@@ -8,9 +8,9 @@ class EntityManager
 public:
     EntityManager() {}
     ~EntityManager() {}
-    Entity *createEntity();
-    void destroyEntity(Entity *entity);
-    std::vector<Entity*>        &getEntities();
+    Entity*						createEntity();
+    void 						destroyEntity(Entity *entity);
+    std::vector<Entity*>&		getEntities();
 
 private:
     static int                  _entityId;

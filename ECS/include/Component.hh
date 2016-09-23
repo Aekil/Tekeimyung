@@ -4,7 +4,7 @@
 
 struct Component
 {
-    virtual const std::type_info &getTypeInfo()
+    virtual const std::type_info& getTypeInfo()
     {
         return typeid(*this);
     }

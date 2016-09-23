@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 #include <typeinfo>
-#include "Component.h"
+#include "Component.hh"
 
 class Entity
 {
@@ -24,12 +24,12 @@ public:
     template<typename componentType, typename... Args>
     void                        addComponent(Args... args)
     {
-        Component *component = new componentType(args...);
+        Component* component = new componentType(args...);
         _components.push_back(component);
     }
 
     template<typename componentType>
-    componentType               *getComponent()
+    componentType*              getComponent()
     {
         const std::type_info &typeInfo = typeid(componentType);
 
@@ -55,6 +55,6 @@ public:
     }
 
 public:
-    int id;
+    int                             id;
     std::vector<Component*>         _components;
 };

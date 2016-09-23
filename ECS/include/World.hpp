@@ -1,16 +1,16 @@
 #pragma once
 
 #include <vector>
-#include "EntityManager.h"
-#include "System.h"
+#include "EntityManager.hpp"
+#include "System.hpp"
 
 class World
 {
 public:
     World() {}
     ~World();
-    EntityManager           &getEntityManager();
-    std::vector<System*>    &getSystems();
+    EntityManager&          getEntityManager();
+    std::vector<System*>&   getSystems();
 
     template<typename T>
     void                    addSystem()

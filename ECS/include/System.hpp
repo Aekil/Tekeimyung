@@ -2,8 +2,8 @@
 
 #include <functional>
 #include <typeindex>
-#include "EntityManager.h"
-#include "Component.h"
+#include "EntityManager.hpp"
+#include "Component.hh"
 
 class System
 {

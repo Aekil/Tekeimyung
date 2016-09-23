@@ -1,10 +1,10 @@
 #include <algorithm>
-#include "EntityManager.h"
+#include "EntityManager.hpp"
 
 int                         EntityManager::_entityId = 0;
 
 
-Entity                      *EntityManager::createEntity()
+Entity* EntityManager::createEntity()
 {
     Entity *entity = new Entity(_entityId++);
 
@@ -17,7 +17,7 @@ void destroy()
 
 }
 
-void                        EntityManager::destroyEntity(Entity *entity)
+void    EntityManager::destroyEntity(Entity *entity)
 {
     std::for_each(entity->_components.begin(), entity->_components.end(), [](Component *component) {
         delete component;
@@ -35,7 +35,7 @@ void                        EntityManager::destroyEntity(Entity *entity)
     }
 }
 
-std::vector<Entity*>        &EntityManager::getEntities()
+std::vector<Entity*>&    EntityManager::getEntities()
 {
     return _entities;
 }
