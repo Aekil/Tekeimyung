@@ -8,7 +8,7 @@ bool    System::init()
     return true;
 }
 
-void    System::forEachEntity(EntityManager &em, std::function<void (Entity *entity)> callback)
+void    System::forEachEntity(EntityManager& em, std::function<void (Entity* entity)> callback)
 {
     for (auto &&entity: em.getEntities()) {
         bool hasComponents = true;

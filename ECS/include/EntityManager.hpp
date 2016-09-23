@@ -9,7 +9,7 @@ public:
     EntityManager() {}
     ~EntityManager() {}
     Entity*						createEntity();
-    void 						destroyEntity(Entity *entity);
+    void 						destroyEntity(Entity* entity);
     std::vector<Entity*>&		getEntities();
 
 private:
