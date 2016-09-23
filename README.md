@@ -7,7 +7,7 @@
 ### Downloading Dependencies
 * [GLFW](http://www.glfw.org/download.html)
 
-### CMake variables
+### Libraries environment variables
 Variable | Type
 ---------|-----
 GLFW_INCLUDE_DIR | PATH
