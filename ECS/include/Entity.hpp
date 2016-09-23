@@ -8,10 +8,10 @@
 class Entity
 {
 public:
-    Entity(int id_): id(id_) {}
+    Entity(unsigned int id_): id(id_) {}
     ~Entity() {}
 
-    bool operator==(int id_)
+    bool operator==(unsigned int id_)
     {
         return id == id_;
     }
@@ -55,6 +55,6 @@ public:
     }
 
 public:
-    int                             id;
+    unsigned int                    id;
     std::vector<Component*>         _components;
 };
