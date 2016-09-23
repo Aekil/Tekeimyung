@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 #include <typeinfo>
-#include "Components.h"
+#include "Component.h"
 
 class Entity
 {

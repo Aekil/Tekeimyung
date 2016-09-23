@@ -1,7 +1,6 @@
 #pragma once
 
 #include <vector>
-#include "Components.h"
 #include "EntityManager.h"
 #include "System.h"
 

@@ -3,7 +3,7 @@
 #include <functional>
 #include <typeindex>
 #include "EntityManager.h"
-#include "Components.h"
+#include "Component.h"
 
 class System
 {
