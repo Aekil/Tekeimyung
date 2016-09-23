@@ -10,10 +10,10 @@ void    GameStateManager::removeCurrentState()
 
 std::shared_ptr<GameState>  GameStateManager::getCurrentState() const
 {
-    return _states.back();
+    return (_states.back());
 }
 
 bool    GameStateManager::hasStates() const
 {
-    return _states.size() != 0;
+    return (_states.size() != 0);
 }

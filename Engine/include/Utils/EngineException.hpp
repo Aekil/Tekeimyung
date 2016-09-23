@@ -20,7 +20,7 @@ public:
 
     virtual const char* what() const throw()
     {
-        return _what.c_str();
+        return (_what.c_str());
     }
 
 private:

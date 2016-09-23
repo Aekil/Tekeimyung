@@ -10,12 +10,13 @@ class System
 public:
     System() {}
     virtual ~System();
-    virtual void        update(EntityManager& em, float elapsedTime) = 0;
-    virtual bool        init();
-    void                forEachEntity(EntityManager& em, std::function<void (Entity* entity)> callback);
+    virtual void                        update(EntityManager& em, float elapsedTime) = 0;
+    virtual bool                        init();
+    void                                forEachEntity(EntityManager& em, std::function<void (Entity* entity)> callback);
 
     template<typename ComponentType>
-    void                addDependency() {
+    void                                addDependency()
+    {
         _components.push_back(std::type_index(typeid(ComponentType)));
     }
 

@@ -16,12 +16,12 @@ class GameStateManager
         std::shared_ptr<T> gameState = std::make_shared<T>();
         if (!gameState->init() || !gameState->initSystems())
         {
-            return false;
+            return (false);
         }
 
         _states.push_back(gameState);
 
-        return false;
+        return (false);
     }
 
     void                                        removeCurrentState();

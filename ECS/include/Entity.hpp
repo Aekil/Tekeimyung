@@ -13,45 +13,49 @@ public:
 
     bool operator==(unsigned int id_)
     {
-        return id == id_;
+        return (id == id_);
     }
 
     bool operator==(Entity &entity)
     {
-        return id == entity.id;
+        return (id == entity.id);
     }
 
     template<typename componentType, typename... Args>
-    void                        addComponent(Args... args)
+    void                            addComponent(Args... args)
     {
         Component* component = new componentType(args...);
         _components.push_back(component);
     }
 
     template<typename componentType>
-    componentType*              getComponent()
+    componentType*                  getComponent()
     {
-        const std::type_info &typeInfo = typeid(componentType);
+        const std::type_info& typeInfo = typeid(componentType);
 
-        for (auto component: _components) {
-            if (component->getTypeInfo().hash_code() == typeInfo.hash_code()) {
+        for (auto component: _components)
+        {
+            if (component->getTypeInfo().hash_code() == typeInfo.hash_code())
+            {
                 return static_cast<componentType*>(component);
             }
         }
 
-        return nullptr;
+        return (nullptr);
     }
 
     // Check if the entity has the component with corresponding hashcode => typeid(component).hash_code()
-    bool                        hasComponent(size_t componentHashCode)
+    bool                            hasComponent(size_t componentHashCode)
     {
-        for (auto component: _components) {
-            if (component->getTypeInfo().hash_code() == componentHashCode) {
-                return true;
+        for (auto component: _components)
+        {
+            if (component->getTypeInfo().hash_code() == componentHashCode)
+            {
+                return (true);
             }
         }
 
-        return false;
+        return (false);
     }
 
 public:

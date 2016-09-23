@@ -6,6 +6,6 @@ struct Component
 {
     virtual const std::type_info& getTypeInfo()
     {
-        return typeid(*this);
+        return (typeid(*this));
     }
 };
