@@ -9,6 +9,9 @@ file(GLOB_RECURSE source_files src/*)
 # add ECS includes with ECS_INCLUDE_DIRS
 include_directories(${ECS_INCLUDE_DIRS})
 
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+
 # Create executable
 add_executable(${EXECUTABLE_NAME} ${source_files})
 

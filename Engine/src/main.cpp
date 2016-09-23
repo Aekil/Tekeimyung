@@ -1,9 +1,12 @@
-#include "World.hpp"
+#include "Core/Engine.hpp"
 
 int main()
 {
-	World		world;
+    Engine engine;
 
- 	EntityManager &em = world.getEntityManager();
-	return (0);
+    if (!engine.init() || !engine.run())
+        return (1);
+
+    engine.stop();
+    return (0);
 }
