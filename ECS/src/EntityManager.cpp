@@ -19,7 +19,7 @@ void destroy()
 
 void    EntityManager::destroyEntity(Entity* entity)
 {
-    std::for_each(entity->_components.begin(), entity->_components.end(), [](Component* component)
+    std::for_each(entity->_components.begin(), entity->_components.end(), [](sComponent* component)
     {
         delete component;
     });

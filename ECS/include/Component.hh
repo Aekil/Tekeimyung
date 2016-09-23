@@ -2,7 +2,7 @@
 
 #include <typeinfo>
 
-struct Component
+struct sComponent
 {
     virtual const std::type_info& getTypeInfo()
     {

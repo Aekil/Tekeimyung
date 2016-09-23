@@ -24,7 +24,7 @@ public:
     template<typename componentType, typename... Args>
     void                            addComponent(Args... args)
     {
-        Component* component = new componentType(args...);
+        sComponent* component = new componentType(args...);
         _components.push_back(component);
     }
 
@@ -60,5 +60,5 @@ public:
 
 public:
     unsigned int                    id;
-    std::vector<Component*>         _components;
+    std::vector<sComponent*>        _components;
 };
