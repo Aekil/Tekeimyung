@@ -6,6 +6,7 @@
 
 ### Downloading Dependencies
 * [GLFW](http://www.glfw.org/download.html)
+* [GLEW] (http://glew.sourceforge.net/)
 
 ### Libraries environment variables
 Variable | Type
@@ -21,3 +22,4 @@ GLEW_LOCATION | PATH
 ### Downloading Dependencies
 Simply use your package manager to install these libraries:
 * GLFW
+* GLEW
