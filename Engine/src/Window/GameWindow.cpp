@@ -6,7 +6,7 @@
 */
 #include	<GL/glew.h>
 
-#include	<GameWindow.hpp>
+#include	"Window/GameWindow.hpp"
 
 GameWindow::GameWindow(int width, int height, const char *title) :
 	_screenWidth(width), _screenHeight(height),
