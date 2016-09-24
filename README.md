@@ -12,6 +12,7 @@ Variable | Type
 ---------|-----
 GLFW_INCLUDE_DIR | PATH
 GLFW_LIBRARY | FILE_PATH
+GLEW_LOCATION | PATH
 
 
 <br />
