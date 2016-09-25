@@ -1,12 +1,12 @@
-#include	<iostream>
+#include <iostream>
 
 /**
 	Please, include the extension loader library before GLFW3.
 	See : http://www.glfw.org/docs/latest/quick.html#quick_include
 */
-#include	<GL/glew.h>
+#include <GL/glew.h>
 
-#include	"Window/GameWindow.hpp"
+#include "Window/GameWindow.hpp"
 
 GameWindow::GameWindow(int width, int height, const char *title) :
 	_screenWidth(width), _screenHeight(height),
@@ -15,17 +15,17 @@ GameWindow::GameWindow(int width, int height, const char *title) :
 
 GameWindow::~GameWindow()
 {
-	if (this->_window != nullptr)
+	if (_window != nullptr)
 	{
 		//delete (this->_window);
 		// deleting the pointer causes an error ????
 	}
 }
 
-int						GameWindow::initialize()
+int     GameWindow::initialize()
 {
-	const GLFWvidmode	*vidmode;
-	int					xPos, yPos;
+	const GLFWvidmode *vidmode;
+	int xPos, yPos;
 
 	// Initializing GLFW.
 	if (glfwInit() == GLFW_FALSE)
@@ -35,74 +35,74 @@ int						GameWindow::initialize()
 	}
 
 	// Creating a GLFW window.
-	this->_window = glfwCreateWindow(this->_screenWidth, this->_screenHeight, this->_title.c_str(), nullptr, nullptr);
-	if (this->_window == nullptr)
+	_window = glfwCreateWindow(_screenWidth, _screenHeight, _title.c_str(), nullptr, nullptr);
+	if (_window == nullptr)
 	{
 		std::cerr << "Could not initialize the window properly." << std::endl;
 		glfwTerminate();
 		return (1);
 	}
-	glfwMakeContextCurrent(this->_window);
-	glfwGetFramebufferSize(this->_window, &this->_bufferWidth, &this->_bufferHeight);
+	glfwMakeContextCurrent(_window);
+	glfwGetFramebufferSize(_window, &_bufferWidth, &_bufferHeight);
 	glfwSwapInterval(1);
 
 	// Placing the game window at the center of the screen.
 	vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-	xPos = (vidmode->width - 640) / 2;
-	yPos = (vidmode->height - 480) / 2;
-	glfwSetWindowPos(this->_window, xPos, yPos);
+	xPos = (vidmode->width - WINDOW_DEFAULT_WIDTH) / 2;
+	yPos = (vidmode->height - WINDOW_DEFAULT_HEIGHT) / 2;
+	glfwSetWindowPos(_window, xPos, yPos);
 
 	return (0);
 }
 
-int			GameWindow::width() const
+int GameWindow::width() const
 {
-	return (this->_screenWidth);
+	return (_screenWidth);
 }
 
-int			GameWindow::height() const
+int GameWindow::height() const
 {
-	return (this->_screenHeight);
+	return (_screenHeight);
 }
 
-std::string	GameWindow::name() const
+std::string GameWindow::name() const
 {
-	return (this->_title);
+	return (_title);
 }
 
-void		GameWindow::setDecorated(bool decorated)
+void GameWindow::setDecorated(bool decorated)
 {
 	glfwWindowHint(GLFW_DECORATED, decorated ? GLFW_TRUE : GLFW_FALSE);
 }
 
-void		GameWindow::setMaximized(bool maximized)
+void GameWindow::setMaximized(bool maximized)
 {
 	glfwWindowHint(GLFW_MAXIMIZED, maximized ? GLFW_TRUE : GLFW_FALSE);
 }
 
-void		GameWindow::setResizable(bool resizable)
+void GameWindow::setResizable(bool resizable)
 {
 	glfwWindowHint(GLFW_RESIZABLE, resizable ? GLFW_TRUE : GLFW_FALSE);
 }
 
-bool		GameWindow::isRunning() const
+bool GameWindow::isRunning() const
 {
-	return (glfwWindowShouldClose(this->_window) == GLFW_FALSE);
+	return (glfwWindowShouldClose(_window) == GLFW_FALSE);
 }
 
-void		GameWindow::display()
+void GameWindow::display()
 {
-	glViewport(0, 0, this->_bufferWidth, this->_bufferHeight);
+	glViewport(0, 0, _bufferWidth, _bufferHeight);
 	glClear(GL_COLOR_BUFFER_BIT);
-	glfwSwapBuffers(this->_window);
+	glfwSwapBuffers(_window);
 }
 
-void		GameWindow::pollEvents()
+void GameWindow::pollEvents()
 {
 	glfwPollEvents();
 }
 
-void		GameWindow::close() {
-	glfwDestroyWindow(this->_window);
+void GameWindow::close() {
+	glfwDestroyWindow(_window);
 	glfwTerminate();
 }
