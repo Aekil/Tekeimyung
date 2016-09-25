@@ -9,10 +9,10 @@ public:
     GameState();
     virtual ~GameState();
     
-    virtual bool        init() = 0;
-    virtual bool        initSystems();
-    virtual bool        update(float elapsedTime);
+    virtual bool            init() = 0;
+    virtual bool            initSystems();
+    virtual bool            update(float elapsedTime);
     
 protected:
-    World               _world;
-};
+    World                   _world;
+};=

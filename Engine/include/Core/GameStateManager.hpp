@@ -6,9 +6,15 @@
 
 class GameStateManager
 {
+<<<<<<< HEAD
 public:
     GameStateManager();
     virtual ~GameStateManager();
+=======
+ public:
+    GameStateManager();
+    ~GameStateManager();
+>>>>>>> 283ac34c1adff2944fe0e528fd81d98014c88b39
 
     template<typename T>
     bool                                        addState()
@@ -21,7 +27,7 @@ public:
 
         _states.push_back(gameState);
 
-        return (false);
+        return (true);
     }
 
     void                                        removeCurrentState();
@@ -31,4 +37,8 @@ public:
 private:
     // States list
     std::list<std::shared_ptr<GameState>>       _states;
+<<<<<<< HEAD
 };
+=======
+};
+>>>>>>> 283ac34c1adff2944fe0e528fd81d98014c88b39

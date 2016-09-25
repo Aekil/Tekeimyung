@@ -8,8 +8,9 @@
 class System
 {
 public:
-    System() {}
+    System();
     virtual ~System();
+
     virtual void                        update(EntityManager& em, float elapsedTime) = 0;
     virtual bool                        init();
     void                                forEachEntity(EntityManager& em, std::function<void (Entity* entity)> callback);

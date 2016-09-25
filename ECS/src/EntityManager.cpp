@@ -4,6 +4,10 @@
 int                         EntityManager::_entityId = 0;
 
 
+EntityManager::EntityManager() {}
+
+EntityManager::~EntityManager() {}
+
 Entity* EntityManager::createEntity()
 {
     Entity* entity = new Entity(_entityId++);

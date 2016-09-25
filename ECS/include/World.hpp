@@ -7,8 +7,9 @@
 class World
 {
 public:
-    World() {}
+    World();
     ~World();
+
     EntityManager&          getEntityManager();
     std::vector<System*>&   getSystems();
 
