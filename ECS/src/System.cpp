@@ -1,6 +1,8 @@
 #include <algorithm>
 #include "System.hpp"
 
+System::System() {}
+
 System::~System() {}
 
 bool    System::init()

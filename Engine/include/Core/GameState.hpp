@@ -4,10 +4,10 @@
 #include "EntityManager.hpp"
 
 class GameState
- {
+{
  public:
-    GameState() {}
-    virtual ~GameState() {}
+    GameState();
+    virtual ~GameState();
 
     virtual bool                    init() = 0;
     virtual bool                    initSystems();
@@ -15,4 +15,4 @@ class GameState
 
 protected:
     World                           _world;
- };
+};

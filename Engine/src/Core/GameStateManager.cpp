@@ -1,5 +1,9 @@
 #include "Core/GameStateManager.hpp"
 
+GameStateManager::GameStateManager() {}
+
+GameStateManager::~GameStateManager() {}
+
 void    GameStateManager::removeCurrentState()
 {
     if (!_states.empty())

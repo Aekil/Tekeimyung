@@ -1,9 +1,8 @@
 #include "World.hpp"
 
-World::~World()
-{
-    
-}
+World::World() {}
+
+World::~World() {}
 
 EntityManager&	World::getEntityManager()
 {

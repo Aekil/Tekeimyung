@@ -4,7 +4,8 @@ class Timer
 {
 public:
     Timer();
-    ~Timer() {}
+    ~Timer();
+
     void            reset();
     double         	getElapsedTime() const;
 
