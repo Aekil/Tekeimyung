@@ -15,4 +15,4 @@ public:
     
 protected:
     World                   _world;
-};=
+};
