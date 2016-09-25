@@ -21,7 +21,7 @@ class GameStateManager
 
         _states.push_back(gameState);
 
-        return (false);
+        return (true);
     }
 
     void                                        removeCurrentState();
