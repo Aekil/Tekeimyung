@@ -5,10 +5,10 @@
 #include "GameState.hpp"
 
 class GameStateManager
- {
- public:
-    GameStateManager() {}
-    ~GameStateManager() {}
+{
+public:
+    GameStateManager();
+    virtual ~GameStateManager();
 
     template<typename T>
     bool                                        addState()
@@ -31,4 +31,4 @@ class GameStateManager
 private:
     // States list
     std::list<std::shared_ptr<GameState>>       _states;
- };
+};

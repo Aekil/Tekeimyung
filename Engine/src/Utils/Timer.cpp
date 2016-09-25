@@ -6,12 +6,14 @@ Timer::Timer()
     reset();
 }
 
-void	Timer::reset()
+Timer::~Timer() {}
+
+void    Timer::reset()
 {
-	_lastReset = glfwGetTime();
+    _lastReset = glfwGetTime();
 }
 
-double	Timer::getElapsedTime() const
+double  Timer::getElapsedTime() const
 {
-    return glfwGetTime() - _lastReset;
+    return (glfwGetTime() - _lastReset);
 }

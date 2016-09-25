@@ -17,8 +17,8 @@ bool    Engine::init()
 bool    Engine::run()
 {
     // FPS counter
-    Timer               timer;
-    double              timePerFrame;
+    Timer       timer;
+    double      timePerFrame;
 
     timePerFrame = 1.0f / 60.0f;
     while (1)

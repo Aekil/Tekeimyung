@@ -1,5 +1,9 @@
 #include "Core/GameStateManager.hpp"
 
+GameStateManager::GameStateManager() {}
+
+GameStateManager::~GameStateManager() {}
+
 void    GameStateManager::removeCurrentState()
 {
     if (!_states.empty())
@@ -8,7 +12,7 @@ void    GameStateManager::removeCurrentState()
     }
 }
 
-std::shared_ptr<GameState>  GameStateManager::getCurrentState() const
+std::shared_ptr<GameState> GameStateManager::getCurrentState() const
 {
     return (_states.back());
 }

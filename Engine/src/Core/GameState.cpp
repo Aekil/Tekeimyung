@@ -1,5 +1,10 @@
+
 #include "Core/GameState.hpp"
 #include "Utils/EngineException.hpp"
+
+GameState::GameState() {}
+
+GameState::~GameState() {}
 
 bool    GameState::initSystems()
 {
