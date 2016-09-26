@@ -7,7 +7,7 @@ class Engine
 {
 public:
     Engine();
-    virtual ~Engine();
+    ~Engine();
 
     bool                    init();
     bool                    run();
