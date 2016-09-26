@@ -1,14 +1,10 @@
 #include "Utils/Timer.hpp"
 #include <GLFW/glfw3.h>
 
-Timer::~Timer() {}
-
 Timer::Timer()
 {
     reset();
 }
-
-Timer::~Timer() {}
 
 void    Timer::reset()
 {
