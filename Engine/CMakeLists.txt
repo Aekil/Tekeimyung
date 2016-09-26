@@ -5,6 +5,7 @@ project(${EXECUTABLE_NAME})
 
 # All source files using glob
 file(GLOB_RECURSE source_files src/*)
+file(GLOB_RECURSE include_files include/*)
 
 # add ECS includes with ECS_INCLUDE_DIRS
 include_directories(${ECS_INCLUDE_DIRS})
@@ -24,7 +25,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include ${GLFW_INCLUDE_DIR} ${GL
 
 
 # Create executable
-add_executable(${EXECUTABLE_NAME} ${source_files})
+add_executable(${EXECUTABLE_NAME} ${source_files} ${include_files})
 
 
 # Link libraries with executable

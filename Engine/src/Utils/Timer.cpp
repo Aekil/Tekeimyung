@@ -6,8 +6,6 @@ Timer::Timer()
     reset();
 }
 
-Timer::~Timer() {}
-
 void    Timer::reset()
 {
     _lastReset = glfwGetTime();
