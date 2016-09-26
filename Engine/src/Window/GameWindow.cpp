@@ -1,11 +1,5 @@
 #include <iostream>
 
-/**
-	Please, include the extension loader library before GLFW3.
-	See : http://www.glfw.org/docs/latest/quick.html#quick_include
-*/
-#include <GL/glew.h>
-
 #include "Window/GameWindow.hpp"
 
 GameWindow::GameWindow(int width, int height, const char *title) :
@@ -44,6 +38,8 @@ int     GameWindow::initialize()
     }
     glfwMakeContextCurrent(_window);
     glfwGetFramebufferSize(_window, &_bufferWidth, &_bufferHeight);
+
+    // Enabling vertical synchronization (or VSync).
     glfwSwapInterval(1);
     
     // Placing the game window at the center of the screen.
@@ -55,19 +51,23 @@ int     GameWindow::initialize()
     return (0);
 }
 
-int     GameWindow::width() const
+int     GameWindow::getWidth() const
 {
     return (_screenWidth);
 }
 
-int     GameWindow::height() const
+int     GameWindow::getHeight() const
 {
     return (_screenHeight);
 }
 
-std::string     GameWindow::name() const
+std::string     GameWindow::getTitle() const
 {
     return (_title);
+}
+
+std::shared_ptr<GameWindow> GameWindow::getInstance() {
+    return (_instance);
 }
 
 void    GameWindow::setDecorated(bool decorated)
@@ -83,6 +83,10 @@ void    GameWindow::setMaximized(bool maximized)
 void    GameWindow::setResizable(bool resizable)
 {
     glfwWindowHint(GLFW_RESIZABLE, resizable ? GLFW_TRUE : GLFW_FALSE);
+}
+
+void    GameWindow::setInstance(std::shared_ptr<GameWindow> instance) {
+    _instance = instance;
 }
 
 bool    GameWindow::isRunning() const
