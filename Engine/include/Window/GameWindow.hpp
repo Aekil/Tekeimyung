@@ -24,7 +24,7 @@ public:
     void                                setDecorated(bool decorated);
     void                                setMaximized(bool fullscreen);
     void                                setResizable(bool resizable);
-    void                                setInstance(std::shared_ptr<GameWindow> instance);
+    static void                         setInstance(std::shared_ptr<GameWindow> instance);
 
     bool                                isRunning() const;
     void                                display();

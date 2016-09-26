@@ -2,6 +2,8 @@
 
 #include "Window/GameWindow.hpp"
 
+std::shared_ptr<GameWindow> GameWindow::_instance;
+
 GameWindow::GameWindow(int width, int height, const char *title) :
     _screenWidth(width), _screenHeight(height),
     _bufferWidth(0), _bufferHeight(0),
@@ -66,7 +68,8 @@ std::string     GameWindow::getTitle() const
     return (_title);
 }
 
-std::shared_ptr<GameWindow> GameWindow::getInstance() {
+std::shared_ptr<GameWindow> GameWindow::getInstance()
+{
     return (_instance);
 }
 
@@ -85,7 +88,8 @@ void    GameWindow::setResizable(bool resizable)
     glfwWindowHint(GLFW_RESIZABLE, resizable ? GLFW_TRUE : GLFW_FALSE);
 }
 
-void    GameWindow::setInstance(std::shared_ptr<GameWindow> instance) {
+void    GameWindow::setInstance(std::shared_ptr<GameWindow> instance)
+{
     _instance = instance;
 }
 
@@ -106,7 +110,8 @@ void    GameWindow::pollEvents()
     glfwPollEvents();
 }
 
-void    GameWindow::close() {
+void    GameWindow::close()
+{
     glfwDestroyWindow(_window);
     glfwTerminate();
 }
