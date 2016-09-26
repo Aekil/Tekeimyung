@@ -4,7 +4,7 @@ class Timer
 {
 public:
     Timer();
-    virtual ~Timer() {}
+    ~Timer();
     
     void                reset();
     double              getElapsedTime() const;
