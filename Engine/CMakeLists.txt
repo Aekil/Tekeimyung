@@ -23,6 +23,9 @@ find_package(OpenGL REQUIRED)
 # Add project and libraries includes
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include ${GLFW_INCLUDE_DIR} ${GLEW_INCLUDE_DIR} ${OPENGL_INCLUDE_DIR})
 
+# Add external includes
+include_directories(${CMAKE_SOURCE_DIR}/external/include)
+
 
 # Create executable
 add_executable(${EXECUTABLE_NAME} ${source_files} ${include_files})
