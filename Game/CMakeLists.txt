@@ -16,6 +16,9 @@ include_directories(${ECS_INCLUDE_DIRS})
 # Add project includes
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
+# Add external includes
+include_directories(${CMAKE_SOURCE_DIR}/external/include)
+
 
 # Create executable
 add_executable(${EXECUTABLE_NAME} ${source_files} ${include_files})
