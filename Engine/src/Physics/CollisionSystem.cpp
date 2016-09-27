@@ -1,4 +1,5 @@
-#include "Physics/CollisionSystem.hh"
+#include "Physics/CollisionSystem.hpp"
+#include "Core/Components.hh"
 
 CollisionSystem::CollisionSystem()
 {

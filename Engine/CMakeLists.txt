@@ -11,6 +11,10 @@ file(GLOB_RECURSE include_files include/*)
 include_directories(${ECS_INCLUDE_DIRS})
 
 
+# Use static lib of glew
+add_definitions(-DGLEW_STATIC)
+
+
 # Find GLFW library
 find_package(GLFW 3.0.0 REQUIRED)
 
