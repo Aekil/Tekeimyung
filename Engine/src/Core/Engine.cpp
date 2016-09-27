@@ -7,7 +7,9 @@ Engine::~Engine() {}
 
 bool    Engine::init()
 {
-    // TODO: Create window
+    _window = std::make_shared<GameWindow>();
+    if (_window->initialize())
+        return (false);
 
     // TODO: Add State
 

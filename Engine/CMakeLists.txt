@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0)
-set(EXECUTABLE_NAME "engine")
+set(EXECUTABLE_NAME "ENGINE")
 project(${EXECUTABLE_NAME})
 
 
@@ -32,8 +32,13 @@ include_directories(${CMAKE_SOURCE_DIR}/external/include)
 
 
 # Create executable
-add_executable(${EXECUTABLE_NAME} ${source_files} ${include_files})
+add_library(${EXECUTABLE_NAME} STATIC ${source_files} ${include_files})
 
 
 # Link libraries with executable
 target_link_libraries(${EXECUTABLE_NAME} ECS ${GLFW_LIBRARY} ${GLEW_LIBRARY} ${OPENGL_gl_LIBRARY})
+
+
+# Store include dir into variable and share it with other projects through cache
+set(${EXECUTABLE_NAME}_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include ${GLFW_INCLUDE_DIR} ${GLEW_INCLUDE_DIR} ${OPENGL_INCLUDE_DIR}
+CACHE INTERNAL "${EXECUTABLE_NAME}: Include Directories" FORCE)

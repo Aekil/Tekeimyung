@@ -7,3 +7,4 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 add_subdirectory(ECS)
 add_subdirectory(Engine)
+add_subdirectory(Game)

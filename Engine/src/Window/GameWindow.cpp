@@ -1,4 +1,5 @@
 #include <iostream>
+#include <GL/glew.h>
 
 #include "Window/GameWindow.hpp"
 
@@ -49,6 +50,15 @@ int     GameWindow::initialize()
     xPos = (vidmode->width - WINDOW_DEFAULT_WIDTH) / 2;
     yPos = (vidmode->height - WINDOW_DEFAULT_HEIGHT) / 2;
     glfwSetWindowPos(_window, xPos, yPos);
+
+
+    // Init Glew
+    glewExperimental = GL_TRUE;
+    if (glewInit() != GLEW_OK) {
+        std::cerr << "Failed to init glew" << std::endl;
+        return (1);
+    }
+    glViewport(0, 0, _screenWidth, _screenHeight);
     
     return (0);
 }
