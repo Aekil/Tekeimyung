@@ -14,9 +14,12 @@ GameWindow::~GameWindow()
 {
     if (_window != nullptr)
     {
+        glfwDestroyWindow(_window);
+        glfwTerminate();
         //delete (_window);
         // deleting the pointer causes an error ????
     }
+
 }
 
 int     GameWindow::initialize()
@@ -31,16 +34,23 @@ int     GameWindow::initialize()
         return (1);
     }
     
+
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+
     // Creating a GLFW window.
     _window = glfwCreateWindow(_screenWidth, _screenHeight, _title.c_str(), nullptr, nullptr);
+
     if (_window == nullptr)
     {
         std::cerr << "Could not initialize the window properly." << std::endl;
         glfwTerminate();
         return (1);
     }
+
     glfwMakeContextCurrent(_window);
     glfwGetFramebufferSize(_window, &_bufferWidth, &_bufferHeight);
+
 
     // Enabling vertical synchronization (or VSync).
     glfwSwapInterval(1);
@@ -58,7 +68,8 @@ int     GameWindow::initialize()
         std::cerr << "Failed to init glew" << std::endl;
         return (1);
     }
-    glViewport(0, 0, _screenWidth, _screenHeight);
+
+    glViewport(0, 0, _bufferWidth, _bufferHeight);
     
     return (0);
 }
@@ -110,8 +121,6 @@ bool    GameWindow::isRunning() const
 
 void    GameWindow::display()
 {
-    glViewport(0, 0, _bufferWidth, _bufferHeight);
-    glClear(GL_COLOR_BUFFER_BIT);
     glfwSwapBuffers(_window);
 }
 

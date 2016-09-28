@@ -13,6 +13,7 @@ public:
     bool                                    init();
     bool                                    run();
     bool                                    stop();
+    GameStateManager&                       getGameStateManager();
 
 private:
     GameStateManager                        _gameStateManager;

@@ -11,7 +11,7 @@ bool    Engine::init()
     if (_window->initialize())
         return (false);
 
-    // TODO: Add State
+    GameWindow::setInstance(_window);
 
     return (true);
 }
@@ -25,6 +25,7 @@ bool    Engine::run()
     timePerFrame = 1.0f / 60.0f;
     while (1)
     {
+        _window->pollEvents();
         // Run one frame each 16ms
         if (timer.getElapsedTime() >= timePerFrame)
         {
@@ -48,4 +49,9 @@ bool    Engine::run()
 bool    Engine::stop()
 {
     return (true);
+}
+
+GameStateManager&   Engine::getGameStateManager()
+{
+    return _gameStateManager;
 }

@@ -26,3 +26,8 @@ add_executable(${EXECUTABLE_NAME} ${source_files} ${include_files})
 
 # Link libraries with executable
 target_link_libraries(${EXECUTABLE_NAME} ENGINE)
+
+
+
+# Copy ressources in Game directory
+file(COPY ../ressources DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
