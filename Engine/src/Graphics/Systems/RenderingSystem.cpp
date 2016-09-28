@@ -74,7 +74,7 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
         glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(trans));
 
         // Bind texture
-        //renderEntity.texture->bind();
+        renderEntity.texture->bind();
 
         // Bind Vertex array buffer
         renderEntity.buffer.bind();
@@ -97,18 +97,18 @@ RenderEntity&   RenderingSystem::getRenderEntity(Entity* entity)
         _renderEntities[id] = new RenderEntity;
 
         // Initialize entity texture
-  /*      sRenderComponent *sprite = entity->getComponent<sRenderComponent>();
-        _renderEntities[id]->texture = &RessourceManager::getInstance()->getTexture(sprite->texture);*/
+        sRenderComponent *sprite = entity->getComponent<sRenderComponent>();
+        _renderEntities[id]->texture = &RessourceManager::getInstance()->getTexture(sprite->texture);
 
-/*        float textureWidth = _renderEntities[id]->texture->getWidth();
-        float textureHeight = _renderEntities[id]->texture->getHeight();*/
+        float textureWidth = _renderEntities[id]->texture->getWidth();
+        float textureHeight = _renderEntities[id]->texture->getHeight();
 
         // Init entity buffers
         Vertex vertices[] = {
-            {glm::vec3(0.0f,  100.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(0.0f, 0.0f)},  // Top Left (red)
-            {glm::vec3(100.0f,  100.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(1.0f, 0.0f)},  // Top Right (blue)
+            {glm::vec3(0.0f,  textureHeight, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(0.0f, 0.0f)},  // Top Left (red)
+            {glm::vec3(textureWidth,  textureHeight, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(1.0f, 0.0f)},  // Top Right (blue)
             {glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(0.0f, 1.0f)},  // Bottom Left (green)
-            {glm::vec3(100.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(1.0f, 1.0f)}  // Bottom Right (red)
+            {glm::vec3(textureWidth, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(1.0f, 1.0f)}  // Bottom Right (red)
         };
 
         GLuint indices[] = {

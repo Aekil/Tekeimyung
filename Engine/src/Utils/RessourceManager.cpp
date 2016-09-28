@@ -69,3 +69,26 @@ std::string RessourceManager::loadFile(const std::string basename, const std::st
     _files[basename] = std::string(fileContent.begin(), fileContent.end());
     return _files[basename];
 }
+
+Texture&    RessourceManager::getTexture(const std::string& fileName)
+{
+    // Textures are stored with their basename
+    std::string basename = getBasename(fileName);
+
+    try {
+        auto &&texture = _textures.at(basename);
+        return texture;
+    }
+    catch(...) {
+        // The texture is not loaded
+        return loadTexture(basename, fileName);
+    }
+}
+
+Texture&    RessourceManager::loadTexture(const std::string basename, const std::string& fileName)
+{
+    _textures[basename] = {};
+    _textures[basename].loadFromFile(fileName);
+
+    return _textures[basename];
+}

@@ -3,12 +3,14 @@
 #include <unordered_map>
 #include "Graphics/ShaderProgram.hpp"
 #include "Graphics/Buffer.hpp"
+#include "Graphics/Texture.hpp"
 #include "System.hpp"
 
 typedef struct
 {
     // OpenGL Buffer
     Buffer      buffer;
+    Texture*    texture;
 }               RenderEntity;
 
 class RenderingSystem: public System
