@@ -69,9 +69,14 @@ int     GameWindow::initialize()
         return (1);
     }
 
-    glViewport(0, 0, _bufferWidth, _bufferHeight);
-    
+    glViewport(0, 0, _bufferWidth, _bufferHeight);   
     return (0);
+}
+
+void	GameWindow::registerEvents()
+{
+	glfwSetWindowUserPointer(_window, &_keyboard);
+	glfwSetKeyCallback(_window, GameWindow::keyCallback);
 }
 
 int     GameWindow::getWidth() const
@@ -92,6 +97,11 @@ std::string     GameWindow::getTitle() const
 std::shared_ptr<GameWindow> GameWindow::getInstance()
 {
     return (_instance);
+}
+
+Keyboard	GameWindow::getKeyboard() const
+{
+	return (_keyboard);
 }
 
 void    GameWindow::setDecorated(bool decorated)
@@ -133,4 +143,26 @@ void    GameWindow::close()
 {
     glfwDestroyWindow(_window);
     glfwTerminate();
+}
+
+void	GameWindow::keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods)
+{
+	Keyboard *keyboard;
+	Keyboard::Key keyboardKey;
+
+	keyboard = reinterpret_cast<Keyboard *>(glfwGetWindowUserPointer(window));
+	if (keyboard != nullptr) {
+		keyboardKey = keyboard->getNativeMap()[key];
+		switch (action) {
+			case GLFW_PRESS:
+				keyboard->getStateMap()[keyboardKey] = Keyboard::KeyState::KEY_PRESSED;
+				break;
+			case GLFW_REPEAT:
+				keyboard->getStateMap()[keyboardKey] = Keyboard::KeyState::KEY_MAINTAINED;
+				break;
+			case GLFW_RELEASE:
+				keyboard->getStateMap()[keyboardKey] = Keyboard::KeyState::KEY_RELEASED;
+				break;
+		}
+	}
 }
