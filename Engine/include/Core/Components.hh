@@ -2,6 +2,7 @@
 
 #include "Component.hh"
 #include <string>
+#include "Window/Keyboard.hpp"
 
 
 enum class eSpriteType
@@ -27,6 +28,18 @@ struct sPositionComponent: sComponent
 
     // Layer number
     float z;
+};
+
+struct sInputComponent: sComponent {
+    sInputComponent(Keyboard::Key moveLeft,
+                    Keyboard::Key moveRight,
+                    Keyboard::Key moveUp,
+                    Keyboard::Key moveDown): moveLeft(moveLeft), moveRight(moveRight), moveUp(moveUp), moveDown(moveDown) {}
+
+    Keyboard::Key           moveLeft;
+    Keyboard::Key           moveRight;
+    Keyboard::Key           moveUp;
+    Keyboard::Key           moveDown;
 };
 
 struct sDirectionComponent : sComponent

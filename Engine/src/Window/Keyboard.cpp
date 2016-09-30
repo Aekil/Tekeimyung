@@ -1,3 +1,4 @@
+#include <iostream>
 #include <GLFW/glfw3.h>
 
 #include "Window/Keyboard.hpp"
@@ -5,8 +6,8 @@
 Keyboard::Keyboard()
 {
 	_nativeMap[GLFW_KEY_UNKNOWN] = Keyboard::Key::UNKNOWN;
-	_nativeMap[GLFW_KEY_Z] = Keyboard::Key::Z;
-	_nativeMap[GLFW_KEY_Q] = Keyboard::Key::Q;
+	_nativeMap[GLFW_KEY_W] = Keyboard::Key::Z;
+	_nativeMap[GLFW_KEY_A] = Keyboard::Key::Q;
 	_nativeMap[GLFW_KEY_S] = Keyboard::Key::S;
 	_nativeMap[GLFW_KEY_D] = Keyboard::Key::D;
 	_nativeMap[GLFW_KEY_UP] = Keyboard::Key::UP;
@@ -25,12 +26,12 @@ Keyboard::Keyboard()
 	_stateMap[Keyboard::Key::RIGHT] = Keyboard::KeyState::KEY_RELEASED;
 }
 
-Keyboard::KeyboardNativeMap	Keyboard::getNativeMap() const
+Keyboard::KeyboardNativeMap&	Keyboard::getNativeMap()
 {
 	return (_nativeMap);
 }
 
-Keyboard::KeyboardStateMap	&Keyboard::getStateMap()
+Keyboard::KeyboardStateMap&	Keyboard::getStateMap()
 {
 	return (_stateMap);
 }

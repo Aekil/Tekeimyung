@@ -31,8 +31,8 @@ public:
 	explicit			Keyboard();
 	virtual				~Keyboard() {}
 
-	KeyboardNativeMap	getNativeMap() const;
-	KeyboardStateMap	&getStateMap();
+	KeyboardNativeMap&	getNativeMap();
+	KeyboardStateMap&	getStateMap();
 	Keyboard::KeyState	operator[](Keyboard::Key key);
 private:
 	KeyboardNativeMap	_nativeMap;

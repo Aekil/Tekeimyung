@@ -6,6 +6,7 @@
 #include "Graphics/Texture.hpp"
 #include "System.hpp"
 #include <glm/vec3.hpp>
+#include "Core/Components.hh"
 
 typedef struct
 {
@@ -27,6 +28,7 @@ public:
 
     virtual void update(EntityManager& em, float elapsedTime);
     virtual bool                            init();
+    glm::vec3                               posToIso(sPositionComponent *position, sRenderComponent *sprite) const;
 
 private:
     RenderEntity&                           getRenderEntity(Entity* entity);

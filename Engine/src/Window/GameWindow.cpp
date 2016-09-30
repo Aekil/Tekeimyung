@@ -59,7 +59,9 @@ int     GameWindow::initialize()
         return (1);
     }
 
-    glViewport(0, 0, _bufferWidth, _bufferHeight);   
+    glViewport(0, 0, _bufferWidth, _bufferHeight);
+
+    registerEvents();
     return (0);
 }
 
@@ -89,7 +91,7 @@ std::shared_ptr<GameWindow> GameWindow::getInstance()
     return (_instance);
 }
 
-Keyboard	GameWindow::getKeyboard() const
+Keyboard&	GameWindow::getKeyboard()
 {
 	return (_keyboard);
 }

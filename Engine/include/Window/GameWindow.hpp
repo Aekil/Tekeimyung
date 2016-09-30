@@ -22,7 +22,7 @@ public:
     int	                                getHeight() const;
     std::string	                        getTitle() const;
     static std::shared_ptr<GameWindow>  getInstance();
-	Keyboard							getKeyboard() const;
+	Keyboard&							getKeyboard();
     
     void                                setDecorated(bool decorated);
     void                                setMaximized(bool fullscreen);

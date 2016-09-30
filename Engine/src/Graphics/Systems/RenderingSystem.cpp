@@ -6,7 +6,6 @@
 #include "Window/GameWindow.hpp"
 #include "Utils/EngineException.hpp"
 #include "Utils/RessourceManager.hpp"
-#include "Core/Components.hh"
 
 RenderingSystem::RenderingSystem()
 {
@@ -81,6 +80,8 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
 RenderEntity&   RenderingSystem::getRenderEntity(Entity* entity)
 {
     int id = entity->id;
+    sRenderComponent *sprite = entity->getComponent<sRenderComponent>();
+    sPositionComponent *position = entity->getComponent<sPositionComponent>();
 
     // The entity does not exist in the render system
     if (_renderEntities.find(id) == _renderEntities.end())
@@ -88,7 +89,6 @@ RenderEntity&   RenderingSystem::getRenderEntity(Entity* entity)
         _renderEntities[id] = new RenderEntity;
 
         // Init entity texture
-        sRenderComponent *sprite = entity->getComponent<sRenderComponent>();
         _renderEntities[id]->texture = &RessourceManager::getInstance()->getTexture(sprite->texture);
 
         float textureWidth = _renderEntities[id]->texture->getWidth();
@@ -111,19 +111,30 @@ RenderEntity&   RenderingSystem::getRenderEntity(Entity* entity)
 
 
         // Init entity graphic position
-        sPositionComponent *position = entity->getComponent<sPositionComponent>();
-        float offsetX = GameWindow::getInstance()->getWidth() / 2.0f - 66.0f;
-        float offsetY = GameWindow::getInstance()->getHeight() - (33.0f * 3.0f);
-
-        _renderEntities[id]->pos.x = offsetX + (position->x - position->y) * 66.0f;
-        _renderEntities[id]->pos.y = offsetY - (position->x + position->y) * 33.0f + (32.0f * position->z);
-        _renderEntities[id]->pos.z = position->z;
-
-        if (sprite->type == eSpriteType::OBJECT)
-        {
-            _renderEntities[id]->pos.y += 30.0f;
-        }
+        _renderEntities[id]->pos = posToIso(position, sprite);
+    }
+    else if (sprite->type == eSpriteType::OBJECT)
+    {
+        _renderEntities[id]->pos = posToIso(position, sprite);
     }
 
-    return *_renderEntities[id];
+    return (*_renderEntities[id]);
+}
+
+glm::vec3 RenderingSystem::posToIso(sPositionComponent *pos, sRenderComponent *sprite) const
+{
+    glm::vec3 isoPos;
+    float offsetX = GameWindow::getInstance()->getWidth() / 2.0f - 66.0f;
+    float offsetY = GameWindow::getInstance()->getHeight() - (33.0f * 3.0f);
+
+    isoPos.x = offsetX + (pos->x - pos->y) * 66.0f;
+    isoPos.y = offsetY - (pos->x + pos->y) * 33.0f + (32.0f * pos->z);
+    isoPos.z = pos->z;
+
+    if (sprite->type == eSpriteType::OBJECT)
+    {
+        isoPos.y += 30.0f;
+    }
+
+    return (isoPos);
 }

@@ -25,10 +25,10 @@ bool    Engine::run()
     timePerFrame = 1.0f / 60.0f;
     while (1)
     {
-        _window->pollEvents();
         // Run one frame each 16ms
         if (timer.getElapsedTime() >= timePerFrame)
         {
+            _window->pollEvents();
             if (!_gameStateManager.hasStates())
             {
                 return (true);
@@ -36,7 +36,7 @@ bool    Engine::run()
 
             auto &&currentState = _gameStateManager.getCurrentState();
 
-            if (!currentState->update(0))
+            if (!currentState->update(timer.getElapsedTime()))
             {
                 _gameStateManager.removeCurrentState();
             }

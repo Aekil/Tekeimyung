@@ -1,4 +1,7 @@
 #include "Graphics/Systems/RenderingSystem.hpp"
+#include "Window/Systems/InputSystem.hpp"
+#include "Window/Keyboard.hpp"
+#include "Physics/MovementSystem.hpp"
 #include "Core/Components.hh"
 
 #include "GameStates/PlayState.hpp"
@@ -12,11 +15,14 @@ bool    PlayState::init()
 {
     EntityManager &em = _world.getEntityManager();
 
+    _world.addSystem<InputSystem>();
+    _world.addSystem<MovementSystem>();
     _world.addSystem<RenderingSystem>();
 
     Entity *entity = em.createEntity();
     entity->addComponent<sPositionComponent>(9, 9, 3);
     entity->addComponent<sDirectionComponent>(0, 0);
+    entity->addComponent<sInputComponent>(Keyboard::Key::Q, Keyboard::Key::D, Keyboard::Key::Z, Keyboard::Key::S);
     entity->addComponent<sRenderComponent>(eSpriteType::OBJECT, "ressources/sprites/taxi.png");
 
     _map.resize(3);
