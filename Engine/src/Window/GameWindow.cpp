@@ -10,17 +10,7 @@ GameWindow::GameWindow(int width, int height, const char *title) :
     _bufferWidth(0), _bufferHeight(0),
     _title(title), _window(nullptr) {}
 
-GameWindow::~GameWindow()
-{
-    if (_window != nullptr)
-    {
-        glfwDestroyWindow(_window);
-        glfwTerminate();
-        //delete (_window);
-        // deleting the pointer causes an error ????
-    }
-
-}
+GameWindow::~GameWindow() {}
 
 int     GameWindow::initialize()
 {
