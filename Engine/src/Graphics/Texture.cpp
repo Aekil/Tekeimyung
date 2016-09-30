@@ -13,13 +13,6 @@ void    Texture::loadFromFile (const std::string &fileName)
     {
          throw EngineException("Failed to load ", fileName, ": ", stbi_failure_reason());
     }
-/*    sf::Image image;
-
-    if (!image.loadFromFile(fileName)) {
-        throw EngineException("Failed to load ", fileName);
-    }
-    _width = image.getSize().x;
-    _height = image.getSize().y;*/
 
     // Create one texture object
     glGenTextures(1, &_texture);

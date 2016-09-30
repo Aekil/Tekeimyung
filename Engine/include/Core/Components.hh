@@ -4,11 +4,18 @@
 #include <string>
 
 
+enum class eSpriteType
+{
+    TILE,
+    OBJECT
+};
+
 struct sRenderComponent: sComponent
 {
-    sRenderComponent(const std::string& texture): texture(texture) {}
+    sRenderComponent(eSpriteType type, const std::string& texture): texture(texture), type(type) {}
 
     std::string texture;
+    eSpriteType type;
 };
 
 struct sPositionComponent: sComponent

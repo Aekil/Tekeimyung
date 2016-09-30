@@ -5,8 +5,8 @@
 #include <GLFW/glfw3.h>
 #include "Window/Keyboard.hpp"
 
-#define WINDOW_DEFAULT_WIDTH    640
-#define WINDOW_DEFAULT_HEIGHT   480
+#define WINDOW_DEFAULT_WIDTH    1280
+#define WINDOW_DEFAULT_HEIGHT   720
 #define WINDOW_DEFAULT_TITLE    "Window default title - Powered by "
 
 class GameWindow

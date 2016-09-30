@@ -1,5 +1,7 @@
 #include <algorithm>
 #include "EntityManager.hpp"
+#include <algorithm>
+#include <random>
 
 int                         EntityManager::_entityId = 0;
 
@@ -43,7 +45,7 @@ void    EntityManager::destroyEntity(Entity* entity)
     }
 }
 
-std::vector<Entity*>&    EntityManager::getEntities()
+std::list<Entity*>&     EntityManager::getEntities()
 {
     return (_entities);
 }

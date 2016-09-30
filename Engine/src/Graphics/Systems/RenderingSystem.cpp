@@ -40,26 +40,17 @@ bool    RenderingSystem::init()
     // Enable blend for transparency
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
     return (true);
 }
 
 void    RenderingSystem::update(EntityManager& em, float elapsedTime)
 {
-
-    // Enable depth test
-    //glEnable(GL_DEPTH_TEST);
-
-    // Specify depth function
-    //glDepthFunc(GL_GREATER);
-
-    // Specify depth buffer clear value
-    //glClearDepth(0.0f);
-
-    // Clear screen and depth buffer
+    // Clear color buffer
     glClear (GL_COLOR_BUFFER_BIT);
+
     forEachEntity(em, [&](Entity *entity) {
         RenderEntity &renderEntity = getRenderEntity(entity);
+        sPositionComponent *position = entity->getComponent<sPositionComponent>();
 
         // Orthogonal projection matrice
         glm::mat4 ortho = glm::ortho(0.0f, (float)GameWindow::getInstance()->getWidth(), 0.0f, (float)GameWindow::getInstance()->getHeight());
@@ -81,6 +72,7 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
         // Draw to screen
         glDrawElements(GL_TRIANGLES, renderEntity.buffer.getIndicesNb(), GL_UNSIGNED_INT, 0);
     });
+
 
     // Display screen
     GameWindow::getInstance()->display();
@@ -124,7 +116,13 @@ RenderEntity&   RenderingSystem::getRenderEntity(Entity* entity)
         float offsetY = GameWindow::getInstance()->getHeight() - (33.0f * 3.0f);
 
         _renderEntities[id]->pos.x = offsetX + (position->x - position->y) * 66.0f;
-        _renderEntities[id]->pos.y = offsetY - (position->x + position->y) * 33.0f + (31.0f * position->z);
+        _renderEntities[id]->pos.y = offsetY - (position->x + position->y) * 33.0f + (32.0f * position->z);
+        _renderEntities[id]->pos.z = position->z;
+
+        if (sprite->type == eSpriteType::OBJECT)
+        {
+            _renderEntities[id]->pos.y += 30.0f;
+        }
     }
 
     return *_renderEntities[id];

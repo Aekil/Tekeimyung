@@ -5,7 +5,7 @@
 #include "Graphics/Buffer.hpp"
 #include "Graphics/Texture.hpp"
 #include "System.hpp"
-#include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
 
 typedef struct
 {
@@ -16,7 +16,7 @@ typedef struct
     Texture*    texture;
 
     // Entity position
-    glm::vec2   pos;
+    glm::vec3   pos;
 }               RenderEntity;
 
 class RenderingSystem: public System

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vector>
+#include <list>
 #include "Entity.hpp"
 
 class EntityManager
@@ -11,9 +11,15 @@ public:
 
     Entity*                     createEntity();
     void                        destroyEntity(Entity* entity);
-    std::vector<Entity*>&       getEntities();
+    std::list<Entity*>&         getEntities();
+
+    template <class Compare>
+    void                        sortEntities(Compare comp)
+    {
+        _entities.sort(comp);
+    }
 
 private:
     static int                  _entityId;
-    std::vector<Entity*>        _entities;
+    std::list<Entity*>          _entities;
 };
