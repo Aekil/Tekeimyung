@@ -13,10 +13,13 @@ struct sRenderComponent: sComponent
 
 struct sPositionComponent: sComponent
 {
-    sPositionComponent(float x, float y): x(x), y(y) {}
+    sPositionComponent(float x, float y, float z): x(x), y(y), z(z) {}
 
     float x;
     float y;
+
+    // Layer number
+    float z;
 };
 
 struct sDirectionComponent : sComponent

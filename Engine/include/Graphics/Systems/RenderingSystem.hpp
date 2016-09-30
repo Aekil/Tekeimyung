@@ -5,12 +5,18 @@
 #include "Graphics/Buffer.hpp"
 #include "Graphics/Texture.hpp"
 #include "System.hpp"
+#include <glm/vec2.hpp>
 
 typedef struct
 {
     // OpenGL Buffer
     Buffer      buffer;
+
+    // Entity texture
     Texture*    texture;
+
+    // Entity position
+    glm::vec2   pos;
 }               RenderEntity;
 
 class RenderingSystem: public System

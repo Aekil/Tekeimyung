@@ -38,8 +38,8 @@ bool    RenderingSystem::init()
     }
 
     // Enable blend for transparency
-    //glEnable(GL_BLEND);
-    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     return (true);
 }
@@ -59,7 +59,6 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
     // Clear screen and depth buffer
     glClear (GL_COLOR_BUFFER_BIT);
     forEachEntity(em, [&](Entity *entity) {
-        sPositionComponent *position = entity->getComponent<sPositionComponent>();
         RenderEntity &renderEntity = getRenderEntity(entity);
 
         // Orthogonal projection matrice
@@ -69,7 +68,7 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
 
         // Model matrice
         glm::mat4 trans;
-        trans = glm::translate(trans, glm::vec3(position->x, position->y, 0.0f));
+        trans = glm::translate(trans, glm::vec3(renderEntity.pos.x, renderEntity.pos.y, 0.0f));
         GLint uniTrans = _shaderProgram.getUniformLocation("trans");
         glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(trans));
 
@@ -96,7 +95,7 @@ RenderEntity&   RenderingSystem::getRenderEntity(Entity* entity)
     {
         _renderEntities[id] = new RenderEntity;
 
-        // Initialize entity texture
+        // Init entity texture
         sRenderComponent *sprite = entity->getComponent<sRenderComponent>();
         _renderEntities[id]->texture = &RessourceManager::getInstance()->getTexture(sprite->texture);
 
@@ -117,6 +116,15 @@ RenderEntity&   RenderingSystem::getRenderEntity(Entity* entity)
         };
 
         _renderEntities[id]->buffer.updateData(vertices, 4, indices, 6);
+
+
+        // Init entity graphic position
+        sPositionComponent *position = entity->getComponent<sPositionComponent>();
+        float offsetX = GameWindow::getInstance()->getWidth() / 2.0f - 66.0f;
+        float offsetY = GameWindow::getInstance()->getHeight() - (33.0f * 3.0f);
+
+        _renderEntities[id]->pos.x = offsetX + (position->x - position->y) * 66.0f;
+        _renderEntities[id]->pos.y = offsetY - (position->x + position->y) * 33.0f + (31.0f * position->z);
     }
 
     return *_renderEntities[id];

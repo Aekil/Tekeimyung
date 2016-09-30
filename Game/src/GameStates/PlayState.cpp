@@ -15,12 +15,12 @@ bool    PlayState::init()
     _world.addSystem<RenderingSystem>();
 
     Entity *entity = em.createEntity();
-    entity->addComponent<sPositionComponent>(0, 50);
+    entity->addComponent<sPositionComponent>(9, 9, 1);
     entity->addComponent<sDirectionComponent>(0, 0);
     entity->addComponent<sRenderComponent>("ressources/sprites/taxi.png");
 
     entity = em.createEntity();
-    entity->addComponent<sPositionComponent>(200, 50);
+    entity->addComponent<sPositionComponent>(8, 8, 1);
     entity->addComponent<sDirectionComponent>(0, 0);
     entity->addComponent<sRenderComponent>("ressources/sprites/police.png");
 
