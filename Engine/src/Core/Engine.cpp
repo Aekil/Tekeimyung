@@ -28,7 +28,7 @@ bool    Engine::run()
         // Run one frame each 16ms
         if (timer.getElapsedTime() >= timePerFrame)
         {
-            _window->getKeyboard().resetReleasedKeys();
+            _window->getKeyboard().updateKeyboardState();
             _window->getMouse().resetReleasedButtons();
             _window->pollEvents();
             if (!_gameStateManager.hasStates())

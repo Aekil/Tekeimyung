@@ -37,8 +37,10 @@ public:
     void                                pollEvents();
     void                                close();
 
-	static void							keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods);
+	static void							keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
     static void                         buttonCallback(GLFWwindow* window, int button, int action, int mods);
+    static void                         cursorEnterCallback(GLFWwindow* window, int entered);
+    static void                         cursorPositionCallback(GLFWwindow* window, double xPos, double yPos);
 private:
     GLFWwindow*                         _window;
 

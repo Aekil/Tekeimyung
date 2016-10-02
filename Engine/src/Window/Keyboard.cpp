@@ -134,15 +134,6 @@ Keyboard::Keyboard()
     //_nativeMap[GLFW_KEY_LAST] = _nativeMap[GLFW_KEY_MENU];
 
     resetKeyboardState();
-	/*_stateMap[Keyboard::eKey::UNKNOWN] = Keyboard::eKeyState::KEY_RELEASED;
-	_stateMap[Keyboard::eKey::Z] = Keyboard::eKeyState::KEY_RELEASED;
-	_stateMap[Keyboard::eKey::Q] = Keyboard::eKeyState::KEY_RELEASED;
-	_stateMap[Keyboard::eKey::S] = Keyboard::eKeyState::KEY_RELEASED;
-	_stateMap[Keyboard::eKey::D] = Keyboard::eKeyState::KEY_RELEASED;
-	_stateMap[Keyboard::eKey::UP] = Keyboard::eKeyState::KEY_RELEASED;
-	_stateMap[Keyboard::eKey::DOWN] = Keyboard::eKeyState::KEY_RELEASED;
-	_stateMap[Keyboard::eKey::LEFT] = Keyboard::eKeyState::KEY_RELEASED;
-	_stateMap[Keyboard::eKey::RIGHT] = Keyboard::eKeyState::KEY_RELEASED;*/
 }
 
 Keyboard::KeyboardNativeMap&    Keyboard::getNativeMap()
@@ -170,14 +161,23 @@ void    Keyboard::resetKeyboardState()
     }
 }
 
-void    Keyboard::resetReleasedKeys()
+void    Keyboard::updateKeyboardState()
 {
     Keyboard::KeyboardNativeMap::const_iterator it;
 
     for (it = _nativeMap.begin(); it != _nativeMap.end(); ++it)
     {
-        if (_stateMap[it->second] == Keyboard::eKeyState::KEY_RELEASED)
-            _stateMap[it->second] = Keyboard::eKeyState::KEY_IDLE;
+        switch (_stateMap[it->second])
+        {
+            case Keyboard::eKeyState::KEY_RELEASED:
+                _stateMap[it->second] = Keyboard::eKeyState::KEY_IDLE;
+                break;
+            case Keyboard::eKeyState::KEY_PRESSED:
+                _stateMap[it->second] = Keyboard::eKeyState::KEY_MAINTAINED;
+                break;
+            default:
+                break;
+        }
     }
 }
 

@@ -2,6 +2,8 @@
 
 #include <unordered_map>
 
+#include <Window/Cursor.hpp>
+
 class Mouse
 {
 public:
@@ -38,6 +40,7 @@ public:
 
     MouseNativeMap& getNativeMap();
     MouseStateMap&  getStateMap();
+    Cursor&         getCursor();
 
     void            resetMouseState();
     void            resetReleasedButtons();
@@ -46,4 +49,6 @@ public:
 private:
     MouseNativeMap  _nativeMap;
     MouseStateMap   _stateMap;
+
+    Cursor          _cursor;
 };

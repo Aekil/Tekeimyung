@@ -25,33 +25,35 @@ void    InputSystem::update(EntityManager &em, float elapsedTime)
 
         if (keyboard.isPressed(input->moveLeft))
         {
-            std::cout << "LEFT is " << (keyboard[input->moveLeft] == Keyboard::eKeyState::KEY_MAINTAINED ? "maintained" : "pressed") << " !" << std::endl;
+            //std::cout << "LEFT is " << (keyboard[input->moveLeft] == Keyboard::eKeyState::KEY_MAINTAINED ? "maintained" : "pressed") << " !" << std::endl;
             direction->x += -1.0;
             direction->y += 1.0;
         }
 
         if (keyboard.isPressed(input->moveRight))
         {
-            std::cout << "RIGHT is " << (keyboard[input->moveRight] == Keyboard::eKeyState::KEY_MAINTAINED ? "maintained" : "pressed") << " !" << std::endl;
+            //std::cout << "RIGHT is " << (keyboard[input->moveRight] == Keyboard::eKeyState::KEY_MAINTAINED ? "maintained" : "pressed") << " !" << std::endl;
             direction->x += 1.0;
             direction->y += -1.0;
         }
 
         if (keyboard.isPressed(input->moveUp))
         {
-            std::cout << "UP is " << (keyboard[input->moveUp] == Keyboard::eKeyState::KEY_MAINTAINED ? "maintained" : "pressed") << " !" << std::endl;
+            //std::cout << "UP is " << (keyboard[input->moveUp] == Keyboard::eKeyState::KEY_MAINTAINED ? "maintained" : "pressed") << " !" << std::endl;
             direction->x += -1.0;
             direction->y += -1.0;
         }
 
         if (keyboard.isPressed(input->moveDown))
         {
-            std::cout << "DOWN is " << (keyboard[input->moveDown] == Keyboard::eKeyState::KEY_MAINTAINED ? "maintained" : "pressed") << " !" << std::endl;
+            //std::cout << "DOWN is " << (keyboard[input->moveDown] == Keyboard::eKeyState::KEY_MAINTAINED ? "maintained" : "pressed") << " !" << std::endl;
             direction->x += 1.0;
             direction->y += 1.0;
         }
 
-        if (mouse.isPressed(Mouse::eButton::MOUSE_BUTTON_1))
-            std::cout << "BUTTON is " << (mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_1] == Mouse::eButtonState::CLICK_MAINTAINED ? "maintained" : "pressed") << " !" << std::endl;
+        //if (mouse.isPressed(Mouse::eButton::MOUSE_BUTTON_1))
+            //std::cout << "BUTTON is " << (mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_1] == Mouse::eButtonState::CLICK_MAINTAINED ? "maintained" : "pressed") << " !" << std::endl;
+
+        //std::cout << "Cursor is " << (mouse.getCursor().isInTheWindow() ? "in the window" : "is out of the window") << " (" << mouse.getCursor().getX() << ", " << mouse.getCursor().getY() << ")" << std::endl;
     });
 }

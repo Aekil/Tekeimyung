@@ -26,6 +26,11 @@ Mouse::MouseStateMap&   Mouse::getStateMap()
     return (_stateMap);
 }
 
+Cursor&     Mouse::getCursor()
+{
+    return (_cursor);
+}
+
 void    Mouse::resetMouseState()
 {
     Mouse::MouseNativeMap::const_iterator   it;
@@ -44,6 +49,17 @@ void    Mouse::resetReleasedButtons()
     {
         if (_stateMap[it->second] == Mouse::eButtonState::CLICK_RELEASED)
             _stateMap[it->second] = Mouse::eButtonState::CLICK_IDLE;
+        switch (_stateMap[it->second])
+        {
+            case Mouse::eButtonState::CLICK_RELEASED:
+                _stateMap[it->second] = Mouse::eButtonState::CLICK_IDLE;
+                break;
+            case Mouse::eButtonState::CLICK_PRESSED:
+                _stateMap[it->second] = Mouse::eButtonState::CLICK_MAINTAINED;
+                break;
+            default:
+                break;
+        }
     }
 }
 

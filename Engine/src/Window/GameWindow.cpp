@@ -70,6 +70,8 @@ void	GameWindow::registerEvents()
 	glfwSetWindowUserPointer(_window, this);
 	glfwSetKeyCallback(_window, GameWindow::keyCallback);
     glfwSetMouseButtonCallback(_window, GameWindow::buttonCallback);
+    glfwSetCursorEnterCallback(_window, GameWindow::cursorEnterCallback);
+    glfwSetCursorPosCallback(_window, GameWindow::cursorPositionCallback);
 }
 
 int     GameWindow::getWidth() const
@@ -143,14 +145,14 @@ void    GameWindow::close()
     glfwTerminate();
 }
 
-void	GameWindow::keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods)
+void	GameWindow::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	GameWindow      *gameWindow;
+	GameWindow*     gameWindow;
 	Keyboard::eKey  keyboardKey;
 
     if (key < (int) Keyboard::eKey::UNKNOWN || key >= (int) Keyboard::eKey::LAST)
         return;
-	gameWindow = reinterpret_cast<GameWindow *>(glfwGetWindowUserPointer(window));
+	gameWindow = reinterpret_cast<GameWindow*>(glfwGetWindowUserPointer(window));
 	if (gameWindow != nullptr)
     {
         Keyboard    &keyboard = gameWindow->getKeyboard();
@@ -176,12 +178,12 @@ void	GameWindow::keyCallback(GLFWwindow *window, int key, int scancode, int acti
 
 void    GameWindow::buttonCallback(GLFWwindow* window, int button, int action, int mods)
 {
-    GameWindow      *gameWindow;
+    GameWindow*     gameWindow;
     Mouse::eButton  mouseButton;
 
     if (button <= (int) Mouse::eButton::UNKNOWN || button >= (int) Mouse::eButton::MOUSE_BUTTON_LAST)
         return;
-    gameWindow = reinterpret_cast<GameWindow *>(glfwGetWindowUserPointer(window));
+    gameWindow = reinterpret_cast<GameWindow*>(glfwGetWindowUserPointer(window));
     if (gameWindow != nullptr)
     {
         Mouse       &mouse = gameWindow->getMouse();
@@ -190,15 +192,45 @@ void    GameWindow::buttonCallback(GLFWwindow* window, int button, int action, i
         {
             case GLFW_PRESS:
                 {
-                    if (mouse.getStateMap()[mouseButton] == Mouse::eButtonState::CLICK_IDLE)
-                        mouse.getStateMap()[mouseButton] = Mouse::eButtonState::CLICK_PRESSED;
-                    else if (mouse.getStateMap()[mouseButton] == Mouse::eButtonState::CLICK_PRESSED)
+                    if (mouse.getStateMap()[mouseButton] == Mouse::eButtonState::CLICK_PRESSED)
                         mouse.getStateMap()[mouseButton] = Mouse::eButtonState::CLICK_MAINTAINED;
+                    else if (mouse.getStateMap()[mouseButton] == Mouse::eButtonState::CLICK_IDLE)
+                        mouse.getStateMap()[mouseButton] = Mouse::eButtonState::CLICK_PRESSED;
                 }
+                break;
+            case GLFW_REPEAT:
+                mouse.getStateMap()[mouseButton] = Mouse::eButtonState::CLICK_MAINTAINED;
                 break;
             case GLFW_RELEASE:
                 mouse.getStateMap()[mouseButton] = Mouse::eButtonState::CLICK_RELEASED;
                 break;
         }
+    }
+}
+
+void    GameWindow::cursorEnterCallback(GLFWwindow* window, int entered)
+{
+    GameWindow*     gameWindow;
+
+    gameWindow = reinterpret_cast<GameWindow*>(glfwGetWindowUserPointer(window));
+    if (gameWindow != nullptr)
+    {
+        Cursor&     cursor = gameWindow->getMouse().getCursor();
+
+        cursor.setWindowEntering(entered);
+    }
+}
+
+void    GameWindow::cursorPositionCallback(GLFWwindow* window, double xPos, double yPos)
+{
+    GameWindow*     gameWindow;
+
+    gameWindow = reinterpret_cast<GameWindow*>(glfwGetWindowUserPointer(window));
+    if (gameWindow != nullptr)
+    {
+        Cursor&     cursor = gameWindow->getMouse().getCursor();
+
+        cursor.setXPosition(xPos);
+        cursor.setYPosition(yPos);
     }
 }

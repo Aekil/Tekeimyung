@@ -150,7 +150,7 @@ public:
     Keyboard::eKeyState operator[](Keyboard::eKey key);
 
     void                resetKeyboardState();
-    void                resetReleasedKeys();
+    void                updateKeyboardState();
 
     bool                isPressed(Keyboard::eKey key);
 private:
