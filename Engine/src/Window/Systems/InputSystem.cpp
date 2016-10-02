@@ -14,6 +14,7 @@ InputSystem::~InputSystem() {}
 void    InputSystem::update(EntityManager &em, float elapsedTime)
 {
     auto &&keyboard = GameWindow::getInstance()->getKeyboard();
+    auto &&mouse = GameWindow::getInstance()->getMouse();
 
     forEachEntity(em, [&](Entity *entity) {
         sInputComponent *input = entity->getComponent<sInputComponent>();
@@ -49,5 +50,8 @@ void    InputSystem::update(EntityManager &em, float elapsedTime)
             direction->x += 1.0;
             direction->y += 1.0;
         }
+
+        if (mouse.isPressed(Mouse::eButton::MOUSE_BUTTON_1))
+            std::cout << "BUTTON is " << (mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_1] == Mouse::eButtonState::CLICK_MAINTAINED ? "maintained" : "pressed") << " !" << std::endl;
     });
 }

@@ -1,7 +1,7 @@
 #include <iostream>
 #include <GLFW/glfw3.h>
 
-#include "Window/Keyboard.hpp"
+#include <Window/Keyboard.hpp>
 
 /**
     Some native keys are not directly remapped to their Keyboard clone ones.
@@ -174,7 +174,8 @@ void    Keyboard::resetReleasedKeys()
 {
     Keyboard::KeyboardNativeMap::const_iterator it;
 
-    for (it = _nativeMap.begin(); it != _nativeMap.end(); ++it) {
+    for (it = _nativeMap.begin(); it != _nativeMap.end(); ++it)
+    {
         if (_stateMap[it->second] == Keyboard::eKeyState::KEY_RELEASED)
             _stateMap[it->second] = Keyboard::eKeyState::KEY_IDLE;
     }

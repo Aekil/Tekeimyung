@@ -128,7 +128,7 @@ public:
         RIGHT_ALT,      // Right alt    key
         RIGHT_SUPER,    // ???          key
         MENU,           // ???          key
-        LAST = MENU     // ???          key
+        LAST = MENU     // Last         index
 	}                   Key;
 
 	enum class          eKeyState
@@ -147,7 +147,7 @@ public:
 
 	KeyboardNativeMap&  getNativeMap();
 	KeyboardStateMap&   getStateMap();
-	Keyboard::eKeyState operator[](Keyboard::eKey key);
+    Keyboard::eKeyState operator[](Keyboard::eKey key);
 
     void                resetKeyboardState();
     void                resetReleasedKeys();

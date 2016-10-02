@@ -3,7 +3,9 @@
 #include <memory>
 #include <string>
 #include <GLFW/glfw3.h>
-#include "Window/Keyboard.hpp"
+
+#include <Window/Keyboard.hpp>
+#include <Window/Mouse.hpp>
 
 #define WINDOW_DEFAULT_WIDTH    1280
 #define WINDOW_DEFAULT_HEIGHT   720
@@ -23,6 +25,7 @@ public:
     std::string	                        getTitle() const;
     static std::shared_ptr<GameWindow>  getInstance();
 	Keyboard&							getKeyboard();
+    Mouse&                              getMouse();
     
     void                                setDecorated(bool decorated);
     void                                setMaximized(bool fullscreen);
@@ -35,6 +38,7 @@ public:
     void                                close();
 
 	static void							keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods);
+    static void                         buttonCallback(GLFWwindow* window, int button, int action, int mods);
 private:
     GLFWwindow*                         _window;
 
@@ -46,4 +50,5 @@ private:
 
     static std::shared_ptr<GameWindow>  _instance;
 	Keyboard							_keyboard;
+    Mouse                               _mouse;
 };

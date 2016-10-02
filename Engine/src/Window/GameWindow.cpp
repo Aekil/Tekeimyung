@@ -67,8 +67,9 @@ bool    GameWindow::initialize()
 
 void	GameWindow::registerEvents()
 {
-	glfwSetWindowUserPointer(_window, &_keyboard);
+	glfwSetWindowUserPointer(_window, this);
 	glfwSetKeyCallback(_window, GameWindow::keyCallback);
+    glfwSetMouseButtonCallback(_window, GameWindow::buttonCallback);
 }
 
 int     GameWindow::getWidth() const
@@ -94,6 +95,11 @@ std::shared_ptr<GameWindow> GameWindow::getInstance()
 Keyboard&	GameWindow::getKeyboard()
 {
 	return (_keyboard);
+}
+
+Mouse&      GameWindow::getMouse()
+{
+    return (_mouse);
 }
 
 void    GameWindow::setDecorated(bool decorated)
@@ -139,29 +145,60 @@ void    GameWindow::close()
 
 void	GameWindow::keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
-	Keyboard *keyboard;
-	Keyboard::eKey keyboardKey;
+	GameWindow      *gameWindow;
+	Keyboard::eKey  keyboardKey;
 
     if (key < (int) Keyboard::eKey::UNKNOWN || key >= (int) Keyboard::eKey::LAST)
         return;
-	keyboard = reinterpret_cast<Keyboard *>(glfwGetWindowUserPointer(window));
-	if (keyboard != nullptr) {
-		keyboardKey = keyboard->getNativeMap()[key];
+	gameWindow = reinterpret_cast<GameWindow *>(glfwGetWindowUserPointer(window));
+	if (gameWindow != nullptr)
+    {
+        Keyboard    &keyboard = gameWindow->getKeyboard();
+		keyboardKey = keyboard.getNativeMap()[key];
 		switch (action) {
 			case GLFW_PRESS:
                 {
-                    if (keyboard->getStateMap()[keyboardKey] == Keyboard::eKeyState::KEY_IDLE)
-                        keyboard->getStateMap()[keyboardKey] = Keyboard::eKeyState::KEY_PRESSED;
-				    else if (keyboard->getStateMap()[keyboardKey] == Keyboard::eKeyState::KEY_PRESSED)
-                        keyboard->getStateMap()[keyboardKey] = Keyboard::eKeyState::KEY_MAINTAINED;
+                    if (keyboard.getStateMap()[keyboardKey] == Keyboard::eKeyState::KEY_IDLE)
+                        keyboard.getStateMap()[keyboardKey] = Keyboard::eKeyState::KEY_PRESSED;
+				    else if (keyboard.getStateMap()[keyboardKey] == Keyboard::eKeyState::KEY_PRESSED)
+                        keyboard.getStateMap()[keyboardKey] = Keyboard::eKeyState::KEY_MAINTAINED;
                 }
 				break;
 			case GLFW_REPEAT:
-				keyboard->getStateMap()[keyboardKey] = Keyboard::eKeyState::KEY_MAINTAINED;
+				keyboard.getStateMap()[keyboardKey] = Keyboard::eKeyState::KEY_MAINTAINED;
 				break;
 			case GLFW_RELEASE:
-                keyboard->getStateMap()[keyboardKey] = Keyboard::eKeyState::KEY_RELEASED;
+                keyboard.getStateMap()[keyboardKey] = Keyboard::eKeyState::KEY_RELEASED;
 				break;
 		}
 	}
+}
+
+void    GameWindow::buttonCallback(GLFWwindow* window, int button, int action, int mods)
+{
+    GameWindow      *gameWindow;
+    Mouse::eButton  mouseButton;
+
+    if (button <= (int) Mouse::eButton::UNKNOWN || button >= (int) Mouse::eButton::MOUSE_BUTTON_LAST)
+        return;
+    gameWindow = reinterpret_cast<GameWindow *>(glfwGetWindowUserPointer(window));
+    if (gameWindow != nullptr)
+    {
+        Mouse       &mouse = gameWindow->getMouse();
+        mouseButton = mouse.getNativeMap()[button];
+        switch (action)
+        {
+            case GLFW_PRESS:
+                {
+                    if (mouse.getStateMap()[mouseButton] == Mouse::eButtonState::CLICK_IDLE)
+                        mouse.getStateMap()[mouseButton] = Mouse::eButtonState::CLICK_PRESSED;
+                    else if (mouse.getStateMap()[mouseButton] == Mouse::eButtonState::CLICK_PRESSED)
+                        mouse.getStateMap()[mouseButton] = Mouse::eButtonState::CLICK_MAINTAINED;
+                }
+                break;
+            case GLFW_RELEASE:
+                mouse.getStateMap()[mouseButton] = Mouse::eButtonState::CLICK_RELEASED;
+                break;
+        }
+    }
 }

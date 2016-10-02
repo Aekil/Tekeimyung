@@ -29,6 +29,7 @@ bool    Engine::run()
         if (timer.getElapsedTime() >= timePerFrame)
         {
             _window->getKeyboard().resetReleasedKeys();
+            _window->getMouse().resetReleasedButtons();
             _window->pollEvents();
             if (!_gameStateManager.hasStates())
             {
