@@ -15,7 +15,7 @@ public:
     explicit                            GameWindow(int width = WINDOW_DEFAULT_WIDTH, int height = WINDOW_DEFAULT_HEIGHT, const char *title = WINDOW_DEFAULT_TITLE);
     virtual                             ~GameWindow();
     
-    int                                 initialize();
+    bool                                initialize();
 	void								registerEvents();
     
     int                                 getWidth() const;
@@ -36,7 +36,7 @@ public:
 
 	static void							keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods);
 private:
-    GLFWwindow                          *_window;
+    GLFWwindow*                         _window;
 
     int                                 _screenWidth;
     int                                 _screenHeight;

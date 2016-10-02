@@ -12,7 +12,7 @@ GameWindow::GameWindow(int width, int height, const char *title) :
 
 GameWindow::~GameWindow() {}
 
-int     GameWindow::initialize()
+bool    GameWindow::initialize()
 {
     const GLFWvidmode *vidmode;
     int xPos, yPos;
@@ -21,7 +21,7 @@ int     GameWindow::initialize()
     if (glfwInit() == GLFW_FALSE)
     {
         std::cerr << "Could not initialize GLFW." << std::endl;
-        return (1);
+        return (false);
     }
     
 
@@ -35,7 +35,7 @@ int     GameWindow::initialize()
     {
         std::cerr << "Could not initialize the window properly." << std::endl;
         glfwTerminate();
-        return (1);
+        return (false);
     }
 
     glfwMakeContextCurrent(_window);
@@ -56,13 +56,13 @@ int     GameWindow::initialize()
     glewExperimental = GL_TRUE;
     if (glewInit() != GLEW_OK) {
         std::cerr << "Failed to init glew" << std::endl;
-        return (1);
+        return (false);
     }
 
     glViewport(0, 0, _bufferWidth, _bufferHeight);
 
     registerEvents();
-    return (0);
+    return (true);
 }
 
 void	GameWindow::registerEvents()
@@ -140,20 +140,27 @@ void    GameWindow::close()
 void	GameWindow::keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
 	Keyboard *keyboard;
-	Keyboard::Key keyboardKey;
+	Keyboard::eKey keyboardKey;
 
+    if (key < (int) Keyboard::eKey::UNKNOWN || key >= (int) Keyboard::eKey::LAST)
+        return;
 	keyboard = reinterpret_cast<Keyboard *>(glfwGetWindowUserPointer(window));
 	if (keyboard != nullptr) {
 		keyboardKey = keyboard->getNativeMap()[key];
 		switch (action) {
 			case GLFW_PRESS:
-				keyboard->getStateMap()[keyboardKey] = Keyboard::KeyState::KEY_PRESSED;
+                {
+                    if (keyboard->getStateMap()[keyboardKey] == Keyboard::eKeyState::KEY_IDLE)
+                        keyboard->getStateMap()[keyboardKey] = Keyboard::eKeyState::KEY_PRESSED;
+				    else if (keyboard->getStateMap()[keyboardKey] == Keyboard::eKeyState::KEY_PRESSED)
+                        keyboard->getStateMap()[keyboardKey] = Keyboard::eKeyState::KEY_MAINTAINED;
+                }
 				break;
 			case GLFW_REPEAT:
-				keyboard->getStateMap()[keyboardKey] = Keyboard::KeyState::KEY_MAINTAINED;
+				keyboard->getStateMap()[keyboardKey] = Keyboard::eKeyState::KEY_MAINTAINED;
 				break;
 			case GLFW_RELEASE:
-				keyboard->getStateMap()[keyboardKey] = Keyboard::KeyState::KEY_RELEASED;
+                keyboard->getStateMap()[keyboardKey] = Keyboard::eKeyState::KEY_RELEASED;
 				break;
 		}
 	}

@@ -22,7 +22,7 @@ bool    PlayState::init()
     Entity *entity = em.createEntity();
     entity->addComponent<sPositionComponent>(9, 9, 3);
     entity->addComponent<sDirectionComponent>(0, 0);
-    entity->addComponent<sInputComponent>(Keyboard::Key::Q, Keyboard::Key::D, Keyboard::Key::Z, Keyboard::Key::S);
+    entity->addComponent<sInputComponent>(Keyboard::eKey::Q, Keyboard::eKey::D, Keyboard::eKey::Z, Keyboard::eKey::S);
     entity->addComponent<sRenderComponent>(eSpriteType::OBJECT, "ressources/sprites/taxi.png");
 
     _map.resize(3);

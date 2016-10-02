@@ -8,7 +8,7 @@ Engine::~Engine() {}
 bool    Engine::init()
 {
     _window = std::make_shared<GameWindow>();
-    if (_window->initialize())
+    if (!_window->initialize())
         return (false);
 
     GameWindow::setInstance(_window);
@@ -23,11 +23,12 @@ bool    Engine::run()
     double      timePerFrame;
 
     timePerFrame = 1.0f / 60.0f;
-    while (1)
+    while (_window->isRunning())
     {
         // Run one frame each 16ms
         if (timer.getElapsedTime() >= timePerFrame)
         {
+            _window->getKeyboard().resetReleasedKeys();
             _window->pollEvents();
             if (!_gameStateManager.hasStates())
             {

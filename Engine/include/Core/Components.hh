@@ -31,15 +31,15 @@ struct sPositionComponent: sComponent
 };
 
 struct sInputComponent: sComponent {
-    sInputComponent(Keyboard::Key moveLeft,
-                    Keyboard::Key moveRight,
-                    Keyboard::Key moveUp,
-                    Keyboard::Key moveDown): moveLeft(moveLeft), moveRight(moveRight), moveUp(moveUp), moveDown(moveDown) {}
+    sInputComponent(Keyboard::eKey moveLeft,
+                    Keyboard::eKey moveRight,
+                    Keyboard::eKey moveUp,
+                    Keyboard::eKey moveDown): moveLeft(moveLeft), moveRight(moveRight), moveUp(moveUp), moveDown(moveDown) {}
 
-    Keyboard::Key           moveLeft;
-    Keyboard::Key           moveRight;
-    Keyboard::Key           moveUp;
-    Keyboard::Key           moveDown;
+    Keyboard::eKey           moveLeft;
+    Keyboard::eKey           moveRight;
+    Keyboard::eKey           moveUp;
+    Keyboard::eKey           moveDown;
 };
 
 struct sDirectionComponent : sComponent
