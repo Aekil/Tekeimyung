@@ -5,7 +5,7 @@
 
 #include "Graphics/Texture.hpp"
 
-Texture::Texture(): _data(nullptr), _bpc(0) {}
+Texture::Texture(): _data(nullptr), _comp(0) {}
 
 Texture::~Texture()
 {
@@ -18,15 +18,12 @@ Texture::~Texture()
 
 void    Texture::loadFromFile (const std::string &fileName)
 {
-    _data = stbi_load(fileName.c_str(), &_width, &_height, &_bpc, 0);
+    // Load image data and force  components number
+    _data = stbi_load(fileName.c_str(), &_width, &_height, &_comp, 4);
 
     if (_data == nullptr)
     {
          throw EngineException("Failed to load ", fileName, ": ", stbi_failure_reason());
-    }
-    else if (_bpc != 4)
-    {
-        throw EngineException("NotImplemented: can't read textures with less than 4 bits components");
     }
 
     // Create one texture object
@@ -64,7 +61,7 @@ unsigned char*  Texture::getData() const
     return _data;
 }
 
-int     Texture::getBitsPerComponent() const
+int     Texture::getComponentsNumber() const
 {
-    return _bpc;
+    return _comp;
 }

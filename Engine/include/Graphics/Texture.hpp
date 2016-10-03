@@ -13,7 +13,7 @@ public:
     unsigned int                            getWidth() const;
     unsigned int                            getHeight() const;
     unsigned char*                          getData() const;
-    int                                     getBitsPerComponent() const;
+    int                                     getComponentsNumber() const;
 
 private:
     GLuint                                  _texture;
@@ -21,6 +21,6 @@ private:
     int                                     _height;
     unsigned char*                          _data;
 
-    // Bits per component
-    int                                     _bpc;
+    // Components number
+    int                                     _comp;
 };
