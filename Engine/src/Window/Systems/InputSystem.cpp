@@ -21,6 +21,7 @@ void    InputSystem::update(EntityManager &em, float elapsedTime)
         sDirectionComponent *direction = entity->getComponent<sDirectionComponent>();
 
         direction->x = 0;
+        input->keyPressed = false;
         direction->y = 0;
 
         if (keyboard.isPressed(input->moveLeft))
@@ -28,6 +29,8 @@ void    InputSystem::update(EntityManager &em, float elapsedTime)
             //std::cout << "LEFT is " << (keyboard[input->moveLeft] == Keyboard::eKeyState::KEY_MAINTAINED ? "maintained" : "pressed") << " !" << std::endl;
             direction->x += -1.0;
             direction->y += 1.0;
+            input->keyPressed = true;
+            direction->orientation = eOrientation::W;
         }
 
         if (keyboard.isPressed(input->moveRight))
@@ -35,6 +38,8 @@ void    InputSystem::update(EntityManager &em, float elapsedTime)
             //std::cout << "RIGHT is " << (keyboard[input->moveRight] == Keyboard::eKeyState::KEY_MAINTAINED ? "maintained" : "pressed") << " !" << std::endl;
             direction->x += 1.0;
             direction->y += -1.0;
+            input->keyPressed = true;
+            direction->orientation = eOrientation::E;
         }
 
         if (keyboard.isPressed(input->moveUp))
@@ -42,6 +47,8 @@ void    InputSystem::update(EntityManager &em, float elapsedTime)
             //std::cout << "UP is " << (keyboard[input->moveUp] == Keyboard::eKeyState::KEY_MAINTAINED ? "maintained" : "pressed") << " !" << std::endl;
             direction->x += -1.0;
             direction->y += -1.0;
+            input->keyPressed = true;
+            direction->orientation = eOrientation::N;
         }
 
         if (keyboard.isPressed(input->moveDown))
@@ -49,6 +56,8 @@ void    InputSystem::update(EntityManager &em, float elapsedTime)
             //std::cout << "DOWN is " << (keyboard[input->moveDown] == Keyboard::eKeyState::KEY_MAINTAINED ? "maintained" : "pressed") << " !" << std::endl;
             direction->x += 1.0;
             direction->y += 1.0;
+            input->keyPressed = true;
+            direction->orientation = eOrientation::S;
         }
 
         //if (mouse.isPressed(Mouse::eButton::MOUSE_BUTTON_1))

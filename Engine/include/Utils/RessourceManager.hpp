@@ -28,4 +28,4 @@ private:
 
     //Singleton instance
     static RessourceManager*                        _ressourceManager;
-};  
+};
