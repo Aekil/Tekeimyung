@@ -48,7 +48,13 @@ void    InputSystem::update(EntityManager &em, float elapsedTime)
             direction->x += -1.0;
             direction->y += -1.0;
             input->keyPressed = true;
-            direction->orientation = eOrientation::N;
+
+            if (keyboard.isPressed(input->moveLeft))
+                direction->orientation = eOrientation::NW;
+            else if (keyboard.isPressed(input->moveRight))
+                direction->orientation = eOrientation::NE;
+            else
+                direction->orientation = eOrientation::N;
         }
 
         if (keyboard.isPressed(input->moveDown))
@@ -57,7 +63,13 @@ void    InputSystem::update(EntityManager &em, float elapsedTime)
             direction->x += 1.0;
             direction->y += 1.0;
             input->keyPressed = true;
-            direction->orientation = eOrientation::S;
+
+            if (keyboard.isPressed(input->moveLeft))
+                direction->orientation = eOrientation::SW;
+            else if (keyboard.isPressed(input->moveRight))
+                direction->orientation = eOrientation::SE;
+            else
+                direction->orientation = eOrientation::S;
         }
 
         //if (mouse.isPressed(Mouse::eButton::MOUSE_BUTTON_1))
