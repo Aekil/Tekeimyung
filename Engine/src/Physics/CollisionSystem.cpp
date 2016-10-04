@@ -11,11 +11,13 @@ CollisionSystem::CollisionSystem()
 void    CollisionSystem::update(EntityManager &em, float elapsedTime)
 {
     this->forEachEntity(em, [&](Entity* entity) {
-        sDirectionComponent *direction = entity->getComponent<sDirectionComponent>();
-        sPositionComponent *position = entity->getComponent<sPositionComponent>();
+        sDirectionComponent* direction = entity->getComponent<sDirectionComponent>();
+        sPositionComponent* position = entity->getComponent<sPositionComponent>();
 
         this->forEachEntity(em, [&](Entity* entityB) {
-            if (entity->id != entityB->id && this->isColliding(entity, entityB)) {
+            sPositionComponent* positionB = entityB->getComponent<sPositionComponent>();
+            if (entity->id != entityB->id && position->z == positionB->z && this->isColliding(entity, entityB)) {
+                //TODO: Resolution of collisions
                 position->x += -direction->x * elapsedTime;
                 position->y += -direction->y * elapsedTime;
             }
@@ -26,17 +28,10 @@ void    CollisionSystem::update(EntityManager &em, float elapsedTime)
 bool    CollisionSystem::isColliding(Entity *firstEntity, Entity *secondEntity)
 {
     sHitBoxComponent* hitBoxFirst = firstEntity->getComponent<sHitBoxComponent>();
-    sPositionComponent* positionFirst = firstEntity->getComponent<sPositionComponent>();
     sHitBoxComponent* hitBoxSecond = secondEntity->getComponent<sHitBoxComponent>();
-    sPositionComponent* positionSecond = secondEntity->getComponent<sPositionComponent>();
 
-    hitBoxFirst->x += positionFirst->x;
-    hitBoxFirst->y += positionFirst->y;
-    hitBoxSecond->x += positionSecond->x;
-    hitBoxSecond->y += positionSecond->y;
+    if (hitBoxFirst->max.x < hitBoxSecond->min.x || hitBoxFirst->min.x > hitBoxSecond->max.x) return false;
+    if (hitBoxFirst->max.y < hitBoxSecond->min.y || hitBoxFirst->min.y > hitBoxSecond->max.y) return false;
 
-    return (hitBoxFirst->x < hitBoxSecond->x + hitBoxSecond->width &&
-        hitBoxFirst->x + hitBoxFirst->width > hitBoxSecond->x &&
-        hitBoxFirst->y < hitBoxSecond->y + hitBoxSecond->height &&
-        hitBoxFirst->y + hitBoxFirst->height > hitBoxSecond->y);
+    return true;
 }

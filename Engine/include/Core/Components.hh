@@ -61,10 +61,15 @@ struct sDirectionComponent : sComponent
 
 struct sHitBoxComponent : sComponent
 {
-    sHitBoxComponent(float x, float y, float width, float height) : x(x), y(y), width(width), height(height) {}
+    sHitBoxComponent(glm::vec2 min, glm::vec2 max) : min(min), max(max) {}
 
-    float x;
-    float y;
-    float width;
-    float height;
+    glm::vec2 min;
+    glm::vec2 max;
+};
+
+struct sGravityComponent : sComponent
+{
+    sGravityComponent(glm::vec2 value) : value(value) {}
+
+    glm::vec2 value;
 };

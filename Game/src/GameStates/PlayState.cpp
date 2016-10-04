@@ -2,6 +2,7 @@
 #include "Window/Systems/InputSystem.hpp"
 #include "Window/Keyboard.hpp"
 #include "Physics/MovementSystem.hpp"
+#include "Physics/GravitySystem.hpp"
 #include "Core/Components.hh"
 
 #include "GameStates/PlayState.hpp"
@@ -16,12 +17,14 @@ bool    PlayState::init()
     EntityManager &em = _world.getEntityManager();
 
     _world.addSystem<InputSystem>();
+    _world.addSystem<GravitySystem>();
     _world.addSystem<MovementSystem>();
     _world.addSystem<RenderingSystem>();
 
     Entity *entity = em.createEntity();
     entity->addComponent<sPositionComponent>(9, 9, 3);
     entity->addComponent<sDirectionComponent>(0, 0);
+    entity->addComponent<sGravityComponent>(glm::vec2(9.8, 9.8));
     entity->addComponent<sInputComponent>(Keyboard::eKey::Q, Keyboard::eKey::D, Keyboard::eKey::Z, Keyboard::eKey::S);
     entity->addComponent<sRenderComponent>(Sprite::eType::OBJECT, "ressources/sprites/soldierSpriteSheet.png", true, 8,
         std::vector<eOrientation>{eOrientation::NW, eOrientation::N, eOrientation::NE, eOrientation::E, eOrientation::W, eOrientation::SW, eOrientation::S, eOrientation::SE}, glm::vec2(55, 64.9));
