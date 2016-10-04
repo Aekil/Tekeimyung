@@ -2,7 +2,6 @@
 
 #include <string>
 #include <unordered_map>
-#include "EngineException.hpp"
 #include "Graphics/Texture.hpp"
 
 class RessourceManager

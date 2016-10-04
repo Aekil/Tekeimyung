@@ -1,6 +1,6 @@
 
 #include "Core/GameState.hpp"
-#include "Utils/EngineException.hpp"
+#include "Utils/Exception.hpp"
 
 GameState::GameState() {}
 
@@ -28,7 +28,7 @@ bool    GameState::update(float elapsedTime)
             system->update(_world.getEntityManager(), elapsedTime);
         }
     }
-    catch(const EngineException &e)
+    catch(const Exception &e)
     {
         std::cerr << e.what() << std::endl;
         return (false);

@@ -1,6 +1,6 @@
 #define STB_IMAGE_IMPLEMENTATION
 
-#include "Utils/EngineException.hpp"
+#include "Utils/Exception.hpp"
 #include "stb_image/stb_image.h"
 
 #include "Graphics/Texture.hpp"
@@ -23,7 +23,7 @@ void    Texture::loadFromFile (const std::string &fileName)
 
     if (_data == nullptr)
     {
-         throw EngineException("Failed to load ", fileName, ": ", stbi_failure_reason());
+         EXCEPT(FileNotFoundException, "Failed to load file");
     }
 
     // Create one texture object

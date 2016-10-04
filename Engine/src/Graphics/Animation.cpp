@@ -1,4 +1,4 @@
-#include "Utils/EngineException.hpp"
+#include "Utils/Exception.hpp"
 #include "Graphics/Animation.hpp"
 
 Animation::Animation(): _framesNb(0), _currentFrame(0), _spriteSheet(nullptr) {}
@@ -16,7 +16,7 @@ void    Animation::addFrame(const glm::vec2& offset)
 
     if (!_spriteSheet)
     {
-        throw EngineException("Attempt to add a frame without sprite sheet");
+        EXCEPT(InternalErrorException, "Attempt to add a frame without sprite sheet");
     }
 
     spriteSheetSize = _spriteSheet->getWidth() *  _spriteSheet->getHeight();
@@ -24,7 +24,7 @@ void    Animation::addFrame(const glm::vec2& offset)
     if (offset.x > spriteSheetSize ||
         offset.y > spriteSheetSize)
     {
-        throw EngineException("Attempt to add a frame outside the sprite sheet range");
+        EXCEPT(InternalErrorException, "Attempt to add a frame outside the sprite sheet range");
     }
 
     _frames.push_back(offset);

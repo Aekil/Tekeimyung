@@ -1,7 +1,7 @@
 #include <GL/glew.h>
 #include "Graphics/ShaderProgram.hpp"
 #include "Utils/RessourceManager.hpp"
-#include "Utils/EngineException.hpp"
+#include "Utils/Exception.hpp"
 
 ShaderProgram::ShaderProgram()
 {
@@ -36,11 +36,11 @@ void    ShaderProgram::attachShader(GLenum shaderType, const std::string& fileNa
     GLchar infoLog[512];
     glGetShaderiv(_shaders[shaderType], GL_COMPILE_STATUS, &success);
 
-    // If compilation did not succeed, get the error message and throw an Exception 
+    // If compilation did not succeed, get the error message and throw an Exception
     if (!success)
     {
         glGetShaderInfoLog(_shaders[shaderType], 512, NULL, infoLog);
-        throw EngineException("Failed to compile ", shaderNameFromType(shaderType), " shader: ", infoLog);
+        EXCEPT(RendererAPIException, "Failed to compile shaders");
     }
 
     // Attach shaders to shader program
@@ -63,11 +63,11 @@ void    ShaderProgram::checkProgramError() const
     // Check errors on program
     glGetProgramiv(_shaderProgram, GL_LINK_STATUS, &success);
 
-    // If compilation did not succeed, get the error message and throw an Exception 
+    // If compilation did not succeed, get the error message and throw an Exception
     if(!success)
     {
         glGetProgramInfoLog(_shaderProgram, 512, NULL, infoLog);
-        throw EngineException("Failed to attach shaders to shader program: ", infoLog);
+        EXCEPT(RendererAPIException, "Failed to attach shaders to shader program");
     }
 }
 
@@ -84,7 +84,7 @@ std::string     ShaderProgram::shaderNameFromType(GLenum shaderType) const
     {
         return shaderTypes.at(shaderType);
     }
-    catch(...) 
+    catch(...)
     {
         return "";
     }

@@ -1,6 +1,7 @@
 #include <fstream>
 #include <vector>
 #include "Utils/RessourceManager.hpp"
+#include "Utils/Exception.hpp"
 
 RessourceManager*   RessourceManager::_ressourceManager = nullptr;
 
@@ -57,7 +58,7 @@ std::string RessourceManager::loadFile(const std::string basename, const std::st
 
     file.open(fileName.c_str());
     if (!file.good())
-        throw EngineException("Failed to open file " + fileName);
+        EXCEPT(FileNotFoundException, "Failed to open file ");
 
     file.seekg(0, file.end);
     fileSize = file.tellg();

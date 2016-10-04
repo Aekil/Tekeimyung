@@ -4,7 +4,7 @@
 #include <vector>
 #include "Graphics/Systems/RenderingSystem.hpp"
 #include "Window/GameWindow.hpp"
-#include "Utils/EngineException.hpp"
+#include "Utils/Exception.hpp"
 
 RenderingSystem::RenderingSystem()
 {
@@ -29,7 +29,7 @@ bool    RenderingSystem::init()
         _shaderProgram.link();
         _shaderProgram.use();
     }
-    catch(const EngineException& e)
+    catch(const Exception& e)
     {
         std::cerr << e.what() << std::endl;
         return (false);
