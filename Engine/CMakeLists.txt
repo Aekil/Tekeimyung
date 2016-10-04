@@ -6,6 +6,7 @@ project(${EXECUTABLE_NAME})
 # All source files using glob
 file(GLOB_RECURSE source_files src/*)
 file(GLOB_RECURSE include_files include/*)
+file(GLOB_RECURSE imgui_source_files ${CMAKE_SOURCE_DIR}/external/imgui/*.cpp*)
 
 # add ECS includes with ECS_INCLUDE_DIRS
 include_directories(${ECS_INCLUDE_DIRS})
@@ -30,10 +31,11 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include ${GLFW_INCLUDE_DIR} ${GL
 # Add external includes
 include_directories(${CMAKE_SOURCE_DIR}/external/glm/)
 include_directories(${CMAKE_SOURCE_DIR}/external/stb_image/)
+include_directories(${CMAKE_SOURCE_DIR}/external/imgui/)
 
 
 # Create executable
-add_library(${EXECUTABLE_NAME} STATIC ${source_files} ${include_files})
+add_library(${EXECUTABLE_NAME} STATIC ${source_files} ${imgui_source_files} ${include_files})
 
 
 # Link libraries with executable
