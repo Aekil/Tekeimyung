@@ -55,28 +55,5 @@ bool    PlayState::init()
         }
     }
 
-    // Sort entities with their depth value
-    em.sortEntities([](Entity *first, Entity *second) {
-        unsigned int depthFirst = 0;
-        unsigned int depthSecond = 0;
-        sPositionComponent *positionFirst = first->getComponent<sPositionComponent>();
-        sPositionComponent *positionSecond = second->getComponent<sPositionComponent>();
-
-        if (positionFirst)
-        {
-            depthFirst = positionFirst->x + positionFirst->y + positionFirst->z;
-        }
-        if (positionSecond)
-        {
-            depthSecond = positionSecond->x + positionSecond->y + positionSecond->z;
-        }
-
-        return depthFirst < depthSecond;
-    });
-
-
-
-
-
     return (true);
 }
