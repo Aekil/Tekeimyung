@@ -61,13 +61,13 @@ void    Sprite::loadFromTexture(const std::string& textureFile, bool animated,  
    _buffer.updateData(vertices, 4, indices, 6);
 }
 
-void Sprite::update(float x, float y, float z, bool keyPressed, eOrientation orientation)
+void Sprite::update(glm::vec2 position, float z, bool keyPressed, eOrientation orientation)
 {
     float offsetX = GameWindow::getInstance()->getWidth() / 2.0f - 66.0f;
     float offsetY = GameWindow::getInstance()->getHeight() - (33.0f * 3.0f);
 
-    _pos.x = offsetX + (x - y) * 66.0f;
-    _pos.y = offsetY - (x + y) * 33.0f + (32.0f * z);
+    _pos.x = offsetX + (position.x - position.y) * 66.0f;
+    _pos.y = offsetY - (position.x + position.y) * 33.0f + (32.0f * z);
     _pos.z = z;
     _currentOrientation = orientation;
 

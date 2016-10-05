@@ -23,7 +23,7 @@ public:
     ~Sprite();
 
     void                                            loadFromTexture(const std::string& textureFile, bool animated,  uint32_t nbFrames, const std::vector<eOrientation>& orientations, const glm::vec2& spriteSize);
-    void                                            update(float x, float y, float z, bool keyPressed, eOrientation orientation);
+    void                                            update(glm::vec2 position, float z, bool keyPressed, eOrientation orientation);
     void                                            draw();
     const glm::vec3&                                getPos() const;
 

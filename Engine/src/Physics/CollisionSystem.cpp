@@ -18,8 +18,8 @@ void    CollisionSystem::update(EntityManager &em, float elapsedTime)
             sPositionComponent* positionB = entityB->getComponent<sPositionComponent>();
             if (entity->id != entityB->id && position->z == positionB->z && this->isColliding(entity, entityB)) {
                 //TODO: Resolution of collisions
-                position->x += -direction->x * elapsedTime;
-                position->y += -direction->y * elapsedTime;
+
+                position->value += -direction->value * elapsedTime;
             }
         });
     });

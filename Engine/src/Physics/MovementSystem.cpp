@@ -13,7 +13,6 @@ void    MovementSystem::update(EntityManager &em, float elapsedTime)
         sDirectionComponent *direction = entity->getComponent<sDirectionComponent>();
         sPositionComponent *position = entity->getComponent<sPositionComponent>();
 
-        position->x += direction->x * elapsedTime;
-        position->y += direction->y * elapsedTime;
+        position->value += direction->value * elapsedTime;
     });
 }
