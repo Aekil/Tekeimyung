@@ -73,3 +73,19 @@ struct sGravityComponent : sComponent
 
     glm::vec2 value;
 };
+
+enum class eEntityType
+{
+    CHARACTER = 0,
+    OBJECT = 1,
+    TILE = 2,
+    TILE_STAIRS_UP = 3,
+    TILE_STAIRS_DOWN = 4
+};
+
+struct sTypeComponent: sComponent
+{
+    sTypeComponent(eEntityType type): type(type) {}
+
+    eEntityType type;
+};

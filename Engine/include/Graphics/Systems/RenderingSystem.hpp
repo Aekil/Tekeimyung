@@ -5,11 +5,12 @@
 #include "Graphics/Sprite.hpp"
 #include "System.hpp"
 #include "Core/Components.hh"
+#include "Core/Map.hpp"
 
 class RenderingSystem: public System
 {
 public:
-    RenderingSystem();
+    RenderingSystem(Map* map);
     virtual ~RenderingSystem();
 
     virtual void update(EntityManager& em, float elapsedTime);
@@ -24,4 +25,6 @@ private:
 
     // Render System entities
     std::unordered_map<int, Sprite*>        _renderEntities;
+
+    Map*                                    _map;
 };
