@@ -8,13 +8,16 @@
 
 Map::SquareReference::SquareReference(Map *map, uint16_t layerIdx, uint32_t lineIdx, uint32_t squareIdx): _map(map), _layerIdx(layerIdx), _lineIdx(lineIdx), _squareIdx(squareIdx) {}
 
-Map::Square&    Map::SquareReference::operator=(uint32_t id) const
+Map::Square&    Map::SquareReference::operator=(uint32_t id)
 {
+    //TODO: Add assert to verify that layerIdx, lineIdx and squareIdx are not out of range
+
     _map->_map[_layerIdx][_lineIdx][_squareIdx] = id;
+    (*_map->_collisionMap)[_layerIdx][_lineIdx][_squareIdx] = eColType::DIRTY;
     return get();
 }
 
-Map::Square&    Map::SquareReference::get() const
+Map::Square&    Map::SquareReference::get()
 {
     return _map->_map[_layerIdx][_lineIdx][_squareIdx];
 }
@@ -105,4 +108,11 @@ uint16_t    Map::getLayersNb() const
 CollisionMap*   Map::getCollisionMap() const
 {
     return (_collisionMap);
+}
+
+bool    Map::isValidPosition(glm::ivec3& pos) const
+{
+    return (pos.x >= 0 && pos.x < (int)getWidth() &&
+        pos.y >= 0 && pos.y < (int)getHeight() &&
+        pos.z >= 0 && pos.z < (int)getLayersNb());
 }

@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <cstddef>
+#include <glm/vec3.hpp>
 #include "Core/CollisionMap.hpp"
 #include "EntityManager.hpp"
 
@@ -21,8 +22,8 @@ using Layer = Square**;
     public:
         SquareReference(Map *map, uint16_t layerIdx, uint32_t lineIdx, uint32_t squareIdx);
 
-        Square&             operator=(uint32_t id) const;
-        Square&             get() const;
+        Square&             operator=(uint32_t id);
+        Square&             get();
 
     private:
         Map*                _map;
@@ -82,6 +83,7 @@ public:
     uint32_t                getHeight() const;
     uint16_t                getLayersNb() const;
     CollisionMap*           getCollisionMap() const;
+    bool                    isValidPosition(glm::ivec3& pos) const;
 
 private:
     Layer*                  _map;

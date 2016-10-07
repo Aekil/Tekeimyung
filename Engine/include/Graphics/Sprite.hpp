@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <string>
 #include <glm/vec3.hpp>
+#include <glm/vec2.hpp>
 #include "Graphics/Texture.hpp"
 #include "Graphics/Animation.hpp"
 #include "Graphics/Buffer.hpp"
@@ -38,6 +39,8 @@ private:
 
     // Sprite position
     glm::vec3                                       _pos;
+    // Sprite spriteSize
+    glm::vec2                                       _spriteSize;
 
     // Sprite type
     eType                                           _type;

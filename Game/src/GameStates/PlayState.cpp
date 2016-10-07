@@ -19,7 +19,7 @@ bool    PlayState::init()
     Entity* tile;
 
     player = em.createEntity();
-    player->addComponent<sPositionComponent>(9, 9, 3);
+    player->addComponent<sPositionComponent>(9, 9, 1);
     player->addComponent<sDirectionComponent>(0, 0);
     player->addComponent<sGravityComponent>(glm::vec2(9.8, 9.8));
     player->addComponent<sInputComponent>(Keyboard::eKey::Q, Keyboard::eKey::D, Keyboard::eKey::Z, Keyboard::eKey::S);
@@ -62,7 +62,7 @@ bool    PlayState::init()
 
     _world.addSystem<InputSystem>();
     _world.addSystem<GravitySystem>();
-    _world.addSystem<MovementSystem>();
+    _world.addSystem<MovementSystem>(_map);
     _world.addSystem<RenderingSystem>(_map);
 
     return (true);
