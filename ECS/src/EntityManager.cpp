@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <random>
 
-int                         EntityManager::_entityId = 0;
+int                         EntityManager::_entityId = 1;
 
 
 EntityManager::EntityManager() {}
@@ -36,5 +36,7 @@ std::unordered_map<uint32_t, Entity*>& EntityManager::getEntities()
 
 Entity* EntityManager::getEntity(uint32_t id) const
 {
-    return _entities.at(id);
+    auto &&it = _entities.find(id);
+
+    return (it != _entities.end() ? it->second : nullptr);
 }
