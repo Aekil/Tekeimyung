@@ -3,6 +3,7 @@
 #include "Window/Keyboard.hpp"
 #include "Physics/MovementSystem.hpp"
 #include "Physics/GravitySystem.hpp"
+#include "Physics/CollisionSystem.hpp"
 #include "Core/Components.hh"
 
 #include "GameStates/PlayState.hpp"
@@ -36,7 +37,7 @@ bool    PlayState::init()
             tile->addComponent<sPositionComponent>(x, y, 0);
             tile->addComponent<sRenderComponent>(Sprite::eType::TILE, "ressources/sprites/Landscape/landscape_13.png");
             tile->addComponent<sTypeComponent>(eEntityType::TILE);
-            (*_map)[0][y][x] = tile->id;
+            (*_map)[0][y][x].set(Map::eObjType::STATIC, tile->id);
         }
     }
     for (int y = 0; y < 4; y++) {
@@ -45,7 +46,7 @@ bool    PlayState::init()
             tile->addComponent<sPositionComponent>(x, y, 2);
             tile->addComponent<sRenderComponent>(Sprite::eType::TILE, "ressources/sprites/Landscape/landscape_30.png");
             tile->addComponent<sTypeComponent>(eEntityType::TILE);
-            (*_map)[2][y][x] = tile->id;
+            (*_map)[2][y][x].set(Map::eObjType::STATIC, tile->id);
         }
     }
    for (int y = 0; y < 7; y++) {
@@ -54,15 +55,16 @@ bool    PlayState::init()
             tile->addComponent<sPositionComponent>(x, y, 1);
             tile->addComponent<sRenderComponent>(Sprite::eType::TILE, "ressources/sprites/Landscape/landscape_33.png");
             tile->addComponent<sTypeComponent>(eEntityType::TILE);
-            (*_map)[1][y][x] = tile->id;
+            (*_map)[1][y][x].set(Map::eObjType::STATIC, tile->id);
         }
     }
 
-    (*_map)[1][9][9] = player->id;
+    (*_map)[1][9][9].set(Map::eObjType::DYNAMIC, player->id);
 
     _world.addSystem<InputSystem>();
     _world.addSystem<GravitySystem>();
     _world.addSystem<MovementSystem>(_map);
+    _world.addSystem<CollisionSystem>(_map);
     _world.addSystem<RenderingSystem>(_map);
 
     return (true);

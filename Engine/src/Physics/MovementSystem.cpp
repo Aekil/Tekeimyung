@@ -23,8 +23,8 @@ void    MovementSystem::update(EntityManager &em, float elapsedTime)
         if (_map->isValidPosition(newPosition) && (newPosition.x != oldPosition.x || newPosition.y != oldPosition.y))
         {
             std::cout << "X: " << newPosition.x << " Y: " << newPosition.y << "  Z: " << oldPosition.z << std::endl;
-            (*_map)[oldPosition.z][oldPosition.y][oldPosition.x] = 0;
-            (*_map)[newPosition.z][newPosition.y][newPosition.x] = entity->id;
+            (*_map)[oldPosition.z][oldPosition.y][oldPosition.x].set(Map::eObjType::DYNAMIC, 0);
+            (*_map)[newPosition.z][newPosition.y][newPosition.x].set(Map::eObjType::DYNAMIC, entity->id);
         }
     });
 }

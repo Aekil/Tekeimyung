@@ -8,18 +8,38 @@
 
 Map::SquareReference::SquareReference(Map *map, uint16_t layerIdx, uint32_t lineIdx, uint32_t squareIdx): _map(map), _layerIdx(layerIdx), _lineIdx(lineIdx), _squareIdx(squareIdx) {}
 
-Map::Square&    Map::SquareReference::operator=(uint32_t id)
+void    Map::SquareReference::set(eObjType type, uint32_t id)
 {
     //TODO: Add assert to verify that layerIdx, lineIdx and squareIdx are not out of range
 
-    _map->_map[_layerIdx][_lineIdx][_squareIdx] = id;
+    switch(type)
+    {
+        case eObjType::STATIC:
+            _map->_map[_layerIdx][_lineIdx][_squareIdx].static_ = id;
+            break;
+        case eObjType::DYNAMIC:
+            _map->_map[_layerIdx][_lineIdx][_squareIdx].dynamic_ = id;
+            break;
+        default:
+            // TODO: throw Assert
+            break;
+    }
+
     (*_map->_collisionMap)[_layerIdx][_lineIdx][_squareIdx] = eColType::DIRTY;
-    return get();
 }
 
-Map::Square&    Map::SquareReference::get()
+uint32_t&    Map::SquareReference::get(eObjType type)
 {
-    return _map->_map[_layerIdx][_lineIdx][_squareIdx];
+    switch(type)
+    {
+        case eObjType::STATIC:
+            return _map->_map[_layerIdx][_lineIdx][_squareIdx].static_;
+        case eObjType::DYNAMIC:
+            return _map->_map[_layerIdx][_lineIdx][_squareIdx].dynamic_;
+        default:
+            // TODO: throw Assert
+            return _map->_map[_layerIdx][_lineIdx][_squareIdx].static_;
+    }
 }
 
 

@@ -41,6 +41,25 @@ bool    RenderingSystem::init()
     return (true);
 }
 
+void    RenderingSystem::drawSquare(EntityManager& em, uint16_t layer, uint32_t x, uint32_t y, Map::eObjType type)
+{
+    Entity* entity = em.getEntity((*_map)[layer][y][x].get(type));
+
+    if (!entity)
+        return;
+
+    Sprite* sprite = getSprite(entity);
+
+    // Model matrice
+    glm::mat4 trans;
+    trans = glm::translate(trans, glm::vec3(sprite->getPos().x, sprite->getPos().y, 0.0f));
+    GLint uniTrans = _shaderProgram.getUniformLocation("trans");
+    glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(trans));
+
+    // Draw sprite
+    sprite->draw();
+}
+
 void    RenderingSystem::update(EntityManager& em, float elapsedTime)
 {
     // Clear color buffer
@@ -53,27 +72,13 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
         {
             for (uint32_t x = 0; x < _map->getWidth(); x++)
             {
-                Entity* entity = em.getEntity((*_map)[layer][y][x].get());
-
-                if (!entity)
-                    continue;
-
-                Sprite* sprite = getSprite(entity);
-                sPositionComponent *position = entity->getComponent<sPositionComponent>();
-
                 // Orthogonal projection matrice
                 glm::mat4 ortho = glm::ortho(0.0f, (float)GameWindow::getInstance()->getWidth(), 0.0f, (float)GameWindow::getInstance()->getHeight());
                 GLint uniProj = _shaderProgram.getUniformLocation("proj");
                 glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(ortho));
 
-                // Model matrice
-                glm::mat4 trans;
-                trans = glm::translate(trans, glm::vec3(sprite->getPos().x, sprite->getPos().y, 0.0f));
-                GLint uniTrans = _shaderProgram.getUniformLocation("trans");
-                glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(trans));
-
-                // Draw sprite
-                sprite->draw();
+                drawSquare(em, layer, x, y, Map::eObjType::STATIC);
+                drawSquare(em, layer, x, y, Map::eObjType::DYNAMIC);
             }
         }
     }

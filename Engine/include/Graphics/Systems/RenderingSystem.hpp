@@ -15,6 +15,7 @@ public:
 
     virtual void update(EntityManager& em, float elapsedTime);
     virtual bool                            init();
+    void                                    drawSquare(EntityManager& em, uint16_t layer, uint32_t x, uint32_t y, Map::eObjType pos);
 
 private:
     Sprite*                                 getSprite(Entity* entity);

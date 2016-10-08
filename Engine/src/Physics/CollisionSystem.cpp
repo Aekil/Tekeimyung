@@ -1,7 +1,7 @@
 #include "Physics/CollisionSystem.hpp"
 #include "Core/Components.hh"
 
-CollisionSystem::CollisionSystem()
+CollisionSystem::CollisionSystem(Map* map): _map(map)
 {
     this->addDependency<sHitBoxComponent>();
     this->addDependency<sPositionComponent>();

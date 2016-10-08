@@ -13,7 +13,7 @@ CollisionMap::Square&   CollisionMap::LineReference::operator[](unsigned int idx
     // Collision square need update
     if (_map->_collisionMap[_layerIdx][_lineIdx][idx] == eColType::DIRTY)
     {
-        Entity* entity = _map->_em.getEntity((*_map->_map)[_layerIdx][_lineIdx][idx].get());
+        Entity* entity = _map->_em.getEntity((*_map->_map)[_layerIdx][_lineIdx][idx].get(Map::eObjType::STATIC));
         sTypeComponent* entityType = entity ? entity->getComponent<sTypeComponent>() : nullptr;
 
         if (entityType)

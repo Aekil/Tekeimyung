@@ -10,10 +10,20 @@ class CollisionMap;
 
 class Map
 {
-using Square = uint32_t;
+using Square = struct {
+    uint32_t static_;
+    uint32_t dynamic_;
+};
 using Layer = Square**;
 
+public:
+    enum class eObjType
+    {
+        STATIC,
+        DYNAMIC
+    };
 
+private:
     /*
     ** SquareReference
     */
@@ -22,8 +32,8 @@ using Layer = Square**;
     public:
         SquareReference(Map *map, uint16_t layerIdx, uint32_t lineIdx, uint32_t squareIdx);
 
-        Square&             operator=(uint32_t id);
-        Square&             get();
+        void                set(eObjType pos, uint32_t id);
+        uint32_t&           get(eObjType pos);
 
     private:
         Map*                _map;
