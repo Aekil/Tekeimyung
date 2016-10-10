@@ -20,9 +20,9 @@ bool    PlayState::init()
     Entity* tile;
 
     player = em.createEntity();
-    player->addComponent<sPositionComponent>(9, 9, 1);
-    player->addComponent<sDirectionComponent>(0, 0);
-    player->addComponent<sGravityComponent>(glm::vec2(9.8, 9.8));
+    player->addComponent<sPositionComponent>(glm::vec2(9, 9), 1);
+    player->addComponent<sDirectionComponent>(glm::vec2(0, 0));
+    //player->addComponent<sGravityComponent>(glm::vec2(9.8, 9.8));
     player->addComponent<sInputComponent>(Keyboard::eKey::Q, Keyboard::eKey::D, Keyboard::eKey::Z, Keyboard::eKey::S);
     player->addComponent<sRenderComponent>(Sprite::eType::OBJECT, "ressources/sprites/soldierSpriteSheet.png", true, 8,
         std::vector<eOrientation>{eOrientation::NW, eOrientation::N, eOrientation::NE, eOrientation::E, eOrientation::W, eOrientation::SW, eOrientation::S, eOrientation::SE}, glm::vec2(55, 64.9));
@@ -34,7 +34,7 @@ bool    PlayState::init()
     for (int y = 0; y < 10; y++) {
         for (int x = 0; x < 10; x++) {
             tile = em.createEntity();
-            tile->addComponent<sPositionComponent>(x, y, 0);
+            tile->addComponent<sPositionComponent>(glm::vec2(x, y), 0);
             tile->addComponent<sRenderComponent>(Sprite::eType::TILE, "ressources/sprites/Landscape/landscape_13.png");
             tile->addComponent<sTypeComponent>(eEntityType::TILE);
             (*_map)[0][y][x].set(Map::eObjType::STATIC, tile->id);
@@ -43,7 +43,7 @@ bool    PlayState::init()
     for (int y = 0; y < 4; y++) {
         for (int x = 0; x < 4; x++) {
             tile = em.createEntity();
-            tile->addComponent<sPositionComponent>(x, y, 2);
+            tile->addComponent<sPositionComponent>(glm::vec2(x, y), 2);
             tile->addComponent<sRenderComponent>(Sprite::eType::TILE, "ressources/sprites/Landscape/landscape_30.png");
             tile->addComponent<sTypeComponent>(eEntityType::TILE);
             (*_map)[2][y][x].set(Map::eObjType::STATIC, tile->id);
@@ -52,7 +52,7 @@ bool    PlayState::init()
    for (int y = 0; y < 7; y++) {
         for (int x = 0; x < 7; x++) {
             tile = em.createEntity();
-            tile->addComponent<sPositionComponent>(x, y, 1);
+            tile->addComponent<sPositionComponent>(glm::vec2(x, y), 1);
             tile->addComponent<sRenderComponent>(Sprite::eType::TILE, "ressources/sprites/Landscape/landscape_33.png");
             tile->addComponent<sTypeComponent>(eEntityType::TILE);
             (*_map)[1][y][x].set(Map::eObjType::STATIC, tile->id);
@@ -62,7 +62,7 @@ bool    PlayState::init()
     (*_map)[1][9][9].set(Map::eObjType::DYNAMIC, player->id);
 
     _world.addSystem<InputSystem>();
-    _world.addSystem<GravitySystem>();
+    //_world.addSystem<GravitySystem>();
     _world.addSystem<MovementSystem>(_map);
     _world.addSystem<CollisionSystem>(_map);
     _world.addSystem<RenderingSystem>(_map);

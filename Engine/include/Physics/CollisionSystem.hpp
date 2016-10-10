@@ -12,6 +12,7 @@ public:
 
 private:
     bool            isColliding(Entity *firstEntity, Entity *secondEntity);
+    void            moveHitBox(Entity *entity);
 
 private:
     Map*            _map;
