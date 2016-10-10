@@ -8,40 +8,16 @@
 
 Map::SquareReference::SquareReference(Map *map, uint16_t layerIdx, uint32_t lineIdx, uint32_t squareIdx): _map(map), _layerIdx(layerIdx), _lineIdx(lineIdx), _squareIdx(squareIdx) {}
 
-void    Map::SquareReference::set(eObjType type, uint32_t id)
+Map::Square& Map::SquareReference::operator=(uint32_t id)
 {
-    //TODO: Add assert to verify that layerIdx, lineIdx and squareIdx are not out of range
-
-    switch(type)
-    {
-        case eObjType::STATIC:
-            _map->_map[_layerIdx][_lineIdx][_squareIdx].static_ = id;
-            break;
-        case eObjType::DYNAMIC:
-            _map->_map[_layerIdx][_lineIdx][_squareIdx].dynamic_ = id;
-            break;
-        default:
-            // TODO: throw Assert
-            break;
-    }
-
-    (*_map->_collisionMap)[_layerIdx][_lineIdx][_squareIdx] = eColType::DIRTY;
+    _map->_map[_layerIdx][_lineIdx][_squareIdx] = id;
+    return get();
 }
 
-uint32_t&    Map::SquareReference::get(eObjType type)
+Map::Square&    Map::SquareReference::get()
 {
-    switch(type)
-    {
-        case eObjType::STATIC:
-            return _map->_map[_layerIdx][_lineIdx][_squareIdx].static_;
-        case eObjType::DYNAMIC:
-            return _map->_map[_layerIdx][_lineIdx][_squareIdx].dynamic_;
-        default:
-            // TODO: throw Assert
-            return _map->_map[_layerIdx][_lineIdx][_squareIdx].static_;
-    }
+    return _map->_map[_layerIdx][_lineIdx][_squareIdx];
 }
-
 
 
 /*
@@ -55,8 +31,6 @@ Map::SquareReference    Map::LineReference::operator[](unsigned int idx)
     return SquareReference(_map, _layerIdx, _lineIdx, idx);
 }
 
-
-
 /*
 ** LayerReference
 */
@@ -68,7 +42,36 @@ Map::LineReference  Map::LayerReference::operator[](unsigned int idx)
     return LineReference(_map, _layerIdx, idx);
 }
 
+void    Map::LayerReference::addEntity(uint32_t entity)
+{
+    _map->_entities[_layerIdx].push_back(entity);
+}
 
+void    Map::LayerReference::orderEntities(EntityManager& em)
+{
+    _map->_entities[_layerIdx].sort([&](uint32_t a, uint32_t b) {
+        Entity* entityA = em.getEntity(a);
+        Entity* entityB = em.getEntity(b);
+        sPositionComponent* positionA;
+        sPositionComponent* positionB;
+
+        if (!entityA || !entityB)
+        {
+            // TODO: Assert
+            return false;
+        }
+
+        positionA = entityA->getComponent<sPositionComponent>();
+        positionB = entityB->getComponent<sPositionComponent>();
+
+        return (positionA->value.x + positionA->value.y < positionB->value.x + positionB->value.y);
+    });
+}
+
+std::list<uint32_t>& Map::LayerReference::getEntities()
+{
+    return _map->_entities[_layerIdx];
+}
 
 /*
 ** Map

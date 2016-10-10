@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <cstddef>
+#include <unordered_map>
 #include <glm/vec3.hpp>
 #include "Core/CollisionMap.hpp"
 #include "EntityManager.hpp"
@@ -10,18 +11,8 @@ class CollisionMap;
 
 class Map
 {
-using Square = struct {
-    uint32_t static_;
-    uint32_t dynamic_;
-};
+using Square = uint32_t;
 using Layer = Square**;
-
-public:
-    enum class eObjType
-    {
-        STATIC,
-        DYNAMIC
-    };
 
 private:
     /*
@@ -32,8 +23,8 @@ private:
     public:
         SquareReference(Map *map, uint16_t layerIdx, uint32_t lineIdx, uint32_t squareIdx);
 
-        void                set(eObjType pos, uint32_t id);
-        uint32_t&           get(eObjType pos);
+        Square&             operator=(uint32_t id);
+        Square&             get();
 
     private:
         Map*                _map;
@@ -67,11 +58,14 @@ private:
     public:
         LayerReference(Map *map, unsigned int idx);
 
-        LineReference       operator[](unsigned int idx);
+        LineReference           operator[](unsigned int idx);
+        void                    addEntity(uint32_t entity);
+        void                    orderEntities(EntityManager& em);
+        std::list<uint32_t>&    getEntities();
 
     private:
-        uint16_t            _layerIdx;
-        Map*                _map;
+        uint16_t                _layerIdx;
+        Map*                    _map;
     };
 
 
@@ -103,4 +97,10 @@ private:
     uint32_t                _layersNb;
     uint32_t                _width;
     uint32_t                _height;
+
+
+    // Store all dynamic entities
+    // The map arrays contains only static entities (tiles)
+    // Store as map<layer, entities*>
+    std::unordered_map<uint16_t, std::list<uint32_t> > _entities;
 };
