@@ -3,6 +3,7 @@
 #include "Window/Keyboard.hpp"
 #include "Physics/MovementSystem.hpp"
 #include "Physics/GravitySystem.hpp"
+#include "Physics/CollisionSystem.hpp"
 #include "Core/Components.hh"
 
 #include "GameStates/PlayState.hpp"
@@ -15,68 +16,56 @@ PlayState::~PlayState() {}
 bool    PlayState::init()
 {
     EntityManager &em = _world.getEntityManager();
+    Entity* player;
+    Entity* tile;
 
-    _world.addSystem<InputSystem>();
-    //_world.addSystem<GravitySystem>();
-    _world.addSystem<MovementSystem>();
-    _world.addSystem<RenderingSystem>();
-
-    Entity *entity = em.createEntity();
-    entity->addComponent<sPositionComponent>(glm::vec2(9, 9), 3);
-    entity->addComponent<sDirectionComponent>(glm::vec2(0, 0));
-    //entity->addComponent<sGravityComponent>(glm::vec2(9.8, 9.8));
-    entity->addComponent<sInputComponent>(Keyboard::eKey::Q, Keyboard::eKey::D, Keyboard::eKey::Z, Keyboard::eKey::S);
-    entity->addComponent<sRenderComponent>(Sprite::eType::OBJECT, "ressources/sprites/soldierSpriteSheet.png", true, 8,
+    player = em.createEntity();
+    player->addComponent<sPositionComponent>(9, 9, 1);
+    player->addComponent<sDirectionComponent>(0, 0);
+    player->addComponent<sGravityComponent>(glm::vec2(9.8, 9.8));
+    player->addComponent<sInputComponent>(Keyboard::eKey::Q, Keyboard::eKey::D, Keyboard::eKey::Z, Keyboard::eKey::S);
+    player->addComponent<sRenderComponent>(Sprite::eType::OBJECT, "ressources/sprites/soldierSpriteSheet.png", true, 8,
         std::vector<eOrientation>{eOrientation::NW, eOrientation::N, eOrientation::NE, eOrientation::E, eOrientation::W, eOrientation::SW, eOrientation::S, eOrientation::SE}, glm::vec2(55, 64.9));
+    player->addComponent<sTypeComponent>(eEntityType::CHARACTER);
 
-    _map.resize(3);
+
+    _map = new Map(em, 10, 10, 3);
+
     for (int y = 0; y < 10; y++) {
         for (int x = 0; x < 10; x++) {
-            entity = em.createEntity();
-            entity->addComponent<sPositionComponent>(glm::vec2(x, y), 0);
-            entity->addComponent<sRenderComponent>(Sprite::eType::TILE, "ressources/sprites/Landscape/landscape_13.png");
-            _map[0][y][x] = entity;
+            tile = em.createEntity();
+            tile->addComponent<sPositionComponent>(x, y, 0);
+            tile->addComponent<sRenderComponent>(Sprite::eType::TILE, "ressources/sprites/Landscape/landscape_13.png");
+            tile->addComponent<sTypeComponent>(eEntityType::TILE);
+            (*_map)[0][y][x].set(Map::eObjType::STATIC, tile->id);
         }
     }
     for (int y = 0; y < 4; y++) {
         for (int x = 0; x < 4; x++) {
-            entity = em.createEntity();
-            entity->addComponent<sPositionComponent>(glm::vec2(x, y), 2);
-            entity->addComponent<sRenderComponent>(Sprite::eType::TILE, "ressources/sprites/Landscape/landscape_30.png");
-            _map[2][y][x] = entity;
+            tile = em.createEntity();
+            tile->addComponent<sPositionComponent>(x, y, 2);
+            tile->addComponent<sRenderComponent>(Sprite::eType::TILE, "ressources/sprites/Landscape/landscape_30.png");
+            tile->addComponent<sTypeComponent>(eEntityType::TILE);
+            (*_map)[2][y][x].set(Map::eObjType::STATIC, tile->id);
         }
     }
    for (int y = 0; y < 7; y++) {
         for (int x = 0; x < 7; x++) {
-            entity = em.createEntity();
-            entity->addComponent<sPositionComponent>(glm::vec2(x, y), 1);
-            entity->addComponent<sRenderComponent>(Sprite::eType::TILE, "ressources/sprites/Landscape/landscape_33.png");
-            _map[1][y][x] = entity;
+            tile = em.createEntity();
+            tile->addComponent<sPositionComponent>(x, y, 1);
+            tile->addComponent<sRenderComponent>(Sprite::eType::TILE, "ressources/sprites/Landscape/landscape_33.png");
+            tile->addComponent<sTypeComponent>(eEntityType::TILE);
+            (*_map)[1][y][x].set(Map::eObjType::STATIC, tile->id);
         }
     }
 
-    // Sort entities with their depth value
-    em.sortEntities([](Entity *first, Entity *second) {
-        unsigned int depthFirst = 0;
-        unsigned int depthSecond = 0;
-        sPositionComponent *positionFirst = first->getComponent<sPositionComponent>();
-        sPositionComponent *positionSecond = second->getComponent<sPositionComponent>();
+    (*_map)[1][9][9].set(Map::eObjType::DYNAMIC, player->id);
 
-        if (positionFirst)
-        {
-            depthFirst = positionFirst->value.x + positionFirst->value.y + positionFirst->z;
-        }
-        if (positionSecond)
-        {
-            depthSecond = positionSecond->value.x + positionSecond->value.y + positionSecond->z;
-        }
-
-        return depthFirst < depthSecond;
-    });
-
-
-
-
+    _world.addSystem<InputSystem>();
+    _world.addSystem<GravitySystem>();
+    _world.addSystem<MovementSystem>(_map);
+    _world.addSystem<CollisionSystem>(_map);
+    _world.addSystem<RenderingSystem>(_map);
 
     return (true);
 }

@@ -6,7 +6,7 @@
 #include "Window/GameWindow.hpp"
 #include "Utils/Exception.hpp"
 
-RenderingSystem::RenderingSystem()
+RenderingSystem::RenderingSystem(Map* map): _map(map)
 {
     addDependency<sPositionComponent>();
     addDependency<sRenderComponent>();
@@ -41,29 +41,47 @@ bool    RenderingSystem::init()
     return (true);
 }
 
+void    RenderingSystem::drawSquare(EntityManager& em, uint16_t layer, uint32_t x, uint32_t y, Map::eObjType type)
+{
+    Entity* entity = em.getEntity((*_map)[layer][y][x].get(type));
+
+    if (!entity)
+        return;
+
+    Sprite* sprite = getSprite(entity);
+
+    // Model matrice
+    glm::mat4 trans;
+    trans = glm::translate(trans, glm::vec3(sprite->getPos().x, sprite->getPos().y, 0.0f));
+    GLint uniTrans = _shaderProgram.getUniformLocation("trans");
+    glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(trans));
+
+    // Draw sprite
+    sprite->draw();
+}
+
 void    RenderingSystem::update(EntityManager& em, float elapsedTime)
 {
     // Clear color buffer
     glClear (GL_COLOR_BUFFER_BIT);
+    CollisionMap* collisionMap = _map->getCollisionMap();
 
-    forEachEntity(em, [&](Entity *entity) {
-        Sprite* sprite = getSprite(entity);
-        sPositionComponent *position = entity->getComponent<sPositionComponent>();
+    for (uint16_t layer = 0; layer < _map->getLayersNb(); layer++)
+    {
+        for (uint32_t y = 0; y < _map->getHeight(); y++)
+        {
+            for (uint32_t x = 0; x < _map->getWidth(); x++)
+            {
+                // Orthogonal projection matrice
+                glm::mat4 ortho = glm::ortho(0.0f, (float)GameWindow::getInstance()->getWidth(), 0.0f, (float)GameWindow::getInstance()->getHeight());
+                GLint uniProj = _shaderProgram.getUniformLocation("proj");
+                glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(ortho));
 
-        // Orthogonal projection matrice
-        glm::mat4 ortho = glm::ortho(0.0f, (float)GameWindow::getInstance()->getWidth(), 0.0f, (float)GameWindow::getInstance()->getHeight());
-        GLint uniProj = _shaderProgram.getUniformLocation("proj");
-        glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(ortho));
-
-        // Model matrice
-        glm::mat4 trans;
-        trans = glm::translate(trans, glm::vec3(sprite->getPos().x, sprite->getPos().y, 0.0f));
-        GLint uniTrans = _shaderProgram.getUniformLocation("trans");
-        glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(trans));
-
-        // Draw sprite
-        sprite->draw();
-    });
+                drawSquare(em, layer, x, y, Map::eObjType::STATIC);
+                drawSquare(em, layer, x, y, Map::eObjType::DYNAMIC);
+            }
+        }
+    }
 
 
     // Display screen

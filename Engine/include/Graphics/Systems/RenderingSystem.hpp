@@ -5,15 +5,17 @@
 #include "Graphics/Sprite.hpp"
 #include "System.hpp"
 #include "Core/Components.hh"
+#include "Core/Map.hpp"
 
 class RenderingSystem: public System
 {
 public:
-    RenderingSystem();
+    RenderingSystem(Map* map);
     virtual ~RenderingSystem();
 
     virtual void update(EntityManager& em, float elapsedTime);
     virtual bool                            init();
+    void                                    drawSquare(EntityManager& em, uint16_t layer, uint32_t x, uint32_t y, Map::eObjType pos);
 
 private:
     Sprite*                                 getSprite(Entity* entity);
@@ -24,4 +26,6 @@ private:
 
     // Render System entities
     std::unordered_map<int, Sprite*>        _renderEntities;
+
+    Map*                                    _map;
 };

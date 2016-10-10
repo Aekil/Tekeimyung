@@ -3,15 +3,16 @@
 #include <iostream>
 #include <vector>
 #include <typeinfo>
+#include <cstdint>
 #include "Component.hh"
 
 class Entity
 {
 public:
-    Entity(unsigned int id_): id(id_) {}
+    Entity(uint32_t id_): id(id_) {}
     ~Entity() {}
 
-    bool operator==(unsigned int id_)
+    bool operator==(uint32_t id_)
     {
         return (id == id_);
     }
@@ -59,6 +60,6 @@ public:
     }
 
 public:
-    unsigned int                    id;
+    uint32_t                        id;
     std::vector<sComponent*>        _components;
 };

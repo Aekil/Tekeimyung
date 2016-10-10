@@ -1,4 +1,3 @@
-#include <algorithm>
 #include "System.hpp"
 
 System::System() {}
@@ -16,10 +15,10 @@ void    System::forEachEntity(EntityManager& em, std::function<void(Entity* enti
     {
         bool hasComponents = true;
 
-        for (std::type_index componentType : _components)
+        for (auto componentType : _components)
         {
             size_t hashCode = componentType.hash_code();
-            if (!entity->hasComponent(hashCode))
+            if (!entity.second->hasComponent(hashCode))
             {
                 hasComponents = false;
                 break;
@@ -27,6 +26,6 @@ void    System::forEachEntity(EntityManager& em, std::function<void(Entity* enti
         }
 
         if (hasComponents)
-            callback(entity);
+            callback(entity.second);
     }
 }

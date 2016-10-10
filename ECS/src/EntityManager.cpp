@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <random>
 
-int                         EntityManager::_entityId = 0;
+int                         EntityManager::_entityId = 1;
 
 
 EntityManager::EntityManager() {}
@@ -14,13 +14,8 @@ Entity* EntityManager::createEntity()
 {
     Entity* entity = new Entity(_entityId++);
 
-    _entities.push_back(entity);
+    _entities[entity->id] = entity;
     return (entity);
-}
-
-void destroy()
-{
-
 }
 
 void    EntityManager::destroyEntity(Entity* entity)
@@ -31,21 +26,17 @@ void    EntityManager::destroyEntity(Entity* entity)
     });
     entity->_components.clear();
 
-    for (auto it = _entities.begin(); it != _entities.end(); )
-    {
-        if (*(*it) == *entity)
-        {
-            delete *it;
-            it = _entities.erase(it);
-        }
-        else
-        {
-            ++it;
-        }
-    }
+    _entities.erase(entity->id);
 }
 
-std::list<Entity*>&     EntityManager::getEntities()
+std::unordered_map<uint32_t, Entity*>& EntityManager::getEntities()
 {
     return (_entities);
+}
+
+Entity* EntityManager::getEntity(uint32_t id) const
+{
+    auto &&it = _entities.find(id);
+
+    return (it != _entities.end() ? it->second : nullptr);
 }

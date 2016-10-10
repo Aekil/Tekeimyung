@@ -13,9 +13,6 @@ Sprite::~Sprite() {}
 
 void    Sprite::loadFromTexture(const std::string& textureFile, bool animated,  uint32_t nbFrames, const std::vector<eOrientation>& orientations, const glm::vec2& spriteSize)
 {
-    float spriteWidth;
-    float spriteHeight;
-
     // Init entity texture
     _texture = &RessourceManager::getInstance()->getTexture(textureFile);
     _animated = animated;
@@ -36,21 +33,20 @@ void    Sprite::loadFromTexture(const std::string& textureFile, bool animated,  
             }
         }
 
-        spriteWidth = spriteSize.x;
-        spriteHeight = spriteSize.y;
+        _spriteSize = spriteSize;
     }
     else
     {
-        spriteWidth = _texture->getWidth();
-        spriteHeight = _texture->getHeight();
+        _spriteSize.x = _texture->getWidth();
+        _spriteSize.y = _texture->getHeight();
     }
 
     // Init entity buffers
     Vertex vertices[] = {
-        {glm::vec3(0.0f,  spriteHeight, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(0.0f, 0.0f)},  // Top Left (red)
-        {glm::vec3(spriteWidth,  spriteHeight, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(spriteWidth / _texture->getWidth(), 0.0f)},  // Top Right (blue)
-        {glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(0.0f, spriteHeight / _texture->getHeight())},  // Bottom Left (green)
-        {glm::vec3(spriteWidth, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(spriteWidth / _texture->getWidth(), spriteHeight / _texture->getHeight())}  // Bottom Right (red)
+        {glm::vec3(0.0f,  _spriteSize.y, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(0.0f, 0.0f)},  // Top Left (red)
+        {glm::vec3(_spriteSize.x,  _spriteSize.y, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(_spriteSize.x / _texture->getWidth(), 0.0f)},  // Top Right (blue)
+        {glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(0.0f, _spriteSize.y / _texture->getHeight())},  // Bottom Left (green)
+        {glm::vec3(_spriteSize.x, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(_spriteSize.x / _texture->getWidth(), _spriteSize.y / _texture->getHeight())}  // Bottom Right (red)
     };
 
     GLuint indices[] = {
@@ -73,7 +69,8 @@ void Sprite::update(glm::vec2 position, float z, bool keyPressed, eOrientation o
 
     if (_type == Sprite::eType::OBJECT)
     {
-        _pos.y += 30.0f;
+        _pos.y += _spriteSize.y;
+        _pos.x += _spriteSize.x - 15.0f;
     }
     if (_animated && !keyPressed)
     {
