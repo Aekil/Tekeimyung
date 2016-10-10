@@ -41,13 +41,8 @@ bool    RenderingSystem::init()
     return (true);
 }
 
-void    RenderingSystem::drawSquare(EntityManager& em, uint16_t layer, uint32_t x, uint32_t y, Map::eObjType type)
+void    RenderingSystem::renderEntity(Entity* entity)
 {
-    Entity* entity = em.getEntity((*_map)[layer][y][x].get(type));
-
-    if (!entity)
-        return;
-
     Sprite* sprite = getSprite(entity);
 
     // Model matrice
@@ -60,6 +55,30 @@ void    RenderingSystem::drawSquare(EntityManager& em, uint16_t layer, uint32_t 
     sprite->draw();
 }
 
+void    RenderingSystem::renderEntities(EntityManager& em, std::list<uint32_t>::const_iterator& it, uint16_t layer, uint32_t x, uint32_t y)
+{
+    Entity* entity;
+    sPositionComponent *position;
+
+    if (it == (*_map)[layer].getEntities().cend())
+        return;
+
+    entity = em.getEntity(*it);
+    position = entity->getComponent<sPositionComponent>();
+    while (std::floor(position->x) == x && std::floor(position->y) == y)
+    {
+        // TODO: Assert if entity does not exists
+        renderEntity(entity);
+        it++;
+
+        if (it == (*_map)[layer].getEntities().cend())
+            break;
+
+        entity = em.getEntity(*it);
+        position = entity->getComponent<sPositionComponent>();
+    }
+}
+
 void    RenderingSystem::update(EntityManager& em, float elapsedTime)
 {
     // Clear color buffer
@@ -68,6 +87,10 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
 
     for (uint16_t layer = 0; layer < _map->getLayersNb(); layer++)
     {
+        // Order the entities to properly render !
+        // If not, the render will not work
+        (*_map)[layer].orderEntities(em);
+        auto &&it = (*_map)[layer].getEntities().cbegin();
         for (uint32_t y = 0; y < _map->getHeight(); y++)
         {
             for (uint32_t x = 0; x < _map->getWidth(); x++)
@@ -77,8 +100,12 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
                 GLint uniProj = _shaderProgram.getUniformLocation("proj");
                 glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(ortho));
 
-                drawSquare(em, layer, x, y, Map::eObjType::STATIC);
-                drawSquare(em, layer, x, y, Map::eObjType::DYNAMIC);
+                Entity* tile = em.getEntity((*_map)[layer][y][x].get());
+
+                if (tile)
+                    renderEntity(tile);
+
+                renderEntities(em, it, layer, x, y);
             }
         }
     }
