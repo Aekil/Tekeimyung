@@ -14,7 +14,6 @@ void GravitySystem::update(EntityManager &em, float elapsedTime)
         sDirectionComponent* direction = entity->getComponent<sDirectionComponent>();
         sGravityComponent* gravity = entity->getComponent<sGravityComponent>();
 
-        direction->x += gravity->value.x * elapsedTime;
-        direction->y += gravity->value.y * elapsedTime;
+        direction->value += gravity->value * elapsedTime;
     });
 }

@@ -107,7 +107,7 @@ Sprite*   RenderingSystem::getSprite(Entity* entity)
     // Update entity graphic position
     bool keyPressed = input && input->keyPressed;
     eOrientation orientation = direction ? direction->orientation : eOrientation::S;
-    _renderEntities[id]->update(position->x, position->y, position->z, keyPressed, orientation);
+    _renderEntities[id]->update(position->value, position->z, keyPressed, orientation);
 
     return (_renderEntities[id]);
 }

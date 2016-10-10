@@ -20,15 +20,15 @@ void    InputSystem::update(EntityManager &em, float elapsedTime)
         sInputComponent *input = entity->getComponent<sInputComponent>();
         sDirectionComponent *direction = entity->getComponent<sDirectionComponent>();
 
-        direction->x = 0;
+        direction->value = glm::vec2(0.0f, 0.0f);
+
         input->keyPressed = false;
-        direction->y = 0;
 
         if (keyboard.isPressed(input->moveLeft))
         {
             //std::cout << "LEFT is " << (keyboard[input->moveLeft] == Keyboard::eKeyState::KEY_MAINTAINED ? "maintained" : "pressed") << " !" << std::endl;
-            direction->x += -1.0;
-            direction->y += 1.0;
+            direction->value.x += -1.0;
+            direction->value.y += 1.0;
             input->keyPressed = true;
             direction->orientation = eOrientation::W;
         }
@@ -36,8 +36,8 @@ void    InputSystem::update(EntityManager &em, float elapsedTime)
         if (keyboard.isPressed(input->moveRight))
         {
             //std::cout << "RIGHT is " << (keyboard[input->moveRight] == Keyboard::eKeyState::KEY_MAINTAINED ? "maintained" : "pressed") << " !" << std::endl;
-            direction->x += 1.0;
-            direction->y += -1.0;
+            direction->value.x += 1.0;
+            direction->value.y += -1.0;
             input->keyPressed = true;
             direction->orientation = eOrientation::E;
         }
@@ -45,8 +45,8 @@ void    InputSystem::update(EntityManager &em, float elapsedTime)
         if (keyboard.isPressed(input->moveUp))
         {
             //std::cout << "UP is " << (keyboard[input->moveUp] == Keyboard::eKeyState::KEY_MAINTAINED ? "maintained" : "pressed") << " !" << std::endl;
-            direction->x += -1.0;
-            direction->y += -1.0;
+            direction->value.x += -1.0;
+            direction->value.y += -1.0;
             input->keyPressed = true;
 
             if (keyboard.isPressed(input->moveLeft))
@@ -60,8 +60,8 @@ void    InputSystem::update(EntityManager &em, float elapsedTime)
         if (keyboard.isPressed(input->moveDown))
         {
             //std::cout << "DOWN is " << (keyboard[input->moveDown] == Keyboard::eKeyState::KEY_MAINTAINED ? "maintained" : "pressed") << " !" << std::endl;
-            direction->x += 1.0;
-            direction->y += 1.0;
+            direction->value.x += 1.0;
+            direction->value.y += 1.0;
             input->keyPressed = true;
 
             if (keyboard.isPressed(input->moveLeft))

@@ -28,10 +28,9 @@ struct sRenderComponent: sComponent
 
 struct sPositionComponent: sComponent
 {
-    sPositionComponent(float x, float y, float z): x(x), y(y), z(z) {}
+    sPositionComponent(glm::vec2 value, float z): value(value), z(z) {}
 
-    float x;
-    float y;
+    glm::vec2 value;
 
     // Layer number
     float z;
@@ -52,10 +51,9 @@ struct sInputComponent: sComponent {
 
 struct sDirectionComponent : sComponent
 {
-    sDirectionComponent(float x, float y) : x(x), y(y), orientation(eOrientation::N) {}
+    sDirectionComponent(glm::vec2) : value(value), orientation(eOrientation::N) {}
 
-    float x;
-    float y;
+    glm::vec2 value;
     eOrientation orientation;
 };
 
@@ -65,6 +63,14 @@ struct sHitBoxComponent : sComponent
 
     glm::vec2 min;
     glm::vec2 max;
+};
+
+struct sCircleHitBoxComponent : sComponent
+{
+    sCircleHitBoxComponent(glm::vec2 center, float radius) : center(center), radius(radius) {}
+
+    glm::vec2 center;
+    float radius;
 };
 
 struct sGravityComponent : sComponent

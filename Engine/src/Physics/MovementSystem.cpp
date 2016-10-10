@@ -14,12 +14,11 @@ void    MovementSystem::update(EntityManager &em, float elapsedTime)
     this->forEachEntity(em, [&](Entity* entity) {
         sDirectionComponent *direction = entity->getComponent<sDirectionComponent>();
         sPositionComponent *position = entity->getComponent<sPositionComponent>();
-        glm::ivec3 oldPosition(floor(position->x), floor(position->y), position->z);
+        glm::ivec3 oldPosition(floor(position->value.x), floor(position->value.y), position->z);
 
-        position->x += direction->x * elapsedTime;
-        position->y += direction->y * elapsedTime;
+        position->value += direction->value * elapsedTime;
 
-        glm::ivec3 newPosition(floor(position->x), floor(position->y), position->z);
+        glm::ivec3 newPosition(floor(position->value.x), floor(position->value.y), position->z);
         if (_map->isValidPosition(newPosition) && (newPosition.x != oldPosition.x || newPosition.y != oldPosition.y))
         {
             std::cout << "X: " << newPosition.x << " Y: " << newPosition.y << "  Z: " << oldPosition.z << std::endl;
