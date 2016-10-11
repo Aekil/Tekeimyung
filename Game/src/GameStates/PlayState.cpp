@@ -27,6 +27,7 @@ bool    PlayState::init()
     sPositionComponent* posPlayer = player->getComponent<sPositionComponent>();
     sPositionComponent* posPlayer2 = player2->getComponent<sPositionComponent>();
     sInputComponent* input = player2->getComponent<sInputComponent>();
+    sHitBoxComponent* hitbox = player2->getComponent<sHitBoxComponent>();
 
     posPlayer->value.x = 9;
     posPlayer->value.y = 9;
@@ -40,6 +41,9 @@ bool    PlayState::init()
     input->moveRight = Keyboard::eKey::L;
     input->moveUp = Keyboard::eKey::I;
     input->moveDown = Keyboard::eKey::K;
+
+    hitbox->min.y = 320.8;
+    hitbox->max.y = 255.9;
 
     _map = new Map(em, 10, 10, 3);
 

@@ -16,15 +16,23 @@ void    CollisionSystem::update(EntityManager &em, float elapsedTime)
         this->moveHitBox(entity);
         sDirectionComponent* direction = entity->getComponent<sDirectionComponent>();
         sPositionComponent* position = entity->getComponent<sPositionComponent>();
+        uint16_t layer = std::floor(position->z);
 
-        this->forEachEntity(em, [&](Entity* entityB) {
+        for (auto &&entityId: (*_map)[layer].getEntities())
+        {
+            Entity* entityB = em.getEntity(entityId);
+
+            if (!entityB || !entityB->getComponent<sHitBoxComponent>())
+                continue;
+
             sPositionComponent* positionB = entityB->getComponent<sPositionComponent>();
             if (entity->id != entityB->id && position->z == positionB->z && this->isColliding(entity, entityB))
             {
                 //TODO: Resolution of collisions
                 position->value += -direction->value * elapsedTime;
             }
-        });
+        }
+
     });
 }
 
