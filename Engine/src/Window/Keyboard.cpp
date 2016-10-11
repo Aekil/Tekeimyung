@@ -133,6 +133,131 @@ Keyboard::Keyboard()
     //_nativeMap[GLFW_KEY_MENU] = ;
     //_nativeMap[GLFW_KEY_LAST] = _nativeMap[GLFW_KEY_MENU];
 
+
+
+    _stringMap["UNKNOWN"] = Keyboard::eKey::UNKNOWN;
+    _stringMap["SPACE"] = Keyboard::eKey::SPACE;
+    //_stringMap["APOSTROPHE"] = ;
+    _stringMap["COMMA"] = Keyboard::eKey::M;
+    //_stringMap["MINUS"] = ;
+    //_stringMap["PERIOD"] = ;
+    //_stringMap["SLASH"] = ;
+    _stringMap["0"] = Keyboard::eKey::KEY_0;
+    _stringMap["1"] = Keyboard::eKey::KEY_1;
+    _stringMap["2"] = Keyboard::eKey::KEY_2;
+    _stringMap["3"] = Keyboard::eKey::KEY_3;
+    _stringMap["4"] = Keyboard::eKey::KEY_4;
+    _stringMap["5"] = Keyboard::eKey::KEY_5;
+    _stringMap["6"] = Keyboard::eKey::KEY_6;
+    _stringMap["7"] = Keyboard::eKey::KEY_7;
+    _stringMap["8"] = Keyboard::eKey::KEY_8;
+    _stringMap["9"] = Keyboard::eKey::KEY_9;
+    //_stringMap["SEMICOLON"] = ;
+    //_stringMap["EQUAL"] = ;
+    _stringMap["A"] = Keyboard::eKey::Q;
+    _stringMap["B"] = Keyboard::eKey::B;
+    _stringMap["C"] = Keyboard::eKey::C;
+    _stringMap["D"] = Keyboard::eKey::D;
+    _stringMap["E"] = Keyboard::eKey::E;
+    _stringMap["F"] = Keyboard::eKey::F;
+    _stringMap["G"] = Keyboard::eKey::G;
+    _stringMap["H"] = Keyboard::eKey::H;
+    _stringMap["I"] = Keyboard::eKey::I;
+    _stringMap["J"] = Keyboard::eKey::J;
+    _stringMap["K"] = Keyboard::eKey::K;
+    _stringMap["L"] = Keyboard::eKey::L;
+    _stringMap["M"] = Keyboard::eKey::COMMA;
+    _stringMap["N"] = Keyboard::eKey::N;
+    _stringMap["O"] = Keyboard::eKey::O;
+    _stringMap["P"] = Keyboard::eKey::P;
+    _stringMap["Q"] = Keyboard::eKey::A;
+    _stringMap["R"] = Keyboard::eKey::R;
+    _stringMap["S"] = Keyboard::eKey::S;
+    _stringMap["T"] = Keyboard::eKey::T;
+    _stringMap["U"] = Keyboard::eKey::U;
+    _stringMap["V"] = Keyboard::eKey::V;
+    _stringMap["W"] = Keyboard::eKey::Z;
+    _stringMap["X"] = Keyboard::eKey::X;
+    _stringMap["Y"] = Keyboard::eKey::Y;
+    _stringMap["Z"] = Keyboard::eKey::Z;
+    //_stringMap["LEFT_BRACKET"] = ;
+    //_stringMap["BACKSLASH"] = ;
+    //_stringMap["RIGHT_BRACKET"] = ;
+    //_stringMap["GRAVE_ACCENT"] = ;
+    //_stringMap["WORLD_1"] = ;
+    //_stringMap["WORLD_2"] = ;
+    _stringMap["ESCAPE"] = Keyboard::eKey::ESCAPE;
+    _stringMap["ENTER"] = Keyboard::eKey::ENTER;
+    _stringMap["TAB"] = Keyboard::eKey::TAB;
+    _stringMap["BACKSPACE"] = Keyboard::eKey::BACKSPACE;
+    _stringMap["INSERT"] = Keyboard::eKey::INSERT;
+    _stringMap["DELETE"] = Keyboard::eKey::DELETE;
+    _stringMap["RIGHT"] = Keyboard::eKey::RIGHT;
+    _stringMap["LEFT"] = Keyboard::eKey::LEFT;
+    _stringMap["DOWN"] = Keyboard::eKey::DOWN;
+    _stringMap["UP"] = Keyboard::eKey::UP;
+    _stringMap["PAGE_UP"] = Keyboard::eKey::PAGE_UP;
+    _stringMap["PAGE_DOWN"] = Keyboard::eKey::PAGE_DOWN;
+    //_stringMap["HOME"] = ;
+    //_stringMap["END"] = ;
+    _stringMap["CAPS_LOCK"] = Keyboard::eKey::CAPS_LOCK;
+    //_stringMap["SCROLL_LOCK"] = ;
+    _stringMap["NUM_LOCK"] = Keyboard::eKey::NUM_LOCK;
+    _stringMap["PRINT_SCREEN"] = Keyboard::eKey::PRINT_SCREEN;
+    _stringMap["PAUSE"] = Keyboard::eKey::PAUSE;
+    _stringMap["F1"] = Keyboard::eKey::F1;
+    _stringMap["F2"] = Keyboard::eKey::F2;
+    _stringMap["F3"] = Keyboard::eKey::F3;
+    _stringMap["F4"] = Keyboard::eKey::F4;
+    _stringMap["F5"] = Keyboard::eKey::F5;
+    _stringMap["F6"] = Keyboard::eKey::F6;
+    _stringMap["F7"] = Keyboard::eKey::F7;
+    _stringMap["F8"] = Keyboard::eKey::F8;
+    _stringMap["F9"] = Keyboard::eKey::F9;
+    _stringMap["F10"] = Keyboard::eKey::F10;
+    _stringMap["F11"] = Keyboard::eKey::F11;
+    _stringMap["F12"] = Keyboard::eKey::F12;
+    //_stringMap["F13"] = ;
+    //_stringMap["F14"] = ;
+    //_stringMap["F15"] = ;
+    //_stringMap["F16"] = ;
+    //_stringMap["F17"] = ;
+    //_stringMap["F18"] = ;
+    //_stringMap["F19"] = ;
+    //_stringMap["F20"] = ;
+    //_stringMap["F21"] = ;
+    //_stringMap["F22"] = ;
+    //_stringMap["F23"] = ;
+    //_stringMap["F24"] = ;
+    //_stringMap["F25"] = ;
+    _stringMap["KP_0"] = Keyboard::eKey::KP_0;
+    _stringMap["KP_1"] = Keyboard::eKey::KP_1;
+    _stringMap["KP_2"] = Keyboard::eKey::KP_2;
+    _stringMap["KP_3"] = Keyboard::eKey::KP_3;
+    _stringMap["KP_4"] = Keyboard::eKey::KP_4;
+    _stringMap["KP_5"] = Keyboard::eKey::KP_5;
+    _stringMap["KP_6"] = Keyboard::eKey::KP_6;
+    _stringMap["KP_7"] = Keyboard::eKey::KP_7;
+    _stringMap["KP_8"] = Keyboard::eKey::KP_8;
+    _stringMap["KP_9"] = Keyboard::eKey::KP_9;
+    _stringMap["KP_DECIMAL"] = Keyboard::eKey::KP_DECIMAL;
+    _stringMap["KP_DIVIDE"] = Keyboard::eKey::KP_DIVIDE;
+    _stringMap["KP_MULTIPLY"] = Keyboard::eKey::KP_MULTIPLY;
+    _stringMap["KP_SUBTRACT"] = Keyboard::eKey::KP_SUBTRACT;
+    _stringMap["KP_ADD"] = Keyboard::eKey::KP_ADD;
+    _stringMap["KP_ENTER"] = Keyboard::eKey::KP_ENTER;
+    _stringMap["KP_EQUAL"] = Keyboard::eKey::KP_EQUAL;
+    _stringMap["LEFT_SHIFT"] = Keyboard::eKey::LEFT_SHIFT;
+    _stringMap["LEFT_CONTROL"] = Keyboard::eKey::LEFT_CONTROL;
+    _stringMap["LEFT_ALT"] = Keyboard::eKey::LEFT_ALT;
+    _stringMap["LEFT_SUPER"] = Keyboard::eKey::LEFT_SUPER;
+    _stringMap["RIGHT_SHIFT"] = Keyboard::eKey::RIGHT_SHIFT;
+    _stringMap["RIGHT_CONTROL"] = Keyboard::eKey::RIGHT_CONTROL;
+    _stringMap["RIGHT_ALT"] = Keyboard::eKey::RIGHT_ALT;
+    _stringMap["RIGHT_SUPER"] = Keyboard::eKey::RIGHT_SUPER;
+    //_stringMap["MENU"] = ;
+    //_stringMap["LAST"] = _nativeMap[GLFW_KEY_MENU];
+
     resetKeyboardState();
 }
 
@@ -144,6 +269,11 @@ Keyboard::KeyboardNativeMap&    Keyboard::getNativeMap()
 Keyboard::KeyboardStateMap& Keyboard::getStateMap()
 {
 	return (_stateMap);
+}
+
+Keyboard::KeyboardStringMap& Keyboard::getStringMap()
+{
+    return (_stringMap);
 }
 
 Keyboard::eKeyState Keyboard::operator[](Keyboard::eKey key)

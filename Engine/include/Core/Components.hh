@@ -12,6 +12,7 @@
 
 struct sRenderComponent: sComponent
 {
+    sRenderComponent() = default;
     sRenderComponent(Sprite::eType type, const std::string& texture, bool animated = false, uint32_t nbFrames = 0, const std::vector<eOrientation>& orientations = {}, const glm::vec2& spriteSize = {0, 0})
     : texture(texture), type(type), animated(animated), nbFrames(nbFrames), orientations(orientations), spriteSize(spriteSize) {}
 
@@ -28,6 +29,7 @@ struct sRenderComponent: sComponent
 
 struct sPositionComponent: sComponent
 {
+    sPositionComponent() = default;
     sPositionComponent(glm::vec2 value, float z): value(value), z(z) {}
 
     glm::vec2 value;
@@ -37,6 +39,7 @@ struct sPositionComponent: sComponent
 };
 
 struct sInputComponent: sComponent {
+    sInputComponent() = default;
     sInputComponent(Keyboard::eKey moveLeft,
                     Keyboard::eKey moveRight,
                     Keyboard::eKey moveUp,
@@ -51,6 +54,7 @@ struct sInputComponent: sComponent {
 
 struct sDirectionComponent : sComponent
 {
+    sDirectionComponent() = default;
     sDirectionComponent(glm::vec2) : value(value), orientation(eOrientation::N) {}
 
     glm::vec2 value;
@@ -59,6 +63,7 @@ struct sDirectionComponent : sComponent
 
 struct sHitBoxComponent : sComponent
 {
+    sHitBoxComponent() = default;
     sHitBoxComponent(glm::vec2 min, glm::vec2 max) : min(min), max(max) {}
 
     glm::vec2 min;
@@ -67,6 +72,7 @@ struct sHitBoxComponent : sComponent
 
 struct sCircleHitBoxComponent : sComponent
 {
+    sCircleHitBoxComponent() = default;
     sCircleHitBoxComponent(glm::vec2 center, float radius) : center(center), radius(radius) {}
 
     glm::vec2 center;
@@ -75,6 +81,7 @@ struct sCircleHitBoxComponent : sComponent
 
 struct sGravityComponent : sComponent
 {
+    sGravityComponent() = default;
     sGravityComponent(glm::vec2 value) : value(value) {}
 
     glm::vec2 value;
@@ -91,6 +98,7 @@ enum class eEntityType
 
 struct sTypeComponent: sComponent
 {
+    sTypeComponent() = default;
     sTypeComponent(eEntityType type): type(type) {}
 
     eEntityType type;
