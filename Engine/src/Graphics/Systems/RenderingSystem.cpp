@@ -83,7 +83,13 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
 {
     // Clear color buffer
     glClear (GL_COLOR_BUFFER_BIT);
-    CollisionMap* collisionMap = _map->getCollisionMap();
+
+    for (auto &&id: (*_map)[1].getEntities())
+    {
+        sPositionComponent *position;
+        Entity* entity = em.getEntity(id);
+        position = entity->getComponent<sPositionComponent>();
+    }
 
     for (uint16_t layer = 0; layer < _map->getLayersNb(); layer++)
     {
@@ -111,7 +117,7 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
     }
 
     ImGui::Render();
-    
+
     // Display screen
     GameWindow::getInstance()->display();
 }

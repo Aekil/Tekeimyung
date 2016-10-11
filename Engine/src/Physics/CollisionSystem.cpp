@@ -82,6 +82,6 @@ bool    CollisionSystem::isColliding(Entity *firstEntity, Entity *secondEntity)
         r *= r;
         return r < pow((circleHitBoxFirst->center.x + circleHitBoxSecond->center.x), 2) + pow((circleHitBoxFirst->center.y + circleHitBoxFirst->center.y), 2);
     }
-    
+
     return false;
 }

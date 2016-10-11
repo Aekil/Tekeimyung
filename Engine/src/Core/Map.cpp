@@ -54,6 +54,7 @@ void    Map::LayerReference::orderEntities(EntityManager& em)
         Entity* entityB = em.getEntity(b);
         sPositionComponent* positionA;
         sPositionComponent* positionB;
+        float dirty;
 
         if (!entityA || !entityB)
         {
@@ -64,7 +65,9 @@ void    Map::LayerReference::orderEntities(EntityManager& em)
         positionA = entityA->getComponent<sPositionComponent>();
         positionB = entityB->getComponent<sPositionComponent>();
 
-        return (positionA->value.x + positionA->value.y < positionB->value.x + positionB->value.y);
+        float posA = (std::floor(positionA->value.y) * _map->_width) + std::floor(positionA->value.x) + (std::pow(std::modf(positionA->value.x, &dirty), 2) + std::pow(std::modf(positionA->value.y, &dirty), 2)) / 2.0f;
+        float posB = (std::floor(positionB->value.y) * _map->_width) + std::floor(positionB->value.x) + (std::pow(std::modf(positionB->value.x, &dirty), 2) + std::pow(std::modf(positionB->value.y, &dirty), 2)) / 2.0f;
+        return posA < posB;
     });
 }
 
