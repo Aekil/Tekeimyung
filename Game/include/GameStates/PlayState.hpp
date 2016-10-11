@@ -13,7 +13,9 @@ class PlayState: public GameState
     virtual ~PlayState();
 
     virtual bool                        init();
+    virtual bool                        update(float elapsedTime);
 
 private:
     Map*                                _map;
+    bool                                _windowImgui;
 };

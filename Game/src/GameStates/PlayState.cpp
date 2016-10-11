@@ -7,10 +7,13 @@
 #include "Core/Components.hh"
 #include "EntityFactory.hpp"
 
+#include <imgui.h>
+#include "imgui_impl_glfw_gl3.h"
+
 #include "GameStates/PlayState.hpp"
 
 
-PlayState::PlayState() {}
+PlayState::PlayState(): _windowImgui(true) {}
 
 PlayState::~PlayState() {}
 
@@ -95,6 +98,23 @@ bool    PlayState::init()
     _world.addSystem<MovementSystem>(_map);
     _world.addSystem<CollisionSystem>(_map);
     _world.addSystem<RenderingSystem>(_map);
+
+    return (true);
+}
+
+bool    PlayState::update(float elapsedTime)
+{
+
+    ImGui_ImplGlfwGL3_NewFrame();
+    {
+        ImGui::SetNextWindowPos(ImVec2(50, 650), ImGuiSetCond_FirstUseEver);
+        ImGui::SetNextWindowSize(ImVec2(400, 50), ImGuiSetCond_FirstUseEver);
+        ImGui::Begin("Framerate", &_windowImgui);
+        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+        ImGui::End();
+    }
+
+    GameState::update(elapsedTime);
 
     return (true);
 }
