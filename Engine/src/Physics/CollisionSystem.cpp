@@ -1,5 +1,6 @@
 #include "Physics/CollisionSystem.hpp"
 #include "Core/Components.hh"
+#include "Window/GameWindow.hpp"
 
 CollisionSystem::CollisionSystem(Map* map): _map(map)
 {
@@ -29,20 +30,26 @@ void    CollisionSystem::update(EntityManager &em, float elapsedTime)
 
 void    CollisionSystem::moveHitBox(Entity *entity)
 {
-    sDirectionComponent* direction = entity->getComponent<sDirectionComponent>();
+    sPositionComponent* position = entity->getComponent<sPositionComponent>();
+    float offsetX = GameWindow::getInstance()->getWidth() / 2.0f - 66.0f;
+    float offsetY = GameWindow::getInstance()->getHeight() - (33.0f * 3.0f);
 
     if (entity->getComponent<sHitBoxComponent>() != nullptr)
     {
         sHitBoxComponent* hitBox = entity->getComponent<sHitBoxComponent>();
 
-        hitBox->min += direction->value;
-        hitBox->max += direction->value;
+        hitBox->min.x = offsetX + (position->value.x - position->value.y) * 66.0f;
+        hitBox->min.y = offsetY - (position->value.x + position->value.y) * 33.0f + (32.0f * position->z);
+
+        hitBox->max.x = (offsetX + (position->value.x - position->value.y) * 66.0f )+ 55.0f;
+        hitBox->max.y = (offsetY - (position->value.x + position->value.y) * 33.0f + (32.0f * position->z)) + 64.9f;
     }
     else if (entity->getComponent<sCircleHitBoxComponent>() != nullptr)
     {
         sCircleHitBoxComponent* circleHitBox = entity->getComponent<sCircleHitBoxComponent>();
 
-        circleHitBox->center += direction->value;
+        circleHitBox->center.x = offsetX + (position->value.x - position->value.y) * 66.0f;
+        circleHitBox->center.y = offsetY - (position->value.x + position->value.y) * 33.0f + (32.0f * position->z);
     }
 }
 
