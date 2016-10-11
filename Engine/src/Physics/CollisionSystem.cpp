@@ -21,7 +21,8 @@ void    CollisionSystem::update(EntityManager &em, float elapsedTime)
         uint16_t layer = position->z;
 
         // Check Collision with tile
-        if ((*collisionMap)[layer][std::floor(position->value.y)][std::floor(position->value.x)] == eColType::CAN_NOT_WALK)
+        if ((*_map)[layer][std::floor(position->value.y)][std::floor(position->value.x)].get() != 0 ||
+            (layer > 0 && (*collisionMap)[layer - 1][std::floor(position->value.y)][std::floor(position->value.x)] == eColType::CAN_NOT_WALK))
         {
             position->value += -direction->value * elapsedTime;
         }

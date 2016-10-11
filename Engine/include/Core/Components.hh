@@ -168,9 +168,10 @@ enum class eEntityType
 {
     CHARACTER = 0,
     OBJECT = 1,
-    TILE = 2,
-    TILE_STAIRS_UP = 3,
-    TILE_STAIRS_DOWN = 4
+    TILE_WALKABLE = 2,
+    TILE_NOT_WALKABLE = 3,
+    TILE_STAIRS_UP = 4,
+    TILE_STAIRS_DOWN = 5
 };
 
 struct sTypeComponent: sComponent

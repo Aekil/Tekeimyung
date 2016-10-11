@@ -54,6 +54,16 @@ bool    PlayState::init()
         }
     }
 
+
+    for (int y = 0; y < 5; y++) {
+        tile = EntityFactory::createEntity(eArchetype::TILE2);
+        sPositionComponent* pos = tile->getComponent<sPositionComponent>();
+        pos->value.x = 8;
+        pos->value.y = y;
+        pos->z = 0;
+        (*_map)[0][y][8] = tile->id;
+    }
+
     for (int y = 0; y < 7; y++) {
         for (int x = 0; x < 7; x++) {
             tile = EntityFactory::createEntity(eArchetype::TILE2);
@@ -64,6 +74,7 @@ bool    PlayState::init()
             (*_map)[1][y][x] = tile->id;
         }
     }
+
 
     for (int y = 0; y < 4; y++) {
         for (int x = 0; x < 4; x++) {

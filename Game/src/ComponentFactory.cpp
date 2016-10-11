@@ -209,8 +209,10 @@ eEntityType ComponentFactory<sTypeComponent>::stringToEntityType(const std::stri
         return eEntityType::CHARACTER;
     else if (entityTypeStr == "OBJECT")
         return eEntityType::OBJECT;
-    else if (entityTypeStr == "TILE")
-        return eEntityType::TILE;
+    else if (entityTypeStr == "TILE_WALKABLE")
+        return eEntityType::TILE_WALKABLE;
+    else if (entityTypeStr == "TILE_NOT_WALKABLE")
+        return eEntityType::TILE_NOT_WALKABLE;
     else if (entityTypeStr == "TILE_STAIRS_UP")
         return eEntityType::TILE_STAIRS_UP;
     else if (entityTypeStr == "TILE_STAIRS_DOWN")

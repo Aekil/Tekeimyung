@@ -77,8 +77,10 @@ eColType                        CollisionMap::colTypeFromEntityType(eEntityType 
             return eColType::CAN_WALK;
         case eEntityType::OBJECT:
             return eColType::CAN_NOT_WALK;
-        case eEntityType::TILE:
+        case eEntityType::TILE_NOT_WALKABLE:
             return eColType::CAN_NOT_WALK;
+        case eEntityType::TILE_WALKABLE:
+            return eColType::CAN_WALK;
         case eEntityType::TILE_STAIRS_UP:
             return eColType::GO_LAYER_UP;
         case eEntityType::TILE_STAIRS_DOWN:
