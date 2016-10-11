@@ -5,6 +5,9 @@
 #include <vector>
 #include "Entity.hpp"
 
+// Generate a list
+// string: "PLAYER", "TILE1", "TILE2"
+// enum: PLAYER, TILE1, TILE2
 #define ENTITIES_TYPES(PROCESS)\
     PROCESS(PLAYER),\
     PROCESS(TILE1),\

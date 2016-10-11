@@ -39,12 +39,14 @@ void EntityFactory::init()
             Json::Value parsed;
             if (!jsonReader.parse(entityConf, parsed))
                 EXCEPT(IOException, "Cannot parse archetype .json");
-            else if (!EntityFactory::entityTypeExists(parsed["name"].asString()))
+            else if (!EntityFactory::entityTypeExists(parsed["name"].asString())) // The macro ENTITIES_TYPES did not create the type
                 EXCEPT(InvalidParametersException, "Failed to read entity archetype: Entity type does not exist");
 
             entity = new Entity(-1);
+            // Create entity components
             for (Json::ValueIterator it = parsed["components"].begin(); it != parsed["components"].end(); it++)
             {
+                // The macro COMPONENTS_TYPES did not create the type
                 if (!IComponentFactory::componentTypeExists(it.key().asString()))
                     EXCEPT(InvalidParametersException, "Failed to read entity archetype: Component type does not exist");
 

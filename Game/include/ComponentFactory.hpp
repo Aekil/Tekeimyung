@@ -4,7 +4,8 @@
 #include "json/json.h"
 #include "Core/Components.hh"
 
-
+// Generate map initializer lists
+// ex: { "sRenderComponent", sRenderComponent }, { "sPositionComponent", sPositionComponent }
 #define COMPONENTS_TYPES()\
     GENERATE_PAIRS(sRenderComponent),\
     GENERATE_PAIRS(sPositionComponent),\
@@ -31,6 +32,11 @@ private:
     static std::unordered_map<std::string, IComponentFactory*>      _componentsTypes;
 };
 
+
+/*
+** IComponentFactory
+*/
+
 template <typename T>
 class ComponentFactory: public IComponentFactory
 {
@@ -43,6 +49,11 @@ public:
     }
 };
 
+
+/*
+** sRenderComponent
+*/
+
 template <>
 class ComponentFactory<sRenderComponent>: public IComponentFactory
 {
@@ -53,12 +64,22 @@ private:
     Sprite::eType stringToSpriteType(const std::string& spriteTypeStr);
 };
 
+
+/*
+** sPositionComponent
+*/
+
 template <>
 class ComponentFactory<sPositionComponent>: public IComponentFactory
 {
 public:
     sComponent* loadFromJson(Json::Value& json);
 };
+
+
+/*
+** sInputComponent
+*/
 
 template <>
 class ComponentFactory<sInputComponent>: public IComponentFactory
@@ -67,12 +88,22 @@ public:
     sComponent* loadFromJson(Json::Value& json);
 };
 
+
+/*
+** sDirectionComponent
+*/
+
 template <>
 class ComponentFactory<sDirectionComponent>: public IComponentFactory
 {
 public:
     sComponent* loadFromJson(Json::Value& json);
 };
+
+
+/*
+** sHitBoxComponent
+*/
 
 template <>
 class ComponentFactory<sHitBoxComponent>: public IComponentFactory
@@ -81,6 +112,11 @@ public:
     sComponent* loadFromJson(Json::Value& json);
 };
 
+
+/*
+** sCircleHitBoxComponent
+*/
+
 template <>
 class ComponentFactory<sCircleHitBoxComponent>: public IComponentFactory
 {
@@ -88,12 +124,22 @@ public:
     sComponent* loadFromJson(Json::Value& json);
 };
 
+
+/*
+** sGravityComponent
+*/
+
 template <>
 class ComponentFactory<sGravityComponent>: public IComponentFactory
 {
 public:
     sComponent* loadFromJson(Json::Value& json);
 };
+
+
+/*
+** sTypeComponent
+*/
 
 template <>
 class ComponentFactory<sTypeComponent>: public IComponentFactory
