@@ -10,14 +10,16 @@ CollisionSystem::CollisionSystem(Map* map): _map(map)
 
 void    CollisionSystem::update(EntityManager &em, float elapsedTime)
 {
-    this->forEachEntity(em, [&](Entity* entity) {
+    this->forEachEntity(em, [&](Entity* entity)
+    {
         this->moveHitBox(entity);
         sDirectionComponent* direction = entity->getComponent<sDirectionComponent>();
         sPositionComponent* position = entity->getComponent<sPositionComponent>();
 
         this->forEachEntity(em, [&](Entity* entityB) {
             sPositionComponent* positionB = entityB->getComponent<sPositionComponent>();
-            if (entity->id != entityB->id && position->z == positionB->z && this->isColliding(entity, entityB)) {
+            if (entity->id != entityB->id && position->z == positionB->z && this->isColliding(entity, entityB))
+            {
                 //TODO: Resolution of collisions
                 position->value += -direction->value * elapsedTime;
             }

@@ -1,5 +1,6 @@
-#include "Core/Engine.hpp"
-#include "Utils/Timer.hpp"
+#include <Core/Engine.hpp>
+#include <Utils/Logger.hpp>
+#include <Utils/Timer.hpp>
 
 Engine::Engine() {}
 
@@ -7,12 +8,19 @@ Engine::~Engine() {}
 
 bool    Engine::init()
 {
+    std::shared_ptr<Logger> logger;
+
     _window = std::make_shared<GameWindow>();
     if (!_window->initialize())
         return (false);
 
-    GameWindow::setInstance(_window);
+    logger = std::make_shared<Logger>();
+    if (!logger->initialize())
+        return (false);
 
+    GameWindow::setInstance(_window);
+    Logger::setInstance(logger);
+    LOG_INFO("Initialization complete !");
     return (true);
 }
 
@@ -50,6 +58,7 @@ bool    Engine::run()
 
 bool    Engine::stop()
 {
+    Logger::getInstance()->shutdown();
     return (true);
 }
 
