@@ -110,7 +110,8 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
         }
     }
 
-
+    ImGui::Render();
+    
     // Display screen
     GameWindow::getInstance()->display();
 }

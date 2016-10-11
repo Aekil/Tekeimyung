@@ -62,6 +62,8 @@ bool    GameWindow::initialize()
 
     glViewport(0, 0, _bufferWidth, _bufferHeight);
 
+    ImGui_ImplGlfwGL3_Init(_window, true);
+
     registerEvents();
     return (true);
 }
@@ -142,6 +144,7 @@ void    GameWindow::pollEvents()
 
 void    GameWindow::close()
 {
+    ImGui_ImplGlfwGL3_Shutdown();
     glfwDestroyWindow(_window);
     glfwTerminate();
 }

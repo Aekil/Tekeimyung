@@ -10,7 +10,7 @@
 
 #include <cstdlib>
     #define ASSERT(expression, message) \
-        if (Debug::assert(expression, message, __FILE__, FUNCTION, __LINE__) == false) \
+        if (Debug::engineAssert(expression, message, __FILE__, FUNCTION, __LINE__) == false) \
             std::abort();
 #else
     #define ASSERT(expression, message)
@@ -19,5 +19,5 @@
 class           Debug
 {
 public:
-    static bool assert(bool expression, const char* message, const char* filename, const char* function, unsigned int line);
+    static bool engineAssert(bool expression, const char* message, const char* filename, const char* function, unsigned int line);
 };
