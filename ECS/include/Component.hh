@@ -8,4 +8,6 @@ struct sComponent
     {
         return (typeid(*this));
     }
+
+    virtual sComponent* clone() = 0;
 };

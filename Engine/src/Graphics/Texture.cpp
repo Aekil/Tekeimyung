@@ -1,5 +1,6 @@
 #define STB_IMAGE_IMPLEMENTATION
 
+#include <iostream>
 #include "Utils/Exception.hpp"
 #include "stb_image/stb_image.h"
 

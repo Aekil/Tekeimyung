@@ -29,6 +29,11 @@ public:
         _components.push_back(component);
     }
 
+    void                            addComponent(sComponent* component)
+    {
+        _components.push_back(component);
+    }
+
     template<typename componentType>
     componentType*                  getComponent()
     {

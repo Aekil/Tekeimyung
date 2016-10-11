@@ -19,6 +19,15 @@ RessourceManager*   RessourceManager::getInstance()
     return _ressourceManager;
 }
 
+std::string  RessourceManager::getFileExtension(const std::string& fileName)
+{
+    std::size_t size = fileName.rfind('.', fileName.length());
+    if (size != std::string::npos)
+        return (fileName.substr(size + 1, fileName.length() - size));
+
+    return ("");
+}
+
 std::string RessourceManager::getBasename(const std::string& fileName)
 {
     size_t basenameOcur;

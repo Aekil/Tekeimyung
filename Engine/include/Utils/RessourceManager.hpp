@@ -12,6 +12,7 @@ public:
     std::string                                     getFile(const std::string& fileName);
     Texture&                                        getTexture(const std::string& fileName);
     static RessourceManager*                        getInstance();
+    static std::string                              getFileExtension(const std::string& fileName);
 
 private:
     std::string                                     getBasename(const std::string& fileName);

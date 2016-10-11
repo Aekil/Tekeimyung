@@ -1,6 +1,7 @@
 #pragma once
 
 #include <unordered_map>
+#include <string>
 
 class Keyboard
 {
@@ -140,13 +141,15 @@ public:
 	}                   KeyState;
 private:
 	typedef std::unordered_map<int, Keyboard::eKey>                 KeyboardNativeMap;
-	typedef std::unordered_map<Keyboard::eKey, Keyboard::eKeyState> KeyboardStateMap;
+    typedef std::unordered_map<Keyboard::eKey, Keyboard::eKeyState> KeyboardStateMap;
+    typedef std::unordered_map<std::string, Keyboard::eKey>    KeyboardStringMap;
 public:
 	explicit            Keyboard();
 	virtual             ~Keyboard() {}
 
 	KeyboardNativeMap&  getNativeMap();
-	KeyboardStateMap&   getStateMap();
+    KeyboardStateMap&   getStateMap();
+    KeyboardStringMap&  getStringMap();
     Keyboard::eKeyState operator[](Keyboard::eKey key);
 
     void                resetKeyboardState();
@@ -155,5 +158,6 @@ public:
     bool                isPressed(Keyboard::eKey key);
 private:
 	KeyboardNativeMap   _nativeMap;
-	KeyboardStateMap    _stateMap;
+    KeyboardStateMap    _stateMap;
+    KeyboardStringMap   _stringMap;
 };
