@@ -11,7 +11,7 @@ int     main()
 
     try
     {
-        EntityFactory::init();
+        EntityFactory::init("ressources/archetypes");
 
     /*    if (!engine.init() || !gameStateManager.addState<PlayState>())
             return (1);

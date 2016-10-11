@@ -14,13 +14,13 @@ EntityFactory::EntityFactory() {}
 
 EntityFactory::~EntityFactory() {}
 
-void EntityFactory::init()
+void EntityFactory::init(const std::string& archetypesDir)
 {
     DIR* dir;
     struct dirent* ent;
     RessourceManager* ressourceManager = RessourceManager::getInstance();
 
-    dir = opendir("ressources/archetypes");
+    dir = opendir(archetypesDir.c_str());
     if (!dir)
         EXCEPT(FileNotFoundException, "Cannot open archetypes directory");
 
@@ -31,7 +31,7 @@ void EntityFactory::init()
             Entity* entity;
 
             // Get entity configuration file
-            std::string path = std::string("ressources/archetypes/").append(ent->d_name);
+            std::string path = std::string(archetypesDir).append("/").append(ent->d_name);
             std::string entityConf = ressourceManager->getFile(path);
 
             // Parse the configuration file with jsoncpp

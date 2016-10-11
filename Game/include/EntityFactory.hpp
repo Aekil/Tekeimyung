@@ -30,7 +30,7 @@ class EntityFactory
 public:
     EntityFactory();
     ~EntityFactory();
-    static void                                             init();
+    static void                                             init(const std::string& archetypesDir);
     static Entity*                                          createEntity(eArchetype& type);
 
 private:
