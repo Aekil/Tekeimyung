@@ -1,7 +1,8 @@
 #include <iostream>
 #include <GL/glew.h>
 
-#include "Window/GameWindow.hpp"
+#include <Utils/Debug.hpp>
+#include <Window/GameWindow.hpp>
 
 std::shared_ptr<GameWindow> GameWindow::_instance;
 
@@ -150,29 +151,27 @@ void	GameWindow::keyCallback(GLFWwindow* window, int key, int scancode, int acti
 	GameWindow*     gameWindow;
 	Keyboard::eKey  keyboardKey;
 
-    if (key < (int) Keyboard::eKey::UNKNOWN || key >= (int) Keyboard::eKey::LAST)
-        return;
+    ASSERT(!(key < (int) Keyboard::eKey::UNKNOWN || key >= (int) Keyboard::eKey::LAST), "The keyboard key should belong to the range.");
 	gameWindow = reinterpret_cast<GameWindow*>(glfwGetWindowUserPointer(window));
-	if (gameWindow != nullptr)
-    {
-        Keyboard    &keyboard = gameWindow->getKeyboard();
-		keyboardKey = keyboard.getNativeMap()[key];
-		switch (action) {
-			case GLFW_PRESS:
-                {
-                    if (keyboard.getStateMap()[keyboardKey] == Keyboard::eKeyState::KEY_IDLE)
-                        keyboard.getStateMap()[keyboardKey] = Keyboard::eKeyState::KEY_PRESSED;
-				    else if (keyboard.getStateMap()[keyboardKey] == Keyboard::eKeyState::KEY_PRESSED)
-                        keyboard.getStateMap()[keyboardKey] = Keyboard::eKeyState::KEY_MAINTAINED;
-                }
-				break;
-			case GLFW_REPEAT:
-				keyboard.getStateMap()[keyboardKey] = Keyboard::eKeyState::KEY_MAINTAINED;
-				break;
-			case GLFW_RELEASE:
-                keyboard.getStateMap()[keyboardKey] = Keyboard::eKeyState::KEY_RELEASED;
-				break;
-		}
+    ASSERT(gameWindow != nullptr, "GameWindow should not be null.");
+
+    Keyboard    &keyboard = gameWindow->getKeyboard();
+    keyboardKey = keyboard.getNativeMap()[key];
+	switch (action) {
+        case GLFW_PRESS:
+            {
+                if (keyboard.getStateMap()[keyboardKey] == Keyboard::eKeyState::KEY_IDLE)
+                   keyboard.getStateMap()[keyboardKey] = Keyboard::eKeyState::KEY_PRESSED;
+                else if (keyboard.getStateMap()[keyboardKey] == Keyboard::eKeyState::KEY_PRESSED)
+                   keyboard.getStateMap()[keyboardKey] = Keyboard::eKeyState::KEY_MAINTAINED;
+            }
+            break;
+        case GLFW_REPEAT:
+            keyboard.getStateMap()[keyboardKey] = Keyboard::eKeyState::KEY_MAINTAINED;
+            break;
+        case GLFW_RELEASE:
+            keyboard.getStateMap()[keyboardKey] = Keyboard::eKeyState::KEY_RELEASED;
+            break;
 	}
 }
 
@@ -181,30 +180,28 @@ void    GameWindow::buttonCallback(GLFWwindow* window, int button, int action, i
     GameWindow*     gameWindow;
     Mouse::eButton  mouseButton;
 
-    if (button <= (int) Mouse::eButton::UNKNOWN || button >= (int) Mouse::eButton::MOUSE_BUTTON_LAST)
-        return;
+    ASSERT(!(button <= (int) Mouse::eButton::UNKNOWN || button >= (int) Mouse::eButton::MOUSE_BUTTON_LAST), "The mouse button should belong to the range.");
     gameWindow = reinterpret_cast<GameWindow*>(glfwGetWindowUserPointer(window));
-    if (gameWindow != nullptr)
+    ASSERT(gameWindow != nullptr, "GameWindow should not be null.");
+
+    Mouse       &mouse = gameWindow->getMouse();
+    mouseButton = mouse.getNativeMap()[button];
+    switch (action)
     {
-        Mouse       &mouse = gameWindow->getMouse();
-        mouseButton = mouse.getNativeMap()[button];
-        switch (action)
-        {
-            case GLFW_PRESS:
-                {
-                    if (mouse.getStateMap()[mouseButton] == Mouse::eButtonState::CLICK_PRESSED)
-                        mouse.getStateMap()[mouseButton] = Mouse::eButtonState::CLICK_MAINTAINED;
-                    else if (mouse.getStateMap()[mouseButton] == Mouse::eButtonState::CLICK_IDLE)
-                        mouse.getStateMap()[mouseButton] = Mouse::eButtonState::CLICK_PRESSED;
-                }
-                break;
-            case GLFW_REPEAT:
-                mouse.getStateMap()[mouseButton] = Mouse::eButtonState::CLICK_MAINTAINED;
-                break;
-            case GLFW_RELEASE:
-                mouse.getStateMap()[mouseButton] = Mouse::eButtonState::CLICK_RELEASED;
-                break;
-        }
+        case GLFW_PRESS:
+            {
+                if (mouse.getStateMap()[mouseButton] == Mouse::eButtonState::CLICK_PRESSED)
+                    mouse.getStateMap()[mouseButton] = Mouse::eButtonState::CLICK_MAINTAINED;
+                else if (mouse.getStateMap()[mouseButton] == Mouse::eButtonState::CLICK_IDLE)
+                    mouse.getStateMap()[mouseButton] = Mouse::eButtonState::CLICK_PRESSED;
+            }
+            break;
+        case GLFW_REPEAT:
+            mouse.getStateMap()[mouseButton] = Mouse::eButtonState::CLICK_MAINTAINED;
+            break;
+        case GLFW_RELEASE:
+            mouse.getStateMap()[mouseButton] = Mouse::eButtonState::CLICK_RELEASED;
+            break;
     }
 }
 
@@ -213,12 +210,10 @@ void    GameWindow::cursorEnterCallback(GLFWwindow* window, int entered)
     GameWindow*     gameWindow;
 
     gameWindow = reinterpret_cast<GameWindow*>(glfwGetWindowUserPointer(window));
-    if (gameWindow != nullptr)
-    {
-        Cursor&     cursor = gameWindow->getMouse().getCursor();
+    ASSERT(gameWindow != nullptr, "GameWindow should not be null.");
 
-        cursor.setWindowEntering(entered);
-    }
+    Cursor&     cursor = gameWindow->getMouse().getCursor();
+    cursor.setWindowEntering(entered);
 }
 
 void    GameWindow::cursorPositionCallback(GLFWwindow* window, double xPos, double yPos)
@@ -226,11 +221,9 @@ void    GameWindow::cursorPositionCallback(GLFWwindow* window, double xPos, doub
     GameWindow*     gameWindow;
 
     gameWindow = reinterpret_cast<GameWindow*>(glfwGetWindowUserPointer(window));
-    if (gameWindow != nullptr)
-    {
-        Cursor&     cursor = gameWindow->getMouse().getCursor();
+    ASSERT(gameWindow != nullptr, "GameWindow should not be null.");
 
-        cursor.setXPosition(xPos);
-        cursor.setYPosition(yPos);
-    }
+    Cursor&     cursor = gameWindow->getMouse().getCursor();
+    cursor.setXPosition(xPos);
+    cursor.setYPosition(yPos);
 }

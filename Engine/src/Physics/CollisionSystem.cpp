@@ -11,14 +11,16 @@ CollisionSystem::CollisionSystem(Map* map): _map(map)
 
 void    CollisionSystem::update(EntityManager &em, float elapsedTime)
 {
-    this->forEachEntity(em, [&](Entity* entity) {
+    this->forEachEntity(em, [&](Entity* entity)
+    {
         this->moveHitBox(entity);
         sDirectionComponent* direction = entity->getComponent<sDirectionComponent>();
         sPositionComponent* position = entity->getComponent<sPositionComponent>();
 
         this->forEachEntity(em, [&](Entity* entityB) {
             sPositionComponent* positionB = entityB->getComponent<sPositionComponent>();
-            if (entity->id != entityB->id && position->z == positionB->z && this->isColliding(entity, entityB)) {
+            if (entity->id != entityB->id && position->z == positionB->z && this->isColliding(entity, entityB))
+            {
                 //TODO: Resolution of collisions
                 position->value += -direction->value * elapsedTime;
             }
@@ -39,8 +41,8 @@ void    CollisionSystem::moveHitBox(Entity *entity)
         hitBox->min.x = offsetX + (position->value.x - position->value.y) * 66.0f;
         hitBox->min.y = offsetY - (position->value.x + position->value.y) * 33.0f + (32.0f * position->z);
 
-        hitBox->max.x = offsetX + (position->value.x - position->value.y) * 66.0f + 55.0f;
-        hitBox->max.y = offsetY - (position->value.x + position->value.y) * 33.0f + (32.0f * position->z) + 64.9f;
+        hitBox->max.x = (offsetX + (position->value.x - position->value.y) * 66.0f )+ 55.0f;
+        hitBox->max.y = (offsetY - (position->value.x + position->value.y) * 33.0f + (32.0f * position->z)) + 64.9f;
     }
     else if (entity->getComponent<sCircleHitBoxComponent>() != nullptr)
     {
