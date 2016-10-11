@@ -11,27 +11,40 @@ CollisionSystem::CollisionSystem(Map* map): _map(map)
 
 void    CollisionSystem::update(EntityManager &em, float elapsedTime)
 {
+    CollisionMap* collisionMap = _map->getCollisionMap();
+
     this->forEachEntity(em, [&](Entity* entity)
     {
         this->moveHitBox(entity);
         sDirectionComponent* direction = entity->getComponent<sDirectionComponent>();
         sPositionComponent* position = entity->getComponent<sPositionComponent>();
-        uint16_t layer = std::floor(position->z);
+        uint16_t layer = position->z;
 
-        for (auto &&entityId: (*_map)[layer].getEntities())
+        // Check Collision with tile
+        if ((*collisionMap)[layer][std::floor(position->value.y)][std::floor(position->value.x)] == eColType::CAN_NOT_WALK)
         {
-            Entity* entityB = em.getEntity(entityId);
-
-            if (!entityB || !entityB->getComponent<sHitBoxComponent>())
-                continue;
-
-            sPositionComponent* positionB = entityB->getComponent<sPositionComponent>();
-            if (entity->id != entityB->id && position->z == positionB->z && this->isColliding(entity, entityB))
-            {
-                //TODO: Resolution of collisions
-                position->value += -direction->value * elapsedTime;
-            }
+            position->value += -direction->value * elapsedTime;
         }
+        else
+        {
+            // Check Collision with dynamic entities
+            for (auto &&entityId: (*_map)[layer].getEntities())
+            {
+                Entity* entityB = em.getEntity(entityId);
+
+                if (!entityB || !entityB->getComponent<sHitBoxComponent>())
+                    continue;
+
+                sPositionComponent* positionB = entityB->getComponent<sPositionComponent>();
+                if (entity->id != entityB->id && position->z == positionB->z && this->isColliding(entity, entityB))
+                {
+                    //TODO: Resolution of collisions
+                    position->value += -direction->value * elapsedTime;
+                }
+            }
+
+        }
+
 
     });
 }
