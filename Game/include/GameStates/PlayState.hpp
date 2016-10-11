@@ -14,6 +14,7 @@ class PlayState: public GameState
 
     virtual bool                        init();
     virtual bool                        update(float elapsedTime);
+    void                                createEntity(const glm::vec3& pos);
 
 private:
     Map*                                _map;

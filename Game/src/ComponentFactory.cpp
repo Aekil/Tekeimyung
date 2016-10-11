@@ -225,7 +225,7 @@ sComponent* ComponentFactory<sTypeComponent>::loadFromJson(const std::string& en
 {
     sTypeComponent* component = new sTypeComponent();
 
-    component->type = stringToEntityType(json.get("type", "TILE").asString());
+    component->type = stringToEntityType(json.get("type", "TILE_WALKABLE").asString());
 
     return component;
 }

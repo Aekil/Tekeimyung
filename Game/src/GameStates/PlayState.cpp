@@ -44,7 +44,7 @@ bool    PlayState::init()
     input->moveUp = Keyboard::eKey::I;
     input->moveDown = Keyboard::eKey::K;
 
-    _map = new Map(em, 10, 10, 3);
+    _map = new Map(em, 10, 10, 4);
 
     for (int y = 0; y < 10; y++) {
         for (int x = 0; x < 10; x++) {
@@ -67,6 +67,7 @@ bool    PlayState::init()
         (*_map)[0][y][8] = tile->id;
     }
 
+
     for (int y = 0; y < 7; y++) {
         for (int x = 0; x < 7; x++) {
             tile = EntityFactory::createEntity(eArchetype::TILE2);
@@ -78,6 +79,16 @@ bool    PlayState::init()
         }
     }
 
+    for (int y = 0; y < 3; y++) {
+        for (int x = 4; x < 7; x++) {
+            tile = EntityFactory::createEntity(eArchetype::TILE1);
+            sPositionComponent* pos = tile->getComponent<sPositionComponent>();
+            pos->value.x = x;
+            pos->value.y = y;
+            pos->z = 1;
+            (*_map)[1][y][x] = tile->id;
+        }
+    }
 
     for (int y = 0; y < 4; y++) {
         for (int x = 0; x < 4; x++) {
@@ -102,16 +113,47 @@ bool    PlayState::init()
     return (true);
 }
 
+void    PlayState::createEntity(const glm::vec3& pos)
+{
+    Entity* entity = EntityFactory::createEntity(eArchetype::PLAYER);
+
+    sPositionComponent* posEntity = entity->getComponent<sPositionComponent>();
+    posEntity->value.x = pos.x;
+    posEntity->value.y = pos.y;
+    posEntity->z = pos.z;
+
+    (*_map)[pos.z].addEntity(entity->id);
+}
+
 bool    PlayState::update(float elapsedTime)
 {
-
+    bool createEntityButton = false;
     ImGui_ImplGlfwGL3_NewFrame();
     {
-        ImGui::SetNextWindowPos(ImVec2(50, 650), ImGuiSetCond_FirstUseEver);
         ImGui::SetNextWindowSize(ImVec2(400, 50), ImGuiSetCond_FirstUseEver);
-        ImGui::Begin("Framerate", &_windowImgui);
+        ImGui::Begin("Debug", &_windowImgui);
         ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+        createEntityButton = ImGui::Button("Create entity");
         ImGui::End();
+    }
+
+    if (createEntityButton)
+    {
+        CollisionMap* collisionMap = _map->getCollisionMap();
+        eColType colType = eColType::CAN_NOT_WALK;
+
+        // Generate random position
+        glm::vec3 pos;
+        while (colType == eColType::CAN_NOT_WALK)
+        {
+            pos.x  = static_cast<float>(std::rand()) / (static_cast<float>(RAND_MAX / (_map->getWidth() - 1)));
+            pos.y  = static_cast<float>(std::rand()) / (static_cast<float>(RAND_MAX / (_map->getHeight() - 1)));
+            pos.z  = std::floor(1 + static_cast<float>(std::rand()) / (static_cast<float>(RAND_MAX / (_map->getLayersNb() - 1))));
+
+            colType = (*collisionMap)[pos.z - 1][std::floor(pos.y)][std::floor(pos.x)];
+        }
+
+        createEntity(pos);
     }
 
     GameState::update(elapsedTime);

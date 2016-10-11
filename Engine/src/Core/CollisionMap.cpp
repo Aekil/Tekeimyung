@@ -18,13 +18,20 @@ CollisionMap::Square&   CollisionMap::LineReference::operator[](unsigned int idx
         Entity* entity = _map->_em.getEntity((*_map->_map)[_layerIdx][_lineIdx][idx].get());
         sTypeComponent* entityType = entity ? entity->getComponent<sTypeComponent>() : nullptr;
 
+        // Set tile to non walkable if there is a tile on the upper layer
+        if (_layerIdx + 1 < _map->_map->getLayersNb() && (*_map->_map)[_layerIdx + 1][_lineIdx][idx].get() != 0)
+        {
+             _map->_collisionMap[_layerIdx][_lineIdx][idx] = eColType::CAN_NOT_WALK;
+             return _map->_collisionMap[_layerIdx][_lineIdx][idx];
+        }
+
         if (entityType)
         {
             _map->_collisionMap[_layerIdx][_lineIdx][idx] = _map->colTypeFromEntityType(entityType->type);
         }
         else
         {
-            _map->_collisionMap[_layerIdx][_lineIdx][idx] = eColType::CAN_WALK;
+            _map->_collisionMap[_layerIdx][_lineIdx][idx] = eColType::CAN_NOT_WALK;
         }
     }
 
