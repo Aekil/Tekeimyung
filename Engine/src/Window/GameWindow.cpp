@@ -17,14 +17,14 @@ bool    GameWindow::initialize()
 {
     const GLFWvidmode *vidmode;
     int xPos, yPos;
-    
+
     // Initializing GLFW.
     if (glfwInit() == GLFW_FALSE)
     {
         std::cerr << "Could not initialize GLFW." << std::endl;
         return (false);
     }
-    
+
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -45,7 +45,7 @@ bool    GameWindow::initialize()
 
     // Enabling vertical synchronization (or VSync).
     glfwSwapInterval(1);
-    
+
     // Placing the game window at the center of the screen.
     vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
     xPos = (vidmode->width - WINDOW_DEFAULT_WIDTH) / 2;

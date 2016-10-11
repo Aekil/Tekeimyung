@@ -32,7 +32,7 @@ bool    PlayState::init()
     posPlayer->value.y = 9;
     posPlayer->z = 1;
 
-    posPlayer2->value.x = 8;
+    posPlayer2->value.x = 6;
     posPlayer2->value.y = 8;
     posPlayer2->z = 1;
 

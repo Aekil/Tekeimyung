@@ -2,9 +2,12 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <vector>
-#include "Graphics/Systems/RenderingSystem.hpp"
 #include "Window/GameWindow.hpp"
+#include "Utils/Debug.hpp"
 #include "Utils/Exception.hpp"
+
+#include "Graphics/Systems/RenderingSystem.hpp"
+
 
 RenderingSystem::RenderingSystem(Map* map): _map(map)
 {
@@ -64,10 +67,11 @@ void    RenderingSystem::renderEntities(EntityManager& em, std::list<uint32_t>::
         return;
 
     entity = em.getEntity(*it);
+    ASSERT(entity, "The entity should exists");
+
     position = entity->getComponent<sPositionComponent>();
     while (std::floor(position->value.x) == x && std::floor(position->value.y) == y)
     {
-        // TODO: Assert if entity does not exists
         renderEntity(entity);
         it++;
 
@@ -75,6 +79,8 @@ void    RenderingSystem::renderEntities(EntityManager& em, std::list<uint32_t>::
             break;
 
         entity = em.getEntity(*it);
+        ASSERT(entity, "The entity should exists");
+
         position = entity->getComponent<sPositionComponent>();
     }
 }

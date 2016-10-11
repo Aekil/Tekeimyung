@@ -1,4 +1,6 @@
 #include <cstring>
+#include "Utils/Debug.hpp"
+
 #include "Core/Map.hpp"
 
 
@@ -56,11 +58,8 @@ void    Map::LayerReference::orderEntities(EntityManager& em)
         sPositionComponent* positionB;
         float dirty;
 
-        if (!entityA || !entityB)
-        {
-            // TODO: Assert
-            return false;
-        }
+
+        ASSERT(entityA && entityB, "Entities should exists");
 
         positionA = entityA->getComponent<sPositionComponent>();
         positionB = entityB->getComponent<sPositionComponent>();

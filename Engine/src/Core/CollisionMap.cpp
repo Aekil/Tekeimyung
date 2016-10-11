@@ -1,4 +1,6 @@
 #include <cstring>
+#include "Utils/Debug.hpp"
+
 #include "Core/CollisionMap.hpp"
 
 /*
@@ -87,7 +89,7 @@ eColType                        CollisionMap::colTypeFromEntityType(eEntityType 
             return eColType::GO_LAYER_DOWN;
     }
 
-    //TODO: Add assert
+    ASSERT(true, "No col type existing for this entity type");
 
     return eColType::DIRTY;
 }

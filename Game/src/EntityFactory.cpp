@@ -1,10 +1,11 @@
 #include "json/json.h"
 #include "Utils/Exception.hpp"
 #include "Utils/RessourceManager.hpp"
-#include "EntityFactory.hpp"
 #include "ComponentFactory.hpp"
 #include "dirent.h"
+#include "Utils/Debug.hpp"
 
+#include "EntityFactory.hpp"
 
 
 std::unordered_map<std::string, std::list<std::string> >  EntityFactory::_entities;
@@ -76,11 +77,11 @@ Entity* EntityFactory::createEntity(eArchetype type)
 {
     if ((int)type > _typesString.size() - 1)
     {
-        // TODO: Assert not null
+        EXCEPT(InvalidParametersException, "The entity type does not exist");
         return (nullptr);
     }
 
-    // TODO: Assert _em not null
+    ASSERT(_em != nullptr, "The entity manager should not be null");
 
     std::string typeName = _typesString[(int)type];
 
