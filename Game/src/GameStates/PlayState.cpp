@@ -23,11 +23,22 @@ bool    PlayState::init()
     player->addComponent<sPositionComponent>(glm::vec2(9, 9), 1);
     player->addComponent<sDirectionComponent>(glm::vec2(0, 0));
     //player->addComponent<sGravityComponent>(glm::vec2(9.8, 9.8));
+    player->addComponent<sHitBoxComponent>(glm::vec2(614, 188.8), glm::vec2(669, 123.9));
     player->addComponent<sInputComponent>(Keyboard::eKey::Q, Keyboard::eKey::D, Keyboard::eKey::Z, Keyboard::eKey::S);
     player->addComponent<sRenderComponent>(Sprite::eType::OBJECT, "ressources/sprites/soldierSpriteSheet.png", true, 8,
         std::vector<eOrientation>{eOrientation::NW, eOrientation::N, eOrientation::NE, eOrientation::E, eOrientation::W, eOrientation::SW, eOrientation::S, eOrientation::SE}, glm::vec2(55, 64.9));
     player->addComponent<sTypeComponent>(eEntityType::CHARACTER);
 
+    Entity *player2;
+
+    player2 = em.createEntity();
+    player2->addComponent<sPositionComponent>(glm::vec2(7, 7), 1);
+    player2->addComponent<sDirectionComponent>(glm::vec2(0, 0));
+    player2->addComponent<sHitBoxComponent>(glm::vec2(614, 320.8), glm::vec2(669, 255.9));
+    player2->addComponent<sInputComponent>(Keyboard::eKey::J, Keyboard::eKey::L, Keyboard::eKey::I, Keyboard::eKey::K);
+    player2->addComponent<sRenderComponent>(Sprite::eType::OBJECT, "ressources/sprites/soldierSpriteSheet.png", true, 8,
+        std::vector<eOrientation>{eOrientation::NW, eOrientation::N, eOrientation::NE, eOrientation::E, eOrientation::W, eOrientation::SW, eOrientation::S, eOrientation::SE}, glm::vec2(55, 64.9));
+    player2->addComponent<sTypeComponent>(eEntityType::CHARACTER);
 
     _map = new Map(em, 10, 10, 3);
 
@@ -49,7 +60,7 @@ bool    PlayState::init()
             (*_map)[2][y][x].set(Map::eObjType::STATIC, tile->id);
         }
     }
-   for (int y = 0; y < 7; y++) {
+    for (int y = 0; y < 7; y++) {
         for (int x = 0; x < 7; x++) {
             tile = em.createEntity();
             tile->addComponent<sPositionComponent>(glm::vec2(x, y), 1);
@@ -60,6 +71,7 @@ bool    PlayState::init()
     }
 
     (*_map)[1][9][9].set(Map::eObjType::DYNAMIC, player->id);
+    (*_map)[1][7][7].set(Map::eObjType::DYNAMIC, player2->id);
 
     _world.addSystem<InputSystem>();
     //_world.addSystem<GravitySystem>();
