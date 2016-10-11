@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include "Entity.hpp"
+#include "EntityManager.hpp"
 
 // Generate a list
 // string: "PLAYER", "TILE1", "TILE2"
@@ -31,12 +32,16 @@ public:
     EntityFactory();
     ~EntityFactory();
     static void                                             init(const std::string& archetypesDir);
-    static Entity*                                          createEntity(eArchetype& type);
+    static Entity*                                          createEntity(eArchetype type);
+    static void                                             bindEntityManager(EntityManager* em);
 
 private:
     static bool                                             entityTypeExists(const std::string& type);
+    static Entity*                                          cloneEntity(const std::string& typeName);
 
 private:
-    static std::unordered_map<std::string, Entity*>         _entities;
+    // Store entities components names (ComponentFactory has components)
+    static std::unordered_map<std::string, std::list<std::string>>         _entities;
     static std::vector<std::string>                         _typesString;
+    static EntityManager*                                   _em;
 };

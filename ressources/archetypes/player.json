@@ -6,6 +6,10 @@
                 "y": 8,
                 "z": 1
             },
+            "sDirectionComponent": {
+                "x": 0,
+                "y": 0
+            },
             "sRenderComponent": {
                 "texture": "ressources/sprites/soldierSpriteSheet.png",
                 "type": "OBJECT",
@@ -22,6 +26,9 @@
                 "right": "D",
                 "up": "Z",
                 "down": "S"
+            },
+            "sTypeComponent": {
+                "type": "CHARACTER"
             }
         }
 }

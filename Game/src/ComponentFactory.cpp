@@ -1,4 +1,3 @@
-#include <iostream>
 #include <sstream>
 #include "Window/Keyboard.hpp"
 
@@ -24,31 +23,33 @@ bool    IComponentFactory::componentTypeExists(const std::string& type)
 
 eOrientation IComponentFactory::stringToOrientation(const std::string& orientationStr)
 {
-    if("N")
+    if (orientationStr == "N")
         return eOrientation::N;
-    else if("NE")
+    else if (orientationStr == "NE")
         return eOrientation::NE;
-    else if("E")
+    else if (orientationStr == "E")
         return eOrientation::E;
-    else if("SE")
+    else if (orientationStr == "SE")
         return eOrientation::SE;
-    else if("S")
+    else if (orientationStr == "S")
         return eOrientation::S;
-    else if("SW")
+    else if (orientationStr == "SW")
         return eOrientation::SW;
-    else if("W")
+    else if (orientationStr == "W")
         return eOrientation::W;
-    else if("NW")
+    else if (orientationStr == "NW")
         return eOrientation::NW;
 
     EXCEPT(NotImplementedException, "Failed to load sRenderComponent:  the orientation does not exist");
 }
 
-sComponent*  IComponentFactory::createComponent(const std::string& name, Json::Value& value)
+void    IComponentFactory::initComponent(const std::string& entityType, const std::string& name, Json::Value& value)
 {
     try
     {
-        return _componentsTypes[name]->loadFromJson(value);
+        sComponent* component;
+        component = _componentsTypes[name]->loadFromJson(entityType, value);
+        _componentsTypes[name]->addComponent(entityType, component);
     }
     catch(const std::exception& e)
     {
@@ -59,11 +60,16 @@ sComponent*  IComponentFactory::createComponent(const std::string& name, Json::V
     }
 }
 
+sComponent*  IComponentFactory::createComponent(const std::string& entityType, const std::string& name)
+{
+    return _componentsTypes[name]->clone(entityType);
+}
+
 /*
 ** sRenderComponent
 */
 
-sComponent* ComponentFactory<sRenderComponent>::loadFromJson(Json::Value& json)
+sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& entityType, Json::Value& json)
 {
     sRenderComponent* component = new sRenderComponent();
 
@@ -98,7 +104,7 @@ Sprite::eType ComponentFactory<sRenderComponent>::stringToSpriteType(const std::
 ** sPositionComponent
 */
 
-sComponent* ComponentFactory<sPositionComponent>::loadFromJson(Json::Value& json)
+sComponent* ComponentFactory<sPositionComponent>::loadFromJson(const std::string& entityType, Json::Value& json)
 {
     sPositionComponent* component = new sPositionComponent();
 
@@ -114,7 +120,7 @@ sComponent* ComponentFactory<sPositionComponent>::loadFromJson(Json::Value& json
 ** sInputComponent
 */
 
-sComponent* ComponentFactory<sInputComponent>::loadFromJson(Json::Value& json)
+sComponent* ComponentFactory<sInputComponent>::loadFromJson(const std::string& entityType, Json::Value& json)
 {
     Keyboard keyboard;
     auto &&keyMap = keyboard.getStringMap();
@@ -133,7 +139,7 @@ sComponent* ComponentFactory<sInputComponent>::loadFromJson(Json::Value& json)
 ** sDirectionComponent
 */
 
-sComponent* ComponentFactory<sDirectionComponent>::loadFromJson(Json::Value& json)
+sComponent* ComponentFactory<sDirectionComponent>::loadFromJson(const std::string& entityType, Json::Value& json)
 {
     sDirectionComponent* component = new sDirectionComponent();
 
@@ -149,7 +155,7 @@ sComponent* ComponentFactory<sDirectionComponent>::loadFromJson(Json::Value& jso
 ** sHitBoxComponent
 */
 
-sComponent* ComponentFactory<sHitBoxComponent>::loadFromJson(Json::Value& json)
+sComponent* ComponentFactory<sHitBoxComponent>::loadFromJson(const std::string& entityType, Json::Value& json)
 {
     sHitBoxComponent* component = new sHitBoxComponent();
 
@@ -166,7 +172,7 @@ sComponent* ComponentFactory<sHitBoxComponent>::loadFromJson(Json::Value& json)
 ** sCircleHitBoxComponent
 */
 
-sComponent* ComponentFactory<sCircleHitBoxComponent>::loadFromJson(Json::Value& json)
+sComponent* ComponentFactory<sCircleHitBoxComponent>::loadFromJson(const std::string& entityType, Json::Value& json)
 {
     sCircleHitBoxComponent* component = new sCircleHitBoxComponent();
 
@@ -182,7 +188,7 @@ sComponent* ComponentFactory<sCircleHitBoxComponent>::loadFromJson(Json::Value& 
 ** sGravityComponent
 */
 
-sComponent* ComponentFactory<sGravityComponent>::loadFromJson(Json::Value& json)
+sComponent* ComponentFactory<sGravityComponent>::loadFromJson(const std::string& entityType, Json::Value& json)
 {
     sGravityComponent* component = new sGravityComponent();
 
@@ -213,7 +219,7 @@ eEntityType ComponentFactory<sTypeComponent>::stringToEntityType(const std::stri
     EXCEPT(NotImplementedException, "Failed to load sTypeComponent:  the entity type does not exist");
 }
 
-sComponent* ComponentFactory<sTypeComponent>::loadFromJson(Json::Value& json)
+sComponent* ComponentFactory<sTypeComponent>::loadFromJson(const std::string& entityType, Json::Value& json)
 {
     sTypeComponent* component = new sTypeComponent();
 

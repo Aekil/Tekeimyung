@@ -1,0 +1,18 @@
+{
+    "name": "TILE2",
+    "components": {
+            "sPositionComponent": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "sRenderComponent": {
+                "texture": "ressources/sprites/Landscape/landscape_33.png",
+                "type": "TILE",
+                "animated": false
+            },
+            "sTypeComponent": {
+                "type": "TILE"
+            }
+        }
+}

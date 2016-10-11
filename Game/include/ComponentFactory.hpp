@@ -1,5 +1,6 @@
 #pragma once
 
+#include <utility>
 #include "Utils/Exception.hpp"
 #include "json/json.h"
 #include "Core/Components.hh"
@@ -18,47 +19,83 @@
 
 #define GENERATE_PAIRS(COMPONENT) { #COMPONENT, new ComponentFactory<COMPONENT>() }
 
-class IComponentFactory
-{
-public:
-    IComponentFactory() {}
-    virtual ~IComponentFactory() {}
-    virtual sComponent* loadFromJson(Json::Value& json) = 0;
-    static bool                                                     componentTypeExists(const std::string& type);
-    static eOrientation                                             stringToOrientation(const std::string& orientationStr);
-    static sComponent*                                              createComponent(const std::string& name, Json::Value& value);
-
-private:
-    static std::unordered_map<std::string, IComponentFactory*>      _componentsTypes;
-};
-
 
 /*
 ** IComponentFactory
 */
 
+class IComponentFactory
+{
+public:
+    IComponentFactory() {}
+    virtual ~IComponentFactory() {}
+    virtual sComponent* loadFromJson(const std::string& entityType, Json::Value& json) = 0;
+    static bool                                                     componentTypeExists(const std::string& type);
+    static eOrientation                                             stringToOrientation(const std::string& orientationStr);
+    static void                                                     initComponent(const std::string& entityType, const std::string& name, Json::Value& value);
+    static sComponent*                                              createComponent(const std::string& entityType, const std::string& name);
+    virtual sComponent*                                             clone(const std::string& entityType) = 0;
+    virtual void                                                    addComponent(const std::string& entityType, sComponent* component) = 0;
+
+private:
+    // Store Components types
+    static std::unordered_map<std::string, IComponentFactory*>      _componentsTypes;
+};
+
+
+/*
+** BaseComponentFactory
+*/
+
 template <typename T>
-class ComponentFactory: public IComponentFactory
+class BaseComponentFactory: public IComponentFactory
+{
+public:
+    BaseComponentFactory() {}
+    ~BaseComponentFactory() {}
+
+    sComponent* loadFromJson(const std::string& entityType, Json::Value& json)
+    {
+        EXCEPT(NotImplementedException, "Failed to load component: the component has no overload");
+    }
+
+    void addComponent(const std::string& entityType, sComponent* component)
+    {
+        _components[entityType] = component;
+    }
+
+private:
+    sComponent*         clone(const std::string& entityType)
+    {
+        return _components[entityType]->clone();
+    }
+
+protected:
+    // One component per entity type
+    std::unordered_map<std::string, sComponent*>    _components;
+};
+
+
+/*
+** ComponentFactory
+*/
+template <typename T>
+class ComponentFactory
 {
 public:
     ComponentFactory() {}
     ~ComponentFactory() {}
-    sComponent* loadFromJson(Json::Value& json)
-    {
-        EXCEPT(NotImplementedException, "Failed to load component: the component has no overload");
-    }
 };
-
 
 /*
 ** sRenderComponent
 */
 
 template <>
-class ComponentFactory<sRenderComponent>: public IComponentFactory
+class ComponentFactory<sRenderComponent>: public BaseComponentFactory<sRenderComponent>
 {
 public:
-    sComponent* loadFromJson(Json::Value& json);
+    sComponent* loadFromJson(const std::string& entityType, Json::Value& json);
 
 private:
     Sprite::eType stringToSpriteType(const std::string& spriteTypeStr);
@@ -70,10 +107,10 @@ private:
 */
 
 template <>
-class ComponentFactory<sPositionComponent>: public IComponentFactory
+class ComponentFactory<sPositionComponent>: public BaseComponentFactory<sPositionComponent>
 {
 public:
-    sComponent* loadFromJson(Json::Value& json);
+    sComponent* loadFromJson(const std::string& entityType, Json::Value& json);
 };
 
 
@@ -82,10 +119,10 @@ public:
 */
 
 template <>
-class ComponentFactory<sInputComponent>: public IComponentFactory
+class ComponentFactory<sInputComponent>: public BaseComponentFactory<sInputComponent>
 {
 public:
-    sComponent* loadFromJson(Json::Value& json);
+    sComponent* loadFromJson(const std::string& entityType, Json::Value& json);
 };
 
 
@@ -94,10 +131,10 @@ public:
 */
 
 template <>
-class ComponentFactory<sDirectionComponent>: public IComponentFactory
+class ComponentFactory<sDirectionComponent>: public BaseComponentFactory<sDirectionComponent>
 {
 public:
-    sComponent* loadFromJson(Json::Value& json);
+    sComponent* loadFromJson(const std::string& entityType, Json::Value& json);
 };
 
 
@@ -106,10 +143,10 @@ public:
 */
 
 template <>
-class ComponentFactory<sHitBoxComponent>: public IComponentFactory
+class ComponentFactory<sHitBoxComponent>: public BaseComponentFactory<sHitBoxComponent>
 {
 public:
-    sComponent* loadFromJson(Json::Value& json);
+    sComponent* loadFromJson(const std::string& entityType, Json::Value& json);
 };
 
 
@@ -118,10 +155,10 @@ public:
 */
 
 template <>
-class ComponentFactory<sCircleHitBoxComponent>: public IComponentFactory
+class ComponentFactory<sCircleHitBoxComponent>: public BaseComponentFactory<sCircleHitBoxComponent>
 {
 public:
-    sComponent* loadFromJson(Json::Value& json);
+    sComponent* loadFromJson(const std::string& entityType, Json::Value& json);
 };
 
 
@@ -130,10 +167,10 @@ public:
 */
 
 template <>
-class ComponentFactory<sGravityComponent>: public IComponentFactory
+class ComponentFactory<sGravityComponent>: public BaseComponentFactory<sGravityComponent>
 {
 public:
-    sComponent* loadFromJson(Json::Value& json);
+    sComponent* loadFromJson(const std::string& entityType, Json::Value& json);
 };
 
 
@@ -142,9 +179,9 @@ public:
 */
 
 template <>
-class ComponentFactory<sTypeComponent>: public IComponentFactory
+class ComponentFactory<sTypeComponent>: public BaseComponentFactory<sTypeComponent>
 {
 public:
-    sComponent* loadFromJson(Json::Value& json);
+    sComponent* loadFromJson(const std::string& entityType, Json::Value& json);
     eEntityType stringToEntityType(const std::string& entityTypeStr);
 };

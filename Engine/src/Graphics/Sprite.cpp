@@ -1,3 +1,4 @@
+#include <iostream>
 #include "Window/GameWindow.hpp"
 #include "Utils/RessourceManager.hpp"
 
@@ -80,9 +81,9 @@ void Sprite::update(glm::vec2 position, float z, bool keyPressed, eOrientation o
 
 void    Sprite::draw()
 {
-    if (_animated)
+    if (_animated && _animations.find(_currentOrientation) != _animations.end())
     {
-        // Play animation
+        // Play animation if found for current orientation
         _animations[_currentOrientation].play(_textureShiftUniform);
     }
     else

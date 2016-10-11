@@ -26,7 +26,6 @@ void    InputSystem::update(EntityManager &em, float elapsedTime)
 
         if (keyboard.isPressed(input->moveLeft))
         {
-            //std::cout << "LEFT is " << (keyboard[input->moveLeft] == Keyboard::eKeyState::KEY_MAINTAINED ? "maintained" : "pressed") << " !" << std::endl;
             direction->value.x += -1.0;
             direction->value.y += 1.0;
             input->keyPressed = true;
@@ -35,7 +34,6 @@ void    InputSystem::update(EntityManager &em, float elapsedTime)
 
         if (keyboard.isPressed(input->moveRight))
         {
-            //std::cout << "RIGHT is " << (keyboard[input->moveRight] == Keyboard::eKeyState::KEY_MAINTAINED ? "maintained" : "pressed") << " !" << std::endl;
             direction->value.x += 1.0;
             direction->value.y += -1.0;
             input->keyPressed = true;
@@ -44,7 +42,6 @@ void    InputSystem::update(EntityManager &em, float elapsedTime)
 
         if (keyboard.isPressed(input->moveUp))
         {
-            //std::cout << "UP is " << (keyboard[input->moveUp] == Keyboard::eKeyState::KEY_MAINTAINED ? "maintained" : "pressed") << " !" << std::endl;
             direction->value.x += -1.0;
             direction->value.y += -1.0;
             input->keyPressed = true;
@@ -59,7 +56,6 @@ void    InputSystem::update(EntityManager &em, float elapsedTime)
 
         if (keyboard.isPressed(input->moveDown))
         {
-            //std::cout << "DOWN is " << (keyboard[input->moveDown] == Keyboard::eKeyState::KEY_MAINTAINED ? "maintained" : "pressed") << " !" << std::endl;
             direction->value.x += 1.0;
             direction->value.y += 1.0;
             input->keyPressed = true;

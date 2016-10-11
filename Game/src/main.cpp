@@ -13,10 +13,10 @@ int     main()
     {
         EntityFactory::init("ressources/archetypes");
 
-    /*    if (!engine.init() || !gameStateManager.addState<PlayState>())
+        if (!engine.init() || !gameStateManager.addState<PlayState>())
             return (1);
         else if (!engine.run())
-            return (1);*/
+            return (1);
     }
     catch(const Exception& e)
     {

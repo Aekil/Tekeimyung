@@ -7,8 +7,9 @@
 
 
 
-std::unordered_map<std::string, Entity*>  EntityFactory::_entities;
+std::unordered_map<std::string, std::list<std::string> >  EntityFactory::_entities;
 std::vector<std::string>  EntityFactory::_typesString = { ENTITIES_TYPES(GENERATE_STRING) };
+EntityManager*  EntityFactory::_em = nullptr;
 
 EntityFactory::EntityFactory() {}
 
@@ -28,8 +29,6 @@ void EntityFactory::init(const std::string& archetypesDir)
     {
         if (RessourceManager::getFileExtension(ent->d_name) == "json")
         {
-            Entity* entity;
-
             // Get entity configuration file
             std::string path = std::string(archetypesDir).append("/").append(ent->d_name);
             std::string entityConf = ressourceManager->getFile(path);
@@ -37,21 +36,26 @@ void EntityFactory::init(const std::string& archetypesDir)
             // Parse the configuration file with jsoncpp
             Json::Reader jsonReader;
             Json::Value parsed;
+            std::string typeName;
             if (!jsonReader.parse(entityConf, parsed))
                 EXCEPT(IOException, "Cannot parse archetype .json");
-            else if (!EntityFactory::entityTypeExists(parsed["name"].asString())) // The macro ENTITIES_TYPES did not create the type
+
+            typeName = parsed["name"].asString();
+
+            if (!EntityFactory::entityTypeExists(typeName)) // The macro ENTITIES_TYPES did not create the type
                 EXCEPT(InvalidParametersException, "Failed to read entity archetype: Entity type does not exist");
 
-            entity = new Entity(-1);
             // Create entity components
             for (Json::ValueIterator it = parsed["components"].begin(); it != parsed["components"].end(); it++)
             {
+                std::string componentName = it.key().asString();
+
                 // The macro COMPONENTS_TYPES did not create the type
                 if (!IComponentFactory::componentTypeExists(it.key().asString()))
                     EXCEPT(InvalidParametersException, "Failed to read entity archetype: Component type does not exist");
 
-                sComponent* component = IComponentFactory::createComponent(it.key().asString(), *it);
-                entity->addComponent(component);
+                IComponentFactory::initComponent(typeName, componentName, *it);
+                _entities[typeName].push_back(componentName);
             }
         }
     }
@@ -68,12 +72,35 @@ bool    EntityFactory::entityTypeExists(const std::string& type)
     return (false);
 }
 
-Entity* EntityFactory::createEntity(eArchetype& type)
+Entity* EntityFactory::createEntity(eArchetype type)
 {
     if ((int)type > _typesString.size() - 1)
     {
         // TODO: Assert not null
         return (nullptr);
     }
-    return EntityFactory::_entities[_typesString[(int)type]];
+
+    // TODO: Assert _em not null
+
+    std::string typeName = _typesString[(int)type];
+
+    return (cloneEntity(typeName));
+}
+
+void EntityFactory::bindEntityManager(EntityManager* em)
+{
+    _em = em;
+}
+
+Entity* EntityFactory::cloneEntity(const std::string& typeName)
+{
+    Entity* clone = _em->createEntity();
+
+    for (auto &&component: _entities[typeName])
+    {
+        sComponent* component_ = IComponentFactory::createComponent(typeName, component);
+        clone->addComponent(component_);
+    }
+
+    return (clone);
 }

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include "Component.hh"
 #include <vector>
 #include <string>
@@ -15,6 +16,20 @@ struct sRenderComponent: sComponent
     sRenderComponent() = default;
     sRenderComponent(Sprite::eType type, const std::string& texture, bool animated = false, uint32_t nbFrames = 0, const std::vector<eOrientation>& orientations = {}, const glm::vec2& spriteSize = {0, 0})
     : texture(texture), type(type), animated(animated), nbFrames(nbFrames), orientations(orientations), spriteSize(spriteSize) {}
+
+    virtual sComponent* clone()
+    {
+        sRenderComponent* component = new sRenderComponent();
+
+        component->texture = this->texture;
+        component->type = this->type;
+        component->animated = this->animated;
+        component->nbFrames = this->nbFrames;
+        component->spriteSize = this->spriteSize;
+        component->orientations = this->orientations;
+
+        return (component);
+    }
 
     std::string texture;
     Sprite::eType type;
@@ -32,6 +47,16 @@ struct sPositionComponent: sComponent
     sPositionComponent() = default;
     sPositionComponent(glm::vec2 value, float z): value(value), z(z) {}
 
+    virtual sComponent* clone()
+    {
+        sPositionComponent* component = new sPositionComponent();
+
+        component->value = this->value;
+        component->z = this->z;
+
+        return (component);
+    }
+
     glm::vec2 value;
 
     // Layer number
@@ -45,6 +70,19 @@ struct sInputComponent: sComponent {
                     Keyboard::eKey moveUp,
                     Keyboard::eKey moveDown): moveLeft(moveLeft), moveRight(moveRight), moveUp(moveUp), moveDown(moveDown), keyPressed(false) {}
 
+    virtual sComponent* clone()
+    {
+        sInputComponent* component = new sInputComponent();
+
+        component->moveLeft = this->moveLeft;
+        component->moveRight = this->moveRight;
+        component->moveUp = this->moveUp;
+        component->moveDown = this->moveDown;
+        component->keyPressed = this->keyPressed;
+
+        return (component);
+    }
+
     Keyboard::eKey          moveLeft;
     Keyboard::eKey          moveRight;
     Keyboard::eKey          moveUp;
@@ -57,6 +95,16 @@ struct sDirectionComponent : sComponent
     sDirectionComponent() = default;
     sDirectionComponent(glm::vec2) : value(value), orientation(eOrientation::N) {}
 
+    virtual sComponent* clone()
+    {
+        sDirectionComponent* component = new sDirectionComponent();
+
+        component->value = this->value;
+        component->orientation = this->orientation;
+
+        return (component);
+    }
+
     glm::vec2 value;
     eOrientation orientation;
 };
@@ -65,6 +113,16 @@ struct sHitBoxComponent : sComponent
 {
     sHitBoxComponent() = default;
     sHitBoxComponent(glm::vec2 min, glm::vec2 max) : min(min), max(max) {}
+
+    virtual sComponent* clone()
+    {
+        sHitBoxComponent* component = new sHitBoxComponent();
+
+        component->min = this->min;
+        component->max = this->max;
+
+        return (component);
+    }
 
     glm::vec2 min;
     glm::vec2 max;
@@ -75,6 +133,16 @@ struct sCircleHitBoxComponent : sComponent
     sCircleHitBoxComponent() = default;
     sCircleHitBoxComponent(glm::vec2 center, float radius) : center(center), radius(radius) {}
 
+    virtual sComponent* clone()
+    {
+        sCircleHitBoxComponent* component = new sCircleHitBoxComponent();
+
+        component->center = this->center;
+        component->radius = this->radius;
+
+        return (component);
+    }
+
     glm::vec2 center;
     float radius;
 };
@@ -83,6 +151,15 @@ struct sGravityComponent : sComponent
 {
     sGravityComponent() = default;
     sGravityComponent(glm::vec2 value) : value(value) {}
+
+    virtual sComponent* clone()
+    {
+        sGravityComponent* component = new sGravityComponent();
+
+        component->value = this->value;
+
+        return (component);
+    }
 
     glm::vec2 value;
 };
@@ -100,6 +177,15 @@ struct sTypeComponent: sComponent
 {
     sTypeComponent() = default;
     sTypeComponent(eEntityType type): type(type) {}
+
+    virtual sComponent* clone()
+    {
+        sTypeComponent* component = new sTypeComponent();
+
+        component->type = this->type;
+
+        return (component);
+    }
 
     eEntityType type;
 };
