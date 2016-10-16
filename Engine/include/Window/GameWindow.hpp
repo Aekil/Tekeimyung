@@ -8,9 +8,6 @@
 #include <Window/Keyboard.hpp>
 #include <Window/Mouse.hpp>
 
-#include <imgui.h>
-#include "imgui_impl_glfw_gl3.h"
-
 #define WINDOW_DEFAULT_WIDTH    1280
 #define WINDOW_DEFAULT_HEIGHT   720
 #define WINDOW_DEFAULT_TITLE    "Window default title - Powered by "

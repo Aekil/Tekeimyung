@@ -2,6 +2,7 @@
 #include <GL/glew.h>
 
 #include <Utils/Debug.hpp>
+#include <Utils/Logger.hpp>
 #include <Window/GameWindow.hpp>
 
 std::shared_ptr<GameWindow> GameWindow::_instance;
@@ -45,7 +46,7 @@ bool    GameWindow::initialize()
 
 
     // Enabling vertical synchronization (or VSync).
-    glfwSwapInterval(1);
+    glfwSwapInterval(0);
 
     // Placing the game window at the center of the screen.
     vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
@@ -63,7 +64,7 @@ bool    GameWindow::initialize()
 
     glViewport(0, 0, _bufferWidth, _bufferHeight);
 
-    ImGui_ImplGlfwGL3_Init(_window, true);
+    //ImGui_ImplGlfwGL3_Init(_window, true);
 
     registerEvents();
     return (true);
@@ -145,7 +146,7 @@ void    GameWindow::pollEvents()
 
 void    GameWindow::close()
 {
-    ImGui_ImplGlfwGL3_Shutdown();
+    //ImGui_ImplGlfwGL3_Shutdown();
     glfwDestroyWindow(_window);
     glfwTerminate();
 }
@@ -155,28 +156,33 @@ void	GameWindow::keyCallback(GLFWwindow* window, int key, int scancode, int acti
 	GameWindow*     gameWindow;
 	Keyboard::eKey  keyboardKey;
 
-    ASSERT(!(key < (int) Keyboard::eKey::UNKNOWN || key >= (int) Keyboard::eKey::LAST), "The keyboard key should belong to the range.");
 	gameWindow = reinterpret_cast<GameWindow*>(glfwGetWindowUserPointer(window));
     ASSERT(gameWindow != nullptr, "GameWindow should not be null.");
 
     Keyboard    &keyboard = gameWindow->getKeyboard();
     keyboardKey = keyboard.getNativeMap()[key];
-	switch (action) {
-        case GLFW_PRESS:
+    if (keyboardKey <= Keyboard::eKey::UNKNOWN || keyboardKey >= Keyboard::eKey::LAST)
+        LOG_INFO("The keyboard key should belong to the range.");
+    else
+    {
+        switch (action)
+        {
+            case GLFW_PRESS:
             {
                 if (keyboard.getStateMap()[keyboardKey] == Keyboard::eKeyState::KEY_IDLE)
-                   keyboard.getStateMap()[keyboardKey] = Keyboard::eKeyState::KEY_PRESSED;
+                    keyboard.getStateMap()[keyboardKey] = Keyboard::eKeyState::KEY_PRESSED;
                 else if (keyboard.getStateMap()[keyboardKey] == Keyboard::eKeyState::KEY_PRESSED)
-                   keyboard.getStateMap()[keyboardKey] = Keyboard::eKeyState::KEY_MAINTAINED;
+                    keyboard.getStateMap()[keyboardKey] = Keyboard::eKeyState::KEY_MAINTAINED;
             }
             break;
-        case GLFW_REPEAT:
-            keyboard.getStateMap()[keyboardKey] = Keyboard::eKeyState::KEY_MAINTAINED;
-            break;
-        case GLFW_RELEASE:
-            keyboard.getStateMap()[keyboardKey] = Keyboard::eKeyState::KEY_RELEASED;
-            break;
-	}
+            case GLFW_REPEAT:
+                keyboard.getStateMap()[keyboardKey] = Keyboard::eKeyState::KEY_MAINTAINED;
+                break;
+            case GLFW_RELEASE:
+                keyboard.getStateMap()[keyboardKey] = Keyboard::eKeyState::KEY_RELEASED;
+                break;
+        }
+    }
 }
 
 void    GameWindow::buttonCallback(GLFWwindow* window, int button, int action, int mods)
@@ -184,28 +190,32 @@ void    GameWindow::buttonCallback(GLFWwindow* window, int button, int action, i
     GameWindow*     gameWindow;
     Mouse::eButton  mouseButton;
 
-    ASSERT(!(button <= (int) Mouse::eButton::UNKNOWN || button >= (int) Mouse::eButton::MOUSE_BUTTON_LAST), "The mouse button should belong to the range.");
     gameWindow = reinterpret_cast<GameWindow*>(glfwGetWindowUserPointer(window));
     ASSERT(gameWindow != nullptr, "GameWindow should not be null.");
 
     Mouse       &mouse = gameWindow->getMouse();
     mouseButton = mouse.getNativeMap()[button];
-    switch (action)
+    if (button <= (int) Mouse::eButton::UNKNOWN || button >= (int) Mouse::eButton::MOUSE_BUTTON_LAST)
+        LOG_INFO("The mouse button should belong to the range.");
+    else
     {
-        case GLFW_PRESS:
-            {
-                if (mouse.getStateMap()[mouseButton] == Mouse::eButtonState::CLICK_PRESSED)
-                    mouse.getStateMap()[mouseButton] = Mouse::eButtonState::CLICK_MAINTAINED;
-                else if (mouse.getStateMap()[mouseButton] == Mouse::eButtonState::CLICK_IDLE)
-                    mouse.getStateMap()[mouseButton] = Mouse::eButtonState::CLICK_PRESSED;
-            }
-            break;
-        case GLFW_REPEAT:
-            mouse.getStateMap()[mouseButton] = Mouse::eButtonState::CLICK_MAINTAINED;
-            break;
-        case GLFW_RELEASE:
-            mouse.getStateMap()[mouseButton] = Mouse::eButtonState::CLICK_RELEASED;
-            break;
+        switch (action)
+        {
+            case GLFW_PRESS:
+                {
+                    if (mouse.getStateMap()[mouseButton] == Mouse::eButtonState::CLICK_PRESSED)
+                        mouse.getStateMap()[mouseButton] = Mouse::eButtonState::CLICK_MAINTAINED;
+                    else if (mouse.getStateMap()[mouseButton] == Mouse::eButtonState::CLICK_IDLE)
+                        mouse.getStateMap()[mouseButton] = Mouse::eButtonState::CLICK_PRESSED;
+                }
+                break;
+            case GLFW_REPEAT:
+                mouse.getStateMap()[mouseButton] = Mouse::eButtonState::CLICK_MAINTAINED;
+                break;
+            case GLFW_RELEASE:
+                mouse.getStateMap()[mouseButton] = Mouse::eButtonState::CLICK_RELEASED;
+                break;
+        }
     }
 }
 

@@ -2,11 +2,14 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <vector>
-#include "Window/GameWindow.hpp"
-#include "Utils/Debug.hpp"
-#include "Utils/Exception.hpp"
 
-#include "Graphics/Systems/RenderingSystem.hpp"
+#include <Graphics/Systems/RenderingSystem.hpp>
+#include <Utils/Debug.hpp>
+#include <Utils/Exception.hpp>
+#include <Window/GameWindow.hpp>
+
+#include <imgui.h>
+#include "imgui_impl_glfw_gl3.h"
 
 
 RenderingSystem::RenderingSystem(Map* map): _map(map)

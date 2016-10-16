@@ -1,4 +1,5 @@
 #include <ctime>
+#include <iomanip>
 #include <iostream>
 
 #include <Utils/Logger.hpp>
@@ -9,23 +10,24 @@ Logger::Logger() {}
 
 bool    Logger::initialize()
 {
-    time_t      time;
-    struct tm*  now;
-
     _stream.open("engine.log", std::ios::out | std::ios::app);
     if (!_stream.is_open())
     {
-        std::cerr << "Could not open the Logger properly." << std::endl;
+        std::cerr << "Could not open the log file properly." << std::endl;
         return (false);
     }
-    time = std::time(0);
-    now = std::localtime(&time);
-    _stream << std::asctime(now) << std::endl;
+    _stream << "===========================================" << std::endl;
+    _stream << "A new instance of Logger has been created !" << std::endl;
+    _stream << "Current date is: " << Logger::getDateToString() << std::endl;
+    _stream << "===========================================" << std::endl;
     return (true);
 }
 
 void    Logger::shutdown()
 {
+    _stream << "===========================================" << std::endl;
+    _stream << "Closing the current instance of Logger ...." << std::endl;
+    _stream << "===========================================" << std::endl;
     _stream.close();
 }
 
@@ -60,14 +62,28 @@ std::string Logger::getLevelToString(Logger::eLogLevel level)
     return (value);
 }
 
-void    Logger::log(Logger::eLogLevel level, std::string message)
+std::string Logger::getDateToString()
+{
+    time_t      time;
+    struct tm   now;
+    char        format[26];
+
+    time = std::time(0);
+    localtime_s(&now, &time);
+    asctime_s(format, sizeof(format), &now);
+    format[sizeof(format) - 2] = '\0';
+    return (format);
+}
+
+void    Logger::log(Logger::eLogLevel level, std::string message, ...)
 {
     std::ofstream&  stream = Logger::getInstance()->getStream();
 
     if (stream.is_open() && stream.good())
     {
         stream << "[" <<
-            Logger::getLevelToString(level) <<
+            Logger::getDateToString() <<
+            " - " << Logger::getLevelToString(level) <<
             "]\t" << message << std::endl;
     }
 }
