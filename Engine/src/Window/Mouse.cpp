@@ -41,14 +41,12 @@ void    Mouse::resetMouseState()
     }
 }
 
-void    Mouse::resetReleasedButtons()
+void    Mouse::updateMouseState()
 {
     Mouse::MouseNativeMap::const_iterator   it;
 
     for (it = _nativeMap.begin(); it != _nativeMap.end(); ++it)
     {
-        if (_stateMap[it->second] == Mouse::eButtonState::CLICK_RELEASED)
-            _stateMap[it->second] = Mouse::eButtonState::CLICK_IDLE;
         switch (_stateMap[it->second])
         {
             case Mouse::eButtonState::CLICK_RELEASED:

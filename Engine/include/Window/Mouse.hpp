@@ -43,7 +43,7 @@ public:
     Cursor&         getCursor();
 
     void            resetMouseState();
-    void            resetReleasedButtons();
+    void            updateMouseState();
 
     bool            isPressed(Mouse::eButton button);
 private:

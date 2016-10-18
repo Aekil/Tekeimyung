@@ -67,10 +67,5 @@ void    InputSystem::update(EntityManager &em, float elapsedTime)
             else
                 direction->orientation = eOrientation::S;
         }
-
-        //if (mouse.isPressed(Mouse::eButton::MOUSE_BUTTON_1))
-            //std::cout << "BUTTON is " << (mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_1] == Mouse::eButtonState::CLICK_MAINTAINED ? "maintained" : "pressed") << " !" << std::endl;
-
-        //std::cout << "Cursor is " << (mouse.getCursor().isInTheWindow() ? "in the window" : "is out of the window") << " (" << mouse.getCursor().getX() << ", " << mouse.getCursor().getY() << ")" << std::endl;
     });
 }

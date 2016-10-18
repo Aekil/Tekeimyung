@@ -20,7 +20,6 @@ bool    Engine::init()
 
     GameWindow::setInstance(_window);
     Logger::setInstance(logger);
-    LOG_INFO("Initialization complete !");
     return (true);
 }
 
@@ -37,7 +36,7 @@ bool    Engine::run()
         if (timer.getElapsedTime() >= timePerFrame)
         {
             _window->getKeyboard().updateKeyboardState();
-            _window->getMouse().resetReleasedButtons();
+            _window->getMouse().updateMouseState();
             _window->pollEvents();
             if (!_gameStateManager.hasStates())
             {
@@ -50,6 +49,7 @@ bool    Engine::run()
             {
                 _gameStateManager.removeCurrentState();
             }
+            std::cout << "Time: " << timer.getElapsedTime() * 1000 << std::endl;
             timer.reset();
         }
     }

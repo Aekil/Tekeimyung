@@ -4,11 +4,11 @@
 #include <memory>
 #include <string>
 
-#define LOG_TRACE(message)  Logger::log(Logger::eLogLevel::TRACE, message);
-#define LOG_DEBUG(message)  Logger::log(Logger::eLogLevel::DEBUG, message);
-#define LOG_INFO(message)   Logger::log(Logger::eLogLevel::INFO, message);
-#define LOG_WARN(message)   Logger::log(Logger::eLogLevel::WARN, message);
-#define LOG_ERROR(message)  Logger::log(Logger::eLogLevel::ERROR, message);
+#define LOG_TRACE(message, ...) Logger::log(Logger::eLogLevel::TRACE, message, __VA_ARGS__)
+#define LOG_DEBUG(message, ...) Logger::log(Logger::eLogLevel::DEBUG, message, __VA_ARGS__)
+#define LOG_INFO(message, ...)  Logger::log(Logger::eLogLevel::INFO, message, __VA_ARGS__)
+#define LOG_WARN(message, ...)  Logger::log(Logger::eLogLevel::WARN, message, __VA_ARGS__)
+#define LOG_ERROR(message, ...) Logger::log(Logger::eLogLevel::ERROR, message, __VA_ARGS__)
 
 class           Logger
 {
@@ -34,8 +34,9 @@ public:
     static void                     setInstance(std::shared_ptr<Logger> instance);
 
     static std::string              getLevelToString(Logger::eLogLevel level);
+    static std::string              getDateToString();
 
-    static void log(Logger::eLogLevel level, std::string message);
+    static void log(Logger::eLogLevel level, std::string message, ...);
 private:
     std::ofstream   _stream;
 
