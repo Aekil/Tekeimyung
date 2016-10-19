@@ -7,8 +7,8 @@
 #include "Core/Components.hh"
 #include "EntityFactory.hpp"
 
-//#include <imgui.h>
-//#include "imgui_impl_glfw_gl3.h"
+#include <imgui.h>
+#include <imgui_impl_glfw_gl3.h>
 
 #include "GameStates/PlayState.hpp"
 
@@ -128,14 +128,14 @@ void    PlayState::createEntity(const glm::vec3& pos)
 bool    PlayState::update(float elapsedTime)
 {
     bool createEntityButton = false;
-    /*ImGui_ImplGlfwGL3_NewFrame();
+    ImGui_ImplGlfwGL3_NewFrame();
     {
         ImGui::SetNextWindowSize(ImVec2(400, 50), ImGuiSetCond_FirstUseEver);
         ImGui::Begin("Debug", &_windowImgui);
         ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
         createEntityButton = ImGui::Button("Create entity");
         ImGui::End();
-    }*/
+    }
 
     if (createEntityButton)
     {
