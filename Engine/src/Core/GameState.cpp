@@ -1,4 +1,3 @@
-
 #include "Core/GameState.hpp"
 #include "Utils/Exception.hpp"
 

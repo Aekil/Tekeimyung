@@ -1,6 +1,9 @@
 #include <iostream>
 #include <GL/glew.h>
 
+#include <imgui.h>
+#include <imgui_impl_glfw_gl3.h>
+
 #include <Utils/Debug.hpp>
 #include <Utils/Logger.hpp>
 #include <Window/GameWindow.hpp>
@@ -46,7 +49,7 @@ bool    GameWindow::initialize()
 
 
     // Enabling vertical synchronization (or VSync).
-    glfwSwapInterval(0);
+    glfwSwapInterval(1);
 
     // Placing the game window at the center of the screen.
     vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
@@ -64,9 +67,8 @@ bool    GameWindow::initialize()
 
     glViewport(0, 0, _bufferWidth, _bufferHeight);
 
-    //ImGui_ImplGlfwGL3_Init(_window, true);
-
     registerEvents();
+    ImGui_ImplGlfwGL3_Init(_window, false);
     return (true);
 }
 
@@ -146,7 +148,7 @@ void    GameWindow::pollEvents()
 
 void    GameWindow::close()
 {
-    //ImGui_ImplGlfwGL3_Shutdown();
+    ImGui_ImplGlfwGL3_Shutdown();
     glfwDestroyWindow(_window);
     glfwTerminate();
 }
