@@ -2,12 +2,27 @@ cmake_minimum_required(VERSION 3.0)
 set(EXECUTABLE_NAME "game")
 project(${EXECUTABLE_NAME})
 
-
 # All source files using glob
 file(GLOB_RECURSE source_files src/*)
 file(GLOB_RECURSE include_files include/*)
 file(GLOB_RECURSE imgui_source_files ${CMAKE_SOURCE_DIR}/external/imgui/*.cpp*)
 file(GLOB_RECURSE jsoncpp_source_files ${CMAKE_SOURCE_DIR}/external/jsoncpp/*.cpp)
+
+# Group source files into the Visual Studio tree structure
+message(STATUS "Grouping source files in the tree structure... (from ${CMAKE_CURRENT_SOURCE_DIR})")
+source_group_files(${source_files})
+
+# Group header files into the Visual Studio tree structure
+message(STATUS "Grouping header files in the tree structure... (from ${CMAKE_CURRENT_SOURCE_DIR})")
+source_group_files(${include_files})
+
+# Group ImGui source files into the Visual Studio tree structure
+message(STATUS "Grouping ImGui source files in the tree structure... (from ${CMAKE_CURRENT_SOURCE_DIR})")
+source_group_files(${imgui_source_files})
+
+# Group JsonCpp source files into the Visual Studio tree structure
+message(STATUS "Grouping JsonCpp source files in the tree structure... (from ${CMAKE_CURRENT_SOURCE_DIR})")
+source_group_files(${jsoncpp_source_files})
 
 # add Engine includes with ENGINE_INCLUDE_DIRS
 include_directories(${ENGINE_INCLUDE_DIRS})
