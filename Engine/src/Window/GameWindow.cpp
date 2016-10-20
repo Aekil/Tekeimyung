@@ -49,7 +49,7 @@ bool    GameWindow::initialize()
 
 
     // Enabling vertical synchronization (or VSync).
-    glfwSwapInterval(1);
+    glfwSwapInterval(0);
 
     // Placing the game window at the center of the screen.
     vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
