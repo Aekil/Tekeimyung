@@ -15,7 +15,7 @@ struct sRenderComponent: sComponent
 {
     sRenderComponent() = default;
     sRenderComponent(Sprite::eType type, const std::string& texture, bool animated = false, uint32_t nbFrames = 0, const std::vector<eOrientation>& orientations = {}, const glm::vec2& spriteSize = {0, 0})
-    : texture(texture), type(type), animated(animated), nbFrames(nbFrames), orientations(orientations), spriteSize(spriteSize) {}
+    : texture(texture), type(type), animated(animated), nbFrames(nbFrames), orientations(orientations), spriteSize(spriteSize), _sprite(nullptr) {}
 
     virtual sComponent* clone()
     {
@@ -38,6 +38,7 @@ struct sRenderComponent: sComponent
 
     // Sprite width and height
     glm::vec2 spriteSize;
+    Sprite* _sprite;
 
     std::vector<eOrientation> orientations;
 };

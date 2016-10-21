@@ -25,8 +25,5 @@ private:
     // Shader program
     ShaderProgram                           _shaderProgram;
 
-    // Render System entities
-    std::unordered_map<int, Sprite*>        _renderEntities;
-
     Map*                                    _map;
 };
