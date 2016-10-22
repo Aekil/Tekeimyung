@@ -8,7 +8,8 @@
             },
             "sDirectionComponent": {
                 "x": 0,
-                "y": 0
+                "y": 0,
+                "speed": 2.0
             },
             "sRenderComponent": {
                 "texture": "ressources/sprites/characters/soldierSpriteSheet.png",

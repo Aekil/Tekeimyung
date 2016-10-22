@@ -146,6 +146,7 @@ sComponent* ComponentFactory<sDirectionComponent>::loadFromJson(const std::strin
     component->value.x = json.get("x", 0).asFloat();
     component->value.y = json.get("y", 0).asFloat();
     component->orientation =  stringToOrientation(json.get("orientation", "S").asString());
+    component->speed =  json.get("speed", 1.0f).asFloat();
 
     return component;
 }
