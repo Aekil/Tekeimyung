@@ -5,6 +5,7 @@
 #include "Core/GameState.hpp"
 #include "Core/Map.hpp"
 #include "Entity.hpp"
+#include "EntityFactory.hpp"
 
 class PlayState: public GameState
 {
@@ -15,6 +16,7 @@ class PlayState: public GameState
     virtual bool                        init();
     virtual bool                        update(float elapsedTime);
     void                                createEntity(const glm::vec3& pos);
+    void                                createTile(const glm::vec3& pos, eArchetype type);
 
 private:
     Map*                                _map;

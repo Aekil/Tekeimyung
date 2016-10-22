@@ -76,6 +76,10 @@ void Sprite::update(glm::vec2 position, float z, bool keyPressed, eOrientation o
         _pos.y += _spriteSize.y;
         _pos.x += _spriteSize.x - 15.0f;
     }
+    else
+    {
+        _pos.x -= (_spriteSize.x / 2.0f) - tileWidthHalf;
+    }
     if (_animated && !keyPressed)
     {
         _animations[_currentOrientation].reset();

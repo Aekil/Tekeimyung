@@ -5,7 +5,6 @@
 #include "Physics/GravitySystem.hpp"
 #include "Physics/CollisionSystem.hpp"
 #include "Core/Components.hh"
-#include "EntityFactory.hpp"
 
 #include <imgui.h>
 #include <imgui_impl_glfw_gl3.h>
@@ -17,12 +16,24 @@ PlayState::PlayState(): _windowImgui(true) {}
 
 PlayState::~PlayState() {}
 
+void    PlayState::createTile(const glm::vec3& pos, eArchetype type)
+{
+    Entity* tile;
+
+    tile = EntityFactory::createEntity(type);
+    sPositionComponent* tilePos = tile->getComponent<sPositionComponent>();
+    tilePos->value.y = pos.y;
+    tilePos->value.x = pos.x;
+    tilePos->z = pos.z;
+    (*_map)[pos.z][pos.y][pos.x] = tile->id;
+}
+
 bool    PlayState::init()
 {
     EntityManager &em = _world.getEntityManager();
     Entity* player;
     Entity* player2;
-    Entity* tile;
+    Entity* tower;
 
     EntityFactory::bindEntityManager(&em);
     player = EntityFactory::createEntity(eArchetype::PLAYER);
@@ -46,39 +57,29 @@ bool    PlayState::init()
 
     _map = new Map(em, 10, 10, 4);
 
+    // Init base map
     for (int y = 0; y < 10; y++) {
         for (int x = 0; x < 10; x++) {
-            tile = EntityFactory::createEntity(eArchetype::BLOCK_GREEN);
-            sPositionComponent* pos = tile->getComponent<sPositionComponent>();
-            pos->value.x = x;
-            pos->value.y = y;
-            pos->z = 0;
-            (*_map)[0][y][x] = tile->id;
+            createTile(glm::vec3(x, y, 0), eArchetype::BLOCK_GREEN);
         }
     }
 
 
     for (int y = 0; y < 4; y++) {
         for (int x = 0; x < 10; x++) {
-            tile = EntityFactory::createEntity(eArchetype::BLOCK_BROWN);
-            sPositionComponent* pos = tile->getComponent<sPositionComponent>();
-            pos->value.x = x;
-            pos->value.y = y;
-            pos->z = 1;
-            (*_map)[1][y][x] = tile->id;
+            createTile(glm::vec3(x, y, 1), eArchetype::BLOCK_BROWN);
         }
     }
 
     for (int y = 8; y < 10; y++) {
         for (int x = 0; x < 10; x++) {
-            tile = EntityFactory::createEntity(eArchetype::BLOCK_BROWN);
-            sPositionComponent* pos = tile->getComponent<sPositionComponent>();
-            pos->value.x = x;
-            pos->value.y = y;
-            pos->z = 1;
-            (*_map)[1][y][x] = tile->id;
+            createTile(glm::vec3(x, y, 1), eArchetype::BLOCK_BROWN);
         }
     }
+
+
+    // init towers
+    createTile(glm::vec3(3, 5, 1), eArchetype::TOWER_FIRE);
 
     //(*_map)[1].addEntity(player->id);
     //(*_map)[1].addEntity(player2->id);
