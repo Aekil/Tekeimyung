@@ -7,7 +7,7 @@
                 "z": 0
             },
             "sRenderComponent": {
-                "texture": "ressources/sprites/game/block_green.png",
+                "texture": "ressources/sprites/blocks/block_green.png",
                 "type": "TILE",
                 "animated": false
             },
