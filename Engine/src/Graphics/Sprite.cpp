@@ -60,11 +60,14 @@ void    Sprite::loadFromTexture(const std::string& textureFile, bool animated,  
 
 void Sprite::update(glm::vec2 position, float z, bool keyPressed, eOrientation orientation)
 {
-    float offsetX = GameWindow::getInstance()->getWidth() / 2.0f - 66.0f;
-    float offsetY = GameWindow::getInstance()->getHeight() - (33.0f * 3.0f);
+    float tileWidthHalf = 64.0f;
+    float tileLengthHalf = 32.0f;
+    float tileHeight = 38.0f;
+    float offsetX = GameWindow::getInstance()->getWidth() / 2.0f - tileWidthHalf;
+    float offsetY = GameWindow::getInstance()->getHeight() - (tileLengthHalf * 3.0f);
 
-    _pos.x = offsetX + (position.x - position.y) * 66.0f;
-    _pos.y = offsetY - (position.x + position.y) * 33.0f + (32.0f * z);
+    _pos.x = offsetX + (position.x - position.y) * tileWidthHalf;
+    _pos.y = offsetY - (position.x + position.y) * tileLengthHalf + (tileHeight * z);
     _pos.z = z;
     _currentOrientation = orientation;
 

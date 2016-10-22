@@ -48,7 +48,7 @@ bool    PlayState::init()
 
     for (int y = 0; y < 10; y++) {
         for (int x = 0; x < 10; x++) {
-            tile = EntityFactory::createEntity(eArchetype::TILE1);
+            tile = EntityFactory::createEntity(eArchetype::BLOCK_GREEN);
             sPositionComponent* pos = tile->getComponent<sPositionComponent>();
             pos->value.x = x;
             pos->value.y = y;
@@ -58,51 +58,30 @@ bool    PlayState::init()
     }
 
 
-    for (int y = 0; y < 5; y++) {
-        tile = EntityFactory::createEntity(eArchetype::TILE2);
-        sPositionComponent* pos = tile->getComponent<sPositionComponent>();
-        pos->value.x = 8;
-        pos->value.y = y;
-        pos->z = 0;
-        (*_map)[0][y][8] = tile->id;
-    }
-
-
-    for (int y = 0; y < 7; y++) {
-        for (int x = 0; x < 7; x++) {
-            tile = EntityFactory::createEntity(eArchetype::TILE2);
-            sPositionComponent* pos = tile->getComponent<sPositionComponent>();
-            pos->value.x = x;
-            pos->value.y = y;
-            pos->z = 1;
-            (*_map)[1][y][x] = tile->id;
-        }
-    }
-
-    for (int y = 0; y < 3; y++) {
-        for (int x = 4; x < 7; x++) {
-            tile = EntityFactory::createEntity(eArchetype::TILE1);
-            sPositionComponent* pos = tile->getComponent<sPositionComponent>();
-            pos->value.x = x;
-            pos->value.y = y;
-            pos->z = 1;
-            (*_map)[1][y][x] = tile->id;
-        }
-    }
-
     for (int y = 0; y < 4; y++) {
-        for (int x = 0; x < 4; x++) {
-            tile = EntityFactory::createEntity(eArchetype::TILE3);
+        for (int x = 0; x < 10; x++) {
+            tile = EntityFactory::createEntity(eArchetype::BLOCK_BROWN);
             sPositionComponent* pos = tile->getComponent<sPositionComponent>();
             pos->value.x = x;
             pos->value.y = y;
-            pos->z = 2;
-            (*_map)[2][y][x] = tile->id;
+            pos->z = 1;
+            (*_map)[1][y][x] = tile->id;
         }
     }
 
-    (*_map)[1].addEntity(player->id);
-    (*_map)[1].addEntity(player2->id);
+    for (int y = 8; y < 10; y++) {
+        for (int x = 0; x < 10; x++) {
+            tile = EntityFactory::createEntity(eArchetype::BLOCK_BROWN);
+            sPositionComponent* pos = tile->getComponent<sPositionComponent>();
+            pos->value.x = x;
+            pos->value.y = y;
+            pos->z = 1;
+            (*_map)[1][y][x] = tile->id;
+        }
+    }
+
+    //(*_map)[1].addEntity(player->id);
+    //(*_map)[1].addEntity(player2->id);
 
     _world.addSystem<InputSystem>();
     //_world.addSystem<GravitySystem>();
