@@ -4,6 +4,7 @@
 #include "Physics/MovementSystem.hpp"
 #include "Physics/GravitySystem.hpp"
 #include "Physics/CollisionSystem.hpp"
+#include "Systems/AISystem.hpp"
 #include "Core/Components.hh"
 
 #include <imgui.h>
@@ -66,6 +67,7 @@ bool    PlayState::init()
     createTile(glm::vec3(7, 7, 1), eArchetype::TOWER_FIRE);
 
     _world.addSystem<InputSystem>();
+    _world.addSystem<AISystem>();
     _world.addSystem<MovementSystem>(_map);
     _world.addSystem<CollisionSystem>(_map);
     _world.addSystem<RenderingSystem>(_map);

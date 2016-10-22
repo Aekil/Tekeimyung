@@ -58,7 +58,7 @@ void    Sprite::loadFromTexture(const std::string& textureFile, bool animated,  
    _buffer.updateData(vertices, 4, indices, 6);
 }
 
-void Sprite::update(glm::vec2 position, float z, bool keyPressed, eOrientation orientation)
+void Sprite::update(glm::vec2 position, float z, bool moved, eOrientation orientation)
 {
     float tileWidthHalf = 64.0f;
     float tileLengthHalf = 32.0f;
@@ -80,7 +80,7 @@ void Sprite::update(glm::vec2 position, float z, bool keyPressed, eOrientation o
     {
         _pos.x -= (_spriteSize.x / 2.0f) - tileWidthHalf;
     }
-    if (_animated && !keyPressed)
+    if (_animated && !moved)
     {
         _animations[_currentOrientation].reset();
     }

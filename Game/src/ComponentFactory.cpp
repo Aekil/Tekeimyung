@@ -229,3 +229,15 @@ sComponent* ComponentFactory<sTypeComponent>::loadFromJson(const std::string& en
 
     return component;
 }
+
+
+/*
+** sAIComponent
+*/
+
+sComponent* ComponentFactory<sAIComponent>::loadFromJson(const std::string& entityType, Json::Value& json)
+{
+    sAIComponent* component = new sAIComponent();
+
+    return component;
+}

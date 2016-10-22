@@ -16,6 +16,7 @@
     GENERATE_PAIRS(sCircleHitBoxComponent),\
     GENERATE_PAIRS(sGravityComponent),\
     GENERATE_PAIRS(sTypeComponent),\
+    GENERATE_PAIRS(sAIComponent),\
 
 #define GENERATE_PAIRS(COMPONENT) { #COMPONENT, new ComponentFactory<COMPONENT>() }
 
@@ -184,4 +185,16 @@ class ComponentFactory<sTypeComponent>: public BaseComponentFactory<sTypeCompone
 public:
     sComponent* loadFromJson(const std::string& entityType, Json::Value& json);
     eEntityType stringToEntityType(const std::string& entityTypeStr);
+};
+
+
+/*
+** sAIComponent
+*/
+
+template <>
+class ComponentFactory<sAIComponent>: public BaseComponentFactory<sAIComponent>
+{
+public:
+    sComponent* loadFromJson(const std::string& entityType, Json::Value& json);
 };

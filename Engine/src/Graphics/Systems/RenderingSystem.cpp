@@ -131,7 +131,6 @@ Sprite*   RenderingSystem::getSprite(Entity* entity)
     sRenderComponent *sprite = entity->getComponent<sRenderComponent>();
     sPositionComponent *position = entity->getComponent<sPositionComponent>();
     sDirectionComponent *direction = entity->getComponent<sDirectionComponent>();
-    sInputComponent *input = entity->getComponent<sInputComponent>();
 
     // The entity does not exist in the render system
     if (!sprite->_sprite)
@@ -142,9 +141,9 @@ Sprite*   RenderingSystem::getSprite(Entity* entity)
     }
 
     // Update entity graphic position
-    bool keyPressed = input && input->keyPressed;
+    bool moved = direction && direction->moved;
     eOrientation orientation = direction ? direction->orientation : eOrientation::S;
-    sprite->_sprite->update(position->value, position->z, keyPressed, orientation);
+    sprite->_sprite->update(position->value, position->z, moved, orientation);
 
     return (sprite->_sprite);
 }

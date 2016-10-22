@@ -69,7 +69,7 @@ struct sInputComponent: sComponent {
     sInputComponent(Keyboard::eKey moveLeft,
                     Keyboard::eKey moveRight,
                     Keyboard::eKey moveUp,
-                    Keyboard::eKey moveDown): moveLeft(moveLeft), moveRight(moveRight), moveUp(moveUp), moveDown(moveDown), keyPressed(false) {}
+                    Keyboard::eKey moveDown): moveLeft(moveLeft), moveRight(moveRight), moveUp(moveUp), moveDown(moveDown) {}
 
     virtual sComponent* clone()
     {
@@ -79,7 +79,6 @@ struct sInputComponent: sComponent {
         component->moveRight = this->moveRight;
         component->moveUp = this->moveUp;
         component->moveDown = this->moveDown;
-        component->keyPressed = this->keyPressed;
 
         return (component);
     }
@@ -88,13 +87,12 @@ struct sInputComponent: sComponent {
     Keyboard::eKey          moveRight;
     Keyboard::eKey          moveUp;
     Keyboard::eKey          moveDown;
-    bool                    keyPressed;
 };
 
 struct sDirectionComponent : sComponent
 {
     sDirectionComponent() = default;
-    sDirectionComponent(glm::vec2) : value(value), orientation(eOrientation::N) {}
+    sDirectionComponent(glm::vec2) : value(value), orientation(eOrientation::N), moved(false) {}
 
     virtual sComponent* clone()
     {
@@ -102,12 +100,14 @@ struct sDirectionComponent : sComponent
 
         component->value = this->value;
         component->orientation = this->orientation;
+        component->moved = this->moved;
 
         return (component);
     }
 
     glm::vec2 value;
     eOrientation orientation;
+    bool moved;
 };
 
 struct sHitBoxComponent : sComponent
@@ -190,4 +190,16 @@ struct sTypeComponent: sComponent
     }
 
     eEntityType type;
+};
+
+struct sAIComponent : sComponent
+{
+    sAIComponent() = default;
+
+    virtual sComponent* clone()
+    {
+        sAIComponent* component = new sAIComponent();
+
+        return (component);
+    }
 };
