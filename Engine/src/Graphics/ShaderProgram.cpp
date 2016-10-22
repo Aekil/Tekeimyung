@@ -39,8 +39,9 @@ void    ShaderProgram::attachShader(GLenum shaderType, const std::string& fileNa
     // If compilation did not succeed, get the error message and throw an Exception
     if (!success)
     {
+        std::string shaderTypeName = shaderNameFromType(shaderType);
         glGetShaderInfoLog(_shaders[shaderType], 512, NULL, infoLog);
-        EXCEPT(RendererAPIException, "Failed to compile shaders");
+        EXCEPT(RendererAPIException, "Failed to compile shader \"%s\"", shaderTypeName.c_str());
     }
 
     // Attach shaders to shader program

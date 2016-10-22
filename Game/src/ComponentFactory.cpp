@@ -56,7 +56,7 @@ void    IComponentFactory::initComponent(const std::string& entityType, const st
         std::stringstream msg;
 
         msg << "Failed to load " << name << ": " << e.what();
-        EXCEPT(InternalErrorException, msg.str());
+        EXCEPT(InternalErrorException, msg.str().c_str());
     }
 }
 

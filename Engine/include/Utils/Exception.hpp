@@ -3,6 +3,8 @@
 #include <exception>
 #include <cstdint>
 #include <string>
+#include <cstdio>
+#include "Debug.hpp"
 
 
 #if defined(_MSC_VER)
@@ -81,7 +83,20 @@ public:
     : Exception{"RendererAPIException", description, file, function, line} {}
 };
 
-#define EXCEPT(type, desc)\
+template<typename... Args>
+std::string formatMessage(const char* format, Args... args)
+{
+    std::string buffer;
+    buffer.resize(512);
+    int size = snprintf(const_cast<char*>(buffer.c_str()), 512, format, args...);
+
+    ASSERT(size >= 0, "The formated message should correctly be copied in the buffer");
+
+    buffer.resize(size);
+    return buffer;
+}
+
+#define EXCEPT(type, format, ...)\
 do {\
-    throw type(desc, __FILE__, FUNCTION, __LINE__);\
+    throw type(formatMessage(format, __VA_ARGS__), __FILE__, FUNCTION, __LINE__);\
 } while (0)

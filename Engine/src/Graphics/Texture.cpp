@@ -24,7 +24,7 @@ void    Texture::loadFromFile (const std::string &fileName)
 
     if (_data == nullptr)
     {
-         EXCEPT(FileNotFoundException, "Failed to load file");
+         EXCEPT(FileNotFoundException, "Failed to load texture \"%s\"", fileName.c_str());
     }
 
     // Create one texture object
