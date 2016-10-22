@@ -33,6 +33,10 @@ void    Texture::loadFromFile (const std::string &fileName)
     // Use texture
     glBindTexture(GL_TEXTURE_2D, _texture);
 
+    // Define texture filter
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
     // Copy image data into texture object
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, _width, _height, 0, GL_RGBA, GL_UNSIGNED_BYTE, _data);
     // Generate image mipmap levels

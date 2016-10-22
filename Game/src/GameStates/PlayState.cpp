@@ -55,31 +55,32 @@ bool    PlayState::init()
     input->moveUp = Keyboard::eKey::I;
     input->moveDown = Keyboard::eKey::K;
 
-    _map = new Map(em, 10, 10, 4);
+    _map = new Map(em, 20, 15, 4);
 
     // Init base map
-    for (int y = 0; y < 10; y++) {
-        for (int x = 0; x < 10; x++) {
+    for (int y = 0; y < 15; y++) {
+        for (int x = 0; x < 20; x++) {
             createTile(glm::vec3(x, y, 0), eArchetype::BLOCK_GREEN);
         }
     }
 
 
     for (int y = 0; y < 4; y++) {
-        for (int x = 0; x < 10; x++) {
+        for (int x = 0; x < 20; x++) {
             createTile(glm::vec3(x, y, 1), eArchetype::BLOCK_BROWN);
         }
     }
 
-    for (int y = 8; y < 10; y++) {
-        for (int x = 0; x < 10; x++) {
+    for (int y = 8; y < 15; y++) {
+        for (int x = 0; x < 20; x++) {
             createTile(glm::vec3(x, y, 1), eArchetype::BLOCK_BROWN);
         }
     }
 
 
     // init towers
-    createTile(glm::vec3(3, 5, 1), eArchetype::TOWER_FIRE);
+    createTile(glm::vec3(7, 4, 1), eArchetype::TOWER_FIRE);
+    createTile(glm::vec3(7, 7, 1), eArchetype::TOWER_FIRE);
 
     //(*_map)[1].addEntity(player->id);
     //(*_map)[1].addEntity(player2->id);
