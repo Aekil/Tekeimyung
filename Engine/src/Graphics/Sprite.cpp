@@ -73,8 +73,8 @@ void Sprite::update(glm::vec2 position, float z, bool keyPressed, eOrientation o
 
     if (_type == Sprite::eType::OBJECT)
     {
-        _pos.y += _spriteSize.y;
-        _pos.x += _spriteSize.x - 15.0f;
+        _pos.y += tileLengthHalf * 2.0f;
+        _pos.x += tileWidthHalf - (_spriteSize.x / 2.0f);
     }
     else
     {

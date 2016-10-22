@@ -31,19 +31,14 @@ void    PlayState::createTile(const glm::vec3& pos, eArchetype type)
 bool    PlayState::init()
 {
     EntityManager &em = _world.getEntityManager();
-    Entity* player;
-    Entity* player2;
-    Entity* tower;
 
     EntityFactory::bindEntityManager(&em);
-    player = EntityFactory::createEntity(eArchetype::PLAYER);
-    sPositionComponent* posPlayer = player->getComponent<sPositionComponent>();
-
-    posPlayer->value.x = 9;
-    posPlayer->value.y = 5;
-    posPlayer->z = 1;
 
     _map = new Map(em, 20, 15, 4);
+
+    // Create characters
+    createEntity(glm::vec3(9, 5, 1), eArchetype::PLAYER);
+    createEntity(glm::vec3(0.5f, 5.5f, 1), eArchetype::ENEMY);
 
     // Init base map
     for (int y = 0; y < 15; y++) {
@@ -66,11 +61,9 @@ bool    PlayState::init()
     }
 
 
-    // init towers
+    // Create towers
     createTile(glm::vec3(7, 4, 1), eArchetype::TOWER_FIRE);
     createTile(glm::vec3(7, 7, 1), eArchetype::TOWER_FIRE);
-
-    (*_map)[1].addEntity(player->id);
 
     _world.addSystem<InputSystem>();
     _world.addSystem<MovementSystem>(_map);
@@ -80,9 +73,9 @@ bool    PlayState::init()
     return (true);
 }
 
-void    PlayState::createEntity(const glm::vec3& pos)
+Entity*    PlayState::createEntity(const glm::vec3& pos, eArchetype type)
 {
-    Entity* entity = EntityFactory::createEntity(eArchetype::PLAYER);
+    Entity* entity = EntityFactory::createEntity(type);
 
     sPositionComponent* posEntity = entity->getComponent<sPositionComponent>();
     posEntity->value.x = pos.x;
@@ -90,6 +83,7 @@ void    PlayState::createEntity(const glm::vec3& pos)
     posEntity->z = pos.z;
 
     (*_map)[pos.z].addEntity(entity->id);
+    return entity;
 }
 
 bool    PlayState::update(float elapsedTime)
@@ -120,7 +114,7 @@ bool    PlayState::update(float elapsedTime)
             colType = (*collisionMap)[pos.z - 1][std::floor(pos.y)][std::floor(pos.x)];
         }
 
-        createEntity(pos);
+        createEntity(pos, eArchetype::PLAYER);
     }
 
     GameState::update(elapsedTime);
