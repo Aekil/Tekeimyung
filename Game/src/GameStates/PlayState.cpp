@@ -37,23 +37,11 @@ bool    PlayState::init()
 
     EntityFactory::bindEntityManager(&em);
     player = EntityFactory::createEntity(eArchetype::PLAYER);
-    player2 = EntityFactory::createEntity(eArchetype::PLAYER);
     sPositionComponent* posPlayer = player->getComponent<sPositionComponent>();
-    sPositionComponent* posPlayer2 = player2->getComponent<sPositionComponent>();
-    sInputComponent* input = player2->getComponent<sInputComponent>();
 
     posPlayer->value.x = 9;
-    posPlayer->value.y = 9;
+    posPlayer->value.y = 5;
     posPlayer->z = 1;
-
-    posPlayer2->value.x = 6;
-    posPlayer2->value.y = 8;
-    posPlayer2->z = 1;
-
-    input->moveLeft = Keyboard::eKey::J;
-    input->moveRight = Keyboard::eKey::L;
-    input->moveUp = Keyboard::eKey::I;
-    input->moveDown = Keyboard::eKey::K;
 
     _map = new Map(em, 20, 15, 4);
 
@@ -82,11 +70,9 @@ bool    PlayState::init()
     createTile(glm::vec3(7, 4, 1), eArchetype::TOWER_FIRE);
     createTile(glm::vec3(7, 7, 1), eArchetype::TOWER_FIRE);
 
-    //(*_map)[1].addEntity(player->id);
-    //(*_map)[1].addEntity(player2->id);
+    (*_map)[1].addEntity(player->id);
 
     _world.addSystem<InputSystem>();
-    //_world.addSystem<GravitySystem>();
     _world.addSystem<MovementSystem>(_map);
     _world.addSystem<CollisionSystem>(_map);
     _world.addSystem<RenderingSystem>(_map);
