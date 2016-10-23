@@ -119,6 +119,7 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
         }
     }
 
+    ImGui::ShowTestWindow();
     ImGui::Render();
 
     // Display screen
