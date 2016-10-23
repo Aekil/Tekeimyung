@@ -18,13 +18,7 @@ RenderingSystem::RenderingSystem(Map* map): _map(map)
     addDependency<sRenderComponent>();
 }
 
-RenderingSystem::~RenderingSystem()
-{
-    for (auto &&renderEntity: _renderEntities)
-    {
-        delete renderEntity.second;
-    }
-}
+RenderingSystem::~RenderingSystem() {}
 
 bool    RenderingSystem::init()
 {
@@ -111,7 +105,7 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
             for (uint32_t x = 0; x < _map->getWidth(); x++)
             {
                 // Orthogonal projection matrice
-                glm::mat4 ortho = glm::ortho(0.0f, (float)GameWindow::getInstance()->getWidth(), 0.0f, (float)GameWindow::getInstance()->getHeight());
+                glm::mat4 ortho = glm::ortho(0.0f, (float)GameWindow::getInstance()->getWidth() * 1.3f, 0.0f, (float)GameWindow::getInstance()->getHeight() * 1.3f);
                 GLint uniProj = _shaderProgram.getUniformLocation("proj");
                 glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(ortho));
 
@@ -138,20 +132,19 @@ Sprite*   RenderingSystem::getSprite(Entity* entity)
     sRenderComponent *sprite = entity->getComponent<sRenderComponent>();
     sPositionComponent *position = entity->getComponent<sPositionComponent>();
     sDirectionComponent *direction = entity->getComponent<sDirectionComponent>();
-    sInputComponent *input = entity->getComponent<sInputComponent>();
 
     // The entity does not exist in the render system
-    if (_renderEntities.find(id) == _renderEntities.end())
+    if (!sprite->_sprite)
     {
-        _renderEntities[id] = new Sprite(sprite->type, _shaderProgram);
-        _renderEntities[id]->loadFromTexture(sprite->texture, sprite->animated, sprite->nbFrames, sprite->orientations, sprite->spriteSize);
+        sprite->_sprite = new Sprite(sprite->type, _shaderProgram);
+        sprite->_sprite->loadFromTexture(sprite->texture, sprite->animated, sprite->nbFrames, sprite->orientations, sprite->spriteSize);
 
     }
 
     // Update entity graphic position
-    bool keyPressed = input && input->keyPressed;
+    bool moved = direction && direction->moved;
     eOrientation orientation = direction ? direction->orientation : eOrientation::S;
-    _renderEntities[id]->update(position->value, position->z, keyPressed, orientation);
+    sprite->_sprite->update(position->value, position->z, moved, orientation);
 
-    return (_renderEntities[id]);
+    return (sprite->_sprite);
 }

@@ -22,29 +22,29 @@ void    InputSystem::update(EntityManager &em, float elapsedTime)
 
         direction->value = glm::vec2(0.0f, 0.0f);
 
-        input->keyPressed = false;
+        direction->moved = false;
 
         if (keyboard.isPressed(input->moveLeft))
         {
-            direction->value.x += -1.0;
-            direction->value.y += 1.0;
-            input->keyPressed = true;
+            direction->value.x += -direction->speed;
+            direction->value.y += direction->speed;
+            direction->moved = true;
             direction->orientation = eOrientation::W;
         }
 
         if (keyboard.isPressed(input->moveRight))
         {
-            direction->value.x += 1.0;
-            direction->value.y += -1.0;
-            input->keyPressed = true;
+            direction->value.x += direction->speed;
+            direction->value.y += -direction->speed;
+            direction->moved = true;
             direction->orientation = eOrientation::E;
         }
 
         if (keyboard.isPressed(input->moveUp))
         {
-            direction->value.x += -1.0;
-            direction->value.y += -1.0;
-            input->keyPressed = true;
+            direction->value.x += -direction->speed;
+            direction->value.y += -direction->speed;
+            direction->moved = true;
 
             if (keyboard.isPressed(input->moveLeft))
                 direction->orientation = eOrientation::NW;
@@ -56,9 +56,9 @@ void    InputSystem::update(EntityManager &em, float elapsedTime)
 
         if (keyboard.isPressed(input->moveDown))
         {
-            direction->value.x += 1.0;
-            direction->value.y += 1.0;
-            input->keyPressed = true;
+            direction->value.x += direction->speed;
+            direction->value.y += direction->speed;
+            direction->moved = true;
 
             if (keyboard.isPressed(input->moveLeft))
                 direction->orientation = eOrientation::SW;

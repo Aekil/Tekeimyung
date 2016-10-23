@@ -24,7 +24,7 @@ void EntityFactory::init(const std::string& archetypesDir)
 
     dir = opendir(archetypesDir.c_str());
     if (!dir)
-        EXCEPT(FileNotFoundException, "Cannot open archetypes directory");
+        EXCEPT(FileNotFoundException, "Cannot open archetypes directory \"%s\"", archetypesDir.c_str());
 
     while ((ent = readdir(dir)) != NULL)
     {
@@ -39,12 +39,12 @@ void EntityFactory::init(const std::string& archetypesDir)
             Json::Value parsed;
             std::string typeName;
             if (!jsonReader.parse(entityConf, parsed))
-                EXCEPT(IOException, "Cannot parse archetype .json");
+                EXCEPT(IOException, "Cannot parse archetype \"%s\"", path.c_str());
 
             typeName = parsed["name"].asString();
 
             if (!EntityFactory::entityTypeExists(typeName)) // The macro ENTITIES_TYPES did not create the type
-                EXCEPT(InvalidParametersException, "Failed to read entity archetype: Entity type does not exist");
+                EXCEPT(InvalidParametersException, "Failed to read entity archetype: Entity type \"%s\" does not exist", typeName.c_str());
 
             // Create entity components
             for (Json::ValueIterator it = parsed["components"].begin(); it != parsed["components"].end(); it++)
@@ -53,7 +53,7 @@ void EntityFactory::init(const std::string& archetypesDir)
 
                 // The macro COMPONENTS_TYPES did not create the type
                 if (!IComponentFactory::componentTypeExists(it.key().asString()))
-                    EXCEPT(InvalidParametersException, "Failed to read entity archetype: Component type does not exist");
+                    EXCEPT(InvalidParametersException, "Failed to read entity archetype: Component type \"%s\" does not exist", componentName.c_str());
 
                 IComponentFactory::initComponent(typeName, componentName, *it);
                 _entities[typeName].push_back(componentName);

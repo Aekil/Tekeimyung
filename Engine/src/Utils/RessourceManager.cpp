@@ -67,7 +67,7 @@ std::string RessourceManager::loadFile(const std::string basename, const std::st
 
     file.open(fileName.c_str());
     if (!file.good())
-        EXCEPT(FileNotFoundException, "Failed to open file ");
+        EXCEPT(FileNotFoundException, "Failed to open file \"%s\"", fileName.c_str());
 
     file.seekg(0, file.end);
     fileSize = file.tellg();

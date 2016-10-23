@@ -15,7 +15,7 @@ struct sRenderComponent: sComponent
 {
     sRenderComponent() = default;
     sRenderComponent(Sprite::eType type, const std::string& texture, bool animated = false, uint32_t nbFrames = 0, const std::vector<eOrientation>& orientations = {}, const glm::vec2& spriteSize = {0, 0})
-    : texture(texture), type(type), animated(animated), nbFrames(nbFrames), orientations(orientations), spriteSize(spriteSize) {}
+    : texture(texture), type(type), animated(animated), nbFrames(nbFrames), orientations(orientations), spriteSize(spriteSize), _sprite(nullptr) {}
 
     virtual sComponent* clone()
     {
@@ -38,6 +38,7 @@ struct sRenderComponent: sComponent
 
     // Sprite width and height
     glm::vec2 spriteSize;
+    Sprite* _sprite;
 
     std::vector<eOrientation> orientations;
 };
@@ -68,7 +69,7 @@ struct sInputComponent: sComponent {
     sInputComponent(Keyboard::eKey moveLeft,
                     Keyboard::eKey moveRight,
                     Keyboard::eKey moveUp,
-                    Keyboard::eKey moveDown): moveLeft(moveLeft), moveRight(moveRight), moveUp(moveUp), moveDown(moveDown), keyPressed(false) {}
+                    Keyboard::eKey moveDown): moveLeft(moveLeft), moveRight(moveRight), moveUp(moveUp), moveDown(moveDown) {}
 
     virtual sComponent* clone()
     {
@@ -78,7 +79,6 @@ struct sInputComponent: sComponent {
         component->moveRight = this->moveRight;
         component->moveUp = this->moveUp;
         component->moveDown = this->moveDown;
-        component->keyPressed = this->keyPressed;
 
         return (component);
     }
@@ -87,13 +87,12 @@ struct sInputComponent: sComponent {
     Keyboard::eKey          moveRight;
     Keyboard::eKey          moveUp;
     Keyboard::eKey          moveDown;
-    bool                    keyPressed;
 };
 
 struct sDirectionComponent : sComponent
 {
     sDirectionComponent() = default;
-    sDirectionComponent(glm::vec2) : value(value), orientation(eOrientation::N) {}
+    sDirectionComponent(glm::vec2) : value(value), orientation(eOrientation::N), moved(false), speed(1.0f) {}
 
     virtual sComponent* clone()
     {
@@ -101,12 +100,16 @@ struct sDirectionComponent : sComponent
 
         component->value = this->value;
         component->orientation = this->orientation;
+        component->speed = this->speed;
+        component->moved = this->moved;
 
         return (component);
     }
 
     glm::vec2 value;
     eOrientation orientation;
+    float speed;
+    bool moved;
 };
 
 struct sHitBoxComponent : sComponent
@@ -189,4 +192,16 @@ struct sTypeComponent: sComponent
     }
 
     eEntityType type;
+};
+
+struct sAIComponent : sComponent
+{
+    sAIComponent() = default;
+
+    virtual sComponent* clone()
+    {
+        sAIComponent* component = new sAIComponent();
+
+        return (component);
+    }
 };

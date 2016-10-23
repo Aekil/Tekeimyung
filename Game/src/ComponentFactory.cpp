@@ -56,7 +56,7 @@ void    IComponentFactory::initComponent(const std::string& entityType, const st
         std::stringstream msg;
 
         msg << "Failed to load " << name << ": " << e.what();
-        EXCEPT(InternalErrorException, msg.str());
+        EXCEPT(InternalErrorException, msg.str().c_str());
     }
 }
 
@@ -146,6 +146,7 @@ sComponent* ComponentFactory<sDirectionComponent>::loadFromJson(const std::strin
     component->value.x = json.get("x", 0).asFloat();
     component->value.y = json.get("y", 0).asFloat();
     component->orientation =  stringToOrientation(json.get("orientation", "S").asString());
+    component->speed =  json.get("speed", 1.0f).asFloat();
 
     return component;
 }
@@ -226,6 +227,18 @@ sComponent* ComponentFactory<sTypeComponent>::loadFromJson(const std::string& en
     sTypeComponent* component = new sTypeComponent();
 
     component->type = stringToEntityType(json.get("type", "TILE_WALKABLE").asString());
+
+    return component;
+}
+
+
+/*
+** sAIComponent
+*/
+
+sComponent* ComponentFactory<sAIComponent>::loadFromJson(const std::string& entityType, Json::Value& json)
+{
+    sAIComponent* component = new sAIComponent();
 
     return component;
 }
