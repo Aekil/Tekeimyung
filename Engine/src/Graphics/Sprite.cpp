@@ -23,14 +23,14 @@ void    Sprite::loadFromTexture(const std::string& textureFile, bool animated,  
         for (unsigned int i = 0; i < orientations.size(); i++)
         {
             auto &&orientation = orientations[i];
-            glm::vec2 offset(0, spriteSize.y * i / _texture->getHeight());
+            glm::vec2 offset(0, spriteSize.y * i);
 
             _animations[orientation] = {};
             _animations[orientation].setSpriteSheet(_texture);
             for (unsigned int frame = 0; frame < nbFrames; frame++)
             {
                 _animations[orientation].addFrame(offset);
-                offset.x += spriteSize.x / _texture->getWidth();
+                offset.x += spriteSize.x;
             }
         }
 

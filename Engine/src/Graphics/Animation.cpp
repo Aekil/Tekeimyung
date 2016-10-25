@@ -27,7 +27,13 @@ void    Animation::addFrame(const glm::vec2& offset)
         EXCEPT(InternalErrorException, "Attempt to add a frame outside the sprite sheet range");
     }
 
-    _frames.push_back(offset);
+    // Normalize texture coordinates
+    glm::vec2 normalizedOffset;
+    normalizedOffset.x = offset.x / _spriteSheet->getWidth();
+    normalizedOffset.y = offset.y / _spriteSheet->getHeight();
+
+    // Add textures coordinates to frame list
+    _frames.push_back(normalizedOffset);
     ++_framesNb;
 }
 
