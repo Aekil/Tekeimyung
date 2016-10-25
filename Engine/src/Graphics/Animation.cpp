@@ -37,6 +37,21 @@ void    Animation::addFrame(const glm::vec2& offset)
     ++_framesNb;
 }
 
+void    Animation::addFrames(const glm::vec2& baseOffset, const glm::vec2& spriteSize, uint32_t cols, uint32_t rows)
+{
+    glm::vec2 textCoords;
+
+    for (uint32_t y = 0; y < rows; y++)
+    {
+        textCoords = {0, baseOffset.y + spriteSize.y * y};
+        for (uint32_t x = 0; x < cols; x++)
+        {
+            textCoords.x += baseOffset.x + spriteSize.x;
+            addFrame(textCoords);
+        }
+    }
+}
+
 void    Animation::play(GLint textureShiftUniform)
 {
     // Bind sprite sheet
