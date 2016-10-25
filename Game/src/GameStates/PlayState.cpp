@@ -1,10 +1,10 @@
-#include "Graphics/Systems/RenderingSystem.hpp"
-#include "Window/Systems/InputSystem.hpp"
-#include "Window/Keyboard.hpp"
-#include "Physics/MovementSystem.hpp"
-#include "Physics/GravitySystem.hpp"
-#include "Physics/CollisionSystem.hpp"
+#include "Systems/RenderingSystem.hpp"
+#include "Systems/MovementSystem.hpp"
+#include "Systems/GravitySystem.hpp"
+#include "Systems/CollisionSystem.hpp"
 #include "Systems/AISystem.hpp"
+#include "Systems/InputSystem.hpp"
+#include "Window/Keyboard.hpp"
 #include "Core/Components.hh"
 
 #include <imgui.h>

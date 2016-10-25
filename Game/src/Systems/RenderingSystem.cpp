@@ -3,7 +3,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <vector>
 
-#include <Graphics/Systems/RenderingSystem.hpp>
+#include <Systems/RenderingSystem.hpp>
 #include <Utils/Debug.hpp>
 #include <Utils/Exception.hpp>
 #include <Window/GameWindow.hpp>

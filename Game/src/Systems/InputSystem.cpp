@@ -1,7 +1,7 @@
 #include "Window/GameWindow.hpp"
 #include "Core/Components.hh"
 
-#include "Window/Systems/InputSystem.hpp"
+#include "Systems/InputSystem.hpp"
 
 InputSystem::InputSystem()
 {

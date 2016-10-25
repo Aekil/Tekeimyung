@@ -1,4 +1,4 @@
-#include "Physics/GravitySystem.hpp"
+#include "Systems/GravitySystem.hpp"
 #include "Core/Components.hh"
 
 GravitySystem::GravitySystem()
