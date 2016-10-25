@@ -32,7 +32,7 @@ class EntityFactory
 public:
     EntityFactory();
     ~EntityFactory();
-    static void                                             init(const std::string& archetypesDir);
+    static void                                             loadDirectory(const std::string& archetypesDir);
     static Entity*                                          createEntity(eArchetype type);
     static void                                             bindEntityManager(EntityManager* em);
 

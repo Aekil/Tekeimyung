@@ -16,7 +16,7 @@ EntityFactory::EntityFactory() {}
 
 EntityFactory::~EntityFactory() {}
 
-void EntityFactory::init(const std::string& archetypesDir)
+void EntityFactory::loadDirectory(const std::string& archetypesDir)
 {
     DIR* dir;
     struct dirent* ent;
@@ -59,7 +59,16 @@ void EntityFactory::init(const std::string& archetypesDir)
                 _entities[typeName].push_back(componentName);
             }
         }
+        // No file extension, is directory
+        else if (std::string(ent->d_name).find(".") == std::string::npos)
+        {
+            // Load directory
+            std::string directoryPath = std::string(archetypesDir).append("/").append(ent->d_name);
+            loadDirectory(directoryPath);
+        }
     }
+
+    closedir(dir);
 }
 
 bool    EntityFactory::entityTypeExists(const std::string& type)
