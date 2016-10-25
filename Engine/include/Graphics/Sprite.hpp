@@ -23,7 +23,7 @@ public:
     Sprite(Sprite::eType type, const ShaderProgram& shaderProgram);
     ~Sprite();
 
-    void                                            loadFromTexture(const std::string& textureFile, bool animated,  uint32_t nbFrames, const std::vector<eOrientation>& orientations, const glm::vec2& spriteSize);
+    void                                            loadFromTexture(const std::string& textureFile, bool animated, const glm::vec2& frames, const std::vector<eOrientation>& orientations, const glm::vec2& spriteSize);
     void                                            update(glm::vec2 position, float z, bool moved, eOrientation orientation);
     void                                            draw();
     const glm::vec3&                                getPos() const;

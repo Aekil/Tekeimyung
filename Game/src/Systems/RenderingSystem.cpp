@@ -137,7 +137,7 @@ Sprite*   RenderingSystem::getSprite(Entity* entity)
     if (!sprite->_sprite)
     {
         sprite->_sprite = new Sprite(sprite->type, _shaderProgram);
-        sprite->_sprite->loadFromTexture(sprite->texture, sprite->animated, sprite->nbFrames, sprite->orientations, sprite->spriteSize);
+        sprite->_sprite->loadFromTexture(sprite->texture, sprite->animated, sprite->frames, sprite->orientations, sprite->spriteSize);
 
     }
 

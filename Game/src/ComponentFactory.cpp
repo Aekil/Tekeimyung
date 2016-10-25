@@ -72,18 +72,23 @@ sComponent*  IComponentFactory::createComponent(const std::string& entityType, c
 sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& entityType, Json::Value& json)
 {
     sRenderComponent* component = new sRenderComponent();
+    Json::Value animation = json.get("animation", {});
 
+    component->animated = false;
     component->texture = json.get("texture", "").asString();
     component->type = stringToSpriteType(json.get("type", "").asString());
-    component->animated = json.get("animated", false).asBool();
-    component->nbFrames = json.get("nbFrames", 0).asInt();
-    component->nbFrames = json.get("nbFrames", 0).asInt();
     component->spriteSize.x = json.get("spriteSize", {}).get("width", 0).asFloat();
     component->spriteSize.y = json.get("spriteSize", {}).get("height", 0).asFloat();
 
-    for (auto&& orientation: json.get("orientations", "[]"))
+    if (animation.size() > 0)
     {
-        component->orientations.push_back(stringToOrientation(orientation.asString()));
+        component->animated = true;
+        component->frames.x = animation.get("frames", {}).get("x", 0).asFloat();
+        component->frames.y = animation.get("frames", {}).get("y", 0).asFloat();
+        for (auto&& orientation: animation.get("orientations", "[]"))
+        {
+            component->orientations.push_back(stringToOrientation(orientation.asString()));
+        }
     }
 
     return component;

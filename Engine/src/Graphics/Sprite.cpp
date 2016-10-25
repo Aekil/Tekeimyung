@@ -12,7 +12,7 @@ Sprite::Sprite(eType type, const ShaderProgram& shaderProgram): _type(type), _te
 
 Sprite::~Sprite() {}
 
-void    Sprite::loadFromTexture(const std::string& textureFile, bool animated,  uint32_t nbFrames, const std::vector<eOrientation>& orientations, const glm::vec2& spriteSize)
+void    Sprite::loadFromTexture(const std::string& textureFile, bool animated, const glm::vec2& frames, const std::vector<eOrientation>& orientations, const glm::vec2& spriteSize)
 {
     // Init entity texture
     _texture = &RessourceManager::getInstance()->getTexture(textureFile);
@@ -27,7 +27,7 @@ void    Sprite::loadFromTexture(const std::string& textureFile, bool animated,  
 
             _animations[orientation] = {};
             _animations[orientation].setSpriteSheet(_texture);
-            _animations[orientation].addFrames({0, i * _spriteSize.y}, _spriteSize, nbFrames, 1);
+            _animations[orientation].addFrames({0, i * _spriteSize.y}, _spriteSize, frames.x, 1);
         }
     }
     else
