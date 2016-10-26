@@ -75,6 +75,7 @@ sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& 
     Json::Value animation = json.get("animation", {});
 
     component->animated = false;
+    component->spriteSheetOffset = {0, 0};
     component->texture = json.get("texture", "").asString();
     component->type = stringToSpriteType(json.get("type", "").asString());
     component->spriteSize.x = json.get("spriteSize", {}).get("width", 0).asFloat();
@@ -85,6 +86,8 @@ sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& 
         component->animated = true;
         component->frames.x = animation.get("frames", {}).get("x", 0).asFloat();
         component->frames.y = animation.get("frames", {}).get("y", 0).asFloat();
+        component->spriteSheetOffset.x = animation.get("offset", {}).get("x", 0).asFloat();
+        component->spriteSheetOffset.y = animation.get("offset", {}).get("y", 0).asFloat();
         for (auto&& orientation: animation.get("orientations", "[]"))
         {
             component->orientations.push_back(stringToOrientation(orientation.asString()));
@@ -150,7 +153,7 @@ sComponent* ComponentFactory<sDirectionComponent>::loadFromJson(const std::strin
 
     component->value.x = json.get("x", 0).asFloat();
     component->value.y = json.get("y", 0).asFloat();
-    component->orientation =  stringToOrientation(json.get("orientation", "S").asString());
+    component->orientation =  stringToOrientation(json.get("orientation", "N").asString());
     component->speed =  json.get("speed", 1.0f).asFloat();
 
     return component;

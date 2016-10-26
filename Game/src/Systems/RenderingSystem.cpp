@@ -137,13 +137,13 @@ Sprite*   RenderingSystem::getSprite(Entity* entity)
     if (!sprite->_sprite)
     {
         sprite->_sprite = new Sprite(sprite->type, _shaderProgram);
-        sprite->_sprite->loadFromTexture(sprite->texture, sprite->animated, sprite->frames, sprite->orientations, sprite->spriteSize);
+        sprite->_sprite->loadFromTexture(sprite->texture, sprite->animated, sprite->frames, sprite->spriteSheetOffset, sprite->orientations, sprite->spriteSize);
 
     }
 
     // Update entity graphic position
     bool moved = direction && direction->moved;
-    eOrientation orientation = direction ? direction->orientation : eOrientation::S;
+    eOrientation orientation = direction ? direction->orientation : eOrientation::N;
     sprite->_sprite->update(position->value, position->z, moved, orientation);
 
     return (sprite->_sprite);

@@ -46,8 +46,8 @@ void    Animation::addFrames(const glm::vec2& baseOffset, const glm::vec2& sprit
         textCoords = {0, baseOffset.y + spriteSize.y * y};
         for (uint32_t x = 0; x < cols; x++)
         {
-            textCoords.x += baseOffset.x + spriteSize.x;
             addFrame(textCoords);
+            textCoords.x += baseOffset.x + spriteSize.x;
         }
     }
 }

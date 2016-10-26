@@ -12,7 +12,7 @@ Sprite::Sprite(eType type, const ShaderProgram& shaderProgram): _type(type), _te
 
 Sprite::~Sprite() {}
 
-void    Sprite::loadFromTexture(const std::string& textureFile, bool animated, const glm::vec2& frames, const std::vector<eOrientation>& orientations, const glm::vec2& spriteSize)
+void    Sprite::loadFromTexture(const std::string& textureFile, bool animated, const glm::vec2& frames, const glm::vec2& offset, const std::vector<eOrientation>& orientations, const glm::vec2& spriteSize)
 {
     // Init entity texture
     _texture = &RessourceManager::getInstance()->getTexture(textureFile);
@@ -21,13 +21,25 @@ void    Sprite::loadFromTexture(const std::string& textureFile, bool animated, c
     if (_animated)
     {
         _spriteSize = spriteSize;
-        for (unsigned int i = 0; i < orientations.size(); i++)
-        {
-            auto &&orientation = orientations[i];
 
-            _animations[orientation] = {};
-            _animations[orientation].setSpriteSheet(_texture);
-            _animations[orientation].addFrames({0, i * _spriteSize.y}, _spriteSize, frames.x, 1);
+        // Load sprites with given orientations
+        if (orientations.size() > 0)
+        {
+            for (unsigned int i = 0; i < orientations.size(); i++)
+            {
+                auto &&orientation = orientations[i];
+
+                _animations[orientation] = {};
+                _animations[orientation].setSpriteSheet(_texture);
+                _animations[orientation].addFrames({offset.x, offset.y + i * _spriteSize.y}, _spriteSize, frames.x, 1);
+            }
+        }
+        // Load sprites with default orientation
+        else
+        {
+            _animations[_currentOrientation] = {};
+            _animations[_currentOrientation].setSpriteSheet(_texture);
+            _animations[_currentOrientation].addFrames({offset.x, offset.y}, _spriteSize, frames.x, frames.y);
         }
     }
     else
@@ -35,6 +47,7 @@ void    Sprite::loadFromTexture(const std::string& textureFile, bool animated, c
         _spriteSize.x = _texture->getWidth();
         _spriteSize.y = _texture->getHeight();
     }
+
 
     // Init entity buffers
     Vertex vertices[] = {
@@ -74,7 +87,7 @@ void Sprite::update(glm::vec2 position, float z, bool moved, eOrientation orient
     {
         _pos.x -= (_spriteSize.x / 2.0f) - tileWidthHalf;
     }
-    if (_animated && !moved)
+    if (_animated && !moved && _animations.size() > 1)
     {
         _animations[_currentOrientation].reset();
     }

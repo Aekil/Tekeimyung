@@ -15,7 +15,7 @@ struct sRenderComponent: sComponent
 {
     sRenderComponent() = default;
     sRenderComponent(Sprite::eType type, const std::string& texture, bool animated = false, glm::vec2 frames = {0, 0}, const std::vector<eOrientation>& orientations = {}, const glm::vec2& spriteSize = {0, 0})
-    : texture(texture), type(type), animated(animated), frames(frames), orientations(orientations), spriteSize(spriteSize), _sprite(nullptr) {}
+    : texture(texture), type(type), animated(animated), frames(frames), orientations(orientations), spriteSize(spriteSize), _sprite(nullptr), spriteSheetOffset(0, 0) {}
 
     virtual sComponent* clone()
     {
@@ -27,6 +27,7 @@ struct sRenderComponent: sComponent
         component->frames = this->frames;
         component->spriteSize = this->spriteSize;
         component->orientations = this->orientations;
+        component->spriteSheetOffset = this->spriteSheetOffset;
 
         return (component);
     }
@@ -37,6 +38,9 @@ struct sRenderComponent: sComponent
 
     // Frames numbers in sprite sheet
     glm::vec2 frames;
+
+    // Sprite sheet offset
+    glm::vec2 spriteSheetOffset;
 
     // Sprite width and height
     glm::vec2 spriteSize;
