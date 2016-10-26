@@ -38,7 +38,7 @@ include_directories(${CMAKE_SOURCE_DIR}/external/glm)
 include_directories(${CMAKE_SOURCE_DIR}/external/imgui/)
 include_directories(${CMAKE_SOURCE_DIR}/external/jsoncpp)
 include_directories(${CMAKE_SOURCE_DIR}/external/dirent)
-
+#include_directories(${CMAKE_SOURCE_DIR}/external/fmod/inc)
 
 # Create executable
 add_executable(${EXECUTABLE_NAME} ${source_files} ${jsoncpp_source_files} ${include_files})
