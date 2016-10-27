@@ -6,11 +6,13 @@
 #include "Systems/InputSystem.hpp"
 #include "Window/Keyboard.hpp"
 #include "Core/Components.hh"
+#include "Sound/SoundManager.hpp"
 
 #include <imgui.h>
 #include <imgui_impl_glfw_gl3.h>
 
 #include "GameStates/PlayState.hpp"
+
 
 
 PlayState::PlayState(): _windowImgui(true) {}
@@ -71,6 +73,9 @@ bool    PlayState::init()
     _world.addSystem<MovementSystem>(_map);
     _world.addSystem<CollisionSystem>(_map);
     _world.addSystem<RenderingSystem>(_map);
+
+    // Play sound
+    SoundManager::getInstance()->playBkgdMusic("test.mp3", false);
 
     return (true);
 }

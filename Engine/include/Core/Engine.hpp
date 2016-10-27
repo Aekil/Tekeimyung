@@ -3,7 +3,7 @@
 #include <memory>
 #include "GameStateManager.hpp"
 #include "Window/GameWindow.hpp"
-#include <Sound/SoundManager.hpp>
+#include "Sound/SoundManager.hpp"
 
 class Engine
 {
@@ -19,5 +19,5 @@ public:
 private:
     GameStateManager                        _gameStateManager;
     std::shared_ptr<GameWindow>             _window;
-    SoundManager*                           _sound;
+    std::shared_ptr<SoundManager>           _soundManager;
 };

@@ -18,8 +18,8 @@ bool    Engine::init()
     if (!logger->initialize())
         return (false);
 
-    std::cout << "Initializing sound." << std::endl;
-    if (_sound->initialize())
+    _soundManager = SoundManager::getInstance();
+    if (!_soundManager->initialize())
         return (false);
 
     GameWindow::setInstance(_window);
@@ -42,7 +42,9 @@ bool    Engine::run()
             _window->getKeyboard().updateKeyboardState();
             _window->getMouse().updateMouseState();
             _window->pollEvents();
-            _sound->update();
+
+            _soundManager->update();
+
             if (!_gameStateManager.hasStates())
             {
                 return (true);
@@ -63,7 +65,7 @@ bool    Engine::run()
 
 bool    Engine::stop()
 {
-    _sound->shutdown();
+    _soundManager->shutdown();
     Logger::getInstance()->shutdown();
     return (true);
 }
