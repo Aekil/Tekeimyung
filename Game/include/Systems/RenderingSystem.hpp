@@ -23,6 +23,7 @@ public:
 
 private:
     Sprite*                                 getSprite(Entity* entity);
+    void                                    getSpriteCreateInfo(Sprite::sCreateInfo& createInfo, sRenderComponent *sprite);
 
 private:
     // Shader program

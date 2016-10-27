@@ -41,7 +41,7 @@ void    ParticleSystem::updateEmitter(Entity* entity, float elapsedTime)
 
     bool moved = direction && direction->moved;
     eOrientation orientation = direction ? direction->orientation : eOrientation::N;
-    sprite->_sprite->update(pos->value, pos->z, moved, orientation);
+    sprite->_sprite->update(pos->value, pos->z, moved, orientation, sprite->color);
 
     // Update particles
     for (unsigned int i = 0; i < emitter->particlesNb; i++)
@@ -81,6 +81,7 @@ void    ParticleSystem::updateEmitter(Entity* entity, float elapsedTime)
             particle.velocity.y = glm::sin(angleRadian);
             particle.speed = emitterComp->speed;
             particle.life = emitterComp->life + Helper::randFloat(0, emitterComp->lifeVariance);
+            particle.color = {0, 0, 0};
 
             // Can add a particle in particles list
             if (emitter->particlesNb != emitter->particles.size())

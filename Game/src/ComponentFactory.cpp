@@ -1,6 +1,7 @@
 #include <sstream>
 #include <imgui.h>
 #include <imgui_impl_glfw_gl3.h>
+#include <glm/gtc/type_ptr.hpp>
 #include "Window/Keyboard.hpp"
 
 #include "ComponentFactory.hpp"
@@ -84,13 +85,26 @@ sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& 
     sRenderComponent* component = new sRenderComponent();
     Json::Value animation = json.get("animation", {});
 
+    // Initialize some values
     component->animated = false;
     component->spriteSheetOffset = {0, 0};
+
+    // Sprite texture
     component->texture = json.get("texture", "").asString();
+
+    // Sprite type
     component->type = stringToSpriteType(json.get("type", "").asString());
+
+    // Sprite size
     component->spriteSize.x = json.get("spriteSize", {}).get("width", 0).asFloat();
     component->spriteSize.y = json.get("spriteSize", {}).get("height", 0).asFloat();
 
+    // Sprite color
+    component->color.x = json.get("color", {}).get("r", 0).asFloat();
+    component->color.y = json.get("color", {}).get("g", 0).asFloat();
+    component->color.z = json.get("color", {}).get("b", 0).asFloat();
+
+    // Sprite animation
     if (animation.size() > 0)
     {
         component->animated = true;
@@ -105,6 +119,21 @@ sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& 
     }
 
     return component;
+}
+
+bool    ComponentFactory<sRenderComponent>::updateEditor(const std::string& entityType, sComponent** component_)
+{
+    sRenderComponent* component = static_cast<sRenderComponent*>(_components[entityType]);
+    *component_ = component;
+    bool changed = false;
+
+    ImGui::PushItemWidth(200);
+    if (ImGui::CollapsingHeader("sRenderComponent", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        changed |= ImGui::ColorEdit3("color", glm::value_ptr(component->color));
+    }
+
+    return (changed);
 }
 
 Sprite::eType ComponentFactory<sRenderComponent>::stringToSpriteType(const std::string& spriteTypeStr)

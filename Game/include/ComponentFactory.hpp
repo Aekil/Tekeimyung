@@ -108,6 +108,7 @@ public:
 
 private:
     Sprite::eType stringToSpriteType(const std::string& spriteTypeStr);
+    bool    updateEditor(const std::string& entityType, sComponent** component_);
 };
 
 

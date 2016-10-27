@@ -28,6 +28,7 @@ struct sRenderComponent: sComponent
     virtual void update(sRenderComponent* component)
     {
         this->texture = component->texture;
+        this->color = component->color;
         this->type = component->type;
         this->animated = component->animated;
         this->frames = component->frames;
@@ -42,6 +43,7 @@ struct sRenderComponent: sComponent
     }
 
     std::string texture;
+    glm::vec3 color;
     Sprite::eType type;
     bool animated;
 
