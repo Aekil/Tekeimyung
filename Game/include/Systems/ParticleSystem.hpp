@@ -11,16 +11,27 @@ struct sParticle
 {
     glm::vec3 pos;
     glm::vec3 velocity;
-    glm::vec4 color;
-    glm::vec4 colorStep;
     float speed;
+
+    // How long a particle live, in frames
     float life;
+
+    // Particle color
+    glm::vec4 color;
+    // Increment color by colorStep each frame
+    glm::vec4 colorStep;
+
+    // Particle scale
+    float size;
+    // Increment size by sizeStep each frame
+    float sizeStep;
 };
 
 struct sEmitter
 {
     std::vector<sParticle>  particles;
     unsigned int            particlesNb;
+    Timer                   timer;
 };
 
 class ParticleSystem: public System
@@ -38,5 +49,4 @@ private:
 
 private:
     std::unordered_map<uint32_t, sEmitter*>     _emitters;
-    Timer                                       _timer;
 };

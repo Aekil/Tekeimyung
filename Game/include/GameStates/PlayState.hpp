@@ -19,7 +19,7 @@ class PlayState: public GameState
 private:
     Entity*                             createEntity(const glm::vec3& pos, eArchetype type);
     void                                createTile(const glm::vec3& pos, eArchetype type);
-    void                                initParticles();
+    void                                createParticlesEmittor(const glm::vec3& pos, eArchetype type);
 
 private:
     Map*                                _map;

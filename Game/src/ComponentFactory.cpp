@@ -299,6 +299,7 @@ sComponent* ComponentFactory<sParticleEmitterComponent>::loadFromJson(const std:
 {
     sParticleEmitterComponent* component = new sParticleEmitterComponent();
     Json::Value color = json.get("color", {});
+    Json::Value size = json.get("size", {});
 
     component->rate = json.get("rate", "").asFloat();
     component->spawnNb = json.get("spawn_nb", "").asInt();
@@ -326,6 +327,14 @@ sComponent* ComponentFactory<sParticleEmitterComponent>::loadFromJson(const std:
         colorStartVariance.get("b", 1).asFloat(), colorStartVariance.get("a", 1).asFloat() };
     }
 
+    if (size.size() > 0)
+    {
+        component->sizeStart =  size.get("start", 1.0f).asFloat();
+        component->sizeFinish =  size.get("finish", 1.0f).asFloat();
+        component->sizeStartVariance =  size.get("start_variance", 1.0f).asFloat();
+        component->sizeFinishVariance =  size.get("finish_variance", 1.0f).asFloat();
+    }
+
     return component;
 }
 
@@ -348,6 +357,10 @@ bool    ComponentFactory<sParticleEmitterComponent>::updateEditor(const std::str
         changed |= ImGui::SliderInt("Life variance", &component->lifeVariance, 0.0f, 200.0f);
         changed |= ImGui::ColorEdit4("Start color", glm::value_ptr(component->colorStart));
         changed |= ImGui::ColorEdit4("Finish color", glm::value_ptr(component->colorFinish));
+        changed |= ImGui::SliderFloat("Start size", &component->sizeStart, 0.0f, 5.0f);
+        changed |= ImGui::SliderFloat("Finish size", &component->sizeFinish, 0.0f, 5.0f);
+        changed |= ImGui::SliderFloat("Start size variance", &component->sizeStartVariance, 0.0f, 5.0f);
+        changed |= ImGui::SliderFloat("Finish size variance", &component->sizeFinishVariance, 0.0f, 5.0f);
     }
 
     return (changed);

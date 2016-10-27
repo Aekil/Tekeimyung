@@ -30,16 +30,16 @@ void    PlayState::createTile(const glm::vec3& pos, eArchetype type)
     (*_map)[pos.z][pos.y][pos.x] = tile->id;
 }
 
-void    PlayState::initParticles()
+void    PlayState::createParticlesEmittor(const glm::vec3& pos, eArchetype type)
 {
-    Entity* particleSystem;
-    sPositionComponent* pos;
+    Entity* ps;
+    sPositionComponent* psPos;
 
-    particleSystem = EntityFactory::createEntity(eArchetype::EMITTER_BASIC);
-    pos = particleSystem->getComponent<sPositionComponent>();
-    pos->value.x = 5.5f;
-    pos->value.y = 5.5f;
-    pos->z = 1.0f;
+    ps = EntityFactory::createEntity(type);
+    psPos = ps->getComponent<sPositionComponent>();
+    psPos->value.x = pos.x;
+    psPos->value.y = pos.y;
+    psPos->z = pos.z;
 }
 
 bool    PlayState::init()
@@ -50,7 +50,8 @@ bool    PlayState::init()
 
     _map = new Map(em, 20, 15, 4);
 
-    initParticles();
+    createParticlesEmittor(glm::vec3(5.5f, 5.5f, 1.0f), eArchetype::EMITTER_FIRE);
+    createParticlesEmittor(glm::vec3(8.5f, 5.5f, 1.0f), eArchetype::EMITTER_WATER);
     // Create characters
 /*    createEntity(glm::vec3(9, 5, 1), eArchetype::PLAYER);
     createEntity(glm::vec3(0.5f, 5.5f, 1), eArchetype::ENEMY);*/

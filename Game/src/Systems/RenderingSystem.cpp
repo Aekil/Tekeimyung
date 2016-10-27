@@ -89,6 +89,9 @@ void    RenderingSystem::renderEntities(EntityManager& em, std::list<uint32_t>::
 
 void    RenderingSystem::renderParticles(EntityManager& em)
 {
+    // Activate additive blending
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+
     for (auto &&it: *_particleEmitters)
     {
         auto &&emitter = it.second;
@@ -111,9 +114,13 @@ void    RenderingSystem::renderParticles(EntityManager& em)
 
             // Model matrice
             glm::mat4 trans;
+            glm::mat4 scale;
+            glm::mat4 modelTrans;
             trans = glm::translate(trans, glm::vec3(particle.pos.x, particle.pos.y, 0.0f));
+            scale = glm::scale(scale, glm::vec3(particle.size, particle.size, particle.size));
+            modelTrans = trans * scale;
             GLint uniTrans = _shaderProgram.getUniformLocation("trans");
-            glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(trans));
+            glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(modelTrans));
 
             // Color vector
             GLint uniColor = _shaderProgram.getUniformLocation("color");
@@ -123,6 +130,9 @@ void    RenderingSystem::renderParticles(EntityManager& em)
             sprite->_sprite->draw();
         }
     }
+
+    // Activate transparency blending
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void    RenderingSystem::update(EntityManager& em, float elapsedTime)
