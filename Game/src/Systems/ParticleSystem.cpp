@@ -83,8 +83,6 @@ void    ParticleSystem::updateEmitter(Entity* entity, float elapsedTime)
             particle.speed = emitterComp->speed + Helper::randFloat(0, emitterComp->speedVariance);
             particle.life = emitterComp->life + Helper::randFloat(0, emitterComp->lifeVariance);
             particle.color = emitterComp->colorStart;
-
-            // We are supposing it's updating every 16ms
             particle.colorStep = (emitterComp->colorFinish - emitterComp->colorStart) / glm::vec4(emitterComp->life);
 
             // Can add a particle in particles list
