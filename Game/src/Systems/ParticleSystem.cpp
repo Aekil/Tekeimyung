@@ -80,7 +80,7 @@ void    ParticleSystem::updateEmitter(Entity* entity, float elapsedTime)
             particle.pos = sprite->_sprite->getPos();
             particle.velocity.x = glm::cos(angleRadian);
             particle.velocity.y = glm::sin(angleRadian);
-            particle.speed = emitterComp->speed;
+            particle.speed = emitterComp->speed + Helper::randFloat(0, emitterComp->speedVariance);
             particle.life = emitterComp->life + Helper::randFloat(0, emitterComp->lifeVariance);
             particle.color = emitterComp->colorStart;
 

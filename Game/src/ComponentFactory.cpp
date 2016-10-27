@@ -307,6 +307,7 @@ sComponent* ComponentFactory<sParticleEmitterComponent>::loadFromJson(const std:
     component->angle = json.get("angle", "").asFloat();
     component->angleVariance = json.get("angle_variance", "").asFloat();
     component->speed = json.get("speed", "").asFloat();
+    component->speedVariance =  json.get("speed_variance", 0.0f).asFloat();
 
     if (color.size() > 0)
     {
@@ -316,13 +317,13 @@ sComponent* ComponentFactory<sParticleEmitterComponent>::loadFromJson(const std:
         Json::Value colorFinishVariance = color.get("finish_variance", {});
 
         component->colorStart = { colorStart.get("r", 1).asFloat(), colorStart.get("g", 1).asFloat(),
-        colorStart.get("g", 1).asFloat(), 1 };
+        colorStart.get("b", 1).asFloat(), 1 };
         component->colorStartVariance = { colorStartVariance.get("r", 1).asFloat(), colorStartVariance.get("g", 1).asFloat(),
-        colorStartVariance.get("g", 1).asFloat(), colorStartVariance.get("a", 1).asFloat() };
+        colorStartVariance.get("b", 1).asFloat(), colorStartVariance.get("a", 1).asFloat() };
         component->colorFinish = { colorFinish.get("r", 1).asFloat(), colorFinish.get("g", 1).asFloat(),
-        colorFinish.get("g", 1).asFloat(), colorFinish.get("a", 1).asFloat() };
+        colorFinish.get("b", 1).asFloat(), colorFinish.get("a", 1).asFloat() };
         component->colorStartVariance = { colorStartVariance.get("r", 1).asFloat(), colorStartVariance.get("g", 1).asFloat(),
-        colorStartVariance.get("g", 1).asFloat(), colorStartVariance.get("a", 1).asFloat() };
+        colorStartVariance.get("b", 1).asFloat(), colorStartVariance.get("a", 1).asFloat() };
     }
 
     return component;
@@ -342,6 +343,7 @@ bool    ComponentFactory<sParticleEmitterComponent>::updateEditor(const std::str
         changed |= ImGui::SliderFloat("Angle", &component->angle, 0.0f, 360.0f);
         changed |= ImGui::SliderFloat("Angle variance", &component->angleVariance, 0.0f, 360.0f);
         changed |= ImGui::SliderFloat("Speed", &component->speed, 0.0f, 200.0f);
+        changed |= ImGui::SliderFloat("Speed variance", &component->speedVariance, 0.0f, 200.0f);
         changed |= ImGui::SliderInt("Life", &component->life, 0.0f, 200.0f);
         changed |= ImGui::SliderInt("Life variance", &component->lifeVariance, 0.0f, 200.0f);
         changed |= ImGui::ColorEdit4("Start color", glm::value_ptr(component->colorStart));

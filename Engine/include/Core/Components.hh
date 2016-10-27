@@ -317,6 +317,7 @@ struct sParticleEmitterComponent : sComponent
         this->angle = component->angle;
         this->angleVariance = component->angleVariance;
         this->speed = component->speed;
+        this->speedVariance = component->speedVariance;
 
         this->colorStart = component->colorStart;
         this->colorFinish = component->colorFinish;
@@ -336,6 +337,7 @@ struct sParticleEmitterComponent : sComponent
     float angle;
     float angleVariance;
     float speed;
+    float speedVariance;
 
     glm::vec4 colorStart;
     glm::vec4 colorFinish;
