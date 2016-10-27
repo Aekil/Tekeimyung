@@ -14,13 +14,14 @@
                 "type": "OBJECT"
             },
             "sParticleEmitterComponent": {
-                "rate": 0.2,
-                "spawn_nb": 5,
+                "rate": 0,
+                "spawn_nb": 9,
                 "life": 80,
                 "life_variance": 30,
-                "angle": 0,
-                "angle_variance": 90,
-                "speed": 100,
+                "angle": 301,
+                "angle_variance": 67,
+                "speed": 101,
+                "speed_variance": 22,
                 "color": {
                     "start": {
                         "r": 1.0,
@@ -30,7 +31,7 @@
                     },
                     "finish": {
                         "r": 1.0,
-                        "g": 0.3,
+                        "g": 0.64,
                         "b": 0,
                         "a": 0
                     },
