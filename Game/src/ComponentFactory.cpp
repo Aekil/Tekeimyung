@@ -1,6 +1,7 @@
 #include <sstream>
 #include <imgui.h>
 #include <imgui_impl_glfw_gl3.h>
+#include <glm/gtc/type_ptr.hpp>
 #include "Window/Keyboard.hpp"
 
 #include "ComponentFactory.hpp"
@@ -84,13 +85,26 @@ sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& 
     sRenderComponent* component = new sRenderComponent();
     Json::Value animation = json.get("animation", {});
 
+    // Initialize some values
     component->animated = false;
     component->spriteSheetOffset = {0, 0};
+
+    // Sprite texture
     component->texture = json.get("texture", "").asString();
+
+    // Sprite type
     component->type = stringToSpriteType(json.get("type", "").asString());
+
+    // Sprite size
     component->spriteSize.x = json.get("spriteSize", {}).get("width", 0).asFloat();
     component->spriteSize.y = json.get("spriteSize", {}).get("height", 0).asFloat();
 
+    // Sprite color
+    component->color.x = json.get("color", {}).get("r", 1).asFloat();
+    component->color.y = json.get("color", {}).get("g", 1).asFloat();
+    component->color.z = json.get("color", {}).get("b", 1).asFloat();
+
+    // Sprite animation
     if (animation.size() > 0)
     {
         component->animated = true;
@@ -105,6 +119,21 @@ sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& 
     }
 
     return component;
+}
+
+bool    ComponentFactory<sRenderComponent>::updateEditor(const std::string& entityType, sComponent** component_)
+{
+    sRenderComponent* component = static_cast<sRenderComponent*>(_components[entityType]);
+    *component_ = component;
+    bool changed = false;
+
+    ImGui::PushItemWidth(200);
+    if (ImGui::CollapsingHeader("sRenderComponent", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        changed |= ImGui::ColorEdit3("color", glm::value_ptr(component->color));
+    }
+
+    return (changed);
 }
 
 Sprite::eType ComponentFactory<sRenderComponent>::stringToSpriteType(const std::string& spriteTypeStr)
@@ -269,6 +298,8 @@ sComponent* ComponentFactory<sAIComponent>::loadFromJson(const std::string& enti
 sComponent* ComponentFactory<sParticleEmitterComponent>::loadFromJson(const std::string& entityType, Json::Value& json)
 {
     sParticleEmitterComponent* component = new sParticleEmitterComponent();
+    Json::Value color = json.get("color", {});
+    Json::Value size = json.get("size", {});
 
     component->rate = json.get("rate", "").asFloat();
     component->spawnNb = json.get("spawn_nb", "").asInt();
@@ -277,6 +308,32 @@ sComponent* ComponentFactory<sParticleEmitterComponent>::loadFromJson(const std:
     component->angle = json.get("angle", "").asFloat();
     component->angleVariance = json.get("angle_variance", "").asFloat();
     component->speed = json.get("speed", "").asFloat();
+    component->speedVariance =  json.get("speed_variance", 0.0f).asFloat();
+
+    if (color.size() > 0)
+    {
+        Json::Value colorStart = color.get("start", {});
+        Json::Value colorStartVariance = color.get("start_variance", {});
+        Json::Value colorFinish = color.get("finish", {});
+        Json::Value colorFinishVariance = color.get("finish_variance", {});
+
+        component->colorStart = { colorStart.get("r", 1).asFloat(), colorStart.get("g", 1).asFloat(),
+        colorStart.get("b", 1).asFloat(), 1 };
+        component->colorStartVariance = { colorStartVariance.get("r", 1).asFloat(), colorStartVariance.get("g", 1).asFloat(),
+        colorStartVariance.get("b", 1).asFloat(), colorStartVariance.get("a", 1).asFloat() };
+        component->colorFinish = { colorFinish.get("r", 1).asFloat(), colorFinish.get("g", 1).asFloat(),
+        colorFinish.get("b", 1).asFloat(), colorFinish.get("a", 1).asFloat() };
+        component->colorStartVariance = { colorStartVariance.get("r", 1).asFloat(), colorStartVariance.get("g", 1).asFloat(),
+        colorStartVariance.get("b", 1).asFloat(), colorStartVariance.get("a", 1).asFloat() };
+    }
+
+    if (size.size() > 0)
+    {
+        component->sizeStart =  size.get("start", 1.0f).asFloat();
+        component->sizeFinish =  size.get("finish", 1.0f).asFloat();
+        component->sizeStartVariance =  size.get("start_variance", 1.0f).asFloat();
+        component->sizeFinishVariance =  size.get("finish_variance", 1.0f).asFloat();
+    }
 
     return component;
 }
@@ -295,8 +352,15 @@ bool    ComponentFactory<sParticleEmitterComponent>::updateEditor(const std::str
         changed |= ImGui::SliderFloat("Angle", &component->angle, 0.0f, 360.0f);
         changed |= ImGui::SliderFloat("Angle variance", &component->angleVariance, 0.0f, 360.0f);
         changed |= ImGui::SliderFloat("Speed", &component->speed, 0.0f, 200.0f);
+        changed |= ImGui::SliderFloat("Speed variance", &component->speedVariance, 0.0f, 200.0f);
         changed |= ImGui::SliderInt("Life", &component->life, 0.0f, 200.0f);
         changed |= ImGui::SliderInt("Life variance", &component->lifeVariance, 0.0f, 200.0f);
+        changed |= ImGui::ColorEdit4("Start color", glm::value_ptr(component->colorStart));
+        changed |= ImGui::ColorEdit4("Finish color", glm::value_ptr(component->colorFinish));
+        changed |= ImGui::SliderFloat("Start size", &component->sizeStart, 0.0f, 5.0f);
+        changed |= ImGui::SliderFloat("Finish size", &component->sizeFinish, 0.0f, 5.0f);
+        changed |= ImGui::SliderFloat("Start size variance", &component->sizeStartVariance, 0.0f, 5.0f);
+        changed |= ImGui::SliderFloat("Finish size variance", &component->sizeFinishVariance, 0.0f, 5.0f);
     }
 
     return (changed);

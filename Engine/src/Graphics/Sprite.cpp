@@ -5,33 +5,34 @@
 #include "Graphics/Sprite.hpp"
 
 
-Sprite::Sprite(eType type, const ShaderProgram& shaderProgram): _type(type), _texture(nullptr), _currentOrientation(eOrientation::N)
+Sprite::Sprite(eType type, const ShaderProgram& shaderProgram): _type(type), _texture(nullptr), _currentOrientation(eOrientation::N), _color({0.0f, 0.0f, 0.0f})
 {
     _textureShiftUniform = shaderProgram.getUniformLocation("texCoordsShift");
 }
 
 Sprite::~Sprite() {}
 
-void    Sprite::loadFromTexture(const std::string& textureFile, bool animated, const glm::vec2& frames, const glm::vec2& offset, const std::vector<eOrientation>& orientations, const glm::vec2& spriteSize)
+void    Sprite::loadFromTexture(sCreateInfo& createInfo)
 {
     // Init entity texture
-    _texture = &RessourceManager::getInstance()->getTexture(textureFile);
-    _animated = animated;
+    _texture = &RessourceManager::getInstance()->getTexture(createInfo.textureFile);
+    _animated = createInfo.animated;
+    _color = createInfo.color;
 
     if (_animated)
     {
-        _spriteSize = spriteSize;
+        _spriteSize = createInfo.spriteSize;
 
         // Load sprites with given orientations
-        if (orientations.size() > 0)
+        if (createInfo.orientations.size() > 0)
         {
-            for (unsigned int i = 0; i < orientations.size(); i++)
+            for (unsigned int i = 0; i < createInfo.orientations.size(); i++)
             {
-                auto &&orientation = orientations[i];
+                auto &&orientation = createInfo.orientations[i];
 
                 _animations[orientation] = {};
                 _animations[orientation].setSpriteSheet(_texture);
-                _animations[orientation].addFrames({offset.x, offset.y + i * _spriteSize.y}, _spriteSize, frames.x, 1);
+                _animations[orientation].addFrames({createInfo.offset.x, createInfo.offset.y + i * _spriteSize.y}, _spriteSize, createInfo.frames.x, 1);
             }
         }
         // Load sprites with default orientation
@@ -39,7 +40,7 @@ void    Sprite::loadFromTexture(const std::string& textureFile, bool animated, c
         {
             _animations[_currentOrientation] = {};
             _animations[_currentOrientation].setSpriteSheet(_texture);
-            _animations[_currentOrientation].addFrames({offset.x, offset.y}, _spriteSize, frames.x, frames.y);
+            _animations[_currentOrientation].addFrames({createInfo.offset.x, createInfo.offset.y}, _spriteSize, createInfo.frames.x, createInfo.frames.y);
         }
     }
     else
@@ -49,10 +50,10 @@ void    Sprite::loadFromTexture(const std::string& textureFile, bool animated, c
 
     // Init entity buffers
     Vertex vertices[] = {
-        {glm::vec3(0.0f,  _spriteSize.y, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(0.0f, 0.0f)},  // Top Left (red)
-        {glm::vec3(_spriteSize.x,  _spriteSize.y, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(_spriteSize.x / _texture->getWidth(), 0.0f)},  // Top Right (blue)
-        {glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(0.0f, _spriteSize.y / _texture->getHeight())},  // Bottom Left (green)
-        {glm::vec3(_spriteSize.x, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(_spriteSize.x / _texture->getWidth(), _spriteSize.y / _texture->getHeight())}  // Bottom Right (red)
+        {glm::vec3(0.0f,  _spriteSize.y, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, 0.0f)},  // Top Left
+        {glm::vec3(_spriteSize.x,  _spriteSize.y, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(_spriteSize.x / _texture->getWidth(), 0.0f)},  // Top Right
+        {glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, _spriteSize.y / _texture->getHeight())},  // Bottom Left
+        {glm::vec3(_spriteSize.x, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(_spriteSize.x / _texture->getWidth(), _spriteSize.y / _texture->getHeight())}  // Bottom Right
     };
 
     GLuint indices[] = {
@@ -63,7 +64,7 @@ void    Sprite::loadFromTexture(const std::string& textureFile, bool animated, c
    _buffer.updateData(vertices, 4, indices, 6);
 }
 
-void Sprite::update(glm::vec2 position, float z, bool moved, eOrientation orientation)
+void Sprite::update(glm::vec2 position, float z, bool moved, eOrientation orientation, glm::vec3& color)
 {
     float tileWidthHalf = 64.0f;
     float tileLengthHalf = 32.0f;
@@ -75,6 +76,7 @@ void Sprite::update(glm::vec2 position, float z, bool moved, eOrientation orient
     _pos.y = offsetY - (position.x + position.y) * tileLengthHalf + (tileHeight * z);
     _pos.z = z;
     _currentOrientation = orientation;
+    _color = color;
 
     if (_type == Sprite::eType::OBJECT)
     {
@@ -117,4 +119,9 @@ void    Sprite::draw()
 const glm::vec3&    Sprite::getPos() const
 {
     return _pos;
+}
+
+const glm::vec3&    Sprite::getColor() const
+{
+    return _color;
 }

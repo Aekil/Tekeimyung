@@ -9,6 +9,7 @@
 #include "Graphics/Animation.hpp"
 #include "Graphics/Sprite.hpp"
 #include <glm/vec2.hpp>
+#include <glm/vec4.hpp>
 
 
 struct sRenderComponent: sComponent
@@ -28,6 +29,7 @@ struct sRenderComponent: sComponent
     virtual void update(sRenderComponent* component)
     {
         this->texture = component->texture;
+        this->color = component->color;
         this->type = component->type;
         this->animated = component->animated;
         this->frames = component->frames;
@@ -42,6 +44,7 @@ struct sRenderComponent: sComponent
     }
 
     std::string texture;
+    glm::vec3 color;
     Sprite::eType type;
     bool animated;
 
@@ -314,6 +317,17 @@ struct sParticleEmitterComponent : sComponent
         this->angle = component->angle;
         this->angleVariance = component->angleVariance;
         this->speed = component->speed;
+        this->speedVariance = component->speedVariance;
+
+        this->colorStart = component->colorStart;
+        this->colorFinish = component->colorFinish;
+        this->colorStartVariance = component->colorStartVariance;
+        this->colorFinishVariance = component->colorFinishVariance;
+
+        this->sizeStart = component->sizeStart;
+        this->sizeFinish = component->sizeFinish;
+        this->sizeStartVariance = component->sizeStartVariance;
+        this->sizeFinishVariance = component->sizeFinishVariance;
     }
 
     virtual void update(sComponent* component)
@@ -321,13 +335,35 @@ struct sParticleEmitterComponent : sComponent
         update(static_cast<sParticleEmitterComponent*>(component));
     }
 
+    // Spawn particles each rate second
     float rate;
+
+    // Spawn spawnNb particles each rate
     int spawnNb;
+
+    // Particle life time in frame
     int life;
     int lifeVariance;
+
+    // Particles spawn angle
     float angle;
     float angleVariance;
+
+    // Particles speed
     float speed;
+    float speedVariance;
+
+    // Particles color
+    glm::vec4 colorStart;
+    glm::vec4 colorFinish;
+    glm::vec4 colorStartVariance;
+    glm::vec4 colorFinishVariance;
+
+    // Particles size
+    float sizeStart;
+    float sizeFinish;
+    float sizeStartVariance;
+    float sizeFinishVariance;
 };
 
 struct sNameComponent : sComponent

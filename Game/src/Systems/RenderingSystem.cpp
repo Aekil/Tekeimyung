@@ -52,6 +52,10 @@ void    RenderingSystem::renderEntity(Entity* entity)
     GLint uniTrans = _shaderProgram.getUniformLocation("trans");
     glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(trans));
 
+    // Color vector
+    GLint uniColor = _shaderProgram.getUniformLocation("color");
+    glUniform4f(uniColor, sprite->getColor().x, sprite->getColor().y, sprite->getColor().z, 1.0f);
+
     // Draw sprite
     sprite->draw();
 }
@@ -85,6 +89,9 @@ void    RenderingSystem::renderEntities(EntityManager& em, std::list<uint32_t>::
 
 void    RenderingSystem::renderParticles(EntityManager& em)
 {
+    // Activate additive blending
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+
     for (auto &&it: *_particleEmitters)
     {
         auto &&emitter = it.second;
@@ -94,8 +101,11 @@ void    RenderingSystem::renderParticles(EntityManager& em)
 
         if (!sprite->_sprite)
         {
+            Sprite::sCreateInfo createInfo;
             sprite->_sprite = new Sprite(sprite->type, _shaderProgram);
-            sprite->_sprite->loadFromTexture(sprite->texture, sprite->animated, sprite->frames, sprite->spriteSheetOffset, sprite->orientations, sprite->spriteSize);
+
+            getSpriteCreateInfo(createInfo, sprite);
+            sprite->_sprite->loadFromTexture(createInfo);
         }
 
         for (unsigned int i = 0; i < emitter->particlesNb; i++)
@@ -104,14 +114,25 @@ void    RenderingSystem::renderParticles(EntityManager& em)
 
             // Model matrice
             glm::mat4 trans;
+            glm::mat4 scale;
+            glm::mat4 modelTrans;
             trans = glm::translate(trans, glm::vec3(particle.pos.x, particle.pos.y, 0.0f));
+            scale = glm::scale(scale, glm::vec3(particle.size, particle.size, particle.size));
+            modelTrans = trans * scale;
             GLint uniTrans = _shaderProgram.getUniformLocation("trans");
-            glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(trans));
+            glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(modelTrans));
+
+            // Color vector
+            GLint uniColor = _shaderProgram.getUniformLocation("color");
+            glUniform4f(uniColor, particle.color.x, particle.color.y, particle.color.z, particle.color.w);
 
             // Draw sprite
             sprite->_sprite->draw();
         }
     }
+
+    // Activate transparency blending
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void    RenderingSystem::update(EntityManager& em, float elapsedTime)
@@ -169,17 +190,31 @@ Sprite*   RenderingSystem::getSprite(Entity* entity)
     // The entity does not exist in the render system
     if (!sprite->_sprite)
     {
+        Sprite::sCreateInfo createInfo;
         sprite->_sprite = new Sprite(sprite->type, _shaderProgram);
-        sprite->_sprite->loadFromTexture(sprite->texture, sprite->animated, sprite->frames, sprite->spriteSheetOffset, sprite->orientations, sprite->spriteSize);
+
+        getSpriteCreateInfo(createInfo, sprite);
+        sprite->_sprite->loadFromTexture(createInfo);
 
     }
 
     // Update entity graphic position
     bool moved = direction && direction->moved;
     eOrientation orientation = direction ? direction->orientation : eOrientation::N;
-    sprite->_sprite->update(position->value, position->z, moved, orientation);
+    sprite->_sprite->update(position->value, position->z, moved, orientation, sprite->color);
 
     return (sprite->_sprite);
+}
+
+void    RenderingSystem::getSpriteCreateInfo(Sprite::sCreateInfo& createInfo, sRenderComponent *sprite)
+{
+    createInfo.textureFile = sprite->texture;
+    createInfo.animated = sprite->animated;
+    createInfo.frames = sprite->frames;
+    createInfo.offset = sprite->spriteSheetOffset;
+    createInfo.orientations = sprite->orientations;
+    createInfo.spriteSize = sprite->spriteSize;
+    createInfo.color = sprite->color;
 }
 
 const ShaderProgram&  RenderingSystem::getShaderProgram() const

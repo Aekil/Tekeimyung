@@ -41,7 +41,7 @@ void    ParticleSystem::updateEmitter(Entity* entity, float elapsedTime)
 
     bool moved = direction && direction->moved;
     eOrientation orientation = direction ? direction->orientation : eOrientation::N;
-    sprite->_sprite->update(pos->value, pos->z, moved, orientation);
+    sprite->_sprite->update(pos->value, pos->z, moved, orientation, sprite->color);
 
     // Update particles
     for (unsigned int i = 0; i < emitter->particlesNb; i++)
@@ -53,6 +53,8 @@ void    ParticleSystem::updateEmitter(Entity* entity, float elapsedTime)
 
         emitter->particles[i].pos += velocity;
         emitter->particles[i].life--;
+        emitter->particles[i].color += emitter->particles[i].colorStep;
+        emitter->particles[i].size += emitter->particles[i].sizeStep;
 
         // Remove particle
         if (emitter->particles[i].life <= 0)
@@ -68,7 +70,7 @@ void    ParticleSystem::updateEmitter(Entity* entity, float elapsedTime)
     }
 
     // Create new particles each second
-    if (_timer.getElapsedTime() >= emitterComp->rate)
+    if (emitter->timer.getElapsedTime() >= emitterComp->rate)
     {
         for (unsigned int i = 0; i < emitterComp->spawnNb; i++)
         {
@@ -79,8 +81,14 @@ void    ParticleSystem::updateEmitter(Entity* entity, float elapsedTime)
             particle.pos = sprite->_sprite->getPos();
             particle.velocity.x = glm::cos(angleRadian);
             particle.velocity.y = glm::sin(angleRadian);
-            particle.speed = emitterComp->speed;
+            particle.speed = emitterComp->speed + Helper::randFloat(0, emitterComp->speedVariance);
             particle.life = emitterComp->life + Helper::randFloat(0, emitterComp->lifeVariance);
+
+            particle.color = emitterComp->colorStart;
+            particle.colorStep = (emitterComp->colorFinish - emitterComp->colorStart) / glm::vec4(emitterComp->life);
+
+            particle.size = emitterComp->sizeStart;
+            particle.sizeStep = (emitterComp->sizeFinish - emitterComp->sizeStart) / emitterComp->life;
 
             // Can add a particle in particles list
             if (emitter->particlesNb != emitter->particles.size())
@@ -89,7 +97,7 @@ void    ParticleSystem::updateEmitter(Entity* entity, float elapsedTime)
                 emitter->particlesNb++;
             }
         }
-        _timer.reset();
+        emitter->timer.reset();
     }
 }
 
