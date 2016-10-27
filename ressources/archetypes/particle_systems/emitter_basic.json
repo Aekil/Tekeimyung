@@ -1,0 +1,26 @@
+{
+    "name": "EMITTER_BASIC",
+    "components": {
+            "sPositionComponent": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "sRenderComponent": {
+                "texture": "ressources/sprites/particles/particle_purple2.png",
+                "type": "OBJECT"
+            },
+            "sTypeComponent": {
+                "type": "OBJECT"
+            },
+            "sParticleEmitterComponent": {
+                "rate": 0.2,
+                "spawn_nb": 5,
+                "life": 80,
+                "life_variance": 30,
+                "angle": 0,
+                "angle_variance": 90,
+                "speed": 100
+            }
+        }
+}

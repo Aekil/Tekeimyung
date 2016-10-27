@@ -44,10 +44,8 @@ void    Sprite::loadFromTexture(const std::string& textureFile, bool animated, c
     }
     else
     {
-        _spriteSize.x = _texture->getWidth();
-        _spriteSize.y = _texture->getHeight();
+        _spriteSize = {_texture->getWidth(), _texture->getHeight()};
     }
-
 
     // Init entity buffers
     Vertex vertices[] = {

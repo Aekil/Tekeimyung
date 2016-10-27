@@ -1,4 +1,6 @@
 #include "json/json.h"
+#include <imgui.h>
+#include <imgui_impl_glfw_gl3.h>
 #include "Utils/Exception.hpp"
 #include "Utils/RessourceManager.hpp"
 #include "ComponentFactory.hpp"
@@ -9,8 +11,9 @@
 
 
 std::unordered_map<std::string, std::list<std::string> >  EntityFactory::_entities;
-std::vector<std::string>  EntityFactory::_typesString = { ENTITIES_TYPES(GENERATE_STRING) };
+std::vector<const char*>  EntityFactory::_typesString = { ENTITIES_TYPES(GENERATE_STRING) };
 EntityManager*  EntityFactory::_em = nullptr;
+int  EntityFactory::_selectedEntity = 0;
 
 EntityFactory::EntityFactory() {}
 
@@ -102,6 +105,41 @@ void EntityFactory::bindEntityManager(EntityManager* em)
     _em = em;
 }
 
+void    EntityFactory::updateEditors()
+{
+    const char** list = _typesString.data();
+
+    ImGui_ImplGlfwGL3_NewFrame();
+    {
+        //ImGui::SetNextWindowSize(ImVec2(400, 50), ImGuiSetCond_FirstUseEver);
+        ImGui::Begin("Live edition");
+        ImGui::PushItemWidth(200);
+        ImGui::ListBox("Entities types", &_selectedEntity, list, _typesString.capacity(), 4);
+
+        const char* entityName = _typesString[_selectedEntity];
+
+
+        if (ImGui::CollapsingHeader(entityName, ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            // Iterate over all components names
+            for (auto &&componentName: _entities[entityName])
+            {
+                IComponentFactory* compFactory = IComponentFactory::getFactory(componentName);
+                sComponent* component = nullptr;
+
+                // The component data has changed
+                if (compFactory->updateEditor(entityName, &component))
+                {
+                    ASSERT(component != nullptr, "component should be set in updateEditor");
+                    updateEntityComponent(entityName, compFactory, component);
+                }
+            }
+        }
+
+        ImGui::End();
+    }
+}
+
 Entity* EntityFactory::cloneEntity(const std::string& typeName)
 {
     Entity* clone = _em->createEntity();
@@ -112,5 +150,22 @@ Entity* EntityFactory::cloneEntity(const std::string& typeName)
         clone->addComponent(component_);
     }
 
+    clone->addComponent<sNameComponent>(typeName);
+
     return (clone);
+}
+
+void    EntityFactory::updateEntityComponent(const std::string& entityName, IComponentFactory* compFactory, sComponent* component)
+{
+    for (auto &&entity_: _em->getEntities())
+    {
+        Entity* entity = entity_.second;
+        sNameComponent* name = entity->getComponent<sNameComponent>();
+
+        if (name->value == entityName)
+        {
+            sComponent* entityComponent = entity->getComponent(component->getTypeInfo().hash_code());
+            entityComponent->update(component);
+        }
+    }
 }

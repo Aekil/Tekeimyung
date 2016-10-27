@@ -1,4 +1,6 @@
 #include <sstream>
+#include <imgui.h>
+#include <imgui_impl_glfw_gl3.h>
 #include "Window/Keyboard.hpp"
 
 #include "ComponentFactory.hpp"
@@ -63,6 +65,14 @@ void    IComponentFactory::initComponent(const std::string& entityType, const st
 sComponent*  IComponentFactory::createComponent(const std::string& entityType, const std::string& name)
 {
     return _componentsTypes[name]->clone(entityType);
+}
+
+IComponentFactory*   IComponentFactory::getFactory(const std::string& name)
+{
+    if (!IComponentFactory::componentTypeExists(name))
+        EXCEPT(InvalidParametersException, "Cannot get component factory archetype \"%s\": does not exist", name);
+
+    return _componentsTypes[name];
 }
 
 /*
@@ -249,4 +259,48 @@ sComponent* ComponentFactory<sAIComponent>::loadFromJson(const std::string& enti
     sAIComponent* component = new sAIComponent();
 
     return component;
+}
+
+
+/*
+** sParticleEmitterComponent
+*/
+
+sComponent* ComponentFactory<sParticleEmitterComponent>::loadFromJson(const std::string& entityType, Json::Value& json)
+{
+    sParticleEmitterComponent* component = new sParticleEmitterComponent();
+
+    component->rate = json.get("rate", "").asFloat();
+    component->spawnNb = json.get("spawn_nb", "").asInt();
+    component->life = json.get("life", "").asInt();
+    component->lifeVariance = json.get("life_variance", "").asInt();
+    component->angle = json.get("angle", "").asFloat();
+    component->angleVariance = json.get("angle_variance", "").asFloat();
+    component->speed = json.get("speed", "").asFloat();
+
+    return component;
+}
+
+bool    ComponentFactory<sParticleEmitterComponent>::updateEditor(const std::string& entityType, sComponent** component_)
+{
+    sParticleEmitterComponent* component = static_cast<sParticleEmitterComponent*>(_components[entityType]);
+    *component_ = component;
+    bool changed = false;
+
+    //ImGui_ImplGlfwGL3_NewFrame();
+    //{
+        ImGui::PushItemWidth(200);
+        if (ImGui::CollapsingHeader("sParticleEmitterComponent", ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            changed |= ImGui::SliderFloat("Rate", &component->rate, 0.0f, 3.0f);
+            changed |= ImGui::SliderInt("Particles number per spawn", &component->spawnNb, 0.0f, 50.0f);
+            changed |= ImGui::SliderFloat("Angle", &component->angle, 0.0f, 360.0f);
+            changed |= ImGui::SliderFloat("Angle variance", &component->angleVariance, 0.0f, 360.0f);
+            changed |= ImGui::SliderFloat("Speed", &component->speed, 0.0f, 200.0f);
+            changed |= ImGui::SliderInt("Life", &component->life, 0.0f, 200.0f);
+            changed |= ImGui::SliderInt("Life variance", &component->lifeVariance, 0.0f, 200.0f);
+        }
+    //}
+
+    return (changed);
 }

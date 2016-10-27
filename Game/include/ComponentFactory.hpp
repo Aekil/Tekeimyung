@@ -17,6 +17,7 @@
     GENERATE_PAIRS(sGravityComponent),\
     GENERATE_PAIRS(sTypeComponent),\
     GENERATE_PAIRS(sAIComponent),\
+    GENERATE_PAIRS(sParticleEmitterComponent),\
 
 #define GENERATE_PAIRS(COMPONENT) { #COMPONENT, new ComponentFactory<COMPONENT>() }
 
@@ -35,8 +36,10 @@ public:
     static eOrientation                                             stringToOrientation(const std::string& orientationStr);
     static void                                                     initComponent(const std::string& entityType, const std::string& name, Json::Value& value);
     static sComponent*                                              createComponent(const std::string& entityType, const std::string& name);
+    static IComponentFactory*                                       getFactory(const std::string& name);
     virtual sComponent*                                             clone(const std::string& entityType) = 0;
     virtual void                                                    addComponent(const std::string& entityType, sComponent* component) = 0;
+    virtual bool                                                    updateEditor(const std::string& entityType, sComponent** component_) = 0;
 
 private:
     // Store Components types
@@ -57,12 +60,17 @@ public:
 
     sComponent* loadFromJson(const std::string& entityType, Json::Value& json)
     {
-        EXCEPT(NotImplementedException, "Failed to load component: the component has no overload");
+        EXCEPT(NotImplementedException, "Failed to load component: the component has no overload to load from json");
     }
 
     void addComponent(const std::string& entityType, sComponent* component)
     {
         _components[entityType] = component;
+    }
+
+    bool    updateEditor(const std::string& entityType, sComponent** component_)
+    {
+        return (false);
     }
 
 private:
@@ -197,4 +205,17 @@ class ComponentFactory<sAIComponent>: public BaseComponentFactory<sAIComponent>
 {
 public:
     sComponent* loadFromJson(const std::string& entityType, Json::Value& json);
+};
+
+
+/*
+** sParticleEmitterComponent
+*/
+
+template <>
+class ComponentFactory<sParticleEmitterComponent>: public BaseComponentFactory<sParticleEmitterComponent>
+{
+public:
+    sComponent* loadFromJson(const std::string& entityType, Json::Value& json);
+    bool    updateEditor(const std::string& entityType, sComponent** component_);
 };

@@ -10,4 +10,5 @@ struct sComponent
     }
 
     virtual sComponent* clone() = 0;
+    virtual void        update(sComponent* component) = 0;
 };

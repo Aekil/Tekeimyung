@@ -12,8 +12,9 @@
 #include "imgui_impl_glfw_gl3.h"
 
 
-RenderingSystem::RenderingSystem(Map* map): _map(map)
+RenderingSystem::RenderingSystem(Map* map, std::unordered_map<uint32_t, sEmitter*>* particleEmitters): _map(map), _particleEmitters(particleEmitters)
 {
+
     addDependency<sPositionComponent>();
     addDependency<sRenderComponent>();
 }
@@ -82,6 +83,37 @@ void    RenderingSystem::renderEntities(EntityManager& em, std::list<uint32_t>::
     }
 }
 
+void    RenderingSystem::renderParticles(EntityManager& em)
+{
+    for (auto &&it: *_particleEmitters)
+    {
+        auto &&emitter = it.second;
+        Entity* entity = em.getEntity(it.first);
+        sRenderComponent *sprite = entity->getComponent<sRenderComponent>();
+
+
+        if (!sprite->_sprite)
+        {
+            sprite->_sprite = new Sprite(sprite->type, _shaderProgram);
+            sprite->_sprite->loadFromTexture(sprite->texture, sprite->animated, sprite->frames, sprite->spriteSheetOffset, sprite->orientations, sprite->spriteSize);
+        }
+
+        for (unsigned int i = 0; i < emitter->particlesNb; i++)
+        {
+            auto &&particle = emitter->particles[i];
+
+            // Model matrice
+            glm::mat4 trans;
+            trans = glm::translate(trans, glm::vec3(particle.pos.x, particle.pos.y, 0.0f));
+            GLint uniTrans = _shaderProgram.getUniformLocation("trans");
+            glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(trans));
+
+            // Draw sprite
+            sprite->_sprite->draw();
+        }
+    }
+}
+
 void    RenderingSystem::update(EntityManager& em, float elapsedTime)
 {
     // Clear color buffer
@@ -119,7 +151,8 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
         }
     }
 
-    ImGui::ShowTestWindow();
+    renderParticles(em);
+
     ImGui::Render();
 
     // Display screen
@@ -147,4 +180,9 @@ Sprite*   RenderingSystem::getSprite(Entity* entity)
     sprite->_sprite->update(position->value, position->z, moved, orientation);
 
     return (sprite->_sprite);
+}
+
+const ShaderProgram&  RenderingSystem::getShaderProgram() const
+{
+    return _shaderProgram;
 }
