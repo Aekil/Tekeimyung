@@ -107,16 +107,18 @@ void EntityFactory::bindEntityManager(EntityManager* em)
 
 void    EntityFactory::updateEditors()
 {
+    static bool open = false;
     const char** list = _typesString.data();
 
     //ImGui::SetNextWindowSize(ImVec2(400, 50), ImGuiSetCond_FirstUseEver);
-    ImGui::Begin("Live edition");
-    ImGui::PushItemWidth(200);
+    ImGui::Begin("Live edition", &open, ImGuiWindowFlags_AlwaysAutoResize);
+    //ImGui::PushItemWidth(200);
     ImGui::ListBox("Entities types", &_selectedEntity, list, _typesString.capacity(), 4);
 
     const char* entityName = _typesString[_selectedEntity];
 
 
+    //ImGui::SetNextWindowSize(ImVec2(0,0), ImGuiSetCond_FirstUseEver);
     if (ImGui::CollapsingHeader(entityName, ImGuiTreeNodeFlags_DefaultOpen))
     {
         // Iterate over all components names
