@@ -12,6 +12,7 @@
 #include <imgui_impl_glfw_gl3.h>
 
 #include "GameStates/PlayState.hpp"
+#include <Utils/DebugOverlayWindow.hpp>
 
 
 PlayState::PlayState(): _windowImgui(true) {}
@@ -102,7 +103,11 @@ bool    PlayState::update(float elapsedTime)
         ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
         createEntityButton = ImGui::Button("Create entity");
         ImGui::End();*/
-        EntityFactory::updateEditors();
+        //EntityFactory::updateEditors();
+		DebugOverlayWindow	overlay;
+
+		overlay.setDisplayed(true);
+		overlay.build();
     }
 
     if (createEntityButton)

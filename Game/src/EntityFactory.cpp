@@ -9,7 +9,6 @@
 
 #include "EntityFactory.hpp"
 
-
 std::unordered_map<std::string, std::list<std::string> >  EntityFactory::_entities;
 std::vector<const char*>  EntityFactory::_typesString = { ENTITIES_TYPES(GENERATE_STRING) };
 EntityManager*  EntityFactory::_em = nullptr;
