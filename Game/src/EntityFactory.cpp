@@ -109,35 +109,32 @@ void    EntityFactory::updateEditors()
 {
     const char** list = _typesString.data();
 
-    ImGui_ImplGlfwGL3_NewFrame();
+    //ImGui::SetNextWindowSize(ImVec2(400, 50), ImGuiSetCond_FirstUseEver);
+    ImGui::Begin("Live edition");
+    ImGui::PushItemWidth(200);
+    ImGui::ListBox("Entities types", &_selectedEntity, list, _typesString.capacity(), 4);
+
+    const char* entityName = _typesString[_selectedEntity];
+
+
+    if (ImGui::CollapsingHeader(entityName, ImGuiTreeNodeFlags_DefaultOpen))
     {
-        //ImGui::SetNextWindowSize(ImVec2(400, 50), ImGuiSetCond_FirstUseEver);
-        ImGui::Begin("Live edition");
-        ImGui::PushItemWidth(200);
-        ImGui::ListBox("Entities types", &_selectedEntity, list, _typesString.capacity(), 4);
-
-        const char* entityName = _typesString[_selectedEntity];
-
-
-        if (ImGui::CollapsingHeader(entityName, ImGuiTreeNodeFlags_DefaultOpen))
+        // Iterate over all components names
+        for (auto &&componentName: _entities[entityName])
         {
-            // Iterate over all components names
-            for (auto &&componentName: _entities[entityName])
-            {
-                IComponentFactory* compFactory = IComponentFactory::getFactory(componentName);
-                sComponent* component = nullptr;
+            IComponentFactory* compFactory = IComponentFactory::getFactory(componentName);
+            sComponent* component = nullptr;
 
-                // The component data has changed
-                if (compFactory->updateEditor(entityName, &component))
-                {
-                    ASSERT(component != nullptr, "component should be set in updateEditor");
-                    updateEntityComponent(entityName, compFactory, component);
-                }
+            // The component data has changed
+            if (compFactory->updateEditor(entityName, &component))
+            {
+                ASSERT(component != nullptr, "component should be set in updateEditor");
+                updateEntityComponent(entityName, compFactory, component);
             }
         }
-
-        ImGui::End();
     }
+
+    ImGui::End();
 }
 
 Entity* EntityFactory::cloneEntity(const std::string& typeName)

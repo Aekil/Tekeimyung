@@ -287,20 +287,17 @@ bool    ComponentFactory<sParticleEmitterComponent>::updateEditor(const std::str
     *component_ = component;
     bool changed = false;
 
-    //ImGui_ImplGlfwGL3_NewFrame();
-    //{
-        ImGui::PushItemWidth(200);
-        if (ImGui::CollapsingHeader("sParticleEmitterComponent", ImGuiTreeNodeFlags_DefaultOpen))
-        {
-            changed |= ImGui::SliderFloat("Rate", &component->rate, 0.0f, 3.0f);
-            changed |= ImGui::SliderInt("Particles number per spawn", &component->spawnNb, 0.0f, 50.0f);
-            changed |= ImGui::SliderFloat("Angle", &component->angle, 0.0f, 360.0f);
-            changed |= ImGui::SliderFloat("Angle variance", &component->angleVariance, 0.0f, 360.0f);
-            changed |= ImGui::SliderFloat("Speed", &component->speed, 0.0f, 200.0f);
-            changed |= ImGui::SliderInt("Life", &component->life, 0.0f, 200.0f);
-            changed |= ImGui::SliderInt("Life variance", &component->lifeVariance, 0.0f, 200.0f);
-        }
-    //}
+    ImGui::PushItemWidth(200);
+    if (ImGui::CollapsingHeader("sParticleEmitterComponent", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        changed |= ImGui::SliderFloat("Rate", &component->rate, 0.0f, 3.0f);
+        changed |= ImGui::SliderInt("Particles number per spawn", &component->spawnNb, 0.0f, 50.0f);
+        changed |= ImGui::SliderFloat("Angle", &component->angle, 0.0f, 360.0f);
+        changed |= ImGui::SliderFloat("Angle variance", &component->angleVariance, 0.0f, 360.0f);
+        changed |= ImGui::SliderFloat("Speed", &component->speed, 0.0f, 200.0f);
+        changed |= ImGui::SliderInt("Life", &component->life, 0.0f, 200.0f);
+        changed |= ImGui::SliderInt("Life variance", &component->lifeVariance, 0.0f, 200.0f);
+    }
 
     return (changed);
 }
