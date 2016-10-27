@@ -3,9 +3,13 @@
 #include <iostream>
 #include <memory>
 
+//#include <string>
+
 #include <fmod.hpp>
 #include "fmod_common.h"
 #include "fmod_errors.h"
+
+#include "Utils/Debug.hpp"
 
 #define SOUND_MAX_CHANNELS  32
 
@@ -20,6 +24,9 @@ public:
     bool                                    initialize();
     void                                    update();
     void                                    shutdown();
+
+    bool                                    errorCheck();
+    //std::string                             getErrorString();
 
     void                                    playBkgdMusic(const char *name, bool loop);
 

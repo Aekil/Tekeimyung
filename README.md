@@ -7,8 +7,8 @@
 ### Downloading Dependencies
 * [GLFW] (http://www.glfw.org/download.html)
 * [GLEW] (http://glew.sourceforge.net/)
-* [FMOD] (http://www.fmod.org/download/ - make sure to download the Low Level Programmer API)
-
+* [FMOD] (http://www.fmod.org/download/) - make sure to download the Low Level Programmer API
+ 
 ### Libraries environment variables
 Variable | Type
 ---------|-----
