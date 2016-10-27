@@ -9,5 +9,5 @@ uniform sampler2D spriteTexture;
 
 void main()
 {
-    color = texture(spriteTexture, outTexCoords) + outColor;
+    color = texture(spriteTexture, outTexCoords) * outColor;
 }

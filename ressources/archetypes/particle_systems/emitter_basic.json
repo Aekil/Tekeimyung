@@ -7,7 +7,7 @@
                 "z": 0
             },
             "sRenderComponent": {
-                "texture": "ressources/sprites/particles/particle_purple2.png",
+                "texture": "ressources/sprites/particles/particle_circle.png",
                 "type": "OBJECT"
             },
             "sTypeComponent": {
@@ -20,7 +20,33 @@
                 "life_variance": 30,
                 "angle": 0,
                 "angle_variance": 90,
-                "speed": 100
+                "speed": 100,
+                "color": {
+                    "start": {
+                        "r": 1.0,
+                        "g": 0.3,
+                        "b": 0,
+                        "a": 0.6
+                    },
+                    "finish": {
+                        "r": 1.0,
+                        "g": 0.3,
+                        "b": 0,
+                        "a": 0
+                    },
+                    "start_variance": {
+                        "r": 0,
+                        "g": 0,
+                        "b": 0,
+                        "a": 0
+                    },
+                    "finish_variance": {
+                        "r": 0,
+                        "g": 0,
+                        "b": 0,
+                        "a": 0
+                    }
+                }
             }
         }
 }

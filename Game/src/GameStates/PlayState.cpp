@@ -30,6 +30,18 @@ void    PlayState::createTile(const glm::vec3& pos, eArchetype type)
     (*_map)[pos.z][pos.y][pos.x] = tile->id;
 }
 
+void    PlayState::initParticles()
+{
+    Entity* particleSystem;
+    sPositionComponent* pos;
+
+    particleSystem = EntityFactory::createEntity(eArchetype::EMITTER_BASIC);
+    pos = particleSystem->getComponent<sPositionComponent>();
+    pos->value.x = 5.5f;
+    pos->value.y = 5.5f;
+    pos->z = 1.0f;
+}
+
 bool    PlayState::init()
 {
     EntityManager &em = _world.getEntityManager();
@@ -38,7 +50,7 @@ bool    PlayState::init()
 
     _map = new Map(em, 20, 15, 4);
 
-    createEntity(glm::vec3(5.5f, 5.5f, 1), eArchetype::EMITTER_BASIC);
+    initParticles();
     // Create characters
 /*    createEntity(glm::vec3(9, 5, 1), eArchetype::PLAYER);
     createEntity(glm::vec3(0.5f, 5.5f, 1), eArchetype::ENEMY);*/
@@ -51,7 +63,7 @@ bool    PlayState::init()
     }
 
 
-/*    for (int y = 0; y < 4; y++) {
+    /*for (int y = 0; y < 4; y++) {
         for (int x = 0; x < 20; x++) {
             createTile(glm::vec3(x, y, 1), eArchetype::BLOCK_BROWN);
         }
@@ -66,8 +78,8 @@ bool    PlayState::init()
 
     // Create towers
     createTile(glm::vec3(7, 4, 1), eArchetype::TOWER_FIRE);
-    createTile(glm::vec3(7, 7, 1), eArchetype::TOWER_FIRE);
-*/
+    createTile(glm::vec3(7, 7, 1), eArchetype::TOWER_FIRE);*/
+
     _world.addSystem<InputSystem>();
     _world.addSystem<AISystem>();
     _world.addSystem<MovementSystem>(_map);

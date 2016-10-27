@@ -53,6 +53,7 @@ void    ParticleSystem::updateEmitter(Entity* entity, float elapsedTime)
 
         emitter->particles[i].pos += velocity;
         emitter->particles[i].life--;
+        emitter->particles[i].color += emitter->particles[i].colorStep;
 
         // Remove particle
         if (emitter->particles[i].life <= 0)
@@ -81,7 +82,10 @@ void    ParticleSystem::updateEmitter(Entity* entity, float elapsedTime)
             particle.velocity.y = glm::sin(angleRadian);
             particle.speed = emitterComp->speed;
             particle.life = emitterComp->life + Helper::randFloat(0, emitterComp->lifeVariance);
-            particle.color = {0, 0, 0};
+            particle.color = emitterComp->colorStart;
+
+            // We are supposing it's updating every 16ms
+            particle.colorStep = (emitterComp->colorFinish - emitterComp->colorStart) / glm::vec4(emitterComp->life);
 
             // Can add a particle in particles list
             if (emitter->particlesNb != emitter->particles.size())

@@ -54,7 +54,7 @@ void    RenderingSystem::renderEntity(Entity* entity)
 
     // Color vector
     GLint uniColor = _shaderProgram.getUniformLocation("color");
-    glUniform3f(uniColor, sprite->getColor().x, sprite->getColor().y, sprite->getColor().z);
+    glUniform4f(uniColor, sprite->getColor().x, sprite->getColor().y, sprite->getColor().z, 1.0f);
 
     // Draw sprite
     sprite->draw();
@@ -117,7 +117,7 @@ void    RenderingSystem::renderParticles(EntityManager& em)
 
             // Color vector
             GLint uniColor = _shaderProgram.getUniformLocation("color");
-            glUniform3f(uniColor, particle.color.x, particle.color.y, particle.color.z);
+            glUniform4f(uniColor, particle.color.x, particle.color.y, particle.color.z, particle.color.w);
 
             // Draw sprite
             sprite->_sprite->draw();

@@ -11,7 +11,8 @@ struct sParticle
 {
     glm::vec3 pos;
     glm::vec3 velocity;
-    glm::vec3 color;
+    glm::vec4 color;
+    glm::vec4 colorStep;
     float speed;
     float life;
 };

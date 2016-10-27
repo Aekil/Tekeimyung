@@ -9,6 +9,7 @@
 #include "Graphics/Animation.hpp"
 #include "Graphics/Sprite.hpp"
 #include <glm/vec2.hpp>
+#include <glm/vec4.hpp>
 
 
 struct sRenderComponent: sComponent
@@ -316,6 +317,11 @@ struct sParticleEmitterComponent : sComponent
         this->angle = component->angle;
         this->angleVariance = component->angleVariance;
         this->speed = component->speed;
+
+        this->colorStart = component->colorStart;
+        this->colorFinish = component->colorFinish;
+        this->colorStartVariance = component->colorStartVariance;
+        this->colorFinishVariance = component->colorFinishVariance;
     }
 
     virtual void update(sComponent* component)
@@ -330,6 +336,11 @@ struct sParticleEmitterComponent : sComponent
     float angle;
     float angleVariance;
     float speed;
+
+    glm::vec4 colorStart;
+    glm::vec4 colorFinish;
+    glm::vec4 colorStartVariance;
+    glm::vec4 colorFinishVariance;
 };
 
 struct sNameComponent : sComponent
