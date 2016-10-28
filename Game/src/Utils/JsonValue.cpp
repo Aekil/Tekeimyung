@@ -150,6 +150,14 @@ void JsonValue::setString(const std::string& index, const std::string& value)
     _json[index] = value;
 }
 
+void    JsonValue::setStringVec(const std::string& index, const std::vector<std::string>& value)
+{
+    for (uint32_t i = 0; i < value.size(); i++)
+    {
+        _json[index][i] = value[i];
+    }
+}
+
 
 void   JsonValue::setColor3f(const std::string& index, const glm::vec3& value)
 {

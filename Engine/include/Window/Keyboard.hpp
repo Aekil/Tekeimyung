@@ -150,6 +150,7 @@ public:
 	KeyboardNativeMap&  getNativeMap();
     KeyboardStateMap&   getStateMap();
     KeyboardStringMap&  getStringMap();
+    std::string         keyToString(Keyboard::eKey key);
     Keyboard::eKeyState operator[](Keyboard::eKey key);
 
     void                resetKeyboardState();

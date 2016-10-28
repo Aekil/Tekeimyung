@@ -43,7 +43,29 @@ eOrientation IComponentFactory::stringToOrientation(const std::string& orientati
     else if (orientationStr == "NW")
         return eOrientation::NW;
 
-    EXCEPT(NotImplementedException, "Failed to load sRenderComponent:  the orientation does not exist");
+    EXCEPT(NotImplementedException, "Failed to load sRenderComponent:  the orientation %s does not exist", orientationStr);
+}
+
+std::string IComponentFactory::orientationToString(eOrientation orientation)
+{
+    if (orientation == eOrientation::N)
+        return ("N");
+    else if (orientation == eOrientation::NE)
+        return ("NE");
+    else if (orientation == eOrientation::E)
+        return ("E");
+    else if (orientation == eOrientation::SE)
+        return ("SE");
+    else if (orientation == eOrientation::S)
+        return ("S");
+    else if (orientation == eOrientation::SW)
+        return ("SW");
+    else if (orientation == eOrientation::W)
+        return ("W");
+    else if (orientation == eOrientation::NW)
+        return ("NW");
+
+    EXCEPT(NotImplementedException, "Failed to save sRenderComponent:  the orientation type does not exist");
 }
 
 void    IComponentFactory::initComponent(const std::string& entityType, const std::string& name, JsonValue& value)
@@ -117,6 +139,33 @@ sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& 
     return (component);
 }
 
+JsonValue&    ComponentFactory<sRenderComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
+{
+    std::vector<std::string> orientations;
+    JsonValue animation;
+    JsonValue& json = _componentsJson[entityType];
+    sRenderComponent* component = static_cast<sRenderComponent*>(_components[entityType]);
+
+
+    // Write animation
+    animation.setVec2f("frames", component->frames);
+    animation.setVec2f("offset", component->spriteSheetOffset);
+    // Convert orientations into string
+    for (auto &&orientation: component->orientations)
+    {
+        orientations.push_back(orientationToString(orientation));
+    }
+    animation.setStringVec("orientations", orientations);
+    json.setValue("animation", animation);
+
+    json.setString("texture", component->texture);
+    json.setString("type", spriteTypeToString(component->type));
+    json.setVec2f("spriteSize", component->spriteSize);
+    json.setColor3f("color", component->color);
+
+    return (json);
+}
+
 bool    ComponentFactory<sRenderComponent>::updateEditor(const std::string& entityType, sComponent** component_)
 {
     sRenderComponent* component = static_cast<sRenderComponent*>(_components[entityType]);
@@ -139,7 +188,17 @@ Sprite::eType ComponentFactory<sRenderComponent>::stringToSpriteType(const std::
     else if (spriteTypeStr == "TILE")
         return Sprite::eType::TILE;
 
-    EXCEPT(NotImplementedException, "Failed to load sRenderComponent:  the sprite type does not exist");
+    EXCEPT(NotImplementedException, "Failed to load sRenderComponent:  the sprite type %s does not exist", spriteTypeStr);
+}
+
+std::string ComponentFactory<sRenderComponent>::spriteTypeToString(Sprite::eType spriteType)
+{
+    if (spriteType == Sprite::eType::OBJECT)
+        return ("OBJECT");
+    else if (spriteType == Sprite::eType::TILE)
+        return ("TILE");
+
+    EXCEPT(NotImplementedException, "Failed to save sRenderComponent:  the sprite type does not exist");
 }
 
 
@@ -156,6 +215,18 @@ sComponent* ComponentFactory<sPositionComponent>::loadFromJson(const std::string
     component->z = json.getFloat("z", 0.0f);
 
     return (component);
+}
+
+JsonValue&    ComponentFactory<sPositionComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
+{
+    JsonValue& json = _componentsJson[entityType];
+    sPositionComponent* component = static_cast<sPositionComponent*>(_components[entityType]);
+
+    json.setFloat("x", component->value.x);
+    json.setFloat("y", component->value.y);
+    json.setFloat("z", component->z);
+
+    return (json);
 }
 
 
@@ -177,6 +248,20 @@ sComponent* ComponentFactory<sInputComponent>::loadFromJson(const std::string& e
     return (component);
 }
 
+JsonValue&    ComponentFactory<sInputComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
+{
+    JsonValue& json = _componentsJson[entityType];
+    sInputComponent* component = static_cast<sInputComponent*>(_components[entityType]);
+    Keyboard keyboard;
+
+    json.setString("left", keyboard.keyToString(component->moveLeft));
+    json.setString("right", keyboard.keyToString(component->moveRight));
+    json.setString("up", keyboard.keyToString(component->moveUp));
+    json.setString("down", keyboard.keyToString(component->moveDown));
+
+    return (json);
+}
+
 
 /*
 ** sDirectionComponent
@@ -194,6 +279,19 @@ sComponent* ComponentFactory<sDirectionComponent>::loadFromJson(const std::strin
     return (component);
 }
 
+JsonValue&    ComponentFactory<sDirectionComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
+{
+    JsonValue& json = _componentsJson[entityType];
+    sDirectionComponent* component = static_cast<sDirectionComponent*>(_components[entityType]);
+
+    json.setFloat("x", component->value.x);
+    json.setFloat("y", component->value.y);
+    json.setString("orientation", orientationToString(component->orientation));
+    json.setFloat("speed", component->speed);
+
+    return (json);
+}
+
 
 /*
 ** sHitBoxComponent
@@ -207,6 +305,17 @@ sComponent* ComponentFactory<sHitBoxComponent>::loadFromJson(const std::string& 
     component->max = json.getVec2f("max", { 0.0f, 0.0f });
 
     return (component);
+}
+
+JsonValue&    ComponentFactory<sHitBoxComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
+{
+    JsonValue& json = _componentsJson[entityType];
+    sHitBoxComponent* component = static_cast<sHitBoxComponent*>(_components[entityType]);
+
+    json.setVec2f("min", component->min);
+    json.setVec2f("max", component->max);
+
+    return (json);
 }
 
 
@@ -224,6 +333,17 @@ sComponent* ComponentFactory<sCircleHitBoxComponent>::loadFromJson(const std::st
     return (component);
 }
 
+JsonValue&    ComponentFactory<sCircleHitBoxComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
+{
+    JsonValue& json = _componentsJson[entityType];
+    sCircleHitBoxComponent* component = static_cast<sCircleHitBoxComponent*>(_components[entityType]);
+
+    json.setVec2f("center", component->center);
+    json.setFloat("radius", component->radius);
+
+    return (json);
+}
+
 
 /*
 ** sGravityComponent
@@ -237,6 +357,17 @@ sComponent* ComponentFactory<sGravityComponent>::loadFromJson(const std::string&
     component->value.y = json.getFloat("y", 0.0f);
 
     return (component);
+}
+
+JsonValue&    ComponentFactory<sGravityComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
+{
+    JsonValue& json = _componentsJson[entityType];
+    sGravityComponent* component = static_cast<sGravityComponent*>(_components[entityType]);
+
+    json.setFloat("x", component->value.x);
+    json.setFloat("y", component->value.y);
+
+    return (json);
 }
 
 
@@ -259,7 +390,36 @@ eEntityType ComponentFactory<sTypeComponent>::stringToEntityType(const std::stri
     else if (entityTypeStr == "TILE_STAIRS_DOWN")
         return eEntityType::TILE_STAIRS_DOWN;
 
-    EXCEPT(NotImplementedException, "Failed to load sTypeComponent:  the entity type does not exist");
+    EXCEPT(NotImplementedException, "Failed to load sTypeComponent:  the entity type %s does not exist", entityTypeStr);
+}
+
+std::string ComponentFactory<sTypeComponent>::entityTypeToString(eEntityType entityType)
+{
+    if (entityType == eEntityType::CHARACTER)
+        return ("CHARACTER");
+    else if (entityType == eEntityType::OBJECT)
+        return ("OBJECT");
+    else if (entityType == eEntityType::TILE_WALKABLE)
+        return ("TILE_WALKABLE");
+    else if (entityType == eEntityType::TILE_NOT_WALKABLE)
+        return ("TILE_NOT_WALKABLE");
+    else if (entityType == eEntityType::TILE_STAIRS_UP)
+        return ("TILE_STAIRS_UP");
+    else if (entityType == eEntityType::TILE_STAIRS_DOWN)
+        return ("TILE_STAIRS_DOWN");
+
+    EXCEPT(NotImplementedException, "Failed to save sTypeComponent:  the entity type does not exist");
+}
+
+
+JsonValue&    ComponentFactory<sTypeComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
+{
+    JsonValue& json = _componentsJson[entityType];
+    sTypeComponent* component = static_cast<sTypeComponent*>(_components[entityType]);
+
+    json.setString("type", entityTypeToString(component->type));
+
+    return (json);
 }
 
 sComponent* ComponentFactory<sTypeComponent>::loadFromJson(const std::string& entityType, JsonValue& json)

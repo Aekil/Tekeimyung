@@ -4,6 +4,7 @@
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 #include <cstdint>
+#include <vector>
 #include <array>
 #include "json/json.h"
 
@@ -54,6 +55,7 @@ class JsonValue
     void                                setUInt(const std::string& index, unsigned int value);
     void                                setFloat(const std::string& index, float value);
     void                                setString(const std::string& index, const std::string& value);
+    void                                setStringVec(const std::string& index, const std::vector<std::string>& value);
 
     // Set colors
     void                                setColor3f(const std::string& index, const glm::vec3& value);

@@ -36,6 +36,7 @@ public:
     virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType) = 0;
     static bool                                                     componentTypeExists(const std::string& type);
     static eOrientation                                             stringToOrientation(const std::string& orientationStr);
+    static std::string                                              orientationToString(eOrientation orientation);
     static void                                                     initComponent(const std::string& entityType, const std::string& name, JsonValue& value);
     static sComponent*                                              createComponent(const std::string& entityType, const std::string& name);
     static IComponentFactory*                                       getFactory(const std::string& name);
@@ -123,10 +124,12 @@ class ComponentFactory<sRenderComponent>: public BaseComponentFactory<sRenderCom
 {
 public:
     sComponent* loadFromJson(const std::string& entityType, JsonValue& json);
+    JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
 
 private:
-    Sprite::eType stringToSpriteType(const std::string& spriteTypeStr);
     bool    updateEditor(const std::string& entityType, sComponent** component_);
+    Sprite::eType stringToSpriteType(const std::string& spriteTypeStr);
+    std::string spriteTypeToString(Sprite::eType spriteType);
 };
 
 
@@ -139,6 +142,7 @@ class ComponentFactory<sPositionComponent>: public BaseComponentFactory<sPositio
 {
 public:
     sComponent* loadFromJson(const std::string& entityType, JsonValue& json);
+    JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
 };
 
 
@@ -151,6 +155,7 @@ class ComponentFactory<sInputComponent>: public BaseComponentFactory<sInputCompo
 {
 public:
     sComponent* loadFromJson(const std::string& entityType, JsonValue& json);
+    JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
 };
 
 
@@ -163,6 +168,7 @@ class ComponentFactory<sDirectionComponent>: public BaseComponentFactory<sDirect
 {
 public:
     sComponent* loadFromJson(const std::string& entityType, JsonValue& json);
+    JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
 };
 
 
@@ -175,6 +181,7 @@ class ComponentFactory<sHitBoxComponent>: public BaseComponentFactory<sHitBoxCom
 {
 public:
     sComponent* loadFromJson(const std::string& entityType, JsonValue& json);
+    JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
 };
 
 
@@ -187,6 +194,7 @@ class ComponentFactory<sCircleHitBoxComponent>: public BaseComponentFactory<sCir
 {
 public:
     sComponent* loadFromJson(const std::string& entityType, JsonValue& json);
+    JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
 };
 
 
@@ -199,6 +207,7 @@ class ComponentFactory<sGravityComponent>: public BaseComponentFactory<sGravityC
 {
 public:
     sComponent* loadFromJson(const std::string& entityType, JsonValue& json);
+    JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
 };
 
 
@@ -211,7 +220,9 @@ class ComponentFactory<sTypeComponent>: public BaseComponentFactory<sTypeCompone
 {
 public:
     sComponent* loadFromJson(const std::string& entityType, JsonValue& json);
+    JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
     eEntityType stringToEntityType(const std::string& entityTypeStr);
+    std::string entityTypeToString(eEntityType entityType);
 };
 
 
