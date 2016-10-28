@@ -5,8 +5,8 @@
 #include "ComponentFactory.hpp"
 #include "dirent.h"
 #include "Utils/Debug.hpp"
-#include "JsonReader.hpp"
-#include "JsonWriter.hpp"
+#include "Utils/JsonReader.hpp"
+#include "Utils/JsonWriter.hpp"
 
 #include "EntityFactory.hpp"
 

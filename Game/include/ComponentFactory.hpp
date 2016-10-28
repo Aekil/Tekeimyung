@@ -3,7 +3,7 @@
 #include <utility>
 #include "Utils/Exception.hpp"
 #include "Utils/Logger.hpp"
-#include "JsonValue.hpp"
+#include "Utils/JsonValue.hpp"
 #include "Core/Components.hh"
 
 // Generate map initializer lists
