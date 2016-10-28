@@ -4,6 +4,7 @@
 #include "Utils/Exception.hpp"
 #include "Utils/Logger.hpp"
 #include "json/json.h"
+#include "JsonValue.hpp"
 #include "Core/Components.hh"
 
 // Generate map initializer lists
@@ -32,11 +33,11 @@ class IComponentFactory
 public:
     IComponentFactory() {}
     virtual ~IComponentFactory() {}
-    virtual sComponent* loadFromJson(const std::string& entityType, Json::Value& json) = 0;
+    virtual sComponent* loadFromJson(const std::string& entityType, JsonValue& json) = 0;
     virtual Json::Value& saveToJson(const std::string& entityType, const std::string& componentType) = 0;
     static bool                                                     componentTypeExists(const std::string& type);
     static eOrientation                                             stringToOrientation(const std::string& orientationStr);
-    static void                                                     initComponent(const std::string& entityType, const std::string& name, Json::Value& value);
+    static void                                                     initComponent(const std::string& entityType, const std::string& name, JsonValue& value);
     static sComponent*                                              createComponent(const std::string& entityType, const std::string& name);
     static IComponentFactory*                                       getFactory(const std::string& name);
     virtual sComponent*                                             clone(const std::string& entityType) = 0;
@@ -61,7 +62,7 @@ public:
     BaseComponentFactory() {}
     ~BaseComponentFactory() {}
 
-    sComponent* loadFromJson(const std::string& entityType, Json::Value& json)
+    sComponent* loadFromJson(const std::string& entityType, JsonValue& json)
     {
         EXCEPT(NotImplementedException, "Failed to load component: the component has no overload to load from json");
     }
@@ -122,7 +123,7 @@ template <>
 class ComponentFactory<sRenderComponent>: public BaseComponentFactory<sRenderComponent>
 {
 public:
-    sComponent* loadFromJson(const std::string& entityType, Json::Value& json);
+    sComponent* loadFromJson(const std::string& entityType, JsonValue& json);
 
 private:
     Sprite::eType stringToSpriteType(const std::string& spriteTypeStr);
@@ -138,7 +139,7 @@ template <>
 class ComponentFactory<sPositionComponent>: public BaseComponentFactory<sPositionComponent>
 {
 public:
-    sComponent* loadFromJson(const std::string& entityType, Json::Value& json);
+    sComponent* loadFromJson(const std::string& entityType, JsonValue& json);
 };
 
 
@@ -150,7 +151,7 @@ template <>
 class ComponentFactory<sInputComponent>: public BaseComponentFactory<sInputComponent>
 {
 public:
-    sComponent* loadFromJson(const std::string& entityType, Json::Value& json);
+    sComponent* loadFromJson(const std::string& entityType, JsonValue& json);
 };
 
 
@@ -162,7 +163,7 @@ template <>
 class ComponentFactory<sDirectionComponent>: public BaseComponentFactory<sDirectionComponent>
 {
 public:
-    sComponent* loadFromJson(const std::string& entityType, Json::Value& json);
+    sComponent* loadFromJson(const std::string& entityType, JsonValue& json);
 };
 
 
@@ -174,7 +175,7 @@ template <>
 class ComponentFactory<sHitBoxComponent>: public BaseComponentFactory<sHitBoxComponent>
 {
 public:
-    sComponent* loadFromJson(const std::string& entityType, Json::Value& json);
+    sComponent* loadFromJson(const std::string& entityType, JsonValue& json);
 };
 
 
@@ -186,7 +187,7 @@ template <>
 class ComponentFactory<sCircleHitBoxComponent>: public BaseComponentFactory<sCircleHitBoxComponent>
 {
 public:
-    sComponent* loadFromJson(const std::string& entityType, Json::Value& json);
+    sComponent* loadFromJson(const std::string& entityType, JsonValue& json);
 };
 
 
@@ -198,7 +199,7 @@ template <>
 class ComponentFactory<sGravityComponent>: public BaseComponentFactory<sGravityComponent>
 {
 public:
-    sComponent* loadFromJson(const std::string& entityType, Json::Value& json);
+    sComponent* loadFromJson(const std::string& entityType, JsonValue& json);
 };
 
 
@@ -210,7 +211,7 @@ template <>
 class ComponentFactory<sTypeComponent>: public BaseComponentFactory<sTypeComponent>
 {
 public:
-    sComponent* loadFromJson(const std::string& entityType, Json::Value& json);
+    sComponent* loadFromJson(const std::string& entityType, JsonValue& json);
     eEntityType stringToEntityType(const std::string& entityTypeStr);
 };
 
@@ -223,7 +224,7 @@ template <>
 class ComponentFactory<sAIComponent>: public BaseComponentFactory<sAIComponent>
 {
 public:
-    sComponent* loadFromJson(const std::string& entityType, Json::Value& json);
+    sComponent* loadFromJson(const std::string& entityType, JsonValue& json);
 };
 
 
@@ -235,7 +236,7 @@ template <>
 class ComponentFactory<sParticleEmitterComponent>: public BaseComponentFactory<sParticleEmitterComponent>
 {
 public:
-    sComponent* loadFromJson(const std::string& entityType, Json::Value& json);
+    sComponent* loadFromJson(const std::string& entityType, JsonValue& json);
     Json::Value& saveToJson(const std::string& entityType, const std::string& componentType);
     bool    updateEditor(const std::string& entityType, sComponent** component_);
 };

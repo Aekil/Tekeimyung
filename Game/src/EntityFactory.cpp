@@ -1,4 +1,4 @@
-#include "json/json.h"
+#include "JsonReader.hpp"
 #include <imgui.h>
 #include <imgui_impl_glfw_gl3.h>
 #include "Utils/Exception.hpp"
@@ -38,19 +38,20 @@ void EntityFactory::loadDirectory(const std::string& archetypesDir)
             std::string entityConf = ressourceManager->getFile(path);
 
             // Parse the configuration file with jsoncpp
-            Json::Reader jsonReader;
-            Json::Value parsed;
+            JsonReader jsonReader;
+            JsonValue parsed;
             std::string typeName;
             if (!jsonReader.parse(entityConf, parsed))
                 EXCEPT(IOException, "Cannot parse archetype \"%s\"", path.c_str());
 
-            typeName = parsed["name"].asString();
+            typeName = parsed.getString("name", "");
 
             if (!EntityFactory::entityTypeExists(typeName)) // The macro ENTITIES_TYPES did not create the type
                 EXCEPT(InvalidParametersException, "Failed to read entity archetype: Entity type \"%s\" does not exist", typeName.c_str());
 
             // Create entity components
-            for (Json::ValueIterator it = parsed["components"].begin(); it != parsed["components"].end(); it++)
+            auto &&components = parsed.get("components", {}).get();
+            for (Json::ValueIterator it = components.begin(); it != components.end(); it++)
             {
                 std::string componentName = it.key().asString();
 
@@ -58,7 +59,7 @@ void EntityFactory::loadDirectory(const std::string& archetypesDir)
                 if (!IComponentFactory::componentTypeExists(it.key().asString()))
                     EXCEPT(InvalidParametersException, "Failed to read entity archetype: Component type \"%s\" does not exist", componentName.c_str());
 
-                IComponentFactory::initComponent(typeName, componentName, *it);
+                IComponentFactory::initComponent(typeName, componentName, JsonValue(*it));
                 _entitiesFiles[typeName] = path;
                 _entities[typeName].push_back(componentName);
             }

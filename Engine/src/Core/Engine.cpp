@@ -45,7 +45,7 @@ bool    Engine::run()
 
             auto &&currentState = _gameStateManager.getCurrentState();
 
-            if (!currentState->update(timer.getElapsedTime()))
+            if (currentState->update(timer.getElapsedTime()) == false)
             {
                 _gameStateManager.removeCurrentState();
             }

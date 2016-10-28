@@ -142,7 +142,5 @@ bool    PlayState::update(float elapsedTime)
         createEntity(pos, eArchetype::PLAYER);
     }
 
-    GameState::update(elapsedTime);
-
-    return (true);
+    return (GameState::update(elapsedTime));
 }

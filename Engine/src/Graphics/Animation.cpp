@@ -54,6 +54,9 @@ void    Animation::addFrames(const glm::vec2& baseOffset, const glm::vec2& sprit
 
 void    Animation::play(GLint textureShiftUniform)
 {
+    if (!_framesNb)
+        EXCEPT(InternalErrorException, "Attempt to play an animation with no frame");
+
     // Bind sprite sheet
     _spriteSheet->bind();
 

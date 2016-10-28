@@ -46,14 +46,14 @@ eOrientation IComponentFactory::stringToOrientation(const std::string& orientati
     EXCEPT(NotImplementedException, "Failed to load sRenderComponent:  the orientation does not exist");
 }
 
-void    IComponentFactory::initComponent(const std::string& entityType, const std::string& name, Json::Value& value)
+void    IComponentFactory::initComponent(const std::string& entityType, const std::string& name, JsonValue& value)
 {
     try
     {
         sComponent* component;
-        component = _componentsTypes[name]->loadFromJson(entityType, value);
+        component = _componentsTypes[name]->loadFromJson(entityType, JsonValue(value));
         _componentsTypes[name]->addComponent(entityType, component);
-        _componentsTypes[name]->saveComponentJson(entityType, value);
+        _componentsTypes[name]->saveComponentJson(entityType, value.get());
     }
     catch(const std::exception& e)
     {
@@ -81,39 +81,34 @@ IComponentFactory*   IComponentFactory::getFactory(const std::string& name)
 ** sRenderComponent
 */
 
-sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& entityType, Json::Value& json)
+sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& entityType, JsonValue& json)
 {
     sRenderComponent* component = new sRenderComponent();
-    Json::Value animation = json.get("animation", {});
+    JsonValue animation = json.get("animation", {});
 
     // Initialize some values
     component->animated = false;
     component->spriteSheetOffset = {0, 0};
 
     // Sprite texture
-    component->texture = json.get("texture", "").asString();
+    component->texture = json.getString("texture", "");
 
     // Sprite type
-    component->type = stringToSpriteType(json.get("type", "").asString());
+    component->type = stringToSpriteType(json.getString("type", ""));
 
     // Sprite size
-    component->spriteSize.x = json.get("spriteSize", {}).get("width", 0).asFloat();
-    component->spriteSize.y = json.get("spriteSize", {}).get("height", 0).asFloat();
+    component->spriteSize = json.getVec2f("spriteSize", { "width", "height" }, { 0.0f, 0.0f });
 
     // Sprite color
-    component->color.x = json.get("color", {}).get("r", 1).asFloat();
-    component->color.y = json.get("color", {}).get("g", 1).asFloat();
-    component->color.z = json.get("color", {}).get("b", 1).asFloat();
+    component->color = json.getColor3f("color", { 1.0f, 1.0f, 1.0f });
 
     // Sprite animation
     if (animation.size() > 0)
     {
         component->animated = true;
-        component->frames.x = animation.get("frames", {}).get("x", 0).asFloat();
-        component->frames.y = animation.get("frames", {}).get("y", 0).asFloat();
-        component->spriteSheetOffset.x = animation.get("offset", {}).get("x", 0).asFloat();
-        component->spriteSheetOffset.y = animation.get("offset", {}).get("y", 0).asFloat();
-        for (auto&& orientation: animation.get("orientations", "[]"))
+        component->frames = animation.getVec2f("frames", { 0.0f, 0.0f });
+        component->spriteSheetOffset = animation.getVec2f("offset", { 0.0f, 0.0f });
+        for (auto &&orientation: animation.get("orientations", {}).get())
         {
             component->orientations.push_back(stringToOrientation(orientation.asString()));
         }
@@ -152,13 +147,13 @@ Sprite::eType ComponentFactory<sRenderComponent>::stringToSpriteType(const std::
 ** sPositionComponent
 */
 
-sComponent* ComponentFactory<sPositionComponent>::loadFromJson(const std::string& entityType, Json::Value& json)
+sComponent* ComponentFactory<sPositionComponent>::loadFromJson(const std::string& entityType, JsonValue& json)
 {
     sPositionComponent* component = new sPositionComponent();
 
-    component->value.x = json.get("x", 0).asFloat();
-    component->value.y = json.get("y", 0).asFloat();
-    component->z = json.get("z", 0).asFloat();
+    component->value.x = json.getFloat("x", 0.0f);
+    component->value.y = json.getFloat("y", 0.0f);
+    component->z = json.getFloat("z", 0.0f);
 
     return component;
 }
@@ -168,16 +163,16 @@ sComponent* ComponentFactory<sPositionComponent>::loadFromJson(const std::string
 ** sInputComponent
 */
 
-sComponent* ComponentFactory<sInputComponent>::loadFromJson(const std::string& entityType, Json::Value& json)
+sComponent* ComponentFactory<sInputComponent>::loadFromJson(const std::string& entityType, JsonValue& json)
 {
     Keyboard keyboard;
     auto &&keyMap = keyboard.getStringMap();
     sInputComponent* component = new sInputComponent();
 
-    component->moveLeft = keyMap[json.get("left", "Q").asString()];
-    component->moveRight = keyMap[json.get("right", "D").asString()];
-    component->moveUp = keyMap[json.get("up", "Z").asString()];
-    component->moveDown = keyMap[json.get("down", "S").asString()];
+    component->moveLeft = keyMap[json.getString("left", "Q")];
+    component->moveRight = keyMap[json.getString("right", "D")];
+    component->moveUp = keyMap[json.getString("up", "Z")];
+    component->moveDown = keyMap[json.getString("down", "S")];
 
     return component;
 }
@@ -187,14 +182,14 @@ sComponent* ComponentFactory<sInputComponent>::loadFromJson(const std::string& e
 ** sDirectionComponent
 */
 
-sComponent* ComponentFactory<sDirectionComponent>::loadFromJson(const std::string& entityType, Json::Value& json)
+sComponent* ComponentFactory<sDirectionComponent>::loadFromJson(const std::string& entityType, JsonValue& json)
 {
     sDirectionComponent* component = new sDirectionComponent();
 
-    component->value.x = json.get("x", 0).asFloat();
-    component->value.y = json.get("y", 0).asFloat();
-    component->orientation =  stringToOrientation(json.get("orientation", "N").asString());
-    component->speed =  json.get("speed", 1.0f).asFloat();
+    component->value.x = json.getFloat("x", 0.0f);
+    component->value.y = json.getFloat("y", 0.0f);
+    component->orientation =  stringToOrientation(json.getString("orientation", "N"));
+    component->speed =  json.getFloat("speed", 1.0f);
 
     return component;
 }
@@ -204,14 +199,12 @@ sComponent* ComponentFactory<sDirectionComponent>::loadFromJson(const std::strin
 ** sHitBoxComponent
 */
 
-sComponent* ComponentFactory<sHitBoxComponent>::loadFromJson(const std::string& entityType, Json::Value& json)
+sComponent* ComponentFactory<sHitBoxComponent>::loadFromJson(const std::string& entityType, JsonValue& json)
 {
     sHitBoxComponent* component = new sHitBoxComponent();
 
-    component->min.x =  json.get("min", {}).get("x", 0).asFloat();
-    component->min.y =  json.get("min", {}).get("y", 0).asFloat();
-    component->max.x =  json.get("max", {}).get("x", 0).asFloat();
-    component->max.y =  json.get("max", {}).get("y", 0).asFloat();
+    component->min = json.getVec2f("min", { 0.0f, 0.0f });
+    component->max = json.getVec2f("max", { 0.0f, 0.0f });
 
     return component;
 }
@@ -221,13 +214,12 @@ sComponent* ComponentFactory<sHitBoxComponent>::loadFromJson(const std::string& 
 ** sCircleHitBoxComponent
 */
 
-sComponent* ComponentFactory<sCircleHitBoxComponent>::loadFromJson(const std::string& entityType, Json::Value& json)
+sComponent* ComponentFactory<sCircleHitBoxComponent>::loadFromJson(const std::string& entityType, JsonValue& json)
 {
     sCircleHitBoxComponent* component = new sCircleHitBoxComponent();
 
-    component->center.x =  json.get("center", {}).get("x", 0).asFloat();
-    component->center.y = json.get("center", {}).get("y", 0).asFloat();
-    component->radius = json.get("radius", 0).asFloat();
+    component->center = json.getVec2f("center", { 0.0f, 0.0f });
+    component->radius = json.getFloat("radius", 0.0f);
 
     return component;
 }
@@ -237,12 +229,12 @@ sComponent* ComponentFactory<sCircleHitBoxComponent>::loadFromJson(const std::st
 ** sGravityComponent
 */
 
-sComponent* ComponentFactory<sGravityComponent>::loadFromJson(const std::string& entityType, Json::Value& json)
+sComponent* ComponentFactory<sGravityComponent>::loadFromJson(const std::string& entityType, JsonValue& json)
 {
     sGravityComponent* component = new sGravityComponent();
 
-    component->value.x = json.get("x", 0).asFloat();
-    component->value.y = json.get("y", 0).asFloat();
+    component->value.x = json.getFloat("x", 0.0f);
+    component->value.y = json.getFloat("y", 0.0f);
 
     return component;
 }
@@ -270,11 +262,11 @@ eEntityType ComponentFactory<sTypeComponent>::stringToEntityType(const std::stri
     EXCEPT(NotImplementedException, "Failed to load sTypeComponent:  the entity type does not exist");
 }
 
-sComponent* ComponentFactory<sTypeComponent>::loadFromJson(const std::string& entityType, Json::Value& json)
+sComponent* ComponentFactory<sTypeComponent>::loadFromJson(const std::string& entityType, JsonValue& json)
 {
     sTypeComponent* component = new sTypeComponent();
 
-    component->type = stringToEntityType(json.get("type", "TILE_WALKABLE").asString());
+    component->type = stringToEntityType(json.getString("type", "TILE_WALKABLE"));
 
     return component;
 }
@@ -284,7 +276,7 @@ sComponent* ComponentFactory<sTypeComponent>::loadFromJson(const std::string& en
 ** sAIComponent
 */
 
-sComponent* ComponentFactory<sAIComponent>::loadFromJson(const std::string& entityType, Json::Value& json)
+sComponent* ComponentFactory<sAIComponent>::loadFromJson(const std::string& entityType, JsonValue& json)
 {
     sAIComponent* component = new sAIComponent();
 
@@ -296,44 +288,35 @@ sComponent* ComponentFactory<sAIComponent>::loadFromJson(const std::string& enti
 ** sParticleEmitterComponent
 */
 
-sComponent* ComponentFactory<sParticleEmitterComponent>::loadFromJson(const std::string& entityType, Json::Value& json)
+sComponent* ComponentFactory<sParticleEmitterComponent>::loadFromJson(const std::string& entityType, JsonValue& json)
 {
     sParticleEmitterComponent* component = new sParticleEmitterComponent();
-    Json::Value color = json.get("color", {});
-    Json::Value size = json.get("size", {});
+    JsonValue color(json.get("color", {}));
+    JsonValue size = json.get("size", {});
 
-    component->rate = json.get("rate", "").asFloat();
-    component->spawnNb = json.get("spawn_nb", "").asInt();
-    component->life = json.get("life", "").asInt();
-    component->lifeVariance = json.get("life_variance", "").asInt();
-    component->angle = json.get("angle", "").asFloat();
-    component->angleVariance = json.get("angle_variance", "").asFloat();
-    component->speed = json.get("speed", "").asFloat();
-    component->speedVariance =  json.get("speed_variance", 0.0f).asFloat();
+    component->rate = json.getFloat("rate", 0.0f);
+    component->spawnNb = json.getUInt("spawn_nb", 0);
+    component->life = json.getUInt("life", 0);
+    component->lifeVariance = json.getUInt("life_variance", 0);
+    component->angle = json.getFloat("angle", 0.0f);
+    component->angleVariance = json.getFloat("angle_variance", 0.0f);
+    component->speed = json.getFloat("speed", 0.0f);
+    component->speedVariance =  json.getFloat("speed_variance", 0.0f);
 
     if (color.size() > 0)
     {
-        Json::Value colorStart = color.get("start", {});
-        Json::Value colorStartVariance = color.get("start_variance", {});
-        Json::Value colorFinish = color.get("finish", {});
-        Json::Value colorFinishVariance = color.get("finish_variance", {});
-
-        component->colorStart = { colorStart.get("r", 1).asFloat(), colorStart.get("g", 1).asFloat(),
-        colorStart.get("b", 1).asFloat(), 1 };
-        component->colorStartVariance = { colorStartVariance.get("r", 1).asFloat(), colorStartVariance.get("g", 1).asFloat(),
-        colorStartVariance.get("b", 1).asFloat(), colorStartVariance.get("a", 1).asFloat() };
-        component->colorFinish = { colorFinish.get("r", 1).asFloat(), colorFinish.get("g", 1).asFloat(),
-        colorFinish.get("b", 1).asFloat(), colorFinish.get("a", 1).asFloat() };
-        component->colorStartVariance = { colorStartVariance.get("r", 1).asFloat(), colorStartVariance.get("g", 1).asFloat(),
-        colorStartVariance.get("b", 1).asFloat(), colorStartVariance.get("a", 1).asFloat() };
+        component->colorStart = color.getColor4f("start", { 1.0f, 1.0f, 1.0f, 1.0f });
+        component->colorStartVariance = color.getColor4f("start_variance", { 1.0f, 1.0f, 1.0f, 1.0f });
+        component->colorFinish = color.getColor4f("finish", { 1.0f, 1.0f, 1.0f, 1.0f });
+        component->colorFinishVariance = color.getColor4f("finish_variance", { 1.0f, 1.0f, 1.0f, 1.0f });
     }
 
     if (size.size() > 0)
     {
-        component->sizeStart =  size.get("start", 1.0f).asFloat();
-        component->sizeFinish =  size.get("finish", 1.0f).asFloat();
-        component->sizeStartVariance =  size.get("start_variance", 1.0f).asFloat();
-        component->sizeFinishVariance =  size.get("finish_variance", 1.0f).asFloat();
+        component->sizeStart =  size.getFloat("start", 1.0f);
+        component->sizeFinish =  size.getFloat("finish", 1.0f);
+        component->sizeStartVariance =  size.getFloat("start_variance", 1.0f);
+        component->sizeFinishVariance =  size.getFloat("finish_variance", 1.0f);
     }
 
     return component;
