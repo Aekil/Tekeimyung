@@ -114,7 +114,7 @@ sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& 
         }
     }
 
-    return component;
+    return (component);
 }
 
 bool    ComponentFactory<sRenderComponent>::updateEditor(const std::string& entityType, sComponent** component_)
@@ -155,7 +155,7 @@ sComponent* ComponentFactory<sPositionComponent>::loadFromJson(const std::string
     component->value.y = json.getFloat("y", 0.0f);
     component->z = json.getFloat("z", 0.0f);
 
-    return component;
+    return (component);
 }
 
 
@@ -174,7 +174,7 @@ sComponent* ComponentFactory<sInputComponent>::loadFromJson(const std::string& e
     component->moveUp = keyMap[json.getString("up", "Z")];
     component->moveDown = keyMap[json.getString("down", "S")];
 
-    return component;
+    return (component);
 }
 
 
@@ -191,7 +191,7 @@ sComponent* ComponentFactory<sDirectionComponent>::loadFromJson(const std::strin
     component->orientation =  stringToOrientation(json.getString("orientation", "N"));
     component->speed =  json.getFloat("speed", 1.0f);
 
-    return component;
+    return (component);
 }
 
 
@@ -206,7 +206,7 @@ sComponent* ComponentFactory<sHitBoxComponent>::loadFromJson(const std::string& 
     component->min = json.getVec2f("min", { 0.0f, 0.0f });
     component->max = json.getVec2f("max", { 0.0f, 0.0f });
 
-    return component;
+    return (component);
 }
 
 
@@ -221,7 +221,7 @@ sComponent* ComponentFactory<sCircleHitBoxComponent>::loadFromJson(const std::st
     component->center = json.getVec2f("center", { 0.0f, 0.0f });
     component->radius = json.getFloat("radius", 0.0f);
 
-    return component;
+    return (component);
 }
 
 
@@ -236,7 +236,7 @@ sComponent* ComponentFactory<sGravityComponent>::loadFromJson(const std::string&
     component->value.x = json.getFloat("x", 0.0f);
     component->value.y = json.getFloat("y", 0.0f);
 
-    return component;
+    return (component);
 }
 
 
@@ -268,7 +268,7 @@ sComponent* ComponentFactory<sTypeComponent>::loadFromJson(const std::string& en
 
     component->type = stringToEntityType(json.getString("type", "TILE_WALKABLE"));
 
-    return component;
+    return (component);
 }
 
 
@@ -280,7 +280,7 @@ sComponent* ComponentFactory<sAIComponent>::loadFromJson(const std::string& enti
 {
     sAIComponent* component = new sAIComponent();
 
-    return component;
+    return (component);
 }
 
 
@@ -319,60 +319,40 @@ sComponent* ComponentFactory<sParticleEmitterComponent>::loadFromJson(const std:
         component->sizeFinishVariance =  size.getFloat("finish_variance", 1.0f);
     }
 
-    return component;
+    return (component);
 }
 
-Json::Value&    ComponentFactory<sParticleEmitterComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
+JsonValue&    ComponentFactory<sParticleEmitterComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
 {
-    Json::Value& json = _componentsJson[entityType];
+    JsonValue color;
+    JsonValue size;
+    JsonValue& json = _componentsJson[entityType];
     sParticleEmitterComponent* component = static_cast<sParticleEmitterComponent*>(_components[entityType]);
 
     // Write colors
-    json["color"] = {};
-    json["color"]["start_variance"] = {};
-    json["color"]["finish"] = {};
-    json["color"]["finish_variance"] = {};
-
-    json["color"]["start"] = {};
-    json["color"]["start"]["r"] = component->colorStart.x;
-    json["color"]["start"]["g"] = component->colorStart.y;
-    json["color"]["start"]["b"] = component->colorStart.z;
-    json["color"]["start"]["a"] = component->colorStart.w;
-
-    json["color"]["start_variance"] = {};
-    json["color"]["start_variance"]["r"] = component->colorStartVariance.x;
-    json["color"]["start_variance"]["g"] = component->colorStartVariance.y;
-    json["color"]["start_variance"]["b"] = component->colorStartVariance.z;
-    json["color"]["start_variance"]["a"] = component->colorStartVariance.w;
-
-    json["color"]["finish"] = {};
-    json["color"]["finish"]["r"] = component->colorFinish.x;
-    json["color"]["finish"]["g"] = component->colorFinish.y;
-    json["color"]["finish"]["b"] = component->colorFinish.z;
-    json["color"]["finish"]["a"] = component->colorFinish.w;
-
-    json["color"]["finish_variance"] = {};
-    json["color"]["finish_variance"]["r"] = component->colorFinishVariance.x;
-    json["color"]["finish_variance"]["g"] = component->colorFinishVariance.y;
-    json["color"]["finish_variance"]["b"] = component->colorFinishVariance.z;
-    json["color"]["finish_variance"]["a"] = component->colorFinishVariance.w;
+    color.setColor4f("start", component->colorStart);
+    color.setColor4f("start_variance", component->colorStartVariance);
+    color.setColor4f("finish", component->colorFinish);
+    color.setColor4f("finish_variance", component->colorFinishVariance);
+    json.setValue("color", color);
 
     // Write size
-    json["size"] = {};
-    json["size"]["start"] = component->sizeStart;
-    json["size"]["start_variance"] = component->sizeStartVariance;
-    json["size"]["finish"] = component->sizeFinish;
-    json["size"]["finish"] = component->sizeFinishVariance;
+    size.setFloat("start", component->sizeStart);
+    size.setFloat("start_variance", component->sizeStartVariance);
+    size.setFloat("finish", component->sizeFinish);
+    size.setFloat("finish_variance", component->sizeFinishVariance);
+    json.setValue("size", size);
 
-    json["rate"] = component->rate;
-    json["spawnNb"] = component->spawnNb;
-    json["life_variance"] = component->lifeVariance;
-    json["angle"] = component->angle;
-    json["angle_variance"] = component->angleVariance;
-    json["speed"] = component->speed;
-    json["speed_variance"] = component->speedVariance;
+    json.setFloat("rate", component->rate);
+    json.setUInt("spawn_nb", component->spawnNb);
+    json.setUInt("life", component->life);
+    json.setUInt("life_variance", component->lifeVariance);
+    json.setFloat("angle", component->angle);
+    json.setFloat("angle_variance", component->angleVariance);
+    json.setFloat("speed", component->speed);
+    json.setFloat("speed_variance", component->speedVariance);
 
-    return json;
+    return (json);
 }
 
 bool    ComponentFactory<sParticleEmitterComponent>::updateEditor(const std::string& entityType, sComponent** component_)

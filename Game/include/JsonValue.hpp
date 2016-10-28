@@ -44,6 +44,32 @@ class JsonValue
     glm::vec3                           getVec3f(const std::string& index, const std::array<const char*, 3>& keys, const glm::vec3& defaultValue) const;
     glm::vec4                           getVec4f(const std::string& index, const std::array<const char*, 4>& keys, const glm::vec4& defaultValue) const;
 
+
+    // Set any value to key
+    void                                setValue(const std::string& index, const JsonValue& value);
+
+    // Set scalar/string/bool
+    void                                setBool(const std::string& index, bool value);
+    void                                setInt(const std::string& index, int value);
+    void                                setUInt(const std::string& index, unsigned int value);
+    void                                setFloat(const std::string& index, float value);
+    void                                setString(const std::string& index, const std::string& value);
+
+    // Set colors
+    void                                setColor3f(const std::string& index, const glm::vec3& value);
+    void                                setColor4f(const std::string& index, const glm::vec4& value);
+
+    // Set vectors
+    void                                setVec2f(const std::string& index, const glm::vec2& value);
+    void                                setVec3f(const std::string& index, const glm::vec3& value);
+    void                                setVec4f(const std::string& index, const glm::vec4& value);
+
+    // Set vectors with specific keys
+    void                                setVec2f(const std::string& index, const std::array<const char*, 2>& keys, const glm::vec2& value);
+    void                                setVec3f(const std::string& index, const std::array<const char*, 3>& keys, const glm::vec3& value);
+    void                                setVec4f(const std::string& index, const std::array<const char*, 4>& keys, const glm::vec4& value);
+
+
     uint32_t                            size() const;
 
 private:

@@ -172,8 +172,8 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
         }
     }
 
-    //renderParticles(em);
-	ImGui::ShowTestWindow();
+    renderParticles(em);
+	//ImGui::ShowTestWindow();
     ImGui::Render();
 
     // Display screen

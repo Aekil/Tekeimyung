@@ -3,7 +3,6 @@
 #include <utility>
 #include "Utils/Exception.hpp"
 #include "Utils/Logger.hpp"
-#include "json/json.h"
 #include "JsonValue.hpp"
 #include "Core/Components.hh"
 
@@ -34,7 +33,7 @@ public:
     IComponentFactory() {}
     virtual ~IComponentFactory() {}
     virtual sComponent* loadFromJson(const std::string& entityType, JsonValue& json) = 0;
-    virtual Json::Value& saveToJson(const std::string& entityType, const std::string& componentType) = 0;
+    virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType) = 0;
     static bool                                                     componentTypeExists(const std::string& type);
     static eOrientation                                             stringToOrientation(const std::string& orientationStr);
     static void                                                     initComponent(const std::string& entityType, const std::string& name, JsonValue& value);
@@ -42,7 +41,7 @@ public:
     static IComponentFactory*                                       getFactory(const std::string& name);
     virtual sComponent*                                             clone(const std::string& entityType) = 0;
     virtual void                                                    addComponent(const std::string& entityType, sComponent* component) = 0;
-    virtual void                                                    saveComponentJson(const std::string& entityType, const Json::Value& json) = 0;
+    virtual void                                                    saveComponentJson(const std::string& entityType, const JsonValue& json) = 0;
     virtual bool                                                    updateEditor(const std::string& entityType, sComponent** component_) = 0;
 
 private:
@@ -67,7 +66,7 @@ public:
         EXCEPT(NotImplementedException, "Failed to load component: the component has no overload to load from json");
     }
 
-    Json::Value& saveToJson(const std::string& entityType, const std::string& componentType)
+    JsonValue& saveToJson(const std::string& entityType, const std::string& componentType)
     {
         LOG_WARN(entityType, "::", componentType, ": can't save to json because no saveToJson found");
         return _componentsJson[entityType];
@@ -78,7 +77,7 @@ public:
         _components[entityType] = component;
     }
 
-    void    saveComponentJson(const std::string& entityType, const Json::Value& json)
+    void    saveComponentJson(const std::string& entityType, const JsonValue& json)
     {
         _componentsJson[entityType] = json;
     }
@@ -100,7 +99,7 @@ protected:
 
     // Store component JSON retrieved from loadFromJson function
     // so we can return the default json if saveToJson is not implemented
-    std::unordered_map<std::string, Json::Value>    _componentsJson;
+    std::unordered_map<std::string, JsonValue>    _componentsJson;
 };
 
 
@@ -237,6 +236,6 @@ class ComponentFactory<sParticleEmitterComponent>: public BaseComponentFactory<s
 {
 public:
     sComponent* loadFromJson(const std::string& entityType, JsonValue& json);
-    Json::Value& saveToJson(const std::string& entityType, const std::string& componentType);
+    JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
     bool    updateEditor(const std::string& entityType, sComponent** component_);
 };

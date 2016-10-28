@@ -1,4 +1,3 @@
-#include "JsonReader.hpp"
 #include <imgui.h>
 #include <imgui_impl_glfw_gl3.h>
 #include "Utils/Exception.hpp"
@@ -6,6 +5,8 @@
 #include "ComponentFactory.hpp"
 #include "dirent.h"
 #include "Utils/Debug.hpp"
+#include "JsonReader.hpp"
+#include "JsonWriter.hpp"
 
 #include "EntityFactory.hpp"
 
@@ -178,16 +179,17 @@ void    EntityFactory::updateEntityComponent(const std::string& entityName, ICom
 
 void    EntityFactory::saveToJson(const std::string& typeName)
 {
-    Json::Value json;
+    JsonWriter jsonWriter;
+    JsonValue json;
+    JsonValue components;
 
-    json["name"] = typeName;
-    json["components"] = {};
+    json.setString("name", typeName);
     for (auto &&component: _entities[typeName])
     {
-        Json::Value& componentJson = IComponentFactory::getFactory(component)->saveToJson(typeName, component);
-        json["components"][component] = componentJson;
+        JsonValue& componentJson = IComponentFactory::getFactory(component)->saveToJson(typeName, component);
+        components.setValue(component, componentJson);
     }
+    json.setValue("components", components);
 
-    // fileName is lowercased entity type
-    RessourceManager::getInstance()->saveFile(_entitiesFiles[typeName], json.toStyledString());
+    jsonWriter.write(_entitiesFiles[typeName], json);
 }

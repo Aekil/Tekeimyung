@@ -120,6 +120,114 @@ glm::vec4   JsonValue::getVec4f(const std::string& index, const std::array<const
 }
 
 
+void    JsonValue::setValue(const std::string& index, const JsonValue& value)
+{
+    _json[index] = value.get();
+}
+
+void    JsonValue::setBool(const std::string& index, bool value)
+{
+    _json[index] = value;
+}
+
+void JsonValue::setInt(const std::string& index, int value)
+{
+    _json[index] = value;
+}
+
+void    JsonValue::setUInt(const std::string& index, unsigned int value)
+{
+    _json[index] = value;
+}
+
+void   JsonValue::setFloat(const std::string& index, float value)
+{
+    _json[index] = value;
+}
+
+void JsonValue::setString(const std::string& index, const std::string& value)
+{
+    _json[index] = value;
+}
+
+
+void   JsonValue::setColor3f(const std::string& index, const glm::vec3& value)
+{
+    Json::Value& color = _json[index];
+
+    color["r"] = value.x;
+    color["g"] = value.y;
+    color["b"] = value.z;
+}
+
+void   JsonValue::setColor4f(const std::string& index, const glm::vec4& value)
+{
+    Json::Value& color = _json[index];
+
+    color["r"] = value.x;
+    color["g"] = value.y;
+    color["b"] = value.z;
+    color["a"] = value.w;
+}
+
+
+void   JsonValue::setVec2f(const std::string& index, const glm::vec2& value)
+{
+    Json::Value& vec = _json[index];
+
+    vec["x"] = value.x;
+    vec["y"] = value.y;
+}
+
+void   JsonValue::setVec3f(const std::string& index, const glm::vec3& value)
+{
+    Json::Value& vec = _json[index];
+
+    vec["x"] = value.x;
+    vec["y"] = value.y;
+    vec["z"] = value.z;
+}
+
+void   JsonValue::setVec4f(const std::string& index, const glm::vec4& value)
+{
+    Json::Value& vec = _json[index];
+
+    vec["x"] = value.x;
+    vec["y"] = value.y;
+    vec["z"] = value.z;
+    vec["w"] = value.w;
+}
+
+
+void   JsonValue::setVec2f(const std::string& index, const std::array<const char*, 2>& keys, const glm::vec2& value)
+{
+    Json::Value& vec = _json[index];
+
+    vec[keys[0]] = value.x;
+    vec[keys[1]] = value.y;
+}
+
+void   JsonValue::setVec3f(const std::string& index, const std::array<const char*, 3>& keys, const glm::vec3& value)
+{
+    Json::Value& vec = _json[index];
+
+    vec[keys[0]] = value.x;
+    vec[keys[1]] = value.y;
+    vec[keys[2]] = value.z;
+}
+
+void   JsonValue::setVec4f(const std::string& index, const std::array<const char*, 4>& keys, const glm::vec4& value)
+{
+    Json::Value& vec = _json[index];
+
+    vec[keys[0]] = value.x;
+    vec[keys[1]] = value.y;
+    vec[keys[2]] = value.z;
+    vec[keys[3]] = value.w;
+}
+
+
+
 uint32_t    JsonValue::size() const
 {
     return _json.size();
