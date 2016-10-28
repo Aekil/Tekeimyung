@@ -43,6 +43,7 @@ public:
 private:
     static bool                                             entityTypeExists(const std::string& type);
     static Entity*                                          cloneEntity(const std::string& typeName);
+    static void                                             saveToJson(const std::string& typeName);
     static void                                             updateEntityComponent(const std::string& entityName, IComponentFactory* compFactory, sComponent* component);
 
 private:
@@ -50,6 +51,9 @@ private:
     static std::unordered_map<std::string, std::list<std::string>>         _entities;
     static std::vector<const char*>                         _typesString;
     static EntityManager*                                   _em;
+
+    // Entity types file definition
+    static std::unordered_map<std::string, std::string>     _entitiesFiles;
 
     // Selected entity in IMGUI select box
     static int                                              _selectedEntity;

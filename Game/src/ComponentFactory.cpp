@@ -53,6 +53,7 @@ void    IComponentFactory::initComponent(const std::string& entityType, const st
         sComponent* component;
         component = _componentsTypes[name]->loadFromJson(entityType, value);
         _componentsTypes[name]->addComponent(entityType, component);
+        _componentsTypes[name]->saveComponentJson(entityType, value);
     }
     catch(const std::exception& e)
     {
@@ -336,6 +337,59 @@ sComponent* ComponentFactory<sParticleEmitterComponent>::loadFromJson(const std:
     }
 
     return component;
+}
+
+Json::Value&    ComponentFactory<sParticleEmitterComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
+{
+    Json::Value& json = _componentsJson[entityType];
+    sParticleEmitterComponent* component = static_cast<sParticleEmitterComponent*>(_components[entityType]);
+
+    // Write colors
+    json["color"] = {};
+    json["color"]["start_variance"] = {};
+    json["color"]["finish"] = {};
+    json["color"]["finish_variance"] = {};
+
+    json["color"]["start"] = {};
+    json["color"]["start"]["r"] = component->colorStart.x;
+    json["color"]["start"]["g"] = component->colorStart.y;
+    json["color"]["start"]["b"] = component->colorStart.z;
+    json["color"]["start"]["a"] = component->colorStart.w;
+
+    json["color"]["start_variance"] = {};
+    json["color"]["start_variance"]["r"] = component->colorStartVariance.x;
+    json["color"]["start_variance"]["g"] = component->colorStartVariance.y;
+    json["color"]["start_variance"]["b"] = component->colorStartVariance.z;
+    json["color"]["start_variance"]["a"] = component->colorStartVariance.w;
+
+    json["color"]["finish"] = {};
+    json["color"]["finish"]["r"] = component->colorFinish.x;
+    json["color"]["finish"]["g"] = component->colorFinish.y;
+    json["color"]["finish"]["b"] = component->colorFinish.z;
+    json["color"]["finish"]["a"] = component->colorFinish.w;
+
+    json["color"]["finish_variance"] = {};
+    json["color"]["finish_variance"]["r"] = component->colorFinishVariance.x;
+    json["color"]["finish_variance"]["g"] = component->colorFinishVariance.y;
+    json["color"]["finish_variance"]["b"] = component->colorFinishVariance.z;
+    json["color"]["finish_variance"]["a"] = component->colorFinishVariance.w;
+
+    // Write size
+    json["size"] = {};
+    json["size"]["start"] = component->sizeStart;
+    json["size"]["start_variance"] = component->sizeStartVariance;
+    json["size"]["finish"] = component->sizeFinish;
+    json["size"]["finish"] = component->sizeFinishVariance;
+
+    json["rate"] = component->rate;
+    json["spawnNb"] = component->spawnNb;
+    json["life_variance"] = component->lifeVariance;
+    json["angle"] = component->angle;
+    json["angle_variance"] = component->angleVariance;
+    json["speed"] = component->speed;
+    json["speed_variance"] = component->speedVariance;
+
+    return json;
 }
 
 bool    ComponentFactory<sParticleEmitterComponent>::updateEditor(const std::string& entityType, sComponent** component_)

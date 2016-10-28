@@ -10,6 +10,7 @@
 #include "EntityFactory.hpp"
 
 std::unordered_map<std::string, std::list<std::string> >  EntityFactory::_entities;
+std::unordered_map<std::string, std::string>  EntityFactory::_entitiesFiles;
 std::vector<const char*>  EntityFactory::_typesString = { ENTITIES_TYPES(GENERATE_STRING) };
 EntityManager*  EntityFactory::_em = nullptr;
 int  EntityFactory::_selectedEntity = 0;
@@ -58,6 +59,7 @@ void EntityFactory::loadDirectory(const std::string& archetypesDir)
                     EXCEPT(InvalidParametersException, "Failed to read entity archetype: Component type \"%s\" does not exist", componentName.c_str());
 
                 IComponentFactory::initComponent(typeName, componentName, *it);
+                _entitiesFiles[typeName] = path;
                 _entities[typeName].push_back(componentName);
             }
         }
@@ -107,6 +109,7 @@ void EntityFactory::bindEntityManager(EntityManager* em)
 void    EntityFactory::updateEditors()
 {
     static bool open = false;
+    static bool saveEntity = false;
     const char** list = _typesString.data();
 
     //ImGui::SetNextWindowSize(ImVec2(400, 50), ImGuiSetCond_FirstUseEver);
@@ -133,6 +136,10 @@ void    EntityFactory::updateEditors()
                 updateEntityComponent(entityName, compFactory, component);
             }
         }
+
+        saveEntity = ImGui::Button("Save changes");
+        if (saveEntity)
+            saveToJson(_typesString[_selectedEntity]);
     }
 
     ImGui::End();
@@ -166,4 +173,20 @@ void    EntityFactory::updateEntityComponent(const std::string& entityName, ICom
             entityComponent->update(component);
         }
     }
+}
+
+void    EntityFactory::saveToJson(const std::string& typeName)
+{
+    Json::Value json;
+
+    json["name"] = typeName;
+    json["components"] = {};
+    for (auto &&component: _entities[typeName])
+    {
+        Json::Value& componentJson = IComponentFactory::getFactory(component)->saveToJson(typeName, component);
+        json["components"][component] = componentJson;
+    }
+
+    // fileName is lowercased entity type
+    RessourceManager::getInstance()->saveFile(_entitiesFiles[typeName], json.toStyledString());
 }
