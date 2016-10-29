@@ -2,7 +2,7 @@
 
 #include <string>
 
-class           DebugWindow
+class DebugWindow
 {
 public:
     DebugWindow();

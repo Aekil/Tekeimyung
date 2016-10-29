@@ -2,7 +2,7 @@
 
 #include "Utils/DebugWindow.hpp"
 
-class           OverlayDebugWindow: public DebugWindow
+class OverlayDebugWindow: public DebugWindow
 {
 public:
     OverlayDebugWindow();
