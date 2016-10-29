@@ -38,13 +38,16 @@ public:
     static void                                             loadDirectory(const std::string& archetypesDir);
     static Entity*                                          createEntity(eArchetype type);
     static void                                             bindEntityManager(EntityManager* em);
-    static void                                             updateEditors();
+
+    static const std::vector<const char*>&                  getTypesString();
+    static const std::list<std::string>&                    getComponents(const std::string& typeName);
+    static const std::string&                               getFile(const std::string& typeName);
+
+    static void                                             updateEntityComponent(const std::string& entityName, IComponentFactory* compFactory, sComponent* component);
 
 private:
     static bool                                             entityTypeExists(const std::string& type);
     static Entity*                                          cloneEntity(const std::string& typeName);
-    static void                                             saveToJson(const std::string& typeName);
-    static void                                             updateEntityComponent(const std::string& entityName, IComponentFactory* compFactory, sComponent* component);
 
 private:
     // Store entities components names (ComponentFactory has components)
@@ -54,7 +57,4 @@ private:
 
     // Entity types file definition
     static std::unordered_map<std::string, std::string>     _entitiesFiles;
-
-    // Selected entity in IMGUI select box
-    static int                                              _selectedEntity;
 };

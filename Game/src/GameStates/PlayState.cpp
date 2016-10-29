@@ -8,6 +8,7 @@
 #include "Window/Keyboard.hpp"
 #include "Core/Components.hh"
 #include "Utils/OverlayDebugWindow.hpp"
+#include "EntityDebugWindow.hpp"
 
 #include "GameStates/PlayState.hpp"
 
@@ -86,7 +87,8 @@ bool    PlayState::init()
     _world.addSystem<ParticleSystem>();
     _world.addSystem<RenderingSystem>(_map, dynamic_cast<ParticleSystem*>(_world.getSystems()[4])->getEmitters());
 
-    addDebugWindow<DebugOverlayWindow>();
+    addDebugWindow<OverlayDebugWindow>();
+    addDebugWindow<EntityDebugWindow>();
 
     return (true);
 }

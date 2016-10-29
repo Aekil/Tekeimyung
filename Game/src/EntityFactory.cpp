@@ -1,12 +1,9 @@
-#include <imgui.h>
-#include <imgui_impl_glfw_gl3.h>
 #include "Utils/Exception.hpp"
 #include "Utils/RessourceManager.hpp"
 #include "ComponentFactory.hpp"
 #include "dirent.h"
 #include "Utils/Debug.hpp"
 #include "Utils/JsonReader.hpp"
-#include "Utils/JsonWriter.hpp"
 
 #include "EntityFactory.hpp"
 
@@ -14,7 +11,6 @@ std::unordered_map<std::string, std::list<std::string> >  EntityFactory::_entiti
 std::unordered_map<std::string, std::string>  EntityFactory::_entitiesFiles;
 std::vector<const char*>  EntityFactory::_typesString = { ENTITIES_TYPES(GENERATE_STRING) };
 EntityManager*  EntityFactory::_em = nullptr;
-int  EntityFactory::_selectedEntity = 0;
 
 EntityFactory::EntityFactory() {}
 
@@ -108,43 +104,19 @@ void EntityFactory::bindEntityManager(EntityManager* em)
     _em = em;
 }
 
-void    EntityFactory::updateEditors()
+const std::vector<const char*>& EntityFactory::getTypesString()
 {
-    static bool open = false;
-    static bool saveEntity = false;
-    const char** list = _typesString.data();
+    return _typesString;
+}
 
-    //ImGui::SetNextWindowSize(ImVec2(400, 50), ImGuiSetCond_FirstUseEver);
-    ImGui::Begin("Live edition", &open, ImGuiWindowFlags_AlwaysAutoResize);
-    //ImGui::PushItemWidth(200);
-    ImGui::ListBox("Entities types", &_selectedEntity, list, _typesString.capacity(), 4);
+const std::list<std::string>&   EntityFactory::getComponents(const std::string& typeName)
+{
+    return _entities[typeName];
+}
 
-    const char* entityName = _typesString[_selectedEntity];
-
-
-    //ImGui::SetNextWindowSize(ImVec2(0,0), ImGuiSetCond_FirstUseEver);
-    if (ImGui::CollapsingHeader(entityName, ImGuiTreeNodeFlags_DefaultOpen))
-    {
-        // Iterate over all components names
-        for (auto &&componentName: _entities[entityName])
-        {
-            IComponentFactory* compFactory = IComponentFactory::getFactory(componentName);
-            sComponent* component = nullptr;
-
-            // The component data has changed
-            if (compFactory->updateEditor(entityName, &component))
-            {
-                ASSERT(component != nullptr, "component should be set in updateEditor");
-                updateEntityComponent(entityName, compFactory, component);
-            }
-        }
-
-        saveEntity = ImGui::Button("Save changes");
-        if (saveEntity)
-            saveToJson(_typesString[_selectedEntity]);
-    }
-
-    ImGui::End();
+const std::string& EntityFactory::getFile(const std::string& typeName)
+{
+    return _entitiesFiles[typeName];
 }
 
 Entity* EntityFactory::cloneEntity(const std::string& typeName)
@@ -175,21 +147,4 @@ void    EntityFactory::updateEntityComponent(const std::string& entityName, ICom
             entityComponent->update(component);
         }
     }
-}
-
-void    EntityFactory::saveToJson(const std::string& typeName)
-{
-    JsonWriter jsonWriter;
-    JsonValue json;
-    JsonValue components;
-
-    json.setString("name", typeName);
-    for (auto &&component: _entities[typeName])
-    {
-        JsonValue& componentJson = IComponentFactory::getFactory(component)->saveToJson(typeName, component);
-        components.setValue(component, componentJson);
-    }
-    json.setValue("components", components);
-
-    jsonWriter.write(_entitiesFiles[typeName], json);
 }
