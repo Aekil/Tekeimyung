@@ -2,7 +2,9 @@
 
 #include <Utils/DebugOverlayWindow.hpp>
 
-DebugOverlayWindow::DebugOverlayWindow() {}
+DebugOverlayWindow::DebugOverlayWindow(): DebugWindow() {}
+
+DebugOverlayWindow::~DebugOverlayWindow() {}
 
 void	DebugOverlayWindow::build()
 {
@@ -17,24 +19,4 @@ void	DebugOverlayWindow::build()
 	ImGui::Separator();
 	ImGui::Text("Mouse Position: (%.1f,%.1f)", ImGui::GetIO().MousePos.x, ImGui::GetIO().MousePos.y);
 	ImGui::End();
-}
-
-const std::string	&DebugOverlayWindow::getTitle() const
-{
-	return (_title);
-}
-
-void	DebugOverlayWindow::setTitle(const std::string &title)
-{
-	_title = title;
-}
-
-bool	DebugOverlayWindow::isDisplayed() const
-{
-	return (_displayed);
-}
-
-void	DebugOverlayWindow::setDisplayed(bool displayed)
-{
-	_displayed = displayed;
 }

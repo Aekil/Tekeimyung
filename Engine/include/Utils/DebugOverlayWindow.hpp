@@ -1,21 +1,12 @@
 #pragma once
 
-#include <string>
+#include "Utils/DebugWindow.hpp"
 
-class			DebugOverlayWindow
+class           DebugOverlayWindow: public DebugWindow
 {
 public:
-	explicit	DebugOverlayWindow();
-	virtual		~DebugOverlayWindow() {}
+    DebugOverlayWindow();
+    virtual ~DebugOverlayWindow();
 
-	void		build();
-
-	const std::string	&getTitle() const;
-	void				setTitle(const std::string &title);
-
-	bool		isDisplayed() const;
-	void		setDisplayed(bool displayed);
-private:
-	std::string	_title;
-	bool		_displayed;
+    virtual void        build();
 };
