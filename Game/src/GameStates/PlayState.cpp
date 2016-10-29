@@ -7,12 +7,9 @@
 #include "Systems/InputSystem.hpp"
 #include "Window/Keyboard.hpp"
 #include "Core/Components.hh"
-
-#include <imgui.h>
-#include <imgui_impl_glfw_gl3.h>
+#include "Utils/OverlayDebugWindow.hpp"
 
 #include "GameStates/PlayState.hpp"
-#include <Utils/DebugOverlayWindow.hpp>
 
 
 PlayState::PlayState(): _windowImgui(true) {}

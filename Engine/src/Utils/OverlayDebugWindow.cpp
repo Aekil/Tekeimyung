@@ -1,12 +1,12 @@
 #include <imgui.h>
 
-#include <Utils/DebugOverlayWindow.hpp>
+#include "Utils/OverlayDebugWindow.hpp"
 
-DebugOverlayWindow::DebugOverlayWindow(): DebugWindow() {}
+OverlayDebugWindow::OverlayDebugWindow(): DebugWindow() {}
 
-DebugOverlayWindow::~DebugOverlayWindow() {}
+OverlayDebugWindow::~OverlayDebugWindow() {}
 
-void	DebugOverlayWindow::build()
+void	OverlayDebugWindow::build()
 {
 	ImGui::SetNextWindowPos(ImVec2(10, 10));
 	if (!ImGui::Begin(_title.c_str(), &_displayed, ImVec2(0, 0), 0.3f,
