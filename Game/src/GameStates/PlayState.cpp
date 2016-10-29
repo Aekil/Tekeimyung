@@ -111,11 +111,6 @@ bool    PlayState::update(float elapsedTime)
 
     ImGui_ImplGlfwGL3_NewFrame();
     {
-/*        ImGui::SetNextWindowSize(ImVec2(400, 50), ImGuiSetCond_FirstUseEver);
-        ImGui::Begin("Debug");
-        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-        createEntityButton = ImGui::Button("Create entity");
-        ImGui::End();*/
         EntityFactory::updateEditors();
 		DebugOverlayWindow	overlay;
 
