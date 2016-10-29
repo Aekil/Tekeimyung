@@ -8,6 +8,7 @@
 #include "Window/Keyboard.hpp"
 #include "Core/Components.hh"
 #include "Utils/OverlayDebugWindow.hpp"
+#include "Utils/LogDebugWindow.hpp"
 #include "EntityDebugWindow.hpp"
 
 #include "GameStates/PlayState.hpp"
@@ -89,6 +90,7 @@ bool    PlayState::init()
 
     addDebugWindow<OverlayDebugWindow>();
     addDebugWindow<EntityDebugWindow>(glm::vec2(0, 80), glm::vec2(450, 350));
+    addDebugWindow<LogDebugWindow>(Logger::getInstance(), glm::vec2(450, 80), glm::vec2(300, 200));
 
     return (true);
 }

@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Window/GameWindow.hpp"
 #include "Utils/RessourceManager.hpp"
+#include "Utils/Logger.hpp"
 
 #include "Graphics/Sprite.hpp"
 

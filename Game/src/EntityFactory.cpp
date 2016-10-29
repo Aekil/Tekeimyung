@@ -4,6 +4,7 @@
 #include "dirent.h"
 #include "Utils/Debug.hpp"
 #include "Utils/JsonReader.hpp"
+#include "Utils/Logger.hpp"
 
 #include "EntityFactory.hpp"
 

@@ -8,18 +8,15 @@ Engine::~Engine() {}
 
 bool    Engine::init()
 {
-    std::shared_ptr<Logger> logger;
-
     _window = std::make_shared<GameWindow>();
     if (!_window->initialize())
         return (false);
 
-    logger = std::make_shared<Logger>();
-    if (!logger->initialize())
+    _logger = Logger::getInstance();
+    if (!_logger->initialize())
         return (false);
 
     GameWindow::setInstance(_window);
-    Logger::setInstance(logger);
     return (true);
 }
 
