@@ -88,7 +88,7 @@ bool    PlayState::init()
     _world.addSystem<RenderingSystem>(_map, dynamic_cast<ParticleSystem*>(_world.getSystems()[4])->getEmitters());
 
     addDebugWindow<OverlayDebugWindow>();
-    addDebugWindow<EntityDebugWindow>();
+    addDebugWindow<EntityDebugWindow>(glm::vec2(0, 80), glm::vec2(450, 350));
 
     return (true);
 }
