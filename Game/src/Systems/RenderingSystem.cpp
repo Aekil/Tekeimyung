@@ -2,14 +2,14 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <vector>
+#include <imgui.h>
+#include <imgui_impl_glfw_gl3.h>
 
-#include <Systems/RenderingSystem.hpp>
 #include <Utils/Debug.hpp>
 #include <Utils/Exception.hpp>
 #include <Window/GameWindow.hpp>
 
-#include <imgui.h>
-#include "imgui_impl_glfw_gl3.h"
+#include <Systems/RenderingSystem.hpp>
 
 
 RenderingSystem::RenderingSystem(Map* map, std::unordered_map<uint32_t, sEmitter*>* particleEmitters): _map(map), _particleEmitters(particleEmitters)
@@ -173,6 +173,8 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
     }
 
     renderParticles(em);
+
+    // Display imgui windows
     ImGui::Render();
 
     // Display screen

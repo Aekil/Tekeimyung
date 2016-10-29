@@ -89,6 +89,8 @@ bool    PlayState::init()
     _world.addSystem<ParticleSystem>();
     _world.addSystem<RenderingSystem>(_map, dynamic_cast<ParticleSystem*>(_world.getSystems()[4])->getEmitters());
 
+    addDebugWindow<DebugOverlayWindow>();
+
     return (true);
 }
 
@@ -107,35 +109,5 @@ Entity*    PlayState::createEntity(const glm::vec3& pos, eArchetype type)
 
 bool    PlayState::update(float elapsedTime)
 {
-    bool createEntityButton = false;
-
-    ImGui_ImplGlfwGL3_NewFrame();
-    {
-        EntityFactory::updateEditors();
-		DebugOverlayWindow	overlay;
-
-		overlay.setDisplayed(true);
-		overlay.build();
-    }
-
-    if (createEntityButton)
-    {
-        CollisionMap* collisionMap = _map->getCollisionMap();
-        eColType colType = eColType::CAN_NOT_WALK;
-
-        // Generate random position
-        glm::vec3 pos;
-        while (colType == eColType::CAN_NOT_WALK)
-        {
-            pos.x  = static_cast<float>(std::rand()) / (static_cast<float>(RAND_MAX / (_map->getWidth() - 1)));
-            pos.y  = static_cast<float>(std::rand()) / (static_cast<float>(RAND_MAX / (_map->getHeight() - 1)));
-            pos.z  = std::floor(1 + static_cast<float>(std::rand()) / (static_cast<float>(RAND_MAX / (_map->getLayersNb() - 1))));
-
-            colType = (*collisionMap)[pos.z - 1][std::floor(pos.y)][std::floor(pos.x)];
-        }
-
-        createEntity(pos, eArchetype::PLAYER);
-    }
-
     return (GameState::update(elapsedTime));
 }

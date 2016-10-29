@@ -1,6 +1,9 @@
+#include <iostream>
+#include "Utils/Debug.hpp"
+
 #include "Utils/DebugWindow.hpp"
 
-DebugWindow::DebugWindow() {}
+DebugWindow::DebugWindow(): _displayed(ENGINE_DEBUG) {}
 
 DebugWindow::~DebugWindow() {}
 
