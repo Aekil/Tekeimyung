@@ -4,7 +4,8 @@
 #include <cstdint>
 #include <string>
 #include <cstdio>
-#include "Debug.hpp"
+
+#include "Utils/Debug.hpp"
 
 
 #if defined(_MSC_VER)
