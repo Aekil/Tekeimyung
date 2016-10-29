@@ -3,7 +3,7 @@
 #include "Utils/LogDebugWindow.hpp"
 
 LogDebugWindow::LogDebugWindow(std::shared_ptr<Logger> logger, const glm::vec2& pos, const glm::vec2& size):
-                                DebugWindow("Logs", pos, size), _logger(logger) {}
+                                DebugWindow("Logs", pos, size), _logger(logger), _lastLogSize(0) {}
 
 LogDebugWindow::~LogDebugWindow() {}
 
@@ -20,5 +20,13 @@ void    LogDebugWindow::build()
 
     // Draw components
     ImGui::TextUnformatted(_logger->getLog().begin(), _logger->getLog().end());
+
+    // A Log was added since last update
+    if (_logger->getLog().size() > _lastLogSize)
+    {
+        _lastLogSize = _logger->getLog().size();
+        ImGui::SetScrollHere(1.0f);
+    }
+
     ImGui::End();
 }

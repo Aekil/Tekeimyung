@@ -13,4 +13,5 @@ public:
 
 private:
     std::shared_ptr<Logger> _logger;
+    uint32_t                _lastLogSize;
 };
