@@ -79,7 +79,7 @@ public:
     // In case it's not defined, the loaded component json will be saved
     virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType)
     {
-        LOG_WARN(entityType, "::", componentType, ": can't save to json because no saveToJson found");
+        LOG_WARN(entityType.c_str(), "::", componentType.c_str(), ": can't save to json because no saveToJson found");
         return _componentsJson[entityType];
     }
 

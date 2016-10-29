@@ -73,7 +73,7 @@ std::string Logger::getDateToString()
     return (format);
 }
 
-void    Logger::log(Logger::eLogLevel level, std::string message, ...)
+void    Logger::log(Logger::eLogLevel level, const std::string& message)
 {
     std::ofstream&  stream = getStream();
     if (stream.is_open() && stream.good())
