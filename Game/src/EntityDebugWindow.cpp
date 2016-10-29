@@ -76,4 +76,6 @@ void    EntityDebugWindow::saveEntityToJson(const std::string& typeName)
     json.setValue("components", components);
 
     jsonWriter.write(EntityFactory::getFile(typeName), json);
+
+    LOG_INFO("Entity %s saved", typeName.c_str());
 }

@@ -43,6 +43,7 @@ void EntityFactory::loadDirectory(const std::string& archetypesDir)
                 EXCEPT(IOException, "Cannot parse archetype \"%s\"", path.c_str());
 
             typeName = parsed.getString("name", "");
+            LOG_INFO("Load entity %s", typeName.c_str());
 
             if (!EntityFactory::entityTypeExists(typeName)) // The macro ENTITIES_TYPES did not create the type
                 EXCEPT(InvalidParametersException, "Failed to read entity archetype: Entity type \"%s\" does not exist", typeName.c_str());
@@ -57,6 +58,7 @@ void EntityFactory::loadDirectory(const std::string& archetypesDir)
                 if (!IComponentFactory::componentTypeExists(it.key().asString()))
                     EXCEPT(InvalidParametersException, "Failed to read entity archetype: Component type \"%s\" does not exist", componentName.c_str());
 
+                LOG_INFO("Add %s component %s", typeName.c_str(), componentName.c_str());
                 IComponentFactory::initComponent(typeName, componentName, JsonValue(*it));
                 _entitiesFiles[typeName] = path;
                 _entities[typeName].push_back(componentName);
