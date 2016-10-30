@@ -8,14 +8,12 @@ Engine::~Engine() {}
 
 bool    Engine::init()
 {
-    std::shared_ptr<Logger> logger;
-
     _window = std::make_shared<GameWindow>();
     if (!_window->initialize())
         return (false);
 
-    logger = std::make_shared<Logger>();
-    if (!logger->initialize())
+    _logger = Logger::getInstance();
+    if (!_logger->initialize())
         return (false);
 
     _soundManager = SoundManager::getInstance();
@@ -23,7 +21,6 @@ bool    Engine::init()
         return (false);
 
     GameWindow::setInstance(_window);
-    Logger::setInstance(logger);
     return (true);
 }
 
@@ -52,7 +49,7 @@ bool    Engine::run()
 
             auto &&currentState = _gameStateManager.getCurrentState();
 
-            if (!currentState->update(timer.getElapsedTime()))
+            if (currentState->update(timer.getElapsedTime()) == false)
             {
                 _gameStateManager.removeCurrentState();
             }

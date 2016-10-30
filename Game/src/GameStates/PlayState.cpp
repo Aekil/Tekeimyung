@@ -3,6 +3,7 @@
 #include "Systems/GravitySystem.hpp"
 #include "Systems/CollisionSystem.hpp"
 #include "Systems/AISystem.hpp"
+#include "Systems/ParticleSystem.hpp"
 #include "Systems/InputSystem.hpp"
 #include "Window/Keyboard.hpp"
 #include "Core/Components.hh"
@@ -10,6 +11,10 @@
 
 #include <imgui.h>
 #include <imgui_impl_glfw_gl3.h>
+
+#include "Utils/OverlayDebugWindow.hpp"
+#include "Utils/LogDebugWindow.hpp"
+#include "EntityDebugWindow.hpp"
 
 #include "GameStates/PlayState.hpp"
 
@@ -31,6 +36,18 @@ void    PlayState::createTile(const glm::vec3& pos, eArchetype type)
     (*_map)[pos.z][pos.y][pos.x] = tile->id;
 }
 
+void    PlayState::createParticlesEmittor(const glm::vec3& pos, eArchetype type)
+{
+    Entity* ps;
+    sPositionComponent* psPos;
+
+    ps = EntityFactory::createEntity(type);
+    psPos = ps->getComponent<sPositionComponent>();
+    psPos->value.x = pos.x;
+    psPos->value.y = pos.y;
+    psPos->z = pos.z;
+}
+
 bool    PlayState::init()
 {
     EntityManager &em = _world.getEntityManager();
@@ -39,6 +56,8 @@ bool    PlayState::init()
 
     _map = new Map(em, 20, 15, 4);
 
+    createParticlesEmittor(glm::vec3(5.5f, 5.5f, 1.0f), eArchetype::EMITTER_FIRE);
+    createParticlesEmittor(glm::vec3(8.5f, 5.5f, 1.0f), eArchetype::EMITTER_WATER);
     // Create characters
     createEntity(glm::vec3(9, 5, 1), eArchetype::PLAYER);
     createEntity(glm::vec3(0.5f, 5.5f, 1), eArchetype::ENEMY);
@@ -72,7 +91,12 @@ bool    PlayState::init()
     _world.addSystem<AISystem>();
     _world.addSystem<MovementSystem>(_map);
     _world.addSystem<CollisionSystem>(_map);
-    _world.addSystem<RenderingSystem>(_map);
+    _world.addSystem<ParticleSystem>();
+    _world.addSystem<RenderingSystem>(_map, dynamic_cast<ParticleSystem*>(_world.getSystems()[4])->getEmitters());
+
+    addDebugWindow<OverlayDebugWindow>();
+    addDebugWindow<EntityDebugWindow>(glm::vec2(0, 80), glm::vec2(450, 350));
+    addDebugWindow<LogDebugWindow>(Logger::getInstance(), glm::vec2(450, 80), glm::vec2(300, 200));
 
     // Play sound
     static int idSoundBkgdMusic = SoundManager::getInstance()->registerSound("ressources/sounds/Kalimba.mp3", BACKGROUND_SOUND);
@@ -100,36 +124,5 @@ Entity*    PlayState::createEntity(const glm::vec3& pos, eArchetype type)
 
 bool    PlayState::update(float elapsedTime)
 {
-    bool createEntityButton = false;
-    ImGui_ImplGlfwGL3_NewFrame();
-    {
-        ImGui::SetNextWindowSize(ImVec2(400, 50), ImGuiSetCond_FirstUseEver);
-        ImGui::Begin("Debug", &_windowImgui);
-        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-        createEntityButton = ImGui::Button("Create entity");
-        ImGui::End();
-    }
-
-    if (createEntityButton)
-    {
-        CollisionMap* collisionMap = _map->getCollisionMap();
-        eColType colType = eColType::CAN_NOT_WALK;
-
-        // Generate random position
-        glm::vec3 pos;
-        while (colType == eColType::CAN_NOT_WALK)
-        {
-            pos.x  = static_cast<float>(std::rand()) / (static_cast<float>(RAND_MAX / (_map->getWidth() - 1)));
-            pos.y  = static_cast<float>(std::rand()) / (static_cast<float>(RAND_MAX / (_map->getHeight() - 1)));
-            pos.z  = std::floor(1 + static_cast<float>(std::rand()) / (static_cast<float>(RAND_MAX / (_map->getLayersNb() - 1))));
-
-            colType = (*collisionMap)[pos.z - 1][std::floor(pos.y)][std::floor(pos.x)];
-        }
-
-        createEntity(pos, eArchetype::PLAYER);
-    }
-
-    GameState::update(elapsedTime);
-
-    return (true);
+    return (GameState::update(elapsedTime));
 }

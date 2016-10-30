@@ -4,7 +4,8 @@
 #include <cstdint>
 #include <string>
 #include <cstdio>
-#include "Debug.hpp"
+
+#include "Utils/Debug.hpp"
 
 #define FORMAT_BUFFER_SIZE  512
 
@@ -30,7 +31,7 @@ public:
     const std::string& getFunction() const;
     const long getLine() const;
 
-    const char* what() const override;
+    const char* what() const noexcept override;
 
 private:
     std::string _typeName;
@@ -99,5 +100,5 @@ std::string formatMessage(const char* format, Args... args)
 
 #define EXCEPT(type, format, ...)\
 do {\
-    throw type(formatMessage(format, __VA_ARGS__), __FILE__, FUNCTION, __LINE__);\
+    throw type(formatMessage(format, ## __VA_ARGS__), __FILE__, FUNCTION, __LINE__);\
 } while (0)

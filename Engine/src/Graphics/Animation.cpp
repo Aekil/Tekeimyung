@@ -27,12 +27,36 @@ void    Animation::addFrame(const glm::vec2& offset)
         EXCEPT(InternalErrorException, "Attempt to add a frame outside the sprite sheet range");
     }
 
-    _frames.push_back(offset);
+    // Normalize texture coordinates
+    glm::vec2 normalizedOffset;
+    normalizedOffset.x = offset.x / _spriteSheet->getWidth();
+    normalizedOffset.y = offset.y / _spriteSheet->getHeight();
+
+    // Add textures coordinates to frame list
+    _frames.push_back(normalizedOffset);
     ++_framesNb;
+}
+
+void    Animation::addFrames(const glm::vec2& baseOffset, const glm::vec2& spriteSize, uint32_t cols, uint32_t rows)
+{
+    glm::vec2 textCoords;
+
+    for (uint32_t y = 0; y < rows; y++)
+    {
+        textCoords = {0, baseOffset.y + spriteSize.y * y};
+        for (uint32_t x = 0; x < cols; x++)
+        {
+            addFrame(textCoords);
+            textCoords.x += baseOffset.x + spriteSize.x;
+        }
+    }
 }
 
 void    Animation::play(GLint textureShiftUniform)
 {
+    if (!_framesNb)
+        EXCEPT(InternalErrorException, "Attempt to play an animation with no frame");
+
     // Bind sprite sheet
     _spriteSheet->bind();
 

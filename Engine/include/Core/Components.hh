@@ -9,32 +9,50 @@
 #include "Graphics/Animation.hpp"
 #include "Graphics/Sprite.hpp"
 #include <glm/vec2.hpp>
+#include <glm/vec4.hpp>
 
 
 struct sRenderComponent: sComponent
 {
     sRenderComponent() = default;
-    sRenderComponent(Sprite::eType type, const std::string& texture, bool animated = false, uint32_t nbFrames = 0, const std::vector<eOrientation>& orientations = {}, const glm::vec2& spriteSize = {0, 0})
-    : texture(texture), type(type), animated(animated), nbFrames(nbFrames), orientations(orientations), spriteSize(spriteSize), _sprite(nullptr) {}
+    sRenderComponent(Sprite::eType type, const std::string& texture, bool animated = false, glm::vec2 frames = {0, 0}, const std::vector<eOrientation>& orientations = {}, const glm::vec2& spriteSize = {0, 0})
+    : texture(texture), type(type), animated(animated), frames(frames), orientations(orientations), spriteSize(spriteSize), _sprite(nullptr), spriteSheetOffset(0, 0) {}
 
     virtual sComponent* clone()
     {
         sRenderComponent* component = new sRenderComponent();
-
-        component->texture = this->texture;
-        component->type = this->type;
-        component->animated = this->animated;
-        component->nbFrames = this->nbFrames;
-        component->spriteSize = this->spriteSize;
-        component->orientations = this->orientations;
+        component->update(this);
 
         return (component);
     }
 
+    virtual void update(sRenderComponent* component)
+    {
+        this->texture = component->texture;
+        this->color = component->color;
+        this->type = component->type;
+        this->animated = component->animated;
+        this->frames = component->frames;
+        this->spriteSize = component->spriteSize;
+        this->orientations = component->orientations;
+        this->spriteSheetOffset = component->spriteSheetOffset;
+    }
+
+    virtual void update(sComponent* component)
+    {
+        update(static_cast<sRenderComponent*>(component));
+    }
+
     std::string texture;
+    glm::vec3 color;
     Sprite::eType type;
     bool animated;
-    uint32_t nbFrames;
+
+    // Frames numbers in sprite sheet
+    glm::vec2 frames;
+
+    // Sprite sheet offset
+    glm::vec2 spriteSheetOffset;
 
     // Sprite width and height
     glm::vec2 spriteSize;
@@ -51,11 +69,20 @@ struct sPositionComponent: sComponent
     virtual sComponent* clone()
     {
         sPositionComponent* component = new sPositionComponent();
-
-        component->value = this->value;
-        component->z = this->z;
+        component->update(this);
 
         return (component);
+    }
+
+    virtual void update(sPositionComponent* component)
+    {
+        this->value = component->value;
+        this->z = component->z;
+    }
+
+    virtual void update(sComponent* component)
+    {
+        update(static_cast<sPositionComponent*>(component));
     }
 
     glm::vec2 value;
@@ -74,13 +101,22 @@ struct sInputComponent: sComponent {
     virtual sComponent* clone()
     {
         sInputComponent* component = new sInputComponent();
-
-        component->moveLeft = this->moveLeft;
-        component->moveRight = this->moveRight;
-        component->moveUp = this->moveUp;
-        component->moveDown = this->moveDown;
+        component->update(this);
 
         return (component);
+    }
+
+    virtual void update(sInputComponent* component)
+    {
+        this->moveLeft = component->moveLeft;
+        this->moveRight = component->moveRight;
+        this->moveUp = component->moveUp;
+        this->moveDown = component->moveDown;
+    }
+
+    virtual void update(sComponent* component)
+    {
+        update(static_cast<sInputComponent*>(component));
     }
 
     Keyboard::eKey          moveLeft;
@@ -97,13 +133,22 @@ struct sDirectionComponent : sComponent
     virtual sComponent* clone()
     {
         sDirectionComponent* component = new sDirectionComponent();
-
-        component->value = this->value;
-        component->orientation = this->orientation;
-        component->speed = this->speed;
-        component->moved = this->moved;
+        component->update(this);
 
         return (component);
+    }
+
+    virtual void update(sDirectionComponent* component)
+    {
+        this->value = component->value;
+        this->orientation = component->orientation;
+        this->speed = component->speed;
+        this->moved = component->moved;
+    }
+
+    virtual void update(sComponent* component)
+    {
+        update(static_cast<sDirectionComponent*>(component));
     }
 
     glm::vec2 value;
@@ -120,11 +165,20 @@ struct sHitBoxComponent : sComponent
     virtual sComponent* clone()
     {
         sHitBoxComponent* component = new sHitBoxComponent();
-
-        component->min = this->min;
-        component->max = this->max;
+        component->update(this);
 
         return (component);
+    }
+
+    virtual void update(sHitBoxComponent* component)
+    {
+        this->min = component->min;
+        this->max = component->max;
+    }
+
+    virtual void update(sComponent* component)
+    {
+        update(static_cast<sHitBoxComponent*>(component));
     }
 
     glm::vec2 min;
@@ -139,11 +193,20 @@ struct sCircleHitBoxComponent : sComponent
     virtual sComponent* clone()
     {
         sCircleHitBoxComponent* component = new sCircleHitBoxComponent();
-
-        component->center = this->center;
-        component->radius = this->radius;
+        component->update(this);
 
         return (component);
+    }
+
+    virtual void update(sCircleHitBoxComponent* component)
+    {
+        this->center = component->center;
+        this->radius = component->radius;
+    }
+
+    virtual void update(sComponent* component)
+    {
+        update(static_cast<sCircleHitBoxComponent*>(component));
     }
 
     glm::vec2 center;
@@ -158,10 +221,19 @@ struct sGravityComponent : sComponent
     virtual sComponent* clone()
     {
         sGravityComponent* component = new sGravityComponent();
-
-        component->value = this->value;
+        component->update(this);
 
         return (component);
+    }
+
+    virtual void update(sGravityComponent* component)
+    {
+        this->value = component->value;
+    }
+
+    virtual void update(sComponent* component)
+    {
+        update(static_cast<sGravityComponent*>(component));
     }
 
     glm::vec2 value;
@@ -185,10 +257,19 @@ struct sTypeComponent: sComponent
     virtual sComponent* clone()
     {
         sTypeComponent* component = new sTypeComponent();
-
-        component->type = this->type;
+        component->update(this);
 
         return (component);
+    }
+
+    virtual void update(sTypeComponent* component)
+    {
+        this->type = component->type;
+    }
+
+    virtual void update(sComponent* component)
+    {
+        update(static_cast<sTypeComponent*>(component));
     }
 
     eEntityType type;
@@ -201,7 +282,112 @@ struct sAIComponent : sComponent
     virtual sComponent* clone()
     {
         sAIComponent* component = new sAIComponent();
+        component->update(this);
 
         return (component);
     }
+
+    virtual void update(sAIComponent* component){}
+
+    virtual void update(sComponent* component)
+    {
+        update(static_cast<sAIComponent*>(component));
+    }
+};
+
+
+struct sParticleEmitterComponent : sComponent
+{
+    sParticleEmitterComponent() = default;
+
+    virtual sComponent* clone()
+    {
+        sParticleEmitterComponent* component = new sParticleEmitterComponent();
+        component->update(this);
+
+        return (component);
+    }
+
+    virtual void update(sParticleEmitterComponent* component)
+    {
+        this->rate = component->rate;
+        this->spawnNb = component->spawnNb;
+        this->life = component->life;
+        this->lifeVariance = component->lifeVariance;
+        this->angle = component->angle;
+        this->angleVariance = component->angleVariance;
+        this->speed = component->speed;
+        this->speedVariance = component->speedVariance;
+
+        this->colorStart = component->colorStart;
+        this->colorFinish = component->colorFinish;
+        this->colorStartVariance = component->colorStartVariance;
+        this->colorFinishVariance = component->colorFinishVariance;
+
+        this->sizeStart = component->sizeStart;
+        this->sizeFinish = component->sizeFinish;
+        this->sizeStartVariance = component->sizeStartVariance;
+        this->sizeFinishVariance = component->sizeFinishVariance;
+    }
+
+    virtual void update(sComponent* component)
+    {
+        update(static_cast<sParticleEmitterComponent*>(component));
+    }
+
+    // Spawn particles each rate second
+    float rate;
+
+    // Spawn spawnNb particles each rate
+    int spawnNb;
+
+    // Particle life time in frame
+    int life;
+    int lifeVariance;
+
+    // Particles spawn angle
+    float angle;
+    float angleVariance;
+
+    // Particles speed
+    float speed;
+    float speedVariance;
+
+    // Particles color
+    glm::vec4 colorStart;
+    glm::vec4 colorFinish;
+    glm::vec4 colorStartVariance;
+    glm::vec4 colorFinishVariance;
+
+    // Particles size
+    float sizeStart;
+    float sizeFinish;
+    float sizeStartVariance;
+    float sizeFinishVariance;
+};
+
+struct sNameComponent : sComponent
+{
+    sNameComponent() = default;
+    sNameComponent(const std::string& name): value(name) {}
+
+    virtual sComponent* clone()
+    {
+        sNameComponent* component = new sNameComponent();
+        component->update(this);
+
+        return (component);
+    }
+
+    virtual void update(sNameComponent* component)
+    {
+        this->value = component->value;
+    }
+
+    virtual void update(sComponent* component)
+    {
+        update(static_cast<sNameComponent*>(component));
+    }
+
+    std::string value;
 };

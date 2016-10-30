@@ -18,15 +18,27 @@ public:
         TILE,
         OBJECT
     };
+    struct sCreateInfo
+    {
+        std::string textureFile;
+        bool animated;
+        glm::vec2 frames;
+        glm::vec2 offset;
+        std::vector<eOrientation> orientations;
+        glm::vec2 spriteSize;
+        glm::vec3 color;
+    };
+
 
 public:
     Sprite(Sprite::eType type, const ShaderProgram& shaderProgram);
     ~Sprite();
 
-    void                                            loadFromTexture(const std::string& textureFile, bool animated,  uint32_t nbFrames, const std::vector<eOrientation>& orientations, const glm::vec2& spriteSize);
-    void                                            update(glm::vec2 position, float z, bool moved, eOrientation orientation);
+    void                                            loadFromTexture(sCreateInfo& createInfo);
+    void                                            update(glm::vec2 position, float z, bool moved, eOrientation orientation, glm::vec3& color);
     void                                            draw();
     const glm::vec3&                                getPos() const;
+    const glm::vec3&                                getColor() const;
 
 private:
     // OpenGL Buffer
@@ -39,6 +51,10 @@ private:
 
     // Sprite position
     glm::vec3                                       _pos;
+
+    // Sprite color
+    glm::vec3                                       _color;
+
     // Sprite spriteSize
     glm::vec2                                       _spriteSize;
 

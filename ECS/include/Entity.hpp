@@ -50,6 +50,19 @@ public:
         return (nullptr);
     }
 
+    sComponent*                     getComponent(size_t componentHashCode)
+    {
+        for (auto component: _components)
+        {
+            if (component->getTypeInfo().hash_code() == componentHashCode)
+            {
+                return (component);
+            }
+        }
+
+        return (nullptr);
+    }
+
     // Check if the entity has the component with corresponding hashcode => typeid(component).hash_code()
     bool                            hasComponent(size_t componentHashCode)
     {

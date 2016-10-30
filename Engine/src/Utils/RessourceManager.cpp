@@ -50,7 +50,7 @@ std::string RessourceManager::getFile(const std::string& fileName)
     try
     {
         auto &&file = _files.at(basename);
-        return file;
+        return file.content;
     }
     catch(...)
     {
@@ -59,11 +59,41 @@ std::string RessourceManager::getFile(const std::string& fileName)
     }
 }
 
+void        RessourceManager::saveFile(const std::string& fileName, const std::string fileContent)
+{
+    std::ofstream file;
+    RessourceManager::sFile fileInfos;
+    std::string basename = getBasename(fileName);
+
+    file.open(fileName.c_str(), std::ios::trunc);
+    if (!file.good())
+        EXCEPT(FileNotFoundException, "Failed to open file \"%s\"", fileName.c_str());
+
+    file << fileContent;
+    file.close();
+
+    // The file does not exist is RessourceManager
+    if (_files.find(basename) != _files.end())
+    {
+        // Init file informations
+        fileInfos.content = fileContent;
+        fileInfos.path = fileName;
+        fileInfos.basename = basename;
+    }
+    else
+    {
+        // Update file informations
+        fileInfos.content = fileContent;
+    }
+    _files[basename] = fileInfos;
+}
+
 std::string RessourceManager::loadFile(const std::string basename, const std::string& fileName)
 {
     std::ifstream               file;
     int                         fileSize;
     std::vector<char>           fileContent;
+    RessourceManager::sFile     fileInfos;
 
     file.open(fileName.c_str());
     if (!file.good())
@@ -75,9 +105,13 @@ std::string RessourceManager::loadFile(const std::string basename, const std::st
 
     fileContent.resize(fileSize);
     file.read(fileContent.data(), fileSize);
+    file.close();
 
-    _files[basename] = std::string(fileContent.begin(), fileContent.end());
-    return _files[basename];
+    fileInfos.path = fileName;
+    fileInfos.content = std::string(fileContent.begin(), fileContent.end());
+    fileInfos.basename = basename;
+    _files[basename] = fileInfos;
+    return _files[basename].content;
 }
 
 Texture&    RessourceManager::getTexture(const std::string& fileName)

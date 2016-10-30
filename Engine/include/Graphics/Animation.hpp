@@ -25,6 +25,7 @@ public:
     ~Animation();
     void                                    setSpriteSheet(Texture* spriteSheet);
     void                                    addFrame(const glm::vec2& offset);
+    void                                    addFrames(const glm::vec2& baseOffset, const glm::vec2& spriteSize, uint32_t cols, uint32_t rows);
     void                                    play(GLint textureShiftUniform);
     void                                    reset();
 

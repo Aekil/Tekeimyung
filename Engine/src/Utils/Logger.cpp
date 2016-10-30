@@ -1,6 +1,7 @@
 #include <ctime>
 #include <iomanip>
 #include <iostream>
+#include <ctime>
 
 #include <Utils/Logger.hpp>
 
@@ -33,17 +34,15 @@ void    Logger::shutdown()
 
 std::shared_ptr<Logger> Logger::getInstance()
 {
+    if (!_instance)
+        _instance = std::make_shared<Logger>();
+
     return (_instance);
 }
 
 std::ofstream&  Logger::getStream()
 {
     return (_stream);
-}
-
-void    Logger::setInstance(std::shared_ptr<Logger> instance)
-{
-    _instance = instance;
 }
 
 std::string Logger::getLevelToString(Logger::eLogLevel level)
@@ -64,26 +63,31 @@ std::string Logger::getLevelToString(Logger::eLogLevel level)
 
 std::string Logger::getDateToString()
 {
-    time_t      time;
-    struct tm   now;
-    char        format[26];
+    time_t      rawTime;
+    struct tm*  timeInfo;
+    std::string format;
 
-    time = std::time(0);
-    localtime_s(&now, &time);
-    asctime_s(format, sizeof(format), &now);
-    format[sizeof(format) - 2] = '\0';
+    std::time(&rawTime);
+    timeInfo = std::localtime(&rawTime);
+    format = std::asctime(timeInfo);
     return (format);
 }
 
-void    Logger::log(Logger::eLogLevel level, std::string message, ...)
+void    Logger::log(Logger::eLogLevel level, const std::string& message)
 {
-    std::ofstream&  stream = Logger::getInstance()->getStream();
-
+    std::ofstream&  stream = getStream();
     if (stream.is_open() && stream.good())
     {
         stream << "[" <<
-            Logger::getDateToString() <<
-            " - " << Logger::getLevelToString(level) <<
+            getDateToString() <<
+            " - " << getLevelToString(level) <<
             "]\t" << message << std::endl;
     }
+
+    _log.append("%s\n", message.c_str());
+}
+
+const ImGuiTextBuffer&  Logger::getLog() const
+{
+    return _log;
 }

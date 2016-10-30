@@ -11,7 +11,7 @@ int     main()
 
     try
     {
-        EntityFactory::init("ressources/archetypes");
+        EntityFactory::loadDirectory("ressources/archetypes");
 
         if (!engine.init() || !gameStateManager.addState<PlayState>())
             return (1);
