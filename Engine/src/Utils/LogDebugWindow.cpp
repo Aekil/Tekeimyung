@@ -24,7 +24,7 @@ void    LogDebugWindow::build()
     _size.x = ImGui::GetItemRectSize().x;
 
     // A Log was added since last update
-    if (_logger->getLog().size() > _lastLogSize)
+    if ((uint32_t)_logger->getLog().size() > _lastLogSize)
     {
         _lastLogSize = _logger->getLog().size();
         ImGui::SetScrollHere(1.0f);

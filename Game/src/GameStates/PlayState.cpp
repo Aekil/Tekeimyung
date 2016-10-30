@@ -33,7 +33,7 @@ void    PlayState::createTile(const glm::vec3& pos, eArchetype type)
     tilePos->value.y = pos.y;
     tilePos->value.x = pos.x;
     tilePos->z = pos.z;
-    (*_map)[pos.z][pos.y][pos.x] = tile->id;
+    (*_map)[(uint16_t)pos.z][(uint32_t)pos.y][(uint32_t)pos.x] = tile->id;
 }
 
 void    PlayState::createParticlesEmittor(const glm::vec3& pos, eArchetype type)
@@ -114,7 +114,7 @@ Entity*    PlayState::createEntity(const glm::vec3& pos, eArchetype type)
     posEntity->value.y = pos.y;
     posEntity->z = pos.z;
 
-    (*_map)[pos.z].addEntity(entity->id);
+    (*_map)[(uint16_t)pos.z].addEntity(entity->id);
 
     static int idSoundSpawn = SoundManager::getInstance()->registerSound("ressources/sounds/spawn.mp3", DEFAULT_SOUND);
     SoundManager::getInstance()->playSound(idSoundSpawn);

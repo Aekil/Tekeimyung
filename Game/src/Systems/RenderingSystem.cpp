@@ -69,7 +69,7 @@ void    RenderingSystem::renderEntities(EntityManager& em, std::list<uint32_t>::
         return;
 
     entity = em.getEntity(*it);
-    ASSERT(entity, "The entity should exists");
+    ASSERT(entity != nullptr, "The entity should exists");
 
     position = entity->getComponent<sPositionComponent>();
     while (std::floor(position->value.x) == x && std::floor(position->value.y) == y)
@@ -81,7 +81,7 @@ void    RenderingSystem::renderEntities(EntityManager& em, std::list<uint32_t>::
             break;
 
         entity = em.getEntity(*it);
-        ASSERT(entity, "The entity should exists");
+        ASSERT(entity != nullptr, "The entity should exists");
 
         position = entity->getComponent<sPositionComponent>();
     }

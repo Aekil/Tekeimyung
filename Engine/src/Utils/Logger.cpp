@@ -1,7 +1,8 @@
+// Define this flag before time.h to use secure versions of localtime and asctime on Windows
+#define __STDC_WANT_LIB_EXT1__ 1
 #include <ctime>
 #include <iomanip>
 #include <iostream>
-#include <ctime>
 
 #include <Utils/Logger.hpp>
 
@@ -19,7 +20,7 @@ bool    Logger::initialize()
     }
     _stream << "===========================================" << std::endl;
     _stream << "A new instance of Logger has been created !" << std::endl;
-    _stream << "Current date is: " << Logger::getDateToString() << std::endl;
+    _stream << "Current date is: " << getDateToString() << std::endl;
     _stream << "===========================================" << std::endl;
     return (true);
 }
@@ -64,21 +65,29 @@ std::string Logger::getLevelToString(Logger::eLogLevel level)
 std::string Logger::getDateToString()
 {
     time_t      rawTime;
-    struct tm*  timeInfo;
-    std::string format;
+    struct tm   timeInfo;
+    char        format[26];
 
     std::time(&rawTime);
-    timeInfo = std::localtime(&rawTime);
-    format = std::asctime(timeInfo);
+    std::memset(format, 0, 26);
+
+    #if defined(_WIN32)
+    // Use windows secure versions of localtime and asctime
+        localtime_s(&timeInfo, &rawTime);
+        asctime_s(format, sizeof(format), &timeInfo);
+    #else
+    // Use linux secure versions of localtime and asctime
+        localtime_r(&rawTime, &timeInfo);
+        asctime_r(&timeInfo, format);
+    #endif
     return (format);
 }
 
 void    Logger::log(Logger::eLogLevel level, const std::string& message)
 {
-    std::ofstream&  stream = getStream();
-    if (stream.is_open() && stream.good())
+    if (_stream.is_open() && _stream.good())
     {
-        stream << "[" <<
+        _stream << "[" <<
             getDateToString() <<
             " - " << getLevelToString(level) <<
             "]\t" << message << std::endl;

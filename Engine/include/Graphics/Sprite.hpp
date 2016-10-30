@@ -22,7 +22,7 @@ public:
     {
         std::string textureFile;
         bool animated;
-        glm::vec2 frames;
+        glm::uvec2 frames;
         glm::vec2 offset;
         std::vector<eOrientation> orientations;
         glm::vec2 spriteSize;

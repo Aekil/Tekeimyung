@@ -60,6 +60,10 @@ include_directories(${CMAKE_SOURCE_DIR}/external/imgui/)
 # Create executable
 add_library(${EXECUTABLE_NAME} STATIC ${source_files} ${imgui_source_files} ${include_files}) #${fmt_source_files}
 
+#Disable ImGui C4244 warnings on Windows
+IF (WIN32)
+  set_property(SOURCE ${imgui_source_files} APPEND_STRING PROPERTY COMPILE_FLAGS "/wd4244")
+ENDIF()
 
 # Link libraries with executable
 target_link_libraries(${EXECUTABLE_NAME} ECS ${GLFW_LIBRARY} ${GLEW_LIBRARY} ${OPENGL_gl_LIBRARY} ${FMOD_LIBRARY})

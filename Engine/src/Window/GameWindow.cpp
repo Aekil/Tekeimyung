@@ -225,7 +225,7 @@ void    GameWindow::cursorEnterCallback(GLFWwindow* window, int entered)
     ASSERT(gameWindow != nullptr, "GameWindow should not be null.");
 
     Cursor& cursor = gameWindow->getMouse().getCursor();
-    cursor.setWindowEntering(entered);
+    cursor.setWindowEntering(entered == 1);
 }
 
 void    GameWindow::cursorPositionCallback(GLFWwindow* window, double xPos, double yPos)

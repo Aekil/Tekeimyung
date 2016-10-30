@@ -10,10 +10,10 @@ Timer::~Timer() {}
 
 void    Timer::reset()
 {
-    _lastReset = glfwGetTime();
+    _lastReset = (float)glfwGetTime();
 }
 
-double  Timer::getElapsedTime() const
+float   Timer::getElapsedTime() const
 {
-    return (glfwGetTime() - _lastReset);
+    return ((float)glfwGetTime() - _lastReset);
 }

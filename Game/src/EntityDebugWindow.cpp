@@ -28,7 +28,7 @@ void    EntityDebugWindow::build()
     ImGui::SetWindowPos(ImVec2(_pos.x, _pos.y), ImGuiSetCond_Always);
 
     // Draw components
-    ImGui::ListBox("Entities types", &_selectedEntity, list, EntityFactory::getTypesString().capacity(), 4);
+    ImGui::ListBox("Entities types", &_selectedEntity, list, (int)EntityFactory::getTypesString().capacity(), 4);
 
     const char* entityName = list[_selectedEntity];
 

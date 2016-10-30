@@ -14,7 +14,7 @@ struct sParticle
     float speed;
 
     // How long a particle live, in frames
-    float life;
+    uint32_t life;
 
     // Particle color
     glm::vec4 color;
