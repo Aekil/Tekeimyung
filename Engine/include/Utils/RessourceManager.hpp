@@ -2,6 +2,7 @@
 
 #include <string>
 #include <unordered_map>
+
 #include "Graphics/Texture.hpp"
 
 class RessourceManager

@@ -2,6 +2,7 @@
 #include <ctime>
 
 #include "Utils/Debug.hpp"
+
 #include "Utils/Helper.hpp"
 
 Helper::Helper()

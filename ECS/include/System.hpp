@@ -2,6 +2,7 @@
 
 #include <functional>
 #include <typeindex>
+
 #include "EntityManager.hpp"
 #include "Component.hh"
 

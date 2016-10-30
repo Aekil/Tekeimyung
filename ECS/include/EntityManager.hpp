@@ -2,6 +2,7 @@
 
 #include <unordered_map>
 #include <cstdint>
+
 #include "Entity.hpp"
 
 class EntityManager

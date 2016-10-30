@@ -1,5 +1,6 @@
-#include "Utils/Timer.hpp"
 #include <GLFW/glfw3.h>
+
+#include "Utils/Timer.hpp"
 
 Timer::Timer()
 {

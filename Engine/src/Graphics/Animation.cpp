@@ -1,4 +1,5 @@
 #include "Utils/Exception.hpp"
+
 #include "Graphics/Animation.hpp"
 
 Animation::Animation(): _framesNb(0), _currentFrame(0), _spriteSheet(nullptr) {}

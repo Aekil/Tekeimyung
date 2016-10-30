@@ -4,6 +4,7 @@
 #include <vector>
 #include <typeinfo>
 #include <cstdint>
+
 #include "Component.hh"
 
 class Entity

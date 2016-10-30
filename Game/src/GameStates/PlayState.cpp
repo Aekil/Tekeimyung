@@ -1,3 +1,6 @@
+#include <imgui.h>
+#include <imgui_impl_glfw_gl3.h>
+
 #include "Systems/RenderingSystem.hpp"
 #include "Systems/MovementSystem.hpp"
 #include "Systems/GravitySystem.hpp"
@@ -8,10 +11,6 @@
 #include "Window/Keyboard.hpp"
 #include "Core/Components.hh"
 #include "Sound/SoundManager.hpp"
-
-#include <imgui.h>
-#include <imgui_impl_glfw_gl3.h>
-
 #include "Utils/OverlayDebugWindow.hpp"
 #include "Utils/LogDebugWindow.hpp"
 #include "EntityDebugWindow.hpp"

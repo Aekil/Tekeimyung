@@ -2,6 +2,7 @@
 
 #include <array>
 #include <memory>
+
 #include "Core/GameState.hpp"
 #include "Core/Map.hpp"
 #include "Entity.hpp"

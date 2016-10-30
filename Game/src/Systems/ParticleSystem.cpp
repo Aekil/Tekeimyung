@@ -2,8 +2,9 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <cmath>
 #include <algorithm>
-#include <Window/GameWindow.hpp>
-#include <Utils/Helper.hpp>
+
+#include "Window/GameWindow.hpp"
+#include "Utils/Helper.hpp"
 
 #include "Systems/ParticleSystem.hpp"
 

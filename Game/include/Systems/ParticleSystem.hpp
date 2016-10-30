@@ -1,11 +1,13 @@
 #pragma once
 
-# define MAX_PARTICLES 5000
 #include <unordered_map>
 #include <vector>
+
 #include "Core/Components.hh"
 #include "System.hpp"
 #include "Utils/Timer.hpp"
+
+#define MAX_PARTICLES   5000
 
 struct sParticle
 {

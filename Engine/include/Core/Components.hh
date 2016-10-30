@@ -1,15 +1,16 @@
 #pragma once
 
 #include <iostream>
-#include "Component.hh"
 #include <vector>
 #include <string>
 #include <cstdint>
+#include <glm/vec2.hpp>
+#include <glm/vec4.hpp>
+
 #include "Window/Keyboard.hpp"
 #include "Graphics/Animation.hpp"
 #include "Graphics/Sprite.hpp"
-#include <glm/vec2.hpp>
-#include <glm/vec4.hpp>
+#include "Component.hh"
 
 
 struct sRenderComponent: sComponent

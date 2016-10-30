@@ -1,8 +1,7 @@
 #include "GameStates/PlayState.hpp"
-
-#include "Core/Engine.hpp"
 #include "EntityFactory.hpp"
 #include "Utils/Exception.hpp"
+#include "Core/Engine.hpp"
 
 int     main()
 {

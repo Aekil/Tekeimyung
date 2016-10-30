@@ -1,4 +1,5 @@
 #include <GL/glew.h>
+
 #include "Graphics/Buffer.hpp"
 
 Buffer::Buffer()

@@ -1,3 +1,6 @@
+#include <iostream>
+
+#include "Utils/Debug.hpp"
 
 #include "Sound/SoundManager.hpp"
 

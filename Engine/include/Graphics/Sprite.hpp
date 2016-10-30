@@ -5,6 +5,7 @@
 #include <string>
 #include <glm/vec3.hpp>
 #include <glm/vec2.hpp>
+
 #include "Graphics/Texture.hpp"
 #include "Graphics/Animation.hpp"
 #include "Graphics/Buffer.hpp"

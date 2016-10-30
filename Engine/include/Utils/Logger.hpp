@@ -55,6 +55,7 @@ public:
     void log(Logger::eLogLevel level, const std::string& message);
 
     const ImGuiTextBuffer&  getLog() const;
+
 private:
     std::ofstream   _stream;
 

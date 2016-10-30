@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+
 #include "GameStateManager.hpp"
 #include "Window/GameWindow.hpp"
 #include "Sound/SoundManager.hpp"

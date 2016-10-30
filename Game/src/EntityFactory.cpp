@@ -1,10 +1,11 @@
+#include <dirent.h>
+
 #include "Utils/Exception.hpp"
 #include "Utils/RessourceManager.hpp"
-#include "ComponentFactory.hpp"
-#include <dirent.h>
 #include "Utils/Debug.hpp"
 #include "Utils/JsonReader.hpp"
 #include "Utils/Logger.hpp"
+#include "ComponentFactory.hpp"
 
 #include "EntityFactory.hpp"
 

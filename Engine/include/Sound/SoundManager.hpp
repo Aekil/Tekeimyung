@@ -1,15 +1,9 @@
 #pragma once
 
-#include <iostream>
 #include <memory>
-
-//#include <string>
-
 #include <fmod.hpp>
-#include "fmod_common.h"
-#include "fmod_errors.h"
-
-#include "Utils/Debug.hpp"
+#include <fmod_common.h>
+#include <fmod_errors.h>
 
 #define SOUND_MAX_CHANNELS  32
 #define NB_MAX_SOUNDS       64

@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <vector>
 #include <glm/vec2.hpp>
+
 #include "Graphics/Texture.hpp"
 
 enum class eOrientation

@@ -1,7 +1,9 @@
 #include <fstream>
 #include <vector>
-#include "Utils/RessourceManager.hpp"
+
 #include "Utils/Exception.hpp"
+
+#include "Utils/RessourceManager.hpp"
 
 RessourceManager*   RessourceManager::_ressourceManager = nullptr;
 

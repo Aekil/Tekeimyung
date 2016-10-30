@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <list>
+
 #include "GameState.hpp"
 
 class GameStateManager
