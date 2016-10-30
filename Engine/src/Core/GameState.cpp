@@ -2,6 +2,7 @@
 #include <imgui_impl_glfw_gl3.h>
 
 #include "Utils/Exception.hpp"
+#include "Window/GameWindow.hpp"
 
 #include "Core/GameState.hpp"
 
