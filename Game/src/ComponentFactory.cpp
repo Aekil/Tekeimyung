@@ -128,7 +128,7 @@ sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& 
     if (animation.size() > 0)
     {
         component->animated = true;
-        component->frames = animation.getVec2f("frames", { 0.0f, 0.0f });
+        component->frames = animation.getUVec2f("frames", { 0, 0 });
         component->spriteSheetOffset = animation.getVec2f("offset", { 0.0f, 0.0f });
         for (auto &&orientation: animation.get("orientations", {}).get())
         {
@@ -148,7 +148,7 @@ JsonValue&    ComponentFactory<sRenderComponent>::saveToJson(const std::string& 
 
 
     // Write animation
-    animation.setVec2f("frames", component->frames);
+    animation.setUVec2f("frames", component->frames);
     animation.setVec2f("offset", component->spriteSheetOffset);
     // Convert orientations into string
     for (auto &&orientation: component->orientations)
@@ -525,13 +525,13 @@ bool    ComponentFactory<sParticleEmitterComponent>::updateEditor(const std::str
     if (ImGui::CollapsingHeader("sParticleEmitterComponent", ImGuiTreeNodeFlags_DefaultOpen))
     {
         changed |= ImGui::SliderFloat("Rate", &component->rate, 0.0f, 3.0f);
-        changed |= ImGui::SliderInt("Particles number per spawn", &component->spawnNb, 0.0f, 50.0f);
+        changed |= ImGui::SliderInt("Particles number per spawn", (int*)&component->spawnNb, 0, 50);
         changed |= ImGui::SliderFloat("Angle", &component->angle, 0.0f, 360.0f);
         changed |= ImGui::SliderFloat("Angle variance", &component->angleVariance, 0.0f, 360.0f);
         changed |= ImGui::SliderFloat("Speed", &component->speed, 0.0f, 200.0f);
         changed |= ImGui::SliderFloat("Speed variance", &component->speedVariance, 0.0f, 200.0f);
-        changed |= ImGui::SliderInt("Life", &component->life, 0.0f, 200.0f);
-        changed |= ImGui::SliderInt("Life variance", &component->lifeVariance, 0.0f, 200.0f);
+        changed |= ImGui::SliderInt("Life", (int*)&component->life, 0, 200);
+        changed |= ImGui::SliderInt("Life variance", (int*)&component->lifeVariance, 0, 200);
         changed |= ImGui::ColorEdit4("Start color", glm::value_ptr(component->colorStart));
         changed |= ImGui::ColorEdit4("Finish color", glm::value_ptr(component->colorFinish));
         changed |= ImGui::SliderFloat("Start size", &component->sizeStart, 0.0f, 5.0f);

@@ -95,6 +95,29 @@ glm::vec4   JsonValue::getVec4f(const std::string& index, const glm::vec4& defau
     vec.getFloat("z", defaultValue.y), vec.getFloat("w", defaultValue.y) };
 }
 
+glm::uvec2  JsonValue::getUVec2f(const std::string& index, const glm::uvec2& defaultValue) const
+{
+    JsonValue vec = get(index, {});
+
+    return { vec.getUInt("x", defaultValue.x), vec.getUInt("y", defaultValue.y) };
+}
+
+glm::uvec3  JsonValue::getUVec3f(const std::string& index, const glm::uvec3& defaultValue) const
+{
+    JsonValue vec = get(index, {});
+
+    return { vec.getUInt("x", defaultValue.x), vec.getUInt("y", defaultValue.y),
+    vec.getUInt("z", defaultValue.y) };
+}
+
+glm::uvec4  JsonValue::getUVec4f(const std::string& index, const glm::uvec4& defaultValue) const
+{
+    JsonValue vec = get(index, {});
+
+    return { vec.getUInt("x", defaultValue.x), vec.getUInt("y", defaultValue.y),
+    vec.getUInt("z", defaultValue.y), vec.getUInt("w", defaultValue.y) };
+}
+
 
 glm::vec2   JsonValue::getVec2f(const std::string& index, const std::array<const char*, 2>& keys, const glm::vec2& defaultValue) const
 {
@@ -197,6 +220,33 @@ void   JsonValue::setVec3f(const std::string& index, const glm::vec3& value)
 }
 
 void   JsonValue::setVec4f(const std::string& index, const glm::vec4& value)
+{
+    Json::Value& vec = _json[index];
+
+    vec["x"] = value.x;
+    vec["y"] = value.y;
+    vec["z"] = value.z;
+    vec["w"] = value.w;
+}
+
+void    JsonValue::setUVec2f(const std::string& index, const glm::uvec2& value)
+{
+    Json::Value& vec = _json[index];
+
+    vec["x"] = value.x;
+    vec["y"] = value.y;
+}
+
+void    JsonValue::setUVec3f(const std::string& index, const glm::uvec3& value)
+{
+    Json::Value& vec = _json[index];
+
+    vec["x"] = value.x;
+    vec["y"] = value.y;
+    vec["z"] = value.z;
+}
+
+void    JsonValue::setUVec4f(const std::string& index, const glm::uvec4& value)
 {
     Json::Value& vec = _json[index];
 

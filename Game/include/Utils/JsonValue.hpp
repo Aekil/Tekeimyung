@@ -39,6 +39,9 @@ class JsonValue
     glm::vec2                           getVec2f(const std::string& index, const glm::vec2& defaultValue) const;
     glm::vec3                           getVec3f(const std::string& index, const glm::vec3& defaultValue) const;
     glm::vec4                           getVec4f(const std::string& index, const glm::vec4& defaultValue) const;
+    glm::uvec2                          getUVec2f(const std::string& index, const glm::uvec2& defaultValue) const;
+    glm::uvec3                          getUVec3f(const std::string& index, const glm::uvec3& defaultValue) const;
+    glm::uvec4                          getUVec4f(const std::string& index, const glm::uvec4& defaultValue) const;
 
     // Get vectors with specific keys
     glm::vec2                           getVec2f(const std::string& index, const std::array<const char*, 2>& keys, const glm::vec2& defaultValue) const;
@@ -65,6 +68,9 @@ class JsonValue
     void                                setVec2f(const std::string& index, const glm::vec2& value);
     void                                setVec3f(const std::string& index, const glm::vec3& value);
     void                                setVec4f(const std::string& index, const glm::vec4& value);
+    void                                setUVec2f(const std::string& index, const glm::uvec2& value);
+    void                                setUVec3f(const std::string& index, const glm::uvec3& value);
+    void                                setUVec4f(const std::string& index, const glm::uvec4& value);
 
     // Set vectors with specific keys
     void                                setVec2f(const std::string& index, const std::array<const char*, 2>& keys, const glm::vec2& value);

@@ -21,11 +21,11 @@ void    CollisionSystem::update(EntityManager &em, float elapsedTime)
         this->moveHitBox(entity);
         sDirectionComponent* direction = entity->getComponent<sDirectionComponent>();
         sPositionComponent* position = entity->getComponent<sPositionComponent>();
-        uint16_t layer = position->z;
+        uint16_t layer = (uint16_t)position->z;
 
         // Check Collision with tile
-        if ((*_map)[layer][std::floor(position->value.y)][std::floor(position->value.x)].get() != 0 ||
-            (layer > 0 && (*collisionMap)[layer - 1][std::floor(position->value.y)][std::floor(position->value.x)] == eColType::CAN_NOT_WALK))
+        if ((*_map)[layer][(uint32_t)std::floor(position->value.y)][(uint32_t)std::floor(position->value.x)].get() != 0 ||
+            (layer > 0 && (*collisionMap)[layer - 1][(uint32_t)std::floor(position->value.y)][(uint32_t)std::floor(position->value.x)] == eColType::CAN_NOT_WALK))
         {
             position->value += -direction->value * elapsedTime;
         }

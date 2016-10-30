@@ -72,7 +72,7 @@ void    ParticleSystem::updateEmitter(Entity* entity, float elapsedTime)
     // Create new particles each second
     if (emitter->timer.getElapsedTime() >= emitterComp->rate)
     {
-        for (unsigned int i = 0; i < emitterComp->spawnNb; i++)
+        for (uint32_t i = 0; i < emitterComp->spawnNb; i++)
         {
             sParticle particle;
             float angle = Helper::randFloat(0, emitterComp->angleVariance);
@@ -82,10 +82,10 @@ void    ParticleSystem::updateEmitter(Entity* entity, float elapsedTime)
             particle.velocity.x = glm::cos(angleRadian);
             particle.velocity.y = glm::sin(angleRadian);
             particle.speed = emitterComp->speed + Helper::randFloat(0, emitterComp->speedVariance);
-            particle.life = emitterComp->life + Helper::randFloat(0, emitterComp->lifeVariance);
+            particle.life = emitterComp->life + Helper::randInt(0, emitterComp->lifeVariance);
 
             particle.color = emitterComp->colorStart;
-            particle.colorStep = (emitterComp->colorFinish - emitterComp->colorStart) / glm::vec4(emitterComp->life);
+            particle.colorStep = (emitterComp->colorFinish - emitterComp->colorStart) / glm::vec4((float)emitterComp->life);
 
             particle.size = emitterComp->sizeStart;
             particle.sizeStep = (emitterComp->sizeFinish - emitterComp->sizeStart) / emitterComp->life;

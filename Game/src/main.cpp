@@ -11,9 +11,13 @@ int     main()
 
     try
     {
+        if (!engine.init())
+            return (1);
+
+        // Load entities after engine initialization to have logs
         EntityFactory::loadDirectory("ressources/archetypes");
 
-        if (!engine.init() || !gameStateManager.addState<PlayState>())
+        if (!gameStateManager.addState<PlayState>())
             return (1);
         else if (!engine.run())
             return (1);

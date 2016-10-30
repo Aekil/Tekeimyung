@@ -49,7 +49,7 @@ struct sRenderComponent: sComponent
     bool animated;
 
     // Frames numbers in sprite sheet
-    glm::vec2 frames;
+    glm::uvec2 frames;
 
     // Sprite sheet offset
     glm::vec2 spriteSheetOffset;
@@ -339,11 +339,11 @@ struct sParticleEmitterComponent : sComponent
     float rate;
 
     // Spawn spawnNb particles each rate
-    int spawnNb;
+    uint32_t spawnNb;
 
     // Particle life time in frame
-    int life;
-    int lifeVariance;
+    uint32_t life;
+    uint32_t lifeVariance;
 
     // Particles spawn angle
     float angle;
