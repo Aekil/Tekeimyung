@@ -3,6 +3,7 @@
 #include <unordered_map>
 #include <string>
 #include <vector>
+#include <list>
 #include "Entity.hpp"
 #include "EntityManager.hpp"
 #include "ComponentFactory.hpp"

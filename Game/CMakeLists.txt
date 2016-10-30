@@ -37,7 +37,12 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_directories(${CMAKE_SOURCE_DIR}/external/glm)
 include_directories(${CMAKE_SOURCE_DIR}/external/imgui/)
 include_directories(${CMAKE_SOURCE_DIR}/external/jsoncpp)
-include_directories(${CMAKE_SOURCE_DIR}/external/dirent)
+
+# Include dirent only for windows
+# Linux have his own header
+IF (WIN32)
+    include_directories(${CMAKE_SOURCE_DIR}/external/dirent)
+ENDIF()
 
 
 # Create executable

@@ -1,6 +1,9 @@
-#include "Systems/CollisionSystem.hpp"
+#include <cmath>
+
 #include "Core/Components.hh"
 #include "Window/GameWindow.hpp"
+
+#include "Systems/CollisionSystem.hpp"
 
 CollisionSystem::CollisionSystem(Map* map): _map(map)
 {

@@ -22,11 +22,11 @@ std::string formatLogMessage(const char* format, Args... args)
 }
 
 
-#define LOG_TRACE(format, ...) Logger::getInstance()->log(Logger::eLogLevel::TRACE, formatLogMessage(format, __VA_ARGS__))
-#define LOG_DEBUG(format, ...) Logger::getInstance()->log(Logger::eLogLevel::DEBUG, formatLogMessage(format, __VA_ARGS__))
-#define LOG_INFO(format, ...)  Logger::getInstance()->log(Logger::eLogLevel::INFO, formatLogMessage(format, __VA_ARGS__))
-#define LOG_WARN(format, ...)  Logger::getInstance()->log(Logger::eLogLevel::WARN, formatLogMessage(format, __VA_ARGS__))
-#define LOG_ERROR(format, ...) Logger::getInstance()->log(Logger::eLogLevel::ERROR, formatLogMessage(format, __VA_ARGS__))
+#define LOG_TRACE(format, ...) Logger::getInstance()->log(Logger::eLogLevel::TRACE, formatLogMessage(format, ## __VA_ARGS__))
+#define LOG_DEBUG(format, ...) Logger::getInstance()->log(Logger::eLogLevel::DEBUG, formatLogMessage(format, ## __VA_ARGS__))
+#define LOG_INFO(format, ...)  Logger::getInstance()->log(Logger::eLogLevel::INFO, formatLogMessage(format, ## __VA_ARGS__))
+#define LOG_WARN(format, ...)  Logger::getInstance()->log(Logger::eLogLevel::WARN, formatLogMessage(format, ## __VA_ARGS__))
+#define LOG_ERROR(format, ...) Logger::getInstance()->log(Logger::eLogLevel::ERROR, formatLogMessage(format, ## __VA_ARGS__))
 
 class           Logger
 {

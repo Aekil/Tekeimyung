@@ -34,14 +34,14 @@ public:
     virtual ~IComponentFactory() {}
 
     // Json load/save
-    virtual sComponent* loadFromJson(const std::string& entityType, JsonValue& json) = 0;
+    virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json) = 0;
     virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType) = 0;
 
     // IComponentFactory methods
     static bool                                                     componentTypeExists(const std::string& type);
     static eOrientation                                             stringToOrientation(const std::string& orientationStr);
     static std::string                                              orientationToString(eOrientation orientation);
-    static void                                                     initComponent(const std::string& entityType, const std::string& name, JsonValue& value);
+    static void                                                     initComponent(const std::string& entityType, const std::string& name, const JsonValue& value);
     static sComponent*                                              createComponent(const std::string& entityType, const std::string& name);
     static IComponentFactory*                                       getFactory(const std::string& name);
 
@@ -70,7 +70,7 @@ public:
     virtual ~BaseComponentFactory() {}
 
     // loadFromJson has to be overloaded in BaseComponentFactory child classes
-    virtual sComponent* loadFromJson(const std::string& entityType, JsonValue& json)
+    virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json)
     {
         EXCEPT(NotImplementedException, "Failed to load component: the component has no overload to load from json");
     }
@@ -138,7 +138,7 @@ template <>
 class ComponentFactory<sRenderComponent>: public BaseComponentFactory<sRenderComponent>
 {
 public:
-    virtual sComponent* loadFromJson(const std::string& entityType, JsonValue& json);
+    virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
     virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
 
 private:
@@ -156,7 +156,7 @@ template <>
 class ComponentFactory<sPositionComponent>: public BaseComponentFactory<sPositionComponent>
 {
 public:
-    virtual sComponent* loadFromJson(const std::string& entityType, JsonValue& json);
+    virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
     virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
 };
 
@@ -169,7 +169,7 @@ template <>
 class ComponentFactory<sInputComponent>: public BaseComponentFactory<sInputComponent>
 {
 public:
-    virtual sComponent* loadFromJson(const std::string& entityType, JsonValue& json);
+    virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
     virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
 };
 
@@ -182,7 +182,7 @@ template <>
 class ComponentFactory<sDirectionComponent>: public BaseComponentFactory<sDirectionComponent>
 {
 public:
-    virtual sComponent* loadFromJson(const std::string& entityType, JsonValue& json);
+    virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
     virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
 };
 
@@ -195,7 +195,7 @@ template <>
 class ComponentFactory<sHitBoxComponent>: public BaseComponentFactory<sHitBoxComponent>
 {
 public:
-    virtual sComponent* loadFromJson(const std::string& entityType, JsonValue& json);
+    virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
     virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
 };
 
@@ -208,7 +208,7 @@ template <>
 class ComponentFactory<sCircleHitBoxComponent>: public BaseComponentFactory<sCircleHitBoxComponent>
 {
 public:
-    virtual sComponent* loadFromJson(const std::string& entityType, JsonValue& json);
+    virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
     virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
 };
 
@@ -221,7 +221,7 @@ template <>
 class ComponentFactory<sGravityComponent>: public BaseComponentFactory<sGravityComponent>
 {
 public:
-    virtual sComponent* loadFromJson(const std::string& entityType, JsonValue& json);
+    virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
     virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
 };
 
@@ -234,7 +234,7 @@ template <>
 class ComponentFactory<sTypeComponent>: public BaseComponentFactory<sTypeComponent>
 {
 public:
-    virtual sComponent* loadFromJson(const std::string& entityType, JsonValue& json);
+    virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
     virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
     virtual eEntityType stringToEntityType(const std::string& entityTypeStr);
     virtual std::string entityTypeToString(eEntityType entityType);
@@ -249,7 +249,7 @@ template <>
 class ComponentFactory<sAIComponent>: public BaseComponentFactory<sAIComponent>
 {
 public:
-    virtual sComponent* loadFromJson(const std::string& entityType, JsonValue& json);
+    virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
 };
 
 
@@ -261,7 +261,7 @@ template <>
 class ComponentFactory<sParticleEmitterComponent>: public BaseComponentFactory<sParticleEmitterComponent>
 {
 public:
-    virtual sComponent* loadFromJson(const std::string& entityType, JsonValue& json);
+    virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
     virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
     virtual bool    updateEditor(const std::string& entityType, sComponent** component_);
 };

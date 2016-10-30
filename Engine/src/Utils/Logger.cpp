@@ -1,6 +1,7 @@
 #include <ctime>
 #include <iomanip>
 #include <iostream>
+#include <ctime>
 
 #include <Utils/Logger.hpp>
 
@@ -62,14 +63,13 @@ std::string Logger::getLevelToString(Logger::eLogLevel level)
 
 std::string Logger::getDateToString()
 {
-    time_t      time;
-    struct tm   now;
-    char        format[26];
+    time_t      rawTime;
+    struct tm*  timeInfo;
+    std::string format;
 
-    time = std::time(0);
-    localtime_s(&now, &time);
-    asctime_s(format, sizeof(format), &now);
-    format[sizeof(format) - 2] = '\0';
+    std::time(&rawTime);
+    timeInfo = std::localtime(&rawTime);
+    format = std::asctime(timeInfo);
     return (format);
 }
 

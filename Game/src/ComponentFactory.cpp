@@ -68,7 +68,7 @@ std::string IComponentFactory::orientationToString(eOrientation orientation)
     EXCEPT(NotImplementedException, "Failed to save sRenderComponent:  the orientation type does not exist");
 }
 
-void    IComponentFactory::initComponent(const std::string& entityType, const std::string& name, JsonValue& value)
+void    IComponentFactory::initComponent(const std::string& entityType, const std::string& name, const JsonValue& value)
 {
     try
     {
@@ -103,7 +103,7 @@ IComponentFactory*   IComponentFactory::getFactory(const std::string& name)
 ** sRenderComponent
 */
 
-sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& entityType, JsonValue& json)
+sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
 {
     sRenderComponent* component = new sRenderComponent();
     JsonValue animation = json.get("animation", {});
@@ -206,7 +206,7 @@ std::string ComponentFactory<sRenderComponent>::spriteTypeToString(Sprite::eType
 ** sPositionComponent
 */
 
-sComponent* ComponentFactory<sPositionComponent>::loadFromJson(const std::string& entityType, JsonValue& json)
+sComponent* ComponentFactory<sPositionComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
 {
     sPositionComponent* component = new sPositionComponent();
 
@@ -234,7 +234,7 @@ JsonValue&    ComponentFactory<sPositionComponent>::saveToJson(const std::string
 ** sInputComponent
 */
 
-sComponent* ComponentFactory<sInputComponent>::loadFromJson(const std::string& entityType, JsonValue& json)
+sComponent* ComponentFactory<sInputComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
 {
     Keyboard keyboard;
     auto &&keyMap = keyboard.getStringMap();
@@ -267,7 +267,7 @@ JsonValue&    ComponentFactory<sInputComponent>::saveToJson(const std::string& e
 ** sDirectionComponent
 */
 
-sComponent* ComponentFactory<sDirectionComponent>::loadFromJson(const std::string& entityType, JsonValue& json)
+sComponent* ComponentFactory<sDirectionComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
 {
     sDirectionComponent* component = new sDirectionComponent();
 
@@ -297,7 +297,7 @@ JsonValue&    ComponentFactory<sDirectionComponent>::saveToJson(const std::strin
 ** sHitBoxComponent
 */
 
-sComponent* ComponentFactory<sHitBoxComponent>::loadFromJson(const std::string& entityType, JsonValue& json)
+sComponent* ComponentFactory<sHitBoxComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
 {
     sHitBoxComponent* component = new sHitBoxComponent();
 
@@ -323,7 +323,7 @@ JsonValue&    ComponentFactory<sHitBoxComponent>::saveToJson(const std::string& 
 ** sCircleHitBoxComponent
 */
 
-sComponent* ComponentFactory<sCircleHitBoxComponent>::loadFromJson(const std::string& entityType, JsonValue& json)
+sComponent* ComponentFactory<sCircleHitBoxComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
 {
     sCircleHitBoxComponent* component = new sCircleHitBoxComponent();
 
@@ -349,7 +349,7 @@ JsonValue&    ComponentFactory<sCircleHitBoxComponent>::saveToJson(const std::st
 ** sGravityComponent
 */
 
-sComponent* ComponentFactory<sGravityComponent>::loadFromJson(const std::string& entityType, JsonValue& json)
+sComponent* ComponentFactory<sGravityComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
 {
     sGravityComponent* component = new sGravityComponent();
 
@@ -422,7 +422,7 @@ JsonValue&    ComponentFactory<sTypeComponent>::saveToJson(const std::string& en
     return (json);
 }
 
-sComponent* ComponentFactory<sTypeComponent>::loadFromJson(const std::string& entityType, JsonValue& json)
+sComponent* ComponentFactory<sTypeComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
 {
     sTypeComponent* component = new sTypeComponent();
 
@@ -436,7 +436,7 @@ sComponent* ComponentFactory<sTypeComponent>::loadFromJson(const std::string& en
 ** sAIComponent
 */
 
-sComponent* ComponentFactory<sAIComponent>::loadFromJson(const std::string& entityType, JsonValue& json)
+sComponent* ComponentFactory<sAIComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
 {
     sAIComponent* component = new sAIComponent();
 
@@ -448,7 +448,7 @@ sComponent* ComponentFactory<sAIComponent>::loadFromJson(const std::string& enti
 ** sParticleEmitterComponent
 */
 
-sComponent* ComponentFactory<sParticleEmitterComponent>::loadFromJson(const std::string& entityType, JsonValue& json)
+sComponent* ComponentFactory<sParticleEmitterComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
 {
     sParticleEmitterComponent* component = new sParticleEmitterComponent();
     JsonValue color(json.get("color", {}));

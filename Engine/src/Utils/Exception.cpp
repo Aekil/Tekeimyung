@@ -30,7 +30,7 @@ const long Exception::getLine() const {
     return _line;
 }
 
-const char* Exception::what() const {
+const char* Exception::what() const noexcept {
     std::stringstream msg;
 
     msg << _typeName << ": " << _description << std::endl;
