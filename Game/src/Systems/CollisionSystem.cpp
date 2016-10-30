@@ -53,8 +53,8 @@ void    CollisionSystem::update(EntityManager &em, float elapsedTime)
 void    CollisionSystem::moveHitBox(Entity *entity)
 {
     sPositionComponent* position = entity->getComponent<sPositionComponent>();
-    float offsetX = GameWindow::getInstance()->getWidth() / 2.0f - 66.0f;
-    float offsetY = GameWindow::getInstance()->getHeight() - (33.0f * 3.0f);
+    float offsetX = GameWindow::getInstance()->getScreenWidth() / 2.0f - 66.0f;
+    float offsetY = GameWindow::getInstance()->getScreenHeight() - (33.0f * 3.0f);
 
     if (entity->getComponent<sHitBoxComponent>() != nullptr)
     {

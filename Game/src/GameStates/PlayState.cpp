@@ -75,7 +75,8 @@ bool    PlayState::init()
     _world.addSystem<RenderingSystem>(_map);
 
     // Play sound
-    SoundManager::getInstance()->playBkgdMusic("test.mp3", false);
+    static int idSoundBkgdMusic = SoundManager::getInstance()->registerSound("ressources/sounds/Kalimba.mp3", BACKGROUND_SOUND);
+    SoundManager::getInstance()->playSound(idSoundBkgdMusic);
 
     return (true);
 }
@@ -90,6 +91,10 @@ Entity*    PlayState::createEntity(const glm::vec3& pos, eArchetype type)
     posEntity->z = pos.z;
 
     (*_map)[pos.z].addEntity(entity->id);
+
+    static int idSoundSpawn = SoundManager::getInstance()->registerSound("ressources/sounds/spawn.mp3", DEFAULT_SOUND);
+    SoundManager::getInstance()->playSound(idSoundSpawn);
+
     return entity;
 }
 

@@ -6,6 +6,7 @@
 #include <cstdio>
 #include "Debug.hpp"
 
+#define FORMAT_BUFFER_SIZE  512
 
 #if defined(_MSC_VER)
     #define FUNCTION __FUNCSIG__
@@ -87,8 +88,8 @@ template<typename... Args>
 std::string formatMessage(const char* format, Args... args)
 {
     std::string buffer;
-    buffer.resize(512);
-    int size = snprintf(const_cast<char*>(buffer.c_str()), 512, format, args...);
+    buffer.resize(FORMAT_BUFFER_SIZE);
+    int size = snprintf(const_cast<char*>(buffer.c_str()), FORMAT_BUFFER_SIZE, format, args...);
 
     ASSERT(size >= 0, "The formated message should correctly be copied in the buffer");
 

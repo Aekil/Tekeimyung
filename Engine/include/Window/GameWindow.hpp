@@ -5,12 +5,12 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#include <Window/Keyboard.hpp>
-#include <Window/Mouse.hpp>
+#include "Window/Keyboard.hpp"
+#include "Window/Mouse.hpp"
 
 #define WINDOW_DEFAULT_WIDTH    1280
 #define WINDOW_DEFAULT_HEIGHT   720
-#define WINDOW_DEFAULT_TITLE    "Window default title - Powered by "
+#define WINDOW_DEFAULT_TITLE    "Window default title"
 
 class GameWindow
 {
@@ -21,8 +21,8 @@ public:
     bool                                initialize();
 	void								registerEvents();
     
-    int                                 getWidth() const;
-    int	                                getHeight() const;
+    int                                 getScreenWidth() const;
+    int	                                getScreenHeight() const;
     std::string	                        getTitle() const;
     static std::shared_ptr<GameWindow>  getInstance();
 	Keyboard&							getKeyboard();
@@ -42,6 +42,7 @@ public:
     static void                         buttonCallback(GLFWwindow* window, int button, int action, int mods);
     static void                         cursorEnterCallback(GLFWwindow* window, int entered);
     static void                         cursorPositionCallback(GLFWwindow* window, double xPos, double yPos);
+
 private:
     GLFWwindow*                         _window;
 

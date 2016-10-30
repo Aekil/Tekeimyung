@@ -4,9 +4,10 @@
 #include <imgui.h>
 #include <imgui_impl_glfw_gl3.h>
 
-#include <Utils/Debug.hpp>
-#include <Utils/Logger.hpp>
-#include <Window/GameWindow.hpp>
+#include "Utils/Debug.hpp"
+#include "Utils/Logger.hpp"
+
+#include "Window/GameWindow.hpp"
 
 std::shared_ptr<GameWindow> GameWindow::_instance;
 
@@ -29,7 +30,6 @@ bool    GameWindow::initialize()
         return (false);
     }
 
-
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -47,7 +47,6 @@ bool    GameWindow::initialize()
     glfwMakeContextCurrent(_window);
     glfwGetFramebufferSize(_window, &_bufferWidth, &_bufferHeight);
 
-
     // Enabling vertical synchronization (or VSync).
     glfwSwapInterval(0);
 
@@ -57,10 +56,10 @@ bool    GameWindow::initialize()
     yPos = (vidmode->height - WINDOW_DEFAULT_HEIGHT) / 2;
     glfwSetWindowPos(_window, xPos, yPos);
 
-
     // Init Glew
     glewExperimental = GL_TRUE;
-    if (glewInit() != GLEW_OK) {
+    if (glewInit() != GLEW_OK)
+    {
         std::cerr << "Failed to init glew" << std::endl;
         return (false);
     }
@@ -69,6 +68,7 @@ bool    GameWindow::initialize()
 
     registerEvents();
     ImGui_ImplGlfwGL3_Init(_window, false);
+
     return (true);
 }
 
@@ -81,12 +81,12 @@ void	GameWindow::registerEvents()
     glfwSetCursorPosCallback(_window, GameWindow::cursorPositionCallback);
 }
 
-int     GameWindow::getWidth() const
+int     GameWindow::getScreenWidth() const
 {
     return (_screenWidth);
 }
 
-int     GameWindow::getHeight() const
+int     GameWindow::getScreenHeight() const
 {
     return (_screenHeight);
 }
@@ -170,13 +170,11 @@ void	GameWindow::keyCallback(GLFWwindow* window, int key, int scancode, int acti
         switch (action)
         {
             case GLFW_PRESS:
-            {
                 if (keyboard.getStateMap()[keyboardKey] == Keyboard::eKeyState::KEY_IDLE)
                     keyboard.getStateMap()[keyboardKey] = Keyboard::eKeyState::KEY_PRESSED;
                 else if (keyboard.getStateMap()[keyboardKey] == Keyboard::eKeyState::KEY_PRESSED)
                     keyboard.getStateMap()[keyboardKey] = Keyboard::eKeyState::KEY_MAINTAINED;
-            }
-            break;
+                break;
             case GLFW_REPEAT:
                 keyboard.getStateMap()[keyboardKey] = Keyboard::eKeyState::KEY_MAINTAINED;
                 break;
@@ -195,7 +193,7 @@ void    GameWindow::buttonCallback(GLFWwindow* window, int button, int action, i
     gameWindow = reinterpret_cast<GameWindow*>(glfwGetWindowUserPointer(window));
     ASSERT(gameWindow != nullptr, "GameWindow should not be null.");
 
-    Mouse       &mouse = gameWindow->getMouse();
+    Mouse& mouse = gameWindow->getMouse();
     mouseButton = mouse.getNativeMap()[button];
     if (button <= (int) Mouse::eButton::UNKNOWN || button >= (int) Mouse::eButton::MOUSE_BUTTON_LAST)
         LOG_INFO("The mouse button should belong to the range.");
@@ -204,12 +202,10 @@ void    GameWindow::buttonCallback(GLFWwindow* window, int button, int action, i
         switch (action)
         {
             case GLFW_PRESS:
-                {
-                    if (mouse.getStateMap()[mouseButton] == Mouse::eButtonState::CLICK_PRESSED)
-                        mouse.getStateMap()[mouseButton] = Mouse::eButtonState::CLICK_MAINTAINED;
-                    else if (mouse.getStateMap()[mouseButton] == Mouse::eButtonState::CLICK_IDLE)
-                        mouse.getStateMap()[mouseButton] = Mouse::eButtonState::CLICK_PRESSED;
-                }
+                if (mouse.getStateMap()[mouseButton] == Mouse::eButtonState::CLICK_PRESSED)
+                    mouse.getStateMap()[mouseButton] = Mouse::eButtonState::CLICK_MAINTAINED;
+                else if (mouse.getStateMap()[mouseButton] == Mouse::eButtonState::CLICK_IDLE)
+                    mouse.getStateMap()[mouseButton] = Mouse::eButtonState::CLICK_PRESSED;
                 break;
             case GLFW_REPEAT:
                 mouse.getStateMap()[mouseButton] = Mouse::eButtonState::CLICK_MAINTAINED;
@@ -228,7 +224,7 @@ void    GameWindow::cursorEnterCallback(GLFWwindow* window, int entered)
     gameWindow = reinterpret_cast<GameWindow*>(glfwGetWindowUserPointer(window));
     ASSERT(gameWindow != nullptr, "GameWindow should not be null.");
 
-    Cursor&     cursor = gameWindow->getMouse().getCursor();
+    Cursor& cursor = gameWindow->getMouse().getCursor();
     cursor.setWindowEntering(entered);
 }
 
@@ -239,7 +235,7 @@ void    GameWindow::cursorPositionCallback(GLFWwindow* window, double xPos, doub
     gameWindow = reinterpret_cast<GameWindow*>(glfwGetWindowUserPointer(window));
     ASSERT(gameWindow != nullptr, "GameWindow should not be null.");
 
-    Cursor&     cursor = gameWindow->getMouse().getCursor();
+    Cursor& cursor = gameWindow->getMouse().getCursor();
     cursor.setXPosition(xPos);
     cursor.setYPosition(yPos);
 }

@@ -105,7 +105,7 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
             for (uint32_t x = 0; x < _map->getWidth(); x++)
             {
                 // Orthogonal projection matrice
-                glm::mat4 ortho = glm::ortho(0.0f, (float)GameWindow::getInstance()->getWidth() * 1.3f, 0.0f, (float)GameWindow::getInstance()->getHeight() * 1.3f);
+                glm::mat4 ortho = glm::ortho(0.0f, (float)GameWindow::getInstance()->getScreenWidth() * 1.3f, 0.0f, (float)GameWindow::getInstance()->getScreenHeight() * 1.3f);
                 GLint uniProj = _shaderProgram.getUniformLocation("proj");
                 glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(ortho));
 
