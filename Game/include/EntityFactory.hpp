@@ -38,6 +38,7 @@ public:
     ~EntityFactory();
     static void                                             loadDirectory(const std::string& archetypesDir);
     static Entity*                                          createEntity(eArchetype type);
+    static Entity*                                          createEntity(const std::string& typeName);
     static void                                             bindEntityManager(EntityManager* em);
 
     static const std::vector<const char*>&                  getTypesString();

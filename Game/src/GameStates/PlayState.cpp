@@ -95,8 +95,8 @@ bool    PlayState::init()
     _world.addSystem<RenderingSystem>(_map, dynamic_cast<ParticleSystem*>(_world.getSystems()[4])->getEmitters());
 
     addDebugWindow<OverlayDebugWindow>();
-    addDebugWindow<EntityDebugWindow>(glm::vec2(0, 80), glm::vec2(450, 350));
-    addDebugWindow<LogDebugWindow>(Logger::getInstance(), glm::vec2(450, 80), glm::vec2(300, 200));
+    addDebugWindow<EntityDebugWindow>(_map, glm::vec2(0, 80), glm::vec2(450, 350));
+    addDebugWindow<LogDebugWindow>(Logger::getInstance(), glm::vec2(0, 430), glm::vec2(300, 200));
 
     // Play sound
     static int idSoundBkgdMusic = SoundManager::getInstance()->registerSound("ressources/sounds/Kalimba.mp3", BACKGROUND_SOUND);
