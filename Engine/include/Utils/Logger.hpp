@@ -7,7 +7,6 @@
 
 #include "Utils/Debug.hpp"
 
-
 template<typename... Args>
 std::string formatLogMessage(const char* format, Args... args)
 {
@@ -21,6 +20,15 @@ std::string formatLogMessage(const char* format, Args... args)
     return buffer;
 }
 
+/**
+    The textual representation of the calendar time given by the asctime function
+    has a fixed 25-character form, that is why the buffer is set at 26.
+
+    See the links below for more infos :
+        - http://www.cplusplus.com/reference/ctime/asctime/
+        - http://en.cppreference.com/w/cpp/chrono/c/asctime
+*/
+#define ASCTIME_BUFFER_SIZE (26)
 
 #define LOG_TRACE(format, ...) Logger::getInstance()->log(Logger::eLogLevel::TRACE, formatLogMessage(format, ## __VA_ARGS__))
 #define LOG_DEBUG(format, ...) Logger::getInstance()->log(Logger::eLogLevel::DEBUG, formatLogMessage(format, ## __VA_ARGS__))

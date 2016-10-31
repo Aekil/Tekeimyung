@@ -66,10 +66,10 @@ std::string Logger::getDateToString()
 {
     time_t      rawTime;
     struct tm   timeInfo;
-    char        format[26];
+    char        format[ASCTIME_BUFFER_SIZE];
 
     std::time(&rawTime);
-    std::memset(format, 0, 26);
+    std::memset(format, 0, ASCTIME_BUFFER_SIZE);
 
     #if defined(_WIN32)
     // Use windows secure versions of localtime and asctime
@@ -80,7 +80,7 @@ std::string Logger::getDateToString()
         localtime_r(&rawTime, &timeInfo);
         asctime_r(&timeInfo, format);
     #endif
-    format[24] = '\0';
+    format[ASCTIME_BUFFER_SIZE - 2] = '\0';                 // Removing the newline character at the end, here.
     return (format);
 }
 
