@@ -80,6 +80,7 @@ std::string Logger::getDateToString()
         localtime_r(&rawTime, &timeInfo);
         asctime_r(&timeInfo, format);
     #endif
+    format[24] = '\0';
     return (format);
 }
 
