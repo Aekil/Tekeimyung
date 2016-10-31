@@ -21,51 +21,60 @@ void    InputSystem::update(EntityManager &em, float elapsedTime)
         sDirectionComponent *direction = entity->getComponent<sDirectionComponent>();
 
         direction->value = glm::vec2(0.0f, 0.0f);
+        direction->moved = true;
 
-        direction->moved = false;
-
-        if (keyboard.isPressed(input->moveLeft))
+        if (KB_P(LEFT) && KB_P(UP) && KB_P(RIGHT) && KB_P(DOWN))
         {
-            direction->value.x += -direction->speed;
-            direction->value.y += direction->speed;
-            direction->moved = true;
+            // No movement for the 4 directional keys pressed at the same time
+            direction->orientation = eOrientation::S;
+        }
+        else if (KB_ONLY_LEFT || (KB_P(LEFT) && KB_P(UP) && KB_P(DOWN)))
+        {
             direction->orientation = eOrientation::W;
+            direction->value.x -= direction->speed;
+            direction->value.y += direction->speed;
         }
-
-        if (keyboard.isPressed(input->moveRight))
+        else if (KB_ONLY_UP || (KB_P(LEFT) && KB_P(UP) && KB_P(RIGHT)))
         {
-            direction->value.x += direction->speed;
-            direction->value.y += -direction->speed;
-            direction->moved = true;
+            direction->orientation = eOrientation::N;
+            direction->value.x -= direction->speed;
+            direction->value.y -= direction->speed;
+        }
+        else if (KB_ONLY_RIGHT || (KB_P(RIGHT) && KB_P(UP) && KB_P(DOWN)))
+        {
             direction->orientation = eOrientation::E;
+            direction->value.x += direction->speed;
+            direction->value.y -= direction->speed;
         }
-
-        if (keyboard.isPressed(input->moveUp))
+        else if (KB_ONLY_DOWN || (KB_P(DOWN) && KB_P(LEFT) && KB_P(RIGHT)))
         {
-            direction->value.x += -direction->speed;
-            direction->value.y += -direction->speed;
-            direction->moved = true;
-
-            if (keyboard.isPressed(input->moveLeft))
-                direction->orientation = eOrientation::NW;
-            else if (keyboard.isPressed(input->moveRight))
-                direction->orientation = eOrientation::NE;
-            else
-                direction->orientation = eOrientation::N;
-        }
-
-        if (keyboard.isPressed(input->moveDown))
-        {
+            direction->orientation = eOrientation::S;
             direction->value.x += direction->speed;
             direction->value.y += direction->speed;
-            direction->moved = true;
-
-            if (keyboard.isPressed(input->moveLeft))
-                direction->orientation = eOrientation::SW;
-            else if (keyboard.isPressed(input->moveRight))
-                direction->orientation = eOrientation::SE;
-            else
-                direction->orientation = eOrientation::S;
+        }
+        else if (KB_P(LEFT) && KB_P(UP))
+        {
+            direction->orientation = eOrientation::NW;
+            direction->value.x -= direction->speed;
+        }
+        else if (KB_P(LEFT) && KB_P(DOWN))
+        {
+            direction->orientation = eOrientation::SW;
+            direction->value.y += direction->speed;
+        }
+        else if (KB_P(RIGHT) && KB_P(UP))
+        {
+            direction->orientation = eOrientation::NE;
+            direction->value.y -= direction->speed;
+        }
+        else if (KB_P(RIGHT) && KB_P(DOWN))
+        {
+            direction->orientation = eOrientation::SE;
+            direction->value.x += direction->speed;
+        }
+        else
+        {
+            direction->moved = false;
         }
     });
 }
