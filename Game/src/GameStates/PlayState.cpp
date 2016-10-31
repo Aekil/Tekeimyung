@@ -4,7 +4,8 @@
 #include "Systems/CollisionSystem.hpp"
 #include "Systems/AISystem.hpp"
 #include "Systems/InputSystem.hpp"
-#include "Window/Keyboard.hpp"
+#include "Window/GameWindow.hpp"
+#include <Window/HandleFullscreenEvent.hpp>
 #include "Core/Components.hh"
 
 #include <imgui.h>
@@ -72,6 +73,7 @@ bool    PlayState::init()
     _world.addSystem<CollisionSystem>(_map);
     _world.addSystem<RenderingSystem>(_map);
 
+    _pair = std::make_pair(Keyboard::eKey::F, new HandleFullscreenEvent());
     return (true);
 }
 
@@ -120,6 +122,9 @@ bool    PlayState::update(float elapsedTime)
     }
 
     GameState::update(elapsedTime);
+
+    if (GameWindow::getInstance()->getKeyboard().getStateMap()[_pair.first] == Keyboard::eKeyState::KEY_PRESSED)
+        _pair.second->execute();
 
     return (true);
 }

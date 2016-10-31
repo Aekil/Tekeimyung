@@ -87,6 +87,7 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
     // Clear color buffer
     glClear (GL_COLOR_BUFFER_BIT);
 
+
     for (auto &&id: (*_map)[1].getEntities())
     {
         sPositionComponent *position;
