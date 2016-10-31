@@ -10,9 +10,7 @@ SoundManager::SoundManager() :
 _result(FMOD_OK),
 _system(nullptr),
 _channel1(nullptr),
-_channel2(nullptr)/*,
-_bkgdMusic(nullptr),
-_sound(nullptr)*/
+_channel2(nullptr)
 {
     for (int i = 0; i < NB_MAX_SOUNDS; i++)
     {
@@ -23,8 +21,7 @@ _sound(nullptr)*/
     }
 }
 
-SoundManager::~SoundManager()
-{}
+SoundManager::~SoundManager() {}
 
 std::shared_ptr<SoundManager>   SoundManager::getInstance()
 {
@@ -52,17 +49,12 @@ void    SoundManager::update()
 {
     _result = _system->update();
     errorCheck();
-    //ASSERT(errorCheck(), "FMOD Error");
 }
 
 void    SoundManager::shutdown()
 {
     for (int i = 0; i < NB_MAX_SOUNDS; i++)
         freeSound(i);
-    /*_result = _sound->release();
-    errorCheck();
-    _result = _bkgdMusic->release();
-    errorCheck();*/
     _result = _system->close();
     errorCheck();
     _result = _system->release();
@@ -89,7 +81,7 @@ void    SoundManager::freeSound(unsigned int id)
     }
 }
 
-int     SoundManager::registerSound(const char *name, e_soundType type)
+int     SoundManager::registerSound(const char *name, eSoundType type)
 {
     for (int i = 0; i < NB_MAX_SOUNDS; i++)
     {
@@ -98,9 +90,13 @@ int     SoundManager::registerSound(const char *name, e_soundType type)
             _sounds[i].free = false;
             _sounds[i].type = type;
             if (type == BACKGROUND_SOUND)
+            {
                 _result = _system->createStream(name, FMOD_LOOP_NORMAL, 0, &_sounds[i].sound);
+            }
             else // type == DEFAULT_SOUND
+            {
                 _result = _system->createSound(name, FMOD_DEFAULT, 0, &_sounds[i].sound);
+            }
             errorCheck();
             return (_sounds[i].id);
         }
@@ -120,26 +116,3 @@ void    SoundManager::playSound(unsigned int id)
     }
     errorCheck();
 }
-
-
-/*void    SoundManager::playBkgdMusic(const char *name, bool loop)
-{
-    FMOD_MODE mode;
-
-    mode = (loop ? FMOD_LOOP_NORMAL : FMOD_DEFAULT);
-    _result = _system->createStream(name, mode, 0, &_bkgdMusic);
-    errorCheck();
-    _result = _system->playSound(_bkgdMusic, 0, false, &_channel);
-    errorCheck();
-}
-
-void    SoundManager::playSound(const char *name)
-{
-    _result = _system->createSound(name, FMOD_DEFAULT, 0, &_sound);
-    errorCheck();
-    _result = _system->playSound(_sound, 0, false, &_channel);
-    errorCheck();
-}*/
-
-/*_result = _system->createSound("test.mp3", FMOD_DEFAULT, 0, &_bkgdMusic);
-_result = _bkgdMusic->setMode(FMOD_LOOP_OFF);*/
