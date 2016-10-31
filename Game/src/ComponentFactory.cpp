@@ -126,7 +126,7 @@ sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& 
     component->color = json.getColor3f("color", { 1.0f, 1.0f, 1.0f });
 
     // Sprite animation
-    if (animation.size() > 0)
+    if (json.getBool("animated", false) && animation.size() > 0)
     {
         component->animated = true;
         component->frames = animation.getUVec2f("frames", { 0, 0 });
@@ -158,6 +158,7 @@ JsonValue&    ComponentFactory<sRenderComponent>::saveToJson(const std::string& 
     }
     animation.setStringVec("orientations", orientations);
     json.setValue("animation", animation);
+    json.setBool("animated", component->animated);
 
     json.setString("texture", component->texture);
     json.setString("type", spriteTypeToString(component->type));

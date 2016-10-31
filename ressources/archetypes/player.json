@@ -14,6 +14,7 @@
             "sRenderComponent": {
                 "texture": "ressources/sprites/characters/soldierSpriteSheet.png",
                 "type": "OBJECT",
+                "animated": true,
                 "animation": {
                     "orientations": ["NW", "N", "NE", "E", "W", "SW", "S", "SE"],
                     "frames": {
