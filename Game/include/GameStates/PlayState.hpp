@@ -20,9 +20,13 @@ class PlayState: public GameState
 private:
     Entity*                             createEntity(const glm::vec3& pos, eArchetype type);
     void                                createTile(const glm::vec3& pos, eArchetype type);
-    void                                createParticlesEmittor(const glm::vec3& pos, eArchetype type);
+    Entity*                             createParticlesEmittor(const glm::vec3& pos, eArchetype type);
+    void                                goTo(Entity* emitter, Entity* character);
 
 private:
     Map*                                _map;
     bool                                _windowImgui;
+
+    // Entity enemy for demo
+    Entity*                             _enemy;
 };

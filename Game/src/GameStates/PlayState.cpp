@@ -1,5 +1,6 @@
 #include <imgui.h>
 #include <imgui_impl_glfw_gl3.h>
+#include <glm/glm.hpp>
 
 #include "Systems/RenderingSystem.hpp"
 #include "Systems/MovementSystem.hpp"
@@ -14,6 +15,7 @@
 #include "Utils/OverlayDebugWindow.hpp"
 #include "Utils/LogDebugWindow.hpp"
 #include "EntityDebugWindow.hpp"
+#include "Utils/Exception.hpp"
 
 #include "GameStates/PlayState.hpp"
 
@@ -35,7 +37,7 @@ void    PlayState::createTile(const glm::vec3& pos, eArchetype type)
     (*_map)[(uint16_t)pos.z][(uint32_t)pos.y][(uint32_t)pos.x] = tile->id;
 }
 
-void    PlayState::createParticlesEmittor(const glm::vec3& pos, eArchetype type)
+Entity* PlayState::createParticlesEmittor(const glm::vec3& pos, eArchetype type)
 {
     Entity* ps;
     sPositionComponent* psPos;
@@ -45,6 +47,22 @@ void    PlayState::createParticlesEmittor(const glm::vec3& pos, eArchetype type)
     psPos->value.x = pos.x;
     psPos->value.y = pos.y;
     psPos->z = pos.z;
+    return (ps);
+}
+
+
+void    PlayState::goTo(Entity* emitter, Entity* character)
+{
+    sPositionComponent* emitterPos;
+    sPositionComponent* characterPos;
+
+    emitterPos = emitter->getComponent<sPositionComponent>();
+    characterPos = character->getComponent<sPositionComponent>();
+
+    if (!emitterPos || !characterPos)
+        EXCEPT(InternalErrorException, "sPositionComponent missing");
+
+    emitter->addComponent<sDirectionComponent>(glm::normalize(characterPos->value - emitterPos->value) * 4.0f);
 }
 
 bool    PlayState::init()
@@ -55,11 +73,10 @@ bool    PlayState::init()
 
     _map = new Map(em, 20, 15, 4);
 
-    createParticlesEmittor(glm::vec3(5.5f, 5.5f, 1.0f), eArchetype::EMITTER_FIRE);
     createParticlesEmittor(glm::vec3(8.5f, 5.5f, 1.0f), eArchetype::EMITTER_WATER);
     // Create characters
     createEntity(glm::vec3(9, 5, 1), eArchetype::PLAYER);
-    createEntity(glm::vec3(0.5f, 5.5f, 1), eArchetype::ENEMY);
+    _enemy = createEntity(glm::vec3(0.5f, 5.5f, 1), eArchetype::ENEMY);
 
     // Init base map
     for (int y = 0; y < 15; y++) {
@@ -115,13 +132,29 @@ Entity*    PlayState::createEntity(const glm::vec3& pos, eArchetype type)
 
     (*_map)[(uint16_t)pos.z].addEntity(entity->id);
 
-    static int idSoundSpawn = SoundManager::getInstance()->registerSound("ressources/sounds/spawn.mp3", DEFAULT_SOUND);
-    SoundManager::getInstance()->playSound(idSoundSpawn);
+  /*  static int idSoundSpawn = SoundManager::getInstance()->registerSound("ressources/sounds/spawn.mp3", DEFAULT_SOUND);
+    SoundManager::getInstance()->playSound(idSoundSpawn);*/
 
     return entity;
 }
 
 bool    PlayState::update(float elapsedTime)
 {
+    static Timer timer;
+
+    if (timer.getElapsedTime() >= 1.0f)
+    {
+        // Create a fire emitter
+        Entity* fireEmitter = createParticlesEmittor(glm::vec3(5.5f, 5.5f, 1.0f), eArchetype::EMITTER_FIRE);
+        Entity* fireEmitter2 = createParticlesEmittor(glm::vec3(5.5f, 2.5f, 1.0f), eArchetype::EMITTER_FIRE);
+
+        // Change fire emitter direction to go to enemy direction
+        goTo(fireEmitter, _enemy);
+        goTo(fireEmitter2, _enemy);
+
+        // Reset timer
+        timer.reset();
+    }
+
     return (GameState::update(elapsedTime));
 }

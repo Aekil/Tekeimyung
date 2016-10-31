@@ -129,7 +129,7 @@ struct sInputComponent: sComponent {
 struct sDirectionComponent : sComponent
 {
     sDirectionComponent() = default;
-    sDirectionComponent(glm::vec2) : value(value), orientation(eOrientation::N), moved(false), speed(1.0f) {}
+    sDirectionComponent(const glm::vec2& dir, float speed = 1.0f) : value(dir), orientation(eOrientation::N), moved(false), speed(speed) {}
 
     virtual sComponent* clone()
     {
