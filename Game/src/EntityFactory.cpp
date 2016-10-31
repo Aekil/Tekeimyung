@@ -1,11 +1,10 @@
-#include <dirent.h>
-
-#include "Utils/Exception.hpp"
-#include "Utils/RessourceManager.hpp"
+#include "ComponentFactory.hpp"
+#include <dirent.h> // This include have to be called after "ComponentFactory.hpp"
 #include "Utils/Debug.hpp"
 #include "Utils/JsonReader.hpp"
 #include "Utils/Logger.hpp"
-#include "ComponentFactory.hpp"
+#include "Utils/Exception.hpp"
+#include "Utils/RessourceManager.hpp"
 
 #include "EntityFactory.hpp"
 
@@ -90,7 +89,7 @@ bool    EntityFactory::entityTypeExists(const std::string& type)
 
 Entity* EntityFactory::createEntity(eArchetype type)
 {
-    if ((int)type > _typesString.size() - 1)
+    if ((int)type > (int)_typesString.size() - 1)
     {
         EXCEPT(InvalidParametersException, "The entity type does not exist");
         return (nullptr);
