@@ -102,6 +102,11 @@ Entity* EntityFactory::createEntity(eArchetype type)
     return (cloneEntity(typeName));
 }
 
+Entity* EntityFactory::createEntity(const std::string& typeName)
+{
+    return (cloneEntity(typeName));
+}
+
 void EntityFactory::bindEntityManager(EntityManager* em)
 {
     _em = em;
@@ -125,8 +130,12 @@ const std::string& EntityFactory::getFile(const std::string& typeName)
 Entity* EntityFactory::cloneEntity(const std::string& typeName)
 {
     Entity* clone = _em->createEntity();
+    auto entityComponents = _entities.find(typeName);
 
-    for (auto &&component: _entities[typeName])
+    if (entityComponents == _entities.end())
+        EXCEPT(InvalidParametersException, "The entity type %s does not exist", typeName);
+
+    for (auto &&component: entityComponents->second)
     {
         sComponent* component_ = IComponentFactory::createComponent(typeName, component);
         clone->addComponent(component_);
