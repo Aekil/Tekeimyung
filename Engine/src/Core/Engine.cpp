@@ -29,7 +29,7 @@ bool    Engine::run()
 {
     // FPS counter
     Timer       timer;
-    double      timePerFrame;
+    float       timePerFrame;
 
     timePerFrame = 1.0f / 60.0f;
     while (_window->isRunning())
@@ -37,6 +37,8 @@ bool    Engine::run()
         // Run one frame each 16ms
         if (timer.getElapsedTime() >= timePerFrame)
         {
+            float elapsedTime = timer.getElapsedTime();
+            timer.reset();
             _window->getKeyboard().updateKeyboardState();
             _window->getMouse().updateMouseState();
             _window->pollEvents();
@@ -50,12 +52,11 @@ bool    Engine::run()
 
             auto &&currentState = _gameStateManager.getCurrentState();
 
-            if (currentState->update(timer.getElapsedTime()) == false)
+            if (currentState->update(elapsedTime) == false)
             {
                 _gameStateManager.removeCurrentState();
             }
             //std::cout << "Time: " << timer.getElapsedTime() * 1000 << std::endl;
-            timer.reset();
         }
     }
     return (true);
