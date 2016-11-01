@@ -1,7 +1,9 @@
 #include <GL/glew.h>
-#include "Graphics/ShaderProgram.hpp"
+
 #include "Utils/RessourceManager.hpp"
 #include "Utils/Exception.hpp"
+
+#include "Graphics/ShaderProgram.hpp"
 
 ShaderProgram::ShaderProgram()
 {

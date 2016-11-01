@@ -1,12 +1,12 @@
 #include <iostream>
 #include <GL/glew.h>
-
 #include <imgui.h>
 #include <imgui_impl_glfw_gl3.h>
 
-#include <Utils/Debug.hpp>
-#include <Utils/Logger.hpp>
-#include <Window/GameWindow.hpp>
+#include "Utils/Debug.hpp"
+#include "Utils/Logger.hpp"
+
+#include "Window/GameWindow.hpp"
 
 std::shared_ptr<GameWindow> GameWindow::_instance;
 
@@ -91,18 +91,19 @@ void	GameWindow::registerEvents()
 {
 	glfwSetWindowUserPointer(_window, this);
     //glfwSetWindowCloseCallback(_window, GameWindow::closeCallback);
-	glfwSetKeyCallback(_window, GameWindow::keyCallback);
+    glfwSetKeyCallback(_window, GameWindow::keyCallback);
+    glfwSetCharCallback(_window, GameWindow::charCallback);
     glfwSetMouseButtonCallback(_window, GameWindow::buttonCallback);
     glfwSetCursorEnterCallback(_window, GameWindow::cursorEnterCallback);
     glfwSetCursorPosCallback(_window, GameWindow::cursorPositionCallback);
 }
 
-int     GameWindow::getWidth() const
+int     GameWindow::getScreenWidth() const
 {
     return (_screenWidth);
 }
 
-int     GameWindow::getHeight() const
+int     GameWindow::getScreenHeight() const
 {
     return (_screenHeight);
 }
@@ -230,10 +231,14 @@ void	GameWindow::keyCallback(GLFWwindow* window, int key, int scancode, int acti
 	GameWindow*     gameWindow;
 	Keyboard::eKey  keyboardKey;
 
-	gameWindow = reinterpret_cast<GameWindow*>(glfwGetWindowUserPointer(window));
+    gameWindow = static_cast<GameWindow*>(glfwGetWindowUserPointer(window));
     ASSERT(gameWindow != nullptr, "GameWindow should not be null.");
 
-    Keyboard    &keyboard = gameWindow->getKeyboard();
+    // Don't capture keyboard events if ImGui is capturing them
+    if (sendImGuikeyCallback(gameWindow, window, key, scancode, action, mods))
+        return;
+
+    Keyboard&       keyboard = gameWindow->getKeyboard();
     keyboardKey = keyboard.getNativeMap()[key];
     if (keyboardKey <= Keyboard::eKey::UNKNOWN || keyboardKey >= Keyboard::eKey::LAST)
         LOG_INFO("The keyboard key should belong to the range.");
@@ -242,13 +247,11 @@ void	GameWindow::keyCallback(GLFWwindow* window, int key, int scancode, int acti
         switch (action)
         {
             case GLFW_PRESS:
-            {
                 if (keyboard.getStateMap()[keyboardKey] == Keyboard::eKeyState::KEY_IDLE)
                     keyboard.getStateMap()[keyboardKey] = Keyboard::eKeyState::KEY_PRESSED;
                 else if (keyboard.getStateMap()[keyboardKey] == Keyboard::eKeyState::KEY_PRESSED)
                     keyboard.getStateMap()[keyboardKey] = Keyboard::eKeyState::KEY_MAINTAINED;
-            }
-            break;
+                break;
             case GLFW_REPEAT:
                 keyboard.getStateMap()[keyboardKey] = Keyboard::eKeyState::KEY_MAINTAINED;
                 break;
@@ -259,6 +262,29 @@ void	GameWindow::keyCallback(GLFWwindow* window, int key, int scancode, int acti
     }
 }
 
+bool    GameWindow::sendImGuikeyCallback(GameWindow* gameWindow, GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    ImGuiIO&        io = ImGui::GetIO();
+    Keyboard&       keyboard = gameWindow->getKeyboard();
+    static bool     keyboardStateReset = false;
+
+    // ImGui is capturing keyboard
+    if (io.WantCaptureKeyboard)
+    {
+        // Use keyboardStateReset to reset keyboard state only one time
+        if (!keyboardStateReset)
+            keyboard.resetKeyboardState();
+        else
+            keyboardStateReset = true;
+        ImGui_ImplGlfwGL3_KeyCallback(window, key, scancode, action, mods);
+        return (true);
+    }
+    else
+        keyboardStateReset = false;
+
+    return (false);
+}
+
 /**
     Callback function used to handle the Mouse class through buttons' states.
     This function only retrieve a specific button and updates its state in the buttons' map.
@@ -267,11 +293,16 @@ void    GameWindow::buttonCallback(GLFWwindow* window, int button, int action, i
 {
     GameWindow*     gameWindow;
     Mouse::eButton  mouseButton;
+    ImGuiIO&        io = ImGui::GetIO();
 
-    gameWindow = reinterpret_cast<GameWindow*>(glfwGetWindowUserPointer(window));
+    gameWindow = static_cast<GameWindow*>(glfwGetWindowUserPointer(window));
     ASSERT(gameWindow != nullptr, "GameWindow should not be null.");
 
-    Mouse       &mouse = gameWindow->getMouse();
+    // Don't capture mouse events if ImGui is capturing them
+    if (sendImGuibuttonCallback(gameWindow, window, button, action, mods))
+        return;
+
+    Mouse& mouse =  gameWindow->getMouse();
     mouseButton = mouse.getNativeMap()[button];
     if (button <= (int) Mouse::eButton::UNKNOWN || button >= (int) Mouse::eButton::MOUSE_BUTTON_LAST)
         LOG_INFO("The mouse button should belong to the range.");
@@ -280,12 +311,10 @@ void    GameWindow::buttonCallback(GLFWwindow* window, int button, int action, i
         switch (action)
         {
             case GLFW_PRESS:
-                {
-                    if (mouse.getStateMap()[mouseButton] == Mouse::eButtonState::CLICK_PRESSED)
-                        mouse.getStateMap()[mouseButton] = Mouse::eButtonState::CLICK_MAINTAINED;
-                    else if (mouse.getStateMap()[mouseButton] == Mouse::eButtonState::CLICK_IDLE)
-                        mouse.getStateMap()[mouseButton] = Mouse::eButtonState::CLICK_PRESSED;
-                }
+                if (mouse.getStateMap()[mouseButton] == Mouse::eButtonState::CLICK_PRESSED)
+                    mouse.getStateMap()[mouseButton] = Mouse::eButtonState::CLICK_MAINTAINED;
+                else if (mouse.getStateMap()[mouseButton] == Mouse::eButtonState::CLICK_IDLE)
+                    mouse.getStateMap()[mouseButton] = Mouse::eButtonState::CLICK_PRESSED;
                 break;
             case GLFW_REPEAT:
                 mouse.getStateMap()[mouseButton] = Mouse::eButtonState::CLICK_MAINTAINED;
@@ -297,6 +326,29 @@ void    GameWindow::buttonCallback(GLFWwindow* window, int button, int action, i
     }
 }
 
+bool    GameWindow::sendImGuibuttonCallback(GameWindow* gameWindow, GLFWwindow* window, int button, int action, int mods)
+{
+    ImGuiIO&        io = ImGui::GetIO();
+    Mouse&          mouse = gameWindow->getMouse();
+    static bool     mouseStateReset = false;
+
+    // ImGui is capturing mouse
+    if (io.WantCaptureMouse)
+    {
+        // Use mouseStateReset to reset mouse state only one time
+        if (!mouseStateReset)
+            mouse.resetMouseState();
+        else
+            mouseStateReset = true;
+        ImGui_ImplGlfwGL3_MouseButtonCallback(window, button, action, mods);
+        return (true);
+    }
+    else
+        mouseStateReset = false;
+
+    return (false);
+}
+
 /**
     Callback function used to handle whether the cursor has entered into the GameWindow frame or not.
 */
@@ -304,11 +356,11 @@ void    GameWindow::cursorEnterCallback(GLFWwindow* window, int entered)
 {
     GameWindow*     gameWindow;
 
-    gameWindow = reinterpret_cast<GameWindow*>(glfwGetWindowUserPointer(window));
+    gameWindow = static_cast<GameWindow*>(glfwGetWindowUserPointer(window));
     ASSERT(gameWindow != nullptr, "GameWindow should not be null.");
 
-    Cursor&     cursor = gameWindow->getMouse().getCursor();
-    cursor.setWindowEntering(entered);
+    Cursor& cursor = gameWindow->getMouse().getCursor();
+    cursor.setWindowEntering(entered == 1);
 }
 
 /**
@@ -319,10 +371,35 @@ void    GameWindow::cursorPositionCallback(GLFWwindow* window, double xPos, doub
 {
     GameWindow*     gameWindow;
 
-    gameWindow = reinterpret_cast<GameWindow*>(glfwGetWindowUserPointer(window));
+    gameWindow = static_cast<GameWindow*>(glfwGetWindowUserPointer(window));
     ASSERT(gameWindow != nullptr, "GameWindow should not be null.");
 
-    Cursor&     cursor = gameWindow->getMouse().getCursor();
+    Cursor& cursor = gameWindow->getMouse().getCursor();
     cursor.setXPosition(xPos);
     cursor.setYPosition(yPos);
+}
+
+void    GameWindow::charCallback(GLFWwindow* window, unsigned int c)
+{
+    GameWindow*     gameWindow;
+
+    gameWindow = static_cast<GameWindow*>(glfwGetWindowUserPointer(window));
+    ASSERT(gameWindow != nullptr, "GameWindow should not be null.");
+
+    // Don't capture char events if ImGui is capturing them
+    if (sendImGuiCharCallback(gameWindow, window, c))
+        return;
+}
+
+bool    GameWindow::sendImGuiCharCallback(GameWindow* gameWindow, GLFWwindow* window, unsigned int c)
+{
+    ImGuiIO&    io = ImGui::GetIO();
+
+    // ImGui is capturing keyboard
+    if (io.WantCaptureKeyboard)
+    {
+        ImGui_ImplGlfwGL3_CharCallback(window, c);
+        return (true);
+    }
+    return (false);
 }

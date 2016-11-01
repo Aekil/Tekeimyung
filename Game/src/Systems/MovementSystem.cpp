@@ -1,7 +1,8 @@
-#include "Core/Components.hh"
-
 #include <cmath>
 #include <algorithm>
+
+#include "Core/Components.hh"
+
 #include "Systems/MovementSystem.hpp"
 
 MovementSystem::MovementSystem(Map* map): _map(map)

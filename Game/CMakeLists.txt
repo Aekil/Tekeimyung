@@ -5,7 +5,6 @@ project(${EXECUTABLE_NAME})
 # All source files using glob
 file(GLOB_RECURSE source_files src/*)
 file(GLOB_RECURSE include_files include/*)
-file(GLOB_RECURSE imgui_source_files ${CMAKE_SOURCE_DIR}/external/imgui/*.cpp*)
 file(GLOB_RECURSE jsoncpp_source_files ${CMAKE_SOURCE_DIR}/external/jsoncpp/*.cpp)
 
 # Group source files into the Visual Studio tree structure
@@ -15,10 +14,6 @@ source_group_files(${source_files})
 # Group header files into the Visual Studio tree structure
 message(STATUS "Grouping header files in the tree structure... (from ${CMAKE_CURRENT_SOURCE_DIR})")
 source_group_files(${include_files})
-
-# Group ImGui source files into the Visual Studio tree structure
-message(STATUS "Grouping ImGui source files in the tree structure... (from ${CMAKE_CURRENT_SOURCE_DIR})")
-source_group_files(${imgui_source_files})
 
 # Group JsonCpp source files into the Visual Studio tree structure
 message(STATUS "Grouping JsonCpp source files in the tree structure... (from ${CMAKE_CURRENT_SOURCE_DIR})")
@@ -37,8 +32,18 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_directories(${CMAKE_SOURCE_DIR}/external/glm)
 include_directories(${CMAKE_SOURCE_DIR}/external/imgui/)
 include_directories(${CMAKE_SOURCE_DIR}/external/jsoncpp)
-include_directories(${CMAKE_SOURCE_DIR}/external/dirent)
+#include_directories(${CMAKE_SOURCE_DIR}/external/fmod/inc)
 
+# Include dirent only for windows
+# Linux have his own header
+IF (WIN32)
+    include_directories(${CMAKE_SOURCE_DIR}/external/dirent)
+ENDIF()
+
+# Use static lib of glew
+# Even if the lib is not directly linked,
+# the macro has to be set to prevent warnings
+add_definitions(-DGLEW_STATIC)
 
 # Create executable
 add_executable(${EXECUTABLE_NAME} ${source_files} ${jsoncpp_source_files} ${include_files})

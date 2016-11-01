@@ -1,15 +1,16 @@
-#include "json/json.h"
+#include "ComponentFactory.hpp"
+#include <dirent.h> // This include have to be called after "ComponentFactory.hpp"
+#include "Utils/Debug.hpp"
+#include "Utils/JsonReader.hpp"
+#include "Utils/Logger.hpp"
 #include "Utils/Exception.hpp"
 #include "Utils/RessourceManager.hpp"
-#include "ComponentFactory.hpp"
-#include "dirent.h"
-#include "Utils/Debug.hpp"
 
 #include "EntityFactory.hpp"
 
-
 std::unordered_map<std::string, std::list<std::string> >  EntityFactory::_entities;
-std::vector<std::string>  EntityFactory::_typesString = { ENTITIES_TYPES(GENERATE_STRING) };
+std::unordered_map<std::string, std::string>  EntityFactory::_entitiesFiles;
+std::vector<const char*>  EntityFactory::_typesString = { ENTITIES_TYPES(GENERATE_STRING) };
 EntityManager*  EntityFactory::_em = nullptr;
 
 EntityFactory::EntityFactory() {}
@@ -35,19 +36,21 @@ void EntityFactory::loadDirectory(const std::string& archetypesDir)
             std::string entityConf = ressourceManager->getFile(path);
 
             // Parse the configuration file with jsoncpp
-            Json::Reader jsonReader;
-            Json::Value parsed;
+            JsonReader jsonReader;
+            JsonValue parsed;
             std::string typeName;
             if (!jsonReader.parse(entityConf, parsed))
                 EXCEPT(IOException, "Cannot parse archetype \"%s\"", path.c_str());
 
-            typeName = parsed["name"].asString();
+            typeName = parsed.getString("name", "");
+            LOG_INFO("Load entity %s", typeName.c_str());
 
             if (!EntityFactory::entityTypeExists(typeName)) // The macro ENTITIES_TYPES did not create the type
                 EXCEPT(InvalidParametersException, "Failed to read entity archetype: Entity type \"%s\" does not exist", typeName.c_str());
 
             // Create entity components
-            for (Json::ValueIterator it = parsed["components"].begin(); it != parsed["components"].end(); it++)
+            auto &&components = parsed.get("components", {}).get();
+            for (Json::ValueIterator it = components.begin(); it != components.end(); it++)
             {
                 std::string componentName = it.key().asString();
 
@@ -55,7 +58,9 @@ void EntityFactory::loadDirectory(const std::string& archetypesDir)
                 if (!IComponentFactory::componentTypeExists(it.key().asString()))
                     EXCEPT(InvalidParametersException, "Failed to read entity archetype: Component type \"%s\" does not exist", componentName.c_str());
 
-                IComponentFactory::initComponent(typeName, componentName, *it);
+                LOG_INFO("Add %s component %s", typeName.c_str(), componentName.c_str());
+                IComponentFactory::initComponent(typeName, componentName, JsonValue(*it));
+                _entitiesFiles[typeName] = path;
                 _entities[typeName].push_back(componentName);
             }
         }
@@ -84,7 +89,7 @@ bool    EntityFactory::entityTypeExists(const std::string& type)
 
 Entity* EntityFactory::createEntity(eArchetype type)
 {
-    if ((int)type > _typesString.size() - 1)
+    if ((int)type > (int)_typesString.size() - 1)
     {
         EXCEPT(InvalidParametersException, "The entity type does not exist");
         return (nullptr);
@@ -97,20 +102,61 @@ Entity* EntityFactory::createEntity(eArchetype type)
     return (cloneEntity(typeName));
 }
 
+Entity* EntityFactory::createEntity(const std::string& typeName)
+{
+    return (cloneEntity(typeName));
+}
+
 void EntityFactory::bindEntityManager(EntityManager* em)
 {
     _em = em;
 }
 
+const std::vector<const char*>& EntityFactory::getTypesString()
+{
+    return _typesString;
+}
+
+const std::list<std::string>&   EntityFactory::getComponents(const std::string& typeName)
+{
+    return _entities[typeName];
+}
+
+const std::string& EntityFactory::getFile(const std::string& typeName)
+{
+    return _entitiesFiles[typeName];
+}
+
 Entity* EntityFactory::cloneEntity(const std::string& typeName)
 {
     Entity* clone = _em->createEntity();
+    auto entityComponents = _entities.find(typeName);
 
-    for (auto &&component: _entities[typeName])
+    if (entityComponents == _entities.end())
+        EXCEPT(InvalidParametersException, "The entity type %s does not exist", typeName);
+
+    for (auto &&component: entityComponents->second)
     {
         sComponent* component_ = IComponentFactory::createComponent(typeName, component);
         clone->addComponent(component_);
     }
 
+    clone->addComponent<sNameComponent>(typeName);
+
     return (clone);
+}
+
+void    EntityFactory::updateEntityComponent(const std::string& entityName, IComponentFactory* compFactory, sComponent* component)
+{
+    for (auto &&entity_: _em->getEntities())
+    {
+        Entity* entity = entity_.second;
+        sNameComponent* name = entity->getComponent<sNameComponent>();
+
+        if (name->value == entityName)
+        {
+            sComponent* entityComponent = entity->getComponent(component->getTypeInfo().hash_code());
+            entityComponent->update(component);
+        }
+    }
 }

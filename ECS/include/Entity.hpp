@@ -4,6 +4,7 @@
 #include <vector>
 #include <typeinfo>
 #include <cstdint>
+
 #include "Component.hh"
 
 class Entity
@@ -44,6 +45,19 @@ public:
             if (component->getTypeInfo().hash_code() == typeInfo.hash_code())
             {
                 return static_cast<componentType*>(component);
+            }
+        }
+
+        return (nullptr);
+    }
+
+    sComponent*                     getComponent(size_t componentHashCode)
+    {
+        for (auto component: _components)
+        {
+            if (component->getTypeInfo().hash_code() == componentHashCode)
+            {
+                return (component);
             }
         }
 

@@ -1,5 +1,10 @@
-#include "Core/GameState.hpp"
+#include <imgui.h>
+#include <imgui_impl_glfw_gl3.h>
+
 #include "Utils/Exception.hpp"
+#include "Window/GameWindow.hpp"
+
+#include "Core/GameState.hpp"
 
 GameState::GameState() {}
 
@@ -22,9 +27,20 @@ bool    GameState::update(float elapsedTime)
 {
     try
     {
-        for (auto system: _world.getSystems())
+        ImGui_ImplGlfwGL3_NewFrame();
         {
-            system->update(_world.getEntityManager(), elapsedTime);
+            // Update GameState debug windows
+            for (auto&& debugWinwdow: _debugWindows)
+            {
+                if (debugWinwdow->isDisplayed())
+                    debugWinwdow->build();
+            }
+
+            // Update GameState systems
+            for (auto&& system: _world.getSystems())
+            {
+                system->update(_world.getEntityManager(), elapsedTime);
+            }
         }
     }
     catch(const Exception &e)

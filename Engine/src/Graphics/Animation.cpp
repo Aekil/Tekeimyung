@@ -1,4 +1,5 @@
 #include "Utils/Exception.hpp"
+
 #include "Graphics/Animation.hpp"
 
 Animation::Animation(): _framesNb(0), _currentFrame(0), _spriteSheet(nullptr) {}
@@ -54,6 +55,9 @@ void    Animation::addFrames(const glm::vec2& baseOffset, const glm::vec2& sprit
 
 void    Animation::play(GLint textureShiftUniform)
 {
+    if (!_framesNb)
+        EXCEPT(InternalErrorException, "Attempt to play an animation with no frame");
+
     // Bind sprite sheet
     _spriteSheet->bind();
 

@@ -1,17 +1,25 @@
+#include <imgui.h>
+#include <imgui_impl_glfw_gl3.h>
+#include <glm/glm.hpp>
+
 #include "Systems/RenderingSystem.hpp"
 #include "Systems/MovementSystem.hpp"
 #include "Systems/GravitySystem.hpp"
 #include "Systems/CollisionSystem.hpp"
 #include "Systems/AISystem.hpp"
+#include "Systems/ParticleSystem.hpp"
 #include "Systems/InputSystem.hpp"
 #include "Window/GameWindow.hpp"
 #include <Window/HandleFullscreenEvent.hpp>
 #include "Core/Components.hh"
-
-#include <imgui.h>
-#include <imgui_impl_glfw_gl3.h>
+#include "Sound/SoundManager.hpp"
+#include "Utils/OverlayDebugWindow.hpp"
+#include "Utils/LogDebugWindow.hpp"
+#include "EntityDebugWindow.hpp"
+#include "Utils/Exception.hpp"
 
 #include "GameStates/PlayState.hpp"
+
 
 
 PlayState::PlayState(): _windowImgui(true) {}
@@ -27,7 +35,35 @@ void    PlayState::createTile(const glm::vec3& pos, eArchetype type)
     tilePos->value.y = pos.y;
     tilePos->value.x = pos.x;
     tilePos->z = pos.z;
-    (*_map)[pos.z][pos.y][pos.x] = tile->id;
+    (*_map)[(uint16_t)pos.z][(uint32_t)pos.y][(uint32_t)pos.x] = tile->id;
+}
+
+Entity* PlayState::createParticlesEmittor(const glm::vec3& pos, eArchetype type)
+{
+    Entity* ps;
+    sPositionComponent* psPos;
+
+    ps = EntityFactory::createEntity(type);
+    psPos = ps->getComponent<sPositionComponent>();
+    psPos->value.x = pos.x;
+    psPos->value.y = pos.y;
+    psPos->z = pos.z;
+    return (ps);
+}
+
+
+void    PlayState::goTo(Entity* emitter, Entity* character)
+{
+    sPositionComponent* emitterPos;
+    sPositionComponent* characterPos;
+
+    emitterPos = emitter->getComponent<sPositionComponent>();
+    characterPos = character->getComponent<sPositionComponent>();
+
+    if (!emitterPos || !characterPos)
+        EXCEPT(InternalErrorException, "sPositionComponent missing");
+
+    emitter->addComponent<sDirectionComponent>(glm::normalize(characterPos->value - emitterPos->value) * 4.0f);
 }
 
 bool    PlayState::init()
@@ -38,9 +74,10 @@ bool    PlayState::init()
 
     _map = new Map(em, 20, 15, 4);
 
+    createParticlesEmittor(glm::vec3(8.5f, 5.5f, 1.0f), eArchetype::EMITTER_WATER);
     // Create characters
     createEntity(glm::vec3(9, 5, 1), eArchetype::PLAYER);
-    createEntity(glm::vec3(0.5f, 5.5f, 1), eArchetype::ENEMY);
+    _enemy = createEntity(glm::vec3(0.5f, 5.5f, 1), eArchetype::ENEMY);
 
     // Init base map
     for (int y = 0; y < 15; y++) {
@@ -71,7 +108,16 @@ bool    PlayState::init()
     _world.addSystem<AISystem>();
     _world.addSystem<MovementSystem>(_map);
     _world.addSystem<CollisionSystem>(_map);
-    _world.addSystem<RenderingSystem>(_map);
+    _world.addSystem<ParticleSystem>();
+    _world.addSystem<RenderingSystem>(_map, dynamic_cast<ParticleSystem*>(_world.getSystems()[4])->getEmitters());
+
+    addDebugWindow<OverlayDebugWindow>();
+    addDebugWindow<EntityDebugWindow>(_map, glm::vec2(0, 80), glm::vec2(450, 350));
+    addDebugWindow<LogDebugWindow>(Logger::getInstance(), glm::vec2(0, 430), glm::vec2(300, 200));
+
+    // Play sound
+    static int idSoundBkgdMusic = SoundManager::getInstance()->registerSound("ressources/sounds/Kalimba.mp3", BACKGROUND_SOUND);
+    SoundManager::getInstance()->playSound(idSoundBkgdMusic);
 
     _pair = std::make_pair(Keyboard::eKey::F, new HandleFullscreenEvent());
     return (true);
@@ -86,45 +132,31 @@ Entity*    PlayState::createEntity(const glm::vec3& pos, eArchetype type)
     posEntity->value.y = pos.y;
     posEntity->z = pos.z;
 
-    (*_map)[pos.z].addEntity(entity->id);
+    (*_map)[(uint16_t)pos.z].addEntity(entity->id);
+
+  /*  static int idSoundSpawn = SoundManager::getInstance()->registerSound("ressources/sounds/spawn.mp3", DEFAULT_SOUND);
+    SoundManager::getInstance()->playSound(idSoundSpawn);*/
+
     return entity;
 }
 
 bool    PlayState::update(float elapsedTime)
 {
-    bool createEntityButton = false;
-    ImGui_ImplGlfwGL3_NewFrame();
+    static Timer timer;
+
+    if (timer.getElapsedTime() >= 1.0f)
     {
-        ImGui::SetNextWindowSize(ImVec2(400, 50), ImGuiSetCond_FirstUseEver);
-        ImGui::Begin("Debug", &_windowImgui);
-        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-        createEntityButton = ImGui::Button("Create entity");
-        ImGui::End();
+        // Create a fire emitter
+        Entity* fireEmitter = createParticlesEmittor(glm::vec3(5.5f, 5.5f, 1.0f), eArchetype::EMITTER_FIRE);
+        Entity* fireEmitter2 = createParticlesEmittor(glm::vec3(5.5f, 2.5f, 1.0f), eArchetype::EMITTER_FIRE);
+
+        // Change fire emitter direction to go to enemy direction
+        goTo(fireEmitter, _enemy);
+        goTo(fireEmitter2, _enemy);
+
+        // Reset timer
+        timer.reset();
     }
 
-    if (createEntityButton)
-    {
-        CollisionMap* collisionMap = _map->getCollisionMap();
-        eColType colType = eColType::CAN_NOT_WALK;
-
-        // Generate random position
-        glm::vec3 pos;
-        while (colType == eColType::CAN_NOT_WALK)
-        {
-            pos.x  = static_cast<float>(std::rand()) / (static_cast<float>(RAND_MAX / (_map->getWidth() - 1)));
-            pos.y  = static_cast<float>(std::rand()) / (static_cast<float>(RAND_MAX / (_map->getHeight() - 1)));
-            pos.z  = std::floor(1 + static_cast<float>(std::rand()) / (static_cast<float>(RAND_MAX / (_map->getLayersNb() - 1))));
-
-            colType = (*collisionMap)[pos.z - 1][std::floor(pos.y)][std::floor(pos.x)];
-        }
-
-        createEntity(pos, eArchetype::PLAYER);
-    }
-
-    GameState::update(elapsedTime);
-
-    if (GameWindow::getInstance()->getKeyboard().getStateMap()[_pair.first] == Keyboard::eKeyState::KEY_PRESSED)
-        _pair.second->execute();
-
-    return (true);
+    return (GameState::update(elapsedTime));
 }

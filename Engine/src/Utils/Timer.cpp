@@ -1,5 +1,6 @@
-#include "Utils/Timer.hpp"
 #include <GLFW/glfw3.h>
+
+#include "Utils/Timer.hpp"
 
 Timer::Timer()
 {
@@ -10,10 +11,10 @@ Timer::~Timer() {}
 
 void    Timer::reset()
 {
-    _lastReset = glfwGetTime();
+    _lastReset = (float)glfwGetTime();
 }
 
-double  Timer::getElapsedTime() const
+float   Timer::getElapsedTime() const
 {
-    return (glfwGetTime() - _lastReset);
+    return ((float)glfwGetTime() - _lastReset);
 }

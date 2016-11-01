@@ -274,6 +274,16 @@ Keyboard::KeyboardStringMap& Keyboard::getStringMap()
     return (_stringMap);
 }
 
+std::string Keyboard::keyToString(Keyboard::eKey key)
+{
+    for (auto it = _stringMap.begin(); it != _stringMap.end(); it++)
+    {
+        if (it->second == key)
+            return (it->first);
+    }
+    return ("");
+}
+
 Keyboard::eKeyState Keyboard::operator[](Keyboard::eKey key)
 {
 	return (_stateMap[key]);

@@ -11,8 +11,14 @@
                 "y": 0
             },
             "sRenderComponent": {
-                "texture": "ressources/sprites/characters/soldierSpriteSheet_red.png",
+                "texture": "ressources/sprites/characters/soldierSpriteSheet.png",
+                "color": {
+                    "r": 1,
+                    "g": 0,
+                    "b": 0
+                },
                 "type": "OBJECT",
+                "animated": true,
                 "animation": {
                     "orientations": ["NW", "N", "NE", "E", "W", "SW", "S", "SE"],
                     "frames": {

@@ -1,4 +1,5 @@
 #include <cstring>
+
 #include "Utils/Debug.hpp"
 
 #include "Core/CollisionMap.hpp"

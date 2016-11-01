@@ -1,4 +1,6 @@
 #include <cstring>
+#include <cmath>
+
 #include "Utils/Debug.hpp"
 
 #include "Core/Map.hpp"

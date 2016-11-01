@@ -1,8 +1,14 @@
-#include <Utils/Exception.hpp>
 #include <sstream>
 
+#include "Utils/Logger.hpp"
+
+#include "Utils/Exception.hpp"
+
 Exception::Exception(const char *typeName, const std::string &description, const char* file, const char* function, uint32_t line)
-    : _typeName{typeName}, _description{description}, _file{file}, _function{function}, _line{line} {}
+    : _typeName{typeName}, _description{description}, _file{file}, _function{function}, _line{line}
+    {
+        LOG_ERROR("Exception thrown: %s", what());
+    }
 
 const std::string& Exception::getTypeName() const {
     return _typeName;
@@ -24,7 +30,7 @@ const long Exception::getLine() const {
     return _line;
 }
 
-const char* Exception::what() const {
+const char* Exception::what() const noexcept {
     std::stringstream msg;
 
     msg << _typeName << ": " << _description << std::endl;

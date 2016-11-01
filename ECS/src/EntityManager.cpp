@@ -1,7 +1,7 @@
 #include <algorithm>
-#include "EntityManager.hpp"
-#include <algorithm>
 #include <random>
+
+#include "EntityManager.hpp"
 
 int                         EntityManager::_entityId = 1;
 

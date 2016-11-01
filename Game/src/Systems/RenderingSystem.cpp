@@ -2,18 +2,19 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <vector>
-
-#include <Systems/RenderingSystem.hpp>
-#include <Utils/Debug.hpp>
-#include <Utils/Exception.hpp>
-#include <Window/GameWindow.hpp>
-
 #include <imgui.h>
-#include "imgui_impl_glfw_gl3.h"
+#include <imgui_impl_glfw_gl3.h>
+
+#include "Utils/Debug.hpp"
+#include "Utils/Exception.hpp"
+#include "Window/GameWindow.hpp"
+
+#include "Systems/RenderingSystem.hpp"
 
 
-RenderingSystem::RenderingSystem(Map* map): _map(map)
+RenderingSystem::RenderingSystem(Map* map, std::unordered_map<uint32_t, sEmitter*>* particleEmitters): _map(map), _particleEmitters(particleEmitters)
 {
+
     addDependency<sPositionComponent>();
     addDependency<sRenderComponent>();
 }
@@ -51,6 +52,10 @@ void    RenderingSystem::renderEntity(Entity* entity)
     GLint uniTrans = _shaderProgram.getUniformLocation("trans");
     glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(trans));
 
+    // Color vector
+    GLint uniColor = _shaderProgram.getUniformLocation("color");
+    glUniform4f(uniColor, sprite->getColor().x, sprite->getColor().y, sprite->getColor().z, 1.0f);
+
     // Draw sprite
     sprite->draw();
 }
@@ -64,7 +69,7 @@ void    RenderingSystem::renderEntities(EntityManager& em, std::list<uint32_t>::
         return;
 
     entity = em.getEntity(*it);
-    ASSERT(entity, "The entity should exists");
+    ASSERT(entity != nullptr, "The entity should exists");
 
     position = entity->getComponent<sPositionComponent>();
     while (std::floor(position->value.x) == x && std::floor(position->value.y) == y)
@@ -76,10 +81,58 @@ void    RenderingSystem::renderEntities(EntityManager& em, std::list<uint32_t>::
             break;
 
         entity = em.getEntity(*it);
-        ASSERT(entity, "The entity should exists");
+        ASSERT(entity != nullptr, "The entity should exists");
 
         position = entity->getComponent<sPositionComponent>();
     }
+}
+
+void    RenderingSystem::renderParticles(EntityManager& em)
+{
+    // Activate additive blending
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+
+    for (auto &&it: *_particleEmitters)
+    {
+        auto &&emitter = it.second;
+        Entity* entity = em.getEntity(it.first);
+        sRenderComponent *sprite = entity->getComponent<sRenderComponent>();
+
+
+        if (!sprite->_sprite)
+        {
+            Sprite::sCreateInfo createInfo;
+            sprite->_sprite = new Sprite(sprite->type, _shaderProgram);
+
+            getSpriteCreateInfo(createInfo, sprite);
+            sprite->_sprite->loadFromTexture(createInfo);
+        }
+
+        for (unsigned int i = 0; i < emitter->particlesNb; i++)
+        {
+            auto &&particle = emitter->particles[i];
+
+            // Model matrice
+            glm::mat4 trans;
+            glm::mat4 scale;
+            glm::mat4 modelTrans;
+            trans = glm::translate(trans, glm::vec3(particle.pos.x, particle.pos.y, 0.0f));
+            scale = glm::scale(scale, glm::vec3(particle.size, particle.size, particle.size));
+            modelTrans = trans * scale;
+            GLint uniTrans = _shaderProgram.getUniformLocation("trans");
+            glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(modelTrans));
+
+            // Color vector
+            GLint uniColor = _shaderProgram.getUniformLocation("color");
+            glUniform4f(uniColor, particle.color.x, particle.color.y, particle.color.z, particle.color.w);
+
+            // Draw sprite
+            sprite->_sprite->draw();
+        }
+    }
+
+    // Activate transparency blending
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void    RenderingSystem::update(EntityManager& em, float elapsedTime)
@@ -106,7 +159,7 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
             for (uint32_t x = 0; x < _map->getWidth(); x++)
             {
                 // Orthogonal projection matrice
-                glm::mat4 ortho = glm::ortho(0.0f, (float)GameWindow::getInstance()->getWidth() * 1.3f, 0.0f, (float)GameWindow::getInstance()->getHeight() * 1.3f);
+                glm::mat4 ortho = glm::ortho(0.0f, (float)GameWindow::getInstance()->getScreenWidth() * 1.3f, 0.0f, (float)GameWindow::getInstance()->getScreenHeight() * 1.3f);
                 GLint uniProj = _shaderProgram.getUniformLocation("proj");
                 glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(ortho));
 
@@ -120,7 +173,9 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
         }
     }
 
-    ImGui::ShowTestWindow();
+    renderParticles(em);
+
+    // Display imgui windows
     ImGui::Render();
 
     // Display screen
@@ -137,15 +192,34 @@ Sprite*   RenderingSystem::getSprite(Entity* entity)
     // The entity does not exist in the render system
     if (!sprite->_sprite)
     {
+        Sprite::sCreateInfo createInfo;
         sprite->_sprite = new Sprite(sprite->type, _shaderProgram);
-        sprite->_sprite->loadFromTexture(sprite->texture, sprite->animated, sprite->frames, sprite->spriteSheetOffset, sprite->orientations, sprite->spriteSize);
+
+        getSpriteCreateInfo(createInfo, sprite);
+        sprite->_sprite->loadFromTexture(createInfo);
 
     }
 
     // Update entity graphic position
     bool moved = direction && direction->moved;
     eOrientation orientation = direction ? direction->orientation : eOrientation::N;
-    sprite->_sprite->update(position->value, position->z, moved, orientation);
+    sprite->_sprite->update(position->value, position->z, moved, orientation, sprite->color);
 
     return (sprite->_sprite);
+}
+
+void    RenderingSystem::getSpriteCreateInfo(Sprite::sCreateInfo& createInfo, sRenderComponent *sprite)
+{
+    createInfo.textureFile = sprite->texture;
+    createInfo.animated = sprite->animated;
+    createInfo.frames = sprite->frames;
+    createInfo.offset = sprite->spriteSheetOffset;
+    createInfo.orientations = sprite->orientations;
+    createInfo.spriteSize = sprite->spriteSize;
+    createInfo.color = sprite->color;
+}
+
+const ShaderProgram&  RenderingSystem::getShaderProgram() const
+{
+    return _shaderProgram;
 }

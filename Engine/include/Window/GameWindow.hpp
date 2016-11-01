@@ -5,8 +5,8 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#include <Window/Keyboard.hpp>
-#include <Window/Mouse.hpp>
+#include "Window/Keyboard.hpp"
+#include "Window/Mouse.hpp"
 
 #define WINDOW_DEFAULT_TITLE    "Window default title - Powered by "
 
@@ -15,12 +15,12 @@ class GameWindow
 public:
     explicit                            GameWindow(const char *title = WINDOW_DEFAULT_TITLE);
     virtual                             ~GameWindow();
-    
+
     bool                                initialize();
 	void								registerEvents();
-    
-    int                                 getWidth() const;
-    int	                                getHeight() const;
+
+    int                                 getScreenWidth() const;
+    int	                                getScreenHeight() const;
     std::string	                        getTitle() const;
     bool                                isFullscreen() const;
     static std::shared_ptr<GameWindow>  getInstance();
@@ -41,8 +41,14 @@ public:
     static void                         closeCallback(GLFWwindow* window);
 	static void							keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
     static void                         buttonCallback(GLFWwindow* window, int button, int action, int mods);
+    static bool                         sendImGuibuttonCallback(GameWindow* gameWindow, GLFWwindow* window, int button, int action, int mods);
+
     static void                         cursorEnterCallback(GLFWwindow* window, int entered);
     static void                         cursorPositionCallback(GLFWwindow* window, double xPos, double yPos);
+
+    static void                         charCallback(GLFWwindow* window, unsigned int c);
+    static bool                         sendImGuiCharCallback(GameWindow* gameWindow, GLFWwindow* window, unsigned int c);
+
 private:
     GLFWmonitor*                        _monitor;
     GLFWwindow*                         _window;

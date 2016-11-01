@@ -1,6 +1,7 @@
-#include <Core/Engine.hpp>
-#include <Utils/Logger.hpp>
-#include <Utils/Timer.hpp>
+#include "Utils/Logger.hpp"
+#include "Utils/Timer.hpp"
+
+#include "Core/Engine.hpp"
 
 Engine::Engine() {}
 
@@ -8,18 +9,19 @@ Engine::~Engine() {}
 
 bool    Engine::init()
 {
-    std::shared_ptr<Logger> logger;
-
     _window = std::make_shared<GameWindow>();
     if (!_window->initialize())
         return (false);
 
-    logger = std::make_shared<Logger>();
-    if (!logger->initialize())
+    _logger = Logger::getInstance();
+    if (!_logger->initialize())
+        return (false);
+
+    _soundManager = SoundManager::getInstance();
+    if (!_soundManager->initialize())
         return (false);
 
     GameWindow::setInstance(_window);
-    Logger::setInstance(logger);
     return (true);
 }
 
@@ -27,7 +29,7 @@ bool    Engine::run()
 {
     // FPS counter
     Timer       timer;
-    double      timePerFrame;
+    float       timePerFrame;
 
     timePerFrame = 1.0f / 60.0f;
     while (_window->isRunning())
@@ -35,9 +37,14 @@ bool    Engine::run()
         // Run one frame each 16ms
         if (timer.getElapsedTime() >= timePerFrame)
         {
+            float elapsedTime = timer.getElapsedTime();
+            timer.reset();
             _window->getKeyboard().updateKeyboardState();
             _window->getMouse().updateMouseState();
             _window->pollEvents();
+
+            _soundManager->update();
+
             if (!_gameStateManager.hasStates())
             {
                 return (true);
@@ -45,7 +52,7 @@ bool    Engine::run()
 
             auto &&currentState = _gameStateManager.getCurrentState();
 
-            if (!currentState->update(timer.getElapsedTime()))
+            if (currentState->update(elapsedTime) == false)
             {
                 _gameStateManager.removeCurrentState();
             }
@@ -57,6 +64,7 @@ bool    Engine::run()
 
 bool    Engine::stop()
 {
+    _soundManager->shutdown();
     Logger::getInstance()->shutdown();
     return (true);
 }

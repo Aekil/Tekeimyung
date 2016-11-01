@@ -1,0 +1,59 @@
+{
+    "name": "EMITTER_FIRE",
+    "components": {
+            "sPositionComponent": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "sRenderComponent": {
+                "texture": "ressources/sprites/particles/particle_circle.png",
+                "type": "OBJECT"
+            },
+            "sTypeComponent": {
+                "type": "OBJECT"
+            },
+            "sParticleEmitterComponent": {
+                "rate": 0,
+                "spawn_nb": 9,
+                "life": 80,
+                "life_variance": 30,
+                "angle": 301,
+                "angle_variance": 67,
+                "speed": 101,
+                "speed_variance": 22,
+                "color": {
+                    "start": {
+                        "r": 1.0,
+                        "g": 0.3,
+                        "b": 0,
+                        "a": 0.6
+                    },
+                    "finish": {
+                        "r": 1.0,
+                        "g": 0.64,
+                        "b": 0,
+                        "a": 0
+                    },
+                    "start_variance": {
+                        "r": 0,
+                        "g": 0,
+                        "b": 0,
+                        "a": 0
+                    },
+                    "finish_variance": {
+                        "r": 0,
+                        "g": 0,
+                        "b": 0,
+                        "a": 0
+                    }
+                },
+                "size": {
+                    "start": 1.0,
+                    "start_variance": 0.0,
+                    "finish": 0.5,
+                    "finish_variance": 0.0
+                }
+            }
+        }
+}

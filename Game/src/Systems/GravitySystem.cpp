@@ -1,5 +1,6 @@
-#include "Systems/GravitySystem.hpp"
 #include "Core/Components.hh"
+
+#include "Systems/GravitySystem.hpp"
 
 GravitySystem::GravitySystem()
 {
