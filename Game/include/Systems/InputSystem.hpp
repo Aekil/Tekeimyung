@@ -19,5 +19,8 @@ public:
     InputSystem();
     virtual ~InputSystem();
 
-    virtual void update(EntityManager &em, float elapsedTime);
+    virtual void    update(EntityManager &em, float elapsedTime);
+
+private:
+    void            movementKeys(Entity *entity);
 };
