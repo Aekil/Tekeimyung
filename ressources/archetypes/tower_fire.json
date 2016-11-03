@@ -11,6 +11,11 @@
                 "type": "TILE",
                 "animated": false
             },
+			"sTowerAIComponent": {
+				"radius": 1,
+				"fire_rate": 1,
+				"projectile_speed": 1
+			},
             "sTypeComponent": {
                 "type": "TILE_NOT_WALKABLE"
             }

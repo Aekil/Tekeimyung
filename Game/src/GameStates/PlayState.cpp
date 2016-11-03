@@ -6,6 +6,7 @@
 #include "Systems/MovementSystem.hpp"
 #include "Systems/GravitySystem.hpp"
 #include "Systems/CollisionSystem.hpp"
+#include <Systems/TowerAISystem.hpp>
 #include "Systems/AISystem.hpp"
 #include "Systems/ParticleSystem.hpp"
 #include "Systems/InputSystem.hpp"
@@ -105,6 +106,7 @@ bool    PlayState::init()
     createTile(glm::vec3(7, 7, 1), eArchetype::TOWER_FIRE);
 
     _world.addSystem<InputSystem>();
+    //_world.addSystem<TowerAISystem>(_map);
     _world.addSystem<AISystem>();
     _world.addSystem<MovementSystem>(_map);
     _world.addSystem<CollisionSystem>(_map);
