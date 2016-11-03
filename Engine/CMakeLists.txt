@@ -65,8 +65,14 @@ IF (WIN32)
   set_property(SOURCE ${imgui_source_files} APPEND_STRING PROPERTY COMPILE_FLAGS "/wd4244")
 ENDIF()
 
+#Include Assimp directory on Windows
+IF (WIN32)
+  include_directories(${CMAKE_SOURCE_DIR}/external/Assimp/include)
+  find_library(assimp assimp PATHS ${CMAKE_SOURCE_DIR}/external/Assimp/lib/x64)
+ENDIF()
+
 # Link libraries with executable
-target_link_libraries(${EXECUTABLE_NAME} ECS ${GLFW_LIBRARY} ${GLEW_LIBRARY} ${OPENGL_gl_LIBRARY} ${FMOD_LIBRARY})
+target_link_libraries(${EXECUTABLE_NAME} ECS ${GLFW_LIBRARY} ${GLEW_LIBRARY} ${OPENGL_gl_LIBRARY} ${FMOD_LIBRARY} ${assimp})
 
 
 # Store include dir into variable and share it with other projects through cache
