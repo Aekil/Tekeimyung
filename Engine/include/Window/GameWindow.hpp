@@ -41,6 +41,7 @@ public:
     static void                         closeCallback(GLFWwindow* window);
 	static void							keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
     static void                         buttonCallback(GLFWwindow* window, int button, int action, int mods);
+    static bool                         sendImGuikeyCallback(GameWindow* gameWindow, GLFWwindow* window, int key, int scancode, int action, int mods);
     static bool                         sendImGuibuttonCallback(GameWindow* gameWindow, GLFWwindow* window, int button, int action, int mods);
 
     static void                         cursorEnterCallback(GLFWwindow* window, int entered);

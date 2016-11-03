@@ -71,5 +71,5 @@ bool    Engine::stop()
 
 GameStateManager&   Engine::getGameStateManager()
 {
-    return _gameStateManager;
+    return (_gameStateManager);
 }

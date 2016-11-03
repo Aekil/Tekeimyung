@@ -99,5 +99,5 @@ void    Logger::log(Logger::eLogLevel level, const std::string& message)
 
 const ImGuiTextBuffer&  Logger::getLog() const
 {
-    return _log;
+    return (_log);
 }

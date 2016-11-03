@@ -156,6 +156,7 @@ void    GameWindow::toggleFullscreen()
         refreshRate = vidmode->refreshRate;
         glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
         glfwSetWindowMonitor(_window, nullptr, 0, 0, _screenWidth, _screenHeight, refreshRate);
+        LOG_INFO("Toggled windowed mode.");
     }
     else
     {
@@ -164,6 +165,7 @@ void    GameWindow::toggleFullscreen()
         _screenHeight = vidmode->height;
         refreshRate = vidmode->refreshRate;
         glfwSetWindowMonitor(_window, _monitor, 0, 0, _screenWidth, _screenHeight, refreshRate);
+        LOG_INFO("Toggled fullscreen mode.");
     }
 }
 

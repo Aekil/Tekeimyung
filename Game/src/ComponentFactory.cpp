@@ -544,3 +544,45 @@ bool    ComponentFactory<sParticleEmitterComponent>::updateEditor(const std::str
 
     return (changed);
 }
+
+sComponent* ComponentFactory<sTowerAIComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
+{
+    sTowerAIComponent*  component;
+
+    component = new sTowerAIComponent();
+    component->radius = json.getFloat("radius", 1.0f);
+    component->fireRate = json.getFloat("fire_rate", 1.0f);
+    component->projectileSpeed = json.getFloat("projectile_speed", 1.0f);
+
+    return (component);
+}
+
+JsonValue&  ComponentFactory<sTowerAIComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
+{
+    JsonValue&  json = _componentsJson[entityType];
+    sTowerAIComponent*  component;
+    
+    component = static_cast<sTowerAIComponent*>(_components[entityType]);
+    json.setFloat("radius", component->radius);
+    json.setFloat("fire_rate", component->fireRate);
+    json.setFloat("projectile_speed", component->projectileSpeed);
+    return (json);
+}
+
+bool    ComponentFactory<sTowerAIComponent>::updateEditor(const std::string& entityType, sComponent** component_)
+{
+    sTowerAIComponent*  component;
+    bool    changed;
+
+    component = static_cast<sTowerAIComponent*>(_components[entityType]);
+    *component_ = component;
+    changed = false;
+    if (ImGui::CollapsingHeader("sTowerAIComponent", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        changed |= ImGui::SliderFloat("Radius", &component->radius, 0.0f, 1.0f);
+        changed |= ImGui::SliderFloat("Fire rate", &component->fireRate, 0.0f, 1.0f);
+        changed |= ImGui::SliderFloat("Projectile speed", &component->projectileSpeed, 0.0f, 1.0f);
+    }
+
+    return (changed);
+}

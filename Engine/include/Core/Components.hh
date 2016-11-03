@@ -392,3 +392,33 @@ struct sNameComponent : sComponent
 
     std::string value;
 };
+
+struct sTowerAIComponent : sComponent
+{
+    sTowerAIComponent() = default;
+    //sTowerAIComponent();
+
+    virtual sComponent* clone()
+    {
+        sTowerAIComponent*  component = new sTowerAIComponent();
+        component->update(this);
+
+        return (component);
+    }
+
+    virtual void    update(sTowerAIComponent* component)
+    {
+        this->radius = component->radius;
+        this->fireRate = component->fireRate;
+        this->projectileSpeed = component->projectileSpeed;
+    }
+
+    virtual void    update(sComponent* component)
+    {
+        update(static_cast<sTowerAIComponent*>(component));
+    }
+
+    float   radius;
+    float   fireRate;
+    float   projectileSpeed;
+};

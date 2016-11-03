@@ -158,5 +158,7 @@ bool    PlayState::update(float elapsedTime)
         timer.reset();
     }
 
+    if (GameWindow::getInstance()->getKeyboard().getStateMap()[_pair.first] == Keyboard::eKeyState::KEY_PRESSED)
+        _pair.second->execute();
     return (GameState::update(elapsedTime));
 }
