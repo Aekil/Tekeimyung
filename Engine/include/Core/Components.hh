@@ -1,6 +1,6 @@
 #pragma once
 
-#include <iostream>
+#include <memory>
 #include <vector>
 #include <string>
 #include <cstdint>
@@ -9,15 +9,15 @@
 
 #include "Window/Keyboard.hpp"
 #include "Graphics/Animation.hpp"
-#include "Graphics/Sprite.hpp"
+#include "Graphics/Model.hpp"
 #include "Component.hh"
 
 
 struct sRenderComponent: sComponent
 {
     sRenderComponent() = default;
-    sRenderComponent(Sprite::eType type, const std::string& texture, bool animated = false, glm::vec2 frames = {0, 0}, const std::vector<eOrientation>& orientations = {}, const glm::vec2& spriteSize = {0, 0})
-    : texture(texture), type(type), animated(animated), frames(frames), orientations(orientations), spriteSize(spriteSize), _sprite(nullptr), spriteSheetOffset(0, 0) {}
+    sRenderComponent(const std::string& modelFile, bool animated = false)
+    : modelFile(modelFile), animated(animated) {}
 
     virtual sComponent* clone()
     {
@@ -29,14 +29,10 @@ struct sRenderComponent: sComponent
 
     virtual void update(sRenderComponent* component)
     {
-        this->texture = component->texture;
+        this->modelFile = component->modelFile;
         this->color = component->color;
-        this->type = component->type;
         this->animated = component->animated;
-        this->frames = component->frames;
-        this->spriteSize = component->spriteSize;
-        this->orientations = component->orientations;
-        this->spriteSheetOffset = component->spriteSheetOffset;
+        this->_model = component->_model;
     }
 
     virtual void update(sComponent* component)
@@ -44,22 +40,11 @@ struct sRenderComponent: sComponent
         update(static_cast<sRenderComponent*>(component));
     }
 
-    std::string texture;
+    std::string modelFile;
     glm::vec3 color;
-    Sprite::eType type;
     bool animated;
 
-    // Frames numbers in sprite sheet
-    glm::uvec2 frames;
-
-    // Sprite sheet offset
-    glm::vec2 spriteSheetOffset;
-
-    // Sprite width and height
-    glm::vec2 spriteSize;
-    Sprite* _sprite;
-
-    std::vector<eOrientation> orientations;
+    std::shared_ptr<Model> _model;
 };
 
 struct sPositionComponent: sComponent

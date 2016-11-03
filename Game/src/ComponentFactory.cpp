@@ -107,35 +107,11 @@ IComponentFactory*   IComponentFactory::getFactory(const std::string& name)
 sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
 {
     sRenderComponent* component = new sRenderComponent();
-    JsonValue animation = json.get("animation", {});
 
     // Initialize some values
-    component->animated = false;
-    component->spriteSheetOffset = {0, 0};
-
-    // Sprite texture
-    component->texture = json.getString("texture", "");
-
-    // Sprite type
-    component->type = stringToSpriteType(json.getString("type", ""));
-
-    // Sprite size
-    component->spriteSize = json.getVec2f("spriteSize", { "width", "height" }, { 0.0f, 0.0f });
-
-    // Sprite color
+    component->animated = json.getBool("animated", false);
+    component->modelFile = json.getString("model", "");
     component->color = json.getColor3f("color", { 1.0f, 1.0f, 1.0f });
-
-    // Sprite animation
-    if (json.getBool("animated", false) && animation.size() > 0)
-    {
-        component->animated = true;
-        component->frames = animation.getUVec2f("frames", { 0, 0 });
-        component->spriteSheetOffset = animation.getVec2f("offset", { 0.0f, 0.0f });
-        for (auto &&orientation: animation.get("orientations", {}).get())
-        {
-            component->orientations.push_back(stringToOrientation(orientation.asString()));
-        }
-    }
 
     return (component);
 }
@@ -143,26 +119,12 @@ sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& 
 JsonValue&    ComponentFactory<sRenderComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
 {
     std::vector<std::string> orientations;
-    JsonValue animation;
     JsonValue& json = _componentsJson[entityType];
     sRenderComponent* component = static_cast<sRenderComponent*>(_components[entityType]);
 
 
-    // Write animation
-    animation.setUVec2f("frames", component->frames);
-    animation.setVec2f("offset", component->spriteSheetOffset);
-    // Convert orientations into string
-    for (auto &&orientation: component->orientations)
-    {
-        orientations.push_back(orientationToString(orientation));
-    }
-    animation.setStringVec("orientations", orientations);
-    json.setValue("animation", animation);
     json.setBool("animated", component->animated);
-
-    json.setString("texture", component->texture);
-    json.setString("type", spriteTypeToString(component->type));
-    json.setVec2f("spriteSize", component->spriteSize);
+    json.setString("model", component->modelFile);
     json.setColor3f("color", component->color);
 
     return (json);
@@ -181,26 +143,6 @@ bool    ComponentFactory<sRenderComponent>::updateEditor(const std::string& enti
     }
 
     return (changed);
-}
-
-Sprite::eType ComponentFactory<sRenderComponent>::stringToSpriteType(const std::string& spriteTypeStr)
-{
-    if (spriteTypeStr == "OBJECT")
-        return Sprite::eType::OBJECT;
-    else if (spriteTypeStr == "TILE")
-        return Sprite::eType::TILE;
-
-    EXCEPT(NotImplementedException, "Failed to load sRenderComponent:  the sprite type %s does not exist", spriteTypeStr);
-}
-
-std::string ComponentFactory<sRenderComponent>::spriteTypeToString(Sprite::eType spriteType)
-{
-    if (spriteType == Sprite::eType::OBJECT)
-        return ("OBJECT");
-    else if (spriteType == Sprite::eType::TILE)
-        return ("TILE");
-
-    EXCEPT(NotImplementedException, "Failed to save sRenderComponent:  the sprite type does not exist");
 }
 
 

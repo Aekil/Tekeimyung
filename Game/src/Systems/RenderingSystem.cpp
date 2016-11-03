@@ -7,6 +7,7 @@
 
 #include "Utils/Debug.hpp"
 #include "Utils/Exception.hpp"
+#include "Utils/RessourceManager.hpp"
 #include "Window/GameWindow.hpp"
 
 #include "Systems/RenderingSystem.hpp"
@@ -44,22 +45,12 @@ bool    RenderingSystem::init()
 
 void    RenderingSystem::renderEntity(Entity* entity)
 {
-    Sprite* sprite = getSprite(entity);
+    auto&& model = getModel(entity);
 
-    // Model matrice
-    glm::mat4 trans;
-    trans = glm::translate(trans, glm::vec3(sprite->getPos().x, sprite->getPos().y, 0.0f));
-    GLint uniTrans = _shaderProgram.getUniformLocation("trans");
-    glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(trans));
-
-    // Color vector
-    GLint uniColor = _shaderProgram.getUniformLocation("color");
-    glUniform4f(uniColor, sprite->getColor().x, sprite->getColor().y, sprite->getColor().z, 1.0f);
-
-    // Draw sprite
-    sprite->draw();
+    // Draw model
+    model->draw(_shaderProgram);
 }
-
+/*
 void    RenderingSystem::renderEntities(EntityManager& em, std::list<uint32_t>::const_iterator& it, uint16_t layer, uint32_t x, uint32_t y)
 {
     Entity* entity;
@@ -134,12 +125,28 @@ void    RenderingSystem::renderParticles(EntityManager& em)
     // Activate transparency blending
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
-
+*/
 void    RenderingSystem::update(EntityManager& em, float elapsedTime)
 {
     // Clear color buffer
     glClear (GL_COLOR_BUFFER_BIT);
 
+    // Projection matrix
+    glm::mat4 proj = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 1000.0f);
+    GLint uniProj = _shaderProgram.getUniformLocation("proj");
+    glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(proj));
+
+    // View matrix
+    glm::mat4 view = glm::lookAt(glm::vec3(-50.0f, 150.0f, 100.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    GLint uniView = _shaderProgram.getUniformLocation("view");
+    glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(view));
+
+    // Iterate over particle emitters
+    forEachEntity(em, [&](Entity *entity) {
+        renderEntity(entity);
+    });
+
+/*
     for (auto &&id: (*_map)[1].getEntities())
     {
         sPositionComponent *position;
@@ -170,52 +177,31 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
                 renderEntities(em, it, layer, x, y);
             }
         }
-    }
+    }*/
 
-    renderParticles(em);
+    //renderParticles(em);
 
     // Display imgui windows
-    ImGui::Render();
+    //ImGui::Render();
 
     // Display screen
     GameWindow::getInstance()->display();
 }
 
-Sprite*   RenderingSystem::getSprite(Entity* entity)
+std::shared_ptr<Model>  RenderingSystem::getModel(Entity* entity)
 {
     int id = entity->id;
-    sRenderComponent *sprite = entity->getComponent<sRenderComponent>();
-    sPositionComponent *position = entity->getComponent<sPositionComponent>();
-    sDirectionComponent *direction = entity->getComponent<sDirectionComponent>();
+    sRenderComponent *model = entity->getComponent<sRenderComponent>();
+/*    sPositionComponent *position = entity->getComponent<sPositionComponent>();
+    sDirectionComponent *direction = entity->getComponent<sDirectionComponent>();*/
 
     // The entity does not exist in the render system
-    if (!sprite->_sprite)
+    if (!model->_model)
     {
-        Sprite::sCreateInfo createInfo;
-        sprite->_sprite = new Sprite(sprite->type, _shaderProgram);
-
-        getSpriteCreateInfo(createInfo, sprite);
-        sprite->_sprite->loadFromTexture(createInfo);
-
+        model->_model = RessourceManager::getInstance()->getModel(model->modelFile);
     }
 
-    // Update entity graphic position
-    bool moved = direction && direction->moved;
-    eOrientation orientation = direction ? direction->orientation : eOrientation::N;
-    sprite->_sprite->update(position->value, position->z, moved, orientation, sprite->color);
-
-    return (sprite->_sprite);
-}
-
-void    RenderingSystem::getSpriteCreateInfo(Sprite::sCreateInfo& createInfo, sRenderComponent *sprite)
-{
-    createInfo.textureFile = sprite->texture;
-    createInfo.animated = sprite->animated;
-    createInfo.frames = sprite->frames;
-    createInfo.offset = sprite->spriteSheetOffset;
-    createInfo.orientations = sprite->orientations;
-    createInfo.spriteSize = sprite->spriteSize;
-    createInfo.color = sprite->color;
+    return (model->_model);
 }
 
 const ShaderProgram&  RenderingSystem::getShaderProgram() const

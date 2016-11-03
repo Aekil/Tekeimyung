@@ -44,21 +44,23 @@ std::string RessourceManager::getBasename(const std::string& fileName)
     return basename;
 }
 
+/*
+** File
+*/
+
 std::string RessourceManager::getFile(const std::string& fileName)
 {
-    // Files are stored with their basename
+    // Textures are stored with their basename
     std::string basename = getBasename(fileName);
 
-    try
+    // The file is not loaded
+    if (_files.find(basename) == _files.end())
     {
-        auto &&file = _files.at(basename);
-        return file.content;
-    }
-    catch(...)
-    {
-        // The file is not loaded
         return loadFile(basename, fileName);
     }
+
+    auto &&file = _files.at(basename);
+    return file.content;
 }
 
 void        RessourceManager::saveFile(const std::string& fileName, const std::string fileContent)
@@ -116,19 +118,24 @@ std::string RessourceManager::loadFile(const std::string basename, const std::st
     return _files[basename].content;
 }
 
+
+/*
+** Texture
+*/
+
 Texture&    RessourceManager::getTexture(const std::string& fileName)
 {
     // Textures are stored with their basename
     std::string basename = getBasename(fileName);
 
-    try {
-        auto &&texture = _textures.at(basename);
-        return texture;
-    }
-    catch(...) {
-        // The texture is not loaded
+    // The texture is not loaded
+    if (_textures.find(basename) == _textures.end())
+    {
         return loadTexture(basename, fileName);
     }
+
+    auto &&texture = _textures.at(basename);
+    return texture;
 }
 
 Texture&    RessourceManager::loadTexture(const std::string basename, const std::string& fileName)
@@ -137,4 +144,32 @@ Texture&    RessourceManager::loadTexture(const std::string basename, const std:
     _textures[basename].loadFromFile(fileName);
 
     return _textures[basename];
+}
+
+
+/*
+** Model
+*/
+
+std::shared_ptr<Model>  RessourceManager::getModel(const std::string& fileName)
+{
+    // Models are stored with their basename
+    std::string basename = getBasename(fileName);
+
+    // The model is not loaded
+    if (_models.find(basename) == _models.end())
+    {
+        return loadModel(basename, fileName);
+    }
+
+    auto &&model = _models.at(basename);
+    return model;
+}
+
+std::shared_ptr<Model>  RessourceManager::loadModel(const std::string basename, const std::string& fileName)
+{
+    _models[basename] = std::make_shared<Model>();
+    _models[basename]->loadFromFile(fileName);
+
+    return _models[basename];
 }

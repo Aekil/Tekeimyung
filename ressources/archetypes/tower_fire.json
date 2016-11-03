@@ -7,7 +7,7 @@
                 "z": 0
             },
             "sRenderComponent": {
-                "texture": "ressources/sprites/towers/tower_fire.png",
+                "model": "ressources/models/towers/tower_fire.obj",
                 "type": "TILE",
                 "animated": false
             },

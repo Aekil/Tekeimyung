@@ -67,8 +67,9 @@ ENDIF()
 
 #Include Assimp directory on Windows
 IF (WIN32)
-  include_directories(${CMAKE_SOURCE_DIR}/external/Assimp/include)
-  find_library(assimp assimp PATHS ${CMAKE_SOURCE_DIR}/external/Assimp/lib/x64)
+set(ASSIMP_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/external/Assimp/include)
+  include_directories(${ASSIMP_INCLUDE_DIR})
+  find_library(assimp assimp-vc140-mt PATHS ${CMAKE_SOURCE_DIR}/external/Assimp/lib/x64)
 ENDIF()
 
 # Link libraries with executable
@@ -76,5 +77,5 @@ target_link_libraries(${EXECUTABLE_NAME} ECS ${GLFW_LIBRARY} ${GLEW_LIBRARY} ${O
 
 
 # Store include dir into variable and share it with other projects through cache
-set(${EXECUTABLE_NAME}_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include ${GLFW_INCLUDE_DIR} ${GLEW_INCLUDE_DIR} ${OPENGL_INCLUDE_DIR} ${FMOD_INCLUDE_DIR}
+set(${EXECUTABLE_NAME}_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include ${GLFW_INCLUDE_DIR} ${GLEW_INCLUDE_DIR} ${OPENGL_INCLUDE_DIR} ${ASSIMP_INCLUDE_DIR} ${FMOD_INCLUDE_DIR}
 CACHE INTERNAL "${EXECUTABLE_NAME}: Include Directories" FORCE)

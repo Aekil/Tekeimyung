@@ -73,7 +73,7 @@ bool    PlayState::init()
 
     _map = new Map(em, 20, 15, 4);
 
-    createParticlesEmittor(glm::vec3(8.5f, 5.5f, 1.0f), eArchetype::EMITTER_WATER);
+/*    createParticlesEmittor(glm::vec3(8.5f, 5.5f, 1.0f), eArchetype::EMITTER_WATER);
     // Create characters
     createEntity(glm::vec3(9, 5, 1), eArchetype::PLAYER);
     _enemy = createEntity(glm::vec3(0.5f, 5.5f, 1), eArchetype::ENEMY);
@@ -96,27 +96,27 @@ bool    PlayState::init()
         for (int x = 0; x < 20; x++) {
             createTile(glm::vec3(x, y, 1), eArchetype::BLOCK_BROWN);
         }
-    }
+    }*/
 
 
     // Create towers
-    createTile(glm::vec3(7, 4, 1), eArchetype::TOWER_FIRE);
-    createTile(glm::vec3(7, 7, 1), eArchetype::TOWER_FIRE);
+    //createTile(glm::vec3(7, 4, 1), eArchetype::TOWER_FIRE);
+    createTile(glm::vec3(0, 0, 0), eArchetype::TOWER_FIRE);
 
-    _world.addSystem<InputSystem>();
+/*    _world.addSystem<InputSystem>();
     _world.addSystem<AISystem>();
     _world.addSystem<MovementSystem>(_map);
     _world.addSystem<CollisionSystem>(_map);
-    _world.addSystem<ParticleSystem>();
-    _world.addSystem<RenderingSystem>(_map, dynamic_cast<ParticleSystem*>(_world.getSystems()[4])->getEmitters());
+    _world.addSystem<ParticleSystem>();*/
+    _world.addSystem<RenderingSystem>(_map, nullptr);
 
     addDebugWindow<OverlayDebugWindow>();
     addDebugWindow<EntityDebugWindow>(_map, glm::vec2(0, 80), glm::vec2(450, 350));
     addDebugWindow<LogDebugWindow>(Logger::getInstance(), glm::vec2(0, 430), glm::vec2(300, 200));
 
     // Play sound
-    static int idSoundBkgdMusic = SoundManager::getInstance()->registerSound("ressources/sounds/Kalimba.mp3", BACKGROUND_SOUND);
-    SoundManager::getInstance()->playSound(idSoundBkgdMusic);
+/*    static int idSoundBkgdMusic = SoundManager::getInstance()->registerSound("ressources/sounds/Kalimba.mp3", BACKGROUND_SOUND);
+    SoundManager::getInstance()->playSound(idSoundBkgdMusic);*/
 
     return (true);
 }
@@ -140,7 +140,7 @@ Entity*    PlayState::createEntity(const glm::vec3& pos, eArchetype type)
 
 bool    PlayState::update(float elapsedTime)
 {
-    static Timer timer;
+/*    static Timer timer;
 
     if (timer.getElapsedTime() >= 1.0f)
     {
@@ -154,7 +154,7 @@ bool    PlayState::update(float elapsedTime)
 
         // Reset timer
         timer.reset();
-    }
+    }*/
 
     return (GameState::update(elapsedTime));
 }

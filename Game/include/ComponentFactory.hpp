@@ -144,8 +144,6 @@ public:
 
 private:
     virtual bool    updateEditor(const std::string& entityType, sComponent** component_);
-    virtual Sprite::eType stringToSpriteType(const std::string& spriteTypeStr);
-    virtual std::string spriteTypeToString(Sprite::eType spriteType);
 };
 
 

@@ -33,16 +33,16 @@ void    ParticleSystem::updateEmitter(Entity* entity, float elapsedTime)
 {
     sParticleEmitterComponent *emitterComp = entity->getComponent<sParticleEmitterComponent>();
     sPositionComponent *pos = entity->getComponent<sPositionComponent>();
-    sRenderComponent *sprite = entity->getComponent<sRenderComponent>();
+    //sRenderComponent *sprite = entity->getComponent<sRenderComponent>();
     sDirectionComponent *direction = entity->getComponent<sDirectionComponent>();
     sEmitter* emitter = _emitters[entity->id];
 
-    if (!sprite->_sprite)
-        return;
+/*    if (!sprite->_sprite)
+        return;*/
 
     bool moved = direction && direction->moved;
     eOrientation orientation = direction ? direction->orientation : eOrientation::N;
-    sprite->_sprite->update(pos->value, pos->z, moved, orientation, sprite->color);
+    //sprite->_sprite->update(pos->value, pos->z, moved, orientation, sprite->color);
 
     // Update particles
     for (unsigned int i = 0; i < emitter->particlesNb; i++)
@@ -79,7 +79,7 @@ void    ParticleSystem::updateEmitter(Entity* entity, float elapsedTime)
             float angle = Helper::randFloat(0, emitterComp->angleVariance);
             float angleRadian = glm::radians(std::fmod(angle - emitterComp->angle, 360.0f));
 
-            particle.pos = sprite->_sprite->getPos();
+            //particle.pos = sprite->_sprite->getPos();
             particle.velocity.x = glm::cos(angleRadian);
             particle.velocity.y = glm::sin(angleRadian);
             particle.speed = emitterComp->speed + Helper::randFloat(0, emitterComp->speedVariance);
