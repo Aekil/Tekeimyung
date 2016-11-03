@@ -20,6 +20,22 @@ public:
         _systems.push_back(new T(args...));
     }
 
+    template<typename T>
+    T*                      getSystem()
+    {
+        const std::type_info& typeInfo = typeid(T);
+
+        for (auto system_: _systems)
+        {
+            if (system_->getTypeInfo().hash_code() == typeInfo.hash_code())
+            {
+                return (static_cast<T*>(system_));
+            }
+        }
+
+        return (nullptr);
+    }
+
 private:
     EntityManager           _entityManager;
     std::vector<System*>    _systems;

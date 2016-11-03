@@ -17,6 +17,7 @@
 #include "Utils/OverlayDebugWindow.hpp"
 #include "Utils/LogDebugWindow.hpp"
 #include "EntityDebugWindow.hpp"
+#include "utils/Debug.hpp"
 #include "Utils/Exception.hpp"
 
 #include "GameStates/PlayState.hpp"
@@ -106,12 +107,16 @@ bool    PlayState::init()
     createTile(glm::vec3(7, 7, 1), eArchetype::TOWER_FIRE);
 
     _world.addSystem<InputSystem>();
-    //_world.addSystem<TowerAISystem>(_map);
+    _world.addSystem<TowerAISystem>(_map);
     _world.addSystem<AISystem>();
     _world.addSystem<MovementSystem>(_map);
     _world.addSystem<CollisionSystem>(_map);
     _world.addSystem<ParticleSystem>();
-    _world.addSystem<RenderingSystem>(_map, dynamic_cast<ParticleSystem*>(_world.getSystems()[4])->getEmitters());
+
+    ParticleSystem* particleSystem = _world.getSystem<ParticleSystem>();
+    ASSERT(particleSystem != nullptr, "Particle system should not be null");
+
+    _world.addSystem<RenderingSystem>(_map, particleSystem->getEmitters());
 
     addDebugWindow<OverlayDebugWindow>();
     addDebugWindow<EntityDebugWindow>(_map, glm::vec2(0, 80), glm::vec2(450, 350));
