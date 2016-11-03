@@ -133,7 +133,7 @@ void    Model::initVertexData()
         {
             _vertexData[i].pos = { vertexs[k].pos.x, vertexs[k].pos.y, vertexs[k].pos.z };
             _vertexData[i].color = { vertexs[k].color.x, vertexs[k].color.y, vertexs[k].color.z };
-            _vertexData[i].uv = { vertexs[k].uv.x, vertexs[k].uv.y };
+            _vertexData[i].normal = { vertexs[k].normal.x, vertexs[k].normal.y, vertexs[k].normal.z };
         }
     }
 }

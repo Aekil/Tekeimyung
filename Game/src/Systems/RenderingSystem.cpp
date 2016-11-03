@@ -40,6 +40,10 @@ bool    RenderingSystem::init()
     // Enable blend for transparency
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    // Enable depth buffer
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
     return (true);
 }
 
@@ -129,7 +133,7 @@ void    RenderingSystem::renderParticles(EntityManager& em)
 void    RenderingSystem::update(EntityManager& em, float elapsedTime)
 {
     // Clear color buffer
-    glClear (GL_COLOR_BUFFER_BIT);
+    glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Projection matrix
     glm::mat4 proj = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 1000.0f);

@@ -14,14 +14,15 @@ bool Mesh::loadFromAssimp(aiMesh *mesh) {
     for (uint32_t j = 0; j < mesh->mNumVertices; j++)
     {
         Vertex vertex;
-        glm::vec3 vertice;
-        glm::vec2 uv;
+        glm::vec3 pos;
+        glm::vec3 normal;
         glm::vec3 color;
 
-        vertice.x = mesh->mVertices[j].x;
-        vertice.y = mesh->mVertices[j].y;
-        vertice.z = mesh->mVertices[j].z;
+        pos.x = mesh->mVertices[j].x;
+        pos.y = mesh->mVertices[j].y;
+        pos.z = mesh->mVertices[j].z;
 
+        // Color
         if (mesh->HasVertexColors(j))
         {
             color.x = mesh->mColors[j]->r;
@@ -31,17 +32,20 @@ bool Mesh::loadFromAssimp(aiMesh *mesh) {
         else
             color = glm::vec3(1.0f, 1.0f, 1.0f);
 
-        if (mesh->HasTextureCoords(0))
+        // Normals
+        if (mesh->HasNormals())
         {
-            uv.x = mesh->mTextureCoords[0][j].x;
-            uv.y = 1.0f - mesh->mTextureCoords[0][j].y;
+            normal.x = mesh->mNormals[j].x;
+            normal.y = mesh->mNormals[j].y;
+            normal.z = mesh->mNormals[j].z;
         }
         else
-            uv = glm::vec2(0, 0);
+            normal = glm::vec3(1.0f, 1.0f, 1.0f);
 
-        vertex.pos = vertice;
+
+        vertex.pos = pos;
         vertex.color = color;
-        vertex.uv = uv;
+        vertex.normal = normal;
 
         vertexs.push_back(vertex);
     }

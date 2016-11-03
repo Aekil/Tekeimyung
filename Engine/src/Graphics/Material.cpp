@@ -17,5 +17,5 @@ void    Material::bind(ShaderProgram& shaderProgram) const
 {
     // Bind diffuse
     GLint uniColor = shaderProgram.getUniformLocation("color");
-    glUniform4f(uniColor, diffuse.x, diffuse.y, diffuse.z, 1.0f);
+    glUniform3f(uniColor, diffuse.x, diffuse.y, diffuse.z);
 }

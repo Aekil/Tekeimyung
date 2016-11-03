@@ -63,10 +63,10 @@ void    Buffer::updateData(Vertex* vertices, int verticesNb, GLuint* indices, in
         sizeof(Vertex), // size between vertices
         (GLvoid*)(sizeof(GL_FLOAT) * 3));
 
-    // Vertex texture coords
+    // Vertex normal
     glVertexAttribPointer(
         2, // layout(location=2)
-        2, // 2 components in vec2
+        2, // 3 components in vec3
         GL_FLOAT, // component type
         GL_FALSE, // normalized values (between 0 and 1), GL_FALSE
         sizeof(Vertex), // size between vertices

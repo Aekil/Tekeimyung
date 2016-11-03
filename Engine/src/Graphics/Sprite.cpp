@@ -51,7 +51,7 @@ void    Sprite::loadFromTexture(sCreateInfo& createInfo)
     }
 
     // Init entity buffers
-    Vertex vertices[] = {
+/*    Vertex vertices[] = {
         {glm::vec3(0.0f,  _spriteSize.y, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, 0.0f)},  // Top Left
         {glm::vec3(_spriteSize.x,  _spriteSize.y, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(_spriteSize.x / _texture->getWidth(), 0.0f)},  // Top Right
         {glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, _spriteSize.y / _texture->getHeight())},  // Bottom Left
@@ -62,8 +62,8 @@ void    Sprite::loadFromTexture(sCreateInfo& createInfo)
         0, 1, 2,
         1, 2, 3
     };
-
-   _buffer.updateData(vertices, 4, indices, 6);
+*/
+/*   _buffer.updateData(vertices, 4, indices, 6);*/
 }
 
 void Sprite::update(glm::vec2 position, float z, bool moved, eOrientation orientation, glm::vec3& color)

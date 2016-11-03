@@ -2,16 +2,19 @@
 
 layout (location = 0) in vec3 inPosition;
 layout (location = 1) in vec3 inColor;
+layout (location = 2) in vec3 inNormal;
 
-out vec4 outColor;
+out vec3 fragColor;
+out vec3 fragNormal;
 
 uniform mat4 proj;
 uniform mat4 view;
 uniform mat4 model;
-uniform vec4 color;
+uniform vec3 color;
 
 void main()
 {
     gl_Position = proj * view * model * vec4(inPosition, 1.0);
-    outColor = color;
+    fragColor = color;
+    fragNormal = inNormal;
 }
