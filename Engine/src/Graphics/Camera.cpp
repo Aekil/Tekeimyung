@@ -81,13 +81,13 @@ void    Camera::update(float elapsedTime)
 
     // Update position
     if (keyboard.isPressed(Keyboard::eKey::D))
-        translate(glm::vec3(20.0f * elapsedTime, 0.0f, -20.0f * elapsedTime));
+        translate(glm::vec3(40.0f * elapsedTime, 0.0f, -40.0f * elapsedTime));
     if (keyboard.isPressed(Keyboard::eKey::Q))
-        translate(glm::vec3(-20.0f * elapsedTime, 0.0f, 20.0f * elapsedTime));
+        translate(glm::vec3(-40.0f * elapsedTime, 0.0f, 40.0f * elapsedTime));
     if (keyboard.isPressed(Keyboard::eKey::Z))
-        translate(glm::vec3(-20.0f * elapsedTime, 0.0f, -20.0f * elapsedTime));
+        translate(glm::vec3(-40.0f * elapsedTime, 0.0f, -40.0f * elapsedTime));
     if (keyboard.isPressed(Keyboard::eKey::S))
-        translate(glm::vec3(20.0f * elapsedTime, 0.0f, 20.0f * elapsedTime));
+        translate(glm::vec3(40.0f * elapsedTime, 0.0f, 40.0f * elapsedTime));
 
     // Update zoom
     glm::vec2 mousePos = { cursor.getX(), cursor.getY() };
