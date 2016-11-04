@@ -158,20 +158,20 @@ struct sDirectionComponent : sComponent
     bool moved;
 };
 
-struct sHitBoxComponent : sComponent
+struct sRectHitboxComponent : sComponent
 {
-    sHitBoxComponent() = default;
-    sHitBoxComponent(glm::vec2 min, glm::vec2 max) : min(min), max(max) {}
+    sRectHitboxComponent() = default;
+    sRectHitboxComponent(glm::vec2 min, glm::vec2 max) : min(min), max(max) {}
 
     virtual sComponent* clone()
     {
-        sHitBoxComponent* component = new sHitBoxComponent();
+        sRectHitboxComponent* component = new sRectHitboxComponent();
         component->update(this);
 
         return (component);
     }
 
-    virtual void update(sHitBoxComponent* component)
+    virtual void update(sRectHitboxComponent* component)
     {
         this->min = component->min;
         this->max = component->max;
@@ -179,27 +179,27 @@ struct sHitBoxComponent : sComponent
 
     virtual void update(sComponent* component)
     {
-        update(static_cast<sHitBoxComponent*>(component));
+        update(static_cast<sRectHitboxComponent*>(component));
     }
 
     glm::vec2 min;
     glm::vec2 max;
 };
 
-struct sCircleHitBoxComponent : sComponent
+struct sCircleHitboxComponent : sComponent
 {
-    sCircleHitBoxComponent() = default;
-    sCircleHitBoxComponent(glm::vec2 center, float radius) : center(center), radius(radius) {}
+    sCircleHitboxComponent() = default;
+    sCircleHitboxComponent(glm::vec2 center, float radius) : center(center), radius(radius) {}
 
     virtual sComponent* clone()
     {
-        sCircleHitBoxComponent* component = new sCircleHitBoxComponent();
+        sCircleHitboxComponent* component = new sCircleHitboxComponent();
         component->update(this);
 
         return (component);
     }
 
-    virtual void update(sCircleHitBoxComponent* component)
+    virtual void update(sCircleHitboxComponent* component)
     {
         this->center = component->center;
         this->radius = component->radius;
@@ -207,7 +207,7 @@ struct sCircleHitBoxComponent : sComponent
 
     virtual void update(sComponent* component)
     {
-        update(static_cast<sCircleHitBoxComponent*>(component));
+        update(static_cast<sCircleHitboxComponent*>(component));
     }
 
     glm::vec2 center;

@@ -14,8 +14,8 @@
     GENERATE_PAIRS(sPositionComponent),\
     GENERATE_PAIRS(sInputComponent),\
     GENERATE_PAIRS(sDirectionComponent),\
-    GENERATE_PAIRS(sHitBoxComponent),\
-    GENERATE_PAIRS(sCircleHitBoxComponent),\
+    GENERATE_PAIRS(sRectHitboxComponent),\
+    GENERATE_PAIRS(sCircleHitboxComponent),\
     GENERATE_PAIRS(sGravityComponent),\
     GENERATE_PAIRS(sTypeComponent),\
     GENERATE_PAIRS(sAIComponent),\
@@ -189,11 +189,11 @@ public:
 
 
 /*
-** sHitBoxComponent
+** sRectHitboxComponent
 */
 
 template <>
-class ComponentFactory<sHitBoxComponent>: public BaseComponentFactory<sHitBoxComponent>
+class ComponentFactory<sRectHitboxComponent>: public BaseComponentFactory<sRectHitboxComponent>
 {
 public:
     virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
@@ -202,11 +202,11 @@ public:
 
 
 /*
-** sCircleHitBoxComponent
+** sCircleHitboxComponent
 */
 
 template <>
-class ComponentFactory<sCircleHitBoxComponent>: public BaseComponentFactory<sCircleHitBoxComponent>
+class ComponentFactory<sCircleHitboxComponent>: public BaseComponentFactory<sCircleHitboxComponent>
 {
 public:
     virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);

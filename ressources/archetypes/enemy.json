@@ -34,7 +34,7 @@
             "sTypeComponent": {
                 "type": "CHARACTER"
             },
-            "sHitBoxComponent": {
+            "sRectHitboxComponent": {
                 "min": {
                     "x": 614,
                     "y": 188.8
