@@ -5,8 +5,8 @@
 #include "Graphics/ShaderProgram.hpp"
 #include "Graphics/Sprite.hpp"
 #include "System.hpp"
-#include "Core/Components.hh"
-#include "Core/Map.hpp"
+#include "Components.hh"
+#include "Map.hpp"
 #include "Systems/ParticleSystem.hpp"
 
 class RenderingSystem: public System

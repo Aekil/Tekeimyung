@@ -3,7 +3,7 @@
 #include "EntityFactory.hpp"
 #include "Utils/JsonWriter.hpp"
 #include "Utils/Helper.hpp"
-#include "Core/CollisionMap.hpp"
+#include "CollisionMap.hpp"
 
 #include "EntityDebugWindow.hpp"
 

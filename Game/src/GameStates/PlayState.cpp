@@ -10,7 +10,7 @@
 #include "Systems/ParticleSystem.hpp"
 #include "Systems/InputSystem.hpp"
 #include "Window/Keyboard.hpp"
-#include "Core/Components.hh"
+#include "Components.hh"
 #include "Sound/SoundManager.hpp"
 #include "Utils/OverlayDebugWindow.hpp"
 #include "Utils/LogDebugWindow.hpp"

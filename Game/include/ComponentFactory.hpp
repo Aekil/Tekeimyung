@@ -5,7 +5,7 @@
 #include "Utils/Exception.hpp"
 #include "Utils/Logger.hpp"
 #include "Utils/JsonValue.hpp"
-#include "Core/Components.hh"
+#include "Components.hh"
 
 // Generate map initializer lists
 // ex: { "sRenderComponent", sRenderComponent }, { "sPositionComponent", sPositionComponent }

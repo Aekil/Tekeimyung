@@ -1,4 +1,4 @@
-#include "Core/Components.hh"
+#include "Components.hh"
 
 #include "Systems/GravitySystem.hpp"
 

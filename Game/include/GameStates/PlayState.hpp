@@ -4,7 +4,7 @@
 #include <memory>
 
 #include "Core/GameState.hpp"
-#include "Core/Map.hpp"
+#include "Map.hpp"
 #include "Entity.hpp"
 #include "EntityFactory.hpp"
 

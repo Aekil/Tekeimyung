@@ -3,7 +3,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include "Core/Components.hh"
+#include "Components.hh"
 #include "System.hpp"
 #include "Utils/Timer.hpp"
 

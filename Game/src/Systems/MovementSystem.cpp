@@ -1,7 +1,7 @@
 #include <cmath>
 #include <algorithm>
 
-#include "Core/Components.hh"
+#include "Components.hh"
 
 #include "Systems/MovementSystem.hpp"
 

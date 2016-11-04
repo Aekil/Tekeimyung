@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Map.hpp"
+#include "Map.hpp"
 #include "Utils/DebugWindow.hpp"
 
 class EntityDebugWindow: public DebugWindow

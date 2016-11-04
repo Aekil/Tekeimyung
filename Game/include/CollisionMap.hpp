@@ -4,7 +4,7 @@
 #include <cstddef>
 
 #include "Map.hpp"
-#include "Core/Components.hh"
+#include "Components.hh"
 
 enum class eColType: char
 {

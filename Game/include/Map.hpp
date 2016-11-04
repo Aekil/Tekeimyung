@@ -6,7 +6,7 @@
 #include <unordered_map>
 #include <glm/vec3.hpp>
 
-#include "Core/CollisionMap.hpp"
+#include "CollisionMap.hpp"
 #include "EntityManager.hpp"
 
 class CollisionMap;

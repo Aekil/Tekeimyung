@@ -2,7 +2,7 @@
 
 #include "Utils/Debug.hpp"
 
-#include "Core/CollisionMap.hpp"
+#include "CollisionMap.hpp"
 
 /*
 ** LineReference

@@ -1,5 +1,5 @@
 #include "Window/GameWindow.hpp"
-#include "Core/Components.hh"
+#include "Components.hh"
 
 #include "Systems/AISystem.hpp"
 

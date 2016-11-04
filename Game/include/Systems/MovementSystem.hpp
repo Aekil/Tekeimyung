@@ -1,7 +1,7 @@
 #pragma once
 
 #include "System.hpp"
-#include "Core/Map.hpp"
+#include "Map.hpp"
 
 class MovementSystem : public System
 {

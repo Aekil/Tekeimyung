@@ -1,6 +1,6 @@
 #include <cmath>
 
-#include "Core/Components.hh"
+#include "Components.hh"
 #include "Window/GameWindow.hpp"
 #include "Physics/Collisions.hpp"
 
