@@ -9,14 +9,9 @@
 #include "Graphics/Model.hpp"
 
 
-Model::Model() : _isLoaded(false), _pos({0.0f, 0.0f, 0.0f}) {}
+Model::Model() : _pos({0.0f, 0.0f, 0.0f}) {}
 
 Model::~Model() {}
-
-bool    Model::isLoaded() const
-{
-    return (_isLoaded);
-}
 
 bool    Model::loadFromFile(const std::string &file)
 {
@@ -113,8 +108,14 @@ void    Model::draw(ShaderProgram& shaderProgram) const
 
         // Draw to screen
         glDrawElements(GL_TRIANGLES, (GLuint)mesh->indices.size(), GL_UNSIGNED_INT, BUFFER_OFFSET((GLuint)mesh->idxOffset * sizeof(GLuint)));
-        //glDrawRangeElements(GL_TRIANGLES, (GLuint)mesh->idxOffset, (GLuint)mesh->indices.size(), 1, GL_UNSIGNED_INT, 0);
     }
+}
+
+void    Model::update(const glm::vec2& pos, float z)
+{
+    _pos.x = pos.x * 25.0f;
+    _pos.y = z * 12.5f;
+    _pos.z = pos.y * 25.0f;
 }
 
 void    Model::initVertexData()

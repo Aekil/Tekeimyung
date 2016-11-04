@@ -196,14 +196,14 @@ std::shared_ptr<Model>  RenderingSystem::getModel(Entity* entity)
 {
     int id = entity->id;
     sRenderComponent *model = entity->getComponent<sRenderComponent>();
-/*    sPositionComponent *position = entity->getComponent<sPositionComponent>();
-    sDirectionComponent *direction = entity->getComponent<sDirectionComponent>();*/
+    sPositionComponent *position = entity->getComponent<sPositionComponent>();
 
     // The entity does not exist in the render system
     if (!model->_model)
     {
         model->_model = RessourceManager::getInstance()->getModel(model->modelFile);
     }
+    model->_model->update(position->value, position->z);
 
     return (model->_model);
 }

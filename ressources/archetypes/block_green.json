@@ -7,7 +7,7 @@
                 "z": 0
             },
             "sRenderComponent": {
-                "texture": "ressources/sprites/blocks/block_green.png",
+                "model": "ressources/models/blocks/block_green.obj",
                 "type": "TILE"
             },
             "sTypeComponent": {

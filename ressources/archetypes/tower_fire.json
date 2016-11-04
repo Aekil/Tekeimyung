@@ -8,8 +8,7 @@
             },
             "sRenderComponent": {
                 "model": "ressources/models/towers/tower_fire.obj",
-                "type": "TILE",
-                "animated": false
+                "type": "TILE"
             },
             "sTypeComponent": {
                 "type": "TILE_NOT_WALKABLE"

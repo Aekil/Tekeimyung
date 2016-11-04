@@ -15,8 +15,7 @@ public:
     Model();
     ~Model();
 
-    virtual bool                loadFromFile(const std::string &file);
-    bool                        isLoaded() const;
+    bool                        loadFromFile(const std::string &file);
 
     uint32_t                    getVertexsSize() const;
     uint32_t                    getIndicesSize() const;
@@ -24,6 +23,7 @@ public:
     const glm::vec3&            getPos() const;
 
     void                        draw(ShaderProgram& shaderProgram) const;
+    void                        update(const glm::vec2& pos, float z);
 
 private:
     void                        initVertexData();
@@ -31,7 +31,6 @@ private:
 
 private:
     std::list<std::shared_ptr<Mesh> >   _meshs;
-    bool                                _isLoaded;
 
     // Vertices raw buffers
     Vertex*                             _vertexData;

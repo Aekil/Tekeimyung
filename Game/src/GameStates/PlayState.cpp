@@ -76,7 +76,7 @@ bool    PlayState::init()
 /*    createParticlesEmittor(glm::vec3(8.5f, 5.5f, 1.0f), eArchetype::EMITTER_WATER);
     // Create characters
     createEntity(glm::vec3(9, 5, 1), eArchetype::PLAYER);
-    _enemy = createEntity(glm::vec3(0.5f, 5.5f, 1), eArchetype::ENEMY);
+    _enemy = createEntity(glm::vec3(0.5f, 5.5f, 1), eArchetype::ENEMY);*/
 
     // Init base map
     for (int y = 0; y < 15; y++) {
@@ -96,12 +96,12 @@ bool    PlayState::init()
         for (int x = 0; x < 20; x++) {
             createTile(glm::vec3(x, y, 1), eArchetype::BLOCK_BROWN);
         }
-    }*/
+    }
 
 
     // Create towers
-    //createTile(glm::vec3(7, 4, 1), eArchetype::TOWER_FIRE);
-    createTile(glm::vec3(0, 0, 0), eArchetype::TOWER_FIRE);
+    createTile(glm::vec3(7, 4, 1), eArchetype::TOWER_FIRE);
+    createTile(glm::vec3(7, 7, 1), eArchetype::TOWER_FIRE);
 
 /*    _world.addSystem<InputSystem>();
     _world.addSystem<AISystem>();
