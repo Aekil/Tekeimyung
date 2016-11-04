@@ -21,6 +21,7 @@ public:
     void                setDir(const glm::vec3& dir);
 
     void                translate(const glm::vec3& pos);
+    void                zoom(float amount);
 
     void                lookAt(const glm::vec3& pos, const glm::vec3& target, const glm::vec3& up);
 

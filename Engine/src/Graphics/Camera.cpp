@@ -66,11 +66,20 @@ void    Camera::translate(const glm::vec3& pos)
     _needUpdateView = true;
 }
 
+void    Camera::zoom(float amount)
+{
+    _pos.y -= amount;
+    _needUpdateView = true;
+}
+
 void    Camera::update(float elapsedTime)
 {
     auto &&keyboard = GameWindow::getInstance()->getKeyboard();
+    auto &&mouse = GameWindow::getInstance()->getMouse();
+    auto &&cursor = mouse.getCursor();
+    static glm::vec2 lastMousePos;
 
-    // Update inputs
+    // Update position
     if (keyboard.isPressed(Keyboard::eKey::D))
         translate(glm::vec3(20.0f * elapsedTime, 0.0f, -20.0f * elapsedTime));
     if (keyboard.isPressed(Keyboard::eKey::Q))
@@ -79,6 +88,17 @@ void    Camera::update(float elapsedTime)
         translate(glm::vec3(-20.0f * elapsedTime, 0.0f, -20.0f * elapsedTime));
     if (keyboard.isPressed(Keyboard::eKey::S))
         translate(glm::vec3(20.0f * elapsedTime, 0.0f, 20.0f * elapsedTime));
+
+    // Update zoom
+    glm::vec2 mousePos = { cursor.getX(), cursor.getY() };
+    if (mouse.isPressed(Mouse::eButton::MOUSE_BUTTON_1))
+    {
+        float move = (mousePos.x - lastMousePos.x) + (mousePos.y - lastMousePos.y);
+
+        if (move)
+            zoom(move * elapsedTime * 4.0f);
+    }
+    lastMousePos = mousePos;
 
     // Update matrix
     if (_needUpdateProj)
