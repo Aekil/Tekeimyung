@@ -5,6 +5,7 @@
 
 #include "Graphics/ShaderProgram.hpp"
 #include "Graphics/Model.hpp"
+#include "Graphics/Camera.hpp"
 #include "System.hpp"
 #include "Core/Components.hh"
 #include "Core/Map.hpp"
@@ -32,4 +33,6 @@ private:
 
     Map*                                        _map;
     std::unordered_map<uint32_t, sEmitter*>*    _particleEmitters;
+
+    Camera                                      _camera;
 };

@@ -15,9 +15,11 @@
 
 RenderingSystem::RenderingSystem(Map* map, std::unordered_map<uint32_t, sEmitter*>* particleEmitters): _map(map), _particleEmitters(particleEmitters)
 {
-
     addDependency<sPositionComponent>();
     addDependency<sRenderComponent>();
+
+    _camera.translate(glm::vec3(350.0f, 250.0f, 300.0f));
+    _camera.setDir(glm::vec3(-30.0f));
 }
 
 RenderingSystem::~RenderingSystem() {}
@@ -135,15 +137,15 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
     // Clear color buffer
     glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    _camera.update(elapsedTime);
+
     // Projection matrix
-    glm::mat4 proj = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 1000.0f);
     GLint uniProj = _shaderProgram.getUniformLocation("proj");
-    glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(proj));
+    glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(_camera.getProj()));
 
     // View matrix
-    glm::mat4 view = glm::lookAt(glm::vec3(-50.0f, 150.0f, 100.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
     GLint uniView = _shaderProgram.getUniformLocation("view");
-    glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(view));
+    glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(_camera.getView()));
 
     // Iterate over particle emitters
     forEachEntity(em, [&](Entity *entity) {
