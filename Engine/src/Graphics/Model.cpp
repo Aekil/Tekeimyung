@@ -91,7 +91,7 @@ const glm::vec3&    Model::getPos() const
     return (_pos);
 }
 
-void    Model::draw(ShaderProgram& shaderProgram) const
+void    Model::draw(const ShaderProgram& shaderProgram) const
 {
     // Model matrix
     glm::mat4 modelTrans;

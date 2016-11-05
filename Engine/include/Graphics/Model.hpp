@@ -22,7 +22,7 @@ public:
     const std::list<std::shared_ptr<Mesh> > &getMeshs() const;
     const glm::vec3&            getPos() const;
 
-    void                        draw(ShaderProgram& shaderProgram) const;
+    void                        draw(const ShaderProgram& shaderProgram) const;
     void                        update(const glm::vec2& pos, float z);
 
 private:

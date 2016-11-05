@@ -1,20 +1,26 @@
-#version 330 core
+#version 420 core
 
-in vec3 fragColor;
 in vec3 fragNormal;
 
 out vec4 outFragColor;
 
+layout (binding = 0) uniform material
+{
+    vec3    ambient;
+    float   padding;
+    vec3    diffuse;
+};
+
 vec3 getAmbient(vec3 lightAmbient)
 {
-    return lightAmbient  * fragColor;
+    return lightAmbient  * ambient;
 }
 
 vec3 getDiffuse(vec3 lightDiffuse, vec3 normal, vec3 lightDir)
 {
     float diff = max(dot(normal, lightDir), 0.0);
 
-    return lightDiffuse * (diff * fragColor);
+    return lightDiffuse * (diff * diffuse);
 }
 
 void main()
