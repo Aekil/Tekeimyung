@@ -7,6 +7,7 @@ UniformBuffer::UniformBuffer(): _UBO(0), _firstUpdate(true), _bindingPoint(0)
     glGenBuffers(1, &_UBO);
 }
 
+
 UniformBuffer::~UniformBuffer() {}
 
 void    UniformBuffer::update(void* data, uint32_t size)
@@ -38,7 +39,7 @@ void    UniformBuffer::update(void* data, uint32_t size)
     }
 }
 
-void    UniformBuffer::bind(const ShaderProgram& shaderProgram, const char* blockName)
+void    UniformBuffer::bind(const ShaderProgram& shaderProgram, const char* blockName) const
 {
     // Uniform block index in shader
     GLuint uniformBlockIndex = shaderProgram.getUniformBlockIndex(blockName);
@@ -48,4 +49,9 @@ void    UniformBuffer::bind(const ShaderProgram& shaderProgram, const char* bloc
 
     // Bind UBO with uniform block in shader
     shaderProgram.bindBlock(uniformBlockIndex, _bindingPoint);
+}
+
+void    UniformBuffer::setBindingPoint(uint16_t bindingPoint)
+{
+    _bindingPoint = bindingPoint;
 }

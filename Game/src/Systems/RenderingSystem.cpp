@@ -137,15 +137,9 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
     // Clear color buffer
     glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    _camera.update(elapsedTime);
+    _camera.update(_shaderProgram, elapsedTime);
 
-    // Projection matrix
-    GLint uniProj = _shaderProgram.getUniformLocation("proj");
-    glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(_camera.getProj()));
-
-    // View matrix
-    GLint uniView = _shaderProgram.getUniformLocation("view");
-    glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(_camera.getView()));
+    _camera.getUbo().bind(_shaderProgram, "camera");
 
     // Iterate over particle emitters
     forEachEntity(em, [&](Entity *entity) {

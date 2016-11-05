@@ -6,7 +6,10 @@
 
 #include "Graphics/Camera.hpp"
 
-Camera::Camera(): _needUpdateView(false), _needUpdateProj(true), _fov(45.0f), _aspect(1280.0f / 960.0f), _near(0.1f), _far(1000.0f), _up({0.0f, 1.0f, 0.0f}) {}
+Camera::Camera(): _needUpdateView(false), _needUpdateProj(true), _fov(45.0f), _aspect(1280.0f / 960.0f), _near(0.1f), _far(1000.0f), _up({0.0f, 1.0f, 0.0f})
+{
+    _ubo.setBindingPoint(1);
+}
 
 Camera::~Camera() {}
 
@@ -15,19 +18,14 @@ bool    Camera::needUpdate() const
     return (_needUpdateProj || _needUpdateView);
 }
 
-const glm::mat4&    Camera::getProj() const
-{
-    return (_proj);
-}
-
-const glm::mat4&    Camera::getView() const
-{
-    return (_view);
-}
-
 const glm::vec3&    Camera::getPos() const
 {
     return (_pos);
+}
+
+const UniformBuffer&    Camera::getUbo() const
+{
+    return _ubo;
 }
 
 void    Camera::setFov(float fov)
@@ -72,7 +70,7 @@ void    Camera::zoom(float amount)
     _needUpdateView = true;
 }
 
-void    Camera::update(float elapsedTime)
+void    Camera::update(const ShaderProgram& shaderProgram, float elapsedTime)
 {
     auto &&keyboard = GameWindow::getInstance()->getKeyboard();
     auto &&mouse = GameWindow::getInstance()->getMouse();
@@ -103,12 +101,14 @@ void    Camera::update(float elapsedTime)
     // Update matrix
     if (_needUpdateProj)
     {
-        _proj = glm::perspective(_fov, _aspect, _near, _far);
+        _constants.proj = glm::perspective(_fov, _aspect, _near, _far);
         _needUpdateProj = false;
     }
     if (_needUpdateView)
     {
-        _view = glm::lookAt(_pos, _pos + _dir, _up);
+        _constants.view = glm::lookAt(_pos, _pos + _dir, _up);
         _needUpdateView = false;
     }
+
+    _ubo.update(&_constants, sizeof(_constants));
 }

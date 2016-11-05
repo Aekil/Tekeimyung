@@ -14,7 +14,9 @@ public:
     void                    update(void* data, uint32_t size);
 
     // Bind UBO with uniform buffer block in shader
-    void                    bind(const ShaderProgram& shaderProgram, const char* blockName);
+    void                    bind(const ShaderProgram& shaderProgram, const char* blockName) const;
+
+    void                    setBindingPoint(uint16_t bindingPoint);
 
 private:
     // Uniform buffer object

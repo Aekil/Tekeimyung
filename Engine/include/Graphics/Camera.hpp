@@ -2,17 +2,26 @@
 
 #include <glm/vec4.hpp>
 
+#include "Graphics/UniformBuffer.hpp"
+#include "Graphics/ShaderProgram.hpp"
+
 class Camera
 {
+public:
+    typedef struct
+    {
+        glm::mat4       proj;
+        glm::mat4       view;
+    }                   Constants;
+
 public:
     Camera();
     ~Camera();
 
     bool                needUpdate() const;
 
-    const glm::mat4&    getProj() const;
-    const glm::mat4&    getView() const;
     const glm::vec3&    getPos() const;
+    const UniformBuffer& getUbo() const;
 
     void                setFov(float fov);
     void                setAspect(float aspect);
@@ -25,11 +34,11 @@ public:
 
     void                lookAt(const glm::vec3& pos, const glm::vec3& target, const glm::vec3& up);
 
-    void                update(float elapsedTime);
+    void                update(const ShaderProgram& shaderProgram, float elapsedTime);
 
 private:
-    glm::mat4           _view;
-    glm::mat4           _proj;
+    Camera::Constants   _constants;
+    UniformBuffer       _ubo;
 
     bool                _needUpdateView;
     bool                _needUpdateProj;
