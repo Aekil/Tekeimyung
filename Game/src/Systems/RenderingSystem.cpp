@@ -20,6 +20,7 @@ RenderingSystem::RenderingSystem(Map* map, std::unordered_map<uint32_t, sEmitter
 
     _camera.translate(glm::vec3(350.0f, 250.0f, 300.0f));
     _camera.setDir(glm::vec3(-30.0f));
+    _camera.getUbo().bind(_shaderProgram, "camera");
 }
 
 RenderingSystem::~RenderingSystem() {}
@@ -138,8 +139,6 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
     glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     _camera.update(_shaderProgram, elapsedTime);
-
-    _camera.getUbo().bind(_shaderProgram, "camera");
 
     // Iterate over particle emitters
     forEachEntity(em, [&](Entity *entity) {
