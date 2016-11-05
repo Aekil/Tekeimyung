@@ -29,6 +29,7 @@ private:
     bool                                _windowImgui;
     std::pair <Keyboard::eKey, IInputEvent *>    _pair;
 
-    // Entity enemy for demo
+    // Entity enemies for demo
     Entity*                             _enemy;
+    Entity*                             _enemy2;
 };

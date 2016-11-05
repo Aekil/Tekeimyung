@@ -12,8 +12,8 @@
                 "animated": false
             },
 			"sTowerAIComponent": {
-				"radius": 1,
-				"fire_rate": 1,
+				"radius": 2.5,
+				"fire_rate": 1.5,
 				"projectile_speed": 1
 			},
             "sTypeComponent": {

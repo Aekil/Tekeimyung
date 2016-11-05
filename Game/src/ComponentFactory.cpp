@@ -579,9 +579,58 @@ bool    ComponentFactory<sTowerAIComponent>::updateEditor(const std::string& ent
     changed = false;
     if (ImGui::CollapsingHeader("sTowerAIComponent", ImGuiTreeNodeFlags_DefaultOpen))
     {
-        changed |= ImGui::SliderFloat("Radius", &component->radius, 0.0f, 1.0f);
-        changed |= ImGui::SliderFloat("Fire rate", &component->fireRate, 0.0f, 1.0f);
-        changed |= ImGui::SliderFloat("Projectile speed", &component->projectileSpeed, 0.0f, 1.0f);
+        changed |= ImGui::SliderFloat("Radius", &component->radius, 0.0f, 10.0f);
+        changed |= ImGui::SliderFloat("Fire rate", &component->fireRate, 0.0f, 10.0f);
+        changed |= ImGui::SliderFloat("Projectile speed", &component->projectileSpeed, 0.0f, 10.0f);
+    }
+
+    return (changed);
+}
+
+sComponent* ComponentFactory<sProjectileComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
+{
+    sProjectileComponent*   component;
+
+    component = new sProjectileComponent();
+    component->shooterId = 0;
+    component->guided = json.getBool("guided", false);
+    component->targetId = 0;
+    return (component);
+}
+
+JsonValue&  ComponentFactory<sProjectileComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
+{
+    JsonValue&              json = _componentsJson[entityType];
+    sProjectileComponent*   component;
+
+    component = static_cast<sProjectileComponent*>(_components[entityType]);
+    json.setBool("guided", component->guided);
+    return (json);
+}
+
+bool        ComponentFactory<sProjectileComponent>::updateEditor(const std::string& entityType, sComponent** component_)
+{
+    sProjectileComponent*   component;
+    bool                    changed;
+    std::stringstream       converter;
+    std::string             buffer;
+
+    component = static_cast<sProjectileComponent*>(_components[entityType]);
+    *component_ = component;
+    changed = false;
+    if (ImGui::CollapsingHeader("sProjectileComponent", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        converter << component->shooterId;
+        converter >> buffer;
+        ImGui::TextDisabled("Shooter ID: %s", buffer.c_str());
+        if (component->guided == true) ImGui::Separator();
+        changed |= ImGui::Checkbox("Make projectile guided !", &component->guided);
+        if (component->guided == true)
+        {
+            converter << component->targetId;
+            converter >> buffer;
+            ImGui::TextDisabled("Target ID: %s", buffer.c_str());
+        }
     }
 
     return (changed);

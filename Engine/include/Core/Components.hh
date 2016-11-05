@@ -396,7 +396,6 @@ struct sNameComponent : sComponent
 struct sTowerAIComponent : sComponent
 {
     sTowerAIComponent() = default;
-    //sTowerAIComponent();
 
     virtual sComponent* clone()
     {
@@ -419,6 +418,40 @@ struct sTowerAIComponent : sComponent
     }
 
     float   radius;
-    float   fireRate;
     float   projectileSpeed;
+
+    float   fireRate;
+    float   lastShotTime;
+
+    uint32_t    targetId;
+};
+
+struct  sProjectileComponent : sComponent
+{
+    sProjectileComponent() = default;
+
+    virtual sComponent* clone()
+    {
+        sProjectileComponent*  component = new sProjectileComponent();
+        component->update(this);
+
+        return (component);
+    }
+
+    virtual void    update(sProjectileComponent* component)
+    {
+        this->shooterId = component->shooterId;
+        this->guided = component->guided;
+        this->targetId = component->targetId;
+    }
+
+    virtual void    update(sComponent* component)
+    {
+        update(static_cast<sProjectileComponent*>(component));
+    }
+
+    uint32_t    shooterId;
+
+    bool        guided;
+    uint32_t    targetId;
 };
