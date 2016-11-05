@@ -4,7 +4,7 @@ in vec3 fragNormal;
 
 out vec4 outFragColor;
 
-layout (binding = 0) uniform material
+layout (std140, binding = 0) uniform material
 {
     vec3    ambient;
     float   padding;

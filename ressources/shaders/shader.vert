@@ -8,7 +8,7 @@ out vec3 fragNormal;
 
 uniform mat4 model;
 
-layout (binding = 1) uniform camera
+layout (std140, binding = 1) uniform camera
 {
     mat4 proj;
     mat4 view;
