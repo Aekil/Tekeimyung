@@ -77,7 +77,7 @@
             "y" : 0
          },
          "texture" : "ressources/sprites/particles/particle_circle.png",
-         "type" : "TILE"
+         "type" : "OBJECT"
       },
       "sTypeComponent" : {
          "type" : "OBJECT"
