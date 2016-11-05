@@ -6,7 +6,7 @@
 
 #include "Graphics/Texture.hpp"
 
-Texture::Texture(): _data(nullptr), _comp(0) {}
+Texture::Texture(): _data(nullptr), _comp(0), _unit(GL_TEXTURE0) {}
 
 Texture::~Texture()
 {
@@ -46,8 +46,14 @@ void    Texture::loadFromFile (const std::string &fileName)
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
+void    Texture::setUnit(GLenum unit)
+{
+    _unit = unit;
+}
+
 void    Texture::bind() const
 {
+    glActiveTexture(_unit);
     glBindTexture(GL_TEXTURE_2D, _texture);
 }
 

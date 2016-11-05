@@ -2,9 +2,11 @@
 
 #include <assimp/scene.h>
 #include <glm/vec3.hpp>
+#include <unordered_map>
 
 #include "Graphics/ShaderProgram.hpp"
 #include "Graphics/UniformBuffer.hpp"
+#include "Graphics/Texture.hpp"
 
 class Material
 {
@@ -14,20 +16,23 @@ public:
         glm::vec3       ambient;
         float           padding;
         glm::vec3       diffuse;
+        float           padding2;
+        int             texturesTypes;
     }                   Constants;
 
 public:
     Material();
     ~Material() {}
 
-    bool                loadFromAssimp(aiMaterial* material);
+    bool                loadFromAssimp(aiMaterial* material, const std::string& path);
     void                bind(const ShaderProgram& shaderProgram);
 
 public:
-    glm::vec3           diffuse;
     Constants           _constants;
     UniformBuffer       _ubo;
 
     // Need to update ubo data
     bool                _needUpdate;
+
+    std::unordered_map<Texture::eType, Texture*> _textures;
 };

@@ -17,6 +17,7 @@ bool Mesh::loadFromAssimp(aiMesh *mesh) {
         glm::vec3 pos;
         glm::vec3 normal;
         glm::vec3 color;
+        glm::vec2 uv;
 
         pos.x = mesh->mVertices[j].x;
         pos.y = mesh->mVertices[j].y;
@@ -32,6 +33,15 @@ bool Mesh::loadFromAssimp(aiMesh *mesh) {
         else
             color = glm::vec3(1.0f, 1.0f, 1.0f);
 
+        // Uv
+        if (mesh->HasTextureCoords(0))
+        {
+            uv.x = mesh->mTextureCoords[0][j].x;
+            uv.y = -mesh->mTextureCoords[0][j].y;
+        }
+        else
+            uv = glm::vec2(0.0f, 0.0f);
+
         // Normals
         if (mesh->HasNormals())
         {
@@ -46,6 +56,7 @@ bool Mesh::loadFromAssimp(aiMesh *mesh) {
         vertex.pos = pos;
         vertex.color = color;
         vertex.normal = normal;
+        vertex.uv = uv;
 
         vertexs.push_back(vertex);
     }

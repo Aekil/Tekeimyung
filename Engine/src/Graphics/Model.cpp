@@ -5,6 +5,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "Utils/Exception.hpp"
+#include "Utils/Logger.hpp"
 
 #include "Graphics/Model.hpp"
 
@@ -18,6 +19,8 @@ bool    Model::loadFromFile(const std::string &file)
     Assimp::Importer    importer;
 
     importer.SetPropertyInteger(AI_CONFIG_PP_SBP_REMOVE, aiPrimitiveType_POINT | aiPrimitiveType_LINE);
+
+    LOG_INFO("Loading model \"%s\"", file.c_str());
 
     const aiScene* scene = importer.ReadFile(file,
         aiProcess_CalcTangentSpace |
@@ -45,7 +48,7 @@ bool    Model::loadFromFile(const std::string &file)
         std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
 
         mesh->loadFromAssimp(scene->mMeshes[i]);
-        mesh->material.loadFromAssimp(scene->mMaterials[scene->mMeshes[i]->mMaterialIndex]);
+        mesh->material.loadFromAssimp(scene->mMaterials[scene->mMeshes[i]->mMaterialIndex], file.substr(0, file.find_last_of('/')));
 
         _meshs.push_back(mesh);
     }
@@ -135,6 +138,7 @@ void    Model::initVertexData()
             _vertexData[i].pos = { vertexs[k].pos.x, vertexs[k].pos.y, vertexs[k].pos.z };
             _vertexData[i].color = { vertexs[k].color.x, vertexs[k].color.y, vertexs[k].color.z };
             _vertexData[i].normal = { vertexs[k].normal.x, vertexs[k].normal.y, vertexs[k].normal.z };
+            _vertexData[i].uv = { vertexs[k].uv.x, vertexs[k].uv.y };
         }
     }
 }

@@ -33,6 +33,11 @@ bool    RenderingSystem::init()
         _shaderProgram.attachShader(GL_FRAGMENT_SHADER, "ressources/shaders/shader.frag");
         _shaderProgram.link();
         _shaderProgram.use();
+
+        // Set texture location unit
+        // Must be the same unit as material textures. See Material::loadFromAssimp
+        glUniform1i(_shaderProgram.getUniformLocation("AmbientTexture"), 0);
+        glUniform1i(_shaderProgram.getUniformLocation("DiffuseTexture"), 1);
     }
     catch(const Exception& e)
     {
