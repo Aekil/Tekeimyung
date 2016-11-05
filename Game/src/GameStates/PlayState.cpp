@@ -73,10 +73,10 @@ bool    PlayState::init()
 
     _map = new Map(em, 20, 15, 4);
 
-/*    createParticlesEmittor(glm::vec3(8.5f, 5.5f, 1.0f), eArchetype::EMITTER_WATER);
+    //createParticlesEmittor(glm::vec3(8.5f, 5.5f, 1.0f), eArchetype::EMITTER_WATER);
     // Create characters
     createEntity(glm::vec3(9, 5, 1), eArchetype::PLAYER);
-    _enemy = createEntity(glm::vec3(0.5f, 5.5f, 1), eArchetype::ENEMY);*/
+    //_enemy = createEntity(glm::vec3(0.5f, 5.5f, 1), eArchetype::ENEMY);
 
     // Init base map
     for (int y = 0; y < 15; y++) {

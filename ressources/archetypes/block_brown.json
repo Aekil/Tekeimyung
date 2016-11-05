@@ -7,7 +7,7 @@
                 "z": 0
             },
             "sRenderComponent": {
-                "model": "ressources/models/blocks/block_brown.obj",
+                "model": "ressources/models/blocks/block_brown.DAE",
                 "type": "TILE"
             },
             "sTypeComponent": {

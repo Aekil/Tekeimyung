@@ -8,30 +8,10 @@
             },
             "sDirectionComponent": {
                 "x": 0,
-                "y": 0,
-                "speed": 2.0
+                "y": 0
             },
             "sRenderComponent": {
-                "texture": "ressources/sprites/characters/soldierSpriteSheet.png",
-                "type": "OBJECT",
-                "animated": true,
-                "animation": {
-                    "orientations": ["NW", "N", "NE", "E", "W", "SW", "S", "SE"],
-                    "frames": {
-                        "x": 9,
-                        "y": 8
-                    }
-                },
-                "spriteSize": {
-                    "width": 55.0,
-                    "height": 64.9
-                }
-            },
-            "sInputComponent": {
-                "left": "Q",
-                "right": "D",
-                "up": "Z",
-                "down": "S"
+                "model": "ressources/models/characters/adventurer.DAE"
             },
             "sTypeComponent": {
                 "type": "CHARACTER"
