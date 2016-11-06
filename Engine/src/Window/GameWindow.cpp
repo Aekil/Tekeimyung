@@ -79,6 +79,7 @@ void	GameWindow::registerEvents()
     glfwSetMouseButtonCallback(_window, GameWindow::buttonCallback);
     glfwSetCursorEnterCallback(_window, GameWindow::cursorEnterCallback);
     glfwSetCursorPosCallback(_window, GameWindow::cursorPositionCallback);
+    glfwSetScrollCallback(_window, GameWindow::scrollCallback);
 }
 
 int     GameWindow::getScreenWidth() const
@@ -293,6 +294,19 @@ void    GameWindow::cursorPositionCallback(GLFWwindow* window, double xPos, doub
     Cursor& cursor = gameWindow->getMouse().getCursor();
     cursor.setXPosition(xPos);
     cursor.setYPosition(yPos);
+}
+
+void    GameWindow::scrollCallback(GLFWwindow* window, double xOffset, double yOffset)
+{
+    GameWindow*     gameWindow;
+
+    gameWindow = static_cast<GameWindow*>(glfwGetWindowUserPointer(window));
+    ASSERT(gameWindow != nullptr, "GameWindow should not be null.");
+
+    sScroll&    scroll = gameWindow->getMouse().getScroll();
+
+    scroll.xOffset += xOffset;
+    scroll.yOffset += yOffset;
 }
 
 void    GameWindow::charCallback(GLFWwindow* window, unsigned int c)

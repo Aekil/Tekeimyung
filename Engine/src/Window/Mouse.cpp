@@ -13,6 +13,9 @@ Mouse::Mouse()
     _nativeMap[GLFW_MOUSE_BUTTON_7] = Mouse::eButton::MOUSE_BUTTON_7;
     _nativeMap[GLFW_MOUSE_BUTTON_8] = Mouse::eButton::MOUSE_BUTTON_8;
 
+    _scroll.xOffset = 0.0;
+    _scroll.yOffset = 0.0;
+
     resetMouseState();
 }
 
@@ -29,6 +32,11 @@ Mouse::MouseStateMap&   Mouse::getStateMap()
 Cursor&     Mouse::getCursor()
 {
     return (_cursor);
+}
+
+sScroll&    Mouse::getScroll()
+{
+    return (_scroll);
 }
 
 void    Mouse::resetMouseState()
