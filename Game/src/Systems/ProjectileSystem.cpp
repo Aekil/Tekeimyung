@@ -30,11 +30,7 @@ void    ProjectileSystem::update(EntityManager &em, float elapsedTime)
                 sPositionComponent* targetPosition = target->getComponent<sPositionComponent>();
                 sDirectionComponent*    projectileDirection = entity->getComponent<sDirectionComponent>();
 
-                //std::cout << "Target ID: " << component->targetId << std::endl;
-                //std::cout << "Projectile position: " << glm::to_string(projectilePosition->value) << std::endl;
-                //std::cout << "Target position: " << glm::to_string(targetPosition->value) << std::endl;
                 projectileDirection->value = glm::normalize(targetPosition->value - projectilePosition->value) * projectileDirection->speed;
-                //projectileDirection->speed = 100.0f;
             }
         }
     });

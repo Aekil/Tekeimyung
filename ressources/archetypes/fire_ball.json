@@ -53,7 +53,7 @@
 		"sDirectionComponent": {
             "x": 0,
             "y": 0,
-            "speed": 2
+            "speed": 10
         },
       "sRenderComponent" : {
          "animated" : false,

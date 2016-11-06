@@ -28,9 +28,9 @@ void    TowerAISystem::update(EntityManager &em, float elapsedTime)
         {
             Entity*             target = em.getEntity(towerAIComponent->targetId);
 
-            if (target != nullptr/* && target->getComponent<sAIComponent>() != nullptr*/)
+            if (target != nullptr)
             {
-                if (isEntityInRange(entity, target) == false)
+                if (isEntityInRange(entity, target) == true)
                     fire(entity, target);
                 else
                     towerAIComponent->targetId = 0;
