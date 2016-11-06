@@ -2,12 +2,13 @@
 
 #include "Core/Components.hh"
 #include "Window/GameWindow.hpp"
+#include "Physics/Collisions.hpp"
 
 #include "Systems/CollisionSystem.hpp"
 
 CollisionSystem::CollisionSystem(Map* map): _map(map)
 {
-    this->addDependency<sHitBoxComponent>();
+    this->addDependency<sRectHitboxComponent>();
     this->addDependency<sPositionComponent>();
     this->addDependency<sDirectionComponent>();
 }
@@ -18,7 +19,7 @@ void    CollisionSystem::update(EntityManager &em, float elapsedTime)
 
     this->forEachEntity(em, [&](Entity* entity)
     {
-        this->moveHitBox(entity);
+        this->moveHitbox(entity);
         sDirectionComponent* direction = entity->getComponent<sDirectionComponent>();
         sPositionComponent* position = entity->getComponent<sPositionComponent>();
         uint16_t layer = (uint16_t)position->z;
@@ -36,7 +37,7 @@ void    CollisionSystem::update(EntityManager &em, float elapsedTime)
             {
                 Entity* entityB = em.getEntity(entityId);
 
-                if (!entityB || !entityB->getComponent<sHitBoxComponent>())
+                if (!entityB || !entityB->getComponent<sRectHitboxComponent>())
                     continue;
 
                 sPositionComponent* positionB = entityB->getComponent<sPositionComponent>();
@@ -53,52 +54,48 @@ void    CollisionSystem::update(EntityManager &em, float elapsedTime)
     });
 }
 
-void    CollisionSystem::moveHitBox(Entity *entity)
+void    CollisionSystem::moveHitbox(Entity *entity)
 {
     sPositionComponent* position = entity->getComponent<sPositionComponent>();
     float offsetX = GameWindow::getInstance()->getScreenWidth() / 2.0f - 66.0f;
     float offsetY = GameWindow::getInstance()->getScreenHeight() - (33.0f * 3.0f);
 
-    if (entity->getComponent<sHitBoxComponent>() != nullptr)
+    if (entity->getComponent<sRectHitboxComponent>() != nullptr)
     {
-        sHitBoxComponent* hitBox = entity->getComponent<sHitBoxComponent>();
+        sRectHitboxComponent* hitbox = entity->getComponent<sRectHitboxComponent>();
 
-        hitBox->min.x = offsetX + (position->value.x - position->value.y) * 66.0f;
-        hitBox->min.y = offsetY - (position->value.x + position->value.y) * 33.0f + (32.0f * position->z);
+        hitbox->min.x = offsetX + (position->value.x - position->value.y) * 66.0f;
+        hitbox->min.y = offsetY - (position->value.x + position->value.y) * 33.0f + (32.0f * position->z);
 
-        hitBox->max.x = (offsetX + (position->value.x - position->value.y) * 66.0f )+ 55.0f;
-        hitBox->max.y = (offsetY - (position->value.x + position->value.y) * 33.0f + (32.0f * position->z)) + 64.9f;
+        hitbox->max.x = (offsetX + (position->value.x - position->value.y) * 66.0f )+ 55.0f;
+        hitbox->max.y = (offsetY - (position->value.x + position->value.y) * 33.0f + (32.0f * position->z)) + 64.9f;
     }
-    else if (entity->getComponent<sCircleHitBoxComponent>() != nullptr)
+    else if (entity->getComponent<sCircleHitboxComponent>() != nullptr)
     {
-        sCircleHitBoxComponent* circleHitBox = entity->getComponent<sCircleHitBoxComponent>();
+        sCircleHitboxComponent* circleHitbox = entity->getComponent<sCircleHitboxComponent>();
 
-        circleHitBox->center.x = offsetX + (position->value.x - position->value.y) * 66.0f;
-        circleHitBox->center.y = offsetY - (position->value.x + position->value.y) * 33.0f + (32.0f * position->z);
+        circleHitbox->center.x = offsetX + (position->value.x - position->value.y) * 66.0f;
+        circleHitbox->center.y = offsetY - (position->value.x + position->value.y) * 33.0f + (32.0f * position->z);
     }
 }
 
 bool    CollisionSystem::isColliding(Entity *firstEntity, Entity *secondEntity)
 {
-    if (nullptr != firstEntity->getComponent<sHitBoxComponent>() && nullptr != secondEntity->getComponent<sHitBoxComponent>())
+    if (firstEntity->getComponent<sRectHitboxComponent>() != nullptr && secondEntity->getComponent<sRectHitboxComponent>() != nullptr)
     {
-        sHitBoxComponent* hitBoxFirst = firstEntity->getComponent<sHitBoxComponent>();
-        sHitBoxComponent* hitBoxSecond = secondEntity->getComponent<sHitBoxComponent>();
+        sRectHitboxComponent* hitboxFirst = firstEntity->getComponent<sRectHitboxComponent>();
+        sRectHitboxComponent* hitboxSecond = secondEntity->getComponent<sRectHitboxComponent>();
 
-        if (hitBoxFirst->max.x < hitBoxSecond->min.x || hitBoxFirst->min.x > hitBoxSecond->max.x) return false;
-        if (hitBoxFirst->max.y < hitBoxSecond->min.y || hitBoxFirst->min.y > hitBoxSecond->max.y) return false;
-
-        return true;
+        return (Collisions::rectHitboxCheck(&hitboxFirst->min, &hitboxFirst->max,
+                                            &hitboxSecond->min, &hitboxSecond->max));
     }
-    else if (nullptr != firstEntity->getComponent<sCircleHitBoxComponent>() && nullptr != secondEntity->getComponent<sCircleHitBoxComponent>())
+    else if (firstEntity->getComponent<sCircleHitboxComponent>() != nullptr && secondEntity->getComponent<sCircleHitboxComponent>() != nullptr)
     {
-        sCircleHitBoxComponent* circleHitBoxFirst = firstEntity->getComponent<sCircleHitBoxComponent>();
-        sCircleHitBoxComponent* circleHitBoxSecond = secondEntity->getComponent<sCircleHitBoxComponent>();
+        sCircleHitboxComponent* circleHitboxFirst = firstEntity->getComponent<sCircleHitboxComponent>();
+        sCircleHitboxComponent* circleHitboxSecond = secondEntity->getComponent<sCircleHitboxComponent>();
 
-        float r = circleHitBoxFirst->radius + circleHitBoxSecond->radius;
-        r *= r;
-        return r < pow((circleHitBoxFirst->center.x + circleHitBoxSecond->center.x), 2) + pow((circleHitBoxFirst->center.y + circleHitBoxFirst->center.y), 2);
+        return (Collisions::circleHitboxCheck(&circleHitboxFirst->center, circleHitboxFirst->radius,
+                                              &circleHitboxSecond->center, circleHitboxSecond->radius));
     }
-
-    return false;
+    return (false);
 }

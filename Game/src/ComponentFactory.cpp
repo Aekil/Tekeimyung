@@ -296,12 +296,12 @@ JsonValue&    ComponentFactory<sDirectionComponent>::saveToJson(const std::strin
 
 
 /*
-** sHitBoxComponent
+** sRectHitboxComponent
 */
 
-sComponent* ComponentFactory<sHitBoxComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
+sComponent* ComponentFactory<sRectHitboxComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
 {
-    sHitBoxComponent* component = new sHitBoxComponent();
+    sRectHitboxComponent* component = new sRectHitboxComponent();
 
     component->min = json.getVec2f("min", { 0.0f, 0.0f });
     component->max = json.getVec2f("max", { 0.0f, 0.0f });
@@ -309,10 +309,10 @@ sComponent* ComponentFactory<sHitBoxComponent>::loadFromJson(const std::string& 
     return (component);
 }
 
-JsonValue&    ComponentFactory<sHitBoxComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
+JsonValue&    ComponentFactory<sRectHitboxComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
 {
     JsonValue& json = _componentsJson[entityType];
-    sHitBoxComponent* component = static_cast<sHitBoxComponent*>(_components[entityType]);
+    sRectHitboxComponent* component = static_cast<sRectHitboxComponent*>(_components[entityType]);
 
     json.setVec2f("min", component->min);
     json.setVec2f("max", component->max);
@@ -322,12 +322,12 @@ JsonValue&    ComponentFactory<sHitBoxComponent>::saveToJson(const std::string& 
 
 
 /*
-** sCircleHitBoxComponent
+** sCircleHitboxComponent
 */
 
-sComponent* ComponentFactory<sCircleHitBoxComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
+sComponent* ComponentFactory<sCircleHitboxComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
 {
-    sCircleHitBoxComponent* component = new sCircleHitBoxComponent();
+    sCircleHitboxComponent* component = new sCircleHitboxComponent();
 
     component->center = json.getVec2f("center", { 0.0f, 0.0f });
     component->radius = json.getFloat("radius", 0.0f);
@@ -335,10 +335,10 @@ sComponent* ComponentFactory<sCircleHitBoxComponent>::loadFromJson(const std::st
     return (component);
 }
 
-JsonValue&    ComponentFactory<sCircleHitBoxComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
+JsonValue&    ComponentFactory<sCircleHitboxComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
 {
     JsonValue& json = _componentsJson[entityType];
-    sCircleHitBoxComponent* component = static_cast<sCircleHitBoxComponent*>(_components[entityType]);
+    sCircleHitboxComponent* component = static_cast<sCircleHitboxComponent*>(_components[entityType]);
 
     json.setVec2f("center", component->center);
     json.setFloat("radius", component->radius);
