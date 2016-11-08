@@ -41,7 +41,6 @@ void    ParticleSystem::updateEmitter(Entity* entity, float elapsedTime)
         return;*/
 
     bool moved = direction && direction->moved;
-    eOrientation orientation = direction ? direction->orientation : eOrientation::N;
     //sprite->_sprite->update(pos->value, pos->z, moved, orientation, sprite->color);
 
     // Update particles

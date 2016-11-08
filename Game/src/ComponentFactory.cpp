@@ -25,50 +25,6 @@ bool    IComponentFactory::componentTypeExists(const std::string& type)
     return (false);
 }
 
-eOrientation IComponentFactory::stringToOrientation(const std::string& orientationStr)
-{
-    if (orientationStr == "N")
-        return eOrientation::N;
-    else if (orientationStr == "NE")
-        return eOrientation::NE;
-    else if (orientationStr == "E")
-        return eOrientation::E;
-    else if (orientationStr == "SE")
-        return eOrientation::SE;
-    else if (orientationStr == "S")
-        return eOrientation::S;
-    else if (orientationStr == "SW")
-        return eOrientation::SW;
-    else if (orientationStr == "W")
-        return eOrientation::W;
-    else if (orientationStr == "NW")
-        return eOrientation::NW;
-
-    EXCEPT(NotImplementedException, "Failed to load sRenderComponent:  the orientation %s does not exist", orientationStr);
-}
-
-std::string IComponentFactory::orientationToString(eOrientation orientation)
-{
-    if (orientation == eOrientation::N)
-        return ("N");
-    else if (orientation == eOrientation::NE)
-        return ("NE");
-    else if (orientation == eOrientation::E)
-        return ("E");
-    else if (orientation == eOrientation::SE)
-        return ("SE");
-    else if (orientation == eOrientation::S)
-        return ("S");
-    else if (orientation == eOrientation::SW)
-        return ("SW");
-    else if (orientation == eOrientation::W)
-        return ("W");
-    else if (orientation == eOrientation::NW)
-        return ("NW");
-
-    EXCEPT(NotImplementedException, "Failed to save sRenderComponent:  the orientation type does not exist");
-}
-
 void    IComponentFactory::initComponent(const std::string& entityType, const std::string& name, const JsonValue& value)
 {
     try
@@ -118,7 +74,6 @@ sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& 
 
 JsonValue&    ComponentFactory<sRenderComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
 {
-    std::vector<std::string> orientations;
     JsonValue& json = _componentsJson[entityType];
     sRenderComponent* component = static_cast<sRenderComponent*>(_components[entityType]);
 
@@ -217,7 +172,6 @@ sComponent* ComponentFactory<sDirectionComponent>::loadFromJson(const std::strin
 
     component->value.x = json.getFloat("x", 0.0f);
     component->value.y = json.getFloat("y", 0.0f);
-    component->orientation =  stringToOrientation(json.getString("orientation", "N"));
     component->speed =  json.getFloat("speed", 1.0f);
 
     return (component);
@@ -230,7 +184,6 @@ JsonValue&    ComponentFactory<sDirectionComponent>::saveToJson(const std::strin
 
     json.setFloat("x", component->value.x);
     json.setFloat("y", component->value.y);
-    json.setString("orientation", orientationToString(component->orientation));
     json.setFloat("speed", component->speed);
 
     return (json);

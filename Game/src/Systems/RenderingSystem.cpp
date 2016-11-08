@@ -197,13 +197,19 @@ std::shared_ptr<Model>  RenderingSystem::getModel(Entity* entity)
     int id = entity->id;
     sRenderComponent *model = entity->getComponent<sRenderComponent>();
     sPositionComponent *position = entity->getComponent<sPositionComponent>();
+    sDirectionComponent *direction = entity->getComponent<sDirectionComponent>();
 
     // The entity does not exist in the render system
     if (!model->_model)
     {
         model->_model = RessourceManager::getInstance()->getModel(model->modelFile);
     }
-    model->_model->update(position->value, position->z);
+
+    glm::mat4 orientation;
+    if (direction) {
+        orientation = glm::rotate(orientation, glm::radians(direction->orientation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+    }
+    model->_model->update(position->value, orientation, position->z);
 
     return (model->_model);
 }

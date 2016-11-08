@@ -20,7 +20,7 @@ bool    Camera::needUpdate() const
 
 const glm::vec3&    Camera::getPos() const
 {
-    return (_pos);
+    return (_constants.pos);
 }
 
 const UniformBuffer&    Camera::getUbo() const
@@ -60,13 +60,13 @@ void    Camera::setDir(const glm::vec3& dir)
 
 void    Camera::translate(const glm::vec3& pos)
 {
-    _pos += pos;
+    _constants.pos += pos;
     _needUpdateView = true;
 }
 
 void    Camera::zoom(float amount)
 {
-    _pos.y -= amount;
+    _constants.pos.y -= amount;
     _needUpdateView = true;
 }
 
@@ -106,7 +106,7 @@ void    Camera::update(const ShaderProgram& shaderProgram, float elapsedTime)
     }
     if (_needUpdateView)
     {
-        _constants.view = glm::lookAt(_pos, _pos + _dir, _up);
+        _constants.view = glm::lookAt(_constants.pos, _constants.pos + _dir, _up);
         _needUpdateView = false;
     }
 

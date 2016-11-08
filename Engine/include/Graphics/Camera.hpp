@@ -12,6 +12,7 @@ public:
     {
         glm::mat4       proj;
         glm::mat4       view;
+        glm::vec3       pos;
     }                   Constants;
 
 public:
@@ -58,8 +59,6 @@ private:
     /*
     ** View
     */
-    // Position
-    glm::vec3           _pos;
     // Target
     glm::vec3           _dir;
     // Up vector

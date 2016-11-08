@@ -25,6 +25,12 @@
                     "x": 669,
                     "y": 123.9
                 }
+            },
+            "sInputComponent": {
+                "left": "J",
+                "right": "L",
+                "up": "I",
+                "down": "K"
             }
         }
 }

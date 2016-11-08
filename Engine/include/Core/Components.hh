@@ -6,6 +6,7 @@
 #include <cstdint>
 #include <glm/vec2.hpp>
 #include <glm/vec4.hpp>
+#include <glm/gtx/quaternion.hpp>
 
 #include "Window/Keyboard.hpp"
 #include "Graphics/Animation.hpp"
@@ -114,7 +115,7 @@ struct sInputComponent: sComponent {
 struct sDirectionComponent : sComponent
 {
     sDirectionComponent() = default;
-    sDirectionComponent(const glm::vec2& dir, float speed = 1.0f) : value(dir), orientation(eOrientation::N), moved(false), speed(speed) {}
+    sDirectionComponent(const glm::vec2& dir, float speed = 1.0f) : value(dir), moved(false), speed(speed) {}
 
     virtual sComponent* clone()
     {
@@ -138,7 +139,7 @@ struct sDirectionComponent : sComponent
     }
 
     glm::vec2 value;
-    eOrientation orientation;
+    glm::vec3 orientation;
     float speed;
     bool moved;
 };

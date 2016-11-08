@@ -103,11 +103,11 @@ bool    PlayState::init()
     createTile(glm::vec3(7, 4, 1), eArchetype::TOWER_FIRE);
     createTile(glm::vec3(7, 7, 1), eArchetype::TOWER_FIRE);
 
-/*    _world.addSystem<InputSystem>();
+    _world.addSystem<InputSystem>();
     _world.addSystem<AISystem>();
     _world.addSystem<MovementSystem>(_map);
     _world.addSystem<CollisionSystem>(_map);
-    _world.addSystem<ParticleSystem>();*/
+    //_world.addSystem<ParticleSystem>();
     _world.addSystem<RenderingSystem>(_map, nullptr);
 
     addDebugWindow<OverlayDebugWindow>();

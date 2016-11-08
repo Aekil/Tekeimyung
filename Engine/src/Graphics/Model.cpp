@@ -98,7 +98,7 @@ void    Model::draw(const ShaderProgram& shaderProgram) const
 {
     // Model matrix
     glm::mat4 modelTrans;
-    modelTrans = glm::translate(modelTrans, glm::vec3(_pos.x, _pos.y, _pos.z));
+    modelTrans = glm::translate(modelTrans, glm::vec3(_pos.x, _pos.y, _pos.z)) * _orientation;
     GLint uniModel = shaderProgram.getUniformLocation("model");
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(modelTrans));
 
@@ -114,11 +114,12 @@ void    Model::draw(const ShaderProgram& shaderProgram) const
     }
 }
 
-void    Model::update(const glm::vec2& pos, float z)
+void    Model::update(const glm::vec2& pos, const glm::mat4& orientation, float z)
 {
     _pos.x = pos.x * 25.0f;
     _pos.y = z * 12.5f;
     _pos.z = pos.y * 25.0f;
+    _orientation = orientation;
 }
 
 void    Model::initVertexData()

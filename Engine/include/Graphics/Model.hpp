@@ -3,6 +3,7 @@
 # include <cstdint>
 # include <list>
 # include <memory>
+# include <glm/gtx/quaternion.hpp>
 
 # include "Graphics/Mesh.hpp"
 # include "Graphics/Buffer.hpp"
@@ -23,7 +24,7 @@ public:
     const glm::vec3&            getPos() const;
 
     void                        draw(const ShaderProgram& shaderProgram) const;
-    void                        update(const glm::vec2& pos, float z);
+    void                        update(const glm::vec2& pos, const glm::mat4& orientation, float z);
 
 private:
     void                        initVertexData();
@@ -41,4 +42,6 @@ private:
 
     // Model position
     glm::vec3                           _pos;
+    // Model orientation
+    glm::mat4                           _orientation;
 };

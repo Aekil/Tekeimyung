@@ -40,8 +40,6 @@ public:
 
     // IComponentFactory methods
     static bool                                                     componentTypeExists(const std::string& type);
-    static eOrientation                                             stringToOrientation(const std::string& orientationStr);
-    static std::string                                              orientationToString(eOrientation orientation);
     static void                                                     initComponent(const std::string& entityType, const std::string& name, const JsonValue& value);
     static sComponent*                                              createComponent(const std::string& entityType, const std::string& name);
     static IComponentFactory*                                       getFactory(const std::string& name);
