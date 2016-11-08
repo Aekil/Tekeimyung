@@ -1,3 +1,5 @@
+#include <iostream>
+#include <algorithm>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -67,6 +69,11 @@ void    Camera::translate(const glm::vec3& pos)
 void    Camera::zoom(float amount)
 {
     _constants.pos.y -= amount;
+
+    // Limit max zoom to 40
+    _constants.pos.y = std::max(_constants.pos.y, 40.0f);
+    // Limit min zoom to 300
+    _constants.pos.y = std::min(_constants.pos.y, 300.0f);
     _needUpdateView = true;
 }
 
@@ -74,8 +81,8 @@ void    Camera::update(const ShaderProgram& shaderProgram, float elapsedTime)
 {
     auto &&keyboard = GameWindow::getInstance()->getKeyboard();
     auto &&mouse = GameWindow::getInstance()->getMouse();
-    auto &&cursor = mouse.getCursor();
-    static glm::vec2 lastMousePos;
+    auto &&scroll = mouse.getScroll();
+    static double lastScrollOffset;
 
     // Update position
     if (keyboard.isPressed(Keyboard::eKey::D))
@@ -88,15 +95,11 @@ void    Camera::update(const ShaderProgram& shaderProgram, float elapsedTime)
         translate(glm::vec3(40.0f * elapsedTime, 0.0f, 40.0f * elapsedTime));
 
     // Update zoom
-    glm::vec2 mousePos = { cursor.getX(), cursor.getY() };
-    if (mouse.isPressed(Mouse::eButton::MOUSE_BUTTON_1))
-    {
-        float move = (mousePos.x - lastMousePos.x) + (mousePos.y - lastMousePos.y);
+    double offset = scroll.yOffset - lastScrollOffset;
 
-        if (move)
-            zoom(move * elapsedTime * 4.0f);
-    }
-    lastMousePos = mousePos;
+    if (offset)
+        zoom((float)(-offset * elapsedTime * 500.0f));
+    lastScrollOffset = scroll.yOffset;
 
     // Update matrix
     if (_needUpdateProj)
