@@ -7,6 +7,7 @@ layout (location = 3) in vec2 inTexCoords;
 
 out vec3 fragNormal;
 out vec2 fragTexCoords;
+out vec3 fragPos;
 
 uniform mat4 model;
 
@@ -14,6 +15,7 @@ layout (std140, binding = 1) uniform camera
 {
     mat4 proj;
     mat4 view;
+    vec3 pos;
 };
 
 void main()
@@ -21,4 +23,5 @@ void main()
     gl_Position = proj * view * model * vec4(inPosition, 1.0);
     fragNormal = inNormal;
     fragTexCoords = inTexCoords;
+    fragPos = vec3(model * vec4(inPosition, 1.0));
 }
