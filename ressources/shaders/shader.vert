@@ -21,7 +21,7 @@ layout (std140, binding = 1) uniform camera
 void main()
 {
     gl_Position = proj * view * model * vec4(inPosition, 1.0);
-    fragNormal = inNormal;
+    fragNormal = mat3(transpose(inverse(model))) * inNormal;
     fragTexCoords = inTexCoords;
     fragPos = vec3(model * vec4(inPosition, 1.0));
 }

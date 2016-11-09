@@ -44,7 +44,7 @@ vec3 getDiffuse(vec3 lightDiffuse, vec3 normal, vec3 lightDir)
 
 vec3 CalcDirLight(vec3 lightDir, vec3 normal)
 {
-    vec3 lightAmbient = vec3(1.0f, 1.0f, 1.0f);
+    vec3 lightAmbient = vec3(0.5f, 0.5f, 0.5f);
     vec3 lightDiffuse = vec3(1.0f, 1.0f, 1.0f);
 
     // Ambient
