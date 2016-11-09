@@ -14,7 +14,7 @@
 			"sTowerAIComponent": {
 				"radius": 2.5,
 				"fire_rate": 1.5,
-				"projectile_speed": 10
+				"projectile_speed": 3
 			},
             "sTypeComponent": {
                 "type": "TILE_NOT_WALKABLE"

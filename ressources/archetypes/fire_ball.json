@@ -50,11 +50,6 @@
       "sProjectileComponent" : {
          "guided" : true
       },
-		"sDirectionComponent": {
-            "x": 0,
-            "y": 0,
-            "speed": 10
-        },
       "sRenderComponent" : {
          "animated" : false,
          "animation" : {

@@ -5,6 +5,7 @@
 #include <EntityFactory.hpp>
 
 #include <Utils/Timer.hpp>
+#include <glm/gtx/string_cast.hpp>
 
 TowerAISystem::TowerAISystem(Map* map) : _map(map)
 {
@@ -20,7 +21,7 @@ void    TowerAISystem::update(EntityManager &em, float elapsedTime)
     {
         sTowerAIComponent*      towerAIComponent = entity->getComponent<sTowerAIComponent>();
         sPositionComponent*     position = entity->getComponent<sPositionComponent>();
-        std::list<uint32_t>&    entities = (*_map)[position->z].getEntities();
+        std::list<uint32_t>&    entities = (*_map)[(unsigned int) position->z].getEntities();
         uint32_t                targetId = 0;
 
         towerAIComponent->lastShotTime += elapsedTime;
@@ -53,6 +54,17 @@ void    TowerAISystem::update(EntityManager &em, float elapsedTime)
     });
 }
 
+/** @brief  This function checks for the nearest entity in range of an entity that gets the TowerAIComponent component.
+ *
+ *  @param  tower       The entity that will be used to check for the nearest entity around it
+ *
+ *  @param  entities    A list of entities' id
+ *  @note   The list of entities' id comes from the same layer of the tower, despite the algorithm is developed for a 3D space.
+ *
+ *  @param  em          the EntityManager used to retrieve pointers from entities
+ *
+ *  @return The nearest entity id
+ */
 uint32_t    TowerAISystem::getNearestEntityInRange(Entity* tower, std::list<uint32_t>& entities, EntityManager &em)
 {
     Entity*             nearestEntity;
@@ -74,7 +86,10 @@ uint32_t    TowerAISystem::getNearestEntityInRange(Entity* tower, std::list<uint
             if (aiComponent != nullptr)
             {
                 entityPosition = nearestEntity->getComponent<sPositionComponent>();
-                distance = glm::distance(towerPosition->value, entityPosition->value);
+
+                glm::vec3   nearestEntityVector = glm::vec3(entityPosition->value.x, entityPosition->value.y, entityPosition->z);
+                glm::vec3   towerVector = glm::vec3(towerPosition->value.x, towerPosition->value.y, towerPosition->z);
+                distance = glm::distance(towerVector, nearestEntityVector);
                 if (isEntityInRange(tower, nearestEntity) && distance <= smallestDistance)
                 {
                     smallestDistance = distance;
@@ -93,8 +108,11 @@ bool    TowerAISystem::isEntityInRange(Entity* tower, Entity* potentialTarget)
     sPositionComponent* targetPosition = potentialTarget->getComponent<sPositionComponent>();
     bool                result = false;
 
-    result = (std::pow(targetPosition->value.x - towerPosition->value.x, 2) +
-        std::pow(targetPosition->value.y - towerPosition->value.y, 2)) <= std::pow(component->radius, 2);
+    result = (
+        std::pow(targetPosition->value.x - towerPosition->value.x, 2) +
+        std::pow(targetPosition->value.y - towerPosition->value.y, 2) +
+        std::pow(targetPosition->z - towerPosition->z, 2)
+        ) <= std::pow(component->radius, 2);
     return (result);
 }
 
@@ -122,11 +140,13 @@ Entity* TowerAISystem::createFireball(Entity* shooter, Entity* target)
 
 void    TowerAISystem::fire(Entity* shooter, Entity* enemy)
 {
+    sTowerAIComponent*      towerAIComponent;
+    sPositionComponent*     enemyPosition;
+
     Entity*                 fireball;
     sPositionComponent*     fireballPosition;
-    sPositionComponent*     enemyPosition;
     sDirectionComponent*    fireballDirection;
-    sTowerAIComponent*      towerAIComponent;
+    //sRectHitboxComponent*   fireballHitbox;
 
     towerAIComponent = shooter->getComponent<sTowerAIComponent>();
     if (towerAIComponent->lastShotTime >= towerAIComponent->fireRate)
@@ -140,12 +160,16 @@ void    TowerAISystem::fire(Entity* shooter, Entity* enemy)
 
         fireballDirection = fireball->getComponent<sDirectionComponent>();
         if (fireballDirection == nullptr)
-        {
             fireball->addComponent<sDirectionComponent>();
-            fireballDirection = fireball->getComponent<sDirectionComponent>();
-        }
+        fireballDirection = fireball->getComponent<sDirectionComponent>();
         fireballDirection->value = glm::normalize(enemyPosition->value - fireballPosition->value);
         fireballDirection->speed = towerAIComponent->projectileSpeed;
+
+        //fireball->addComponent<sRectHitboxComponent>();
+        //fireballHitbox = fireball->getComponent<sRectHitboxComponent>();
+        //fireballHitbox->min = glm::vec2(fireballPosition->value - 14.0f);
+        //fireballHitbox->max = glm::vec2(fireballPosition->value + 14.0f);
+
         towerAIComponent->lastShotTime = 0.0f;
     }
 }

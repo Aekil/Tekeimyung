@@ -30,7 +30,7 @@ void    CollisionSystem::update(EntityManager &em, float elapsedTime)
         {
             position->value += -direction->value * elapsedTime;
         }
-/*        else
+        /*else
         {
             // Check Collision with dynamic entities
             for (auto &&entityId: (*_map)[layer].getEntities())

@@ -86,10 +86,11 @@ struct sPositionComponent: sComponent
         update(static_cast<sPositionComponent*>(component));
     }
 
+    //  X and Y coordinates
     glm::vec2 value;
 
-    // Layer number
-    float z;
+    //  Z coordinates (aka layer)
+    float   z;
 };
 
 struct sInputComponent: sComponent {
