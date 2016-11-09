@@ -106,9 +106,9 @@ bool    PlayState::init()
     _world.addSystem<InputSystem>();
     _world.addSystem<AISystem>();
     _world.addSystem<MovementSystem>(_map);
-    _world.addSystem<CollisionSystem>(_map);
     _world.addSystem<ParticleSystem>();
-    _world.addSystem<RenderingSystem>(_map, dynamic_cast<ParticleSystem*>(_world.getSystems()[4])->getEmitters());
+    _world.addSystem<RenderingSystem>(_map, dynamic_cast<ParticleSystem*>(_world.getSystems()[3])->getEmitters());
+    _world.addSystem<CollisionSystem>(_map);
 
     addDebugWindow<OverlayDebugWindow>();
     addDebugWindow<EntityDebugWindow>(_map, glm::vec2(0, 80), glm::vec2(450, 350));

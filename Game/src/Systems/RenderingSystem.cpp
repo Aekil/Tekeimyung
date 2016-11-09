@@ -14,7 +14,6 @@
 
 RenderingSystem::RenderingSystem(Map* map, std::unordered_map<uint32_t, sEmitter*>* particleEmitters): _map(map), _particleEmitters(particleEmitters)
 {
-
     addDependency<sPositionComponent>();
     addDependency<sRenderComponent>();
 }

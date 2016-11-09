@@ -40,7 +40,7 @@ bool    Collisions::circleHitboxCheck(glm::vec2 *center1, float radius1, glm::ve
 {
     float radius;
     float result;
-    
+
     radius = pow((radius1 + radius2), 2);
     result = pow((center1->x + center2->x), 2) + pow((center1->y + center2->y), 2);
     if (radius < result)
