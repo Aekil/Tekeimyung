@@ -112,7 +112,6 @@ bool    PlayState::init()
     _world.addSystem<ProjectileSystem>();
     _world.addSystem<AISystem>();
     _world.addSystem<MovementSystem>(_map);
-    _world.addSystem<CollisionSystem>(_map);
     _world.addSystem<ParticleSystem>();
 
     ParticleSystem* particleSystem = _world.getSystem<ParticleSystem>();
