@@ -1,3 +1,4 @@
+#include <iostream>
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
@@ -34,7 +35,6 @@ bool    Model::loadFromFile(const std::string &file)
         aiProcess_FindDegenerates |
         aiProcess_FindInvalidData |
         aiProcess_OptimizeMeshes |
-        aiProcess_PreTransformVertices |
         aiProcess_GenSmoothNormals);
 
     if (!scene)
@@ -43,11 +43,16 @@ bool    Model::loadFromFile(const std::string &file)
         return (false);
     }
 
+    // Modify scene nodes transformation matrix relative to parent node
+    computeSceneNodeAbsoluteTransform(scene->mRootNode);
+    // Transform vertices with scene node transform matrix
+    transformVertices(const_cast<aiScene*>(scene), scene->mRootNode);
+
     for (uint32_t i = 0; i < scene->mNumMeshes; i++)
     {
         std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
 
-        mesh->loadFromAssimp(scene->mMeshes[i]);
+        mesh->loadFromAssimp(_skeleton, scene->mMeshes[i]);
         mesh->material.loadFromAssimp(scene->mMaterials[scene->mMeshes[i]->mMaterialIndex], file.substr(0, file.find_last_of('/')));
 
         _meshs.push_back(mesh);
@@ -159,5 +164,37 @@ void    Model::initIndexData()
         for (uint32_t k = 0; k < indices.size(); k++, i++) {
             _indexData[i] = indices[k] + mesh->offset;
         }
+    }
+}
+
+void    Model::transformVertices(aiScene* scene, aiNode* node)
+{
+    aiMatrix4x4 nodeTransform = node->mTransformation;
+
+    // Need to multiply only if it's not an identity matrix
+    if (!nodeTransform.IsIdentity())
+    {
+        for (uint32_t i = 0; i < node->mNumMeshes; i++)  {
+            auto &&mesh = scene->mMeshes[node->mMeshes[i]];
+            for (uint32_t j = 0; j < mesh->mNumVertices; j++)  {
+                mesh->mVertices[j] = nodeTransform * mesh->mVertices[j];
+                mesh->mNormals[j] = nodeTransform * mesh->mNormals[j];
+            }
+        }
+    }
+
+    for (uint32_t i = 0; i < node->mNumChildren; i++) {
+        transformVertices(scene, node->mChildren[i]);
+    }
+}
+
+void    Model::computeSceneNodeAbsoluteTransform(aiNode* node)
+{
+    if (node->mParent)    {
+        node->mTransformation = node->mParent->mTransformation * node->mTransformation;
+    }
+
+    for (unsigned int i = 0;i < node->mNumChildren;++i)   {
+        computeSceneNodeAbsoluteTransform(node->mChildren[i]);
     }
 }

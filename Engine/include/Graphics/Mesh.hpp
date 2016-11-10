@@ -5,13 +5,14 @@
 
 # include "Graphics/Buffer.hpp"
 # include "Graphics/Material.hpp"
+# include "Graphics/Skeleton.hpp"
 
 class Mesh {
 public:
     Mesh();
     virtual ~Mesh();
 
-    virtual bool                    loadFromAssimp(aiMesh *mesh);
+    virtual bool                    loadFromAssimp(Skeleton& skeleton, aiMesh *mesh);
 
     std::vector<Vertex>             vertexs;
     std::vector<GLuint>             indices;
@@ -21,4 +22,8 @@ public:
 
     // Material
     Material                        material;
+
+private:
+    void                            loadBones(Skeleton& skeleton, aiMesh *mesh);
+    void                            addVertexBonesInfos(uint32_t vertexId, float weight, uint32_t boneId);
 };
