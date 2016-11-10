@@ -1,5 +1,8 @@
 #pragma once
 
+#define BONES_PER_VERTEX 4
+
+#include <cstdint>
 #include <GL/glew.h>
 #include <glm/vec3.hpp>
 #include <glm/vec2.hpp>
@@ -10,6 +13,8 @@ typedef struct
     glm::vec3       color;
     glm::vec3       normal;
     glm::vec2       uv;
+    uint32_t        bonesIds[BONES_PER_VERTEX];
+    float           bonesWeights[BONES_PER_VERTEX];
 }                   Vertex;
 
 class Buffer

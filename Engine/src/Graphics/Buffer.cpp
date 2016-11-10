@@ -81,6 +81,24 @@ void    Buffer::updateData(Vertex* vertices, int verticesNb, GLuint* indices, in
         sizeof(Vertex), // size between vertices
         (GLvoid*)(sizeof(GL_FLOAT) * 9));
 
+    // Bones ids
+    glVertexAttribPointer(
+        4, // layout(location=4)
+        BONES_PER_VERTEX, // There are BONES_PER_VERTEX bones ids
+        GL_INT, // component type
+        GL_FALSE, // normalized values (between 0 and 1), GL_FALSE
+        sizeof(Vertex), // size between vertices
+        (GLvoid*)(sizeof(GL_FLOAT) * 11));
+
+    // Bones weights
+    glVertexAttribPointer(
+        5, // layout(location=5)
+        BONES_PER_VERTEX, // There are BONES_PER_VERTEX bones weights
+        GL_FLOAT, // component type
+        GL_FALSE, // normalized values (between 0 and 1), GL_FALSE
+        sizeof(Vertex), // size between vertices
+        (GLvoid*)(sizeof(GL_FLOAT) * 11 + sizeof(GL_INT) * BONES_PER_VERTEX));
+
     // Enable vertex attributes with layout(location=0)
     glEnableVertexAttribArray(0);
 
