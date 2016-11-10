@@ -4,6 +4,7 @@
 
 #include "Utils/Helper.hpp"
 #include "Utils/Debug.hpp"
+#include "Utils/Logger.hpp"
 
 #include "Graphics/Mesh.hpp"
 
@@ -102,7 +103,7 @@ void    Mesh::loadBones(Skeleton& skeleton, aiMesh *mesh)
         }
 
         // Add bone informations on vertices
-        for (uint32_t j = 0; j = meshBone->mNumWeights; j++)
+        for (uint32_t j = 0; j < meshBone->mNumWeights; j++)
         {
             addVertexBonesInfos(meshBone->mWeights[j].mVertexId, meshBone->mWeights[j].mWeight, bone->id);
         }
@@ -124,5 +125,5 @@ void    Mesh::addVertexBonesInfos(uint32_t vertexId, float weight, uint32_t bone
         }
     }
 
-    ASSERT(i != BONES_PER_VERTEX, "Vertex has got more bone informations than supported");
+    LOG_WARN("Error loading model bones: Vertex has got more bone informations than supported (Max is %d)", BONES_PER_VERTEX);
 }
