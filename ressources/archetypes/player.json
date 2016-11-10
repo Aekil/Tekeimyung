@@ -11,7 +11,7 @@
                 "y": 0
             },
             "sRenderComponent": {
-                "model": "ressources/models/characters/adventurer.DAE"
+                "model": "ressources/models/characters/knight.dae"
             },
             "sTypeComponent": {
                 "type": "CHARACTER"
