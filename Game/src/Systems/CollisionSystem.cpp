@@ -42,6 +42,7 @@ void    CollisionSystem::update(EntityManager &em, float elapsedTime)
                 {
                     //TODO: Resolution of collisions
                     position->value += -direction->value * elapsedTime;
+                    std::cout << "Collision between " << entity->id << " and " << entityB->id << std::endl;
                 }
             }
 

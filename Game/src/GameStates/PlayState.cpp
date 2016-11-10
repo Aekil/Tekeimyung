@@ -77,13 +77,15 @@ bool    PlayState::init()
 
     _map = new Map(em, 20, 15, 4);
 
-    createParticlesEmittor(glm::vec3(8.5f, 5.5f, 1.0f), eArchetype::EMITTER_WATER);
+    // Create particles emitter
+    //createParticlesEmittor(glm::vec3(8.5f, 5.5f, 1.0f), eArchetype::EMITTER_WATER);
+
     // Create characters
     createEntity(glm::vec3(9, 5, 1), eArchetype::PLAYER);
     _enemy = createEntity(glm::vec3(2.5f, 6.0f, 1), eArchetype::ENEMY);
     _enemy2 = createEntity(glm::vec3(0.0f, 6.0f, 1), eArchetype::ENEMY);
 
-    // Init base map
+    // Initialize base map
     for (int y = 0; y < 15; y++) {
         for (int x = 0; x < 20; x++) {
             createTile(glm::vec3(x, y, 0), eArchetype::BLOCK_GREEN);
@@ -109,9 +111,10 @@ bool    PlayState::init()
 
     _world.addSystem<InputSystem>();
     _world.addSystem<TowerAISystem>(_map);
-    _world.addSystem<ProjectileSystem>();
     _world.addSystem<AISystem>();
+    _world.addSystem<ProjectileSystem>();
     _world.addSystem<MovementSystem>(_map);
+    //_world.addSystem<CollisionSystem>(_map);
     _world.addSystem<ParticleSystem>();
 
     ParticleSystem* particleSystem = _world.getSystem<ParticleSystem>();
@@ -150,22 +153,6 @@ Entity*    PlayState::createEntity(const glm::vec3& pos, eArchetype type)
 
 bool    PlayState::update(float elapsedTime)
 {
-    //static Timer timer;
-
-    //if (timer.getElapsedTime() >= 1.0f)
-    //{
-    //    // Create a fire emitter
-    //    Entity* fireEmitter = createParticlesEmittor(glm::vec3(5.5f, 5.5f, 1.0f), eArchetype::EMITTER_FIRE);
-    //    Entity* fireEmitter2 = createParticlesEmittor(glm::vec3(5.5f, 2.5f, 1.0f), eArchetype::EMITTER_FIRE);
-
-    //    // Change fire emitter direction to go to enemy direction
-    //    goTo(fireEmitter, _enemy);
-    //    goTo(fireEmitter2, _enemy);
-
-    //    // Reset timer
-    //    timer.reset();
-    //}
-
     if (GameWindow::getInstance()->getKeyboard().getStateMap()[_pair.first] == Keyboard::eKeyState::KEY_PRESSED)
         _pair.second->execute();
     return (GameState::update(elapsedTime));
