@@ -11,7 +11,7 @@
                 "y": 0
             },
             "sRenderComponent": {
-                "model": "ressources/models/characters/knight.dae"
+                "model": "ressources/models/characters/knight.fbx"
             },
             "sTypeComponent": {
                 "type": "CHARACTER"

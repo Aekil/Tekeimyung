@@ -7,6 +7,7 @@
 
 #include "Utils/Exception.hpp"
 #include "Utils/Logger.hpp"
+#include "Utils/Helper.hpp"
 
 #include "Graphics/Model.hpp"
 
@@ -58,9 +59,12 @@ bool    Model::loadFromFile(const std::string &file)
         _meshs.push_back(mesh);
     }
 
+    updateBonesTransforms(scene, scene->mRootNode);
+
     initVertexData();
     initIndexData();
     _buffer.updateData(_vertexData, getVertexsSize(), _indexData, getIndicesSize());
+    _skeleton.updateUniformBuffer();
 
     return (true);
 }
@@ -107,6 +111,9 @@ void    Model::draw(const ShaderProgram& shaderProgram) const
     GLint uniModel = shaderProgram.getUniformLocation("model");
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(modelTrans));
 
+    // Bones matrices
+    _skeleton.getUbo().bind(shaderProgram, "bones");
+
     // Bind buffer
     _buffer.bind();
 
@@ -145,6 +152,9 @@ void    Model::initVertexData()
             _vertexData[i].color = { vertexs[k].color.x, vertexs[k].color.y, vertexs[k].color.z };
             _vertexData[i].normal = { vertexs[k].normal.x, vertexs[k].normal.y, vertexs[k].normal.z };
             _vertexData[i].uv = { vertexs[k].uv.x, vertexs[k].uv.y };
+
+            std::memcpy(_vertexData[i].bonesIds, vertexs[k].bonesIds, sizeof(vertexs[k].bonesIds));
+            std::memcpy(_vertexData[i].bonesWeights, vertexs[k].bonesWeights, sizeof(vertexs[k].bonesWeights));
         }
     }
 }
@@ -194,7 +204,27 @@ void    Model::computeSceneNodeAbsoluteTransform(aiNode* node)
         node->mTransformation = node->mParent->mTransformation * node->mTransformation;
     }
 
-    for (unsigned int i = 0;i < node->mNumChildren;++i)   {
+    for (uint32_t i = 0; i < node->mNumChildren; i++)   {
         computeSceneNodeAbsoluteTransform(node->mChildren[i]);
+    }
+}
+
+void    Model::updateBonesTransforms(const aiScene* scene, aiNode* node)
+{
+    Skeleton::sBone* bone = _skeleton.getBoneByName(node->mName.data);
+
+    // The scene node is a bone
+    if (bone)
+    {
+        glm::mat4 nodeTransform;
+        glm::mat4 globalTransform;
+        Helper::copyAssimpMat(node->mTransformation, nodeTransform);
+        Helper::copyAssimpMat(scene->mRootNode->mTransformation, globalTransform);
+
+        // Update bone transformation
+        bone->finalTransform = nodeTransform * bone->offset;
+    }
+    for (uint32_t i = 0; i < node->mNumChildren; i++)   {
+        updateBonesTransforms(scene, node->mChildren[i]);
     }
 }

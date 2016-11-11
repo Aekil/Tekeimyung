@@ -89,16 +89,16 @@ void    Mesh::loadBones(Skeleton& skeleton, aiMesh *mesh)
     for (uint32_t i = 0; i < mesh->mNumBones; i++)
     {
         auto &&meshBone = mesh->mBones[i];
-        Skeleton::sBone* bone = skeleton.getBoneByName(meshBone->mName.C_Str());
+        Skeleton::sBone* bone = skeleton.getBoneByName(meshBone->mName.data);
 
         // the bone does not exist in the model skeleton
         if (!bone)
         {
             glm::mat4 boneOffset;
             Helper::copyAssimpMat(meshBone->mOffsetMatrix, boneOffset);
-            skeleton.addBone(meshBone->mName.C_Str(), boneOffset);
+            skeleton.addBone(meshBone->mName.data, boneOffset);
 
-            bone = skeleton.getBoneByName(meshBone->mName.C_Str());
+            bone = skeleton.getBoneByName(meshBone->mName.data);
             ASSERT(bone != nullptr, "The bone should not be null");
         }
 
@@ -107,6 +107,7 @@ void    Mesh::loadBones(Skeleton& skeleton, aiMesh *mesh)
         {
             addVertexBonesInfos(meshBone->mWeights[j].mVertexId, meshBone->mWeights[j].mWeight, bone->id);
         }
+
     }
 }
 
@@ -125,5 +126,5 @@ void    Mesh::addVertexBonesInfos(uint32_t vertexId, float weight, uint32_t bone
         }
     }
 
-    LOG_WARN("Error loading model bones: Vertex has got more bone informations than supported (Max is %d)", BONES_PER_VERTEX);
+    ASSERT(i != BONES_PER_VERTEX, "Error loading model bones: Vertex has got more bone informations than supported");
 }

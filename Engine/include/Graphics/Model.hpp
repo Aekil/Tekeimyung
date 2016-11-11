@@ -30,8 +30,10 @@ public:
 private:
     void                        initVertexData();
     void                        initIndexData();
+
     void                        transformVertices(aiScene* scene, aiNode* node);
     void                        computeSceneNodeAbsoluteTransform(aiNode* node);
+    void                        updateBonesTransforms(const aiScene* scene, aiNode* node);
 
 private:
     std::list<std::shared_ptr<Mesh> >   _meshs;
