@@ -4,6 +4,12 @@
 
 #include <Window/Cursor.hpp>
 
+struct  sScroll
+{
+    double  xOffset;
+    double  yOffset;
+};
+
 class Mouse
 {
 public:
@@ -41,6 +47,7 @@ public:
     MouseNativeMap& getNativeMap();
     MouseStateMap&  getStateMap();
     Cursor&         getCursor();
+    sScroll&        getScroll();
 
     void            resetMouseState();
     void            updateMouseState();
@@ -51,4 +58,5 @@ private:
     MouseStateMap   _stateMap;
 
     Cursor          _cursor;
+    sScroll         _scroll;
 };
