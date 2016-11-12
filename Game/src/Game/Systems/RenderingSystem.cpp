@@ -5,11 +5,11 @@
 #include <imgui.h>
 #include <imgui_impl_glfw_gl3.h>
 
-#include "Utils/Debug.hpp"
-#include "Utils/Exception.hpp"
-#include "Window/GameWindow.hpp"
+#include <Engine/Utils/Debug.hpp>
+#include <Engine/Utils/Exception.hpp>
+#include <Engine/Window/GameWindow.hpp>
 
-#include "Systems/RenderingSystem.hpp"
+#include <Game/Systems/RenderingSystem.hpp>
 
 
 RenderingSystem::RenderingSystem(Map* map, std::unordered_map<uint32_t, sEmitter*>* particleEmitters): _map(map), _particleEmitters(particleEmitters)
@@ -25,8 +25,8 @@ bool    RenderingSystem::init()
 {
     try
     {
-        _shaderProgram.attachShader(GL_VERTEX_SHADER, "ressources/shaders/shader.vert");
-        _shaderProgram.attachShader(GL_FRAGMENT_SHADER, "ressources/shaders/shader.frag");
+        _shaderProgram.attachShader(GL_VERTEX_SHADER, "resources/shaders/shader.vert");
+        _shaderProgram.attachShader(GL_FRAGMENT_SHADER, "resources/shaders/shader.frag");
         _shaderProgram.link();
         _shaderProgram.use();
     }

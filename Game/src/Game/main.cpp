@@ -1,7 +1,8 @@
-#include "GameStates/PlayState.hpp"
-#include "EntityFactory.hpp"
-#include "Utils/Exception.hpp"
-#include "Core/Engine.hpp"
+#include <Engine/Utils/Exception.hpp>
+#include <Engine/Core/Engine.hpp>
+
+#include <Game/EntityFactory.hpp>
+#include <Game/GameStates/PlayState.hpp>
 
 int     main()
 {
@@ -14,7 +15,7 @@ int     main()
             return (1);
 
         // Load entities after engine initialization to have logs
-        EntityFactory::loadDirectory("ressources/archetypes");
+        EntityFactory::loadDirectory("resources/archetypes");
 
         if (!gameStateManager.addState<PlayState>())
             return (1);

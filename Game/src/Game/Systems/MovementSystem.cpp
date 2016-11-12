@@ -1,9 +1,9 @@
 #include <cmath>
 #include <algorithm>
 
-#include "Components.hh"
+#include <Game/Components.hh>
 
-#include "Systems/MovementSystem.hpp"
+#include <Game/Systems/MovementSystem.hpp>
 
 MovementSystem::MovementSystem(Map* map): _map(map)
 {

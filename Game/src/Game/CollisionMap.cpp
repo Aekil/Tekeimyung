@@ -1,8 +1,8 @@
 #include <cstring>
 
-#include "Utils/Debug.hpp"
+#include <Engine/Utils/Debug.hpp>
 
-#include "CollisionMap.hpp"
+#include <Game/CollisionMap.hpp>
 
 /*
 ** LineReference

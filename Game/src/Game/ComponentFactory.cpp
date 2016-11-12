@@ -3,9 +3,9 @@
 #include <imgui_impl_glfw_gl3.h>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "Window/Keyboard.hpp"
+#include <Engine/Window/Keyboard.hpp>
 
-#include "ComponentFactory.hpp"
+#include <Game/ComponentFactory.hpp>
 
 std::unordered_map<std::string, IComponentFactory*>  IComponentFactory::_componentsTypes = { COMPONENTS_TYPES() };
 

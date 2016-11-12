@@ -1,9 +1,9 @@
 #include <cstring>
 #include <cmath>
 
-#include "Utils/Debug.hpp"
+#include <Engine/Utils/Debug.hpp>
 
-#include "Map.hpp"
+#include <Game/Map.hpp>
 
 
 /*

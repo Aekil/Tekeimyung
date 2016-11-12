@@ -1,12 +1,14 @@
-#include "ComponentFactory.hpp"
+#include <Game/ComponentFactory.hpp>
 #include <dirent.h> // This include have to be called after "ComponentFactory.hpp"
-#include "Utils/Debug.hpp"
-#include "Utils/JsonReader.hpp"
-#include "Utils/Logger.hpp"
-#include "Utils/Exception.hpp"
-#include "Utils/RessourceManager.hpp"
 
-#include "EntityFactory.hpp"
+#include <Engine/Utils/Debug.hpp>
+#include <Engine/Utils/Logger.hpp>
+#include <Engine/Utils/Exception.hpp>
+#include <Engine/Utils/RessourceManager.hpp>
+
+#include <Game/Utils/JsonReader.hpp>
+
+#include <Game/EntityFactory.hpp>
 
 std::unordered_map<std::string, std::list<std::string> >  EntityFactory::_entities;
 std::unordered_map<std::string, std::string>  EntityFactory::_entitiesFiles;

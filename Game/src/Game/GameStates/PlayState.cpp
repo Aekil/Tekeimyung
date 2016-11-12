@@ -2,23 +2,24 @@
 #include <imgui_impl_glfw_gl3.h>
 #include <glm/glm.hpp>
 
-#include "Systems/RenderingSystem.hpp"
-#include "Systems/MovementSystem.hpp"
-#include "Systems/GravitySystem.hpp"
-#include "Systems/CollisionSystem.hpp"
-#include "Systems/AISystem.hpp"
-#include "Systems/ParticleSystem.hpp"
-#include "Systems/InputSystem.hpp"
-#include "Window/Keyboard.hpp"
-#include "Components.hh"
-#include "Sound/SoundManager.hpp"
-#include "Utils/OverlayDebugWindow.hpp"
-#include "Utils/LogDebugWindow.hpp"
-#include "EntityDebugWindow.hpp"
-#include "Utils/Exception.hpp"
+#include <Engine/Utils/Exception.hpp>
+#include <Engine/Utils/OverlayDebugWindow.hpp>
+#include <Engine/Utils/LogDebugWindow.hpp>
+#include <Engine/Window/Keyboard.hpp>
+#include <Engine/Sound/SoundManager.hpp>
 
-#include "GameStates/PlayState.hpp"
+#include <Game/Systems/RenderingSystem.hpp>
+#include <Game/Systems/MovementSystem.hpp>
+#include <Game/Systems/GravitySystem.hpp>
+#include <Game/Systems/CollisionSystem.hpp>
+#include <Game/Systems/AISystem.hpp>
+#include <Game/Systems/ParticleSystem.hpp>
+#include <Game/Systems/InputSystem.hpp>
+#include <Game/Components.hh>
+#include <Game/EntityDebugWindow.hpp>
+#include <Game/EntityFactory.hpp>
 
+#include <Game/GameStates/PlayState.hpp>
 
 
 PlayState::PlayState(): _windowImgui(true) {}
@@ -115,7 +116,7 @@ bool    PlayState::init()
     addDebugWindow<LogDebugWindow>(Logger::getInstance(), glm::vec2(0, 430), glm::vec2(300, 200));
 
     // Play sound
-    static int idSoundBkgdMusic = SoundManager::getInstance()->registerSound("ressources/sounds/Kalimba.mp3", BACKGROUND_SOUND);
+    static int idSoundBkgdMusic = SoundManager::getInstance()->registerSound("resources/sounds/Kalimba.mp3", BACKGROUND_SOUND);
     SoundManager::getInstance()->playSound(idSoundBkgdMusic);
 
     return (true);
@@ -132,7 +133,7 @@ Entity*    PlayState::createEntity(const glm::vec3& pos, eArchetype type)
 
     (*_map)[(uint16_t)pos.z].addEntity(entity->id);
 
-  /*  static int idSoundSpawn = SoundManager::getInstance()->registerSound("ressources/sounds/spawn.mp3", DEFAULT_SOUND);
+  /*  static int idSoundSpawn = SoundManager::getInstance()->registerSound("resources/sounds/spawn.mp3", DEFAULT_SOUND);
     SoundManager::getInstance()->playSound(idSoundSpawn);*/
 
     return entity;

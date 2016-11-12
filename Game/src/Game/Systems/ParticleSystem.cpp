@@ -3,10 +3,10 @@
 #include <cmath>
 #include <algorithm>
 
-#include "Window/GameWindow.hpp"
-#include "Utils/Helper.hpp"
+#include <Engine/Window/GameWindow.hpp>
+#include <Engine/Utils/Helper.hpp>
 
-#include "Systems/ParticleSystem.hpp"
+#include <Game/Systems/ParticleSystem.hpp>
 
 ParticleSystem::ParticleSystem()
 {

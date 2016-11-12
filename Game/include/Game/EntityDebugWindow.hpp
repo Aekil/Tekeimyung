@@ -1,7 +1,8 @@
 #pragma once
 
-#include "Map.hpp"
-#include "Utils/DebugWindow.hpp"
+#include <Engine/Utils/DebugWindow.hpp>
+
+#include <Game/Map.hpp>
 
 class EntityDebugWindow: public DebugWindow
 {

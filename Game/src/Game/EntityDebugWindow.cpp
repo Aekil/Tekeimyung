@@ -1,11 +1,12 @@
 #include <imgui.h>
 
-#include "EntityFactory.hpp"
-#include "Utils/JsonWriter.hpp"
-#include "Utils/Helper.hpp"
-#include "CollisionMap.hpp"
+#include <Engine/Utils/Helper.hpp>
 
-#include "EntityDebugWindow.hpp"
+#include <Game/EntityFactory.hpp>
+#include <Game/Utils/JsonWriter.hpp>
+#include <Game/CollisionMap.hpp>
+
+#include <Game/EntityDebugWindow.hpp>
 
 
 EntityDebugWindow::EntityDebugWindow(Map* map, const glm::vec2& pos, const glm::vec2& size):

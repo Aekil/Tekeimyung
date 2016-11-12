@@ -1,7 +1,8 @@
-#include "Window/GameWindow.hpp"
-#include "Components.hh"
+#include <Engine/Window/GameWindow.hpp>
 
-#include "Systems/AISystem.hpp"
+#include <Game/Components.hh>
+
+#include <Game/Systems/AISystem.hpp>
 
 AISystem::AISystem()
 {

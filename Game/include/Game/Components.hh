@@ -7,10 +7,11 @@
 #include <glm/vec2.hpp>
 #include <glm/vec4.hpp>
 
+#include <ECS/Component.hh>
+
 #include <Engine/Window/Keyboard.hpp>
 #include <Engine/Graphics/Animation.hpp>
 #include <Engine/Graphics/Sprite.hpp>
-#include <ECS/Component.hh>
 
 
 struct sRenderComponent: sComponent

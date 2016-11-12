@@ -1,10 +1,11 @@
 #include <cmath>
 
-#include "Components.hh"
-#include "Window/GameWindow.hpp"
-#include "Physics/Collisions.hpp"
+#include <Engine/Window/GameWindow.hpp>
+#include <Engine/Physics/Collisions.hpp>
 
-#include "Systems/CollisionSystem.hpp"
+#include <Game/Components.hh>
+
+#include <Game/Systems/CollisionSystem.hpp>
 
 CollisionSystem::CollisionSystem(Map* map): _map(map)
 {

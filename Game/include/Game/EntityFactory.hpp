@@ -5,9 +5,10 @@
 #include <vector>
 #include <list>
 
-#include "Entity.hpp"
-#include "EntityManager.hpp"
-#include "ComponentFactory.hpp"
+#include <ECS/Entity.hpp>
+#include <ECS/EntityManager.hpp>
+
+#include <Game/ComponentFactory.hpp>
 
 // Generate a list
 // string: "PLAYER", "TILE1", "TILE2"
