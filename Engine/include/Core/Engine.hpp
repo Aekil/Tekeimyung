@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "GameStateManager.hpp"
+#include "Core/GameStateManager.hpp"
 #include "Window/GameWindow.hpp"
 #include "Sound/SoundManager.hpp"
 #include "Utils/Logger.hpp"

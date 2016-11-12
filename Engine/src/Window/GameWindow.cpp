@@ -10,32 +10,56 @@
 
 std::shared_ptr<GameWindow> GameWindow::_instance;
 
-GameWindow::GameWindow(int width, int height, const char *title) :
-    _screenWidth(width), _screenHeight(height),
-    _bufferWidth(0), _bufferHeight(0),
-    _title(title), _window(nullptr) {}
+GameWindow::GameWindow(const char *title) :
+    _bufferWidth(0), _bufferHeight(0), _fullscreen(false),
+    _title(title), _monitor(nullptr), _window(nullptr), _running(false) {}
 
 GameWindow::~GameWindow() {}
 
 bool    GameWindow::initialize()
 {
-    const GLFWvidmode *vidmode;
-    int xPos, yPos;
+    GLFWmonitor*        monitor = nullptr;
+    const GLFWvidmode*  vidmode = nullptr;
+    int width = 0, height = 0;
 
     // Initializing GLFW.
     if (glfwInit() == GLFW_FALSE)
     {
-        std::cerr << "Could not initialize GLFW." << std::endl;
+        std::cerr << "Could not initialize GLFW properly." << std::endl;
         return (false);
     }
+
+    // Retrieving the primary monitor.
+    _monitor = glfwGetPrimaryMonitor();
+    if (_monitor == nullptr)
+    {
+        std::cerr << "Could not retrieve the primary monitor properly." << std::endl;
+        glfwTerminate();
+        return (false);
+    }
+
+    // Retrieving the video mode.
+    vidmode = glfwGetVideoMode(_monitor);
+    glfwWindowHint(GLFW_RED_BITS, vidmode->redBits);
+    glfwWindowHint(GLFW_GREEN_BITS, vidmode->greenBits);
+    glfwWindowHint(GLFW_BLUE_BITS, vidmode->blueBits);
+    glfwWindowHint(GLFW_REFRESH_RATE, vidmode->refreshRate);
+    _screenWidth = vidmode->width;
+    _screenHeight = vidmode->height;
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     // Creating a GLFW window.
-    _window = glfwCreateWindow(_screenWidth, _screenHeight, _title.c_str(), nullptr, nullptr);
-
+    if (_fullscreen == true)
+        monitor = _monitor;
+    else
+    {
+        glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
+        monitor = nullptr;
+    }
+    _window = glfwCreateWindow(_screenWidth, _screenHeight, _title.c_str(), monitor, nullptr);
     if (_window == nullptr)
     {
         std::cerr << "Could not initialize the window properly." << std::endl;
@@ -45,35 +69,28 @@ bool    GameWindow::initialize()
 
     glfwMakeContextCurrent(_window);
     glfwGetFramebufferSize(_window, &_bufferWidth, &_bufferHeight);
-
-    // Enabling vertical synchronization (or VSync).
     glfwSwapInterval(0);
 
-    // Placing the game window at the center of the screen.
-    vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-    xPos = (vidmode->width - WINDOW_DEFAULT_WIDTH) / 2;
-    yPos = (vidmode->height - WINDOW_DEFAULT_HEIGHT) / 2;
-    glfwSetWindowPos(_window, xPos, yPos);
-
-    // Init Glew
+    // Initializing Glew.
     glewExperimental = GL_TRUE;
-    if (glewInit() != GLEW_OK)
-    {
-        std::cerr << "Failed to init glew" << std::endl;
+    if (glewInit() != GLEW_OK) {
+        std::cerr << "Failed to initialize glew properly." << std::endl;
+        glfwTerminate();
         return (false);
     }
 
-    glViewport(0, 0, _bufferWidth, _bufferHeight);
-
-    ImGui_ImplGlfwGL3_Init(_window, false);
     registerEvents();
+    ImGui_ImplGlfwGL3_Init(_window, false);
 
+    glViewport(0, 0, _bufferWidth, _bufferHeight);
+    setRunning(true);
     return (true);
 }
 
 void	GameWindow::registerEvents()
 {
 	glfwSetWindowUserPointer(_window, this);
+    //glfwSetWindowCloseCallback(_window, GameWindow::closeCallback);
     glfwSetKeyCallback(_window, GameWindow::keyCallback);
     glfwSetCharCallback(_window, GameWindow::charCallback);
     glfwSetMouseButtonCallback(_window, GameWindow::buttonCallback);
@@ -97,6 +114,14 @@ std::string     GameWindow::getTitle() const
     return (_title);
 }
 
+bool            GameWindow::isFullscreen() const
+{
+    GLFWmonitor*    monitor = nullptr;
+
+    monitor = glfwGetWindowMonitor(_window);
+    return (monitor != nullptr);
+}
+
 std::shared_ptr<GameWindow> GameWindow::getInstance()
 {
     return (_instance);
@@ -112,19 +137,42 @@ Mouse&      GameWindow::getMouse()
     return (_mouse);
 }
 
-void    GameWindow::setDecorated(bool decorated)
+void    GameWindow::maximize()
 {
-    glfwWindowHint(GLFW_DECORATED, decorated ? GLFW_TRUE : GLFW_FALSE);
+    glfwMaximizeWindow(_window);
 }
 
-void    GameWindow::setMaximized(bool maximized)
+void    GameWindow::toggleFullscreen()
 {
-    glfwWindowHint(GLFW_MAXIMIZED, maximized ? GLFW_TRUE : GLFW_FALSE);
+    const GLFWvidmode*  vidmode = nullptr;
+    GLFWmonitor*        monitor = nullptr;
+    int refreshRate = 0;
+
+    monitor = glfwGetWindowMonitor(_window);
+    if (monitor != nullptr)
+    {
+        vidmode = glfwGetVideoMode(monitor);
+        _screenWidth = vidmode->width;
+        _screenHeight = vidmode->height;
+        refreshRate = vidmode->refreshRate;
+        glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
+        glfwSetWindowMonitor(_window, nullptr, 0, 0, _screenWidth, _screenHeight, refreshRate);
+        LOG_INFO("Toggled windowed mode.");
+    }
+    else
+    {
+        vidmode = glfwGetVideoMode(_monitor);
+        _screenWidth = vidmode->width;
+        _screenHeight = vidmode->height;
+        refreshRate = vidmode->refreshRate;
+        glfwSetWindowMonitor(_window, _monitor, 0, 0, _screenWidth, _screenHeight, refreshRate);
+        LOG_INFO("Toggled fullscreen mode.");
+    }
 }
 
-void    GameWindow::setResizable(bool resizable)
+void    GameWindow::setRunning(bool running)
 {
-    glfwWindowHint(GLFW_RESIZABLE, resizable ? GLFW_TRUE : GLFW_FALSE);
+    _running = running;
 }
 
 void    GameWindow::setInstance(std::shared_ptr<GameWindow> instance)
@@ -134,6 +182,7 @@ void    GameWindow::setInstance(std::shared_ptr<GameWindow> instance)
 
 bool    GameWindow::isRunning() const
 {
+    //return (_running);
     return (glfwWindowShouldClose(_window) == GLFW_FALSE);
 }
 
@@ -149,11 +198,37 @@ void    GameWindow::pollEvents()
 
 void    GameWindow::close()
 {
+    //glfwSetWindowShouldClose(_window, 0);
     ImGui_ImplGlfwGL3_Shutdown();
     glfwDestroyWindow(_window);
     glfwTerminate();
 }
 
+void    GameWindow::shutdown()
+{
+    ImGui_ImplGlfwGL3_Shutdown();
+    glfwDestroyWindow(_window);
+    glfwTerminate();
+}
+
+/**
+    Callback function used to close the GameWindow and other stuff properly.
+*/
+void    GameWindow::closeCallback(GLFWwindow* window)
+{
+    GameWindow*     gameWindow;
+
+    gameWindow = reinterpret_cast<GameWindow*>(glfwGetWindowUserPointer(window));
+    ASSERT(gameWindow != nullptr, "GameWindow should not be null.");
+
+    std::cout << "Callback has been called !" << std::endl;
+    gameWindow->setRunning(false);
+}
+
+/**
+    Callback function used to handle the Keyboard class through keys' states.
+    This function only retrieve a specific key and updates its state in the keys' map.
+*/
 void	GameWindow::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	GameWindow*     gameWindow;
@@ -213,6 +288,10 @@ bool    GameWindow::sendImGuikeyCallback(GameWindow* gameWindow, GLFWwindow* win
     return (false);
 }
 
+/**
+    Callback function used to handle the Mouse class through buttons' states.
+    This function only retrieve a specific button and updates its state in the buttons' map.
+*/
 void    GameWindow::buttonCallback(GLFWwindow* window, int button, int action, int mods)
 {
     GameWindow*     gameWindow;
@@ -273,6 +352,9 @@ bool    GameWindow::sendImGuibuttonCallback(GameWindow* gameWindow, GLFWwindow* 
     return (false);
 }
 
+/**
+    Callback function used to handle whether the cursor has entered into the GameWindow frame or not.
+*/
 void    GameWindow::cursorEnterCallback(GLFWwindow* window, int entered)
 {
     GameWindow*     gameWindow;
@@ -284,6 +366,10 @@ void    GameWindow::cursorEnterCallback(GLFWwindow* window, int entered)
     cursor.setWindowEntering(entered == 1);
 }
 
+/**
+    Callback function used to handle the cursor position into the GameWindow frame.
+    This function sets the current x and y positions of the cursor, into the frame.
+*/
 void    GameWindow::cursorPositionCallback(GLFWwindow* window, double xPos, double yPos)
 {
     GameWindow*     gameWindow;

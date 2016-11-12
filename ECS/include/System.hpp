@@ -22,6 +22,10 @@ public:
         _components.push_back(std::type_index(typeid(ComponentType)));
     }
 
+    virtual const std::type_info& getTypeInfo()
+    {
+        return (typeid(*this));
+    }
 
 protected:
     // Store components type_index (copyable wrapper of type_info)
