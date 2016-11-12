@@ -37,6 +37,10 @@ void    TowerAISystem::update(EntityManager &em, float elapsedTime)
                 else
                     towerAIComponent->targetId = 0;
             }
+            else
+            {
+                towerAIComponent->targetId = 0;
+            }
         }
         if (towerAIComponent->targetId == 0)
         {

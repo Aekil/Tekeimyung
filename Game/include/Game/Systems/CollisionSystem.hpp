@@ -13,7 +13,9 @@ public:
 
 private:
     bool            isColliding(Entity *firstEntity, Entity *secondEntity);
-    void            moveHitbox(Entity *entity);
+    void            moveHitbox(Entity *entity, float elapsedTime);
+    bool            staticResolution(Entity *firstEntity);
+    bool            dynamicResolution(EntityManager &em, Entity *firstEntity, Entity *secondEntity);
 
 private:
     Map*            _map;

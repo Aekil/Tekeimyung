@@ -125,7 +125,8 @@ void    ParticleSystem::update(EntityManager &em, float elapsedTime)
     // Update the emitter map
     if (activeEmitters != _emitters.size())
     {
-        for (auto it = _emitters.cbegin(); it != _emitters.cend(); it++)
+        auto it = _emitters.cbegin();
+        while (it != _emitters.cend())
         {
             // The emitter has been deleted, remove it from the map
             if (!em.getEntity(it->first))

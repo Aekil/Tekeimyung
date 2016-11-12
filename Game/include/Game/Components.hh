@@ -298,6 +298,26 @@ struct sAIComponent : sComponent
     }
 };
 
+struct sPlayerComponent : sComponent
+{
+    sPlayerComponent() = default;
+
+    virtual sComponent* clone()
+    {
+        sPlayerComponent* component = new sPlayerComponent();
+        component->update(this);
+
+        return (component);
+    }
+
+    virtual void update(sPlayerComponent* component) {}
+
+    virtual void update(sComponent* component)
+    {
+        update(static_cast<sPlayerComponent*>(component));
+    }
+};
+
 
 struct sParticleEmitterComponent : sComponent
 {

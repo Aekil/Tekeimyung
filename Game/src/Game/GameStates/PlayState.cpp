@@ -114,9 +114,12 @@ bool    PlayState::init()
     _world.addSystem<TowerAISystem>(_map);
     _world.addSystem<AISystem>();
     _world.addSystem<ProjectileSystem>();
-    _world.addSystem<MovementSystem>(_map);
+    
     //_world.addSystem<CollisionSystem>(_map);
+
+    _world.addSystem<MovementSystem>(_map);
     _world.addSystem<ParticleSystem>();
+    _world.addSystem<CollisionSystem>(_map);
 
     ParticleSystem* particleSystem = _world.getSystem<ParticleSystem>();
     ASSERT(particleSystem != nullptr, "Particle system should not be null");

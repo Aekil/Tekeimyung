@@ -12,7 +12,7 @@
                 "speed": 2.0
             },
             "sRenderComponent": {
-                "texture": "ressources/sprites/characters/soldierSpriteSheet.png",
+                "texture": "resources/sprites/characters/soldierSpriteSheet.png",
                 "type": "OBJECT",
                 "animated": true,
                 "animation": {
@@ -45,6 +45,7 @@
                     "x": 669,
                     "y": 123.9
                 }
-            }
+            },
+            "sPlayerComponent": {}
         }
 }

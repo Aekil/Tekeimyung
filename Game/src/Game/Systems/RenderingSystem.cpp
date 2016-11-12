@@ -95,6 +95,9 @@ void    RenderingSystem::renderParticles(EntityManager& em)
     {
         auto &&emitter = it.second;
         Entity* entity = em.getEntity(it.first);
+        if (entity == nullptr)
+            continue;
+
         sRenderComponent *sprite = entity->getComponent<sRenderComponent>();
 
 
@@ -144,6 +147,8 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
     {
         sPositionComponent *position;
         Entity* entity = em.getEntity(id);
+        if (entity == nullptr)
+            continue;
         position = entity->getComponent<sPositionComponent>();
     }
 

@@ -28,4 +28,5 @@ void    System::forEachEntity(EntityManager& em, std::function<void(Entity* enti
         if (hasComponents)
             callback(entity.second);
     }
+    em.destroyEntities();
 }

@@ -11,7 +11,7 @@
                 "y": 0
             },
             "sRenderComponent": {
-                "texture": "ressources/sprites/characters/soldierSpriteSheet.png",
+                "texture": "resources/sprites/characters/soldierSpriteSheet.png",
                 "color": {
                     "r": 1,
                     "g": 0,

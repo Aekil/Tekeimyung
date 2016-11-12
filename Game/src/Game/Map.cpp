@@ -55,6 +55,19 @@ void    Map::LayerReference::addEntity(uint32_t entity)
 
 void    Map::LayerReference::orderEntities(EntityManager& em)
 {
+    auto it = _map->_entities[_layerIdx].cbegin();
+    while (it != _map->_entities[_layerIdx].cend())
+    {
+        // The emitter has been deleted, remove it from the map
+        if (!em.getEntity(*it))
+        {
+            // Remove emitter from map
+            _map->_entities[_layerIdx].erase(it++);
+        }
+        else
+            ++it;
+    }
+
     _map->_entities[_layerIdx].sort([&](uint32_t a, uint32_t b) {
         Entity* entityA = em.getEntity(a);
         Entity* entityB = em.getEntity(b);

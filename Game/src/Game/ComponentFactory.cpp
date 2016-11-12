@@ -445,6 +445,16 @@ sComponent* ComponentFactory<sAIComponent>::loadFromJson(const std::string& enti
     return (component);
 }
 
+/*
+** sPlayerComponent
+*/
+
+sComponent* ComponentFactory<sPlayerComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
+{
+    sPlayerComponent* component = new sPlayerComponent();
+
+    return (component);
+}
 
 /*
 ** sParticleEmitterComponent

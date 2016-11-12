@@ -7,7 +7,7 @@
                 "z": 0
             },
             "sRenderComponent": {
-                "texture": "ressources/sprites/particles/particle_circle.png",
+                "texture": "resources/sprites/particles/particle_circle.png",
                 "type": "OBJECT"
             },
             "sTypeComponent": {

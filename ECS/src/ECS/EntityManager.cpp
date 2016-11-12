@@ -29,6 +29,23 @@ void    EntityManager::destroyEntity(Entity* entity)
     _entities.erase(entity->id);
 }
 
+void    EntityManager::destroyEntityRegister(Entity* entity)
+{
+    _entitiesToDestroy.push_back(entity);
+}
+
+void    EntityManager::destroyEntities()
+{
+    if (_entitiesToDestroy.empty())
+        return;
+
+    for (auto entity : _entitiesToDestroy)
+    {
+        destroyEntity(entity);
+    }
+    _entitiesToDestroy.clear();
+}
+
 std::unordered_map<uint32_t, Entity*>& EntityManager::getEntities()
 {
     return (_entities);

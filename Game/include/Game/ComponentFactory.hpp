@@ -20,6 +20,7 @@
     GENERATE_PAIRS(sGravityComponent),\
     GENERATE_PAIRS(sTypeComponent),\
     GENERATE_PAIRS(sAIComponent),\
+    GENERATE_PAIRS(sPlayerComponent),\
     GENERATE_PAIRS(sParticleEmitterComponent),\
     GENERATE_PAIRS(sTowerAIComponent),\
     GENERATE_PAIRS(sProjectileComponent)\
@@ -251,6 +252,17 @@ public:
 
 template <>
 class ComponentFactory<sAIComponent>: public BaseComponentFactory<sAIComponent>
+{
+public:
+    virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
+};
+
+/*
+** sPlayerComponent
+*/
+
+template <>
+class ComponentFactory<sPlayerComponent> : public BaseComponentFactory<sPlayerComponent>
 {
 public:
     virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
