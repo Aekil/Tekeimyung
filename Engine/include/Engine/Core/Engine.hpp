@@ -8,7 +8,6 @@
 
 #include <Engine/Core/GameStateManager.hpp>
 
-
 class Engine
 {
 public:

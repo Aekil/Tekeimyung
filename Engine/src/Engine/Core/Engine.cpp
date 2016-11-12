@@ -56,7 +56,7 @@ bool    Engine::run()
             {
                 _gameStateManager.removeCurrentState();
             }
-            //std::cout << "Time: " << timer.getElapsedTime() * 1000 << std::endl;
+            timer.reset();
         }
     }
     return (true);
@@ -71,5 +71,5 @@ bool    Engine::stop()
 
 GameStateManager&   Engine::getGameStateManager()
 {
-    return _gameStateManager;
+    return (_gameStateManager);
 }

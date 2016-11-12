@@ -6,6 +6,8 @@
 #include <Engine/Utils/OverlayDebugWindow.hpp>
 #include <Engine/Utils/LogDebugWindow.hpp>
 #include <Engine/Window/Keyboard.hpp>
+#include <Engine/Window/HandleFullscreenEvent.hpp>
+#include <Engine/Window/GameWindow.hpp>
 #include <Engine/Sound/SoundManager.hpp>
 
 #include <Game/Systems/RenderingSystem.hpp>
@@ -15,6 +17,8 @@
 #include <Game/Systems/AISystem.hpp>
 #include <Game/Systems/ParticleSystem.hpp>
 #include <Game/Systems/InputSystem.hpp>
+#include <Game/Systems/TowerAISystem.hpp>
+#include <Game/Systems/ProjectileSystem.hpp>
 #include <Game/Components.hh>
 #include <Game/EntityDebugWindow.hpp>
 #include <Game/EntityFactory.hpp>
@@ -74,18 +78,20 @@ bool    PlayState::init()
 
     _map = new Map(em, 20, 15, 4);
 
-    createParticlesEmittor(glm::vec3(8.5f, 5.5f, 1.0f), eArchetype::EMITTER_WATER);
+    // Create particles emitter
+    //createParticlesEmittor(glm::vec3(8.5f, 5.5f, 1.0f), eArchetype::EMITTER_WATER);
+
     // Create characters
     createEntity(glm::vec3(9, 5, 1), eArchetype::PLAYER);
-    _enemy = createEntity(glm::vec3(0.5f, 5.5f, 1), eArchetype::ENEMY);
+    _enemy = createEntity(glm::vec3(2.5f, 6.0f, 1), eArchetype::ENEMY);
+    _enemy2 = createEntity(glm::vec3(0.0f, 6.0f, 1), eArchetype::ENEMY);
 
-    // Init base map
+    // Initialize base map
     for (int y = 0; y < 15; y++) {
         for (int x = 0; x < 20; x++) {
             createTile(glm::vec3(x, y, 0), eArchetype::BLOCK_GREEN);
         }
     }
-
 
     for (int y = 0; y < 4; y++) {
         for (int x = 0; x < 20; x++) {
@@ -105,20 +111,27 @@ bool    PlayState::init()
     createTile(glm::vec3(7, 7, 1), eArchetype::TOWER_FIRE);
 
     _world.addSystem<InputSystem>();
+    _world.addSystem<TowerAISystem>(_map);
     _world.addSystem<AISystem>();
+    _world.addSystem<ProjectileSystem>();
     _world.addSystem<MovementSystem>(_map);
-    _world.addSystem<CollisionSystem>(_map);
+    //_world.addSystem<CollisionSystem>(_map);
     _world.addSystem<ParticleSystem>();
-    _world.addSystem<RenderingSystem>(_map, dynamic_cast<ParticleSystem*>(_world.getSystems()[4])->getEmitters());
+
+    ParticleSystem* particleSystem = _world.getSystem<ParticleSystem>();
+    ASSERT(particleSystem != nullptr, "Particle system should not be null");
+
+    _world.addSystem<RenderingSystem>(_map, particleSystem->getEmitters());
 
     addDebugWindow<OverlayDebugWindow>();
     addDebugWindow<EntityDebugWindow>(_map, glm::vec2(0, 80), glm::vec2(450, 350));
     addDebugWindow<LogDebugWindow>(Logger::getInstance(), glm::vec2(0, 430), glm::vec2(300, 200));
 
     // Play sound
-    static int idSoundBkgdMusic = SoundManager::getInstance()->registerSound("resources/sounds/Kalimba.mp3", BACKGROUND_SOUND);
-    SoundManager::getInstance()->playSound(idSoundBkgdMusic);
+    //static int idSoundBkgdMusic = SoundManager::getInstance()->registerSound("ressources/sounds/Kalimba.mp3", BACKGROUND_SOUND);
+    //SoundManager::getInstance()->playSound(idSoundBkgdMusic);
 
+    _pair = std::make_pair(Keyboard::eKey::F, new HandleFullscreenEvent());
     return (true);
 }
 
@@ -141,21 +154,7 @@ Entity*    PlayState::createEntity(const glm::vec3& pos, eArchetype type)
 
 bool    PlayState::update(float elapsedTime)
 {
-    static Timer timer;
-
-    if (timer.getElapsedTime() >= 1.0f)
-    {
-        // Create a fire emitter
-        Entity* fireEmitter = createParticlesEmittor(glm::vec3(5.5f, 5.5f, 1.0f), eArchetype::EMITTER_FIRE);
-        Entity* fireEmitter2 = createParticlesEmittor(glm::vec3(5.5f, 2.5f, 1.0f), eArchetype::EMITTER_FIRE);
-
-        // Change fire emitter direction to go to enemy direction
-        goTo(fireEmitter, _enemy);
-        goTo(fireEmitter2, _enemy);
-
-        // Reset timer
-        timer.reset();
-    }
-
+    if (GameWindow::getInstance()->getKeyboard().getStateMap()[_pair.first] == Keyboard::eKeyState::KEY_PRESSED)
+        _pair.second->execute();
     return (GameState::update(elapsedTime));
 }

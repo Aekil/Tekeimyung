@@ -104,6 +104,8 @@ void    ParticleSystem::updateEmitter(Entity* entity, float elapsedTime)
 
 void    ParticleSystem::update(EntityManager &em, float elapsedTime)
 {
+    uint32_t activeEmitters = 0;
+
     // Iterate over particle emitters
     forEachEntity(em, [&](Entity *entity) {
 
@@ -113,7 +115,27 @@ void    ParticleSystem::update(EntityManager &em, float elapsedTime)
             initEmitter(entity);
 
         updateEmitter(entity, elapsedTime);
+        activeEmitters++;
     });
+
+    // 1 or more emitters have been deleted
+    // Update the emitter map
+    if (activeEmitters != _emitters.size())
+    {
+        for (auto it = _emitters.cbegin(); it != _emitters.cend(); it++)
+        {
+            // The emitter has been deleted, remove it from the map
+            if (!em.getEntity(it->first))
+            {
+                // Delete emitter pointer
+                delete it->second;
+                // Remove emitter from map
+                _emitters.erase(it++);
+            }
+            else
+                ++it;
+        }
+    }
 }
 
 std::unordered_map<uint32_t, sEmitter*>* ParticleSystem::getEmitters()

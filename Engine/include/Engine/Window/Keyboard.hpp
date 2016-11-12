@@ -6,7 +6,7 @@
 class Keyboard
 {
 public:
-	enum class          eKey : int
+	enum class          eKey : char
 	{
 		UNKNOWN = -1,	// Unknown	    key
         SPACE = 0,      // Space        key

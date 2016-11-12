@@ -87,10 +87,11 @@ struct sPositionComponent: sComponent
         update(static_cast<sPositionComponent*>(component));
     }
 
+    //  X and Y coordinates
     glm::vec2 value;
 
-    // Layer number
-    float z;
+    //  Z coordinates (aka layer)
+    float   z;
 };
 
 struct sInputComponent: sComponent {
@@ -392,4 +393,67 @@ struct sNameComponent : sComponent
     }
 
     std::string value;
+};
+
+struct sTowerAIComponent : sComponent
+{
+    sTowerAIComponent() = default;
+
+    virtual sComponent* clone()
+    {
+        sTowerAIComponent*  component = new sTowerAIComponent();
+        component->update(this);
+
+        return (component);
+    }
+
+    virtual void    update(sTowerAIComponent* component)
+    {
+        this->radius = component->radius;
+        this->fireRate = component->fireRate;
+        this->projectileSpeed = component->projectileSpeed;
+    }
+
+    virtual void    update(sComponent* component)
+    {
+        update(static_cast<sTowerAIComponent*>(component));
+    }
+
+    float   radius;
+    float   projectileSpeed;
+
+    float   fireRate;
+    float   lastShotTime;
+
+    uint32_t    targetId;
+};
+
+struct  sProjectileComponent : sComponent
+{
+    sProjectileComponent() = default;
+
+    virtual sComponent* clone()
+    {
+        sProjectileComponent*  component = new sProjectileComponent();
+        component->update(this);
+
+        return (component);
+    }
+
+    virtual void    update(sProjectileComponent* component)
+    {
+        this->shooterId = component->shooterId;
+        this->guided = component->guided;
+        this->targetId = component->targetId;
+    }
+
+    virtual void    update(sComponent* component)
+    {
+        update(static_cast<sProjectileComponent*>(component));
+    }
+
+    uint32_t    shooterId;
+
+    bool        guided;
+    uint32_t    targetId;
 };

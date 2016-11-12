@@ -5,7 +5,6 @@
 bool    Debug::engineAssert(bool expression, const char* message, const char* filename,
                       const char* function, unsigned int line)
 {
-    #if defined (_DEBUG)
         if (expression == false)
         {
             std::cerr << "Assertion failed: \"" <<
@@ -15,6 +14,5 @@ bool    Debug::engineAssert(bool expression, const char* message, const char* fi
                 line << ")" << std::endl;
             return (false);
         }
-    #endif
     return (true);
 }
