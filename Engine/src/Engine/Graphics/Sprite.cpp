@@ -66,29 +66,12 @@ void    Sprite::loadFromTexture(sCreateInfo& createInfo)
    _buffer.updateData(vertices, 4, indices, 6);
 }
 
-void Sprite::update(glm::vec2 position, float z, bool moved, eOrientation orientation, glm::vec3& color)
+void Sprite::update(glm::vec3& position, bool moved, eOrientation orientation, glm::vec3& color)
 {
-    float tileWidthHalf = 64.0f;
-    float tileLengthHalf = 32.0f;
-    float tileHeight = 38.0f;
-    float offsetX = GameWindow::getInstance()->getScreenWidth() * 1.3f / 2.0f - tileWidthHalf;
-    float offsetY = GameWindow::getInstance()->getScreenHeight() * 1.3f - (tileLengthHalf * 3.0f);
-
-    _pos.x = offsetX + (position.x - position.y) * tileWidthHalf;
-    _pos.y = offsetY - (position.x + position.y) * tileLengthHalf + (tileHeight * z);
-    _pos.z = z;
+    _pos = position;
     _currentOrientation = orientation;
     _color = color;
 
-    if (_type == Sprite::eType::OBJECT)
-    {
-        _pos.y += tileLengthHalf * 2.0f;
-        _pos.x += tileWidthHalf - (_spriteSize.x / 2.0f);
-    }
-    else
-    {
-        _pos.x -= (_spriteSize.x / 2.0f) - tileWidthHalf;
-    }
     if (_animated && !moved && _animations.size() > 1)
     {
         _animations[_currentOrientation].reset();
@@ -120,10 +103,20 @@ void    Sprite::draw()
 
 const glm::vec3&    Sprite::getPos() const
 {
-    return _pos;
+    return (_pos);
 }
 
 const glm::vec3&    Sprite::getColor() const
 {
-    return _color;
+    return (_color);
+}
+
+const Sprite::eType&    Sprite::getType() const
+{
+    return (_type);
+}
+
+const glm::vec2&    Sprite::getSpriteSize() const
+{
+    return (_spriteSize);
 }

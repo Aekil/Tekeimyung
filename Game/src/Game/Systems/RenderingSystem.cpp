@@ -202,7 +202,8 @@ Sprite*   RenderingSystem::getSprite(Entity* entity)
     // Update entity graphic position
     bool moved = direction && direction->moved;
     eOrientation orientation = direction ? direction->orientation : eOrientation::N;
-    sprite->_sprite->update(position->value, position->z, moved, orientation, sprite->color);
+    glm::vec3 graphPos = Map::mapToGraphPosition(position->value, position->z, sprite->_sprite);
+    sprite->_sprite->update(graphPos, moved, orientation, sprite->color);
 
     return (sprite->_sprite);
 }

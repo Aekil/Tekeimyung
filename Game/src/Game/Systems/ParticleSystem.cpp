@@ -6,6 +6,8 @@
 #include <Engine/Window/GameWindow.hpp>
 #include <Engine/Utils/Helper.hpp>
 
+#include <Game/Map.hpp>
+
 #include <Game/Systems/ParticleSystem.hpp>
 
 ParticleSystem::ParticleSystem()
@@ -32,7 +34,7 @@ void    ParticleSystem::initEmitter(Entity* entity)
 void    ParticleSystem::updateEmitter(Entity* entity, float elapsedTime)
 {
     sParticleEmitterComponent *emitterComp = entity->getComponent<sParticleEmitterComponent>();
-    sPositionComponent *pos = entity->getComponent<sPositionComponent>();
+    sPositionComponent *position = entity->getComponent<sPositionComponent>();
     sRenderComponent *sprite = entity->getComponent<sRenderComponent>();
     sDirectionComponent *direction = entity->getComponent<sDirectionComponent>();
     sEmitter* emitter = _emitters[entity->id];
@@ -42,7 +44,8 @@ void    ParticleSystem::updateEmitter(Entity* entity, float elapsedTime)
 
     bool moved = direction && direction->moved;
     eOrientation orientation = direction ? direction->orientation : eOrientation::N;
-    sprite->_sprite->update(pos->value, pos->z, moved, orientation, sprite->color);
+    glm::vec3 graphPos = Map::mapToGraphPosition(position->value, position->z, sprite->_sprite);
+    sprite->_sprite->update(graphPos, moved, orientation, sprite->color);
 
     // Update particles
     for (unsigned int i = 0; i < emitter->particlesNb; i++)

@@ -36,10 +36,13 @@ public:
     ~Sprite();
 
     void                                            loadFromTexture(sCreateInfo& createInfo);
-    void                                            update(glm::vec2 position, float z, bool moved, eOrientation orientation, glm::vec3& color);
+    void                                            update(glm::vec3& position, bool moved, eOrientation orientation, glm::vec3& color);
     void                                            draw();
+
     const glm::vec3&                                getPos() const;
     const glm::vec3&                                getColor() const;
+    const eType&                                    getType() const;
+    const glm::vec2&                                getSpriteSize() const;
 
 private:
     // OpenGL Buffer

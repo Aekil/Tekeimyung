@@ -8,6 +8,8 @@
 
 #include <ECS/EntityManager.hpp>
 
+#include <Engine/Graphics/Sprite.hpp>
+
 #include <Game/CollisionMap.hpp>
 
 class CollisionMap;
@@ -91,6 +93,8 @@ public:
     uint16_t                getLayersNb() const;
     CollisionMap*           getCollisionMap() const;
     bool                    isValidPosition(glm::ivec3& pos) const;
+
+    static glm::vec3        mapToGraphPosition(glm::vec2& mapPos, float z, Sprite *sprite);
 
 private:
     Layer*                  _map;
