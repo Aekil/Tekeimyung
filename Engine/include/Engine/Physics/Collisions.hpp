@@ -18,7 +18,7 @@ class Collisions
 {
 public:
     Collisions();
-    virtual ~Collisions();
+    ~Collisions();
 
     static bool         rectHitboxCheck(tRectHitbox *hb1, tRectHitbox *hb2);
     static bool         rectHitboxCheck(glm::vec2 *min1, glm::vec2 *max1, glm::vec2 *min2, glm::vec2 *max2);

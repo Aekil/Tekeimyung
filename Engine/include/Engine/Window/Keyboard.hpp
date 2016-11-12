@@ -145,7 +145,7 @@ private:
     typedef std::unordered_map<std::string, Keyboard::eKey>    KeyboardStringMap;
 public:
 	explicit            Keyboard();
-	virtual             ~Keyboard() {}
+	                    ~Keyboard() {}
 
 	KeyboardNativeMap&  getNativeMap();
     KeyboardStateMap&   getStateMap();

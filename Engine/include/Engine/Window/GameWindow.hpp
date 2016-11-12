@@ -16,7 +16,7 @@ class GameWindow
 {
 public:
     explicit                            GameWindow(int width = WINDOW_DEFAULT_WIDTH, int height = WINDOW_DEFAULT_HEIGHT, const char *title = WINDOW_DEFAULT_TITLE);
-    virtual                             ~GameWindow();
+                                        ~GameWindow();
 
     bool                                initialize();
 	void								registerEvents();

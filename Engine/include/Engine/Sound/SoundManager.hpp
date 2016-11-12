@@ -22,7 +22,7 @@ class SoundManager
 {
 public:
     SoundManager();
-    virtual ~SoundManager();
+    ~SoundManager();
 
     static std::shared_ptr<SoundManager>    getInstance();
 

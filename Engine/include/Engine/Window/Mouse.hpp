@@ -42,7 +42,7 @@ private:
     typedef std::unordered_map<Mouse::eButton, Mouse::eButtonState> MouseStateMap;
 public:
     explicit        Mouse();
-    virtual         ~Mouse() {}
+                    ~Mouse() {}
 
     MouseNativeMap& getNativeMap();
     MouseStateMap&  getStateMap();

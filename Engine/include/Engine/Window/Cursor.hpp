@@ -4,7 +4,7 @@ class           Cursor
 {
 public:
     explicit    Cursor();
-    virtual     ~Cursor() {}
+                ~Cursor() {}
 
     bool        isInTheWindow() const;
     double      getX() const;
