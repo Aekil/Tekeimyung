@@ -15,7 +15,7 @@
             },
 			"sWaveComponent": {
 			"secBeforeSpawn": 2,
-			"nSpawn": 5
+			"nSpawn": 10
 			}
         }
 }

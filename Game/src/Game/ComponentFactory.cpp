@@ -604,6 +604,7 @@ sComponent* ComponentFactory<sProjectileComponent>::loadFromJson(const std::stri
     component = new sProjectileComponent();
     component->shooterId = 0;
     component->guided = json.getBool("guided", false);
+    component->rangeMax = json.getFloat("rangeMax", 5);
     component->targetId = 0;
     return (component);
 }
@@ -641,6 +642,7 @@ bool        ComponentFactory<sProjectileComponent>::updateEditor(const std::stri
             converter >> buffer;
             ImGui::TextDisabled("Target ID: %s", buffer.c_str());
         }
+        // Add IMGUI implementation for RangeMax 
     }
 
     return (changed);
@@ -654,7 +656,7 @@ sComponent* ComponentFactory<sWaveComponent>::loadFromJson(const std::string& en
 
     //component->spawnPos = json.getVec3f("spawnPos", glm::vec3(0, 0, 0));
     component->secBeforeSpawn = json.getFloat("secBeforeSpawn", 2);
-    component->nSpawn = json.getInt("nSpawn", 5);
+    component->nSpawn = json.getInt("nSpawn", 10);
 
     return (component);
 }

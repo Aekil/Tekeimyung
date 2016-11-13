@@ -465,6 +465,7 @@ struct  sProjectileComponent : sComponent
     {
         this->shooterId = component->shooterId;
         this->guided = component->guided;
+        this->rangeMax = component->rangeMax;
         this->targetId = component->targetId;
     }
 
@@ -476,6 +477,7 @@ struct  sProjectileComponent : sComponent
     uint32_t    shooterId;
 
     bool        guided;
+    float       rangeMax;
     uint32_t    targetId;
 };
 
