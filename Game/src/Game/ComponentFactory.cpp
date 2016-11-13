@@ -645,3 +645,16 @@ bool        ComponentFactory<sProjectileComponent>::updateEditor(const std::stri
 
     return (changed);
 }
+
+sComponent* ComponentFactory<sWaveComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
+{
+    sWaveComponent*   component;
+
+    component = new sWaveComponent();
+
+    //component->spawnPos = json.getVec3f("spawnPos", glm::vec3(0, 0, 0));
+    component->secBeforeSpawn = json.getFloat("secBeforeSpawn", 2);
+    component->nSpawn = json.getInt("nSpawn", 5);
+
+    return (component);
+}

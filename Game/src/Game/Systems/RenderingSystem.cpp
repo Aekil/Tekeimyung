@@ -193,6 +193,8 @@ Sprite*   RenderingSystem::getSprite(Entity* entity)
     sPositionComponent *position = entity->getComponent<sPositionComponent>();
     sDirectionComponent *direction = entity->getComponent<sDirectionComponent>();
 
+    if (sprite == nullptr)
+        return (nullptr);
     // The entity does not exist in the render system
     if (!sprite->_sprite)
     {

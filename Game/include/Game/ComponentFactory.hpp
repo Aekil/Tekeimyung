@@ -23,7 +23,8 @@
     GENERATE_PAIRS(sPlayerComponent),\
     GENERATE_PAIRS(sParticleEmitterComponent),\
     GENERATE_PAIRS(sTowerAIComponent),\
-    GENERATE_PAIRS(sProjectileComponent)\
+    GENERATE_PAIRS(sProjectileComponent),\
+    GENERATE_PAIRS(sWaveComponent)\
 
 #define GENERATE_PAIRS(COMPONENT) { #COMPONENT, new ComponentFactory<COMPONENT>() }
 
@@ -310,4 +311,15 @@ public:
     virtual JsonValue&  saveToJson(const std::string& entityType, const std::string& componentType);
 
     virtual bool    updateEditor(const std::string& entityType, sComponent** component_);
+};
+
+/*
+** sWaveComponent
+*/
+
+template <>
+class ComponentFactory<sWaveComponent> : public BaseComponentFactory<sWaveComponent>
+{
+public:
+    virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
 };

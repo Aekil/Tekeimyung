@@ -23,8 +23,8 @@ class PlayState: public GameState
     virtual bool                        update(float elapsedTime);
 
 private:
-    Entity*                             createEntity(const glm::vec3& pos, eArchetype type);
     void                                createTile(const glm::vec3& pos, eArchetype type);
+    void                                createWave(const glm::vec3& pos, eArchetype type);
     Entity*                             createParticlesEmittor(const glm::vec3& pos, eArchetype type);
     void                                goTo(Entity* emitter, Entity* character);
 
@@ -34,6 +34,5 @@ private:
     std::pair <Keyboard::eKey, IInputEvent *>    _pair;
 
     // Entity enemies for demo
-    Entity*                             _enemy;
-    Entity*                             _enemy2;
+    //std::vector<Entity*>                _enemies;
 };

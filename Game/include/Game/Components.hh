@@ -12,6 +12,7 @@
 #include <Engine/Window/Keyboard.hpp>
 #include <Engine/Graphics/Animation.hpp>
 #include <Engine/Graphics/Sprite.hpp>
+#include <Engine/Utils/Timer.hpp>
 
 
 struct sRenderComponent: sComponent
@@ -476,4 +477,35 @@ struct  sProjectileComponent : sComponent
 
     bool        guided;
     uint32_t    targetId;
+};
+
+struct sWaveComponent : sComponent
+{
+    sWaveComponent() = default;
+
+    virtual sComponent* clone()
+    {
+        sWaveComponent* component = new sWaveComponent();
+        component->update(this);
+
+        return (component);
+    }
+
+    virtual void update(sWaveComponent* component)
+    {
+        this->spawnPos = component->spawnPos;
+        this->secBeforeSpawn = component->secBeforeSpawn;
+        this->nSpawn = component->nSpawn;
+    }
+
+    virtual void update(sComponent* component)
+    {
+        update(static_cast<sWaveComponent*>(component));
+    }
+
+    //eArchetype  type;
+    glm::vec3   spawnPos;
+    float       secBeforeSpawn;
+    int         nSpawn;
+    //Timer*      timer;
 };

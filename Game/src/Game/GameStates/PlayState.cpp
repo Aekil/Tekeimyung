@@ -19,6 +19,7 @@
 #include <Game/Systems/InputSystem.hpp>
 #include <Game/Systems/TowerAISystem.hpp>
 #include <Game/Systems/ProjectileSystem.hpp>
+#include <Game/Systems/WaveSystem.hpp>
 #include <Game/Components.hh>
 #include <Game/EntityDebugWindow.hpp>
 #include <Game/EntityFactory.hpp>
@@ -40,6 +41,11 @@ void    PlayState::createTile(const glm::vec3& pos, eArchetype type)
     tilePos->value.x = pos.x;
     tilePos->z = pos.z;
     (*_map)[(uint16_t)pos.z][(uint32_t)pos.y][(uint32_t)pos.x] = tile->id;
+}
+
+void    PlayState::createWave(const glm::vec3& pos, eArchetype type)
+{
+    createTile(pos, type);
 }
 
 Entity* PlayState::createParticlesEmittor(const glm::vec3& pos, eArchetype type)
@@ -81,10 +87,8 @@ bool    PlayState::init()
     // Create particles emitter
     //createParticlesEmittor(glm::vec3(8.5f, 5.5f, 1.0f), eArchetype::EMITTER_WATER);
 
-    // Create characters
-    createEntity(glm::vec3(9, 5, 1), eArchetype::PLAYER);
-    _enemy = createEntity(glm::vec3(2.5f, 6.0f, 1), eArchetype::ENEMY);
-    _enemy2 = createEntity(glm::vec3(0.0f, 6.0f, 1), eArchetype::ENEMY);
+    // Create character
+    WaveSystem::createEntity(_map, glm::vec3(9, 5, 1), eArchetype::PLAYER);
 
     // Initialize base map
     for (int y = 0; y < 15; y++) {
@@ -105,11 +109,19 @@ bool    PlayState::init()
         }
     }
 
+    // Create wave
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 1; j++) {
+            // create wave
+            createWave(glm::vec3(j, 5.0f + i, 0), eArchetype::WAVE_SPAWNER);
+        }
+    }
 
     // Create towers
     createTile(glm::vec3(7, 4, 1), eArchetype::TOWER_FIRE);
     createTile(glm::vec3(7, 7, 1), eArchetype::TOWER_FIRE);
 
+    _world.addSystem<WaveSystem>(_map);
     _world.addSystem<InputSystem>();
     _world.addSystem<TowerAISystem>(_map);
     _world.addSystem<AISystem>();
@@ -136,23 +148,6 @@ bool    PlayState::init()
 
     _pair = std::make_pair(Keyboard::eKey::F, new HandleFullscreenEvent());
     return (true);
-}
-
-Entity*    PlayState::createEntity(const glm::vec3& pos, eArchetype type)
-{
-    Entity* entity = EntityFactory::createEntity(type);
-
-    sPositionComponent* posEntity = entity->getComponent<sPositionComponent>();
-    posEntity->value.x = pos.x;
-    posEntity->value.y = pos.y;
-    posEntity->z = pos.z;
-
-    (*_map)[(uint16_t)pos.z].addEntity(entity->id);
-
-  /*  static int idSoundSpawn = SoundManager::getInstance()->registerSound("resources/sounds/spawn.mp3", DEFAULT_SOUND);
-    SoundManager::getInstance()->playSound(idSoundSpawn);*/
-
-    return entity;
 }
 
 bool    PlayState::update(float elapsedTime)
