@@ -85,7 +85,7 @@ bool    PlayState::init()
     _map = new Map(em, 20, 15, 4);
 
     // Create particles emitter
-    //createParticlesEmittor(glm::vec3(8.5f, 5.5f, 1.0f), eArchetype::EMITTER_WATER);
+    createParticlesEmittor(glm::vec3(8.5f, 5.5f, 1.0f), eArchetype::EMITTER_WATER);
 
     // Create character
     WaveSystem::createEntity(_map, glm::vec3(9, 5, 1), eArchetype::PLAYER);
@@ -126,7 +126,7 @@ bool    PlayState::init()
     _world.addSystem<TowerAISystem>(_map);
     _world.addSystem<AISystem>();
     _world.addSystem<ProjectileSystem>();
-    
+
     //_world.addSystem<CollisionSystem>(_map);
 
     _world.addSystem<MovementSystem>(_map);

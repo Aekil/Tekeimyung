@@ -56,7 +56,6 @@ bool    Engine::run()
             {
                 _gameStateManager.removeCurrentState();
             }
-            timer.reset();
         }
     }
     return (true);

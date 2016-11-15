@@ -468,6 +468,7 @@ sComponent* ComponentFactory<sParticleEmitterComponent>::loadFromJson(const std:
 
     component->rate = json.getFloat("rate", 0.0f);
     component->spawnNb = json.getUInt("spawn_nb", 0);
+    component->emitterLife = json.getFloat("emitter_life", 0.0f);
     component->life = json.getUInt("life", 0);
     component->lifeVariance = json.getUInt("life_variance", 0);
     component->angle = json.getFloat("angle", 0.0f);
@@ -517,6 +518,7 @@ JsonValue&    ComponentFactory<sParticleEmitterComponent>::saveToJson(const std:
 
     json.setFloat("rate", component->rate);
     json.setUInt("spawn_nb", component->spawnNb);
+    json.setFloat("emitter_life", component->emitterLife);
     json.setUInt("life", component->life);
     json.setUInt("life_variance", component->lifeVariance);
     json.setFloat("angle", component->angle);
@@ -536,6 +538,7 @@ bool    ComponentFactory<sParticleEmitterComponent>::updateEditor(const std::str
     ImGui::PushItemWidth(200);
     if (ImGui::CollapsingHeader("sParticleEmitterComponent", ImGuiTreeNodeFlags_DefaultOpen))
     {
+        changed |= ImGui::SliderFloat("Emitter life (0 to disable)", &component->emitterLife, 0.0f, 10.0f);
         changed |= ImGui::SliderFloat("Rate", &component->rate, 0.0f, 3.0f);
         changed |= ImGui::SliderInt("Particles number per spawn", (int*)&component->spawnNb, 0, 50);
         changed |= ImGui::SliderFloat("Angle", &component->angle, 0.0f, 360.0f);
@@ -571,7 +574,7 @@ JsonValue&  ComponentFactory<sTowerAIComponent>::saveToJson(const std::string& e
 {
     JsonValue&  json = _componentsJson[entityType];
     sTowerAIComponent*  component;
-    
+
     component = static_cast<sTowerAIComponent*>(_components[entityType]);
     json.setFloat("radius", component->radius);
     json.setFloat("fire_rate", component->fireRate);

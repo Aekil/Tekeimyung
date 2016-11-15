@@ -35,6 +35,7 @@ struct sEmitter
 {
     std::vector<sParticle>  particles;
     unsigned int            particlesNb;
+    float                   life;
     Timer                   timer;
 };
 

@@ -73,8 +73,22 @@ void    ParticleSystem::updateEmitter(Entity* entity, float elapsedTime)
         }
     }
 
+    // Update emitter life time
+    if (emitterComp->emitterLife)
+        emitter->life += elapsedTime;
+
+    // The emitter is not alive
+    if (emitterComp->emitterLife &&
+        emitter->life >= emitterComp->emitterLife)
+    {
+        // Wait for particles deletion and remove emitter
+        if (emitter->particles.size() == 0)
+        {
+            _emitters.erase(_emitters.find(entity->id));
+        }
+    }
     // Create new particles each second
-    if (emitter->timer.getElapsedTime() >= emitterComp->rate)
+    else if (emitter->timer.getElapsedTime() >= emitterComp->rate)
     {
         for (uint32_t i = 0; i < emitterComp->spawnNb; i++)
         {

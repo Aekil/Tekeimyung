@@ -336,6 +336,7 @@ struct sParticleEmitterComponent : sComponent
     {
         this->rate = component->rate;
         this->spawnNb = component->spawnNb;
+        this->emitterLife = component->emitterLife;
         this->life = component->life;
         this->lifeVariance = component->lifeVariance;
         this->angle = component->angle;
@@ -364,6 +365,9 @@ struct sParticleEmitterComponent : sComponent
 
     // Spawn spawnNb particles each rate
     uint32_t spawnNb;
+
+    // Emitter life, in seconds
+    float emitterLife;
 
     // Particle life time in frame
     uint32_t life;
