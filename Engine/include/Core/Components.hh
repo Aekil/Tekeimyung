@@ -34,6 +34,7 @@ struct sRenderComponent: sComponent
         this->color = component->color;
         this->animated = component->animated;
         this->_model = component->_model;
+        this->scale = component->scale;
     }
 
     virtual void update(sComponent* component)
@@ -43,6 +44,7 @@ struct sRenderComponent: sComponent
 
     std::string modelFile;
     glm::vec3 color;
+    glm::vec3 scale;
     bool animated;
 
     std::shared_ptr<Model> _model;

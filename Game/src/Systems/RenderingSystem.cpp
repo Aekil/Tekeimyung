@@ -186,7 +186,7 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
     //renderParticles(em);
 
     // Display imgui windows
-    //ImGui::Render();
+    ImGui::Render();
 
     // Display screen
     GameWindow::getInstance()->display();
@@ -209,7 +209,7 @@ std::shared_ptr<Model>  RenderingSystem::getModel(Entity* entity)
     if (direction) {
         orientation = glm::rotate(orientation, glm::radians(direction->orientation.y), glm::vec3(0.0f, 1.0f, 0.0f));
     }
-    model->_model->update(position->value, orientation, position->z);
+    model->_model->update(position->value, model->scale, orientation, position->z);
 
     return (model->_model);
 }

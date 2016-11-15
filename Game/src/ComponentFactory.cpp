@@ -65,6 +65,7 @@ sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& 
     sRenderComponent* component = new sRenderComponent();
 
     // Initialize some values
+    component->scale = json.getVec3f("scale", { 1.0f, 1.0f, 1.0f });
     component->animated = json.getBool("animated", false);
     component->modelFile = json.getString("model", "");
     component->color = json.getColor3f("color", { 1.0f, 1.0f, 1.0f });
@@ -78,6 +79,7 @@ JsonValue&    ComponentFactory<sRenderComponent>::saveToJson(const std::string& 
     sRenderComponent* component = static_cast<sRenderComponent*>(_components[entityType]);
 
 
+    json.getVec3f("scale", component->scale);
     json.setBool("animated", component->animated);
     json.setString("model", component->modelFile);
     json.setColor3f("color", component->color);
@@ -90,14 +92,26 @@ bool    ComponentFactory<sRenderComponent>::updateEditor(const std::string& enti
     sRenderComponent* component = static_cast<sRenderComponent*>(_components[entityType]);
     *component_ = component;
     bool changed = false;
+    bool scaleChanged = false;
 
     ImGui::PushItemWidth(200);
     if (ImGui::CollapsingHeader("sRenderComponent", ImGuiTreeNodeFlags_DefaultOpen))
     {
+        float scale = component->scale.x;
+
+        changed |= ImGui::SliderFloat3("scale",  glm::value_ptr(component->scale), 0.1f, 200.0f);
+        scaleChanged |= ImGui::SliderFloat("scale all",  &scale, 0.1f, 200.0f);
         changed |= ImGui::ColorEdit3("color", glm::value_ptr(component->color));
+
+        if (scaleChanged)
+        {
+            component->scale.x = scale;
+            component->scale.y = scale;
+            component->scale.z = scale;
+        }
     }
 
-    return (changed);
+    return (changed || scaleChanged);
 }
 
 

@@ -88,7 +88,7 @@ void    Mesh::loadBones(Skeleton& skeleton, aiMesh *mesh)
     // Iterate over all bones of the mesh
     for (uint32_t i = 0; i < mesh->mNumBones; i++)
     {
-        auto &&meshBone = mesh->mBones[i];
+		auto &&meshBone = mesh->mBones[i];
         Skeleton::sBone* bone = skeleton.getBoneByName(meshBone->mName.data);
 
         // the bone does not exist in the model skeleton

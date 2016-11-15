@@ -31,6 +31,8 @@ public:
     Skeleton();
     ~Skeleton();
     sBone*                                      getBoneByName(const std::string& name);
+    sBone*                                      getBoneById(uint32_t id);
+    const std::vector<Skeleton::sBone>&         getBones() const;
     void                                        addBone(const std::string& name, const glm::mat4& offset);
 
     void                                        updateUniformBuffer();

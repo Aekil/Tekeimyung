@@ -21,6 +21,16 @@ Skeleton::sBone*  Skeleton::getBoneByName(const std::string& name)
     return &_bones[boneId->second];
 }
 
+Skeleton::sBone*  Skeleton::getBoneById(uint32_t id)
+{
+    return &_bones[id];
+}
+
+const std::vector<Skeleton::sBone>& Skeleton::getBones() const
+{
+    return _bones;
+}
+
 void    Skeleton::addBone(const std::string& name, const glm::mat4& offset)
 {
     std::cout << "ADD Bone " << name.c_str() << std::endl;

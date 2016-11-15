@@ -45,3 +45,18 @@ void    Helper::copyAssimpMat(const aiMatrix4x4& from, glm::mat4& to)
     to[0][3] = from.d1; to[1][3] = from.d2;
     to[2][3] = from.d3; to[3][3] = from.d4;
 }
+
+void    Helper::copyAssimpQuat(const aiQuaternion& from, glm::quat& to)
+{
+    to.x = from.x;
+    to.y = from.y;
+    to.z = from.z;
+    to.w = from.w;
+}
+
+void    Helper::copyAssimpVec3(const aiVector3D& from, glm::vec3& to)
+{
+    to.x = from.x;
+    to.y = from.y;
+    to.z = from.z;
+}

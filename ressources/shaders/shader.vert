@@ -31,16 +31,16 @@ void main()
 {
     mat4 boneTransform = mat4(1.0);
 
-    boneTransform += bones[inBonesIds[0][0]] * inBonesWeights[0][0];
-    boneTransform += bones[inBonesIds[0][1]] * inBonesWeights[0][1];
-    boneTransform += bones[inBonesIds[0][2]] * inBonesWeights[0][2];
-    boneTransform += bones[inBonesIds[0][3]] * inBonesWeights[0][3];
+    /*boneTransform += bones[inBonesIds[0].x] * inBonesWeights[0].x;
+    boneTransform += bones[inBonesIds[0].y] * inBonesWeights[0].y;
+    boneTransform += bones[inBonesIds[0].z] * inBonesWeights[0].z;
+    boneTransform += bones[inBonesIds[0].w] * inBonesWeights[0].w;
 
 
-    boneTransform += bones[inBonesIds[1][0]] * inBonesWeights[1][0];
-    boneTransform += bones[inBonesIds[1][1]] * inBonesWeights[1][1];
-    boneTransform += bones[inBonesIds[1][2]] * inBonesWeights[1][2];
-    boneTransform += bones[inBonesIds[1][3]] * inBonesWeights[1][3];
+    boneTransform += bones[inBonesIds[1].x] * inBonesWeights[1].x;
+    boneTransform += bones[inBonesIds[1].y] * inBonesWeights[1].y;
+    boneTransform += bones[inBonesIds[1].z] * inBonesWeights[1].z;
+    boneTransform += bones[inBonesIds[1].w] * inBonesWeights[1].w;*/
 
     vec4 vertPos = boneTransform * vec4(inPosition, 1.0);
     gl_Position = proj * view * model * vertPos;
