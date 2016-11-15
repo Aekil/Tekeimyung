@@ -47,12 +47,12 @@ bool    Model::loadFromFile(const std::string &file)
 
 
     // Transform vertices with scene node transform matrix
-    if (!scene->HasAnimations())
-    {
+    //if (!scene->HasAnimations())
+    //{
         // Modify scene nodes transformation matrix relative to parent node
         computeSceneNodeAbsoluteTransform(scene->mRootNode);
         transformVertices(_scene, scene->mRootNode);
-    }
+    //}
 
     std::cout << scene->mNumMeshes << " meshes for " << file << std::endl;
     for (uint32_t i = 0; i < scene->mNumMeshes; i++)
@@ -66,17 +66,17 @@ bool    Model::loadFromFile(const std::string &file)
     }
 
 
-    if (scene->HasAnimations())
+/*    if (scene->HasAnimations())
     {
         std::cout << "FOUND " << scene->mNumAnimations << " animations" << std::endl;
         std::cout << "FIRST: " << scene->mAnimations[0]->mName.data << std::endl;
         updateBonesTransforms(scene, scene->mRootNode, glm::mat4(1.0), 2.0f);
-    }
+    }*/
 
     initVertexData();
     initIndexData();
     _buffer.updateData(_vertexData, getVertexsSize(), _indexData, getIndicesSize());
-    _skeleton.updateUniformBuffer();
+    //_skeleton.updateUniformBuffer();
 
     return (true);
 }
@@ -141,19 +141,18 @@ void    Model::draw(const ShaderProgram& shaderProgram) const
 
 void    Model::update(const glm::vec2& pos, const glm::vec3& scale, const glm::mat4& orientation, float z)
 {
-    uint32_t i = 0;
+    //uint32_t i = 0;
     _pos.x = pos.x * 25.0f;
     _pos.y = z * 12.5f;
     _pos.z = pos.y * 25.0f;
     _scale = scale;
     _orientation = orientation;
 
-    if (_skeleton.getBones().size() <= 0)
+   /* if (_skeleton.getBones().size() <= 0)
         return;
 
     if (_anim >= 32.0f)
         _anim = 0.0f;
-    std::cout << "UPDATE " << _anim << std::endl;
     updateBonesTransforms(_scene, _scene->mRootNode, glm::mat4(1.0), _anim);
     for (auto &&mesh : getMeshs())
     {
@@ -173,7 +172,7 @@ void    Model::update(const glm::vec2& pos, const glm::vec3& scale, const glm::m
     }
     _anim++;
 
-    _buffer.updateData(_vertexData, getVertexsSize(), _indexData, getIndicesSize());
+    _buffer.updateData(_vertexData, getVertexsSize(), _indexData, getIndicesSize());*/
     //_skeleton.updateUniformBuffer();
 
 }
@@ -193,7 +192,7 @@ void    Model::initVertexData()
         for (uint32_t k = 0; k < vertexs.size(); k++, i++)
         {
             //vertexs[k].pos = glm::vec3(pos.x, pos.y, pos.z);
-            if (_skeleton.getBones().size() > 0)
+            /*if (_skeleton.getBones().size() > 0)
             {
                 glm::mat4 trans(1.0);
                 for (uint32_t j = 0; j < BONES_PER_VERTEX; j++)
@@ -204,7 +203,7 @@ void    Model::initVertexData()
                 glm::vec4 pos = trans * glm::vec4(vertexs[k].pos, 1.0);
                 _vertexData[i].pos = { pos.x, pos.y, pos.z };
             }
-            else
+            else*/
                 _vertexData[i].pos = { vertexs[k].pos.x, vertexs[k].pos.y, vertexs[k].pos.z };
                 _vertexData[i].color = { vertexs[k].color.x, vertexs[k].color.y, vertexs[k].color.z };
                 _vertexData[i].normal = { vertexs[k].normal.x, vertexs[k].normal.y, vertexs[k].normal.z };
@@ -359,7 +358,7 @@ void    Model::updateBonesTransforms(const aiScene* scene, aiNode* node, const g
         Helper::copyAssimpVec3(aiTranslation, pos);
         Helper::copyAssimpVec3(aiScale, scale);
         Helper::copyAssimpQuat(aiRotation, rotation);
-        nodeTransform = glm::translate(glm::mat4(1.0), pos) * glm::mat4_cast(rotation) * glm::scale(glm::mat4(1.0f), scale);
+        //nodeTransform = glm::translate(glm::mat4(1.0), pos) * glm::mat4_cast(rotation) * glm::scale(glm::mat4(1.0f), scale);
     }
 
    nodeTransform = parentTransform * nodeTransform;
@@ -369,7 +368,7 @@ void    Model::updateBonesTransforms(const aiScene* scene, aiNode* node, const g
     {
         glm::mat4 globalTransform;
         Helper::copyAssimpMat(scene->mRootNode->mTransformation, globalTransform);
-        bone->finalTransform = glm::inverse(globalTransform) * nodeTransform * bone->offset;
+        bone->finalTransform = nodeTransform * bone->offset;
     }
 
     for (uint32_t i = 0; i < node->mNumChildren; i++)   {
