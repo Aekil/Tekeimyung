@@ -142,9 +142,9 @@ bool    PlayState::init()
     addDebugWindow<EntityDebugWindow>(_map, glm::vec2(0, 80), glm::vec2(450, 350));
     addDebugWindow<LogDebugWindow>(Logger::getInstance(), glm::vec2(0, 430), glm::vec2(300, 200));
 
-    // Play sound
-    //static int idSoundBkgdMusic = SoundManager::getInstance()->registerSound("ressources/sounds/Kalimba.mp3", BACKGROUND_SOUND);
-    //SoundManager::getInstance()->playSound(idSoundBkgdMusic);
+     //Play sound
+    static int idSoundBkgdMusic = SoundManager::getInstance()->registerSound("ressources/sounds/Kalimba.mp3", BACKGROUND_SOUND);
+    SoundManager::getInstance()->playSound(idSoundBkgdMusic);
 
     _pair = std::make_pair(Keyboard::eKey::F, new HandleFullscreenEvent());
     return (true);

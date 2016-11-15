@@ -5,6 +5,7 @@
 #include <Engine/Physics/Collisions.hpp>
 
 #include <Game/Components.hh>
+#include <Game/EntityFactory.hpp>
 
 #include <Game/Systems/CollisionSystem.hpp>
 
@@ -170,6 +171,17 @@ bool    CollisionSystem::dynamicResolution(EntityManager &em, Entity *firstEntit
         }
         if (secondEntity->getComponent<sAIComponent>() != nullptr)
         {
+            Entity* ps;
+            sPositionComponent* psPos;
+            sPositionComponent* entityPosition = secondEntity->getComponent<sPositionComponent>();
+
+            ps = EntityFactory::createEntity(eArchetype::EMITTER_FIRE);
+            psPos = ps->getComponent<sPositionComponent>();
+            psPos->value.x = entityPosition->value.x;
+            psPos->value.y = entityPosition->value.y;
+            psPos->z = entityPosition->z;
+            ps->getComponent< sParticleEmitterComponent>()->emitterLife = 1.5f;
+
             // collision projectile avec ennemi
             em.destroyEntityRegister(firstEntity);
             em.destroyEntityRegister(secondEntity);
