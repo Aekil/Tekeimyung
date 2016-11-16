@@ -1,0 +1,17 @@
+{
+    "name": "BLOCK_GREEN",
+    "components": {
+            "sPositionComponent": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "sRenderComponent": {
+                "model": "resources/models/blocks/block_green.DAE",
+                "type": "TILE"
+            },
+            "sTypeComponent": {
+                "type": "TILE_WALKABLE"
+            }
+        }
+}

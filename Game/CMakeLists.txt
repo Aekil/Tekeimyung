@@ -54,5 +54,5 @@ target_link_libraries(${EXECUTABLE_NAME} ENGINE)
 
 
 
-# Copy ressources in Game directory
-file(COPY ../ressources DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+# Copy resources in Game directory
+file(COPY ../resources DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

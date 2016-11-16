@@ -1,0 +1,82 @@
+{
+   "components" : {
+      "sParticleEmitterComponent" : {
+         "angle" : 0,
+         "angle_variance" : 0,
+         "color" : {
+            "finish" : {
+               "a" : 0,
+               "b" : 0,
+               "g" : 0.63999998569488525,
+               "r" : 1
+            },
+            "finish_variance" : {
+               "a" : 0,
+               "b" : 0,
+               "g" : 0,
+               "r" : 0
+            },
+            "start" : {
+               "a" : 0.60000002384185791,
+               "b" : 0,
+               "g" : 0.30000001192092896,
+               "r" : 1
+            },
+            "start_variance" : {
+               "a" : 0,
+               "b" : 0,
+               "g" : 0,
+               "r" : 0
+            }
+         },
+         "life" : 1,
+         "life_variance" : 1,
+         "rate" : 0,
+         "size" : {
+            "finish" : 0.2,
+            "finish_variance" : 0,
+            "start" : 1,
+            "start_variance" : 0
+         },
+         "spawn_nb" : 1,
+         "speed" : 100,
+         "speed_variance" : 0
+      },
+      "sPositionComponent" : {
+         "x" : 0,
+         "y" : 0,
+         "z" : 0
+      },
+      "sProjectileComponent" : {
+         "guided" : true
+      },
+      "sRenderComponent" : {
+         "animated" : false,
+         "animation" : {
+            "frames" : {
+               "x" : 0,
+               "y" : 0
+            },
+            "offset" : {
+               "x" : 0,
+               "y" : 0
+            }
+         },
+         "color" : {
+            "b" : 1,
+            "g" : 1,
+            "r" : 1
+         },
+         "spriteSize" : {
+            "x" : 0,
+            "y" : 0
+         },
+         "texture" : "resources/sprites/particles/particle_circle.png",
+         "type" : "OBJECT"
+      },
+      "sTypeComponent" : {
+         "type" : "OBJECT"
+      }
+   },
+   "name" : "FIRE_BALL"
+}

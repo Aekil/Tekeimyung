@@ -1,0 +1,38 @@
+{
+    "name": "PLAYER",
+    "components": {
+            "sPositionComponent": {
+                "x": 9,
+                "y": 8,
+                "z": 1
+            },
+            "sDirectionComponent": {
+                "x": 0,
+                "y": 0
+            },
+            "sRenderComponent": {
+                "model": "resources/models/characters/knight.fbx",
+                "type": "OBJECT"
+            },
+            "sTypeComponent": {
+                "type": "CHARACTER"
+            },
+            "sRectHitboxComponent": {
+                "min": {
+                    "x": 614,
+                    "y": 188.8
+                },
+                "max": {
+                    "x": 669,
+                    "y": 123.9
+                }
+            },
+            "sInputComponent": {
+                "left": "J",
+                "right": "L",
+                "up": "I",
+                "down": "K"
+            },
+            "sPlayerComponent": {}
+        }
+}
