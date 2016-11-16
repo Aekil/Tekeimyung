@@ -156,7 +156,6 @@ void    TowerAISystem::fire(Entity* shooter, Entity* enemy)
     sRectHitboxComponent*   fireballHitbox;
 
     towerAIComponent = shooter->getComponent<sTowerAIComponent>();
-    std::cout << "ShooterID: " << shooter->id << ", lastShotTime: " << towerAIComponent->lastShotTime << std::endl;
     if (towerAIComponent->lastShotTime >= towerAIComponent->fireRate)
     {
         fireball = createFireball(shooter, enemy);
