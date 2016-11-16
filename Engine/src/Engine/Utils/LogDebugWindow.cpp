@@ -21,7 +21,8 @@ void    LogDebugWindow::build()
     // Draw components
     ImGui::TextUnformatted(_logger->getLog().begin(), _logger->getLog().end());
 
-    _size.x = ImGui::GetItemRectSize().x;
+    if (ImGui::GetItemRectSize().x > _size.x)
+        _size.x = ImGui::GetItemRectSize().x;
 
     // A Log was added since last update
     if ((uint32_t)_logger->getLog().size() > _lastLogSize)
