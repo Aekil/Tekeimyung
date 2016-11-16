@@ -50,7 +50,8 @@ public:
 
 private:
     void            initEmitter(Entity* entity);
-    void            updateEmitter(Entity* entity, float elapsedTime);
+    void            updateEmitter(EntityManager &em, Entity* entity, float elapsedTime);
+    void            removeEmitter(uint32_t id);
 
 private:
     std::unordered_map<uint32_t, sEmitter*>     _emitters;

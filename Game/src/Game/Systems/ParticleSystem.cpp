@@ -31,7 +31,7 @@ void    ParticleSystem::initEmitter(Entity* entity)
 }
 
 
-void    ParticleSystem::updateEmitter(Entity* entity, float elapsedTime)
+void    ParticleSystem::updateEmitter(EntityManager &em, Entity* entity, float elapsedTime)
 {
     sParticleEmitterComponent *emitterComp = entity->getComponent<sParticleEmitterComponent>();
     sPositionComponent *position = entity->getComponent<sPositionComponent>();
@@ -82,9 +82,10 @@ void    ParticleSystem::updateEmitter(Entity* entity, float elapsedTime)
         emitter->life >= emitterComp->emitterLife)
     {
         // Wait for particles deletion and remove emitter
-        if (emitter->particles.size() == 0)
+        if (emitter->particlesNb == 0)
         {
-            _emitters.erase(_emitters.find(entity->id));
+            removeEmitter(entity->id);
+            em.destroyEntityRegister(entity);
         }
     }
     // Create new particles each second
@@ -119,6 +120,16 @@ void    ParticleSystem::updateEmitter(Entity* entity, float elapsedTime)
     }
 }
 
+void    ParticleSystem::removeEmitter(uint32_t id)
+{
+    sEmitter* emitter = _emitters[id];
+
+    // Delete emitter pointer
+    delete emitter;
+    // Remove emitter from map
+    _emitters.erase(_emitters.find(id));
+}
+
 void    ParticleSystem::update(EntityManager &em, float elapsedTime)
 {
     uint32_t activeEmitters = 0;
@@ -131,7 +142,7 @@ void    ParticleSystem::update(EntityManager &em, float elapsedTime)
         if (_emitters.find(entity->id) == _emitters.end())
             initEmitter(entity);
 
-        updateEmitter(entity, elapsedTime);
+        updateEmitter(em, entity, elapsedTime);
         activeEmitters++;
     });
 
@@ -145,10 +156,9 @@ void    ParticleSystem::update(EntityManager &em, float elapsedTime)
             // The emitter has been deleted, remove it from the map
             if (!em.getEntity(it->first))
             {
-                // Delete emitter pointer
-                delete it->second;
-                // Remove emitter from map
-                _emitters.erase(it++);
+                uint32_t emitterId = it->first;
+                ++it;
+                removeEmitter(emitterId);
             }
             else
                 ++it;
