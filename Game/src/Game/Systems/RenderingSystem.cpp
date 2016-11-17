@@ -9,7 +9,6 @@
 #include <Engine/Utils/Exception.hpp>
 #include <Engine/Utils/RessourceManager.hpp>
 #include <Engine/Window/GameWindow.hpp>
-#include <Engine/Graphics/Geometries/Plane.hpp>
 
 #include <Game/Systems/RenderingSystem.hpp>
 
@@ -89,7 +88,7 @@ void    RenderingSystem::renderEntities(EntityManager& em, std::list<uint32_t>::
 
         position = entity->getComponent<sPositionComponent>();
     }
-}
+}*/
 
 void    RenderingSystem::renderParticles(EntityManager& em)
 {
@@ -100,51 +99,28 @@ void    RenderingSystem::renderParticles(EntityManager& em)
     {
         auto &&emitter = it.second;
         Entity* entity = em.getEntity(it.first);
+        sTransformComponent *transform = entity->getComponent<sTransformComponent>();
         if (entity == nullptr)
             continue;
-
-        sRenderComponent *sprite = entity->getComponent<sRenderComponent>();
-
-
-        if (!sprite->_sprite)
-        {
-            Sprite::sCreateInfo createInfo;
-            sprite->_sprite = new Sprite(sprite->type, _shaderProgram);
-
-            getSpriteCreateInfo(createInfo, sprite);
-            sprite->_sprite->loadFromTexture(createInfo);
-        }
 
         for (unsigned int i = 0; i < emitter->particlesNb; i++)
         {
             auto &&particle = emitter->particles[i];
 
             // Model matrice
-            glm::mat4 trans;
-            glm::mat4 scale;
-            glm::mat4 modelTrans;
-            trans = glm::translate(trans, glm::vec3(particle.pos.x, particle.pos.y, 0.0f));
-            scale = glm::scale(scale, glm::vec3(particle.size, particle.size, particle.size));
-            modelTrans = trans * scale;
-            GLint uniTrans = _shaderProgram.getUniformLocation("trans");
-            glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(modelTrans));
-
-            // Color vector
-            GLint uniColor = _shaderProgram.getUniformLocation("color");
-            glUniform4f(uniColor, particle.color.x, particle.color.y, particle.color.z, particle.color.w);
+            emitter->model->update(particle.pos, glm::vec3(particle.size, particle.size, particle.size), glm::mat4(1.0));
 
             // Draw sprite
-            sprite->_sprite->draw();
+            emitter->model->draw(_shaderProgram);
         }
     }
 
     // Activate transparency blending
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
-*/
+
 void    RenderingSystem::update(EntityManager& em, float elapsedTime)
 {
-    static Plane plane(100, 100);
     // Clear color buffer
     glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -157,12 +133,6 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
     forEachEntity(em, [&](Entity *entity) {
         renderEntity(entity);
     });
-
-    // Remove the camera rotation so that the plane face the camera
-    _camera.freezeRotations(true);
-    // Draw the plane
-    plane.update({8, 5}, {1.0f, 1.0f, 1.0f}, glm::mat4(1.0), 1);
-    plane.draw(_shaderProgram);
 
 /*
     for (auto &&id: (*_map)[1].getEntities())
@@ -199,7 +169,10 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
         }
     }*/
 
-    //renderParticles(em);
+    // Remove the camera rotation so that the particles face the camera
+    _camera.freezeRotations(true);
+
+    renderParticles(em);
 
     // Display imgui windows
     ImGui::Render();
@@ -213,6 +186,7 @@ std::shared_ptr<Model>  RenderingSystem::getModel(Entity* entity)
     int id = entity->id;
     sRenderComponent *model = entity->getComponent<sRenderComponent>();
     sPositionComponent *position = entity->getComponent<sPositionComponent>();
+    sTransformComponent *transform = entity->getComponent<sTransformComponent>();
     sDirectionComponent *direction = entity->getComponent<sDirectionComponent>();
 
     // The entity does not exist in the render system
@@ -225,7 +199,8 @@ std::shared_ptr<Model>  RenderingSystem::getModel(Entity* entity)
     if (direction) {
         orientation = glm::rotate(orientation, glm::radians(direction->orientation.y), glm::vec3(0.0f, 1.0f, 0.0f));
     }
-    model->_model->update(position->value, model->scale, orientation, position->z);
+
+    model->_model->update(transform->pos, transform->scale, orientation);
 
     return (model->_model);
 }

@@ -6,6 +6,7 @@
 #include <ECS/System.hpp>
 
 #include <Engine/Utils/Timer.hpp>
+#include <Engine/Graphics/Model.hpp>
 
 #include <Game/Components.hh>
 
@@ -37,6 +38,7 @@ struct sEmitter
     unsigned int            particlesNb;
     float                   life;
     Timer                   timer;
+    std::shared_ptr<Model>  model;
 };
 
 class ParticleSystem: public System

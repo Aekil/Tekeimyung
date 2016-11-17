@@ -37,10 +37,12 @@ void    PlayState::createTile(const glm::vec3& pos, eArchetype type)
 
     tile = EntityFactory::createEntity(type);
     sPositionComponent* tilePos = tile->getComponent<sPositionComponent>();
+    sTransformComponent *tileTransform = tile->getComponent<sTransformComponent>();
     tilePos->value.y = pos.y;
     tilePos->value.x = pos.x;
     tilePos->z = pos.z;
     (*_map)[(uint16_t)pos.z][(uint32_t)pos.y][(uint32_t)pos.x] = tile->id;
+    tileTransform->pos = Map::mapToGraphPosition(tilePos->value, tilePos->z);
 }
 
 void    PlayState::createWave(const glm::vec3& pos, eArchetype type)
@@ -52,12 +54,16 @@ Entity* PlayState::createParticlesEmittor(const glm::vec3& pos, eArchetype type)
 {
     Entity* ps;
     sPositionComponent* psPos;
+    sTransformComponent *psTransform;
 
     ps = EntityFactory::createEntity(type);
     psPos = ps->getComponent<sPositionComponent>();
+    psTransform = ps->getComponent<sTransformComponent>();
     psPos->value.x = pos.x;
     psPos->value.y = pos.y;
     psPos->z = pos.z;
+    psTransform->pos = Map::mapToGraphPosition(psPos->value, psPos->z);
+
     return (ps);
 }
 
@@ -83,6 +89,9 @@ bool    PlayState::init()
     EntityFactory::bindEntityManager(&em);
 
     _map = new Map(em, 20, 15, 4);
+
+    // Create particles emitter
+    createParticlesEmittor(glm::vec3(9, 5, 1), eArchetype::EMITTER_WATER);
 
     // Create character
     createTile(glm::vec3(9, 5, 1), eArchetype::PLAYER);
@@ -128,8 +137,8 @@ bool    PlayState::init()
 
     _world.addSystem<MovementSystem>(_map);
     _world.addSystem<CollisionSystem>(_map);
-    //_world.addSystem<ParticleSystem>();
-    _world.addSystem<RenderingSystem>(_map, nullptr);
+    _world.addSystem<ParticleSystem>();
+    _world.addSystem<RenderingSystem>(_map, _world.getSystem<ParticleSystem>()->getEmitters());
 
     addDebugWindow<OverlayDebugWindow>();
     addDebugWindow<EntityDebugWindow>(_map, glm::vec2(0, 80), glm::vec2(450, 350));

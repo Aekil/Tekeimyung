@@ -22,8 +22,8 @@ public:
     virtual void update(EntityManager& em, float elapsedTime);
     virtual bool                            init();
     void                                    renderEntity(Entity* entity);
-/*    void                                    renderEntities(EntityManager& em, std::list<uint32_t>::const_iterator& it, uint16_t layer, uint32_t x, uint32_t y);
-    void                                    renderParticles(EntityManager& em);*/
+/*    void                                    renderEntities(EntityManager& em, std::list<uint32_t>::const_iterator& it, uint16_t layer, uint32_t x, uint32_t y);*/
+    void                                    renderParticles(EntityManager& em);
     const ShaderProgram&                    getShaderProgram() const;
 
 private:

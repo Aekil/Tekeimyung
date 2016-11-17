@@ -159,28 +159,16 @@ bool    Map::isValidPosition(glm::ivec3& pos) const
         pos.z >= 0 && pos.z < (int)getLayersNb());
 }
 
-glm::vec3   Map::mapToGraphPosition(glm::vec2& mapPos, float z, Sprite *sprite)
+glm::vec3   Map::mapToGraphPosition(glm::vec2& mapPos, float z)
 {
     glm::vec3 graphPos;
-    float tileWidthHalf = 64.0f;
-    float tileLengthHalf = 32.0f;
-    float tileHeight = 38.0f;
-    float offsetX = GameWindow::getInstance()->getScreenWidth() * 1.3f / 2.0f - tileWidthHalf;
-    float offsetY = GameWindow::getInstance()->getScreenHeight() * 1.3f - (tileLengthHalf * 3.0f);
+    float tileWidthHalf = 25.0f;
+    float tileLengthHalf = 25.0f;
+    float tileHeight = 12.5f;
 
-    graphPos.x = offsetX + (mapPos.x - mapPos.y) * tileWidthHalf;
-    graphPos.y = offsetY - (mapPos.x + mapPos.y) * tileLengthHalf + (tileHeight * z);
-    graphPos.z = z;
-
-    if (sprite->getType() == Sprite::eType::OBJECT)
-    {
-        graphPos.y += tileLengthHalf * 2.0f;
-        graphPos.x += tileWidthHalf - (sprite->getSpriteSize().x / 2.0f);
-    }
-    else
-    {
-        graphPos.x -= (sprite->getSpriteSize().x / 2.0f) - tileWidthHalf;
-    }
+    graphPos.x = mapPos.x * tileLengthHalf;
+    graphPos.y = tileHeight * z;
+    graphPos.z = mapPos.y * tileWidthHalf;
 
     return (graphPos);
 }

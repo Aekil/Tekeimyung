@@ -139,12 +139,13 @@ void    Model::draw(const ShaderProgram& shaderProgram) const
     }
 }
 
-void    Model::update(const glm::vec2& pos, const glm::vec3& scale, const glm::mat4& orientation, float z)
+void    Model::update(const glm::vec3& pos, const glm::vec3& scale, const glm::mat4& orientation)
 {
     //uint32_t i = 0;
-    _pos.x = pos.x * 25.0f;
+    _pos = pos;
+/*    _pos.x = pos.x * 25.0f;
     _pos.y = z * 12.5f;
-    _pos.z = pos.y * 25.0f;
+    _pos.z = pos.y * 25.0f;*/
     _scale = scale;
     _orientation = orientation;
 

@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include <Game/ComponentFactory.hpp>
 #include <dirent.h> // This include have to be called after "ComponentFactory.hpp"
 
@@ -64,6 +66,13 @@ void EntityFactory::loadDirectory(const std::string& archetypesDir)
                 IComponentFactory::initComponent(typeName, componentName, JsonValue(*it));
                 _entitiesFiles[typeName] = path;
                 _entities[typeName].push_back(componentName);
+            }
+
+            // Add sTransformation component if not found
+            if (std::find(_entities[typeName].begin(), _entities[typeName].end(), "sTransformComponent") == _entities[typeName].end())
+            {
+                IComponentFactory::initComponent(typeName, "sTransformComponent", {});
+                _entities[typeName].push_back("sTransformComponent");
             }
         }
         // No file extension, is directory

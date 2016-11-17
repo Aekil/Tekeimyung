@@ -6,23 +6,19 @@
                 "y": 0,
                 "z": 0
             },
-            "sRenderComponent": {
-                "texture": "resources/sprites/particles/particle_circle.png",
-                "type": "OBJECT"
-            },
             "sTypeComponent": {
                 "type": "OBJECT"
             },
             "sParticleEmitterComponent": {
-                "emitter_life": 1.0,
+                "emitter_life": 0.0,
                 "rate": 0,
                 "spawn_nb": 9,
                 "life": 80,
                 "life_variance": 30,
-                "angle": 301,
-                "angle_variance": 67,
-                "speed": 101,
-                "speed_variance": 22,
+                "angle": 360,
+                "angle_variance": 0,
+                "speed": 2,
+                "speed_variance": 0,
                 "color": {
                     "start": {
                         "r": 0.0,

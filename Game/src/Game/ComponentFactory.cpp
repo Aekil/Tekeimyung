@@ -65,7 +65,6 @@ sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& 
     sRenderComponent* component = new sRenderComponent();
 
     // Initialize some values
-    component->scale = json.getVec3f("scale", { 1.0f, 1.0f, 1.0f });
     component->animated = json.getBool("animated", false);
     component->modelFile = json.getString("model", "");
     component->color = json.getColor3f("color", { 1.0f, 1.0f, 1.0f });
@@ -79,7 +78,6 @@ JsonValue&    ComponentFactory<sRenderComponent>::saveToJson(const std::string& 
     sRenderComponent* component = static_cast<sRenderComponent*>(_components[entityType]);
 
 
-    json.getVec3f("scale", component->scale);
     json.setBool("animated", component->animated);
     json.setString("model", component->modelFile);
     json.setColor3f("color", component->color);
@@ -92,26 +90,14 @@ bool    ComponentFactory<sRenderComponent>::updateEditor(const std::string& enti
     sRenderComponent* component = static_cast<sRenderComponent*>(_components[entityType]);
     *component_ = component;
     bool changed = false;
-    bool scaleChanged = false;
 
     ImGui::PushItemWidth(200);
     if (ImGui::CollapsingHeader("sRenderComponent", ImGuiTreeNodeFlags_DefaultOpen))
     {
-        float scale = component->scale.x;
-
-        changed |= ImGui::SliderFloat3("scale",  glm::value_ptr(component->scale), 0.1f, 200.0f);
-        scaleChanged |= ImGui::SliderFloat("scale all",  &scale, 0.1f, 200.0f);
         changed |= ImGui::ColorEdit3("color", glm::value_ptr(component->color));
-
-        if (scaleChanged)
-        {
-            component->scale.x = scale;
-            component->scale.y = scale;
-            component->scale.z = scale;
-        }
     }
 
-    return (changed || scaleChanged);
+    return (changed);
 }
 
 
@@ -354,6 +340,7 @@ sComponent* ComponentFactory<sAIComponent>::loadFromJson(const std::string& enti
     return (component);
 }
 
+
 /*
 ** sPlayerComponent
 */
@@ -364,6 +351,7 @@ sComponent* ComponentFactory<sPlayerComponent>::loadFromJson(const std::string& 
 
     return (component);
 }
+
 
 /*
 ** sParticleEmitterComponent
@@ -401,6 +389,8 @@ sComponent* ComponentFactory<sParticleEmitterComponent>::loadFromJson(const std:
         component->sizeFinishVariance =  size.getFloat("finish_variance", 1.0f);
     }
 
+    component->texture = json.getString("texture", "");
+
     return (component);
 }
 
@@ -435,6 +425,8 @@ JsonValue&    ComponentFactory<sParticleEmitterComponent>::saveToJson(const std:
     json.setFloat("speed", component->speed);
     json.setFloat("speed_variance", component->speedVariance);
 
+    json.setString("texture", component->texture);
+
     return (json);
 }
 
@@ -466,6 +458,11 @@ bool    ComponentFactory<sParticleEmitterComponent>::updateEditor(const std::str
 
     return (changed);
 }
+
+
+/*
+** sTowerAIComponent
+*/
 
 sComponent* ComponentFactory<sTowerAIComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
 {
@@ -508,6 +505,11 @@ bool    ComponentFactory<sTowerAIComponent>::updateEditor(const std::string& ent
 
     return (changed);
 }
+
+
+/*
+** sProjectileComponent
+*/
 
 sComponent* ComponentFactory<sProjectileComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
 {
@@ -554,11 +556,16 @@ bool        ComponentFactory<sProjectileComponent>::updateEditor(const std::stri
             converter >> buffer;
             ImGui::TextDisabled("Target ID: %s", buffer.c_str());
         }
-        // Add IMGUI implementation for RangeMax 
+        // Add IMGUI implementation for RangeMax
     }
 
     return (changed);
 }
+
+
+/*
+** sWaveComponent
+*/
 
 sComponent* ComponentFactory<sWaveComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
 {
@@ -571,4 +578,60 @@ sComponent* ComponentFactory<sWaveComponent>::loadFromJson(const std::string& en
     component->nSpawn = json.getInt("nSpawn", 10);
 
     return (component);
+}
+
+
+/*
+** sTransformComponent
+*/
+
+sComponent* ComponentFactory<sTransformComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
+{
+    sTransformComponent*   component;
+
+    component = new sTransformComponent();
+
+    component->scale = json.getVec3f("scale", { 1.0f, 1.0f, 1.0f });
+    component->pos = json.getVec3f("pos", { 0.0f, 0.0f, 0.0f });
+
+    return (component);
+}
+
+JsonValue&    ComponentFactory<sTransformComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
+{
+    JsonValue& json = _componentsJson[entityType];
+    sTransformComponent* component = static_cast<sTransformComponent*>(_components[entityType]);
+
+
+    json.getVec3f("scale", component->scale);
+    json.getVec3f("pos", component->pos);
+
+    return (json);
+}
+
+bool    ComponentFactory<sTransformComponent>::updateEditor(const std::string& entityType, sComponent** component_)
+{
+    sTransformComponent* component = static_cast<sTransformComponent*>(_components[entityType]);
+    *component_ = component;
+    bool changed = false;
+    bool scaleChanged = false;
+
+    ImGui::PushItemWidth(200);
+    if (ImGui::CollapsingHeader("sTransformComponent", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        float scale = component->scale.x;
+
+        changed |= ImGui::SliderFloat3("scale",  glm::value_ptr(component->scale), 0.1f, 200.0f);
+        changed |= ImGui::SliderFloat3("pos",  glm::value_ptr(component->pos), 0.1f, 200.0f);
+        scaleChanged |= ImGui::SliderFloat("scale all",  &scale, 0.1f, 200.0f);
+
+        if (scaleChanged)
+        {
+            component->scale.x = scale;
+            component->scale.y = scale;
+            component->scale.z = scale;
+        }
+    }
+
+    return (changed || scaleChanged);
 }

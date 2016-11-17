@@ -36,7 +36,6 @@ struct sRenderComponent: sComponent
         this->color = component->color;
         this->animated = component->animated;
         this->_model = component->_model;
-        this->scale = component->scale;
     }
 
     virtual void update(sComponent* component)
@@ -46,7 +45,6 @@ struct sRenderComponent: sComponent
 
     std::string modelFile;
     glm::vec3 color;
-    glm::vec3 scale;
     bool animated;
 
     std::shared_ptr<Model> _model;
@@ -380,6 +378,9 @@ struct sParticleEmitterComponent : sComponent
     float sizeFinish;
     float sizeStartVariance;
     float sizeFinishVariance;
+
+    // Particles texture
+    std::string texture;
 };
 
 struct sNameComponent : sComponent
@@ -500,4 +501,34 @@ struct sWaveComponent : sComponent
     glm::vec3   spawnPos;
     float       secBeforeSpawn;
     int         nSpawn;
+};
+
+
+struct sTransformComponent : sComponent
+{
+    sTransformComponent(): scale({1.0f, 1.0f, 1.0f}) {}
+
+    virtual sComponent* clone()
+    {
+        sTransformComponent* component = new sTransformComponent();
+        component->update(this);
+
+        return (component);
+    }
+
+    virtual void update(sTransformComponent* component)
+    {
+        this->pos = component->pos;
+        this->scale = component->scale;
+        this->rotation = component->rotation;
+    }
+
+    virtual void update(sComponent* component)
+    {
+        update(static_cast<sTransformComponent*>(component));
+    }
+
+    glm::vec3   pos;
+    glm::vec3   scale;
+    glm::vec3   rotation;
 };

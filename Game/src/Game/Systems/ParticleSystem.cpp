@@ -5,6 +5,7 @@
 
 #include <Engine/Window/GameWindow.hpp>
 #include <Engine/Utils/Helper.hpp>
+#include <Engine/Graphics/Geometries/Plane.hpp>
 
 #include <Game/Map.hpp>
 
@@ -14,7 +15,6 @@ ParticleSystem::ParticleSystem()
 {
     addDependency<sParticleEmitterComponent>();
     addDependency<sPositionComponent>();
-    addDependency<sRenderComponent>();
 }
 
 ParticleSystem::~ParticleSystem() {}
@@ -25,6 +25,7 @@ void    ParticleSystem::initEmitter(Entity* entity)
     sRenderComponent *sprite = entity->getComponent<sRenderComponent>();
     sEmitter* emitter = new sEmitter();
 
+    emitter->model = std::make_shared<Plane>(emitterComp->sizeStart, emitterComp->sizeStart);
     emitter->particles.resize(MAX_PARTICLES);
     emitter->particlesNb = 0;
     _emitters[entity->id] = emitter;
@@ -34,18 +35,8 @@ void    ParticleSystem::initEmitter(Entity* entity)
 void    ParticleSystem::updateEmitter(EntityManager &em, Entity* entity, float elapsedTime)
 {
     sParticleEmitterComponent *emitterComp = entity->getComponent<sParticleEmitterComponent>();
-    sPositionComponent *pos = entity->getComponent<sPositionComponent>();
-    //sRenderComponent *sprite = entity->getComponent<sRenderComponent>();
-    sDirectionComponent *direction = entity->getComponent<sDirectionComponent>();
+    sTransformComponent *transform = entity->getComponent<sTransformComponent>();
     sEmitter* emitter = _emitters[entity->id];
-
-/*    if (!sprite->_sprite)
-        return;*/
-
-    bool moved = direction && direction->moved;
-    /*eOrientation orientation = direction ? direction->orientation : eOrientation::N;
-    glm::vec3 graphPos = Map::mapToGraphPosition(position->value, position->z, sprite->_sprite);
-    sprite->_sprite->update(graphPos, moved, orientation, sprite->color);*/
 
     // Update particles
     for (unsigned int i = 0; i < emitter->particlesNb; i++)
@@ -97,9 +88,10 @@ void    ParticleSystem::updateEmitter(EntityManager &em, Entity* entity, float e
             float angle = Helper::randFloat(0, emitterComp->angleVariance);
             float angleRadian = glm::radians(std::fmod(angle - emitterComp->angle, 360.0f));
 
-            //particle.pos = sprite->_sprite->getPos();
+            particle.pos = transform->pos;
             particle.velocity.x = glm::cos(angleRadian);
-            particle.velocity.y = glm::sin(angleRadian);
+            particle.velocity.z = glm::sin(angleRadian);
+            particle.velocity.y =  1.0f;
             particle.speed = emitterComp->speed + Helper::randFloat(0, emitterComp->speedVariance);
             particle.life = emitterComp->life + Helper::randInt(0, emitterComp->lifeVariance);
 

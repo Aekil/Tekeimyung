@@ -26,7 +26,7 @@ public:
     const glm::vec3&            getPos() const;
 
     void                        draw(const ShaderProgram& shaderProgram) const;
-    void                        update(const glm::vec2& pos, const glm::vec3& scale, const glm::mat4& orientation, float z);
+    void                        update(const glm::vec3& pos, const glm::vec3& scale, const glm::mat4& orientation);
 
 protected:
     void                        initVertexData();

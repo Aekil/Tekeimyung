@@ -3,7 +3,7 @@
 
 Plane::Plane(): Plane(50, 50) {}
 
-Plane::Plane(uint32_t width, uint32_t height)
+Plane::Plane(float width, float height)
 {
     // Plane mesh
     std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
