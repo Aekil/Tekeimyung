@@ -5,11 +5,13 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include <Engine/Window/GameWindow.hpp>
+#include <Engine/Utils/Helper.hpp>
 
 #include <Engine/Graphics/Camera.hpp>
 
 Camera::Camera(): _needUpdateView(false), _needUpdateProj(true), _fov(45.0f), _aspect(1280.0f / 960.0f), _near(0.1f), _far(1000.0f), _up({0.0f, 1.0f, 0.0f})
 {
+    _constants.freezeRotations = 0;
     _ubo.setBindingPoint(1);
 }
 
@@ -23,6 +25,11 @@ bool    Camera::needUpdate() const
 const glm::vec3&    Camera::getPos() const
 {
     return (_constants.pos);
+}
+
+const glm::mat4&    Camera::getView() const
+{
+    return (_constants.view);
 }
 
 const UniformBuffer&    Camera::getUbo() const
@@ -56,7 +63,7 @@ void    Camera::setFar(float far)
 
 void    Camera::setDir(const glm::vec3& dir)
 {
-    _dir = dir;
+    _constants.dir = dir;
     _needUpdateView = true;
 }
 
@@ -109,9 +116,15 @@ void    Camera::update(const ShaderProgram& shaderProgram, float elapsedTime)
     }
     if (_needUpdateView)
     {
-        _constants.view = glm::lookAt(_constants.pos, _constants.pos + _dir, _up);
+        _constants.view = glm::lookAt(_constants.pos, _constants.pos + _constants.dir, _up);
         _needUpdateView = false;
     }
 
+    _ubo.update(&_constants, sizeof(_constants));
+}
+
+void    Camera::freezeRotations(bool freeze)
+{
+    _constants.freezeRotations = static_cast<int>(freeze);
     _ubo.update(&_constants, sizeof(_constants));
 }

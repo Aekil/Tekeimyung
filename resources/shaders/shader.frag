@@ -23,6 +23,8 @@ layout (std140, binding = 1) uniform camera
     mat4 proj;
     mat4 view;
     vec3 pos;
+    int freezeRotations;
+    vec3 dir;
 };
 
 vec3 getAmbient(vec3 lightAmbient)

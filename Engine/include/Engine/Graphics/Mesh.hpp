@@ -14,6 +14,7 @@ public:
 
     virtual bool                    loadFromAssimp(Skeleton& skeleton, aiMesh *mesh);
 
+public:
     std::vector<Vertex>             vertexs;
     std::vector<GLuint>             indices;
 

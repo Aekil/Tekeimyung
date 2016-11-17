@@ -25,11 +25,38 @@ layout (std140, binding = 1) uniform camera
     mat4 proj;
     mat4 view;
     vec3 pos;
+    int freezeRotations;
+    vec3 dir;
 };
 
 void main()
 {
     mat4 boneTransform = mat4(1.0);
+    mat4 modelView = view * model;
+
+    if (freezeRotations == 1)
+    {
+        // Column 0:
+        modelView[0][0] = 1;
+        modelView[0][1] = 0;
+        modelView[0][2] = 0;
+
+        // Column 1:
+        modelView[1][0] = 0;
+        modelView[1][1] = 1;
+        modelView[1][2] = 0;
+
+        // Column 2:
+        modelView[2][0] = 0;
+        modelView[2][1] = 0;
+        modelView[2][2] = 1;
+
+        fragNormal = -dir;
+    }
+    else
+    {
+        fragNormal = mat3(transpose(inverse(model))) * inNormal;
+    }
 
     /*boneTransform += bones[inBonesIds[0].x] * inBonesWeights[0].x;
     boneTransform += bones[inBonesIds[0].y] * inBonesWeights[0].y;
@@ -43,8 +70,7 @@ void main()
     boneTransform += bones[inBonesIds[1].w] * inBonesWeights[1].w;*/
 
     vec4 vertPos = boneTransform * vec4(inPosition, 1.0);
-    gl_Position = proj * view * model * vertPos;
-    fragNormal = mat3(transpose(inverse(model))) * inNormal;
+    gl_Position = proj * modelView * vertPos;
     fragTexCoords = inTexCoords;
     fragPos = vec3(model * vertPos);
 }

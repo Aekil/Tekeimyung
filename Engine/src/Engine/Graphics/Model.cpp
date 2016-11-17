@@ -12,7 +12,7 @@
 #include <Engine/Graphics/Model.hpp>
 
 
-Model::Model() : _pos({0.0f, 0.0f, 0.0f}), _anim(0) {}
+Model::Model() : _pos({0.0f, 0.0f, 0.0f}), _scale({1.0f, 1.0f, 1.0f}), _anim(0) {}
 
 Model::~Model() {}
 

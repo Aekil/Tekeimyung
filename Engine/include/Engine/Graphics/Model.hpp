@@ -28,16 +28,17 @@ public:
     void                        draw(const ShaderProgram& shaderProgram) const;
     void                        update(const glm::vec2& pos, const glm::vec3& scale, const glm::mat4& orientation, float z);
 
-private:
+protected:
     void                        initVertexData();
     void                        initIndexData();
 
+private:
     void                        transformVertices(aiScene* scene, aiNode* node);
     void                        computeSceneNodeAbsoluteTransform(aiNode* node);
     const aiNodeAnim*           getNodeAnim(const aiScene* scene, const std::string& name);
     void                        updateBonesTransforms(const aiScene* scene, aiNode* node, const glm::mat4& parentTransform, float test);
 
-private:
+protected:
     std::list<std::shared_ptr<Mesh> >   _meshs;
 
     // Vertices raw buffers

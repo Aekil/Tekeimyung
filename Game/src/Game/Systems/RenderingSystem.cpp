@@ -9,6 +9,7 @@
 #include <Engine/Utils/Exception.hpp>
 #include <Engine/Utils/RessourceManager.hpp>
 #include <Engine/Window/GameWindow.hpp>
+#include <Engine/Graphics/Geometries/Plane.hpp>
 
 #include <Game/Systems/RenderingSystem.hpp>
 
@@ -143,8 +144,12 @@ void    RenderingSystem::renderParticles(EntityManager& em)
 */
 void    RenderingSystem::update(EntityManager& em, float elapsedTime)
 {
+    static Plane plane(100, 100);
     // Clear color buffer
     glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // Unfree camera rotation to display normal models
+    _camera.freezeRotations(false);
 
     _camera.update(_shaderProgram, elapsedTime);
 
@@ -152,6 +157,12 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
     forEachEntity(em, [&](Entity *entity) {
         renderEntity(entity);
     });
+
+    // Remove the camera rotation so that the plane face the camera
+    _camera.freezeRotations(true);
+    // Draw the plane
+    plane.update({8, 5}, {1.0f, 1.0f, 1.0f}, glm::mat4(1.0), 1);
+    plane.draw(_shaderProgram);
 
 /*
     for (auto &&id: (*_map)[1].getEntities())

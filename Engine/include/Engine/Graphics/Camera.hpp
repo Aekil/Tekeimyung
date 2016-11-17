@@ -13,6 +13,9 @@ public:
         glm::mat4       proj;
         glm::mat4       view;
         glm::vec3       pos;
+        int             freezeRotations;
+        // Target
+        glm::vec3       dir;
     }                   Constants;
 
 public:
@@ -22,6 +25,7 @@ public:
     bool                needUpdate() const;
 
     const glm::vec3&    getPos() const;
+    const glm::mat4&    getView() const;
     const UniformBuffer& getUbo() const;
 
     void                setFov(float fov);
@@ -36,6 +40,7 @@ public:
     void                lookAt(const glm::vec3& pos, const glm::vec3& target, const glm::vec3& up);
 
     void                update(const ShaderProgram& shaderProgram, float elapsedTime);
+    void                freezeRotations(bool freeze);
 
 private:
     Camera::Constants   _constants;
@@ -59,8 +64,6 @@ private:
     /*
     ** View
     */
-    // Target
-    glm::vec3           _dir;
     // Up vector
     glm::vec3           _up;
 };
