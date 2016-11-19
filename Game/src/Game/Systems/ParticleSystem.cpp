@@ -43,8 +43,7 @@ void    ParticleSystem::updateEmitter(EntityManager &em, Entity* entity, float e
     {
         glm::vec3 velocity;
 
-        velocity.x = emitter->particles[i].velocity.x * elapsedTime * emitter->particles[i].speed;
-        velocity.y = emitter->particles[i].velocity.y * elapsedTime * emitter->particles[i].speed;
+        velocity = emitter->particles[i].velocity * elapsedTime * emitter->particles[i].speed;
 
         emitter->particles[i].pos += velocity;
         emitter->particles[i].life--;
@@ -89,9 +88,11 @@ void    ParticleSystem::updateEmitter(EntityManager &em, Entity* entity, float e
             float angleRadian = glm::radians(std::fmod(angle - emitterComp->angle, 360.0f));
 
             particle.pos = transform->pos;
-            particle.velocity.x = glm::cos(angleRadian);
-            particle.velocity.z = glm::sin(angleRadian);
-            particle.velocity.y =  1.0f;
+            float theta = Helper::randFloat(0.0f, 1.0f) * (2.0f * glm::pi<float>());
+            float phi = (glm::pi<float>() / 2.0f) - (Helper::randFloat(0.0f, 1.0f) * angleRadian);
+            particle.velocity.x = glm::cos(theta) * glm::cos(phi);
+            particle.velocity.z = glm::sin(theta) * glm::cos(phi);
+            particle.velocity.y =  glm::sin(phi);
             particle.speed = emitterComp->speed + Helper::randFloat(0, emitterComp->speedVariance);
             particle.life = emitterComp->life + Helper::randInt(0, emitterComp->lifeVariance);
 

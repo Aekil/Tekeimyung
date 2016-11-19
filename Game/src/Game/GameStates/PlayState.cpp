@@ -91,7 +91,7 @@ bool    PlayState::init()
     _map = new Map(em, 20, 15, 4);
 
     // Create particles emitter
-    createParticlesEmittor(glm::vec3(9, 5, 1), eArchetype::EMITTER_WATER);
+    createParticlesEmittor(glm::vec3(12, 5, 1), eArchetype::EMITTER_WATER);
 
     // Create character
     createTile(glm::vec3(9, 5, 1), eArchetype::PLAYER);

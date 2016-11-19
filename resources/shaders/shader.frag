@@ -29,9 +29,7 @@ layout (std140, binding = 1) uniform camera
 
 vec3 getAmbient(vec3 lightAmbient)
 {
-    if ((texturesTypes & 2) != 0)
-        return lightAmbient  * vec3(texture(AmbientTexture, fragTexCoords));
-    return lightAmbient * ambient;
+    return lightAmbient  * (vec3(texture(AmbientTexture, fragTexCoords)) + ambient);
 }
 
 vec3 getDiffuse(vec3 lightDiffuse, vec3 normal, vec3 lightDir)
@@ -39,9 +37,7 @@ vec3 getDiffuse(vec3 lightDiffuse, vec3 normal, vec3 lightDir)
     normal = normalize(normal);
     float diff = max(dot(normal, lightDir), 0.0);
 
-    if ((texturesTypes & 1) != 0)
-        return lightDiffuse * (diff * vec3(texture(DiffuseTexture, fragTexCoords)));
-    return lightDiffuse * (diff * diffuse);
+    return lightDiffuse * (diff * (vec3(texture(DiffuseTexture, fragTexCoords)) + diffuse));
 }
 
 vec3 CalcDirLight(vec3 lightDir, vec3 normal)
