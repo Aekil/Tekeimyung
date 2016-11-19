@@ -4,8 +4,8 @@
 
 Material::Material(): _needUpdate(true)
 {
-    _constants.diffuse = {0.0f, 0.0f, 0.0f};
-    _constants.ambient = {0.0f, 0.0f, 0.0f};
+    _constants.diffuse = {0.0f, 0.0f, 0.0f, 0.0f};
+    _constants.ambient = {0.0f, 0.0f, 0.0f, 0.0f};
     _constants.texturesTypes = 0;
 }
 
@@ -16,12 +16,12 @@ bool    Material::loadFromAssimp(aiMaterial* material, const std::string& path)
 
     // Diffuse color
     if (material->Get(AI_MATKEY_COLOR_DIFFUSE, color) == AI_SUCCESS) {
-        _constants.diffuse = glm::vec3(color.r, color.g, color.b);
+        _constants.diffuse = glm::vec4(color.r, color.g, color.b, 1.0f);
     }
 
     // Ambient color
     if (material->Get(AI_MATKEY_COLOR_AMBIENT, color) == AI_SUCCESS) {
-        _constants.ambient = glm::vec3(color.r, color.g, color.b);
+        _constants.ambient = glm::vec4(color.r, color.g, color.b, 1.0f);
     }
 
     // Ambient texture

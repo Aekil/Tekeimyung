@@ -36,20 +36,21 @@ void main()
 
     if (freezeRotations == 1)
     {
+        float d = sqrt(pow(modelView[0][0], 2) + pow(modelView[1][1], 2) + pow(modelView[2][2], 2));
         // Column 0:
-        modelView[0][0] = 1;
+        modelView[0][0] = d;
         modelView[0][1] = 0;
         modelView[0][2] = 0;
 
         // Column 1:
         modelView[1][0] = 0;
-        modelView[1][1] = 1;
+        modelView[1][1] = d;
         modelView[1][2] = 0;
 
         // Column 2:
         modelView[2][0] = 0;
         modelView[2][1] = 0;
-        modelView[2][2] = 1;
+        modelView[2][2] = d;
 
         fragNormal = -dir;
     }

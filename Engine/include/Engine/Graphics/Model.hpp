@@ -1,7 +1,7 @@
 #pragma once
 
 # include <cstdint>
-# include <list>
+# include <vector>
 # include <memory>
 # include <glm/gtx/quaternion.hpp>
 #include <assimp/Importer.hpp>
@@ -22,7 +22,7 @@ public:
 
     uint32_t                    getVertexsSize() const;
     uint32_t                    getIndicesSize() const;
-    const std::list<std::shared_ptr<Mesh> > &getMeshs() const;
+    const std::vector<std::shared_ptr<Mesh> > &getMeshs() const;
     const glm::vec3&            getPos() const;
 
     void                        draw(const ShaderProgram& shaderProgram) const;
@@ -39,7 +39,7 @@ private:
     void                        updateBonesTransforms(const aiScene* scene, aiNode* node, const glm::mat4& parentTransform, float test);
 
 protected:
-    std::list<std::shared_ptr<Mesh> >   _meshs;
+    std::vector<std::shared_ptr<Mesh> >   _meshs;
 
     // Vertices raw buffers
     Vertex*                             _vertexData;

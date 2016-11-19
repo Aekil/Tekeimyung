@@ -94,6 +94,7 @@ void    RenderingSystem::renderParticles(EntityManager& em)
 {
     // Activate additive blending
     glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+    glDepthMask(GL_FALSE);
 
     for (auto &&it: *_particleEmitters)
     {
@@ -107,6 +108,10 @@ void    RenderingSystem::renderParticles(EntityManager& em)
         {
             auto &&particle = emitter->particles[i];
 
+            Material& particleMaterial = emitter->model->getMaterial();
+
+            particleMaterial._constants.ambient = particle.color;
+            particleMaterial._needUpdate = true;
             // Model matrice
             emitter->model->update(particle.pos, glm::vec3(particle.size, particle.size, particle.size), glm::mat4(1.0));
 
@@ -114,6 +119,7 @@ void    RenderingSystem::renderParticles(EntityManager& em)
             emitter->model->draw(_shaderProgram);
         }
     }
+    glDepthMask(GL_TRUE);
 
     // Activate transparency blending
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

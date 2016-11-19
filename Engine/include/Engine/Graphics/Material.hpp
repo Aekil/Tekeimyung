@@ -13,10 +13,8 @@ class Material
 public:
     typedef struct
     {
-        glm::vec3       ambient;
-        float           padding;
-        glm::vec3       diffuse;
-        float           padding2;
+        glm::vec4       ambient;
+        glm::vec4       diffuse;
         int             texturesTypes;
     }                   Constants;
 

@@ -11,10 +11,8 @@ uniform sampler2D DiffuseTexture;
 
 layout (std140, binding = 0) uniform material
 {
-    vec3    ambient;
-    float   padding;
-    vec3    diffuse;
-    float   padding2;
+    vec4    ambient;
+    vec4    diffuse;
     int     texturesTypes;
 };
 
@@ -27,29 +25,33 @@ layout (std140, binding = 1) uniform camera
     vec3 dir;
 };
 
-vec3 getAmbient(vec3 lightAmbient)
+vec4 getAmbient(vec4 lightAmbient)
 {
-    return lightAmbient  * (vec3(texture(AmbientTexture, fragTexCoords)) + ambient);
+    if ((texturesTypes & 2) != 0)
+        return lightAmbient  * texture(AmbientTexture, fragTexCoords) * ambient;
+    return lightAmbient * ambient;
 }
 
-vec3 getDiffuse(vec3 lightDiffuse, vec3 normal, vec3 lightDir)
+vec4 getDiffuse(vec4 lightDiffuse, vec3 normal, vec3 lightDir)
 {
     normal = normalize(normal);
     float diff = max(dot(normal, lightDir), 0.0);
 
-    return lightDiffuse * (diff * (vec3(texture(DiffuseTexture, fragTexCoords)) + diffuse));
+    if ((texturesTypes & 1) != 0)
+        return lightDiffuse * (diff * texture(DiffuseTexture, fragTexCoords));
+    return lightDiffuse * (diff * diffuse);
 }
 
-vec3 CalcDirLight(vec3 lightDir, vec3 normal)
+vec4 CalcDirLight(vec3 lightDir, vec3 normal)
 {
-    vec3 lightAmbient = vec3(0.5f, 0.5f, 0.5f);
-    vec3 lightDiffuse = vec3(1.0f, 1.0f, 1.0f);
+    vec4 lightAmbient = vec4(0.5f, 0.5f, 0.5f, 1.0f);
+    vec4 lightDiffuse = vec4(1.0f, 1.0f, 1.0f, 1.0f);
 
     // Ambient
-    vec3 ambient = getAmbient(lightAmbient);
+    vec4 ambient = getAmbient(lightAmbient);
 
     // Diffuse shading
-    vec3 diffuse = getDiffuse(lightDiffuse, normal, lightDir);
+    vec4 diffuse = getDiffuse(lightDiffuse, normal, lightDir);
 
     return (ambient + diffuse);
 }
@@ -58,7 +60,7 @@ vec3 CalcDirLight(vec3 lightDir, vec3 normal)
 void main()
 {
     vec3 lightDir = normalize(vec3(350.0f, 150.0f, 100.0f) - fragPos);
-    vec3 color = CalcDirLight(lightDir, fragNormal);
+    vec4 color = CalcDirLight(lightDir, fragNormal);
 
-    outFragColor = vec4(color, 1.0);
+    outFragColor = color;
 }

@@ -1,6 +1,7 @@
 {
    "components" : {
       "sParticleEmitterComponent" : {
+         "texture" : "resources/sprites/particles/particle_circle.png",
          "angle" : 0,
          "angle_variance" : 360.00003051757813,
          "color" : {

@@ -6,9 +6,9 @@
          "color" : {
             "finish" : {
                "a" : 0,
-               "b" : 1,
-               "g" : 0.63999998569488525,
-               "r" : 0
+               "b" : 0,
+               "g" : 0.47058823704719543,
+               "r" : 0.78431373834609985
             },
             "finish_variance" : {
                "a" : 0,
@@ -18,9 +18,9 @@
             },
             "start" : {
                "a" : 0.60000002384185791,
-               "b" : 1,
-               "g" : 0.30000001192092896,
-               "r" : 0
+               "b" : 0,
+               "g" : 0.30196079611778259,
+               "r" : 0.70980393886566162
             },
             "start_variance" : {
                "a" : 0,
@@ -36,13 +36,13 @@
          "size" : {
             "finish" : 0.5,
             "finish_variance" : 0,
-            "start" : 1,
+            "start" : 5,
             "start_variance" : 0
          },
-         "spawn_nb" : 9,
+         "spawn_nb" : 6,
          "speed" : 22.581001281738281,
          "speed_variance" : 17.204000473022461,
-         "texture" : ""
+         "texture" : "resources/sprites/particles/particle_circle.png"
       },
       "sPositionComponent" : {
          "x" : 0,

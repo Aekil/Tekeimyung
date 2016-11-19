@@ -1,3 +1,6 @@
+#include <Engine/Utils/Debug.hpp>
+#include <Engine/Utils/RessourceManager.hpp>
+
 #include <Engine/Graphics/Geometries/Plane.hpp>
 
 
@@ -25,8 +28,8 @@ Plane::Plane(float width, float height)
 
     // Plane material
     Material material;
-    material._constants.ambient = glm::vec3(0.611765f, 0.392157f, 0.172549f);
-    material._constants.diffuse = glm::vec3(0.611765f, 0.392157f, 0.172549f);
+    material._constants.ambient = glm::vec4(0.611765f, 0.392157f, 0.172549f, 1.0f);
+    material._constants.diffuse = glm::vec4(0.611765f, 0.392157f, 0.172549f, 1.0f);
     mesh->material = material;
 
     // Add plane to meshs list
@@ -37,4 +40,29 @@ Plane::Plane(float width, float height)
     _buffer.updateData(_vertexData, getVertexsSize(), _indexData, getIndicesSize());
 }
 
+Plane::Plane(float width, float height, const std::string& texturePath): Plane(width, height)
+{
+    ASSERT(_meshs.size() == 1, "A plane should have 1 mesh");
+
+    Material& material = _meshs[0]->material;
+
+   material._constants.texturesTypes |= Texture::eType::AMBIENT;
+   material._textures[Texture::eType::AMBIENT] = &RessourceManager::getInstance()->getTexture(texturePath);
+   material._needUpdate = true;
+}
+
 Plane::~Plane() {}
+
+void    Plane::setMaterial(const Material& material)
+{
+    ASSERT(_meshs.size() == 1, "A plane should have 1 mesh");
+
+    _meshs[0]->material = material;
+}
+
+Material&   Plane::getMaterial() const
+{
+    ASSERT(_meshs.size() == 1, "A plane should have 1 mesh");
+
+    return _meshs[0]->material;
+}

@@ -339,6 +339,8 @@ struct sParticleEmitterComponent : sComponent
         this->sizeFinish = component->sizeFinish;
         this->sizeStartVariance = component->sizeStartVariance;
         this->sizeFinishVariance = component->sizeFinishVariance;
+
+        this->texture = component->texture;
     }
 
     virtual void update(sComponent* component)

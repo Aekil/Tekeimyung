@@ -105,7 +105,7 @@ uint32_t    Model::getIndicesSize() const
     return (size);
 }
 
-const std::list<std::shared_ptr<Mesh> > &Model::getMeshs() const
+const std::vector<std::shared_ptr<Mesh> > &Model::getMeshs() const
 {
     return (_meshs);
 }
