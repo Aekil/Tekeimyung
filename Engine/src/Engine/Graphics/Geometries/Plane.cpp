@@ -4,7 +4,7 @@
 #include <Engine/Graphics/Geometries/Plane.hpp>
 
 
-Plane::Plane(Plane::sInfo& info)
+Plane::Plane(Plane::sInfo& info): Geometry(Geometry::eType::PLANE)
 {
     float width = info.width;
     float height = info.height;

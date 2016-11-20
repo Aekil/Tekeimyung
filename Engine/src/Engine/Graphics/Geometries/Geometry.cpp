@@ -3,7 +3,7 @@
 #include <Engine/Graphics/Geometries/Geometry.hpp>
 
 
-Geometry::Geometry() {}
+Geometry::Geometry(Geometry::eType type): _type(type) {}
 
 Geometry::~Geometry() {}
 
@@ -18,5 +18,10 @@ Material&   Geometry::getMaterial() const
 {
     ASSERT(_meshs.size() == 1, "A geometry should have 1 mesh");
 
-    return _meshs[0]->material;
+    return (_meshs[0]->material);
+}
+
+Geometry::eType   Geometry::getType() const
+{
+    return (_type);
 }

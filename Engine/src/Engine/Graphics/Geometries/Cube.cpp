@@ -1,6 +1,6 @@
 #include <Engine/Graphics/Geometries/Cube.hpp>
 
-Cube::Cube(Cube::sInfo& info)
+Cube::Cube(Cube::sInfo& info): Geometry(Geometry::eType::CUBE)
 {
     float size = info.size;
 
