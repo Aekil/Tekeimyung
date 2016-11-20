@@ -4,7 +4,7 @@
 #include <Engine/Graphics/Geometries/Plane.hpp>
 
 
-Plane::Plane(): Plane(50, 50) {}
+Plane::Plane(): Plane(50.0f, 50.0f) {}
 
 Plane::Plane(float width, float height)
 {
@@ -22,7 +22,7 @@ Plane::Plane(float width, float height)
     };
 
     mesh->indices = {
-        0, 1, 2,
+        0, 2, 1,
         1, 2, 3
     };
 
@@ -52,17 +52,3 @@ Plane::Plane(float width, float height, const std::string& texturePath): Plane(w
 }
 
 Plane::~Plane() {}
-
-void    Plane::setMaterial(const Material& material)
-{
-    ASSERT(_meshs.size() == 1, "A plane should have 1 mesh");
-
-    _meshs[0]->material = material;
-}
-
-Material&   Plane::getMaterial() const
-{
-    ASSERT(_meshs.size() == 1, "A plane should have 1 mesh");
-
-    return _meshs[0]->material;
-}

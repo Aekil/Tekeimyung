@@ -2,15 +2,12 @@
 
 #include <string>
 
-#include <Engine/Graphics/Model.hpp>
+#include <Engine/Graphics/Geometries/Geometry.hpp>
 
-class Plane: public Model {
+class Plane: public Geometry {
 public:
     Plane();
     Plane(float width, float height);
     Plane(float width, float height, const std::string& texturePath);
     ~Plane();
-
-    void                setMaterial(const Material& material);
-    Material&           getMaterial() const;
 };

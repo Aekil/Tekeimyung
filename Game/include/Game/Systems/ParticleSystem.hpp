@@ -7,7 +7,7 @@
 
 #include <Engine/Utils/Timer.hpp>
 #include <Engine/Graphics/Model.hpp>
-#include <Engine/Graphics/Geometries/Plane.hpp>
+#include <Engine/Graphics/Geometries/Geometry.hpp>
 
 #include <Game/Components.hh>
 
@@ -39,7 +39,7 @@ struct sEmitter
     unsigned int            particlesNb;
     float                   life;
     Timer                   timer;
-    std::shared_ptr<Plane>  model;
+    std::shared_ptr<Geometry> model;
 };
 
 class ParticleSystem: public System

@@ -8,6 +8,7 @@
 #include <Engine/Utils/Debug.hpp>
 #include <Engine/Utils/Exception.hpp>
 #include <Engine/Utils/RessourceManager.hpp>
+#include <Engine/Graphics/Geometries/Cube.hpp>
 #include <Engine/Window/GameWindow.hpp>
 
 #include <Game/Systems/RenderingSystem.hpp>
@@ -52,6 +53,9 @@ bool    RenderingSystem::init()
     // Enable depth buffer
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
+
+    // Activate back culling
+    //glEnable(GL_CULL_FACE);
     return (true);
 }
 
