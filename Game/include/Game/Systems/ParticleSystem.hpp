@@ -39,7 +39,6 @@ struct sEmitter
     unsigned int            particlesNb;
     float                   life;
     Timer                   timer;
-    std::shared_ptr<Geometry> model;
 };
 
 class ParticleSystem: public System

@@ -26,6 +26,7 @@ public:
     const glm::vec3&            getPos() const;
 
     void                        draw(const ShaderProgram& shaderProgram) const;
+    void                        update(const glm::vec4& color, const glm::vec3& pos, const glm::vec3& scale, const glm::mat4& orientation);
     void                        update(const glm::vec3& pos, const glm::vec3& scale, const glm::mat4& orientation);
 
 protected:
@@ -51,6 +52,7 @@ protected:
     // Model position
     glm::vec3                           _pos;
     glm::vec3                           _scale;
+    glm::vec4                           _color;
     // Model orientation
     glm::mat4                           _orientation;
 

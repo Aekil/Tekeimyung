@@ -107,20 +107,28 @@ void    RenderingSystem::renderParticles(EntityManager& em)
         if (entity == nullptr)
             continue;
 
+        auto&& model = getModel(entity);
+
+        // Only freeze camera rotation for plans
+        //if (static_cast<Geometry*>(model.get())->getType() == Geometry::eType::Plan)
+            //_camera.freezeRotations(true);
+
         for (unsigned int i = 0; i < emitter->particlesNb; i++)
         {
             auto &&particle = emitter->particles[i];
 
-            Material& particleMaterial = emitter->model->getMaterial();
+/*            Material& particleMaterial = model->getMaterial();
 
             particleMaterial._constants.ambient = particle.color;
-            particleMaterial._needUpdate = true;
+            particleMaterial._needUpdate = true;*/
             // Model matrice
-            emitter->model->update(particle.pos, glm::vec3(particle.size, particle.size, particle.size), glm::mat4(1.0));
+            model->update(particle.color, particle.pos, glm::vec3(particle.size, particle.size, particle.size), glm::mat4(1.0));
 
             // Draw sprite
-            emitter->model->draw(_shaderProgram);
+            model->draw(_shaderProgram);
         }
+
+        //_camera.freezeRotations(false);
     }
     glDepthMask(GL_TRUE);
 
@@ -134,13 +142,15 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
     glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Unfree camera rotation to display normal models
-    _camera.freezeRotations(false);
+   _camera.freezeRotations(false);
 
     _camera.update(_shaderProgram, elapsedTime);
 
     // Iterate over particle emitters
     forEachEntity(em, [&](Entity *entity) {
-        renderEntity(entity);
+        // Don't display particle systems
+        if (!entity->getComponent<sParticleEmitterComponent>())
+            renderEntity(entity);
     });
 
 /*
@@ -179,8 +189,6 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
     }*/
 
     // Remove the camera rotation so that the particles face the camera
-    _camera.freezeRotations(true);
-
     renderParticles(em);
 
     // Display imgui windows
@@ -209,7 +217,7 @@ std::shared_ptr<Model>  RenderingSystem::getModel(Entity* entity)
         orientation = glm::rotate(orientation, glm::radians(direction->orientation.y), glm::vec3(0.0f, 1.0f, 0.0f));
     }
 
-    model->_model->update(transform->pos, transform->scale, orientation);
+    model->_model->update(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), transform->pos, transform->scale, orientation);
 
     return (model->_model);
 }

@@ -25,8 +25,6 @@ void    ParticleSystem::initEmitter(Entity* entity)
     sRenderComponent *sprite = entity->getComponent<sRenderComponent>();
     sEmitter* emitter = new sEmitter();
 
-    emitter->model = std::make_shared<Plane>(1.0f, 1.0f, emitterComp->texture);
-    emitter->model->getMaterial()._constants.diffuse = glm::vec4(0.0f);
     emitter->particles.resize(MAX_PARTICLES);
     emitter->particlesNb = 0;
     _emitters[entity->id] = emitter;

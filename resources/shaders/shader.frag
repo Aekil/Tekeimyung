@@ -9,6 +9,8 @@ out vec4 outFragColor;
 uniform sampler2D AmbientTexture;
 uniform sampler2D DiffuseTexture;
 
+uniform vec4 modelColor;
+
 layout (std140, binding = 0) uniform material
 {
     vec4    ambient;
@@ -28,7 +30,7 @@ layout (std140, binding = 1) uniform camera
 vec4 getAmbient(vec4 lightAmbient)
 {
     if ((texturesTypes & 2) != 0)
-        return lightAmbient  * texture(AmbientTexture, fragTexCoords) * ambient;
+        return lightAmbient  * texture(AmbientTexture, fragTexCoords);
     return lightAmbient * ambient;
 }
 
@@ -48,10 +50,10 @@ vec4 CalcDirLight(vec3 lightDir, vec3 normal)
     vec4 lightDiffuse = vec4(1.0f, 1.0f, 1.0f, 1.0f);
 
     // Ambient
-    vec4 ambient = getAmbient(lightAmbient);
+    vec4 ambient = getAmbient(lightAmbient) * modelColor;
 
     // Diffuse shading
-    vec4 diffuse = getDiffuse(lightDiffuse, normal, lightDir);
+    vec4 diffuse = getDiffuse(lightDiffuse, normal, lightDir) * modelColor;
 
     return (ambient + diffuse);
 }

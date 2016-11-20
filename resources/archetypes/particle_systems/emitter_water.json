@@ -3,7 +3,7 @@
       "sRenderComponent": {
          "geometry": {
             "name": "CUBE",
-            "size": 20.0
+            "size": 1.0
          }
       },
       "sParticleEmitterComponent" : {
@@ -45,7 +45,7 @@
             "start" : 5,
             "start_variance" : 0
          },
-         "spawn_nb" : 6,
+         "spawn_nb" : 1,
          "speed" : 22.581001281738281,
          "speed_variance" : 17.204000473022461,
          "texture" : "resources/sprites/particles/particle_circle.png"

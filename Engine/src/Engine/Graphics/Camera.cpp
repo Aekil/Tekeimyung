@@ -125,6 +125,10 @@ void    Camera::update(const ShaderProgram& shaderProgram, float elapsedTime)
 
 void    Camera::freezeRotations(bool freeze)
 {
+    // Don't update ubo if nothing changed
+    if (_constants.freezeRotations == static_cast<int>(freeze))
+        return;
+
     _constants.freezeRotations = static_cast<int>(freeze);
     _ubo.update(&_constants, sizeof(_constants));
 }

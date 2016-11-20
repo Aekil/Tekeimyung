@@ -12,7 +12,7 @@
 #include <Engine/Graphics/Model.hpp>
 
 
-Model::Model() : _pos({0.0f, 0.0f, 0.0f}), _scale({1.0f, 1.0f, 1.0f}), _anim(0) {}
+Model::Model() : _pos({0.0f, 0.0f, 0.0f}), _scale({1.0f, 1.0f, 1.0f}), _anim(0), _color({1.0f, 1.0f, 1.0f, 1.0f}) {}
 
 Model::~Model() {}
 
@@ -124,6 +124,10 @@ void    Model::draw(const ShaderProgram& shaderProgram) const
     GLint uniModel = shaderProgram.getUniformLocation("model");
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(modelTrans));
 
+    // Model color
+    GLint colorModel = shaderProgram.getUniformLocation("modelColor");
+    glUniform4f(colorModel, _color.x, _color.y, _color.z,_color.w);
+
     // Bones matrices
     _skeleton.getUbo().bind(shaderProgram, "bones");
 
@@ -137,6 +141,13 @@ void    Model::draw(const ShaderProgram& shaderProgram) const
         // Draw to screen
         glDrawElements(GL_TRIANGLES, (GLuint)mesh->indices.size(), GL_UNSIGNED_INT, BUFFER_OFFSET((GLuint)mesh->idxOffset * sizeof(GLuint)));
     }
+}
+
+void    Model::update(const glm::vec4& color, const glm::vec3& pos, const glm::vec3& scale, const glm::mat4& orientation)
+{
+    _color = color;
+    update(pos, scale, orientation);
+
 }
 
 void    Model::update(const glm::vec3& pos, const glm::vec3& scale, const glm::mat4& orientation)
