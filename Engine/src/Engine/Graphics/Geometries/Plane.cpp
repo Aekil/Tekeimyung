@@ -4,10 +4,11 @@
 #include <Engine/Graphics/Geometries/Plane.hpp>
 
 
-Plane::Plane(): Plane(50.0f, 50.0f) {}
-
-Plane::Plane(float width, float height)
+Plane::Plane(Plane::sInfo& info)
 {
+    float width = info.width;
+    float height = info.height;
+
     // Plane mesh
     std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
     mesh->vertexs = {
@@ -38,17 +39,19 @@ Plane::Plane(float width, float height)
     initVertexData();
     initIndexData();
     _buffer.updateData(_vertexData, getVertexsSize(), _indexData, getIndicesSize());
-}
 
-Plane::Plane(float width, float height, const std::string& texturePath): Plane(width, height)
-{
-    ASSERT(_meshs.size() == 1, "A plane should have 1 mesh");
 
-    Material& material = _meshs[0]->material;
+    // Plane texture
+    if (info.texturePath.length() > 0)
+    {
+        ASSERT(_meshs.size() == 1, "A plane should have 1 mesh");
 
-   material._constants.texturesTypes |= Texture::eType::AMBIENT;
-   material._textures[Texture::eType::AMBIENT] = &RessourceManager::getInstance()->getTexture(texturePath);
-   material._needUpdate = true;
+        Material& material = _meshs[0]->material;
+
+       material._constants.texturesTypes |= Texture::eType::AMBIENT;
+       material._textures[Texture::eType::AMBIENT] = &RessourceManager::getInstance()->getTexture(info.texturePath);
+       material._needUpdate = true;
+    }
 }
 
 Plane::~Plane() {}

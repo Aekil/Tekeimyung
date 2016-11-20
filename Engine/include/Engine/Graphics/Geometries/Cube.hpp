@@ -4,7 +4,12 @@
 
 class Cube: public Geometry {
 public:
-    Cube();
-    Cube(float size);
+    struct sInfo
+    {
+        float size;
+    };
+
+public:
+    Cube(Cube::sInfo& info);
     ~Cube();
 };

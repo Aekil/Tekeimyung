@@ -1,10 +1,9 @@
 #include <Engine/Graphics/Geometries/Cube.hpp>
 
-
-Cube::Cube(): Cube(50.0f) {}
-
-Cube::Cube(float size)
+Cube::Cube(Cube::sInfo& info)
 {
+    float size = info.size;
+
     // Cube mesh
     std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
     mesh->vertexs = {

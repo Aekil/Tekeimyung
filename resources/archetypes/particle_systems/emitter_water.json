@@ -1,5 +1,11 @@
 {
    "components" : {
+      "sRenderComponent": {
+         "geometry": {
+            "name": "CUBE",
+            "size": 20.0
+         }
+      },
       "sParticleEmitterComponent" : {
          "angle" : 25.161001205444336,
          "angle_variance" : 0,

@@ -63,11 +63,29 @@ IComponentFactory*   IComponentFactory::getFactory(const std::string& name)
 sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
 {
     sRenderComponent* component = new sRenderComponent();
+    JsonValue geometry(json.get("geometry", {}));
 
     // Initialize some values
     component->animated = json.getBool("animated", false);
     component->modelFile = json.getString("model", "");
     component->color = json.getColor3f("color", { 1.0f, 1.0f, 1.0f });
+
+    if (geometry.size() > 0)
+    {
+        component->geometry = geometry.getString("name", "");
+
+        if (component->geometry == "PLANE")
+        {
+            component->geometryInfo.plane.width = geometry.getFloat("width", 10.0f);
+            component->geometryInfo.plane.height = geometry.getFloat("height", 10.0f);
+        }
+        else if (component->geometry == "CUBE")
+        {
+            component->geometryInfo.cube.size = geometry.getFloat("size", 10.0f);
+        }
+        else
+            EXCEPT(InvalidParametersException, "Unknown geometry name \"%s\" for sRenderComponent of \"%s\"", component->geometry.c_str(), entityType.c_str());
+    }
 
     return (component);
 }
@@ -75,6 +93,7 @@ sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& 
 JsonValue&    ComponentFactory<sRenderComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
 {
     JsonValue& json = _componentsJson[entityType];
+    JsonValue geometry;
     sRenderComponent* component = static_cast<sRenderComponent*>(_components[entityType]);
 
 
@@ -82,6 +101,20 @@ JsonValue&    ComponentFactory<sRenderComponent>::saveToJson(const std::string& 
     json.setString("model", component->modelFile);
     json.setColor3f("color", component->color);
 
+    if (component->geometry.size() > 0)
+    {
+        if (component->geometry == "PLANE")
+        {
+            geometry.setFloat("width", component->geometryInfo.plane.width);
+            geometry.setFloat("height", component->geometryInfo.plane.height);
+        }
+        else if (component->geometry == "CUBE")
+        {
+            geometry.setFloat("size", component->geometryInfo.cube.size);
+        }
+    }
+
+    json.setValue("geometry", geometry);
     return (json);
 }
 

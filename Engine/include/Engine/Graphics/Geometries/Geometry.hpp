@@ -1,6 +1,8 @@
 #pragma once
 
 #include <string>
+#include <cstdint>
+#include <memory>
 
 #include <Engine/Graphics/Model.hpp>
 

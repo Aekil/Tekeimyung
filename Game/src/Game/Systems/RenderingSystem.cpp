@@ -7,7 +7,6 @@
 
 #include <Engine/Utils/Debug.hpp>
 #include <Engine/Utils/Exception.hpp>
-#include <Engine/Utils/RessourceManager.hpp>
 #include <Engine/Graphics/Geometries/Cube.hpp>
 #include <Engine/Window/GameWindow.hpp>
 
@@ -202,7 +201,7 @@ std::shared_ptr<Model>  RenderingSystem::getModel(Entity* entity)
     // The entity does not exist in the render system
     if (!model->_model)
     {
-        model->_model = RessourceManager::getInstance()->getModel(model->modelFile);
+        model->initModel();
     }
 
     glm::mat4 orientation;

@@ -14,6 +14,11 @@
 #include <Engine/Graphics/Animation.hpp>
 #include <Engine/Graphics/Sprite.hpp>
 #include <Engine/Graphics/Model.hpp>
+#include <Engine/Graphics/Geometries/Geometry.hpp>
+#include <Engine/Graphics/Geometries/Cube.hpp>
+#include <Engine/Graphics/Geometries/Plane.hpp>
+#include <Engine/Utils/RessourceManager.hpp>
+#include <Engine/Utils/Exception.hpp>
 
 
 struct sRenderComponent: sComponent
@@ -36,6 +41,8 @@ struct sRenderComponent: sComponent
         this->color = component->color;
         this->animated = component->animated;
         this->_model = component->_model;
+        this->geometry = component->geometry;
+        this->geometryInfo = component->geometryInfo;
     }
 
     virtual void update(sComponent* component)
@@ -43,11 +50,41 @@ struct sRenderComponent: sComponent
         update(static_cast<sRenderComponent*>(component));
     }
 
+    void initModel()
+    {
+        // Load mesh
+        if (geometry.size() == 0)
+        {
+            _model = RessourceManager::getInstance()->getModel(modelFile);
+            return;
+        }
+
+        // Load geometry
+        if (geometry == "PLANE")
+        {
+            _model = std::make_shared<Plane>(geometryInfo.plane);
+        }
+        else if (geometry == "CUBE")
+        {
+            _model = std::make_shared<Cube>(geometryInfo.cube);
+        }
+        else
+            EXCEPT(InvalidParametersException, "Unknown geometry name \"%s\" for sRenderComponent", geometry.c_str());
+    }
+
     std::string modelFile;
     glm::vec3 color;
     bool animated;
 
     std::shared_ptr<Model> _model;
+
+    // The object to render is a geometry
+    std::string geometry;
+    struct sGeometryInfo
+    {
+        Plane::sInfo plane;
+        Cube::sInfo cube;
+    } geometryInfo;
 };
 
 struct sPositionComponent: sComponent

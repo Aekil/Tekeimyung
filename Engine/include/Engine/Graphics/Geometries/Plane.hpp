@@ -6,8 +6,14 @@
 
 class Plane: public Geometry {
 public:
-    Plane();
-    Plane(float width, float height);
-    Plane(float width, float height, const std::string& texturePath);
+    struct sInfo
+    {
+        float width;
+        float height;
+        std::string texturePath;
+    };
+
+public:
+    Plane(Plane::sInfo& info);
     ~Plane();
 };
