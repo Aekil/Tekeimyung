@@ -1,7 +1,11 @@
+#include <Engine/Utils/Logger.hpp>
+#include <dirent.h>
 #include <fstream>
+#include <algorithm>
 #include <vector>
 
 #include <Engine/Utils/Exception.hpp>
+#include <Engine/Utils/Helper.hpp>
 
 #include <Engine/Utils/RessourceManager.hpp>
 
@@ -10,6 +14,50 @@ RessourceManager*   RessourceManager::_ressourceManager = nullptr;
 RessourceManager::RessourceManager() {}
 
 RessourceManager::~RessourceManager() {}
+
+void    RessourceManager::loadResources(const std::string& directory)
+{
+    DIR* dir;
+    struct dirent* ent;
+    RessourceManager* ressourceManager = RessourceManager::getInstance();
+    std::vector<std::string> texturesExtensions = {TEXTURES_EXT};
+    std::vector<std::string> modelsExtensions = {MODELS_EXT};
+
+    dir = opendir(directory.c_str());
+    if (!dir)
+        EXCEPT(FileNotFoundException, "Cannot open resource directory \"%s\"", directory.c_str());
+
+    while ((ent = readdir(dir)) != NULL)
+    {
+        // No file extension, is directory
+        if (std::string(ent->d_name).find(".") == std::string::npos)
+        {
+            // Load directory
+            std::string directoryPath = std::string(directory).append("/").append(ent->d_name);
+            loadResources(directoryPath);
+        }
+        else
+        {
+            std::string file = std::string(directory).append("/").append(ent->d_name);
+            std::string extension = RessourceManager::getFileExtension(ent->d_name);
+            std::string basename = getBasename(file);
+
+            extension = Helper::lowerCaseString(extension);
+            // Texture resource
+            if (std::find(texturesExtensions.cbegin(), texturesExtensions.cend(), extension) != texturesExtensions.cend())
+            {
+                loadTexture(basename, file);
+            }
+            // Model resource
+            else if (std::find(modelsExtensions.cbegin(), modelsExtensions.cend(), extension) != modelsExtensions.cend())
+            {
+                loadModel(basename, file);
+            }
+        }
+    }
+
+    closedir(dir);
+}
 
 RessourceManager*   RessourceManager::getInstance()
 {
@@ -138,12 +186,19 @@ Texture&    RessourceManager::getTexture(const std::string& fileName)
     return (texture);
 }
 
+const std::vector<const char*>& RessourceManager::getTexturesNames() const
+{
+    return (_texturesNames);
+}
+
+
 Texture&    RessourceManager::loadTexture(const std::string basename, const std::string& fileName)
 {
     _textures[basename] = {};
     _textures[basename].loadFromFile(fileName);
     _textures[basename].setId(basename);
     _textures[basename].setPath(fileName);
+    _texturesNames.push_back(_textures.find(basename)->first.c_str());
 
     return (_textures[basename]);
 }

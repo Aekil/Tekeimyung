@@ -103,24 +103,20 @@ void    RenderingSystem::renderParticles(EntityManager& em)
     {
         auto &&emitter = it.second;
         Entity* entity = em.getEntity(it.first);
-        sTransformComponent *transform = entity->getComponent<sTransformComponent>();
         if (entity == nullptr)
             continue;
 
+        sRenderComponent *render = entity->getComponent<sRenderComponent>();
         auto&& model = getModel(entity);
 
         // Only freeze camera rotation for plans
-        //if (static_cast<Geometry*>(model.get())->getType() == Geometry::eType::Plan)
-            //_camera.freezeRotations(true);
+        if (render->geometry == Geometry::eType::PLANE)
+            _camera.freezeRotations(true);
 
         for (unsigned int i = 0; i < emitter->particlesNb; i++)
         {
             auto &&particle = emitter->particles[i];
 
-/*            Material& particleMaterial = model->getMaterial();
-
-            particleMaterial._constants.ambient = particle.color;
-            particleMaterial._needUpdate = true;*/
             // Model matrice
             model->update(particle.color, particle.pos, glm::vec3(particle.size, particle.size, particle.size), glm::mat4(1.0));
 
@@ -128,7 +124,7 @@ void    RenderingSystem::renderParticles(EntityManager& em)
             model->draw(_shaderProgram);
         }
 
-        //_camera.freezeRotations(false);
+        _camera.freezeRotations(false);
     }
     glDepthMask(GL_TRUE);
 

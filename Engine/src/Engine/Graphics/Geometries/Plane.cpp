@@ -51,6 +51,9 @@ Plane::Plane(Plane::sInfo& info): Geometry(Geometry::eType::PLANE)
        material._constants.texturesTypes |= Texture::eType::AMBIENT;
        material._textures[Texture::eType::AMBIENT] = &RessourceManager::getInstance()->getTexture(info.texturePath);
        material._needUpdate = true;
+
+       // Set diffuse to 0.0 or the texture transparency won't work
+       material._constants.diffuse = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
     }
 }
 

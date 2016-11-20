@@ -4,6 +4,7 @@
 #include <stb_image/stb_image.h>
 
 #include <Engine/Utils/Exception.hpp>
+#include <Engine/Utils/Logger.hpp>
 
 #include <Engine/Graphics/Texture.hpp>
 
@@ -20,6 +21,8 @@ Texture::~Texture()
 
 void    Texture::loadFromFile (const std::string &fileName)
 {
+    LOG_INFO("Loading texture \"%s\"", fileName.c_str());
+
     // Load image data and force  components number
     _data = stbi_load(fileName.c_str(), &_width, &_height, &_comp, 4);
 

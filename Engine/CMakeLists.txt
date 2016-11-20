@@ -57,6 +57,12 @@ include_directories(${CMAKE_SOURCE_DIR}/external/imgui/)
 #include_directories(${CMAKE_SOURCE_DIR}/external/fmod)
 #include_directories(${CMAKE_SOURCE_DIR}/external/fmt/)
 
+# Include dirent only for windows
+# Linux have his own header
+IF (WIN32)
+    include_directories(${CMAKE_SOURCE_DIR}/external/dirent)
+ENDIF()
+
 # Create executable
 add_library(${EXECUTABLE_NAME} STATIC ${source_files} ${imgui_source_files} ${include_files}) #${fmt_source_files}
 

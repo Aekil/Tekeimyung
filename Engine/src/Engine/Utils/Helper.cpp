@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include <ctime>
+#include <algorithm>
 
 #include <Engine/Utils/Debug.hpp>
 
@@ -59,4 +60,12 @@ void    Helper::copyAssimpVec3(const aiVector3D& from, glm::vec3& to)
     to.x = from.x;
     to.y = from.y;
     to.z = from.z;
+}
+
+std::string Helper::lowerCaseString(const std::string& str)
+{
+    std::string lowerCase = str;
+    std::transform(lowerCase.begin(), lowerCase.end(), lowerCase.begin(), ::tolower);
+
+    return (lowerCase);
 }

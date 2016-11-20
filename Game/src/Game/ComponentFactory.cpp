@@ -87,6 +87,7 @@ sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& 
         {
             component->geometryInfo.plane.width = geometry.getFloat("width", 30.0f);
             component->geometryInfo.plane.height = geometry.getFloat("height", 30.0f);
+            component->geometryInfo.plane.texturePath = geometry.getString("texture", "");
         }
         else if (component->geometry == Geometry::eType::CUBE)
         {
@@ -117,6 +118,7 @@ JsonValue&    ComponentFactory<sRenderComponent>::saveToJson(const std::string& 
         {
             geometry.setFloat("width", component->geometryInfo.plane.width);
             geometry.setFloat("height", component->geometryInfo.plane.height);
+            geometry.setString("texture", component->geometryInfo.plane.texturePath);
         }
         else if (component->geometry == Geometry::eType::CUBE)
         {
@@ -153,6 +155,25 @@ bool    ComponentFactory<sRenderComponent>::updateEditor(const std::string& enti
         {
             changed |= ImGui::SliderFloat("width", &component->geometryInfo.plane.width, 1.0f, 100.0f);
             changed |= ImGui::SliderFloat("height", &component->geometryInfo.plane.height, 1.0f, 100.0f);
+
+            static RessourceManager* resourceManager = RessourceManager::getInstance();
+            static std::vector<const char*>& texturesString = const_cast<std::vector<const char*>&>(resourceManager->getTexturesNames());
+            const char** texturesList = texturesString.data();
+            int selectedTexture = -1;
+            Texture* texture;
+
+            if (component->geometryInfo.plane.texturePath.size() > 0)
+            {
+                texture = &resourceManager->getTexture(component->geometryInfo.plane.texturePath);
+                int selectedTexture = static_cast<int>(std::find(texturesString.cbegin(), texturesString.cend(), texture->getId()) - texturesString.begin());
+            }
+
+            if (ImGui::ListBox("texture", &selectedTexture, texturesList, (int)resourceManager->getTexturesNames().size(), 4))
+            {
+                changed = true;
+                texture = &resourceManager->getTexture(texturesString[selectedTexture]);
+                component->geometryInfo.plane.texturePath = texture->getPath();
+            }
         }
         // CUBE
         else if (component->geometry == Geometry::eType::CUBE)
@@ -163,12 +184,12 @@ bool    ComponentFactory<sRenderComponent>::updateEditor(const std::string& enti
         else if (component->geometry == Geometry::eType::MESH)
         {
             static RessourceManager* resourceManager = RessourceManager::getInstance();
-            auto model = resourceManager->getModel(component->modelFile);
             static std::vector<const char*>& modelsString = const_cast<std::vector<const char*>&>(resourceManager->getModelsNames());
+            auto model = resourceManager->getModel(component->modelFile);
             int selectedModel = static_cast<int>(std::find(modelsString.cbegin(), modelsString.cend(), model->getId()) - modelsString.begin());
             const char** modelsList = modelsString.data();
 
-            if (ImGui::ListBox("Model", &selectedModel, modelsList, (int)resourceManager->getModelsNames().size(), 4))
+            if (ImGui::ListBox("model", &selectedModel, modelsList, (int)resourceManager->getModelsNames().size(), 4))
             {
                 changed = true;
                 model = resourceManager->getModel(modelsString[selectedModel]);
