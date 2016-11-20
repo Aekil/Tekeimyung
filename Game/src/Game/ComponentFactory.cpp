@@ -68,7 +68,7 @@ sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& 
     // Initialize some values
     component->animated = json.getBool("animated", false);
     component->modelFile = json.getString("model", "");
-    component->color = json.getColor3f("color", { 1.0f, 1.0f, 1.0f });
+    component->color = json.getColor4f("color", { 1.0f, 1.0f, 1.0f, 1.0f });
 
     if (geometry.size() > 0)
     {
@@ -99,7 +99,7 @@ JsonValue&    ComponentFactory<sRenderComponent>::saveToJson(const std::string& 
 
     json.setBool("animated", component->animated);
     json.setString("model", component->modelFile);
-    json.setColor3f("color", component->color);
+    json.setColor4f("color", component->color);
 
     if (component->geometry.size() > 0)
     {

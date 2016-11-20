@@ -217,7 +217,7 @@ std::shared_ptr<Model>  RenderingSystem::getModel(Entity* entity)
         orientation = glm::rotate(orientation, glm::radians(direction->orientation.y), glm::vec3(0.0f, 1.0f, 0.0f));
     }
 
-    model->_model->update(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), transform->pos, transform->scale, orientation);
+    model->_model->update(model->color, transform->pos, transform->scale, orientation);
 
     return (model->_model);
 }

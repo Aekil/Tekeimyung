@@ -77,8 +77,8 @@ Cube::Cube(Cube::sInfo& info): Geometry(Geometry::eType::CUBE)
 
     // Cube material
     Material material;
-    material._constants.ambient = glm::vec4(0.611765f, 0.392157f, 0.172549f, 1.0f);
-    material._constants.diffuse = glm::vec4(0.611765f, 0.392157f, 0.172549f, 1.0f);
+    material._constants.ambient = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+    material._constants.diffuse = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
     mesh->material = material;
 
     // Add plane to meshs list

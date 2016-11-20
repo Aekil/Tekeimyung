@@ -73,7 +73,7 @@ struct sRenderComponent: sComponent
     }
 
     std::string modelFile;
-    glm::vec3 color;
+    glm::vec4 color;
     bool animated;
 
     std::shared_ptr<Model> _model;
