@@ -69,7 +69,7 @@ sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& 
 
     // Initialize some values
     component->animated = json.getBool("animated", false);
-    component->modelFile = json.getString("model", "");
+    component->modelFile = json.getString("model", "resources/models/default.DAE");
     component->color = json.getColor4f("color", { 1.0f, 1.0f, 1.0f, 1.0f });
     component->geometry = Geometry::eType::MESH;
 
@@ -141,10 +141,10 @@ bool    ComponentFactory<sRenderComponent>::updateEditor(const std::string& enti
         changed |= ImGui::ColorEdit3("color", glm::value_ptr(component->color));
 
         static std::vector<const char*>& typesString = const_cast<std::vector<const char*>&>(Geometry::getTypesString());
-        static int selectedType = static_cast<int>(std::find(typesString.cbegin(), typesString.cend(), Geometry::getGeometryTypeString(component->geometry)) - typesString.begin());
+        int selectedType = static_cast<int>(std::find(typesString.cbegin(), typesString.cend(), Geometry::getGeometryTypeString(component->geometry)) - typesString.begin());
         const char** typesList = typesString.data();
 
-        typeChanged = ImGui::ListBox("Model type", &selectedType, typesList, (int)Geometry::getTypesString().capacity(), 4);
+        typeChanged = ImGui::ListBox("Model type", &selectedType, typesList, (int)Geometry::getTypesString().size(), 4);
         if (typeChanged)
             component->geometry = Geometry::getGeometryType(typesString[selectedType]);
 
@@ -163,12 +163,12 @@ bool    ComponentFactory<sRenderComponent>::updateEditor(const std::string& enti
         else if (component->geometry == Geometry::eType::MESH)
         {
             static RessourceManager* resourceManager = RessourceManager::getInstance();
-            static auto model = resourceManager->getModel(component->modelFile);
+            auto model = resourceManager->getModel(component->modelFile);
             static std::vector<const char*>& modelsString = const_cast<std::vector<const char*>&>(resourceManager->getModelsNames());
-            static int selectedModel = static_cast<int>(std::find(modelsString.cbegin(), modelsString.cend(), model->getId()) - modelsString.begin());
+            int selectedModel = static_cast<int>(std::find(modelsString.cbegin(), modelsString.cend(), model->getId()) - modelsString.begin());
             const char** modelsList = modelsString.data();
 
-            if (ImGui::ListBox("Model", &selectedModel, modelsList, (int)resourceManager->getModelsNames().capacity(), 4))
+            if (ImGui::ListBox("Model", &selectedModel, modelsList, (int)resourceManager->getModelsNames().size(), 4))
             {
                 changed = true;
                 model = resourceManager->getModel(modelsString[selectedModel]);
