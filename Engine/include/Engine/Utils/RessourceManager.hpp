@@ -2,6 +2,7 @@
 
 #include <string>
 #include <unordered_map>
+#include <vector>
 #include <memory>
 
 #include <Engine/Graphics/Texture.hpp>
@@ -17,6 +18,7 @@ public:
     void                                            saveFile(const std::string& fileName, const std::string fileContent);
     Texture&                                        getTexture(const std::string& fileName);
     std::shared_ptr<Model>                          getModel(const std::string& fileName);
+    const std::vector<const char*>&                 getModelsNames() const;
 
     static RessourceManager*                        getInstance();
     static std::string                              getFileExtension(const std::string& fileName);
@@ -44,6 +46,9 @@ private:
 
     // Store models with their basename
     std::unordered_map<std::string, std::shared_ptr<Model>> _models;
+
+    // Store models basename list
+    std::vector<const char*>                                _modelsNames;
 
     //Singleton instance
     static RessourceManager*                        _ressourceManager;

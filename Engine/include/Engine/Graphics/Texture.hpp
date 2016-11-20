@@ -3,7 +3,9 @@
 #include <GL/glew.h>
 #include <string>
 
-class Texture
+#include <Engine/Utils/Resource.hpp>
+
+class Texture: public Resource
 {
 public:
     enum class eType: uint16_t

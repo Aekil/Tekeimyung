@@ -4,16 +4,17 @@
 # include <vector>
 # include <memory>
 # include <glm/gtx/quaternion.hpp>
-#include <assimp/Importer.hpp>
+# include <assimp/Importer.hpp>
 
 # include <Engine/Graphics/Mesh.hpp>
 # include <Engine/Graphics/Buffer.hpp>
 # include <Engine/Graphics/ShaderProgram.hpp>
 # include <Engine/Graphics/Skeleton.hpp>
+# include <Engine/Utils/Resource.hpp>
 
 #define BUFFER_OFFSET(bytes) ((GLubyte*) NULL + (bytes))
 
-class Model {
+class Model: public Resource {
 public:
     Model();
     ~Model();

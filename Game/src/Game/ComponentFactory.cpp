@@ -1,9 +1,11 @@
+#include <algorithm>
 #include <sstream>
 #include <imgui.h>
 #include <imgui_impl_glfw_gl3.h>
 #include <glm/gtc/type_ptr.hpp>
 
 #include <Engine/Window/Keyboard.hpp>
+#include <Engine/Utils/RessourceManager.hpp>
 
 #include <Game/ComponentFactory.hpp>
 
@@ -69,22 +71,29 @@ sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& 
     component->animated = json.getBool("animated", false);
     component->modelFile = json.getString("model", "");
     component->color = json.getColor4f("color", { 1.0f, 1.0f, 1.0f, 1.0f });
+    component->geometry = Geometry::eType::MESH;
+
+    // Pre-initialize the values so that the values are not 0 when changing the geometry type
+    component->geometryInfo.plane.width = 30.0f;
+    component->geometryInfo.plane.height = 30.0f;
+    component->geometryInfo.cube.size = 10.0f;
 
     if (geometry.size() > 0)
     {
-        component->geometry = geometry.getString("name", "");
+        std::string geometryName = geometry.getString("name", "");
+        component->geometry = Geometry::getGeometryType(geometryName);
 
-        if (component->geometry == "PLANE")
+        if (component->geometry == Geometry::eType::PLANE)
         {
-            component->geometryInfo.plane.width = geometry.getFloat("width", 10.0f);
-            component->geometryInfo.plane.height = geometry.getFloat("height", 10.0f);
+            component->geometryInfo.plane.width = geometry.getFloat("width", 30.0f);
+            component->geometryInfo.plane.height = geometry.getFloat("height", 30.0f);
         }
-        else if (component->geometry == "CUBE")
+        else if (component->geometry == Geometry::eType::CUBE)
         {
             component->geometryInfo.cube.size = geometry.getFloat("size", 10.0f);
         }
         else
-            EXCEPT(InvalidParametersException, "Unknown geometry name \"%s\" for sRenderComponent of \"%s\"", component->geometry.c_str(), entityType.c_str());
+            EXCEPT(InvalidParametersException, "Unknown geometry name \"%s\" for sRenderComponent of \"%s\"", geometryName.c_str(), entityType.c_str());
     }
 
     return (component);
@@ -101,14 +110,15 @@ JsonValue&    ComponentFactory<sRenderComponent>::saveToJson(const std::string& 
     json.setString("model", component->modelFile);
     json.setColor4f("color", component->color);
 
-    if (component->geometry.size() > 0)
+    if (component->geometry != Geometry::eType::MESH)
     {
-        if (component->geometry == "PLANE")
+        geometry.setString("name", Geometry::getGeometryTypeString(component->geometry));
+        if (component->geometry == Geometry::eType::PLANE)
         {
             geometry.setFloat("width", component->geometryInfo.plane.width);
             geometry.setFloat("height", component->geometryInfo.plane.height);
         }
-        else if (component->geometry == "CUBE")
+        else if (component->geometry == Geometry::eType::CUBE)
         {
             geometry.setFloat("size", component->geometryInfo.cube.size);
         }
@@ -123,11 +133,50 @@ bool    ComponentFactory<sRenderComponent>::updateEditor(const std::string& enti
     sRenderComponent* component = static_cast<sRenderComponent*>(_components[entityType]);
     *component_ = component;
     bool changed = false;
+    bool typeChanged = false;
 
     ImGui::PushItemWidth(200);
     if (ImGui::CollapsingHeader("sRenderComponent", ImGuiTreeNodeFlags_DefaultOpen))
     {
         changed |= ImGui::ColorEdit3("color", glm::value_ptr(component->color));
+
+        static std::vector<const char*>& typesString = const_cast<std::vector<const char*>&>(Geometry::getTypesString());
+        static int selectedType = static_cast<int>(std::find(typesString.cbegin(), typesString.cend(), Geometry::getGeometryTypeString(component->geometry)) - typesString.begin());
+        const char** typesList = typesString.data();
+
+        typeChanged = ImGui::ListBox("Model type", &selectedType, typesList, (int)Geometry::getTypesString().capacity(), 4);
+        if (typeChanged)
+            component->geometry = Geometry::getGeometryType(typesString[selectedType]);
+
+        // Plan
+        if (component->geometry == Geometry::eType::PLANE)
+        {
+            changed |= ImGui::SliderFloat("width", &component->geometryInfo.plane.width, 1.0f, 100.0f);
+            changed |= ImGui::SliderFloat("height", &component->geometryInfo.plane.height, 1.0f, 100.0f);
+        }
+        // CUBE
+        else if (component->geometry == Geometry::eType::CUBE)
+        {
+            changed |= ImGui::SliderFloat("size", &component->geometryInfo.cube.size, 1.0f, 100.0f);
+        }
+        // MESH
+        else if (component->geometry == Geometry::eType::MESH)
+        {
+            static RessourceManager* resourceManager = RessourceManager::getInstance();
+            static auto model = resourceManager->getModel(component->modelFile);
+            static std::vector<const char*>& modelsString = const_cast<std::vector<const char*>&>(resourceManager->getModelsNames());
+            static int selectedModel = static_cast<int>(std::find(modelsString.cbegin(), modelsString.cend(), model->getId()) - modelsString.begin());
+            const char** modelsList = modelsString.data();
+
+            if (ImGui::ListBox("Model", &selectedModel, modelsList, (int)resourceManager->getModelsNames().capacity(), 4))
+            {
+                changed = true;
+                model = resourceManager->getModel(modelsString[selectedModel]);
+                component->modelFile = model->getPath();
+            }
+        }
+
+        changed |= typeChanged;
     }
 
     return (changed);

@@ -53,23 +53,23 @@ struct sRenderComponent: sComponent
     void initModel()
     {
         // Load mesh
-        if (geometry.size() == 0)
+        if (geometry == Geometry::eType::MESH)
         {
             _model = RessourceManager::getInstance()->getModel(modelFile);
             return;
         }
 
         // Load geometry
-        if (geometry == "PLANE")
+        if (geometry == Geometry::eType::PLANE)
         {
             _model = std::make_shared<Plane>(geometryInfo.plane);
         }
-        else if (geometry == "CUBE")
+        else if (geometry == Geometry::eType::CUBE)
         {
             _model = std::make_shared<Cube>(geometryInfo.cube);
         }
         else
-            EXCEPT(InvalidParametersException, "Unknown geometry name \"%s\" for sRenderComponent", geometry.c_str());
+            EXCEPT(InvalidParametersException, "Unknown geometry for sRenderComponent");
     }
 
     std::string modelFile;
@@ -79,7 +79,7 @@ struct sRenderComponent: sComponent
     std::shared_ptr<Model> _model;
 
     // The object to render is a geometry
-    std::string geometry;
+    Geometry::eType geometry;
     struct sGeometryInfo
     {
         Plane::sInfo plane;
