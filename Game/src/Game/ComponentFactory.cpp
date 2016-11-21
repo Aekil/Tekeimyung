@@ -2,6 +2,7 @@
 #include <sstream>
 #include <imgui.h>
 #include <imgui_impl_glfw_gl3.h>
+#include <glm/gtx/matrix_decompose.hpp>
 #include <ImGuizmo.h>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -749,7 +750,6 @@ bool    ComponentFactory<sTransformComponent>::updateEditor(const std::string& e
     bool changed = false;
     bool scaleChanged = false;
 
-    ImGuizmo::Enable(true);
     ImGui::PushItemWidth(200);
     if (ImGui::CollapsingHeader("sTransformComponent", ImGuiTreeNodeFlags_DefaultOpen))
     {

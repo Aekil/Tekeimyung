@@ -229,14 +229,15 @@ std::shared_ptr<Model>  RenderingSystem::getModel(Entity* entity)
         model->initModel();
     }
 
-    glm::mat4 orientation;
-    if (direction) {
-        orientation = glm::rotate(orientation, glm::radians(direction->orientation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-    }
-
-
     if (transform->needUpdate)
     {
+        glm::mat4 orientation;
+        if (direction) {
+            orientation = glm::rotate(orientation, glm::radians(transform->rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+            orientation = glm::rotate(orientation, glm::radians(transform->rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+            orientation = glm::rotate(orientation, glm::radians(transform->rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+        }
+
         transform->needUpdate = false;
         glm::mat4 transformMatrix(1.0f);
         transformMatrix = glm::translate(transformMatrix, glm::vec3(transform->pos.x, transform->pos.y, transform->pos.z)) * orientation;
