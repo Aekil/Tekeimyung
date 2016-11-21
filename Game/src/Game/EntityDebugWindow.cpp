@@ -68,15 +68,22 @@ void    EntityDebugWindow::build()
             if (compFactory->updateEditor(entityName, &savedComponent, component))
             {
                 ASSERT(component != nullptr, "component should be set in updateEditor");
-                //EntityFactory::updateEntityComponent(entityName, compFactory, component);
             }
         }
+
+        if (ImGui::Button("Apply changes to template"))
+        {
+            saveEntityTemplate(entityName, selectedEntity);
+            saveEntityTemplateToJson(entityName);
+        }
+/*        else if (spawnEntityButton)
+            spawnEntity(list[_selectedEntity]);*/
     }
     ImGui::EndGroup();
     ImGui::End();
 }
 
-void    EntityDebugWindow::saveEntityToJson(const std::string& typeName)
+void    EntityDebugWindow::saveEntityTemplateToJson(const std::string& typeName)
 {
     JsonWriter jsonWriter;
     JsonValue json;
@@ -94,6 +101,15 @@ void    EntityDebugWindow::saveEntityToJson(const std::string& typeName)
     jsonWriter.write(EntityFactory::getFile(typeName), json);
 
     LOG_INFO("Entity %s saved", typeName.c_str());
+}
+
+void    EntityDebugWindow::saveEntityTemplate(const std::string& typeName, Entity* entity)
+{
+    for (auto component: entity->getComponents())
+    {
+        std::string componentName = IComponentFactory::getComponentNameWithHash(component->getTypeInfo().hash_code());
+        IComponentFactory::getFactory(componentName)->save(typeName, component);
+    }
 }
 
 glm::vec3   EntityDebugWindow::getRandomPos()

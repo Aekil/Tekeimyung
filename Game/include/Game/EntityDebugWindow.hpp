@@ -15,7 +15,8 @@ public:
     virtual void        build();
 
 private:
-    void                saveEntityToJson(const std::string& typeName);
+    void                saveEntityTemplateToJson(const std::string& typeName);
+    void                saveEntityTemplate(const std::string& typeName, Entity* entity);
     glm::vec3           getRandomPos();
     void                spawnEntity(const std::string& typeName);
 

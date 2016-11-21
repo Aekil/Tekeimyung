@@ -46,6 +46,7 @@ public:
     // Json load/save
     virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json) = 0;
     virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType) = 0;
+    virtual void save(const std::string& entityType, sComponent* component) = 0;
 
     // IComponentFactory methods
     static bool                                                     componentTypeExists(const std::string& type);
@@ -94,6 +95,12 @@ public:
     {
         LOG_WARN("%s::%s: : can't save to json because no saveToJson found", entityType.c_str(), componentType.c_str());
         return _componentsJson[entityType];
+    }
+
+    virtual void save(const std::string& entityType, sComponent* component)
+    {
+        delete _components[entityType];
+        _components[entityType] = component->clone();
     }
 
     // Add entity in component entities map
