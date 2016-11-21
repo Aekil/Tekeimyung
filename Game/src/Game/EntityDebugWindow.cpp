@@ -108,7 +108,11 @@ void    EntityDebugWindow::saveEntityTemplate(const std::string& typeName, Entit
     for (auto component: entity->getComponents())
     {
         std::string componentName = IComponentFactory::getComponentNameWithHash(component->getTypeInfo().hash_code());
-        IComponentFactory::getFactory(componentName)->save(typeName, component);
+        auto compFactory = IComponentFactory::getFactory(componentName);
+        compFactory->save(typeName, component);
+
+        // Update other entities component
+        EntityFactory::updateEntityComponent(typeName, compFactory, component);
     }
 }
 

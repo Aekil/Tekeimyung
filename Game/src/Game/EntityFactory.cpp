@@ -167,7 +167,25 @@ void    EntityFactory::updateEntityComponent(const std::string& entityName, ICom
         if (name->value == entityName)
         {
             sComponent* entityComponent = entity->getComponent(component->getTypeInfo().hash_code());
-            entityComponent->update(component);
+            if (entityComponent)
+            {
+                std::string componentName = IComponentFactory::getComponentNameWithHash(component->getTypeInfo().hash_code());
+
+                // Only the scale have to be copied
+                if (componentName == "sTransformComponent")
+                {
+                    LOG_INFO("OKKKKKKKKKKKKKKKKK");
+                    sTransformComponent* transform = static_cast<sTransformComponent*>(component);
+                    sTransformComponent* entityTransform = static_cast<sTransformComponent*>(entityComponent);
+
+                    entityTransform->scale = transform->scale;
+                    entityTransform->needUpdate = true;
+                }
+                else
+                {
+                    entityComponent->update(component);
+                }
+            }
         }
     }
 }
