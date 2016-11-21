@@ -141,7 +141,7 @@ bool    PlayState::init()
     _world.addSystem<RenderingSystem>(_map, _world.getSystem<ParticleSystem>()->getEmitters());
 
     addDebugWindow<OverlayDebugWindow>();
-    addDebugWindow<EntityDebugWindow>(_map, glm::vec2(0, 80), glm::vec2(450, 350));
+    addDebugWindow<EntityDebugWindow>(&em, _map, glm::vec2(0, 80), glm::vec2(450, 350));
     addDebugWindow<LogDebugWindow>(Logger::getInstance(), glm::vec2(0, 430), glm::vec2(300, 200));
 
     // Play sound

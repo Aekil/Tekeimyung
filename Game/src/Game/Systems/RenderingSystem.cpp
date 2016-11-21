@@ -146,8 +146,18 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
     forEachEntity(em, [&](Entity *entity) {
         // Don't display particle systems
         if (!entity->getComponent<sParticleEmitterComponent>())
-            renderEntity(entity);
+        {
+
+
+            if (!isTransparentEntity(entity))
+                renderEntity(entity);
+            else
+                _transparentEntities[entity->id] = entity;
+        }
     });
+
+    for (auto it = _transparentEntities.begin(); it != _transparentEntities.end(); it++)
+        renderEntity(it->second);
 
 /*
     for (auto &&id: (*_map)[1].getEntities())
@@ -192,6 +202,13 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
 
     // Display screen
     GameWindow::getInstance()->display();
+}
+
+bool    RenderingSystem::isTransparentEntity(Entity* entity) const
+{
+    sRenderComponent *model = entity->getComponent<sRenderComponent>();
+
+    return (model->geometry == Geometry::eType::PLANE);
 }
 
 std::shared_ptr<Model>  RenderingSystem::getModel(Entity* entity)

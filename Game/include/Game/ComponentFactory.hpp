@@ -10,24 +10,27 @@
 
 // Generate map initializer lists
 // ex: { "sRenderComponent", sRenderComponent }, { "sPositionComponent", sPositionComponent }
-#define COMPONENTS_TYPES()\
-    GENERATE_PAIRS(sRenderComponent),\
-    GENERATE_PAIRS(sPositionComponent),\
-    GENERATE_PAIRS(sInputComponent),\
-    GENERATE_PAIRS(sDirectionComponent),\
-    GENERATE_PAIRS(sRectHitboxComponent),\
-    GENERATE_PAIRS(sCircleHitboxComponent),\
-    GENERATE_PAIRS(sGravityComponent),\
-    GENERATE_PAIRS(sTypeComponent),\
-    GENERATE_PAIRS(sAIComponent),\
-    GENERATE_PAIRS(sPlayerComponent),\
-    GENERATE_PAIRS(sParticleEmitterComponent),\
-    GENERATE_PAIRS(sTowerAIComponent),\
-    GENERATE_PAIRS(sProjectileComponent),\
-    GENERATE_PAIRS(sWaveComponent),\
-    GENERATE_PAIRS(sTransformComponent)\
+#define COMPONENTS_TYPES(PROCESS)\
+    PROCESS(sRenderComponent),\
+    PROCESS(sPositionComponent),\
+    PROCESS(sInputComponent),\
+    PROCESS(sDirectionComponent),\
+    PROCESS(sRectHitboxComponent),\
+    PROCESS(sCircleHitboxComponent),\
+    PROCESS(sGravityComponent),\
+    PROCESS(sTypeComponent),\
+    PROCESS(sAIComponent),\
+    PROCESS(sPlayerComponent),\
+    PROCESS(sParticleEmitterComponent),\
+    PROCESS(sTowerAIComponent),\
+    PROCESS(sProjectileComponent),\
+    PROCESS(sWaveComponent),\
+    PROCESS(sNameComponent),\
+    PROCESS(sTransformComponent)\
 
 #define GENERATE_PAIRS(COMPONENT) { #COMPONENT, new ComponentFactory<COMPONENT>() }
+
+#define GENERATE_PAIRS_HASHS(COMPONENT) { typeid(COMPONENT).hash_code(), #COMPONENT }
 
 
 /*
@@ -50,16 +53,21 @@ public:
     static sComponent*                                              createComponent(const std::string& entityType, const std::string& name);
     static IComponentFactory*                                       getFactory(const std::string& name);
 
+    static std::string                                              getComponentNameWithHash(std::size_t hash);
+
     // ComponentFactory overloaded classes methods
     // Ex: ComponentFactory<sPositionComponent>, ComponentFactory<sInputComponent>
     virtual sComponent*                                             clone(const std::string& entityType) = 0;
     virtual void                                                    addComponent(const std::string& entityType, sComponent* component) = 0;
     virtual void                                                    saveComponentJson(const std::string& entityType, const JsonValue& json) = 0;
-    virtual bool                                                    updateEditor(const std::string& entityType, sComponent** component_) = 0;
+    virtual bool                                                    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent) = 0;
 
 private:
     // Store Components types
     static std::unordered_map<std::string, IComponentFactory*>      _componentsTypes;
+
+    // Map lookup to get component name with component hash
+    static std::unordered_map<std::size_t, std::string>             _componentsTypesHashs;
 };
 
 
@@ -103,7 +111,7 @@ public:
 
     // Overload this function to display the component editor
     // The component_ pointer have to be set to component pointer (_components[entityType] = component)
-    virtual bool    updateEditor(const std::string& entityType, sComponent** component_)
+    virtual bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent)
     {
         return (false);
     }
@@ -147,7 +155,7 @@ public:
     virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
 
 private:
-    virtual bool    updateEditor(const std::string& entityType, sComponent** component_);
+    virtual bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent);
 };
 
 
@@ -277,7 +285,7 @@ class ComponentFactory<sParticleEmitterComponent>: public BaseComponentFactory<s
 public:
     virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
     virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
-    virtual bool    updateEditor(const std::string& entityType, sComponent** component_);
+    virtual bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent);
 };
 
 
@@ -292,7 +300,7 @@ public:
     virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
     virtual JsonValue&  saveToJson(const std::string& entityType, const std::string& componentType);
 
-    virtual bool    updateEditor(const std::string& entityType, sComponent** component_);
+    virtual bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent);
 };
 
 
@@ -307,7 +315,7 @@ public:
     virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
     virtual JsonValue&  saveToJson(const std::string& entityType, const std::string& componentType);
 
-    virtual bool    updateEditor(const std::string& entityType, sComponent** component_);
+    virtual bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent);
 };
 
 
@@ -317,6 +325,18 @@ public:
 
 template <>
 class ComponentFactory<sWaveComponent> : public BaseComponentFactory<sWaveComponent>
+{
+public:
+    virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
+};
+
+
+/*
+** sNameComponent
+*/
+
+template <>
+class ComponentFactory<sNameComponent> : public BaseComponentFactory<sNameComponent>
 {
 public:
     virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
@@ -334,5 +354,5 @@ public:
     virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
     virtual JsonValue&  saveToJson(const std::string& entityType, const std::string& componentType);
 
-    virtual bool    updateEditor(const std::string& entityType, sComponent** component_);
+    virtual bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent);
 };

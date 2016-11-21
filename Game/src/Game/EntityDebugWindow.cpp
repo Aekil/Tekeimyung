@@ -1,3 +1,4 @@
+#include <sstream>
 #include <imgui.h>
 
 #include <Engine/Utils/Helper.hpp>
@@ -9,18 +10,13 @@
 #include <Game/EntityDebugWindow.hpp>
 
 
-EntityDebugWindow::EntityDebugWindow(Map* map, const glm::vec2& pos, const glm::vec2& size):
-                                    _map(map), DebugWindow("Live edition", pos, size), _selectedEntity(0) {}
+EntityDebugWindow::EntityDebugWindow(EntityManager* em, Map* map, const glm::vec2& pos, const glm::vec2& size):
+                                    _em(em), _map(map), DebugWindow("Live edition", pos, size), _selectedEntity(0) {}
 
 EntityDebugWindow::~EntityDebugWindow() {}
 
 void    EntityDebugWindow::build()
 {
-    static bool saveEntityButton = false;
-    static bool spawnEntityButton = false;
-    std::vector<const char*>& typesString = const_cast<std::vector<const char*>&>(EntityFactory::getTypesString());
-    const char** list = typesString.data();
-
     if (!ImGui::Begin(_title.c_str(), &_displayed, ImGuiWindowFlags_NoResize))
     {
         ImGui::End();
@@ -30,38 +26,53 @@ void    EntityDebugWindow::build()
     ImGui::SetWindowSize(ImVec2(_size.x, _size.y), ImGuiSetCond_Always);
     ImGui::SetWindowPos(ImVec2(_pos.x, _pos.y), ImGuiSetCond_Always);
 
-    // Draw components
-    ImGui::ListBox("Entities types", &_selectedEntity, list, (int)EntityFactory::getTypesString().size(), 4);
-
-    const char* entityName = list[_selectedEntity];
-
-
-    if (ImGui::CollapsingHeader(entityName, ImGuiTreeNodeFlags_DefaultOpen))
+    // Entities list
+    static Entity* selectedEntity = nullptr;
+    ImGui::BeginChild("Entities list", ImVec2(150, 0), true);
+    for (auto it: _em->getEntities())
     {
-        // Iterate over all components names
-        auto&& components = EntityFactory::getComponents(entityName);
-        for (auto &&componentName: components)
-        {
-            IComponentFactory* compFactory = IComponentFactory::getFactory(componentName);
-            sComponent* component = nullptr;
+        std::stringstream name;
+        Entity* entity = it.second;
+        sNameComponent* nameComp = entity->getComponent<sNameComponent>();
 
-            // The component data has changed
-            if (compFactory->updateEditor(entityName, &component))
-            {
-                ASSERT(component != nullptr, "component should be set in updateEditor");
-                EntityFactory::updateEntityComponent(entityName, compFactory, component);
-            }
-        }
+        ASSERT(nameComp != nullptr, "The entity should have a name");
+        name << "[" << entity->id << "] " << nameComp->value;
+        if (ImGui::Selectable(name.str().c_str(), selectedEntity && selectedEntity->id == entity->id))
+            selectedEntity = entity;
+    }
+    ImGui::EndChild();
 
-        saveEntityButton = ImGui::Button("Save changes");
-        spawnEntityButton = ImGui::Button("Spawn entity");
-        if (saveEntityButton)
-            saveEntityToJson(list[_selectedEntity]);
-        else if (spawnEntityButton)
-            spawnEntity(list[_selectedEntity]);
-
+    if (!selectedEntity)
+    {
+        ImGui::End();
+        return;
     }
 
+    // Entity edition
+    ImGui::SameLine();
+    ImGui::BeginGroup();
+    sNameComponent* nameComp = selectedEntity->getComponent<sNameComponent>();
+    ASSERT(nameComp != nullptr, "The entity should have a name");
+
+    std::string entityName = nameComp->value;
+    if (ImGui::CollapsingHeader(entityName.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        for (auto component: selectedEntity->getComponents())
+        {
+            std::string componentName = IComponentFactory::getComponentNameWithHash(component->getTypeInfo().hash_code());
+            ASSERT(componentName.size() > 0, "The component name should exist");
+            IComponentFactory* compFactory = IComponentFactory::getFactory(componentName);
+            sComponent* savedComponent = nullptr;
+
+            // The component data has changed
+            if (compFactory->updateEditor(entityName, &savedComponent, component))
+            {
+                ASSERT(component != nullptr, "component should be set in updateEditor");
+                //EntityFactory::updateEntityComponent(entityName, compFactory, component);
+            }
+        }
+    }
+    ImGui::EndGroup();
     ImGui::End();
 }
 

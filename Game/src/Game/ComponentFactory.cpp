@@ -9,7 +9,8 @@
 
 #include <Game/ComponentFactory.hpp>
 
-std::unordered_map<std::string, IComponentFactory*>  IComponentFactory::_componentsTypes = { COMPONENTS_TYPES() };
+std::unordered_map<std::string, IComponentFactory*>  IComponentFactory::_componentsTypes = { COMPONENTS_TYPES(GENERATE_PAIRS) };
+std::unordered_map<std::size_t, std::string>  IComponentFactory::_componentsTypesHashs = { COMPONENTS_TYPES(GENERATE_PAIRS_HASHS) };
 
 
 /*
@@ -56,6 +57,11 @@ IComponentFactory*   IComponentFactory::getFactory(const std::string& name)
         EXCEPT(InvalidParametersException, "Cannot get component factory archetype \"%s\": does not exist", name);
 
     return _componentsTypes[name];
+}
+
+std::string IComponentFactory::getComponentNameWithHash(std::size_t hash)
+{
+    return (_componentsTypesHashs[hash]);
 }
 
 /*
@@ -130,10 +136,10 @@ JsonValue&    ComponentFactory<sRenderComponent>::saveToJson(const std::string& 
     return (json);
 }
 
-bool    ComponentFactory<sRenderComponent>::updateEditor(const std::string& entityType, sComponent** component_)
+bool    ComponentFactory<sRenderComponent>::updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent)
 {
-    sRenderComponent* component = static_cast<sRenderComponent*>(_components[entityType]);
-    *component_ = component;
+    sRenderComponent* component = static_cast<sRenderComponent*>(entityComponent ? entityComponent : _components[entityType]);
+    *savedComponent = component;
     bool changed = false;
     bool typeChanged = false;
 
@@ -198,6 +204,12 @@ bool    ComponentFactory<sRenderComponent>::updateEditor(const std::string& enti
         }
 
         changed |= typeChanged;
+
+        if (changed)
+        {
+            // Remove the model to auto reload the new model
+            component->_model = nullptr;
+        }
     }
 
     return (changed);
@@ -533,10 +545,10 @@ JsonValue&    ComponentFactory<sParticleEmitterComponent>::saveToJson(const std:
     return (json);
 }
 
-bool    ComponentFactory<sParticleEmitterComponent>::updateEditor(const std::string& entityType, sComponent** component_)
+bool    ComponentFactory<sParticleEmitterComponent>::updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent)
 {
-    sParticleEmitterComponent* component = static_cast<sParticleEmitterComponent*>(_components[entityType]);
-    *component_ = component;
+    sParticleEmitterComponent* component = static_cast<sParticleEmitterComponent*>(entityComponent ? entityComponent : _components[entityType]);
+    *savedComponent = component;
     bool changed = false;
 
     ImGui::PushItemWidth(200);
@@ -591,13 +603,13 @@ JsonValue&  ComponentFactory<sTowerAIComponent>::saveToJson(const std::string& e
     return (json);
 }
 
-bool    ComponentFactory<sTowerAIComponent>::updateEditor(const std::string& entityType, sComponent** component_)
+bool    ComponentFactory<sTowerAIComponent>::updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent)
 {
     sTowerAIComponent*  component;
     bool    changed;
 
-    component = static_cast<sTowerAIComponent*>(_components[entityType]);
-    *component_ = component;
+    component = static_cast<sTowerAIComponent*>(entityComponent ? entityComponent : _components[entityType]);
+    *savedComponent = component;
     changed = false;
     if (ImGui::CollapsingHeader("sTowerAIComponent", ImGuiTreeNodeFlags_DefaultOpen))
     {
@@ -636,15 +648,15 @@ JsonValue&  ComponentFactory<sProjectileComponent>::saveToJson(const std::string
     return (json);
 }
 
-bool        ComponentFactory<sProjectileComponent>::updateEditor(const std::string& entityType, sComponent** component_)
+bool        ComponentFactory<sProjectileComponent>::updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent)
 {
     sProjectileComponent*   component;
     bool                    changed;
     std::stringstream       converter;
     std::string             buffer;
 
-    component = static_cast<sProjectileComponent*>(_components[entityType]);
-    *component_ = component;
+    component = static_cast<sProjectileComponent*>(entityComponent ? entityComponent : _components[entityType]);
+    *savedComponent = component;
     changed = false;
     if (ImGui::CollapsingHeader("sProjectileComponent", ImGuiTreeNodeFlags_DefaultOpen))
     {
@@ -685,6 +697,22 @@ sComponent* ComponentFactory<sWaveComponent>::loadFromJson(const std::string& en
 
 
 /*
+** sNameComponent
+*/
+
+sComponent* ComponentFactory<sNameComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
+{
+    sNameComponent*   component;
+
+    component = new sNameComponent();
+
+    component->value = json.getString("name", "default");
+
+    return (component);
+}
+
+
+/*
 ** sTransformComponent
 */
 
@@ -712,10 +740,10 @@ JsonValue&    ComponentFactory<sTransformComponent>::saveToJson(const std::strin
     return (json);
 }
 
-bool    ComponentFactory<sTransformComponent>::updateEditor(const std::string& entityType, sComponent** component_)
+bool    ComponentFactory<sTransformComponent>::updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent)
 {
-    sTransformComponent* component = static_cast<sTransformComponent*>(_components[entityType]);
-    *component_ = component;
+    sTransformComponent* component = static_cast<sTransformComponent*>(entityComponent ? entityComponent : _components[entityType]);
+    *savedComponent = component;
     bool changed = false;
     bool scaleChanged = false;
 

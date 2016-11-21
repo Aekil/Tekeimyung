@@ -1,5 +1,7 @@
 #pragma once
 
+#include <ECS/EntityManager.hpp>
+
 #include <Engine/Utils/DebugWindow.hpp>
 
 #include <Game/Map.hpp>
@@ -7,7 +9,7 @@
 class EntityDebugWindow: public DebugWindow
 {
 public:
-    EntityDebugWindow(Map* map, const glm::vec2& pos, const glm::vec2& size);
+    EntityDebugWindow(EntityManager* em, Map* map, const glm::vec2& pos, const glm::vec2& size);
     virtual ~EntityDebugWindow();
 
     virtual void        build();
@@ -22,4 +24,6 @@ private:
     int                 _selectedEntity;
 
     Map*                _map;
+
+    EntityManager*      _em;
 };

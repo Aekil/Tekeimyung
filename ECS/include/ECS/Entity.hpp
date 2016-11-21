@@ -64,6 +64,11 @@ public:
         return (nullptr);
     }
 
+    std::vector<sComponent*>&       getComponents()
+    {
+        return _components;
+    }
+
     // Check if the entity has the component with corresponding hashcode => typeid(component).hash_code()
     bool                            hasComponent(size_t componentHashCode)
     {

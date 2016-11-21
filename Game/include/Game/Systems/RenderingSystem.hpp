@@ -27,6 +27,7 @@ public:
     const ShaderProgram&                    getShaderProgram() const;
 
 private:
+    bool                                    isTransparentEntity(Entity* entity) const;
     std::shared_ptr<Model>                  getModel(Entity* entity);
 
 private:
@@ -37,4 +38,6 @@ private:
     std::unordered_map<uint32_t, sEmitter*>*    _particleEmitters;
 
     Camera                                      _camera;
+
+    std::unordered_map<uint32_t, Entity*>       _transparentEntities;
 };
