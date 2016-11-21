@@ -7,6 +7,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include <Engine/Window/Keyboard.hpp>
+#include <Engine/Window/GameWindow.hpp>
 #include <Engine/Utils/RessourceManager.hpp>
 #include <Engine/Graphics/Camera.hpp>
 
@@ -745,6 +746,7 @@ JsonValue&    ComponentFactory<sTransformComponent>::saveToJson(const std::strin
 
 bool    ComponentFactory<sTransformComponent>::updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent)
 {
+    auto &&keyboard = GameWindow::getInstance()->getKeyboard();
     sTransformComponent* component = static_cast<sTransformComponent*>(entityComponent ? entityComponent : _components[entityType]);
     *savedComponent = component;
     bool changed = false;
@@ -757,13 +759,13 @@ bool    ComponentFactory<sTransformComponent>::updateEditor(const std::string& e
     static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::ROTATE);
     static ImGuizmo::MODE mCurrentGizmoMode(ImGuizmo::WORLD);
 
-    if (ImGui::RadioButton("Translate", mCurrentGizmoOperation == ImGuizmo::TRANSLATE))
+    if (ImGui::RadioButton("Translate", mCurrentGizmoOperation == ImGuizmo::TRANSLATE) || keyboard.isPressed(Keyboard::eKey::T))
         mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
     ImGui::SameLine();
-    if (ImGui::RadioButton("Rotate", mCurrentGizmoOperation == ImGuizmo::ROTATE))
+    if (ImGui::RadioButton("Rotate", mCurrentGizmoOperation == ImGuizmo::ROTATE) || keyboard.isPressed(Keyboard::eKey::R))
         mCurrentGizmoOperation = ImGuizmo::ROTATE;
     ImGui::SameLine();
-    if (ImGui::RadioButton("Scale", mCurrentGizmoOperation == ImGuizmo::SCALE))
+    if (ImGui::RadioButton("Scale", mCurrentGizmoOperation == ImGuizmo::SCALE) || keyboard.isPressed(Keyboard::eKey::E))
         mCurrentGizmoOperation = ImGuizmo::SCALE;
     ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(component->transform), glm::value_ptr(component->pos), glm::value_ptr(component->rotation), glm::value_ptr(component->scale));
     ImGui::InputFloat3("Translate", glm::value_ptr(component->pos), 3);
