@@ -98,7 +98,6 @@ void    RenderingSystem::renderParticles(EntityManager& em)
 {
     // Activate additive blending
     glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-    glDepthMask(GL_FALSE);
 
     for (auto &&it: *_particleEmitters)
     {
@@ -130,7 +129,6 @@ void    RenderingSystem::renderParticles(EntityManager& em)
 
         _camera.freezeRotations(false);
     }
-    glDepthMask(GL_TRUE);
 
     // Activate transparency blending
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -160,46 +158,23 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
         }
     });
 
+
+    // Enable blend to blend transparent ojects and particles
+    glEnable(GL_BLEND);
+    // Disable write to the depth buffer so that the depth of transparent objects is not written
+    // because we don't want a transparent object to hide an other transparent object
+    glDepthMask(GL_FALSE);
+
     for (auto it = _transparentEntities.begin(); it != _transparentEntities.end(); it++)
         renderEntity(it->second);
 
-/*
-    for (auto &&id: (*_map)[1].getEntities())
-    {
-        sPositionComponent *position;
-        Entity* entity = em.getEntity(id);
-        if (entity == nullptr)
-            continue;
-        position = entity->getComponent<sPositionComponent>();
-    }
-
-    for (uint16_t layer = 0; layer < _map->getLayersNb(); layer++)
-    {
-        // Order the entities to properly render !
-        // If not, the render will not work
-        (*_map)[layer].orderEntities(em);
-        auto &&it = (*_map)[layer].getEntities().cbegin();
-        for (uint32_t y = 0; y < _map->getHeight(); y++)
-        {
-            for (uint32_t x = 0; x < _map->getWidth(); x++)
-            {
-                // Orthogonal projection matrice
-                glm::mat4 ortho = glm::ortho(0.0f, (float)GameWindow::getInstance()->getScreenWidth() * 1.3f, 0.0f, (float)GameWindow::getInstance()->getScreenHeight() * 1.3f);
-                GLint uniProj = _shaderProgram.getUniformLocation("proj");
-                glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(ortho));
-
-                Entity* tile = em.getEntity((*_map)[layer][y][x].get());
-
-                if (tile)
-                    renderEntity(tile);
-
-                renderEntities(em, it, layer, x, y);
-            }
-        }
-    }*/
-
-    // Remove the camera rotation so that the particles face the camera
     renderParticles(em);
+
+    // Enable depth buffer for opaque objects
+    glDepthMask(GL_TRUE);
+    // Disable blending for opaque objects
+    glDisable(GL_BLEND);
+
 
     // Display imgui windows
     ImGui::Render();
