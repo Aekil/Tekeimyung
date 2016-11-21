@@ -728,6 +728,7 @@ sComponent* ComponentFactory<sTransformComponent>::loadFromJson(const std::strin
 
     component->scale = json.getVec3f("scale", { 1.0f, 1.0f, 1.0f });
     component->pos = json.getVec3f("pos", { 0.0f, 0.0f, 0.0f });
+    component->rotation = json.getVec3f("rotation", { 0.0f, 0.0f, 0.0f });
 
     return (component);
 }
@@ -738,8 +739,9 @@ JsonValue&    ComponentFactory<sTransformComponent>::saveToJson(const std::strin
     sTransformComponent* component = static_cast<sTransformComponent*>(_components[entityType]);
 
 
-    json.getVec3f("scale", component->scale);
-    json.getVec3f("pos", component->pos);
+    json.setVec3f("scale", component->scale);
+    json.setVec3f("pos", component->pos);
+    json.setVec3f("rotation", component->rotation);
 
     return (json);
 }
