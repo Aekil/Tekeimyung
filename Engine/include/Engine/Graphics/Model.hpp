@@ -24,11 +24,9 @@ public:
     uint32_t                    getVertexsSize() const;
     uint32_t                    getIndicesSize() const;
     const std::vector<std::shared_ptr<Mesh> > &getMeshs() const;
-    const glm::vec3&            getPos() const;
 
     void                        draw(const ShaderProgram& shaderProgram) const;
-    void                        update(const glm::vec4& color, const glm::vec3& pos, const glm::vec3& scale, const glm::mat4& orientation);
-    void                        update(const glm::vec3& pos, const glm::vec3& scale, const glm::mat4& orientation);
+    void                        update(const glm::vec4& color, const glm::mat4 transform);
 
 protected:
     void                        initVertexData();
@@ -39,6 +37,7 @@ private:
     void                        computeSceneNodeAbsoluteTransform(aiNode* node);
     const aiNodeAnim*           getNodeAnim(const aiScene* scene, const std::string& name);
     void                        updateBonesTransforms(const aiScene* scene, aiNode* node, const glm::mat4& parentTransform, float test);
+
 
 protected:
     std::vector<std::shared_ptr<Mesh> >   _meshs;
@@ -51,11 +50,8 @@ protected:
     Buffer                              _buffer;
 
     // Model position
-    glm::vec3                           _pos;
-    glm::vec3                           _scale;
     glm::vec4                           _color;
-    // Model orientation
-    glm::mat4                           _orientation;
+    glm::mat4                           _transform;
 
     // Model skeleton used for animations
     Skeleton                            _skeleton;

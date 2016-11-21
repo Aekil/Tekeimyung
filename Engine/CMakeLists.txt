@@ -6,6 +6,7 @@ project(${EXECUTABLE_NAME})
 file(GLOB_RECURSE source_files src/*)
 file(GLOB_RECURSE include_files include/*)
 file(GLOB_RECURSE imgui_source_files ${CMAKE_SOURCE_DIR}/external/imgui/*.cpp*)
+file(GLOB_RECURSE imGuizmo_source_files ${CMAKE_SOURCE_DIR}/external/imGuizmo/*.cpp*)
 #file(GLOB_RECURSE fmod_source_files ${CMAKE_SOURCE_DIR}/external/fmod/lib/*.cs*)
 #file(GLOB_RECURSE fmt_source_files ${CMAKE_SOURCE_DIR}/external/fmt/*.cc*)
 
@@ -20,6 +21,10 @@ source_group_files(${include_files})
 # Group ImGui source files into the Visual Studio tree structure
 message(STATUS "Grouping ImGui source files in the tree structure... (from ${CMAKE_CURRENT_SOURCE_DIR})")
 source_group_files(${imgui_source_files})
+
+# Group ImGuizmo source files into the Visual Studio tree structure
+message(STATUS "Grouping ImGuizmo source files in the tree structure... (from ${CMAKE_CURRENT_SOURCE_DIR})")
+source_group_files(${imGuizmo_source_files})
 
 # Group FMOD source files into the Visual Studio tree structure
 #message(STATUS "Grouping FMOD source files in the tree structure... (from ${CMAKE_CURRENT_SOURCE_DIR})")
@@ -54,6 +59,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include ${GLFW_INCLUDE_DIR} ${GL
 include_directories(${CMAKE_SOURCE_DIR}/external/glm/)
 include_directories(${CMAKE_SOURCE_DIR}/external/stb_image/)
 include_directories(${CMAKE_SOURCE_DIR}/external/imgui/)
+include_directories(${CMAKE_SOURCE_DIR}/external/imGuizmo/)
 #include_directories(${CMAKE_SOURCE_DIR}/external/fmod)
 #include_directories(${CMAKE_SOURCE_DIR}/external/fmt/)
 
@@ -64,7 +70,7 @@ IF (WIN32)
 ENDIF()
 
 # Create executable
-add_library(${EXECUTABLE_NAME} STATIC ${source_files} ${imgui_source_files} ${include_files}) #${fmt_source_files}
+add_library(${EXECUTABLE_NAME} STATIC ${source_files} ${imgui_source_files} ${include_files} ${imGuizmo_source_files})
 
 #Disable ImGui C4244 warnings on Windows
 IF (WIN32)

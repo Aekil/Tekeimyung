@@ -27,5 +27,6 @@ void    MovementSystem::update(EntityManager &em, float elapsedTime)
         position->value.y = std::min((float)_map->getHeight() - 0.01f, position->value.y);
 
         transform->pos = Map::mapToGraphPosition(position->value, position->z);
+        transform->needUpdate = true;
     });
 }

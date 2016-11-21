@@ -9,6 +9,8 @@
 
 #include <Engine/Graphics/Camera.hpp>
 
+Camera*     Camera::_instance = nullptr;
+
 Camera::Camera(): _needUpdateView(false), _needUpdateProj(true), _fov(45.0f), _aspect(1280.0f / 960.0f), _near(0.1f), _far(1000.0f), _up({0.0f, 1.0f, 0.0f})
 {
     _constants.freezeRotations = 0;
@@ -30,6 +32,11 @@ const glm::vec3&    Camera::getPos() const
 const glm::mat4&    Camera::getView() const
 {
     return (_constants.view);
+}
+
+const glm::mat4&    Camera::getProj() const
+{
+    return (_constants.proj);
 }
 
 const UniformBuffer&    Camera::getUbo() const
@@ -131,4 +138,14 @@ void    Camera::freezeRotations(bool freeze)
 
     _constants.freezeRotations = static_cast<int>(freeze);
     _ubo.update(&_constants, sizeof(_constants));
+}
+
+void    Camera::setInstance(Camera* instance)
+{
+    _instance = instance;
+}
+
+Camera* Camera::getInstance()
+{
+    return (_instance);
 }

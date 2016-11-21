@@ -12,7 +12,7 @@
 #include <Engine/Graphics/Model.hpp>
 
 
-Model::Model() : _pos({0.0f, 0.0f, 0.0f}), _scale({1.0f, 1.0f, 1.0f}), _anim(0), _color({1.0f, 1.0f, 1.0f, 1.0f}) {}
+Model::Model() : _anim(0), _color({1.0f, 1.0f, 1.0f, 1.0f}) {}
 
 Model::~Model() {}
 
@@ -110,19 +110,11 @@ const std::vector<std::shared_ptr<Mesh> > &Model::getMeshs() const
     return (_meshs);
 }
 
-const glm::vec3&    Model::getPos() const
-{
-    return (_pos);
-}
-
 void    Model::draw(const ShaderProgram& shaderProgram) const
 {
     // Model matrix
-    glm::mat4 modelTrans;
-    modelTrans = glm::translate(modelTrans, glm::vec3(_pos.x, _pos.y, _pos.z)) * _orientation;
-    modelTrans = glm::scale(modelTrans, _scale);
     GLint uniModel = shaderProgram.getUniformLocation("model");
-    glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(modelTrans));
+    glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(_transform));
 
     // Model color
     GLint colorModel = shaderProgram.getUniformLocation("modelColor");
@@ -143,22 +135,10 @@ void    Model::draw(const ShaderProgram& shaderProgram) const
     }
 }
 
-void    Model::update(const glm::vec4& color, const glm::vec3& pos, const glm::vec3& scale, const glm::mat4& orientation)
+void    Model::update(const glm::vec4& color, const glm::mat4 transform)
 {
     _color = color;
-    update(pos, scale, orientation);
-
-}
-
-void    Model::update(const glm::vec3& pos, const glm::vec3& scale, const glm::mat4& orientation)
-{
-    //uint32_t i = 0;
-    _pos = pos;
-/*    _pos.x = pos.x * 25.0f;
-    _pos.y = z * 12.5f;
-    _pos.z = pos.y * 25.0f;*/
-    _scale = scale;
-    _orientation = orientation;
+    _transform = transform;
 
    /* if (_skeleton.getBones().size() <= 0)
         return;

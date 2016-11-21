@@ -21,6 +21,7 @@ RenderingSystem::RenderingSystem(Map* map, std::unordered_map<uint32_t, sEmitter
     _camera.translate(glm::vec3(350.0f, 250.0f, 300.0f));
     _camera.setDir(glm::vec3(-30.0f));
     _camera.getUbo().bind(_shaderProgram, "camera");
+    Camera::setInstance(&_camera);
 }
 
 RenderingSystem::~RenderingSystem() {}
@@ -118,7 +119,10 @@ void    RenderingSystem::renderParticles(EntityManager& em)
             auto &&particle = emitter->particles[i];
 
             // Model matrice
-            model->update(particle.color, particle.pos, glm::vec3(particle.size, particle.size, particle.size), glm::mat4(1.0));
+            glm::mat4 transformMatrix(1.0f);
+            transformMatrix = glm::translate(transformMatrix, glm::vec3(particle.pos.x, particle.pos.y, particle.pos.z));
+            transformMatrix = glm::scale(transformMatrix, glm::vec3(particle.size, particle.size, particle.size));
+            model->update(particle.color, transformMatrix);
 
             // Draw sprite
             model->draw(_shaderProgram);
@@ -230,7 +234,18 @@ std::shared_ptr<Model>  RenderingSystem::getModel(Entity* entity)
         orientation = glm::rotate(orientation, glm::radians(direction->orientation.y), glm::vec3(0.0f, 1.0f, 0.0f));
     }
 
-    model->_model->update(model->color, transform->pos, transform->scale, orientation);
+
+    if (transform->needUpdate)
+    {
+        transform->needUpdate = false;
+        glm::mat4 transformMatrix(1.0f);
+        transformMatrix = glm::translate(transformMatrix, glm::vec3(transform->pos.x, transform->pos.y, transform->pos.z)) * orientation;
+        transformMatrix = glm::scale(transformMatrix, transform->scale);
+        transform->transform = transformMatrix;
+        model->_model->update(model->color, transformMatrix);
+    }
+    else
+        model->_model->update(model->color, transform->transform);
 
     return (model->_model);
 }

@@ -26,6 +26,7 @@ public:
 
     const glm::vec3&    getPos() const;
     const glm::mat4&    getView() const;
+    const glm::mat4&    getProj() const;
     const UniformBuffer& getUbo() const;
 
     void                setFov(float fov);
@@ -41,6 +42,9 @@ public:
 
     void                update(const ShaderProgram& shaderProgram, float elapsedTime);
     void                freezeRotations(bool freeze);
+
+    static void         setInstance(Camera* instance);
+    static Camera*      getInstance();
 
 private:
     Camera::Constants   _constants;
@@ -66,4 +70,6 @@ private:
     */
     // Up vector
     glm::vec3           _up;
+
+    static Camera*      _instance;
 };

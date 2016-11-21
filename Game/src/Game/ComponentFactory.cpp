@@ -2,10 +2,12 @@
 #include <sstream>
 #include <imgui.h>
 #include <imgui_impl_glfw_gl3.h>
+#include <ImGuizmo.h>
 #include <glm/gtc/type_ptr.hpp>
 
 #include <Engine/Window/Keyboard.hpp>
 #include <Engine/Utils/RessourceManager.hpp>
+#include <Engine/Graphics/Camera.hpp>
 
 #include <Game/ComponentFactory.hpp>
 
@@ -747,21 +749,39 @@ bool    ComponentFactory<sTransformComponent>::updateEditor(const std::string& e
     bool changed = false;
     bool scaleChanged = false;
 
+    ImGuizmo::Enable(true);
     ImGui::PushItemWidth(200);
     if (ImGui::CollapsingHeader("sTransformComponent", ImGuiTreeNodeFlags_DefaultOpen))
     {
-        float scale = component->scale.x;
+    Camera* camera = Camera::getInstance();
+    static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::ROTATE);
+    static ImGuizmo::MODE mCurrentGizmoMode(ImGuizmo::WORLD);
 
-        changed |= ImGui::SliderFloat3("scale",  glm::value_ptr(component->scale), 0.1f, 200.0f);
-        changed |= ImGui::SliderFloat3("pos",  glm::value_ptr(component->pos), 0.1f, 200.0f);
-        scaleChanged |= ImGui::SliderFloat("scale all",  &scale, 0.1f, 200.0f);
+    if (ImGui::RadioButton("Translate", mCurrentGizmoOperation == ImGuizmo::TRANSLATE))
+        mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
+    ImGui::SameLine();
+    if (ImGui::RadioButton("Rotate", mCurrentGizmoOperation == ImGuizmo::ROTATE))
+        mCurrentGizmoOperation = ImGuizmo::ROTATE;
+    ImGui::SameLine();
+    if (ImGui::RadioButton("Scale", mCurrentGizmoOperation == ImGuizmo::SCALE))
+        mCurrentGizmoOperation = ImGuizmo::SCALE;
+    ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(component->transform), glm::value_ptr(component->pos), glm::value_ptr(component->rotation), glm::value_ptr(component->scale));
+    ImGui::InputFloat3("Translate", glm::value_ptr(component->pos), 3);
+    ImGui::InputFloat3("Rotation", glm::value_ptr(component->rotation), 3);
+    ImGui::InputFloat3("Scale", glm::value_ptr(component->scale), 3);
+    ImGuizmo::RecomposeMatrixFromComponents(glm::value_ptr(component->pos), glm::value_ptr(component->rotation), glm::value_ptr(component->scale), glm::value_ptr(component->transform));
 
-        if (scaleChanged)
-        {
-            component->scale.x = scale;
-            component->scale.y = scale;
-            component->scale.z = scale;
-        }
+    if (mCurrentGizmoOperation != ImGuizmo::SCALE)
+    {
+        if (ImGui::RadioButton("Local", mCurrentGizmoMode == ImGuizmo::LOCAL))
+            mCurrentGizmoMode = ImGuizmo::LOCAL;
+        ImGui::SameLine();
+        if (ImGui::RadioButton("World", mCurrentGizmoMode == ImGuizmo::WORLD))
+            mCurrentGizmoMode = ImGuizmo::WORLD;
+    }
+
+        ImGuizmo::Manipulate(glm::value_ptr(camera->getView()), glm::value_ptr(camera->getProj()), mCurrentGizmoOperation, mCurrentGizmoMode, glm::value_ptr(component->transform), nullptr, nullptr);
+        ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(component->transform), glm::value_ptr(component->pos), glm::value_ptr(component->rotation), glm::value_ptr(component->scale));
     }
 
     return (changed || scaleChanged);

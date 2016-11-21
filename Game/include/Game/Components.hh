@@ -6,6 +6,7 @@
 #include <cstdint>
 #include <glm/vec2.hpp>
 #include <glm/vec4.hpp>
+#include <glm/mat4x4.hpp>
 #include <glm/gtx/quaternion.hpp>
 
 #include <ECS/Component.hh>
@@ -545,7 +546,7 @@ struct sWaveComponent : sComponent
 
 struct sTransformComponent : sComponent
 {
-    sTransformComponent(): scale({1.0f, 1.0f, 1.0f}) {}
+    sTransformComponent(): scale({1.0f, 1.0f, 1.0f}), transform(1.0f), needUpdate(true) {}
 
     virtual sComponent* clone()
     {
@@ -560,6 +561,7 @@ struct sTransformComponent : sComponent
         this->pos = component->pos;
         this->scale = component->scale;
         this->rotation = component->rotation;
+        this->transform = component->transform;
     }
 
     virtual void update(sComponent* component)
@@ -570,4 +572,6 @@ struct sTransformComponent : sComponent
     glm::vec3   pos;
     glm::vec3   scale;
     glm::vec3   rotation;
+    glm::mat4   transform;
+    bool        needUpdate;
 };
