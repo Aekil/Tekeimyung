@@ -169,34 +169,78 @@ bool    ComponentFactory<sRenderComponent>::updateEditor(const std::string& enti
         // Plan
         if (component->geometry == Geometry::eType::PLANE)
         {
-            changed |= ImGui::SliderFloat("width", &component->geometryInfo.plane.width, 1.0f, 100.0f);
-            changed |= ImGui::SliderFloat("height", &component->geometryInfo.plane.height, 1.0f, 100.0f);
-
-            static RessourceManager* resourceManager = RessourceManager::getInstance();
-            static std::vector<const char*>& texturesString = const_cast<std::vector<const char*>&>(resourceManager->getTexturesNames());
-            const char** texturesList = texturesString.data();
-            int selectedTexture = -1;
-            Texture* texture;
-
-            if (component->geometryInfo.plane.texturePath.size() > 0)
+            // Plan size
             {
-                texture = &resourceManager->getTexture(component->geometryInfo.plane.texturePath);
-                int selectedTexture = static_cast<int>(std::find(texturesString.cbegin(), texturesString.cend(), texture->getId()) - texturesString.begin());
+                static bool constraint = false;
+
+                bool widthChanged = ImGui::SliderFloat("width", &component->geometryInfo.plane.width, 1.0f, 100.0f);
+                bool heightChanged = ImGui::SliderFloat("height", &component->geometryInfo.plane.height, 1.0f, 100.0f);
+                ImGui::Checkbox("constraint", &constraint);
+
+                changed |= widthChanged || heightChanged;
+
+                if (constraint && changed)
+                {
+                    float size = 0;
+                    if (widthChanged)
+                        size = component->geometryInfo.plane.width;
+                    else if (heightChanged)
+                        size = component->geometryInfo.plane.height;
+
+                    component->geometryInfo.plane.width = size;
+                    component->geometryInfo.plane.height = size;
+                }
             }
 
-            if (ImGui::ListBox("texture", &selectedTexture, texturesList, (int)resourceManager->getTexturesNames().size(), 4))
+            // Plan texture
             {
-                changed = true;
-                texture = &resourceManager->getTexture(texturesString[selectedTexture]);
-                component->geometryInfo.plane.texturePath = texture->getPath();
+                static RessourceManager* resourceManager = RessourceManager::getInstance();
+                static std::vector<const char*>& texturesString = const_cast<std::vector<const char*>&>(resourceManager->getTexturesNames());
+                const char** texturesList = texturesString.data();
+                int selectedTexture = -1;
+                Texture* texture;
+
+                if (component->geometryInfo.plane.texturePath.size() > 0)
+                {
+                    texture = &resourceManager->getTexture(component->geometryInfo.plane.texturePath);
+                    int selectedTexture = static_cast<int>(std::find(texturesString.cbegin(), texturesString.cend(), texture->getId()) - texturesString.begin());
+                }
+
+                if (ImGui::ListBox("texture", &selectedTexture, texturesList, (int)resourceManager->getTexturesNames().size(), 4))
+                {
+                    changed = true;
+                    texture = &resourceManager->getTexture(texturesString[selectedTexture]);
+                    component->geometryInfo.plane.texturePath = texture->getPath();
+                }
             }
+
         }
         // BOX
         else if (component->geometry == Geometry::eType::BOX)
         {
-            changed |= ImGui::SliderFloat("width", &component->geometryInfo.box.width, 1.0f, 100.0f);
-            changed |= ImGui::SliderFloat("height", &component->geometryInfo.box.height, 1.0f, 100.0f);
-            changed |= ImGui::SliderFloat("length", &component->geometryInfo.box.length, 1.0f, 100.0f);
+            static bool constraint = false;
+
+            bool widthChanged = ImGui::SliderFloat("width", &component->geometryInfo.box.width, 1.0f, 100.0f);
+            bool heightChanged = ImGui::SliderFloat("height", &component->geometryInfo.box.height, 1.0f, 100.0f);
+            bool lengthChanged = ImGui::SliderFloat("length", &component->geometryInfo.box.length, 1.0f, 100.0f);
+            ImGui::Checkbox("constraint", &constraint);
+
+            changed |= widthChanged || heightChanged || lengthChanged;
+
+            if (constraint && changed)
+            {
+                float size = 0;
+                if (widthChanged)
+                    size = component->geometryInfo.box.width;
+                else if (heightChanged)
+                    size = component->geometryInfo.box.height;
+                else if (lengthChanged)
+                    size = component->geometryInfo.box.length;
+
+                component->geometryInfo.box.width = size;
+                component->geometryInfo.box.height = size;
+                component->geometryInfo.box.length = size;
+            }
         }
         // MESH
         else if (component->geometry == Geometry::eType::MESH)
