@@ -121,7 +121,7 @@ void    Model::draw(const ShaderProgram& shaderProgram) const
     glUniform4f(colorModel, _color.x, _color.y, _color.z,_color.w);
 
     // Bones matrices
-    _skeleton.getUbo().bind(shaderProgram, "bones");
+    //_skeleton.getUbo().bind(shaderProgram, "bones");
 
     // Bind buffer
     _buffer.bind();

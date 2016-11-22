@@ -75,7 +75,7 @@ bool Mesh::loadFromAssimp(Skeleton& skeleton, aiMesh *mesh) {
         }
     }
 
-    loadBones(skeleton, mesh);
+    //loadBones(skeleton, mesh);
 
     return (true);
 }

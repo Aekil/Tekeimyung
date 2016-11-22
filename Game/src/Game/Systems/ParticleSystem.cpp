@@ -77,7 +77,7 @@ void    ParticleSystem::updateEmitter(EntityManager &em, Entity* entity, float e
             em.destroyEntityRegister(entity);
         }
     }
-    // Create new particles each second
+    // Create new particles each rate
     else if (emitter->timer.getElapsedTime() >= emitterComp->rate)
     {
         for (uint32_t i = 0; i < emitterComp->spawnNb; i++)
