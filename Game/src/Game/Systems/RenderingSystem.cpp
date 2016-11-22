@@ -7,7 +7,6 @@
 
 #include <Engine/Utils/Debug.hpp>
 #include <Engine/Utils/Exception.hpp>
-#include <Engine/Graphics/Geometries/Cube.hpp>
 #include <Engine/Window/GameWindow.hpp>
 
 #include <Game/Systems/RenderingSystem.hpp>

@@ -86,7 +86,9 @@ sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& 
     // Pre-initialize the values so that the values are not 0 when changing the geometry type
     component->geometryInfo.plane.width = 30.0f;
     component->geometryInfo.plane.height = 30.0f;
-    component->geometryInfo.cube.size = 10.0f;
+    component->geometryInfo.box.width = 10.0f;
+    component->geometryInfo.box.height = 10.0f;
+    component->geometryInfo.box.length = 10.0f;
 
     if (geometry.size() > 0)
     {
@@ -99,9 +101,11 @@ sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& 
             component->geometryInfo.plane.height = geometry.getFloat("height", 30.0f);
             component->geometryInfo.plane.texturePath = geometry.getString("texture", "");
         }
-        else if (component->geometry == Geometry::eType::CUBE)
+        else if (component->geometry == Geometry::eType::BOX)
         {
-            component->geometryInfo.cube.size = geometry.getFloat("size", 10.0f);
+            component->geometryInfo.box.width = geometry.getFloat("width", 10.0f);
+            component->geometryInfo.box.height = geometry.getFloat("height", 10.0f);
+            component->geometryInfo.box.length = geometry.getFloat("length", 10.0f);
         }
         else
             EXCEPT(InvalidParametersException, "Unknown geometry name \"%s\" for sRenderComponent of \"%s\"", geometryName.c_str(), entityType.c_str());
@@ -130,9 +134,11 @@ JsonValue&    ComponentFactory<sRenderComponent>::saveToJson(const std::string& 
             geometry.setFloat("height", component->geometryInfo.plane.height);
             geometry.setString("texture", component->geometryInfo.plane.texturePath);
         }
-        else if (component->geometry == Geometry::eType::CUBE)
+        else if (component->geometry == Geometry::eType::BOX)
         {
-            geometry.setFloat("size", component->geometryInfo.cube.size);
+            geometry.setFloat("width", component->geometryInfo.box.width);
+            geometry.setFloat("height", component->geometryInfo.box.height);
+            geometry.setFloat("length", component->geometryInfo.box.length);
         }
     }
 
@@ -185,10 +191,12 @@ bool    ComponentFactory<sRenderComponent>::updateEditor(const std::string& enti
                 component->geometryInfo.plane.texturePath = texture->getPath();
             }
         }
-        // CUBE
-        else if (component->geometry == Geometry::eType::CUBE)
+        // BOX
+        else if (component->geometry == Geometry::eType::BOX)
         {
-            changed |= ImGui::SliderFloat("size", &component->geometryInfo.cube.size, 1.0f, 100.0f);
+            changed |= ImGui::SliderFloat("width", &component->geometryInfo.box.width, 1.0f, 100.0f);
+            changed |= ImGui::SliderFloat("height", &component->geometryInfo.box.height, 1.0f, 100.0f);
+            changed |= ImGui::SliderFloat("length", &component->geometryInfo.box.length, 1.0f, 100.0f);
         }
         // MESH
         else if (component->geometry == Geometry::eType::MESH)

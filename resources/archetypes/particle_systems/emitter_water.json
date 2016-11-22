@@ -2,8 +2,10 @@
    "components" : {
       "sRenderComponent": {
          "geometry": {
-            "name": "CUBE",
-            "size": 1.0
+            "name": "BOX",
+            "width": 1.0,
+            "height": 1.0,
+            "length": 1.0
          }
       },
       "sParticleEmitterComponent" : {

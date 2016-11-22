@@ -16,7 +16,7 @@
 #include <Engine/Graphics/Sprite.hpp>
 #include <Engine/Graphics/Model.hpp>
 #include <Engine/Graphics/Geometries/Geometry.hpp>
-#include <Engine/Graphics/Geometries/Cube.hpp>
+#include <Engine/Graphics/Geometries/Box.hpp>
 #include <Engine/Graphics/Geometries/Plane.hpp>
 #include <Engine/Utils/RessourceManager.hpp>
 #include <Engine/Utils/Exception.hpp>
@@ -65,9 +65,9 @@ struct sRenderComponent: sComponent
         {
             _model = std::make_shared<Plane>(geometryInfo.plane);
         }
-        else if (geometry == Geometry::eType::CUBE)
+        else if (geometry == Geometry::eType::BOX)
         {
-            _model = std::make_shared<Cube>(geometryInfo.cube);
+            _model = std::make_shared<Box>(geometryInfo.box);
         }
         else
             EXCEPT(InvalidParametersException, "Unknown geometry for sRenderComponent");
@@ -83,8 +83,8 @@ struct sRenderComponent: sComponent
     Geometry::eType geometry;
     struct sGeometryInfo
     {
-        Plane::sInfo plane;
-        Cube::sInfo cube;
+        Plane::sInfo    plane;
+        Box::sInfo      box;
     } geometryInfo;
 };
 
