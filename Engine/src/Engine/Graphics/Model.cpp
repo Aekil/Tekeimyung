@@ -78,6 +78,8 @@ bool    Model::loadFromFile(const std::string &file)
     _buffer.updateData(_vertexData, getVertexsSize(), _indexData, getIndicesSize());
     //_skeleton.updateUniformBuffer();
 
+    calculateSize();
+
     return (true);
 }
 
@@ -110,7 +112,7 @@ const std::vector<std::shared_ptr<Mesh> > &Model::getMeshs() const
     return (_meshs);
 }
 
-void    Model::draw(const ShaderProgram& shaderProgram) const
+void    Model::draw(const ShaderProgram& shaderProgram, GLuint primitiveType) const
 {
     // Model matrix
     GLint uniModel = shaderProgram.getUniformLocation("model");
@@ -131,8 +133,23 @@ void    Model::draw(const ShaderProgram& shaderProgram) const
         mesh->material.bind(shaderProgram);
 
         // Draw to screen
-        glDrawElements(GL_TRIANGLES, (GLuint)mesh->indices.size(), GL_UNSIGNED_INT, BUFFER_OFFSET((GLuint)mesh->idxOffset * sizeof(GLuint)));
+        glDrawElements(primitiveType, (GLuint)mesh->indices.size(), GL_UNSIGNED_INT, BUFFER_OFFSET((GLuint)mesh->idxOffset * sizeof(GLuint)));
     }
+}
+
+const glm::vec3&    Model::getSize() const
+{
+    return (_size);
+}
+
+const glm::vec3&    Model::getMin() const
+{
+    return (_min);
+}
+
+const glm::vec3&    Model::getMax() const
+{
+    return (_max);
 }
 
 void    Model::update(const glm::vec4& color, const glm::mat4 transform)
@@ -183,26 +200,10 @@ void    Model::initVertexData()
 
         for (uint32_t k = 0; k < vertexs.size(); k++, i++)
         {
-            //vertexs[k].pos = glm::vec3(pos.x, pos.y, pos.z);
-            /*if (_skeleton.getBones().size() > 0)
-            {
-                glm::mat4 trans(1.0);
-                for (uint32_t j = 0; j < BONES_PER_VERTEX; j++)
-                {
-                   Skeleton::sBone* bone = _skeleton.getBoneById(vertexs[k].bonesIds[j]);
-                    trans = trans + (bone->finalTransform * vertexs[k].bonesWeights[j]);
-                }
-                glm::vec4 pos = trans * glm::vec4(vertexs[k].pos, 1.0);
-                _vertexData[i].pos = { pos.x, pos.y, pos.z };
-            }
-            else*/
-                _vertexData[i].pos = { vertexs[k].pos.x, vertexs[k].pos.y, vertexs[k].pos.z };
-                _vertexData[i].color = { vertexs[k].color.x, vertexs[k].color.y, vertexs[k].color.z };
-                _vertexData[i].normal = { vertexs[k].normal.x, vertexs[k].normal.y, vertexs[k].normal.z };
-                _vertexData[i].uv = { vertexs[k].uv.x, vertexs[k].uv.y };
-
-            //std::memcpy(_vertexData[i].bonesIds, vertexs[k].bonesIds, sizeof(vertexs[k].bonesIds));
-            //std::memcpy(_vertexData[i].bonesWeights, vertexs[k].bonesWeights, sizeof(vertexs[k].bonesWeights));
+            _vertexData[i].pos = { vertexs[k].pos.x, vertexs[k].pos.y, vertexs[k].pos.z };
+            _vertexData[i].color = { vertexs[k].color.x, vertexs[k].color.y, vertexs[k].color.z };
+            _vertexData[i].normal = { vertexs[k].normal.x, vertexs[k].normal.y, vertexs[k].normal.z };
+            _vertexData[i].uv = { vertexs[k].uv.x, vertexs[k].uv.y };
         }
     }
 }
@@ -366,4 +367,44 @@ void    Model::updateBonesTransforms(const aiScene* scene, aiNode* node, const g
     for (uint32_t i = 0; i < node->mNumChildren; i++)   {
         updateBonesTransforms(scene, node->mChildren[i], nodeTransform, test);
     }
+}
+
+void    Model::calculateSize()
+{
+    glm::vec3 min(0.0f);
+    glm::vec3 max(0.0f);
+
+    for (auto &&mesh : getMeshs())
+    {
+        auto &&vertexs = mesh->vertexs;
+
+        for (uint32_t i = 0; i < vertexs.size(); i++)
+        {
+            auto &&pos = vertexs[i].pos;
+
+            // Min/Max x
+            if (pos.x < min.x)
+                min.x = pos.x;
+            else if (pos.x > max.x)
+                max.x = pos.x;
+
+            // Min/Max y
+            if (pos.y < min.y)
+                min.y = pos.y;
+            else if (pos.y > max.y)
+                max.y = pos.y;
+
+            // Min/Max z
+            if (pos.z < min.z)
+                min.z = pos.z;
+            else if (pos.z > max.z)
+                max.z = pos.z;
+        }
+    }
+
+    _size.x = max.x - min.x;
+    _size.y = max.y - min.y;
+    _size.z = max.z - min.z;
+    _min = min;
+    _max = max;
 }

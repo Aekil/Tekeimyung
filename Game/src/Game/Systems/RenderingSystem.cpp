@@ -65,6 +65,7 @@ void    RenderingSystem::renderEntity(Entity* entity)
     // Draw model
     model->draw(_shaderProgram);
 }
+
 /*
 void    RenderingSystem::renderEntities(EntityManager& em, std::list<uint32_t>::const_iterator& it, uint16_t layer, uint32_t x, uint32_t y)
 {
@@ -92,6 +93,32 @@ void    RenderingSystem::renderEntities(EntityManager& em, std::list<uint32_t>::
         position = entity->getComponent<sPositionComponent>();
     }
 }*/
+
+
+void    RenderingSystem::renderCollider(Entity* entity)
+{
+    auto&& model = getModel(entity);
+
+    sBoxColliderComponent* boxCollider = entity->getComponent<sBoxColliderComponent>();
+    sTransformComponent *transform = entity->getComponent<sTransformComponent>();
+    if (boxCollider)
+    {
+        if (!boxCollider->box)
+        {
+            Box::sInfo boxInfo;
+            boxInfo.width = boxCollider->size.x;
+            boxInfo.height = boxCollider->size.y;
+            boxInfo.length = boxCollider->size.z;
+            boxCollider->box = std::make_shared<Box>(boxInfo);
+        }
+
+        glm::mat4 boxTransform = transform->transform;
+        boxTransform = glm::translate(boxTransform, boxCollider->pos);
+
+        boxCollider->box->update(glm::vec4(0.87f, 1.0f, 1.0f, 0.1f), boxTransform);
+        boxCollider->box->draw(_shaderProgram);
+    }
+}
 
 void    RenderingSystem::renderParticles(EntityManager& em)
 {
@@ -155,6 +182,9 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
             else
                 _transparentEntities[entity->id] = entity;
         }
+
+        if (entity->getComponent<sBoxColliderComponent>())
+            _collierEntities[entity->id] = entity;
     });
 
 
@@ -164,8 +194,47 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
     // because we don't want a transparent object to hide an other transparent object
     glDepthMask(GL_FALSE);
 
-    for (auto it = _transparentEntities.begin(); it != _transparentEntities.end(); it++)
-        renderEntity(it->second);
+    // Display transparent entities
+    {
+        auto it = _transparentEntities.begin();
+        while (it != _transparentEntities.end())
+        {
+            // Get fresh entity pointer to handle deletion
+            Entity* entity = em.getEntity(it->first);
+            if (!entity)
+            {
+                uint32_t id = it->first;
+                ++it;
+                _transparentEntities.erase(id);
+            }
+            else
+            {
+                renderEntity(entity);
+                ++it;
+            }
+        }
+    }
+
+    // Display transparent colliders
+    {
+        auto it = _collierEntities.begin();
+        while (it != _collierEntities.end())
+        {
+            // Get fresh entity pointer to handle deletion
+            Entity* entity = em.getEntity(it->first);
+            if (!entity)
+            {
+                uint32_t id = it->first;
+                ++it;
+                _collierEntities.erase(id);
+            }
+            else
+            {
+                renderCollider(entity);
+                ++it;
+            }
+        }
+    }
 
     renderParticles(em);
 

@@ -77,7 +77,7 @@ void    EntityDebugWindow::build()
             sComponent* savedComponent = nullptr;
 
             // The component data has changed
-            if (compFactory->updateEditor(entityName, &savedComponent, component))
+            if (compFactory->updateEditor(entityName, &savedComponent, component, selectedEntity))
             {
                 ASSERT(component != nullptr, "component should be set in updateEditor");
             }

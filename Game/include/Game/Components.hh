@@ -185,32 +185,37 @@ struct sDirectionComponent : sComponent
     bool moved;
 };
 
-struct sRectHitboxComponent : sComponent
+struct sBoxColliderComponent : sComponent
 {
-    sRectHitboxComponent() = default;
-    sRectHitboxComponent(glm::vec2 min, glm::vec2 max) : min(min), max(max) {}
+    sBoxColliderComponent() = default;
 
     virtual sComponent* clone()
     {
-        sRectHitboxComponent* component = new sRectHitboxComponent();
+        sBoxColliderComponent* component = new sBoxColliderComponent();
         component->update(this);
 
         return (component);
     }
 
-    virtual void update(sRectHitboxComponent* component)
+    virtual void update(sBoxColliderComponent* component)
     {
-        this->min = component->min;
-        this->max = component->max;
+        this->pos = component->pos;
+        this->size = component->size;
     }
 
     virtual void update(sComponent* component)
     {
-        update(static_cast<sRectHitboxComponent*>(component));
+        update(static_cast<sBoxColliderComponent*>(component));
     }
 
-    glm::vec2 min;
-    glm::vec2 max;
+    // Relative position to sTransformComponent
+    glm::vec3 pos;
+
+    // Scale
+    glm::vec3 size;
+
+    // Box model
+    std::shared_ptr<Box> box;
 };
 
 struct sCircleHitboxComponent : sComponent

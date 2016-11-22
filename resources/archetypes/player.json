@@ -1,38 +1,66 @@
 {
-    "name": "PLAYER",
-    "components": {
-            "sPositionComponent": {
-                "x": 9,
-                "y": 8,
-                "z": 1
-            },
-            "sDirectionComponent": {
-                "x": 0,
-                "y": 0
-            },
-            "sRenderComponent": {
-                "model": "resources/models/characters/knight.fbx",
-                "type": "OBJECT"
-            },
-            "sTypeComponent": {
-                "type": "CHARACTER"
-            },
-            "sRectHitboxComponent": {
-                "min": {
-                    "x": 614,
-                    "y": 188.8
-                },
-                "max": {
-                    "x": 669,
-                    "y": 123.9
-                }
-            },
-            "sInputComponent": {
-                "left": "J",
-                "right": "L",
-                "up": "I",
-                "down": "K"
-            },
-            "sPlayerComponent": {}
-        }
+   "components" : {
+      "sBoxColliderComponent" : {
+         "pos" : {
+            "x" : -4.5,
+            "y" : -0.50000095367431641,
+            "z" : -2.5
+         },
+         "size" : {
+            "x" : 9,
+            "y" : 17,
+            "z" : 5
+         }
+      },
+      "sDirectionComponent" : {
+         "speed" : 1,
+         "x" : 0,
+         "y" : 0
+      },
+      "sInputComponent" : {
+         "down" : "K",
+         "left" : "J",
+         "right" : "L",
+         "up" : "I"
+      },
+      "sPlayerComponent" : {},
+      "sPositionComponent" : {
+         "x" : 9,
+         "y" : 5,
+         "z" : 1
+      },
+      "sRenderComponent" : {
+         "animated" : false,
+         "color" : {
+            "a" : 1,
+            "b" : 1,
+            "g" : 1,
+            "r" : 1
+         },
+         "geometry" : null,
+         "model" : "resources/models/characters/player.DAE",
+         "type" : "OBJECT"
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 225,
+            "y" : 12.5,
+            "z" : 125
+         },
+         "rotation" : {
+            "x" : 0.00010427361848996952,
+            "y" : 83.6292724609375,
+            "z" : 0.00010427373490529135
+         },
+         "scale" : {
+            "x" : 0.9999966025352478,
+            "y" : 0.99999994039535522,
+            "z" : 0.9999966025352478
+         }
+      },
+      "sTypeComponent" : {
+         "type" : "CHARACTER"
+      }
+   },
+   "name" : "PLAYER"
 }

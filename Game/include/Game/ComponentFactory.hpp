@@ -1,6 +1,9 @@
 #pragma once
 
+#include <ImGuizmo.h>
 #include <utility>
+
+#include <ECS/Entity.hpp>
 
 #include <Engine/Utils/Exception.hpp>
 #include <Engine/Utils/Logger.hpp>
@@ -15,7 +18,7 @@
     PROCESS(sPositionComponent),\
     PROCESS(sInputComponent),\
     PROCESS(sDirectionComponent),\
-    PROCESS(sRectHitboxComponent),\
+    PROCESS(sBoxColliderComponent),\
     PROCESS(sCircleHitboxComponent),\
     PROCESS(sGravityComponent),\
     PROCESS(sTypeComponent),\
@@ -61,7 +64,7 @@ public:
     virtual sComponent*                                             clone(const std::string& entityType) = 0;
     virtual void                                                    addComponent(const std::string& entityType, sComponent* component) = 0;
     virtual void                                                    saveComponentJson(const std::string& entityType, const JsonValue& json) = 0;
-    virtual bool                                                    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent) = 0;
+    virtual bool                                                    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity) = 0;
 
 private:
     // Store Components types
@@ -118,7 +121,7 @@ public:
 
     // Overload this function to display the component editor
     // The component_ pointer have to be set to component pointer (_components[entityType] = component)
-    virtual bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent)
+    virtual bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity)
     {
         return (false);
     }
@@ -162,7 +165,7 @@ public:
     virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
 
 private:
-    virtual bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent);
+    virtual bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity);
 };
 
 
@@ -206,15 +209,17 @@ public:
 
 
 /*
-** sRectHitboxComponent
+** sBoxColliderComponent
 */
 
 template <>
-class ComponentFactory<sRectHitboxComponent>: public BaseComponentFactory<sRectHitboxComponent>
+class ComponentFactory<sBoxColliderComponent>: public BaseComponentFactory<sBoxColliderComponent>
 {
 public:
     virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
     virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
+
+    virtual bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity);
 };
 
 
@@ -292,7 +297,8 @@ class ComponentFactory<sParticleEmitterComponent>: public BaseComponentFactory<s
 public:
     virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
     virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
-    virtual bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent);
+
+    virtual bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity);
 };
 
 
@@ -307,7 +313,7 @@ public:
     virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
     virtual JsonValue&  saveToJson(const std::string& entityType, const std::string& componentType);
 
-    virtual bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent);
+    virtual bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity);
 };
 
 
@@ -322,7 +328,7 @@ public:
     virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
     virtual JsonValue&  saveToJson(const std::string& entityType, const std::string& componentType);
 
-    virtual bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent);
+    virtual bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity);
 };
 
 
@@ -361,5 +367,9 @@ public:
     virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
     virtual JsonValue&  saveToJson(const std::string& entityType, const std::string& componentType);
 
-    virtual bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent);
+    virtual bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity);
+
+    // Update transforms with gizmos
+    // Used for multiple components: sTransformComponent, sBoxColliderComponent
+    static bool     updateTransforms(glm::vec3& pos, glm::vec3& scale, glm::vec3& rotation, glm::mat4& transform, ImGuizmo::MODE mode);
 };

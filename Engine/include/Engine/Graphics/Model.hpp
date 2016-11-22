@@ -24,20 +24,24 @@ public:
     uint32_t                    getVertexsSize() const;
     uint32_t                    getIndicesSize() const;
     const std::vector<std::shared_ptr<Mesh> > &getMeshs() const;
+    const glm::vec3&            getSize() const;
+    const glm::vec3&            getMin() const;
+    const glm::vec3&            getMax() const;
 
-    void                        draw(const ShaderProgram& shaderProgram) const;
+    void                        draw(const ShaderProgram& shaderProgram, GLuint primitiveType = GL_TRIANGLES) const;
     void                        update(const glm::vec4& color, const glm::mat4 transform);
 
 protected:
     void                        initVertexData();
     void                        initIndexData();
 
+    void                        calculateSize();
+
 private:
     void                        transformVertices(aiScene* scene, aiNode* node);
     void                        computeSceneNodeAbsoluteTransform(aiNode* node);
     const aiNodeAnim*           getNodeAnim(const aiScene* scene, const std::string& name);
     void                        updateBonesTransforms(const aiScene* scene, aiNode* node, const glm::mat4& parentTransform, float test);
-
 
 protected:
     std::vector<std::shared_ptr<Mesh> >   _meshs;
@@ -59,4 +63,8 @@ protected:
     aiScene*                            _scene;
     Assimp::Importer                    _importer;
     float                               _anim;
+
+    glm::vec3                           _size;
+    glm::vec3                           _min;
+    glm::vec3                           _max;
 };

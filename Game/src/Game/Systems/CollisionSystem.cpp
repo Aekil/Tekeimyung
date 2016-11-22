@@ -21,7 +21,7 @@ void    CollisionSystem::update(EntityManager &em, float elapsedTime)
 
     this->forEachEntity(em, [&](Entity* entity)
     {
-        if (entity->getComponent<sRectHitboxComponent>())
+        if (entity->getComponent<sBoxColliderComponent>())
         {
             this->moveHitbox(entity, elapsedTime);
             sDirectionComponent* direction = entity->getComponent<sDirectionComponent>();
@@ -119,7 +119,7 @@ void    CollisionSystem::moveHitbox(Entity *entity, float elapsedTime) // simula
 
 bool    CollisionSystem::isColliding(Entity *firstEntity, Entity *secondEntity)
 {
-    if (firstEntity->getComponent<sRectHitboxComponent>() != nullptr && secondEntity->getComponent<sRectHitboxComponent>() != nullptr)
+/*    if (firstEntity->getComponent<sRectHitboxComponent>() != nullptr && secondEntity->getComponent<sRectHitboxComponent>() != nullptr)
     {
         sRectHitboxComponent* rectHitboxFirst = firstEntity->getComponent<sRectHitboxComponent>();
         sRectHitboxComponent* rectHitboxSecond = secondEntity->getComponent<sRectHitboxComponent>();
@@ -134,7 +134,7 @@ bool    CollisionSystem::isColliding(Entity *firstEntity, Entity *secondEntity)
 
         return (Collisions::circleHitboxCheck(&circleHitboxFirst->center, circleHitboxFirst->radius,
             &circleHitboxSecond->center, circleHitboxSecond->radius));
-    }
+    }*/
     return (false);
 }
 

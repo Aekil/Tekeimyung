@@ -146,7 +146,7 @@ JsonValue&    ComponentFactory<sRenderComponent>::saveToJson(const std::string& 
     return (json);
 }
 
-bool    ComponentFactory<sRenderComponent>::updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent)
+bool    ComponentFactory<sRenderComponent>::updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity)
 {
     sRenderComponent* component = static_cast<sRenderComponent*>(entityComponent ? entityComponent : _components[entityType]);
     *savedComponent = component;
@@ -362,30 +362,52 @@ JsonValue&    ComponentFactory<sDirectionComponent>::saveToJson(const std::strin
 
 
 /*
-** sRectHitboxComponent
+** sBoxColliderComponent
 */
 
-sComponent* ComponentFactory<sRectHitboxComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
+sComponent* ComponentFactory<sBoxColliderComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
 {
-    sRectHitboxComponent* component = new sRectHitboxComponent();
+    sBoxColliderComponent* component = new sBoxColliderComponent();
 
-    component->min = json.getVec2f("min", { 0.0f, 0.0f });
-    component->max = json.getVec2f("max", { 0.0f, 0.0f });
+    component->pos = json.getVec3f("pos", { 0.0f, 0.0f, 0.0f });
+    component->size = json.getVec3f("size", { 10.0f, 10.0f, 10.0f });
 
     return (component);
 }
 
-JsonValue&    ComponentFactory<sRectHitboxComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
+JsonValue&    ComponentFactory<sBoxColliderComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
 {
     JsonValue& json = _componentsJson[entityType];
-    sRectHitboxComponent* component = static_cast<sRectHitboxComponent*>(_components[entityType]);
+    sBoxColliderComponent* component = static_cast<sBoxColliderComponent*>(_components[entityType]);
 
-    json.setVec2f("min", component->min);
-    json.setVec2f("max", component->max);
+    json.setVec3f("pos", component->pos);
+    json.setVec3f("size", component->size);
 
     return (json);
 }
 
+bool    ComponentFactory<sBoxColliderComponent>::updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity)
+{
+    sBoxColliderComponent* component = static_cast<sBoxColliderComponent*>(entityComponent ? entityComponent : _components[entityType]);
+    *savedComponent = component;
+    bool changed = false;
+
+    ImGui::PushItemWidth(200);
+    if (ImGui::CollapsingHeader("sBoxColliderComponent", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        if (ImGui::Button("Reset"))
+        {
+            sRenderComponent* render = entity->getComponent<sRenderComponent>();
+            component->pos = glm::vec3(render->_model->getMin().x - 0.5f, render->_model->getMin().y - 0.5f, render->_model->getMin().z - 0.5f);
+            component->size.x = render->_model->getSize().x + 1.0f;
+            component->size.y = render->_model->getSize().y + 1.0f;
+            component->size.z = render->_model->getSize().z + 1.0f;
+            component->box = nullptr;
+        }
+    }
+
+    return (changed);
+}
 
 /*
 ** sCircleHitboxComponent
@@ -601,7 +623,7 @@ JsonValue&    ComponentFactory<sParticleEmitterComponent>::saveToJson(const std:
     return (json);
 }
 
-bool    ComponentFactory<sParticleEmitterComponent>::updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent)
+bool    ComponentFactory<sParticleEmitterComponent>::updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity)
 {
     sParticleEmitterComponent* component = static_cast<sParticleEmitterComponent*>(entityComponent ? entityComponent : _components[entityType]);
     *savedComponent = component;
@@ -659,7 +681,7 @@ JsonValue&  ComponentFactory<sTowerAIComponent>::saveToJson(const std::string& e
     return (json);
 }
 
-bool    ComponentFactory<sTowerAIComponent>::updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent)
+bool    ComponentFactory<sTowerAIComponent>::updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity)
 {
     sTowerAIComponent*  component;
     bool    changed;
@@ -704,7 +726,7 @@ JsonValue&  ComponentFactory<sProjectileComponent>::saveToJson(const std::string
     return (json);
 }
 
-bool        ComponentFactory<sProjectileComponent>::updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent)
+bool        ComponentFactory<sProjectileComponent>::updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity)
 {
     sProjectileComponent*   component;
     bool                    changed;
@@ -798,20 +820,30 @@ JsonValue&    ComponentFactory<sTransformComponent>::saveToJson(const std::strin
     return (json);
 }
 
-bool    ComponentFactory<sTransformComponent>::updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent)
+bool    ComponentFactory<sTransformComponent>::updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity)
 {
-    auto &&keyboard = GameWindow::getInstance()->getKeyboard();
     sTransformComponent* component = static_cast<sTransformComponent*>(entityComponent ? entityComponent : _components[entityType]);
     *savedComponent = component;
     bool changed = false;
-    bool scaleChanged = false;
 
     ImGui::PushItemWidth(200);
     if (ImGui::CollapsingHeader("sTransformComponent", ImGuiTreeNodeFlags_DefaultOpen))
     {
+        ComponentFactory<sTransformComponent>::updateTransforms(component->pos,
+                                                                component->scale,
+                                                                component->rotation,
+                                                                component->transform,
+                                                                ImGuizmo::LOCAL);
+    }
+
+    return (false);
+}
+
+bool    ComponentFactory<sTransformComponent>::updateTransforms(glm::vec3& pos, glm::vec3& scale, glm::vec3& rotation, glm::mat4& transform, ImGuizmo::MODE mode)
+{
+    auto &&keyboard = GameWindow::getInstance()->getKeyboard();
     Camera* camera = Camera::getInstance();
     static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::TRANSLATE);
-    static ImGuizmo::MODE mCurrentGizmoMode(ImGuizmo::WORLD);
 
     if (ImGui::RadioButton("Translate", mCurrentGizmoOperation == ImGuizmo::TRANSLATE) || keyboard.isPressed(Keyboard::eKey::T))
         mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
@@ -821,24 +853,14 @@ bool    ComponentFactory<sTransformComponent>::updateEditor(const std::string& e
     ImGui::SameLine();
     if (ImGui::RadioButton("Scale", mCurrentGizmoOperation == ImGuizmo::SCALE) || keyboard.isPressed(Keyboard::eKey::E))
         mCurrentGizmoOperation = ImGuizmo::SCALE;
-    ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(component->transform), glm::value_ptr(component->pos), glm::value_ptr(component->rotation), glm::value_ptr(component->scale));
-    ImGui::InputFloat3("Translate", glm::value_ptr(component->pos), 3);
-    ImGui::InputFloat3("Rotation", glm::value_ptr(component->rotation), 3);
-    ImGui::InputFloat3("Scale", glm::value_ptr(component->scale), 3);
-    ImGuizmo::RecomposeMatrixFromComponents(glm::value_ptr(component->pos), glm::value_ptr(component->rotation), glm::value_ptr(component->scale), glm::value_ptr(component->transform));
+    ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transform), glm::value_ptr(pos), glm::value_ptr(rotation), glm::value_ptr(scale));
+    ImGui::InputFloat3("Translate", glm::value_ptr(pos), 3);
+    ImGui::InputFloat3("Rotation", glm::value_ptr(rotation), 3);
+    ImGui::InputFloat3("Scale", glm::value_ptr(scale), 3);
+    ImGuizmo::RecomposeMatrixFromComponents(glm::value_ptr(pos), glm::value_ptr(rotation), glm::value_ptr(scale), glm::value_ptr(transform));
 
-    if (mCurrentGizmoOperation != ImGuizmo::SCALE)
-    {
-        if (ImGui::RadioButton("Local", mCurrentGizmoMode == ImGuizmo::LOCAL))
-            mCurrentGizmoMode = ImGuizmo::LOCAL;
-        ImGui::SameLine();
-        if (ImGui::RadioButton("World", mCurrentGizmoMode == ImGuizmo::WORLD))
-            mCurrentGizmoMode = ImGuizmo::WORLD;
-    }
+    ImGuizmo::Manipulate(glm::value_ptr(camera->getView()), glm::value_ptr(camera->getProj()), mCurrentGizmoOperation, mode, glm::value_ptr(transform), nullptr, nullptr);
+    ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transform), glm::value_ptr(pos), glm::value_ptr(rotation), glm::value_ptr(scale));
 
-        ImGuizmo::Manipulate(glm::value_ptr(camera->getView()), glm::value_ptr(camera->getProj()), mCurrentGizmoOperation, mCurrentGizmoMode, glm::value_ptr(component->transform), nullptr, nullptr);
-        ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(component->transform), glm::value_ptr(component->pos), glm::value_ptr(component->rotation), glm::value_ptr(component->scale));
-    }
-
-    return (changed || scaleChanged);
+    return (false);
 }

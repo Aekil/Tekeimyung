@@ -39,7 +39,7 @@ Plane::Plane(Plane::sInfo& info): Geometry(Geometry::eType::PLANE)
     initVertexData();
     initIndexData();
     _buffer.updateData(_vertexData, getVertexsSize(), _indexData, getIndicesSize());
-
+    calculateSize();
 
     // Plane texture
     if (info.texturePath.length() > 0)
