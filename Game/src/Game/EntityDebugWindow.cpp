@@ -28,6 +28,8 @@ void    EntityDebugWindow::build()
 
     // Entities list
     static Entity* selectedEntity = nullptr;
+    // Store entity id to handle entity deletion
+    static uint32_t selectedEntityId = 0;
     ImGui::BeginChild("Entities list", ImVec2(150, 0), true);
     for (auto it: _em->getEntities())
     {
@@ -38,14 +40,24 @@ void    EntityDebugWindow::build()
         ASSERT(nameComp != nullptr, "The entity should have a name");
         name << "[" << entity->id << "] " << nameComp->value;
         if (ImGui::Selectable(name.str().c_str(), selectedEntity && selectedEntity->id == entity->id))
+        {
             selectedEntity = entity;
+            selectedEntityId = entity->id;
+        }
     }
     ImGui::EndChild();
 
+    // No entity selected
     if (!selectedEntity)
     {
         ImGui::End();
         return;
+    }
+    // The entity has been deleted
+    else if (_em->getEntity(selectedEntityId) == nullptr)
+    {
+        selectedEntity = _em->getEntities().begin()->second;
+        selectedEntityId = selectedEntity->id;
     }
 
     // Entity edition
