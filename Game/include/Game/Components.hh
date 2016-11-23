@@ -8,6 +8,7 @@
 #include <glm/vec4.hpp>
 #include <glm/mat4x4.hpp>
 #include <glm/gtx/quaternion.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include <ECS/Component.hh>
 
@@ -572,6 +573,25 @@ struct sTransformComponent : sComponent
     virtual void update(sComponent* component)
     {
         update(static_cast<sTransformComponent*>(component));
+    }
+
+    const glm::mat4& getTransform()
+    {
+        if (needUpdate)
+        {
+            glm::mat4 orientation;
+            orientation = glm::rotate(orientation, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+            orientation = glm::rotate(orientation, glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+            orientation = glm::rotate(orientation, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+
+            needUpdate = false;
+            glm::mat4 transformMatrix(1.0f);
+            transformMatrix = glm::translate(transformMatrix, glm::vec3(pos.x, pos.y, pos.z)) * orientation;
+            transformMatrix = glm::scale(transformMatrix, scale);
+            transform = transformMatrix;
+        }
+
+        return (transform);
     }
 
     glm::vec3   pos;

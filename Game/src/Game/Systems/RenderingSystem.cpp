@@ -264,7 +264,6 @@ std::shared_ptr<Model>  RenderingSystem::getModel(Entity* entity)
     sRenderComponent *model = entity->getComponent<sRenderComponent>();
     sPositionComponent *position = entity->getComponent<sPositionComponent>();
     sTransformComponent *transform = entity->getComponent<sTransformComponent>();
-    sDirectionComponent *direction = entity->getComponent<sDirectionComponent>();
 
     // The entity does not exist in the render system
     if (!model->_model)
@@ -274,19 +273,7 @@ std::shared_ptr<Model>  RenderingSystem::getModel(Entity* entity)
 
     if (transform->needUpdate)
     {
-        glm::mat4 orientation;
-        if (direction) {
-            orientation = glm::rotate(orientation, glm::radians(transform->rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
-            orientation = glm::rotate(orientation, glm::radians(transform->rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-            orientation = glm::rotate(orientation, glm::radians(transform->rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
-        }
-
-        transform->needUpdate = false;
-        glm::mat4 transformMatrix(1.0f);
-        transformMatrix = glm::translate(transformMatrix, glm::vec3(transform->pos.x, transform->pos.y, transform->pos.z)) * orientation;
-        transformMatrix = glm::scale(transformMatrix, transform->scale);
-        transform->transform = transformMatrix;
-        model->_model->update(model->color, transformMatrix);
+        model->_model->update(model->color, transform->getTransform());
     }
     else
         model->_model->update(model->color, transform->transform);
