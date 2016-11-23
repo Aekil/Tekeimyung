@@ -449,14 +449,17 @@ bool    ComponentFactory<sSphereColliderComponent>::updateEditor(const std::stri
         if (ImGui::Button("Reset"))
         {
             sRenderComponent* render = entity->getComponent<sRenderComponent>();
-            component->pos.y = render->_model->getSize().y / 2.0f + 0.5f;
+            //component->pos.y = render->_model->getSize().y / 2.0f + 0.5f;
 
             float modelMaxSize = render->_model->getSize().x;
             if (render->_model->getSize().y > modelMaxSize)
                 modelMaxSize = render->_model->getSize().y;
             if (render->_model->getSize().z > modelMaxSize)
                 modelMaxSize = render->_model->getSize().z;
-            component->radius = (modelMaxSize + 1.0f) / 2.0f;
+            component->radius = modelMaxSize / 2.0f + 1.0f;
+            component->pos = glm::vec3(render->_model->getMin().x + (render->_model->getSize().x / 2.0f),
+                                        render->_model->getMin().y + (render->_model->getSize().y / 2.0f),
+                                        render->_model->getMin().z + (render->_model->getSize().z / 2.0f));
             component->sphere = nullptr;
         }
 

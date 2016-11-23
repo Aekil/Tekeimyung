@@ -81,7 +81,11 @@ ENDIF()
 IF (WIN32)
 set(ASSIMP_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/external/Assimp/include)
   include_directories(${ASSIMP_INCLUDE_DIR})
-  find_library(assimp assimp-vc140-mt PATHS ${CMAKE_SOURCE_DIR}/external/Assimp/lib/x64)
+  IF (CMAKE_SIZEOF_VOID_P EQUAL 8)
+    find_library(assimp assimp PATHS ${CMAKE_SOURCE_DIR}/external/Assimp/lib/x64)
+  ELSE()
+    find_library(assimp assimp PATHS ${CMAKE_SOURCE_DIR}/external/Assimp/lib/x86)
+  ENDIF()
 ENDIF()
 
 # Link libraries with executable
