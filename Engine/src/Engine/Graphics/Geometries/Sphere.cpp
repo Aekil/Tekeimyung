@@ -11,37 +11,40 @@ Sphere::Sphere(Sphere::sInfo& info): Geometry(Geometry::eType::SPHERE)
 
 
 
-    float const R = 1.0f / (float)(rings - 1.0f);
-    float const S = 1.0f / (float)(sectors - 1.0f);
-    int r, s;
-    int i = 0;
+    float const R = 1.0f / (float)(rings - 1);
+    float const S = 1.0f / (float)(sectors - 1);
 
-    mesh->vertexs.resize(rings * sectors);
-    for(r = 0; r < (int)rings; r++) for(s = 0; s < (int)sectors; s++) {
+    for(uint32_t r = 0; r < rings; ++r)
+    {
+        for(uint32_t s = 0; s < sectors; ++s)
+        {
             float const y = sin(-(glm::pi<float>() / 2.0f) + glm::pi<float>() * r * R);
             float const x = cos(2.0f * glm::pi<float>() * s * S) * sin(glm::pi<float>() * r * R);
             float const z = sin(2.0f * glm::pi<float>() * s * S) * sin(glm::pi<float>() * r * R);
 
-            auto &&vertex = mesh->vertexs[i];
+            Vertex vertex;
 
             vertex.uv = glm::vec2(s * S, r * R);
-            vertex.pos = glm::vec3(x * radius, y * radius, z * radius);
+            vertex.pos = glm::vec3(x, y, z) * radius;
             vertex.normal = glm::vec3(x, y, z);
             vertex.color = glm::vec3(0.0f, 0.0f, 0.0f);
 
-            i++;
+            mesh->vertexs.push_back(vertex);
+
+
+
+            int curRow = r * sectors;
+            int nextRow = (r + 1) * sectors;
+
+            mesh->indices.push_back(curRow + s);
+            mesh->indices.push_back(nextRow + s);
+            mesh->indices.push_back(nextRow + (s + 1));
+
+            mesh->indices.push_back(curRow + s);
+            mesh->indices.push_back(nextRow + (s + 1));
+            mesh->indices.push_back(curRow + (s + 1));
+        }
     }
-
-    mesh->indices.resize(rings * sectors * 4);
-    auto j = mesh->indices.begin();
-    for(r = 0; r < (int)rings; r++) for(s = 0; s < (int)sectors; s++) {
-            *j++ = static_cast<uint32_t>(r * sectors + s);
-            *j++ = static_cast<uint32_t>(r * sectors + (s + 1));
-            *j++ = static_cast<uint32_t>((r + 1) * sectors + (s + 1));
-            *j++ = static_cast<uint32_t>((r + 1) * sectors + s);
-    }
-
-
 
 
     // Sphere material
