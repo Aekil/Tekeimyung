@@ -1,6 +1,9 @@
 #include <cmath>
 #include <algorithm>
 
+#include <Engine/Utils/Logger.hpp>
+#include <Engine/Utils/Timer.hpp>
+#include <Engine/Utils/MonitoringDebugWindow.hpp>
 #include <Engine/Window/GameWindow.hpp>
 #include <Engine/Physics/Collisions.hpp>
 
@@ -17,6 +20,7 @@ CollisionSystem::CollisionSystem(Map* map) : _map(map)
 
 void    CollisionSystem::update(EntityManager &em, float elapsedTime)
 {
+    Timer   timer;
     CollisionMap* collisionMap = _map->getCollisionMap();
 
     this->forEachEntity(em, [&](Entity* entity)
@@ -77,6 +81,8 @@ void    CollisionSystem::update(EntityManager &em, float elapsedTime)
             }
         }
     });
+    //mon.registerMsg(FMT_MSG("Collision system : %f secondes", timer.getElapsedTime()));
+    LOG_INFO("Collision system : %f secondes", timer.getElapsedTime());
 }
 
 void    CollisionSystem::moveHitbox(Entity *entity, float elapsedTime) // simulate movement

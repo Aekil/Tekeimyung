@@ -1,3 +1,5 @@
+#include <Engine/Utils/Logger.hpp>
+#include <Engine/Utils/Timer.hpp>
 #include <Engine/Window/GameWindow.hpp>
 
 #include <Game/Components.hh>
@@ -14,12 +16,14 @@ InputSystem::~InputSystem() {}
 
 void    InputSystem::update(EntityManager &em, float elapsedTime)
 {
+    Timer timer;
     //auto &&keyboard = GameWindow::getInstance()->getKeyboard();
     //auto &&mouse = GameWindow::getInstance()->getMouse();
 
     forEachEntity(em, [&](Entity *entity) {
         movementKeys(entity);
     });
+    LOG_INFO("Input system : %f secondes", timer.getElapsedTime());
 }
 
 void    InputSystem::movementKeys(Entity *entity)

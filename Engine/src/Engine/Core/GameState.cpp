@@ -30,10 +30,10 @@ bool    GameState::update(float elapsedTime)
         ImGui_ImplGlfwGL3_NewFrame();
         {
             // Update GameState debug windows
-            for (auto&& debugWinwdow: _debugWindows)
+            for (auto&& debugWindow: _debugWindows)
             {
-                if (debugWinwdow->isDisplayed())
-                    debugWinwdow->build();
+                if (debugWindow->isDisplayed())
+                    debugWindow->build();
             }
 
             // Update GameState systems

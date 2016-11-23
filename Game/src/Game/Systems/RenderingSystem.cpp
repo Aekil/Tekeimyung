@@ -5,6 +5,8 @@
 #include <imgui.h>
 #include <imgui_impl_glfw_gl3.h>
 
+#include <Engine/Utils/Logger.hpp>
+#include <Engine/Utils/Timer.hpp>
 #include <Engine/Utils/Debug.hpp>
 #include <Engine/Utils/Exception.hpp>
 #include <Engine/Window/GameWindow.hpp>
@@ -139,6 +141,7 @@ void    RenderingSystem::renderParticles(EntityManager& em)
 
 void    RenderingSystem::update(EntityManager& em, float elapsedTime)
 {
+    Timer timer;
     // Clear color buffer
     glClear (GL_COLOR_BUFFER_BIT);
 
@@ -184,6 +187,7 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
 
     // Display screen
     GameWindow::getInstance()->display();
+    LOG_INFO("Render system : %f secondes", timer.getElapsedTime());
 }
 
 Sprite*   RenderingSystem::getSprite(Entity* entity)
