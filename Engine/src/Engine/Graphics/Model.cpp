@@ -1,4 +1,3 @@
-#include <iostream>
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
@@ -54,7 +53,6 @@ bool    Model::loadFromFile(const std::string &file)
         transformVertices(_scene, scene->mRootNode);
     //}
 
-    std::cout << scene->mNumMeshes << " meshes for " << file << std::endl;
     for (uint32_t i = 0; i < scene->mNumMeshes; i++)
     {
         std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
@@ -249,15 +247,10 @@ void    Model::transformVertices(aiScene* scene, aiNode* node)
 
 void    Model::computeSceneNodeAbsoluteTransform(aiNode* node)
 {
-        std::cout << "NOODE: " << node->mName.data << std::endl;
     if (node->mParent)    {
         node->mTransformation = node->mParent->mTransformation * node->mTransformation;
     }
-std::cout << "CHILDSSSS: [" << node->mNumChildren << "]" << "  " ;
-    for (uint32_t i = 0; i < node->mNumChildren; i++) {
-        std::cout << node->mChildren[i]->mName.data << "  ";
-    }
-    std::cout << std::endl;
+
     for (uint32_t i = 0; i < node->mNumChildren; i++)   {
         computeSceneNodeAbsoluteTransform(node->mChildren[i]);
     }
