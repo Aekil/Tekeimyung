@@ -1,17 +1,5 @@
 {
    "components" : {
-      "sBoxColliderComponent" : {
-         "pos" : {
-            "x" : -4.5,
-            "y" : -0.50000095367431641,
-            "z" : -2.5
-         },
-         "size" : {
-            "x" : 9,
-            "y" : 17,
-            "z" : 5
-         }
-      },
       "sDirectionComponent" : {
          "speed" : 1,
          "x" : 0,
@@ -41,6 +29,14 @@
          "model" : "resources/models/characters/player.DAE",
          "type" : "OBJECT"
       },
+      "sSphereColliderComponent" : {
+         "pos" : {
+            "x" : 0,
+            "y" : 8.5,
+            "z" : 0
+         },
+         "radius" : 8.5
+      },
       "sTransformComponent" : {
          "pos" : {
             "x" : 225,
@@ -48,14 +44,14 @@
             "z" : 125
          },
          "rotation" : {
-            "x" : 0.00010427361848996952,
+            "x" : 0.00010427342931507155,
             "y" : 83.6292724609375,
-            "z" : 0.00010427373490529135
+            "z" : 0.0001042727890308015
          },
          "scale" : {
-            "x" : 0.9999966025352478,
+            "x" : 0.99999517202377319,
             "y" : 0.99999994039535522,
-            "z" : 0.9999966025352478
+            "z" : 0.99999517202377319
          }
       },
       "sTypeComponent" : {

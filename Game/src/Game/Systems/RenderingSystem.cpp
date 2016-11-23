@@ -97,9 +97,8 @@ void    RenderingSystem::renderEntities(EntityManager& em, std::list<uint32_t>::
 
 void    RenderingSystem::renderCollider(Entity* entity)
 {
-    auto&& model = getModel(entity);
-
     sBoxColliderComponent* boxCollider = entity->getComponent<sBoxColliderComponent>();
+    sSphereColliderComponent* sphereCollider = entity->getComponent<sSphereColliderComponent>();
     sTransformComponent *transform = entity->getComponent<sTransformComponent>();
     if (boxCollider)
     {
@@ -117,6 +116,21 @@ void    RenderingSystem::renderCollider(Entity* entity)
 
         boxCollider->box->update(glm::vec4(0.87f, 1.0f, 1.0f, 0.1f), boxTransform);
         boxCollider->box->draw(_shaderProgram);
+    }
+    if (sphereCollider)
+    {
+        if (!sphereCollider->sphere)
+        {
+            Sphere::sInfo sphereInfo;
+            sphereInfo.radius = sphereCollider->radius;
+            sphereCollider->sphere = std::make_shared<Sphere>(sphereInfo);
+        }
+
+        glm::mat4 sphereTransform = transform->transform;
+        sphereTransform = glm::translate(sphereTransform, sphereCollider->pos);
+
+        sphereCollider->sphere->update(glm::vec4(0.87f, 1.0f, 1.0f, 0.1f), sphereTransform);
+        sphereCollider->sphere->draw(_shaderProgram);
     }
 }
 
@@ -183,10 +197,9 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
                 _transparentEntities[entity->id] = entity;
         }
 
-        if (entity->getComponent<sBoxColliderComponent>())
+        if (entity->getComponent<sBoxColliderComponent>() || entity->getComponent<sSphereColliderComponent>())
             _collierEntities[entity->id] = entity;
     });
-
 
     // Enable blend to blend transparent ojects and particles
     glEnable(GL_BLEND);

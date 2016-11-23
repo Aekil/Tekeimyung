@@ -19,6 +19,7 @@
 #include <Engine/Graphics/Geometries/Geometry.hpp>
 #include <Engine/Graphics/Geometries/Box.hpp>
 #include <Engine/Graphics/Geometries/Plane.hpp>
+#include <Engine/Graphics/Geometries/Sphere.hpp>
 #include <Engine/Utils/RessourceManager.hpp>
 #include <Engine/Utils/Exception.hpp>
 
@@ -219,32 +220,32 @@ struct sBoxColliderComponent : sComponent
     std::shared_ptr<Box> box;
 };
 
-struct sCircleHitboxComponent : sComponent
+struct sSphereColliderComponent : sComponent
 {
-    sCircleHitboxComponent() = default;
-    sCircleHitboxComponent(glm::vec2 center, float radius) : center(center), radius(radius) {}
+    sSphereColliderComponent() = default;
 
     virtual sComponent* clone()
     {
-        sCircleHitboxComponent* component = new sCircleHitboxComponent();
+        sSphereColliderComponent* component = new sSphereColliderComponent();
         component->update(this);
 
         return (component);
     }
 
-    virtual void update(sCircleHitboxComponent* component)
+    virtual void update(sSphereColliderComponent* component)
     {
-        this->center = component->center;
+        this->pos = component->pos;
         this->radius = component->radius;
     }
 
     virtual void update(sComponent* component)
     {
-        update(static_cast<sCircleHitboxComponent*>(component));
+        update(static_cast<sSphereColliderComponent*>(component));
     }
 
-    glm::vec2 center;
+    glm::vec3 pos;
     float radius;
+    std::shared_ptr<Sphere> sphere;
 };
 
 struct sGravityComponent : sComponent

@@ -413,28 +413,58 @@ bool    ComponentFactory<sBoxColliderComponent>::updateEditor(const std::string&
 }
 
 /*
-** sCircleHitboxComponent
+** sSphereColliderComponent
 */
 
-sComponent* ComponentFactory<sCircleHitboxComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
+sComponent* ComponentFactory<sSphereColliderComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
 {
-    sCircleHitboxComponent* component = new sCircleHitboxComponent();
+    sSphereColliderComponent* component = new sSphereColliderComponent();
 
-    component->center = json.getVec2f("center", { 0.0f, 0.0f });
-    component->radius = json.getFloat("radius", 0.0f);
+    component->pos = json.getVec3f("pos", { 0.0f, 0.0f, 0.0f });
+    component->radius = json.getFloat("radius", 6.0f);
 
     return (component);
 }
 
-JsonValue&    ComponentFactory<sCircleHitboxComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
+JsonValue&    ComponentFactory<sSphereColliderComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
 {
     JsonValue& json = _componentsJson[entityType];
-    sCircleHitboxComponent* component = static_cast<sCircleHitboxComponent*>(_components[entityType]);
+    sSphereColliderComponent* component = static_cast<sSphereColliderComponent*>(_components[entityType]);
 
-    json.setVec2f("center", component->center);
+    json.setVec3f("pos", component->pos);
     json.setFloat("radius", component->radius);
 
     return (json);
+}
+
+bool    ComponentFactory<sSphereColliderComponent>::updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity)
+{
+    sSphereColliderComponent* component = static_cast<sSphereColliderComponent*>(entityComponent ? entityComponent : _components[entityType]);
+    *savedComponent = component;
+    bool changed = false;
+
+    ImGui::PushItemWidth(200);
+    if (ImGui::CollapsingHeader("sSphereColliderComponent", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        if (ImGui::Button("Reset"))
+        {
+            sRenderComponent* render = entity->getComponent<sRenderComponent>();
+            component->pos.y = render->_model->getSize().y / 2.0f + 0.5f;
+
+            float modelMaxSize = render->_model->getSize().x;
+            if (render->_model->getSize().y > modelMaxSize)
+                modelMaxSize = render->_model->getSize().y;
+            if (render->_model->getSize().z > modelMaxSize)
+                modelMaxSize = render->_model->getSize().z;
+            component->radius = (modelMaxSize + 1.0f) / 2.0f;
+            component->sphere = nullptr;
+        }
+
+        ImGui::InputFloat3("position", glm::value_ptr(component->pos), 3);
+        ImGui::InputFloat("radius", &component->radius, 3.0f);
+    }
+
+    return (changed);
 }
 
 

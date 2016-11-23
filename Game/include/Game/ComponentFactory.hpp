@@ -19,7 +19,7 @@
     PROCESS(sInputComponent),\
     PROCESS(sDirectionComponent),\
     PROCESS(sBoxColliderComponent),\
-    PROCESS(sCircleHitboxComponent),\
+    PROCESS(sSphereColliderComponent),\
     PROCESS(sGravityComponent),\
     PROCESS(sTypeComponent),\
     PROCESS(sAIComponent),\
@@ -224,15 +224,17 @@ public:
 
 
 /*
-** sCircleHitboxComponent
+** sSphereColliderComponent
 */
 
 template <>
-class ComponentFactory<sCircleHitboxComponent>: public BaseComponentFactory<sCircleHitboxComponent>
+class ComponentFactory<sSphereColliderComponent>: public BaseComponentFactory<sSphereColliderComponent>
 {
 public:
     virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
     virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
+
+    virtual bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity);
 };
 
 
