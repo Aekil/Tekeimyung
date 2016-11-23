@@ -1,0 +1,17 @@
+{
+    "name": "BLOCK_BROWN",
+    "components": {
+            "sPositionComponent": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "sRenderComponent": {
+                "texture": "resources/sprites/blocks/block_brown.png",
+                "type": "TILE"
+            },
+            "sTypeComponent": {
+                "type": "TILE_WALKABLE"
+            }
+        }
+}
