@@ -404,6 +404,9 @@ bool    ComponentFactory<sBoxColliderComponent>::updateEditor(const std::string&
             component->size.z = render->_model->getSize().z + 1.0f;
             component->box = nullptr;
         }
+
+        ImGui::InputFloat3("position", glm::value_ptr(component->pos), 3);
+        ImGui::InputFloat3("size", glm::value_ptr(component->size), 3);
     }
 
     return (changed);
