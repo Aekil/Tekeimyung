@@ -189,7 +189,7 @@ struct sDirectionComponent : sComponent
 
 struct sBoxColliderComponent : sComponent
 {
-    sBoxColliderComponent() = default;
+    sBoxColliderComponent(): display(false) {}
 
     virtual sComponent* clone()
     {
@@ -218,11 +218,12 @@ struct sBoxColliderComponent : sComponent
 
     // Box model
     std::shared_ptr<Box> box;
+    bool display;
 };
 
 struct sSphereColliderComponent : sComponent
 {
-    sSphereColliderComponent() = default;
+    sSphereColliderComponent(): display(false) {}
 
     virtual sComponent* clone()
     {
@@ -246,6 +247,7 @@ struct sSphereColliderComponent : sComponent
     glm::vec3 pos;
     float radius;
     std::shared_ptr<Sphere> sphere;
+    bool display;
 };
 
 struct sGravityComponent : sComponent

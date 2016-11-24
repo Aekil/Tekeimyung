@@ -388,6 +388,8 @@ JsonValue&    ComponentFactory<sBoxColliderComponent>::saveToJson(const std::str
 
 bool    ComponentFactory<sBoxColliderComponent>::updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity)
 {
+    static const std::string editText = "Edit";
+    static const std::string stopEditText = "Stop edit";
     sBoxColliderComponent* component = static_cast<sBoxColliderComponent*>(entityComponent ? entityComponent : _components[entityType]);
     *savedComponent = component;
     bool changed = false;
@@ -403,6 +405,10 @@ bool    ComponentFactory<sBoxColliderComponent>::updateEditor(const std::string&
             component->size.y = render->_model->getSize().y + 1.0f;
             component->size.z = render->_model->getSize().z + 1.0f;
             component->box = nullptr;
+        }
+        if (ImGui::Button(component->display ? stopEditText.c_str() : editText.c_str()))
+        {
+            component->display = !component->display;
         }
 
         ImGui::InputFloat3("position", glm::value_ptr(component->pos), 3);
@@ -439,6 +445,8 @@ JsonValue&    ComponentFactory<sSphereColliderComponent>::saveToJson(const std::
 
 bool    ComponentFactory<sSphereColliderComponent>::updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity)
 {
+    static const std::string editText = "Edit";
+    static const std::string stopEditText = "Stop edit";
     sSphereColliderComponent* component = static_cast<sSphereColliderComponent*>(entityComponent ? entityComponent : _components[entityType]);
     *savedComponent = component;
     bool changed = false;
@@ -462,6 +470,11 @@ bool    ComponentFactory<sSphereColliderComponent>::updateEditor(const std::stri
                                         render->_model->getMin().z + (render->_model->getSize().z / 2.0f));
             component->sphere = nullptr;
         }
+        if (ImGui::Button(component->display ? stopEditText.c_str() : editText.c_str()))
+        {
+            component->display = !component->display;
+        }
+
 
         ImGui::InputFloat3("position", glm::value_ptr(component->pos), 3);
         ImGui::InputFloat("radius", &component->radius, 3.0f);

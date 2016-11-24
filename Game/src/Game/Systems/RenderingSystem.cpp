@@ -100,7 +100,7 @@ void    RenderingSystem::renderCollider(Entity* entity)
     sBoxColliderComponent* boxCollider = entity->getComponent<sBoxColliderComponent>();
     sSphereColliderComponent* sphereCollider = entity->getComponent<sSphereColliderComponent>();
     sTransformComponent *transform = entity->getComponent<sTransformComponent>();
-    if (boxCollider)
+    if (boxCollider && boxCollider->display)
     {
         if (!boxCollider->box)
         {
@@ -117,7 +117,7 @@ void    RenderingSystem::renderCollider(Entity* entity)
         boxCollider->box->update(glm::vec4(0.87f, 1.0f, 1.0f, 0.1f), boxTransform);
         boxCollider->box->draw(_shaderProgram);
     }
-    if (sphereCollider)
+    if (sphereCollider && sphereCollider->display)
     {
         if (!sphereCollider->sphere)
         {
