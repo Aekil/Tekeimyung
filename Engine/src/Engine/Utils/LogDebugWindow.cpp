@@ -22,7 +22,11 @@ void    LogDebugWindow::build()
     ImGui::TextUnformatted(_logger->getLog().begin(), _logger->getLog().end());
 
     if (ImGui::GetItemRectSize().x > _size.x)
+    {
         _size.x = ImGui::GetItemRectSize().x;
+        if (_size.x > LIMIT_WIDTH)
+            _size.x = LIMIT_WIDTH;
+    }
 
     // A Log was added since last update
     if ((uint32_t)_logger->getLog().size() > _lastLogSize)
