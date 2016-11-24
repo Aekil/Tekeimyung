@@ -47,6 +47,8 @@ public:
 
     static const std::vector<const char*>&                  getTypesString();
     static const std::list<std::string>&                    getComponents(const std::string& typeName);
+    static const void                                       removeComponent(const std::string& typeName, const std::string& component);
+    static const void                                       addComponent(const std::string& typeName, const std::string& component);
     static const std::string&                               getFile(const std::string& typeName);
 
     static void                                             updateEntityComponent(const std::string& entityName, IComponentFactory* compFactory, sComponent* component);

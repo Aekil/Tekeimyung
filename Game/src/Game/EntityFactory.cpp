@@ -133,6 +133,21 @@ const std::list<std::string>&   EntityFactory::getComponents(const std::string& 
     return _entities[typeName];
 }
 
+const void   EntityFactory::removeComponent(const std::string& typeName, const std::string& component)
+{
+    auto& components = _entities[typeName];
+    auto foundComponent = std::find(components.begin(), components.end(), component);
+    if (foundComponent != components.end())
+    {
+        components.erase(foundComponent);
+    }
+}
+
+const void   EntityFactory::addComponent(const std::string& typeName, const std::string& component)
+{
+    _entities[typeName].push_back(component);
+}
+
 const std::string& EntityFactory::getFile(const std::string& typeName)
 {
     return _entitiesFiles[typeName];

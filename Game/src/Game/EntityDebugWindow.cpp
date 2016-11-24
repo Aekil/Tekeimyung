@@ -165,14 +165,49 @@ void    EntityDebugWindow::saveEntityTemplateToJson(const std::string& typeName)
 
 void    EntityDebugWindow::saveEntityTemplate(const std::string& typeName, Entity* entity)
 {
-    for (auto component: entity->getComponents())
     {
-        std::string componentName = IComponentFactory::getComponentNameWithHash(component->getTypeInfo().hash_code());
-        auto compFactory = IComponentFactory::getFactory(componentName);
-        compFactory->save(typeName, component);
+        auto &&components = EntityFactory::getComponents(typeName);
+        // Remove deleted components from factories
+        for (auto it = components.begin(); it != components.end();)
+        {
+            auto component = *it;
+            std::size_t componentHash = IComponentFactory::getComponentHashWithName(component);
+            auto compFactory = IComponentFactory::getFactory(component);
+            ASSERT(compFactory != nullptr, "The factory should exist");
 
-        // Update other entities component
-        EntityFactory::updateEntityComponent(typeName, compFactory, component);
+            // The component has been removed, delete it from EntityFactory and ComponentFactory
+            if (!entity->hasComponent(componentHash))
+            {
+                ++it;
+                EntityFactory::removeComponent(typeName, component);
+                compFactory->remove(typeName);
+            }
+            else
+                ++it;
+        }
+    }
+
+    {
+        auto &&components = EntityFactory::getComponents(typeName);
+
+        // Save entity components
+        for (auto component: entity->getComponents())
+        {
+            std::string componentName = IComponentFactory::getComponentNameWithHash(component->getTypeInfo().hash_code());
+            auto compFactory = IComponentFactory::getFactory(componentName);
+            ASSERT(compFactory != nullptr, "The factory should exist");
+            compFactory->save(typeName, component);
+
+            // The component does not exist in entityFactory
+            if (componentName != "sNameComponent" && std::find(components.begin(), components.end(), componentName) == components.end())
+            {
+                // Add component to EntityFactory
+                EntityFactory::addComponent(typeName, componentName);
+            }
+
+            // Update other entities component
+            EntityFactory::updateEntityComponent(typeName, compFactory, component);
+        }
     }
 }
 

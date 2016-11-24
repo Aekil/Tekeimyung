@@ -2,11 +2,13 @@
 
 #include <ImGuizmo.h>
 #include <utility>
+#include <algorithm>
 
 #include <ECS/Entity.hpp>
 
 #include <Engine/Utils/Exception.hpp>
 #include <Engine/Utils/Logger.hpp>
+#include <Engine/Utils/Debug.hpp>
 
 #include <Game/Utils/JsonValue.hpp>
 #include <Game/Components.hh>
@@ -50,6 +52,7 @@ public:
     virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json) = 0;
     virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType) = 0;
     virtual void save(const std::string& entityType, sComponent* component) = 0;
+    virtual void remove(const std::string& entityType) = 0;
 
     // IComponentFactory methods
     static bool                                                     componentTypeExists(const std::string& type);
@@ -58,6 +61,7 @@ public:
     static IComponentFactory*                                       getFactory(const std::string& name);
 
     static std::string                                              getComponentNameWithHash(std::size_t hash);
+    static std::size_t                                              getComponentHashWithName(const std::string& name);
     static const std::unordered_map<std::size_t, std::string>&      getComponentsTypesHashs();
 
     // ComponentFactory overloaded classes methods
@@ -104,6 +108,11 @@ public:
     {
         delete _components[entityType];
         _components[entityType] = component->clone();
+    }
+
+    virtual void remove(const std::string& entityType)
+    {
+        _components.erase(entityType);
     }
 
     // Add entity in component entities map
