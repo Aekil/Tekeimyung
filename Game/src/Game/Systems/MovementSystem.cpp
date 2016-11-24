@@ -3,6 +3,7 @@
 
 #include <Engine/Utils/Logger.hpp>
 #include <Engine/Utils/Timer.hpp>
+#include <Engine/Utils/MonitoringDebugWindow.hpp>
 
 #include <Game/Components.hh>
 
@@ -29,5 +30,6 @@ void    MovementSystem::update(EntityManager &em, float elapsedTime)
         position->value.y = std::max(0.0f, position->value.y);
         position->value.y = std::min((float)_map->getHeight() - 0.01f, position->value.y);
     });
-    LOG_INFO("Movement system : %f secondes", timer.getElapsedTime());
+    MonitoringDebugWindow::getInstance()->registerMsg(FMT_MSG("Movement system : %f secondes", timer.getElapsedTime()));
+    //LOG_INFO("Movement system : %f secondes", timer.getElapsedTime());
 }

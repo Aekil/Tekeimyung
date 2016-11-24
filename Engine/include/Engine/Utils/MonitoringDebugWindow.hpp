@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <vector>
 
 #include <Engine/Utils/Debug.hpp>
@@ -23,14 +24,19 @@ std::string formatMonMessage(const char* format, Args... args)
 class MonitoringDebugWindow : public DebugWindow
 {
 public:
-    MonitoringDebugWindow(const glm::vec2& pos, const glm::vec2& size);
+    //MonitoringDebugWindow();
+    MonitoringDebugWindow(const glm::vec2& pos = glm::vec2(0, 650), const glm::vec2& size = glm::vec2(300, 200));
     virtual ~MonitoringDebugWindow();
 
-    virtual void    build();
+    static std::shared_ptr<MonitoringDebugWindow>   getInstance();
 
-    void            registerMsg(std::string msg);
+    virtual void                                    build();
+
+    void                                            registerMsg(std::string msg);
 
 private:
-    std::vector<std::string>    _msgList;
+    static std::shared_ptr<MonitoringDebugWindow>   _monitoringDebugWindow;
+
+    std::vector<std::string>                        _msgList;
 };
 

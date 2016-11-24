@@ -3,14 +3,27 @@
 #include <Engine/Utils/MonitoringDebugWindow.hpp>
 
 
+std::shared_ptr<MonitoringDebugWindow>   MonitoringDebugWindow::_monitoringDebugWindow = nullptr;
+
+//MonitoringDebugWindow::MonitoringDebugWindow() {}
 
 MonitoringDebugWindow::MonitoringDebugWindow(const glm::vec2& pos, const glm::vec2& size) :
     DebugWindow("Monitoring", pos, size)
 {
-    _msgList.push_back(FMT_MSG("Collision system : %f secondes", 0.0012564));
+    //_msgList.push_back(FMT_MSG("Collision system : %f secondes", 0.0012564));
+    //this->setDisplayed(true);
 }
 
 MonitoringDebugWindow::~MonitoringDebugWindow() {}
+
+std::shared_ptr<MonitoringDebugWindow>   MonitoringDebugWindow::getInstance()
+{
+    if (!_monitoringDebugWindow)
+    {
+        _monitoringDebugWindow = std::make_shared<MonitoringDebugWindow>();
+    }
+    return _monitoringDebugWindow;
+}
 
 void    MonitoringDebugWindow::build()
 {
@@ -39,8 +52,10 @@ void    MonitoringDebugWindow::build()
     for (auto&& msg : _msgList)
     {
         ImGui::Text(msg.c_str());
-        ImGui::Separator();
+        if (msg != _msgList.back())
+            ImGui::Separator();
     }
+    _msgList.clear();
 
     ImGui::End();
 }

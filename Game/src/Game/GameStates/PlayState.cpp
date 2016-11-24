@@ -142,6 +142,7 @@ bool    PlayState::init()
     addDebugWindow<OverlayDebugWindow>();
     addDebugWindow<EntityDebugWindow>(_map, glm::vec2(0, 80), glm::vec2(450, 350));
     addDebugWindow<LogDebugWindow>(Logger::getInstance(), glm::vec2(0, 430), glm::vec2(300, 200));
+    //MonitoringDebugWindow test(glm::vec2(300, 650), glm::vec2(300, 200));
     addDebugWindow<MonitoringDebugWindow>(glm::vec2(0, 650), glm::vec2(300, 200));
 
      //Play sound

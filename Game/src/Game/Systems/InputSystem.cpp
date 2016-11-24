@@ -1,5 +1,6 @@
 #include <Engine/Utils/Logger.hpp>
 #include <Engine/Utils/Timer.hpp>
+#include <Engine/Utils/MonitoringDebugWindow.hpp>
 #include <Engine/Window/GameWindow.hpp>
 
 #include <Game/Components.hh>
@@ -23,7 +24,8 @@ void    InputSystem::update(EntityManager &em, float elapsedTime)
     forEachEntity(em, [&](Entity *entity) {
         movementKeys(entity);
     });
-    LOG_INFO("Input system : %f secondes", timer.getElapsedTime());
+    MonitoringDebugWindow::getInstance()->registerMsg(FMT_MSG("Input system : %f secondes", timer.getElapsedTime()));
+    //LOG_INFO("Input system : %f secondes", timer.getElapsedTime());
 }
 
 void    InputSystem::movementKeys(Entity *entity)

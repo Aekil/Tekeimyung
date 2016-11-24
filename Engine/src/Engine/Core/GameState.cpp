@@ -2,6 +2,7 @@
 #include <imgui_impl_glfw_gl3.h>
 
 #include <Engine/Utils/Exception.hpp>
+#include <Engine/Utils/MonitoringDebugWindow.hpp>
 #include <Engine/Window/GameWindow.hpp>
 
 #include <Engine/Core/GameState.hpp>
@@ -35,6 +36,7 @@ bool    GameState::update(float elapsedTime)
                 if (debugWindow->isDisplayed())
                     debugWindow->build();
             }
+            MonitoringDebugWindow::getInstance()->build();
 
             // Update GameState systems
             for (auto&& system: _world.getSystems())

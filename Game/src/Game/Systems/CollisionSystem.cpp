@@ -81,8 +81,8 @@ void    CollisionSystem::update(EntityManager &em, float elapsedTime)
             }
         }
     });
-    //mon.registerMsg(FMT_MSG("Collision system : %f secondes", timer.getElapsedTime()));
-    LOG_INFO("Collision system : %f secondes", timer.getElapsedTime());
+    MonitoringDebugWindow::getInstance()->registerMsg(FMT_MSG("Collision system : %f secondes", timer.getElapsedTime()));
+    //LOG_INFO("Collision system : %f secondes", timer.getElapsedTime());
 }
 
 void    CollisionSystem::moveHitbox(Entity *entity, float elapsedTime) // simulate movement

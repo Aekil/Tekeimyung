@@ -9,6 +9,7 @@
 #include <Engine/Utils/Timer.hpp>
 #include <Engine/Utils/Debug.hpp>
 #include <Engine/Utils/Exception.hpp>
+#include <Engine/Utils/MonitoringDebugWindow.hpp>
 #include <Engine/Window/GameWindow.hpp>
 
 #include <Game/Systems/RenderingSystem.hpp>
@@ -187,7 +188,8 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
 
     // Display screen
     GameWindow::getInstance()->display();
-    LOG_INFO("Render system : %f secondes", timer.getElapsedTime());
+    MonitoringDebugWindow::getInstance()->registerMsg(FMT_MSG("Render system : %f secondes", timer.getElapsedTime()));
+    //LOG_INFO("Render system : %f secondes", timer.getElapsedTime());
 }
 
 Sprite*   RenderingSystem::getSprite(Entity* entity)
