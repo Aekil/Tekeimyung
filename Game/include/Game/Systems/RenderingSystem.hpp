@@ -41,5 +41,4 @@ private:
     Camera                                      _camera;
 
     std::unordered_map<uint32_t, Entity*>       _transparentEntities;
-    std::unordered_map<uint32_t, Entity*>       _collierEntities;
 };

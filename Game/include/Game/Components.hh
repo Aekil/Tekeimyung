@@ -44,8 +44,8 @@ struct sRenderComponent: sComponent
         this->color = component->color;
         this->animated = component->animated;
         this->_model = component->_model;
-        this->geometry = component->geometry;
-        this->geometryInfo = component->geometryInfo;
+        this->type = component->type;
+        this->texture = component->texture;
     }
 
     virtual void update(sComponent* component)
@@ -56,23 +56,33 @@ struct sRenderComponent: sComponent
     void initModel()
     {
         // Load mesh
-        if (geometry == Geometry::eType::MESH)
+        if (type == Geometry::eType::MESH)
         {
             _model = RessourceManager::getInstance()->getModel(modelFile);
             return;
         }
 
-        // Load geometry
-        if (geometry == Geometry::eType::PLANE)
+        // Load plane
+        if (type == Geometry::eType::PLANE)
         {
-            _model = std::make_shared<Plane>(geometryInfo.plane);
+            Plane::sInfo planeInfos = {1.0f, 1.0f};
+            planeInfos.texturePath = texture;
+            _model = std::make_shared<Plane>(planeInfos);
         }
-        else if (geometry == Geometry::eType::BOX)
+        // Load box
+        else if (type == Geometry::eType::BOX)
         {
-            _model = std::make_shared<Box>(geometryInfo.box);
+            Box::sInfo boxInfos = {1.0f, 1.0f, 1.0f};
+            _model = std::make_shared<Box>(boxInfos);
+        }
+        // Load sphere
+        else if (type == Geometry::eType::SPHERE)
+        {
+            Sphere::sInfo sphereInfos = {1.0f};
+            _model = std::make_shared<Sphere>(sphereInfos);
         }
         else
-            EXCEPT(InvalidParametersException, "Unknown geometry for sRenderComponent");
+            EXCEPT(InvalidParametersException, "Unknown model type for sRenderComponent");
     }
 
     std::string modelFile;
@@ -81,13 +91,11 @@ struct sRenderComponent: sComponent
 
     std::shared_ptr<Model> _model;
 
-    // The object to render is a geometry
-    Geometry::eType geometry;
-    struct sGeometryInfo
-    {
-        Plane::sInfo    plane;
-        Box::sInfo      box;
-    } geometryInfo;
+    // Model type
+    Geometry::eType type;
+
+    // texture for geometries
+    std::string texture;
 };
 
 struct sPositionComponent: sComponent
@@ -189,7 +197,7 @@ struct sDirectionComponent : sComponent
 
 struct sBoxColliderComponent : sComponent
 {
-    sBoxColliderComponent(): display(false) {}
+    sBoxColliderComponent(): display(true) {}
 
     virtual sComponent* clone()
     {
@@ -223,7 +231,7 @@ struct sBoxColliderComponent : sComponent
 
 struct sSphereColliderComponent : sComponent
 {
-    sSphereColliderComponent(): display(false) {}
+    sSphereColliderComponent(): display(true) {}
 
     virtual sComponent* clone()
     {

@@ -27,7 +27,7 @@
          },
          "geometry" : null,
          "model" : "resources/models/characters/player.DAE",
-         "type" : "OBJECT"
+         "type" : "MESH"
       },
       "sSphereColliderComponent" : {
          "pos" : {

@@ -14,6 +14,8 @@ public:
 
     virtual void        build();
 
+    static uint32_t     getSelectedEntityId();
+
 private:
     void                saveEntityTemplateToJson(const std::string& typeName);
     void                saveEntityTemplate(const std::string& typeName, Entity* entity);
@@ -21,10 +23,9 @@ private:
     void                spawnEntity(const std::string& typeName);
 
 private:
-    // Selected entity in IMGUI select box
-    int                 _selectedEntity;
-
     Map*                _map;
 
     EntityManager*      _em;
+
+    static uint32_t     _selectedEntityId;
 };

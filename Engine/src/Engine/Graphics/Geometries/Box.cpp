@@ -2,9 +2,9 @@
 
 Box::Box(Box::sInfo& info): Geometry(Geometry::eType::BOX)
 {
-    float width = info.width;
-    float height = info.height;
-    float length = info.length;
+    float width = 1.0f;
+    float height = 1.0f;
+    float length = 1.0f;
 
     // Box mesh
     std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();

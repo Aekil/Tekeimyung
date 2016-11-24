@@ -10,8 +10,10 @@
 #include <Game/EntityDebugWindow.hpp>
 
 
+uint32_t    EntityDebugWindow::_selectedEntityId = 0;
+
 EntityDebugWindow::EntityDebugWindow(EntityManager* em, Map* map, const glm::vec2& pos, const glm::vec2& size):
-                                    _em(em), _map(map), DebugWindow("Live edition", pos, size), _selectedEntity(0) {}
+                                    _em(em), _map(map), DebugWindow("Live edition", pos, size) {}
 
 EntityDebugWindow::~EntityDebugWindow() {}
 
@@ -28,8 +30,6 @@ void    EntityDebugWindow::build()
 
     // Entities list
     static Entity* selectedEntity = nullptr;
-    // Store entity id to handle entity deletion
-    static uint32_t selectedEntityId = 0;
     ImGui::BeginChild("Entities list", ImVec2(150, 0), true);
     for (auto it: _em->getEntities())
     {
@@ -42,7 +42,7 @@ void    EntityDebugWindow::build()
         if (ImGui::Selectable(name.str().c_str(), selectedEntity && selectedEntity->id == entity->id))
         {
             selectedEntity = entity;
-            selectedEntityId = entity->id;
+            _selectedEntityId = entity->id;
         }
     }
     ImGui::EndChild();
@@ -54,10 +54,10 @@ void    EntityDebugWindow::build()
         return;
     }
     // The entity has been deleted
-    else if (_em->getEntity(selectedEntityId) == nullptr)
+    else if (_em->getEntity(_selectedEntityId) == nullptr)
     {
         selectedEntity = _em->getEntities().begin()->second;
-        selectedEntityId = selectedEntity->id;
+        _selectedEntityId = selectedEntity->id;
     }
 
     // Entity edition
@@ -88,11 +88,14 @@ void    EntityDebugWindow::build()
             saveEntityTemplate(entityName, selectedEntity);
             saveEntityTemplateToJson(entityName);
         }
-/*        else if (spawnEntityButton)
-            spawnEntity(list[_selectedEntity]);*/
     }
     ImGui::EndGroup();
     ImGui::End();
+}
+
+uint32_t    EntityDebugWindow::getSelectedEntityId()
+{
+    return (_selectedEntityId);
 }
 
 void    EntityDebugWindow::saveEntityTemplateToJson(const std::string& typeName)

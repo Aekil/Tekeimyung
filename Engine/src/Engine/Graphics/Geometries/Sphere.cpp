@@ -1,10 +1,11 @@
+#include <iostream>
 #include <Engine/Graphics/Geometries/Sphere.hpp>
 
 Sphere::Sphere(Sphere::sInfo& info): Geometry(Geometry::eType::SPHERE)
 {
-    float radius = info.radius;
-    uint32_t rings = static_cast<uint32_t>(radius * 3.0f);
-    uint32_t sectors = static_cast<uint32_t>(radius * 3.0f);
+    float radius = 1.0f;
+    uint32_t rings = static_cast<uint32_t>(15.0f);
+    uint32_t sectors = static_cast<uint32_t>(15.0f);
 
     // Sphere mesh
     std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();

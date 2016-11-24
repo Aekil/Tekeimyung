@@ -75,41 +75,15 @@ std::string IComponentFactory::getComponentNameWithHash(std::size_t hash)
 sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
 {
     sRenderComponent* component = new sRenderComponent();
-    JsonValue geometry(json.get("geometry", {}));
 
     // Initialize some values
     component->animated = json.getBool("animated", false);
     component->modelFile = json.getString("model", "resources/models/default.DAE");
     component->color = json.getColor4f("color", { 1.0f, 1.0f, 1.0f, 1.0f });
-    component->geometry = Geometry::eType::MESH;
+    component->texture = json.getString("texture", "");
 
-    // Pre-initialize the values so that the values are not 0 when changing the geometry type
-    component->geometryInfo.plane.width = 30.0f;
-    component->geometryInfo.plane.height = 30.0f;
-    component->geometryInfo.box.width = 10.0f;
-    component->geometryInfo.box.height = 10.0f;
-    component->geometryInfo.box.length = 10.0f;
-
-    if (geometry.size() > 0)
-    {
-        std::string geometryName = geometry.getString("name", "");
-        component->geometry = Geometry::getGeometryType(geometryName);
-
-        if (component->geometry == Geometry::eType::PLANE)
-        {
-            component->geometryInfo.plane.width = geometry.getFloat("width", 30.0f);
-            component->geometryInfo.plane.height = geometry.getFloat("height", 30.0f);
-            component->geometryInfo.plane.texturePath = geometry.getString("texture", "");
-        }
-        else if (component->geometry == Geometry::eType::BOX)
-        {
-            component->geometryInfo.box.width = geometry.getFloat("width", 10.0f);
-            component->geometryInfo.box.height = geometry.getFloat("height", 10.0f);
-            component->geometryInfo.box.length = geometry.getFloat("length", 10.0f);
-        }
-        else
-            EXCEPT(InvalidParametersException, "Unknown geometry name \"%s\" for sRenderComponent of \"%s\"", geometryName.c_str(), entityType.c_str());
-    }
+    std::string geometryName = json.getString("type", "MESH");
+    component->type = Geometry::getGeometryType(geometryName);
 
     return (component);
 }
@@ -117,32 +91,15 @@ sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& 
 JsonValue&    ComponentFactory<sRenderComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
 {
     JsonValue& json = _componentsJson[entityType];
-    JsonValue geometry;
     sRenderComponent* component = static_cast<sRenderComponent*>(_components[entityType]);
 
 
     json.setBool("animated", component->animated);
     json.setString("model", component->modelFile);
     json.setColor4f("color", component->color);
+    json.setString("type", Geometry::getGeometryTypeString(component->type));
+    json.setString("texture", component->texture);
 
-    if (component->geometry != Geometry::eType::MESH)
-    {
-        geometry.setString("name", Geometry::getGeometryTypeString(component->geometry));
-        if (component->geometry == Geometry::eType::PLANE)
-        {
-            geometry.setFloat("width", component->geometryInfo.plane.width);
-            geometry.setFloat("height", component->geometryInfo.plane.height);
-            geometry.setString("texture", component->geometryInfo.plane.texturePath);
-        }
-        else if (component->geometry == Geometry::eType::BOX)
-        {
-            geometry.setFloat("width", component->geometryInfo.box.width);
-            geometry.setFloat("height", component->geometryInfo.box.height);
-            geometry.setFloat("length", component->geometryInfo.box.length);
-        }
-    }
-
-    json.setValue("geometry", geometry);
     return (json);
 }
 
@@ -152,6 +109,8 @@ bool    ComponentFactory<sRenderComponent>::updateEditor(const std::string& enti
     *savedComponent = component;
     bool changed = false;
     bool typeChanged = false;
+    bool textureChanged = false;
+    bool modelChanged = false;
 
     ImGui::PushItemWidth(200);
     if (ImGui::CollapsingHeader("sRenderComponent", ImGuiTreeNodeFlags_DefaultOpen))
@@ -159,39 +118,16 @@ bool    ComponentFactory<sRenderComponent>::updateEditor(const std::string& enti
         changed |= ImGui::ColorEdit3("color", glm::value_ptr(component->color));
 
         static std::vector<const char*>& typesString = const_cast<std::vector<const char*>&>(Geometry::getTypesString());
-        int selectedType = static_cast<int>(std::find(typesString.cbegin(), typesString.cend(), Geometry::getGeometryTypeString(component->geometry)) - typesString.begin());
+        int selectedType = static_cast<int>(std::find(typesString.cbegin(), typesString.cend(), Geometry::getGeometryTypeString(component->type)) - typesString.begin());
         const char** typesList = typesString.data();
 
         typeChanged = ImGui::ListBox("Model type", &selectedType, typesList, (int)Geometry::getTypesString().size(), 4);
         if (typeChanged)
-            component->geometry = Geometry::getGeometryType(typesString[selectedType]);
+            component->type = Geometry::getGeometryType(typesString[selectedType]);
 
         // Plan
-        if (component->geometry == Geometry::eType::PLANE)
+        if (component->type == Geometry::eType::PLANE)
         {
-            // Plan size
-            {
-                static bool constraint = false;
-
-                bool widthChanged = ImGui::SliderFloat("width", &component->geometryInfo.plane.width, 1.0f, 100.0f);
-                bool heightChanged = ImGui::SliderFloat("height", &component->geometryInfo.plane.height, 1.0f, 100.0f);
-                ImGui::Checkbox("constraint", &constraint);
-
-                changed |= widthChanged || heightChanged;
-
-                if (constraint && changed)
-                {
-                    float size = 0;
-                    if (widthChanged)
-                        size = component->geometryInfo.plane.width;
-                    else if (heightChanged)
-                        size = component->geometryInfo.plane.height;
-
-                    component->geometryInfo.plane.width = size;
-                    component->geometryInfo.plane.height = size;
-                }
-            }
-
             // Plan texture
             {
                 static RessourceManager* resourceManager = RessourceManager::getInstance();
@@ -200,50 +136,23 @@ bool    ComponentFactory<sRenderComponent>::updateEditor(const std::string& enti
                 int selectedTexture = -1;
                 Texture* texture;
 
-                if (component->geometryInfo.plane.texturePath.size() > 0)
+                if (component->texture.size() > 0)
                 {
-                    texture = &resourceManager->getTexture(component->geometryInfo.plane.texturePath);
-                    int selectedTexture = static_cast<int>(std::find(texturesString.cbegin(), texturesString.cend(), texture->getId()) - texturesString.begin());
+                    texture = &resourceManager->getTexture(component->texture);
+                    selectedTexture = static_cast<int>(std::find(texturesString.cbegin(), texturesString.cend(), texture->getId()) - texturesString.begin());
                 }
 
                 if (ImGui::ListBox("texture", &selectedTexture, texturesList, (int)resourceManager->getTexturesNames().size(), 4))
                 {
-                    changed = true;
+                    textureChanged = true;
                     texture = &resourceManager->getTexture(texturesString[selectedTexture]);
-                    component->geometryInfo.plane.texturePath = texture->getPath();
+                    component->texture = texture->getPath();
                 }
             }
 
         }
-        // BOX
-        else if (component->geometry == Geometry::eType::BOX)
-        {
-            static bool constraint = false;
-
-            bool widthChanged = ImGui::SliderFloat("width", &component->geometryInfo.box.width, 1.0f, 100.0f);
-            bool heightChanged = ImGui::SliderFloat("height", &component->geometryInfo.box.height, 1.0f, 100.0f);
-            bool lengthChanged = ImGui::SliderFloat("length", &component->geometryInfo.box.length, 1.0f, 100.0f);
-            ImGui::Checkbox("constraint", &constraint);
-
-            changed |= widthChanged || heightChanged || lengthChanged;
-
-            if (constraint && changed)
-            {
-                float size = 0;
-                if (widthChanged)
-                    size = component->geometryInfo.box.width;
-                else if (heightChanged)
-                    size = component->geometryInfo.box.height;
-                else if (lengthChanged)
-                    size = component->geometryInfo.box.length;
-
-                component->geometryInfo.box.width = size;
-                component->geometryInfo.box.height = size;
-                component->geometryInfo.box.length = size;
-            }
-        }
         // MESH
-        else if (component->geometry == Geometry::eType::MESH)
+        else if (component->type == Geometry::eType::MESH)
         {
             static RessourceManager* resourceManager = RessourceManager::getInstance();
             static std::vector<const char*>& modelsString = const_cast<std::vector<const char*>&>(resourceManager->getModelsNames());
@@ -253,15 +162,15 @@ bool    ComponentFactory<sRenderComponent>::updateEditor(const std::string& enti
 
             if (ImGui::ListBox("model", &selectedModel, modelsList, (int)resourceManager->getModelsNames().size(), 4))
             {
-                changed = true;
+                modelChanged = true;
                 model = resourceManager->getModel(modelsString[selectedModel]);
                 component->modelFile = model->getPath();
             }
         }
 
-        changed |= typeChanged;
+        changed |= typeChanged || textureChanged || modelChanged;
 
-        if (changed)
+        if (typeChanged || textureChanged || modelChanged)
         {
             // Remove the model to auto reload the new model
             component->_model = nullptr;
@@ -388,8 +297,6 @@ JsonValue&    ComponentFactory<sBoxColliderComponent>::saveToJson(const std::str
 
 bool    ComponentFactory<sBoxColliderComponent>::updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity)
 {
-    static const std::string editText = "Edit";
-    static const std::string stopEditText = "Stop edit";
     sBoxColliderComponent* component = static_cast<sBoxColliderComponent*>(entityComponent ? entityComponent : _components[entityType]);
     *savedComponent = component;
     bool changed = false;
@@ -404,9 +311,8 @@ bool    ComponentFactory<sBoxColliderComponent>::updateEditor(const std::string&
             component->size.x = render->_model->getSize().x + 1.0f;
             component->size.y = render->_model->getSize().y + 1.0f;
             component->size.z = render->_model->getSize().z + 1.0f;
-            component->box = nullptr;
         }
-        if (ImGui::Button(component->display ? stopEditText.c_str() : editText.c_str()))
+        if (ImGui::Button(component->display ? "Hide" : "Display"))
         {
             component->display = !component->display;
         }
@@ -445,8 +351,6 @@ JsonValue&    ComponentFactory<sSphereColliderComponent>::saveToJson(const std::
 
 bool    ComponentFactory<sSphereColliderComponent>::updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity)
 {
-    static const std::string editText = "Edit";
-    static const std::string stopEditText = "Stop edit";
     sSphereColliderComponent* component = static_cast<sSphereColliderComponent*>(entityComponent ? entityComponent : _components[entityType]);
     *savedComponent = component;
     bool changed = false;
@@ -457,7 +361,6 @@ bool    ComponentFactory<sSphereColliderComponent>::updateEditor(const std::stri
         if (ImGui::Button("Reset"))
         {
             sRenderComponent* render = entity->getComponent<sRenderComponent>();
-            //component->pos.y = render->_model->getSize().y / 2.0f + 0.5f;
 
             float modelMaxSize = render->_model->getSize().x;
             if (render->_model->getSize().y > modelMaxSize)
@@ -468,9 +371,8 @@ bool    ComponentFactory<sSphereColliderComponent>::updateEditor(const std::stri
             component->pos = glm::vec3(render->_model->getMin().x + (render->_model->getSize().x / 2.0f),
                                         render->_model->getMin().y + (render->_model->getSize().y / 2.0f),
                                         render->_model->getMin().z + (render->_model->getSize().z / 2.0f));
-            component->sphere = nullptr;
         }
-        if (ImGui::Button(component->display ? stopEditText.c_str() : editText.c_str()))
+        if (ImGui::Button(component->display ? "Hide" : "Display"))
         {
             component->display = !component->display;
         }

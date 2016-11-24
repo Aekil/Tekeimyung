@@ -9,6 +9,8 @@
 #include <Engine/Utils/Exception.hpp>
 #include <Engine/Window/GameWindow.hpp>
 
+#include <Game/EntityDebugWindow.hpp>
+
 #include <Game/Systems/RenderingSystem.hpp>
 
 
@@ -97,6 +99,9 @@ void    RenderingSystem::renderEntities(EntityManager& em, std::list<uint32_t>::
 
 void    RenderingSystem::renderCollider(Entity* entity)
 {
+    if (!entity)
+        return;
+
     sBoxColliderComponent* boxCollider = entity->getComponent<sBoxColliderComponent>();
     sSphereColliderComponent* sphereCollider = entity->getComponent<sSphereColliderComponent>();
     sTransformComponent *transform = entity->getComponent<sTransformComponent>();
@@ -128,6 +133,7 @@ void    RenderingSystem::renderCollider(Entity* entity)
 
         glm::mat4 sphereTransform = transform->transform;
         sphereTransform = glm::translate(sphereTransform, sphereCollider->pos);
+        sphereTransform = glm::scale(sphereTransform, glm::vec3(sphereCollider->radius));
 
         sphereCollider->sphere->update(glm::vec4(0.87f, 1.0f, 1.0f, 0.1f), sphereTransform);
         sphereCollider->sphere->draw(_shaderProgram);
@@ -150,7 +156,7 @@ void    RenderingSystem::renderParticles(EntityManager& em)
         auto&& model = getModel(entity);
 
         // Only freeze camera rotation for plans
-        if (render->geometry == Geometry::eType::PLANE)
+        if (render->type == Geometry::eType::PLANE)
             _camera.freezeRotations(true);
 
         for (unsigned int i = 0; i < emitter->particlesNb; i++)
@@ -196,9 +202,6 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
             else
                 _transparentEntities[entity->id] = entity;
         }
-
-        if (entity->getComponent<sBoxColliderComponent>() || entity->getComponent<sSphereColliderComponent>())
-            _collierEntities[entity->id] = entity;
     });
 
     // Enable blend to blend transparent ojects and particles
@@ -228,26 +231,8 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
         }
     }
 
-    // Display transparent colliders
-    {
-        auto it = _collierEntities.begin();
-        while (it != _collierEntities.end())
-        {
-            // Get fresh entity pointer to handle deletion
-            Entity* entity = em.getEntity(it->first);
-            if (!entity)
-            {
-                uint32_t id = it->first;
-                ++it;
-                _collierEntities.erase(id);
-            }
-            else
-            {
-                renderCollider(entity);
-                ++it;
-            }
-        }
-    }
+
+    renderCollider(em.getEntity(EntityDebugWindow::getSelectedEntityId()));
 
     renderParticles(em);
 
@@ -268,7 +253,7 @@ bool    RenderingSystem::isTransparentEntity(Entity* entity) const
 {
     sRenderComponent *model = entity->getComponent<sRenderComponent>();
 
-    return (model->geometry == Geometry::eType::PLANE);
+    return (model->type == Geometry::eType::PLANE);
 }
 
 std::shared_ptr<Model>  RenderingSystem::getModel(Entity* entity)

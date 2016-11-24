@@ -174,7 +174,6 @@ void    EntityFactory::updateEntityComponent(const std::string& entityName, ICom
                 // Only the scale have to be copied
                 if (componentName == "sTransformComponent")
                 {
-                    LOG_INFO("OKKKKKKKKKKKKKKKKK");
                     sTransformComponent* transform = static_cast<sTransformComponent*>(component);
                     sTransformComponent* entityTransform = static_cast<sTransformComponent*>(entityComponent);
 

@@ -72,8 +72,7 @@
             "x" : 0,
             "y" : 0
          },
-         "texture" : "resources/sprites/particles/particle_circle.png",
-         "type" : "OBJECT"
+         "texture" : "resources/sprites/particles/particle_circle.png"
       },
       "sTypeComponent" : {
          "type" : "OBJECT"
