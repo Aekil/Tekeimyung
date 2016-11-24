@@ -32,13 +32,17 @@ void    EntityDebugWindow::build()
     static char typeName[64];
     ImGui::InputText("##default", typeName, 64);
     ImGui::SameLine();
-    if (ImGui::Button("Create entity type"))
+    ImGui::PushStyleColor(ImGuiCol_Button, ImColor(0.27f, 0.51f, 0.70f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImColor(0.39f, 0.58f, 0.92f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImColor(0.49f, 0.68f, 0.92f, 1.0f));
+        if (ImGui::Button("Create entity type") && std::string(typeName).size() > 0)
     {
         if (EntityFactory::entityTypeExists(typeName))
             LOG_ERROR("Can't create entity type %s, it already exists", typeName);
         else
             EntityFactory::createEntityType(typeName);
     }
+    ImGui::PopStyleColor(3);
 
     // Entities list
     ImGui::BeginChild("Entities list", ImVec2(150, 0), true);
@@ -88,10 +92,20 @@ void    EntityDebugWindow::displayEntityDebug(Entity* entity)
     if (ImGui::CollapsingHeader(entityName.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
     {
         // Add component button
+        ImGui::PushStyleColor(ImGuiCol_Button, ImColor(0.27f, 0.51f, 0.70f, 1.0f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImColor(0.39f, 0.58f, 0.92f, 1.0f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImColor(0.49f, 0.68f, 0.92f, 1.0f));
         if (ImGui::Button("Add component"))
         {
             ImGui::OpenPopup("components");
         }
+        ImGui::SameLine();
+        if (ImGui::Button("Apply changes to template"))
+        {
+            saveEntityTemplate(entityName, entity);
+            saveEntityTemplateToJson(entityName);
+        }
+        ImGui::PopStyleColor(3);
 
         // Display new component that can be added
         if (ImGui::BeginPopup("components"))
@@ -143,12 +157,6 @@ void    EntityDebugWindow::displayEntityDebug(Entity* entity)
                     ASSERT(component != nullptr, "component should be set in updateEditor");
                 }
             }
-        }
-
-        if (ImGui::Button("Apply changes to template"))
-        {
-            saveEntityTemplate(entityName, entity);
-            saveEntityTemplateToJson(entityName);
         }
     }
     ImGui::EndGroup();
