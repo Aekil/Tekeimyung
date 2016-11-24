@@ -28,6 +28,18 @@ void    EntityDebugWindow::build()
     ImGui::SetWindowSize(ImVec2(_size.x, _size.y), ImGuiSetCond_Always);
     ImGui::SetWindowPos(ImVec2(_pos.x, _pos.y), ImGuiSetCond_Always);
 
+    // Create entity type
+    static char typeName[64];
+    ImGui::InputText("##default", typeName, 64);
+    ImGui::SameLine();
+    if (ImGui::Button("Create entity type"))
+    {
+        if (EntityFactory::entityTypeExists(typeName))
+            LOG_ERROR("Can't create entity type %s, it already exists", typeName);
+        else
+            EntityFactory::createEntityType(typeName);
+    }
+
     // Entities list
     ImGui::BeginChild("Entities list", ImVec2(150, 0), true);
     for (auto it: _em->getEntities())

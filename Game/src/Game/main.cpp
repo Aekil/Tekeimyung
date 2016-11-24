@@ -18,7 +18,7 @@ int     main()
             return (1);
 
         // Load entities after engine initialization to have logs
-        EntityFactory::loadDirectory("resources/archetypes");
+        EntityFactory::loadDirectory(ARCHETYPES_LOCATION);
         // Load textures and models
         RessourceManager::getInstance()->loadResources("resources");
 

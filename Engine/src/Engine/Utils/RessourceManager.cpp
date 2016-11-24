@@ -96,6 +96,33 @@ std::string RessourceManager::getBasename(const std::string& fileName)
 ** File
 */
 
+void    RessourceManager::createFile(const std::string& fileName, const std::string& fileContent)
+{
+    std::ofstream file;
+    RessourceManager::sFile fileInfos;
+    std::string basename = getBasename(fileName);
+
+    // Check file does not exists
+    file.open(fileName.c_str());
+    if (!file.good())
+        EXCEPT(InternalErrorException, "Attempt to create the file %s which already exists", fileName.c_str());
+
+    // Open file to write
+    file = std::ofstream(fileName.c_str(), std::ios::out);
+    if (!file.good())
+        EXCEPT(InternalErrorException, "Failed to create the file %s", fileName.c_str());
+
+    // Save content
+    file << fileContent;
+    file.close();
+
+    // Save file in RessourceManager
+    fileInfos.path = fileName;
+    fileInfos.content = std::string(fileContent.begin(), fileContent.end());
+    fileInfos.basename = basename;
+    _files[basename] = fileInfos;
+}
+
 std::string RessourceManager::getFile(const std::string& fileName)
 {
     // Textures are stored with their basename

@@ -20,10 +20,13 @@ public:
 
     void                                            loadResources(const std::string& directory);
 
+    void                                            createFile(const std::string& fileName, const std::string& fileContent);
     std::string                                     getFile(const std::string& fileName);
     void                                            saveFile(const std::string& fileName, const std::string fileContent);
+
     Texture&                                        getTexture(const std::string& fileName);
     const std::vector<const char*>&                 getTexturesNames() const;
+
     std::shared_ptr<Model>                          getModel(const std::string& fileName);
     const std::vector<const char*>&                 getModelsNames() const;
 

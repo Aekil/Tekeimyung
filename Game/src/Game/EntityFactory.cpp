@@ -1,10 +1,12 @@
 #include <algorithm>
+#include <iostream>
 
 #include <Game/ComponentFactory.hpp>
 #include <dirent.h> // This include have to be called after "ComponentFactory.hpp"
 
 #include <Engine/Utils/Debug.hpp>
 #include <Engine/Utils/Logger.hpp>
+#include <Engine/Utils/Helper.hpp>
 #include <Engine/Utils/Exception.hpp>
 #include <Engine/Utils/RessourceManager.hpp>
 
@@ -52,6 +54,8 @@ void EntityFactory::loadDirectory(const std::string& archetypesDir)
             if (!EntityFactory::entityTypeExists(typeName)) // The macro ENTITIES_TYPES did not create the type
                 EXCEPT(InvalidParametersException, "Failed to read entity archetype: Entity type \"%s\" does not exist", typeName.c_str());
 
+            _entitiesFiles[typeName] = path;
+
             // Create entity components
             auto &&components = parsed.get("components", {}).get();
             for (Json::ValueIterator it = components.begin(); it != components.end(); it++)
@@ -64,7 +68,6 @@ void EntityFactory::loadDirectory(const std::string& archetypesDir)
 
                 LOG_INFO("Add %s component %s", typeName.c_str(), componentName.c_str());
                 IComponentFactory::initComponent(typeName, componentName, JsonValue(*it));
-                _entitiesFiles[typeName] = path;
                 _entities[typeName].push_back(componentName);
             }
 
@@ -116,6 +119,24 @@ Entity* EntityFactory::createEntity(eArchetype type)
 Entity* EntityFactory::createEntity(const std::string& typeName)
 {
     return (cloneEntity(typeName));
+}
+
+void    EntityFactory::createEntityType(const std::string& typeName)
+{
+    // Add entity to factory
+    std::string filePath = ARCHETYPES_LOCATION + std::string("/") + Helper::lowerCaseString(typeName) + ".json";
+    _entitiesFiles[typeName] = filePath;
+    _typesString.push_back(_entitiesFiles.find(typeName)->first.c_str());
+
+    // Add transform component
+    IComponentFactory::initComponent(typeName, "sTransformComponent", {});
+    _entities[typeName].push_back("sTransformComponent");
+
+    // Create file
+    RessourceManager::getInstance()->createFile(filePath, "{\"name\": \"" + typeName + "\"}");
+
+    // Create entity instance to edit
+    createEntity(typeName);
 }
 
 void EntityFactory::bindEntityManager(EntityManager* em)
