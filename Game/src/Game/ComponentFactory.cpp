@@ -68,6 +68,11 @@ std::string IComponentFactory::getComponentNameWithHash(std::size_t hash)
     return (_componentsTypesHashs[hash]);
 }
 
+const std::unordered_map<std::size_t, std::string>& IComponentFactory::getComponentsTypesHashs()
+{
+    return (_componentsTypesHashs);
+}
+
 /*
 ** sRenderComponent
 */

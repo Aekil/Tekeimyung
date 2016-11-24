@@ -58,6 +58,7 @@ public:
     static IComponentFactory*                                       getFactory(const std::string& name);
 
     static std::string                                              getComponentNameWithHash(std::size_t hash);
+    static const std::unordered_map<std::size_t, std::string>&      getComponentsTypesHashs();
 
     // ComponentFactory overloaded classes methods
     // Ex: ComponentFactory<sPositionComponent>, ComponentFactory<sInputComponent>
@@ -65,7 +66,6 @@ public:
     virtual void                                                    addComponent(const std::string& entityType, sComponent* component) = 0;
     virtual void                                                    saveComponentJson(const std::string& entityType, const JsonValue& json) = 0;
     virtual bool                                                    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity) = 0;
-
 private:
     // Store Components types
     static std::unordered_map<std::string, IComponentFactory*>      _componentsTypes;

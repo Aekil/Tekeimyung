@@ -69,6 +69,36 @@ void    EntityDebugWindow::displayEntityDebug(Entity* entity)
     std::string entityName = nameComp->value;
     if (ImGui::CollapsingHeader(entityName.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
     {
+        // Add component button
+        if (ImGui::Button("Add component"))
+        {
+            ImGui::OpenPopup("components");
+        }
+
+        // Display new component that can be added
+        if (ImGui::BeginPopup("components"))
+        {
+            for (auto componentHash: IComponentFactory::getComponentsTypesHashs())
+            {
+                // Entity does not have this component, display it
+                if (!entity->hasComponent(componentHash.first))
+                {
+                    // Component button pressed, add it to the entity
+                    if (ImGui::Button(componentHash.second.c_str()))
+                    {
+                        // Get component factory to create a new one
+                        IComponentFactory* newComponentFactory = IComponentFactory::getFactory(componentHash.second);
+                        ASSERT(newComponentFactory != nullptr, "The component factory should exist");
+
+                        // Send fake entity name and json to loadFromJson to have the component fields initialized with default values
+                        sComponent* newComponent = newComponentFactory->loadFromJson("", {});
+                        entity->addComponent(newComponent);
+                    }
+                }
+            }
+            ImGui::EndPopup();
+        }
+        // Display all components debug
         for (uint32_t i = 0; i < entity->getComponents().size(); ++i)
         {
             sComponent* component = entity->getComponents()[i];
@@ -80,6 +110,7 @@ void    EntityDebugWindow::displayEntityDebug(Entity* entity)
             // Display component debug
             if (ImGui::CollapsingHeader(componentName.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
             {
+                // Remove component button
                 std::string removeButton = std::string("Remove " + componentName);
                 if (componentName != "sTransformComponent" &&
                     componentName != "sNameComponent" &&
@@ -88,6 +119,7 @@ void    EntityDebugWindow::displayEntityDebug(Entity* entity)
                     entity->removeComponent(component);
                     --i;
                 }
+                // Component debug content
                 else if (compFactory->updateEditor(entityName, &savedComponent, component, entity))
                 {
                     ASSERT(component != nullptr, "component should be set in updateEditor");

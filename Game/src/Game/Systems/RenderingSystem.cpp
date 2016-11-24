@@ -17,7 +17,6 @@
 
 RenderingSystem::RenderingSystem(Map* map, std::unordered_map<uint32_t, sEmitter*>* particleEmitters): _map(map), _particleEmitters(particleEmitters)
 {
-    addDependency<sPositionComponent>();
     addDependency<sRenderComponent>();
 
     _camera.translate(glm::vec3(350.0f, 250.0f, 300.0f));
@@ -68,35 +67,6 @@ void    RenderingSystem::renderEntity(Entity* entity)
     // Draw model
     model->draw(_shaderProgram);
 }
-
-/*
-void    RenderingSystem::renderEntities(EntityManager& em, std::list<uint32_t>::const_iterator& it, uint16_t layer, uint32_t x, uint32_t y)
-{
-    Entity* entity;
-    sPositionComponent *position;
-
-    if (it == (*_map)[layer].getEntities().cend())
-        return;
-
-    entity = em.getEntity(*it);
-    ASSERT(entity != nullptr, "The entity should exists");
-
-    position = entity->getComponent<sPositionComponent>();
-    while (std::floor(position->value.x) == x && std::floor(position->value.y) == y)
-    {
-        renderEntity(entity);
-        it++;
-
-        if (it == (*_map)[layer].getEntities().cend())
-            break;
-
-        entity = em.getEntity(*it);
-        ASSERT(entity != nullptr, "The entity should exists");
-
-        position = entity->getComponent<sPositionComponent>();
-    }
-}*/
-
 
 void    RenderingSystem::renderCollider(Entity* entity)
 {
@@ -261,7 +231,6 @@ std::shared_ptr<Model>  RenderingSystem::getModel(Entity* entity)
 {
     int id = entity->id;
     sRenderComponent *model = entity->getComponent<sRenderComponent>();
-    sPositionComponent *position = entity->getComponent<sPositionComponent>();
     sTransformComponent *transform = entity->getComponent<sTransformComponent>();
 
     // The entity does not exist in the render system

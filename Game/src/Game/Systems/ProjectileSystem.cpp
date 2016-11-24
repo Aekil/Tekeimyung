@@ -22,24 +22,27 @@ void    ProjectileSystem::update(EntityManager &em, float elapsedTime)
     {
         sProjectileComponent* component = entity->getComponent<sProjectileComponent>();
         Entity* shooter = em.getEntity(component->shooterId);
-        sPositionComponent* towerPos = shooter->getComponent<sPositionComponent>();
-        sPositionComponent* projectilePosition = entity->getComponent<sPositionComponent>();
-
-        float dist = glm::length(towerPos->value - projectilePosition->value);
-        if (dist > component->rangeMax)
+        if (shooter)
         {
-            em.destroyEntityRegister(entity);
-        }
-        else if (component->guided == true)
-        {
-            Entity* target = em.getEntity(component->targetId);
+            sPositionComponent* towerPos = shooter->getComponent<sPositionComponent>();
+            sPositionComponent* projectilePosition = entity->getComponent<sPositionComponent>();
 
-            if (target != nullptr)
+            float dist = glm::length(towerPos->value - projectilePosition->value);
+            if (dist > component->rangeMax)
             {
-                sPositionComponent* targetPosition = target->getComponent<sPositionComponent>();
-                sDirectionComponent*    projectileDirection = entity->getComponent<sDirectionComponent>();
+                em.destroyEntityRegister(entity);
+            }
+            else if (component->guided == true)
+            {
+                Entity* target = em.getEntity(component->targetId);
 
-                projectileDirection->value = glm::normalize(targetPosition->value - projectilePosition->value) * projectileDirection->speed;
+                if (target != nullptr)
+                {
+                    sPositionComponent* targetPosition = target->getComponent<sPositionComponent>();
+                    sDirectionComponent*    projectileDirection = entity->getComponent<sDirectionComponent>();
+
+                    projectileDirection->value = glm::normalize(targetPosition->value - projectilePosition->value) * projectileDirection->speed;
+                }
             }
         }
     });
