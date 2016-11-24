@@ -145,8 +145,10 @@ void    ParticleSystem::update(EntityManager &em, float elapsedTime)
         auto it = _emitters.cbegin();
         while (it != _emitters.cend())
         {
-            // The emitter has been deleted, remove it from the map
-            if (!em.getEntity(it->first))
+            Entity* entity = em.getEntity(it->first);
+            // The emitter has been deleted or the component has been removed, remove it from the map
+            if (!entity ||
+                !entity->getComponent<sParticleEmitterComponent>())
             {
                 uint32_t emitterId = it->first;
                 ++it;

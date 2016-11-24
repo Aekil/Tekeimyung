@@ -67,6 +67,7 @@ void    EntityDebugWindow::displayEntityDebug(Entity* entity)
     ASSERT(nameComp != nullptr, "The entity should have a name");
 
     std::string entityName = nameComp->value;
+    ImGui::PushItemWidth(200);
     if (ImGui::CollapsingHeader(entityName.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
     {
         // Add component button
