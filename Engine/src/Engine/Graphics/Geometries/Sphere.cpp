@@ -3,9 +3,9 @@
 
 Sphere::Sphere(Sphere::sInfo& info): Geometry(Geometry::eType::SPHERE)
 {
-    float radius = 1.0f;
-    uint32_t rings = static_cast<uint32_t>(15.0f);
-    uint32_t sectors = static_cast<uint32_t>(15.0f);
+    float radius = SIZE_UNIT;
+    uint32_t rings = static_cast<uint32_t>(SIZE_UNIT * 3.0f);
+    uint32_t sectors = static_cast<uint32_t>(SIZE_UNIT * 3.0f);
 
     // Sphere mesh
     std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();

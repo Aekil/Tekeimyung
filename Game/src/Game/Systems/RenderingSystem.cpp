@@ -89,6 +89,7 @@ void    RenderingSystem::renderCollider(Entity* entity)
 
         glm::mat4 boxTransform = transform->transform;
         boxTransform = glm::translate(boxTransform, boxCollider->pos);
+        boxTransform = glm::scale(boxTransform, boxCollider->size);
 
         boxCollider->box->update(glm::vec4(0.87f, 1.0f, 1.0f, 0.1f), boxTransform);
         boxCollider->box->draw(_shaderProgram);

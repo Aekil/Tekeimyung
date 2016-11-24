@@ -316,9 +316,9 @@ bool    ComponentFactory<sBoxColliderComponent>::updateEditor(const std::string&
     {
         sRenderComponent* render = entity->getComponent<sRenderComponent>();
         component->pos = glm::vec3(render->_model->getMin().x - 0.5f, render->_model->getMin().y - 0.5f, render->_model->getMin().z - 0.5f);
-        component->size.x = render->_model->getSize().x + 1.0f;
-        component->size.y = render->_model->getSize().y + 1.0f;
-        component->size.z = render->_model->getSize().z + 1.0f;
+        component->size.x = (render->_model->getSize().x + 1.0f) / SIZE_UNIT;
+        component->size.y = (render->_model->getSize().y + 1.0f) / SIZE_UNIT;
+        component->size.z = (render->_model->getSize().z + 1.0f) / SIZE_UNIT;
     }
     if (ImGui::Button(component->display ? "Hide" : "Display"))
     {
@@ -371,7 +371,7 @@ bool    ComponentFactory<sSphereColliderComponent>::updateEditor(const std::stri
             modelMaxSize = render->_model->getSize().y;
         if (render->_model->getSize().z > modelMaxSize)
             modelMaxSize = render->_model->getSize().z;
-        component->radius = modelMaxSize / 2.0f + 1.0f;
+        component->radius = (modelMaxSize / 2.0f + 1.0f) / SIZE_UNIT;
         component->pos = glm::vec3(render->_model->getMin().x + (render->_model->getSize().x / 2.0f),
                                     render->_model->getMin().y + (render->_model->getSize().y / 2.0f),
                                     render->_model->getMin().z + (render->_model->getSize().z / 2.0f));

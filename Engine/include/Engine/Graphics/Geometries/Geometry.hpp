@@ -7,6 +7,9 @@
 
 #include <Engine/Graphics/Model.hpp>
 
+// unit used for geometries base size
+# define SIZE_UNIT 10
+
 #define GEOMETRY_TYPES(PROCESS)\
     PROCESS(MESH),\
     PROCESS(PLANE),\

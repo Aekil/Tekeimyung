@@ -6,8 +6,8 @@
 
 Plane::Plane(Plane::sInfo& info): Geometry(Geometry::eType::PLANE)
 {
-    float width = 1.0f;
-    float height = 1.0f;
+    float width = SIZE_UNIT;
+    float height = SIZE_UNIT;
 
     // Plane mesh
     std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
