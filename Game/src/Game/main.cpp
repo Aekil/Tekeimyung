@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include <Engine/Utils/Exception.hpp>
 #include <Engine/Utils/RessourceManager.hpp>
 #include <Engine/Core/Engine.hpp>

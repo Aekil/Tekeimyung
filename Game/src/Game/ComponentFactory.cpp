@@ -112,69 +112,65 @@ bool    ComponentFactory<sRenderComponent>::updateEditor(const std::string& enti
     bool textureChanged = false;
     bool modelChanged = false;
 
-    ImGui::PushItemWidth(200);
-    if (ImGui::CollapsingHeader("sRenderComponent", ImGuiTreeNodeFlags_DefaultOpen))
+    changed |= ImGui::ColorEdit3("color", glm::value_ptr(component->color));
+
+    static std::vector<const char*>& typesString = const_cast<std::vector<const char*>&>(Geometry::getTypesString());
+    int selectedType = static_cast<int>(std::find(typesString.cbegin(), typesString.cend(), Geometry::getGeometryTypeString(component->type)) - typesString.begin());
+    const char** typesList = typesString.data();
+
+    typeChanged = ImGui::ListBox("Model type", &selectedType, typesList, (int)Geometry::getTypesString().size(), 4);
+    if (typeChanged)
+        component->type = Geometry::getGeometryType(typesString[selectedType]);
+
+    // Plan
+    if (component->type == Geometry::eType::PLANE)
     {
-        changed |= ImGui::ColorEdit3("color", glm::value_ptr(component->color));
-
-        static std::vector<const char*>& typesString = const_cast<std::vector<const char*>&>(Geometry::getTypesString());
-        int selectedType = static_cast<int>(std::find(typesString.cbegin(), typesString.cend(), Geometry::getGeometryTypeString(component->type)) - typesString.begin());
-        const char** typesList = typesString.data();
-
-        typeChanged = ImGui::ListBox("Model type", &selectedType, typesList, (int)Geometry::getTypesString().size(), 4);
-        if (typeChanged)
-            component->type = Geometry::getGeometryType(typesString[selectedType]);
-
-        // Plan
-        if (component->type == Geometry::eType::PLANE)
-        {
-            // Plan texture
-            {
-                static RessourceManager* resourceManager = RessourceManager::getInstance();
-                static std::vector<const char*>& texturesString = const_cast<std::vector<const char*>&>(resourceManager->getTexturesNames());
-                const char** texturesList = texturesString.data();
-                int selectedTexture = -1;
-                Texture* texture;
-
-                if (component->texture.size() > 0)
-                {
-                    texture = &resourceManager->getTexture(component->texture);
-                    selectedTexture = static_cast<int>(std::find(texturesString.cbegin(), texturesString.cend(), texture->getId()) - texturesString.begin());
-                }
-
-                if (ImGui::ListBox("texture", &selectedTexture, texturesList, (int)resourceManager->getTexturesNames().size(), 4))
-                {
-                    textureChanged = true;
-                    texture = &resourceManager->getTexture(texturesString[selectedTexture]);
-                    component->texture = texture->getPath();
-                }
-            }
-
-        }
-        // MESH
-        else if (component->type == Geometry::eType::MESH)
+        // Plan texture
         {
             static RessourceManager* resourceManager = RessourceManager::getInstance();
-            static std::vector<const char*>& modelsString = const_cast<std::vector<const char*>&>(resourceManager->getModelsNames());
-            auto model = resourceManager->getModel(component->modelFile);
-            int selectedModel = static_cast<int>(std::find(modelsString.cbegin(), modelsString.cend(), model->getId()) - modelsString.begin());
-            const char** modelsList = modelsString.data();
+            static std::vector<const char*>& texturesString = const_cast<std::vector<const char*>&>(resourceManager->getTexturesNames());
+            const char** texturesList = texturesString.data();
+            int selectedTexture = -1;
+            Texture* texture;
 
-            if (ImGui::ListBox("model", &selectedModel, modelsList, (int)resourceManager->getModelsNames().size(), 4))
+            if (component->texture.size() > 0)
             {
-                modelChanged = true;
-                model = resourceManager->getModel(modelsString[selectedModel]);
-                component->modelFile = model->getPath();
+                texture = &resourceManager->getTexture(component->texture);
+                selectedTexture = static_cast<int>(std::find(texturesString.cbegin(), texturesString.cend(), texture->getId()) - texturesString.begin());
+            }
+
+            if (ImGui::ListBox("texture", &selectedTexture, texturesList, (int)resourceManager->getTexturesNames().size(), 4))
+            {
+                textureChanged = true;
+                texture = &resourceManager->getTexture(texturesString[selectedTexture]);
+                component->texture = texture->getPath();
             }
         }
 
-        changed |= typeChanged || textureChanged || modelChanged;
+    }
+    // MESH
+    else if (component->type == Geometry::eType::MESH)
+    {
+        static RessourceManager* resourceManager = RessourceManager::getInstance();
+        static std::vector<const char*>& modelsString = const_cast<std::vector<const char*>&>(resourceManager->getModelsNames());
+        auto model = resourceManager->getModel(component->modelFile);
+        int selectedModel = static_cast<int>(std::find(modelsString.cbegin(), modelsString.cend(), model->getId()) - modelsString.begin());
+        const char** modelsList = modelsString.data();
 
-        if (typeChanged || textureChanged || modelChanged)
+        if (ImGui::ListBox("model", &selectedModel, modelsList, (int)resourceManager->getModelsNames().size(), 4))
         {
-            // Remove the model to auto reload the new model
-            component->_model = nullptr;
+            modelChanged = true;
+            model = resourceManager->getModel(modelsString[selectedModel]);
+            component->modelFile = model->getPath();
         }
+    }
+
+    changed |= typeChanged || textureChanged || modelChanged;
+
+    if (typeChanged || textureChanged || modelChanged)
+    {
+        // Remove the model to auto reload the new model
+        component->_model = nullptr;
     }
 
     return (changed);
@@ -301,25 +297,21 @@ bool    ComponentFactory<sBoxColliderComponent>::updateEditor(const std::string&
     *savedComponent = component;
     bool changed = false;
 
-    ImGui::PushItemWidth(200);
-    if (ImGui::CollapsingHeader("sBoxColliderComponent", ImGuiTreeNodeFlags_DefaultOpen))
+    if (ImGui::Button("Reset"))
     {
-        if (ImGui::Button("Reset"))
-        {
-            sRenderComponent* render = entity->getComponent<sRenderComponent>();
-            component->pos = glm::vec3(render->_model->getMin().x - 0.5f, render->_model->getMin().y - 0.5f, render->_model->getMin().z - 0.5f);
-            component->size.x = render->_model->getSize().x + 1.0f;
-            component->size.y = render->_model->getSize().y + 1.0f;
-            component->size.z = render->_model->getSize().z + 1.0f;
-        }
-        if (ImGui::Button(component->display ? "Hide" : "Display"))
-        {
-            component->display = !component->display;
-        }
-
-        ImGui::InputFloat3("position", glm::value_ptr(component->pos), 3);
-        ImGui::InputFloat3("size", glm::value_ptr(component->size), 3);
+        sRenderComponent* render = entity->getComponent<sRenderComponent>();
+        component->pos = glm::vec3(render->_model->getMin().x - 0.5f, render->_model->getMin().y - 0.5f, render->_model->getMin().z - 0.5f);
+        component->size.x = render->_model->getSize().x + 1.0f;
+        component->size.y = render->_model->getSize().y + 1.0f;
+        component->size.z = render->_model->getSize().z + 1.0f;
     }
+    if (ImGui::Button(component->display ? "Hide" : "Display"))
+    {
+        component->display = !component->display;
+    }
+
+    ImGui::InputFloat3("position", glm::value_ptr(component->pos), 3);
+    ImGui::InputFloat3("size", glm::value_ptr(component->size), 3);
 
     return (changed);
 }
@@ -355,32 +347,28 @@ bool    ComponentFactory<sSphereColliderComponent>::updateEditor(const std::stri
     *savedComponent = component;
     bool changed = false;
 
-    ImGui::PushItemWidth(200);
-    if (ImGui::CollapsingHeader("sSphereColliderComponent", ImGuiTreeNodeFlags_DefaultOpen))
+    if (ImGui::Button("Reset"))
     {
-        if (ImGui::Button("Reset"))
-        {
-            sRenderComponent* render = entity->getComponent<sRenderComponent>();
+        sRenderComponent* render = entity->getComponent<sRenderComponent>();
 
-            float modelMaxSize = render->_model->getSize().x;
-            if (render->_model->getSize().y > modelMaxSize)
-                modelMaxSize = render->_model->getSize().y;
-            if (render->_model->getSize().z > modelMaxSize)
-                modelMaxSize = render->_model->getSize().z;
-            component->radius = modelMaxSize / 2.0f + 1.0f;
-            component->pos = glm::vec3(render->_model->getMin().x + (render->_model->getSize().x / 2.0f),
-                                        render->_model->getMin().y + (render->_model->getSize().y / 2.0f),
-                                        render->_model->getMin().z + (render->_model->getSize().z / 2.0f));
-        }
-        if (ImGui::Button(component->display ? "Hide" : "Display"))
-        {
-            component->display = !component->display;
-        }
-
-
-        ImGui::InputFloat3("position", glm::value_ptr(component->pos), 3);
-        ImGui::InputFloat("radius", &component->radius, 3.0f);
+        float modelMaxSize = render->_model->getSize().x;
+        if (render->_model->getSize().y > modelMaxSize)
+            modelMaxSize = render->_model->getSize().y;
+        if (render->_model->getSize().z > modelMaxSize)
+            modelMaxSize = render->_model->getSize().z;
+        component->radius = modelMaxSize / 2.0f + 1.0f;
+        component->pos = glm::vec3(render->_model->getMin().x + (render->_model->getSize().x / 2.0f),
+                                    render->_model->getMin().y + (render->_model->getSize().y / 2.0f),
+                                    render->_model->getMin().z + (render->_model->getSize().z / 2.0f));
     }
+    if (ImGui::Button(component->display ? "Hide" : "Display"))
+    {
+        component->display = !component->display;
+    }
+
+
+    ImGui::InputFloat3("position", glm::value_ptr(component->pos), 3);
+    ImGui::InputFloat("radius", &component->radius, 3.0f);
 
     return (changed);
 }
@@ -580,25 +568,21 @@ bool    ComponentFactory<sParticleEmitterComponent>::updateEditor(const std::str
     *savedComponent = component;
     bool changed = false;
 
-    ImGui::PushItemWidth(200);
-    if (ImGui::CollapsingHeader("sParticleEmitterComponent", ImGuiTreeNodeFlags_DefaultOpen))
-    {
-        changed |= ImGui::SliderFloat("Emitter life (0 to disable)", &component->emitterLife, 0.0f, 10.0f);
-        changed |= ImGui::SliderFloat("Rate", &component->rate, 0.0f, 3.0f);
-        changed |= ImGui::SliderInt("Particles number per spawn", (int*)&component->spawnNb, 0, 50);
-        changed |= ImGui::SliderFloat("Angle", &component->angle, 0.0f, 360.0f);
-        changed |= ImGui::SliderFloat("Angle variance", &component->angleVariance, 0.0f, 360.0f);
-        changed |= ImGui::SliderFloat("Speed", &component->speed, 0.0f, 200.0f);
-        changed |= ImGui::SliderFloat("Speed variance", &component->speedVariance, 0.0f, 200.0f);
-        changed |= ImGui::SliderInt("Life", (int*)&component->life, 0, 200);
-        changed |= ImGui::SliderInt("Life variance", (int*)&component->lifeVariance, 0, 200);
-        changed |= ImGui::ColorEdit4("Start color", glm::value_ptr(component->colorStart));
-        changed |= ImGui::ColorEdit4("Finish color", glm::value_ptr(component->colorFinish));
-        changed |= ImGui::SliderFloat("Start size", &component->sizeStart, 0.0f, 5.0f);
-        changed |= ImGui::SliderFloat("Finish size", &component->sizeFinish, 0.0f, 5.0f);
-        changed |= ImGui::SliderFloat("Start size variance", &component->sizeStartVariance, 0.0f, 5.0f);
-        changed |= ImGui::SliderFloat("Finish size variance", &component->sizeFinishVariance, 0.0f, 5.0f);
-    }
+    changed |= ImGui::SliderFloat("Emitter life (0 to disable)", &component->emitterLife, 0.0f, 10.0f);
+    changed |= ImGui::SliderFloat("Rate", &component->rate, 0.0f, 3.0f);
+    changed |= ImGui::SliderInt("Particles number per spawn", (int*)&component->spawnNb, 0, 50);
+    changed |= ImGui::SliderFloat("Angle", &component->angle, 0.0f, 360.0f);
+    changed |= ImGui::SliderFloat("Angle variance", &component->angleVariance, 0.0f, 360.0f);
+    changed |= ImGui::SliderFloat("Speed", &component->speed, 0.0f, 200.0f);
+    changed |= ImGui::SliderFloat("Speed variance", &component->speedVariance, 0.0f, 200.0f);
+    changed |= ImGui::SliderInt("Life", (int*)&component->life, 0, 200);
+    changed |= ImGui::SliderInt("Life variance", (int*)&component->lifeVariance, 0, 200);
+    changed |= ImGui::ColorEdit4("Start color", glm::value_ptr(component->colorStart));
+    changed |= ImGui::ColorEdit4("Finish color", glm::value_ptr(component->colorFinish));
+    changed |= ImGui::SliderFloat("Start size", &component->sizeStart, 0.0f, 5.0f);
+    changed |= ImGui::SliderFloat("Finish size", &component->sizeFinish, 0.0f, 5.0f);
+    changed |= ImGui::SliderFloat("Start size variance", &component->sizeStartVariance, 0.0f, 5.0f);
+    changed |= ImGui::SliderFloat("Finish size variance", &component->sizeFinishVariance, 0.0f, 5.0f);
 
     return (changed);
 }
@@ -640,12 +624,9 @@ bool    ComponentFactory<sTowerAIComponent>::updateEditor(const std::string& ent
     component = static_cast<sTowerAIComponent*>(entityComponent ? entityComponent : _components[entityType]);
     *savedComponent = component;
     changed = false;
-    if (ImGui::CollapsingHeader("sTowerAIComponent", ImGuiTreeNodeFlags_DefaultOpen))
-    {
-        changed |= ImGui::SliderFloat("Radius", &component->radius, 0.0f, 10.0f);
-        changed |= ImGui::SliderFloat("Fire rate", &component->fireRate, 0.0f, 10.0f);
-        changed |= ImGui::SliderFloat("Projectile speed", &component->projectileSpeed, 0.0f, 10.0f);
-    }
+    changed |= ImGui::SliderFloat("Radius", &component->radius, 0.0f, 10.0f);
+    changed |= ImGui::SliderFloat("Fire rate", &component->fireRate, 0.0f, 10.0f);
+    changed |= ImGui::SliderFloat("Projectile speed", &component->projectileSpeed, 0.0f, 10.0f);
 
     return (changed);
 }
@@ -687,21 +668,18 @@ bool        ComponentFactory<sProjectileComponent>::updateEditor(const std::stri
     component = static_cast<sProjectileComponent*>(entityComponent ? entityComponent : _components[entityType]);
     *savedComponent = component;
     changed = false;
-    if (ImGui::CollapsingHeader("sProjectileComponent", ImGuiTreeNodeFlags_DefaultOpen))
+    converter << component->shooterId;
+    converter >> buffer;
+    ImGui::TextDisabled("Shooter ID: %s", buffer.c_str());
+    if (component->guided == true) ImGui::Separator();
+    changed |= ImGui::Checkbox("Make projectile guided !", &component->guided);
+    if (component->guided == true)
     {
-        converter << component->shooterId;
+        converter << component->targetId;
         converter >> buffer;
-        ImGui::TextDisabled("Shooter ID: %s", buffer.c_str());
-        if (component->guided == true) ImGui::Separator();
-        changed |= ImGui::Checkbox("Make projectile guided !", &component->guided);
-        if (component->guided == true)
-        {
-            converter << component->targetId;
-            converter >> buffer;
-            ImGui::TextDisabled("Target ID: %s", buffer.c_str());
-        }
-        // Add IMGUI implementation for RangeMax
+        ImGui::TextDisabled("Target ID: %s", buffer.c_str());
     }
+    // Add IMGUI implementation for RangeMax
 
     return (changed);
 }
@@ -777,15 +755,11 @@ bool    ComponentFactory<sTransformComponent>::updateEditor(const std::string& e
     *savedComponent = component;
     bool changed = false;
 
-    ImGui::PushItemWidth(200);
-    if (ImGui::CollapsingHeader("sTransformComponent", ImGuiTreeNodeFlags_DefaultOpen))
-    {
-        ComponentFactory<sTransformComponent>::updateTransforms(component->pos,
-                                                                component->scale,
-                                                                component->rotation,
-                                                                component->transform,
-                                                                ImGuizmo::LOCAL);
-    }
+    ComponentFactory<sTransformComponent>::updateTransforms(component->pos,
+                                                            component->scale,
+                                                            component->rotation,
+                                                            component->transform,
+                                                            ImGuizmo::LOCAL);
 
     return (false);
 }

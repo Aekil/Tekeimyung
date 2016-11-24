@@ -17,8 +17,11 @@ public:
     static uint32_t     getSelectedEntityId();
 
 private:
+    void                displayEntityDebug(Entity* entity);
+
     void                saveEntityTemplateToJson(const std::string& typeName);
     void                saveEntityTemplate(const std::string& typeName, Entity* entity);
+
     glm::vec3           getRandomPos();
     void                spawnEntity(const std::string& typeName);
 

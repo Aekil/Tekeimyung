@@ -29,7 +29,6 @@ void    EntityDebugWindow::build()
     ImGui::SetWindowPos(ImVec2(_pos.x, _pos.y), ImGuiSetCond_Always);
 
     // Entities list
-    static Entity* selectedEntity = nullptr;
     ImGui::BeginChild("Entities list", ImVec2(150, 0), true);
     for (auto it: _em->getEntities())
     {
@@ -39,53 +38,66 @@ void    EntityDebugWindow::build()
 
         ASSERT(nameComp != nullptr, "The entity should have a name");
         name << "[" << entity->id << "] " << nameComp->value;
-        if (ImGui::Selectable(name.str().c_str(), selectedEntity && selectedEntity->id == entity->id))
+        if (ImGui::Selectable(name.str().c_str(), _selectedEntityId == entity->id))
         {
-            selectedEntity = entity;
             _selectedEntityId = entity->id;
         }
     }
     ImGui::EndChild();
 
-    // No entity selected
+    Entity* selectedEntity = _em->getEntity(_selectedEntityId);
+
+    // The entity has been deleted or none is selected
     if (!selectedEntity)
-    {
-        ImGui::End();
-        return;
-    }
-    // The entity has been deleted
-    else if (_em->getEntity(_selectedEntityId) == nullptr)
     {
         selectedEntity = _em->getEntities().begin()->second;
         _selectedEntityId = selectedEntity->id;
     }
 
-    // Entity edition
+    displayEntityDebug(selectedEntity);
+
+
+}
+
+void    EntityDebugWindow::displayEntityDebug(Entity* entity)
+{
     ImGui::SameLine();
     ImGui::BeginGroup();
-    sNameComponent* nameComp = selectedEntity->getComponent<sNameComponent>();
+    sNameComponent* nameComp = entity->getComponent<sNameComponent>();
     ASSERT(nameComp != nullptr, "The entity should have a name");
 
     std::string entityName = nameComp->value;
     if (ImGui::CollapsingHeader(entityName.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
     {
-        for (auto component: selectedEntity->getComponents())
+        for (uint32_t i = 0; i < entity->getComponents().size(); ++i)
         {
+            sComponent* component = entity->getComponents()[i];
             std::string componentName = IComponentFactory::getComponentNameWithHash(component->getTypeInfo().hash_code());
             ASSERT(componentName.size() > 0, "The component name should exist");
             IComponentFactory* compFactory = IComponentFactory::getFactory(componentName);
             sComponent* savedComponent = nullptr;
 
-            // The component data has changed
-            if (compFactory->updateEditor(entityName, &savedComponent, component, selectedEntity))
+            // Display component debug
+            if (ImGui::CollapsingHeader(componentName.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
             {
-                ASSERT(component != nullptr, "component should be set in updateEditor");
+                std::string removeButton = std::string("Remove " + componentName);
+                if (componentName != "sTransformComponent" &&
+                    componentName != "sNameComponent" &&
+                    ImGui::Button(removeButton.c_str()))
+                {
+                    entity->removeComponent(component);
+                    --i;
+                }
+                else if (compFactory->updateEditor(entityName, &savedComponent, component, entity))
+                {
+                    ASSERT(component != nullptr, "component should be set in updateEditor");
+                }
             }
         }
 
         if (ImGui::Button("Apply changes to template"))
         {
-            saveEntityTemplate(entityName, selectedEntity);
+            saveEntityTemplate(entityName, entity);
             saveEntityTemplateToJson(entityName);
         }
     }
