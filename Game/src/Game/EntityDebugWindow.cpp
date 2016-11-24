@@ -57,6 +57,12 @@ void    EntityDebugWindow::build()
     }
     ImGui::EndChild();
 
+    if (_em->getEntities().size() == 0)
+    {
+        ImGui::End();
+        return;
+    }
+
     Entity* selectedEntity = _em->getEntity(_selectedEntityId);
 
     // The entity has been deleted or none is selected
@@ -67,8 +73,7 @@ void    EntityDebugWindow::build()
     }
 
     displayEntityDebug(selectedEntity);
-
-
+    ImGui::End();
 }
 
 void    EntityDebugWindow::displayEntityDebug(Entity* entity)
@@ -147,7 +152,6 @@ void    EntityDebugWindow::displayEntityDebug(Entity* entity)
         }
     }
     ImGui::EndGroup();
-    ImGui::End();
 }
 
 uint32_t    EntityDebugWindow::getSelectedEntityId()

@@ -290,7 +290,7 @@ sComponent* ComponentFactory<sBoxColliderComponent>::loadFromJson(const std::str
     sBoxColliderComponent* component = new sBoxColliderComponent();
 
     component->pos = json.getVec3f("pos", { 0.0f, 0.0f, 0.0f });
-    component->size = json.getVec3f("size", { 10.0f, 10.0f, 10.0f });
+    component->size = json.getVec3f("size", { 2.0f, 2.0f, 2.0f });
 
     return (component);
 }
@@ -340,7 +340,7 @@ sComponent* ComponentFactory<sSphereColliderComponent>::loadFromJson(const std::
     sSphereColliderComponent* component = new sSphereColliderComponent();
 
     component->pos = json.getVec3f("pos", { 0.0f, 0.0f, 0.0f });
-    component->radius = json.getFloat("radius", 6.0f);
+    component->radius = json.getFloat("radius", 2.0f);
 
     return (component);
 }
@@ -511,13 +511,13 @@ sComponent* ComponentFactory<sParticleEmitterComponent>::loadFromJson(const std:
     JsonValue size = json.get("size", {});
 
     component->rate = json.getFloat("rate", 0.0f);
-    component->spawnNb = json.getUInt("spawn_nb", 0);
+    component->spawnNb = json.getUInt("spawn_nb", 1);
     component->emitterLife = json.getFloat("emitter_life", 0.0f);
-    component->life = json.getUInt("life", 0);
+    component->life = json.getUInt("life", 80);
     component->lifeVariance = json.getUInt("life_variance", 0);
-    component->angle = json.getFloat("angle", 0.0f);
+    component->angle = json.getFloat("angle", 30.0f);
     component->angleVariance = json.getFloat("angle_variance", 0.0f);
-    component->speed = json.getFloat("speed", 0.0f);
+    component->speed = json.getFloat("speed", 30.0f);
     component->speedVariance =  json.getFloat("speed_variance", 0.0f);
 
     if (color.size() > 0)
@@ -527,6 +527,11 @@ sComponent* ComponentFactory<sParticleEmitterComponent>::loadFromJson(const std:
         component->colorFinish = color.getColor4f("finish", { 1.0f, 1.0f, 1.0f, 1.0f });
         component->colorFinishVariance = color.getColor4f("finish_variance", { 1.0f, 1.0f, 1.0f, 1.0f });
     }
+    else
+    {
+        component->colorStart = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+        component->colorFinish = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f);
+    }
 
     if (size.size() > 0)
     {
@@ -534,6 +539,11 @@ sComponent* ComponentFactory<sParticleEmitterComponent>::loadFromJson(const std:
         component->sizeFinish =  size.getFloat("finish", 1.0f);
         component->sizeStartVariance =  size.getFloat("start_variance", 1.0f);
         component->sizeFinishVariance =  size.getFloat("finish_variance", 1.0f);
+    }
+    else
+    {
+        component->sizeStart = 1.0f;
+        component->sizeFinish = 0.0f;
     }
 
     component->texture = json.getString("texture", "");
