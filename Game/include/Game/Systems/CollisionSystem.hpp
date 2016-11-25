@@ -2,7 +2,11 @@
 
 #include <ECS/System.hpp>
 
+#include <Engine/Utils/MonitoringDebugWindow.hpp>
+
 #include <Game/Map.hpp>
+
+#define MONITORING_NAME "Collision system"
 
 class CollisionSystem : public System
 {
@@ -19,4 +23,6 @@ private:
 
 private:
     Map*            _map;
+    uint16_t        _keyMonitoring;
+    tMonitoring     _data;
 };

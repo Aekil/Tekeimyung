@@ -9,7 +9,6 @@
 #include <Engine/Utils/Timer.hpp>
 #include <Engine/Utils/Debug.hpp>
 #include <Engine/Utils/Exception.hpp>
-#include <Engine/Utils/MonitoringDebugWindow.hpp>
 #include <Engine/Window/GameWindow.hpp>
 
 #include <Game/Systems/RenderingSystem.hpp>
@@ -19,6 +18,8 @@ RenderingSystem::RenderingSystem(Map* map, std::unordered_map<uint32_t, sEmitter
 {
     addDependency<sPositionComponent>();
     addDependency<sRenderComponent>();
+
+    _keyMonitoring = MonitoringDebugWindow::getInstance()->registerSystem(MONITORING_NAME);
 }
 
 RenderingSystem::~RenderingSystem() {}
@@ -188,7 +189,7 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
 
     // Display screen
     GameWindow::getInstance()->display();
-    MonitoringDebugWindow::getInstance()->registerSystem(FMT_MSG("Render system : %f secondes", timer.getElapsedTime()));
+    //MonitoringDebugWindow::getInstance()->registerSystem(FMT_MSG("Render system : %f secondes", timer.getElapsedTime()));
     //LOG_INFO("Render system : %f secondes", timer.getElapsedTime());
 }
 

@@ -12,6 +12,8 @@ TowerAISystem::TowerAISystem(Map* map) : _map(map)
 {
     addDependency<sTowerAIComponent>();
     addDependency<sPositionComponent>();
+
+    _keyMonitoring = MonitoringDebugWindow::getInstance()->registerSystem(MONITORING_NAME);
 }
 
 TowerAISystem::~TowerAISystem() {}

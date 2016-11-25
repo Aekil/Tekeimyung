@@ -6,8 +6,11 @@
 #include <ECS/System.hpp>
 
 #include <Engine/Utils/Timer.hpp>
+#include <Engine/Utils/MonitoringDebugWindow.hpp>
 
 #include <Game/Components.hh>
+
+#define MONITORING_NAME "Particle system"
 
 #define MAX_PARTICLES   5000
 
@@ -55,4 +58,5 @@ private:
 
 private:
     std::unordered_map<uint32_t, sEmitter*>     _emitters;
+    uint16_t                                    _keyMonitoring;
 };

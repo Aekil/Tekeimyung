@@ -15,6 +15,8 @@ ParticleSystem::ParticleSystem()
     addDependency<sParticleEmitterComponent>();
     addDependency<sPositionComponent>();
     addDependency<sRenderComponent>();
+
+    _keyMonitoring = MonitoringDebugWindow::getInstance()->registerSystem(MONITORING_NAME);
 }
 
 ParticleSystem::~ParticleSystem() {}

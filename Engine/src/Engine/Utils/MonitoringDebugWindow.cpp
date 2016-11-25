@@ -49,18 +49,28 @@ void    MonitoringDebugWindow::build()
         ImGui::SetScrollHere(1.0f);
     }*/
 
-    /*for (auto&& msg : _msgList)
+    for (auto&& system : _systemsRegistered)
     {
-        ImGui::Text(msg.c_str());
-        if (msg != _msgList.back())
-            ImGui::Separator();
+        
+        ImGui::Text(FMT_MSG("%s : %f ms", system.second.name.c_str(), system.second.timeMs).c_str);
+        ImGui::Separator();
     }
-    _msgList.clear();*/
+    //_systemsRegistered.clear();
 
     ImGui::End();
 }
 
-void    MonitoringDebugWindow::registerSystem(std::string msg)
+uint16_t    MonitoringDebugWindow::registerSystem(std::string name)
 {
-    //_msgList.push_back(msg);
+    static uint16_t keyID = 0;
+
+    _systemsRegistered[keyID].name = name;
+    _systemsRegistered[keyID].timeMs = 0; // ?
+    
+    return (keyID++);
+}
+
+void    MonitoringDebugWindow::updateSystem(uint16_t key, tMonitoring newData)
+{
+    _systemsRegistered[key].timeMs = newData.timeMs;
 }

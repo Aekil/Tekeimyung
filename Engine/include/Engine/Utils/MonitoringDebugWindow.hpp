@@ -39,7 +39,8 @@ public:
 
     virtual void                                    build();
 
-    void                                            registerSystem(std::string msg);
+    uint16_t                                        registerSystem(std::string name);
+    void                                            updateSystem(uint16_t key, tMonitoring newData);
 
 private:
     static std::shared_ptr<MonitoringDebugWindow>   _monitoringDebugWindow;

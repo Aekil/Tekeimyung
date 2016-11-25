@@ -12,6 +12,8 @@ ProjectileSystem::ProjectileSystem()
     addDependency<sProjectileComponent>();
     addDependency<sPositionComponent>();
     addDependency<sDirectionComponent>();
+
+    _keyMonitoring = MonitoringDebugWindow::getInstance()->registerSystem(MONITORING_NAME);
 }
 
 ProjectileSystem::~ProjectileSystem() {}

@@ -1,6 +1,4 @@
-#include <Engine/Utils/Logger.hpp>
 #include <Engine/Utils/Timer.hpp>
-#include <Engine/Utils/MonitoringDebugWindow.hpp>
 #include <Engine/Window/GameWindow.hpp>
 
 #include <Game/Components.hh>
@@ -11,6 +9,8 @@ InputSystem::InputSystem()
 {
     addDependency<sInputComponent>();
     addDependency<sDirectionComponent>();
+
+    _keyMonitoring = MonitoringDebugWindow::getInstance()->registerSystem(MONITORING_NAME);
 }
 
 InputSystem::~InputSystem() {}
@@ -24,7 +24,7 @@ void    InputSystem::update(EntityManager &em, float elapsedTime)
     forEachEntity(em, [&](Entity *entity) {
         movementKeys(entity);
     });
-    MonitoringDebugWindow::getInstance()->registerSystem(FMT_MSG("Input system : %f secondes", timer.getElapsedTime()));
+    //MonitoringDebugWindow::getInstance()->registerSystem(FMT_MSG("Input system : %f secondes", timer.getElapsedTime()));
     //LOG_INFO("Input system : %f secondes", timer.getElapsedTime());
 }
 

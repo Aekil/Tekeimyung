@@ -1,9 +1,7 @@
 #include <cmath>
 #include <algorithm>
 
-#include <Engine/Utils/Logger.hpp>
 #include <Engine/Utils/Timer.hpp>
-#include <Engine/Utils/MonitoringDebugWindow.hpp>
 #include <Engine/Window/GameWindow.hpp>
 #include <Engine/Physics/Collisions.hpp>
 
@@ -16,6 +14,8 @@ CollisionSystem::CollisionSystem(Map* map) : _map(map)
 {
     this->addDependency<sPositionComponent>();
     this->addDependency<sDirectionComponent>();
+
+    _keyMonitoring = MonitoringDebugWindow::getInstance()->registerSystem(MONITORING_NAME);
 }
 
 void    CollisionSystem::update(EntityManager &em, float elapsedTime)
@@ -81,7 +81,9 @@ void    CollisionSystem::update(EntityManager &em, float elapsedTime)
             }
         }
     });
-    MonitoringDebugWindow::getInstance()->registerSystem(FMT_MSG("Collision system : %f secondes", timer.getElapsedTime()));
+    //MonitoringDebugWindow::getInstance()->registerSystem(FMT_MSG("Collision system : %f secondes", timer.getElapsedTime()));
+    _data.timeMs = timer.getElapsedTime();
+    MonitoringDebugWindow::getInstance()->updateSystem(_keyMonitoring, _data);
     //LOG_INFO("Collision system : %f secondes", timer.getElapsedTime());
 }
 

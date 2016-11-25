@@ -8,6 +8,8 @@ AISystem::AISystem()
 {
     addDependency<sAIComponent>();
     addDependency<sDirectionComponent>();
+
+    _keyMonitoring = MonitoringDebugWindow::getInstance()->registerSystem(MONITORING_NAME);
 }
 
 AISystem::~AISystem() {}

@@ -7,6 +7,8 @@ WaveSystem::WaveSystem(Map* map) : _map(map)
     _timer = new Timer();
     addDependency<sWaveComponent>();
     addDependency<sPositionComponent>();
+
+    _keyMonitoring = MonitoringDebugWindow::getInstance()->registerSystem(MONITORING_NAME);
 }
 
 WaveSystem::~WaveSystem() {}
