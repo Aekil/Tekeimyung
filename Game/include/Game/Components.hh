@@ -20,6 +20,7 @@
 #include <Engine/Graphics/Geometries/Box.hpp>
 #include <Engine/Graphics/Geometries/Plane.hpp>
 #include <Engine/Graphics/Geometries/Sphere.hpp>
+#include <Engine/Graphics/Geometries/Circle.hpp>
 #include <Engine/Utils/RessourceManager.hpp>
 #include <Engine/Utils/Exception.hpp>
 
@@ -80,6 +81,12 @@ struct sRenderComponent: sComponent
         {
             Sphere::sInfo sphereInfos = {1.0f};
             _model = std::make_shared<Sphere>(sphereInfos);
+        }
+        // Load circle
+        else if (type == Geometry::eType::CIRCLE)
+        {
+            Circle::sInfo circleInfos = {1.0f, 1.0f};
+            _model = std::make_shared<Circle>(circleInfos);
         }
         else
             EXCEPT(InvalidParametersException, "Unknown model type for sRenderComponent");

@@ -28,7 +28,7 @@ public:
     const glm::vec3&            getMin() const;
     const glm::vec3&            getMax() const;
 
-    void                        draw(const ShaderProgram& shaderProgram, GLuint primitiveType = GL_TRIANGLES) const;
+    void                        draw(const ShaderProgram& shaderProgram) const;
     void                        update(const glm::vec4& color, const glm::mat4 transform);
 
 protected:
@@ -67,4 +67,6 @@ protected:
     glm::vec3                           _size;
     glm::vec3                           _min;
     glm::vec3                           _max;
+
+    GLuint                              _primitiveType;
 };
