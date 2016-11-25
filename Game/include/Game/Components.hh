@@ -17,12 +17,10 @@
 #include <Engine/Graphics/Sprite.hpp>
 #include <Engine/Graphics/Model.hpp>
 #include <Engine/Graphics/Geometries/Geometry.hpp>
+#include <Engine/Graphics/Geometries/GeometryFactory.hpp>
 #include <Engine/Graphics/Geometries/Box.hpp>
-#include <Engine/Graphics/Geometries/Plane.hpp>
 #include <Engine/Graphics/Geometries/Sphere.hpp>
-#include <Engine/Graphics/Geometries/Circle.hpp>
 #include <Engine/Utils/RessourceManager.hpp>
-#include <Engine/Utils/Exception.hpp>
 
 
 struct sRenderComponent: sComponent
@@ -56,40 +54,10 @@ struct sRenderComponent: sComponent
 
     void initModel()
     {
-        // Load mesh
         if (type == Geometry::eType::MESH)
-        {
             _model = RessourceManager::getInstance()->getModel(modelFile);
-            return;
-        }
-
-        // Load plane
-        if (type == Geometry::eType::PLANE)
-        {
-            Plane::sInfo planeInfos = {1.0f, 1.0f};
-            planeInfos.texturePath = texture;
-            _model = std::make_shared<Plane>(planeInfos);
-        }
-        // Load box
-        else if (type == Geometry::eType::BOX)
-        {
-            Box::sInfo boxInfos = {1.0f, 1.0f, 1.0f};
-            _model = std::make_shared<Box>(boxInfos);
-        }
-        // Load sphere
-        else if (type == Geometry::eType::SPHERE)
-        {
-            Sphere::sInfo sphereInfos = {1.0f};
-            _model = std::make_shared<Sphere>(sphereInfos);
-        }
-        // Load circle
-        else if (type == Geometry::eType::CIRCLE)
-        {
-            Circle::sInfo circleInfos = {1.0f, 1.0f};
-            _model = std::make_shared<Circle>(circleInfos);
-        }
         else
-            EXCEPT(InvalidParametersException, "Unknown model type for sRenderComponent");
+            _model = GeometryFactory::create(type, texture);
     }
 
     std::string modelFile;
