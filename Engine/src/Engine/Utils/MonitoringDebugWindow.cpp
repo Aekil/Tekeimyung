@@ -49,18 +49,18 @@ void    MonitoringDebugWindow::build()
         ImGui::SetScrollHere(1.0f);
     }*/
 
-    for (auto&& msg : _msgList)
+    /*for (auto&& msg : _msgList)
     {
         ImGui::Text(msg.c_str());
         if (msg != _msgList.back())
             ImGui::Separator();
     }
-    _msgList.clear();
+    _msgList.clear();*/
 
     ImGui::End();
 }
 
-void    MonitoringDebugWindow::registerMsg(std::string msg)
+void    MonitoringDebugWindow::registerSystem(std::string msg)
 {
-    _msgList.push_back(msg);
+    //_msgList.push_back(msg);
 }

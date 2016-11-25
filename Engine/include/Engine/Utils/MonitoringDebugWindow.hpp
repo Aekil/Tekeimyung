@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <vector>
+#include <map>
 
 #include <Engine/Utils/Debug.hpp>
 #include <Engine/Utils/DebugWindow.hpp>
@@ -21,6 +22,12 @@ std::string formatMonMessage(const char* format, Args... args)
 
 #define FMT_MSG(format, ...)  (formatMonMessage(format, ## __VA_ARGS__))
 
+typedef struct sMonitoring
+{
+    std::string name;
+    float       timeMs;
+}               tMonitoring;
+
 class MonitoringDebugWindow : public DebugWindow
 {
 public:
@@ -32,11 +39,13 @@ public:
 
     virtual void                                    build();
 
-    void                                            registerMsg(std::string msg);
+    void                                            registerSystem(std::string msg);
 
 private:
     static std::shared_ptr<MonitoringDebugWindow>   _monitoringDebugWindow;
 
-    std::vector<std::string>                        _msgList;
+    std::map<uint16_t, tMonitoring>                 _systemsRegistered;
+
+    //std::vector<std::string>                        _msgList;
 };
 

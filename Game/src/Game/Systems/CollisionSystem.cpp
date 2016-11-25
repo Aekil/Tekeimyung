@@ -81,7 +81,7 @@ void    CollisionSystem::update(EntityManager &em, float elapsedTime)
             }
         }
     });
-    MonitoringDebugWindow::getInstance()->registerMsg(FMT_MSG("Collision system : %f secondes", timer.getElapsedTime()));
+    MonitoringDebugWindow::getInstance()->registerSystem(FMT_MSG("Collision system : %f secondes", timer.getElapsedTime()));
     //LOG_INFO("Collision system : %f secondes", timer.getElapsedTime());
 }
 

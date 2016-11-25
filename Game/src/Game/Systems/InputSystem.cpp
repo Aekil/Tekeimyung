@@ -24,7 +24,7 @@ void    InputSystem::update(EntityManager &em, float elapsedTime)
     forEachEntity(em, [&](Entity *entity) {
         movementKeys(entity);
     });
-    MonitoringDebugWindow::getInstance()->registerMsg(FMT_MSG("Input system : %f secondes", timer.getElapsedTime()));
+    MonitoringDebugWindow::getInstance()->registerSystem(FMT_MSG("Input system : %f secondes", timer.getElapsedTime()));
     //LOG_INFO("Input system : %f secondes", timer.getElapsedTime());
 }
 

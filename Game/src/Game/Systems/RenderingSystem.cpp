@@ -188,7 +188,7 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
 
     // Display screen
     GameWindow::getInstance()->display();
-    MonitoringDebugWindow::getInstance()->registerMsg(FMT_MSG("Render system : %f secondes", timer.getElapsedTime()));
+    MonitoringDebugWindow::getInstance()->registerSystem(FMT_MSG("Render system : %f secondes", timer.getElapsedTime()));
     //LOG_INFO("Render system : %f secondes", timer.getElapsedTime());
 }
 
