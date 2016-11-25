@@ -178,12 +178,6 @@ void APIENTRY   GameWindow::debugOutput(GLenum source, GLenum type, GLenum id,
     {
         LOG_WARN("[OpenGL][%s][%s] %s", sourceString.c_str(), typeString.c_str(), message);
     }
-    else if (severity == GL_DEBUG_SEVERITY_NOTIFICATION)
-    {
-        LOG_INFO("[OpenGL][%s][%s] %s", sourceString.c_str(), typeString.c_str(), message);
-    }
-    else
-        ASSERT(0, "Undefined OpenGL debug severity");
 }
 
 void    GameWindow::initDebugOutput()
