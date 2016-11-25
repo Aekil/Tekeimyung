@@ -45,6 +45,9 @@ void    EntityDebugWindow::build()
     ImGui::PopStyleColor(3);
 
     // Entities list
+    ImGuiTextFilter filter;
+
+    filter.Draw();
     ImGui::BeginChild("Entities list", ImVec2(150, 0), true);
     for (auto it: _em->getEntities())
     {
@@ -54,9 +57,12 @@ void    EntityDebugWindow::build()
 
         ASSERT(nameComp != nullptr, "The entity should have a name");
         name << "[" << entity->id << "] " << nameComp->value;
-        if (ImGui::Selectable(name.str().c_str(), _selectedEntityId == entity->id))
+        if (filter.PassFilter(name.str().c_str()) == true)
         {
-            _selectedEntityId = entity->id;
+            if (ImGui::Selectable(name.str().c_str(), _selectedEntityId == entity->id))
+            {
+                _selectedEntityId = entity->id;
+            }
         }
     }
     ImGui::EndChild();

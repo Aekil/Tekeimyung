@@ -213,7 +213,6 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
     // Disable blending for opaque objects
     glDisable(GL_BLEND);
 
-
     // Display imgui windows
     ImGui::Render();
 
