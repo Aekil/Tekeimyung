@@ -45,7 +45,7 @@ void    EntityDebugWindow::build()
     ImGui::PopStyleColor(3);
 
     // Entities list
-    ImGuiTextFilter filter;
+    static ImGuiTextFilter filter;
 
     filter.Draw();
     ImGui::BeginChild("Entities list", ImVec2(150, 0), true);
