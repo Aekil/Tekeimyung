@@ -211,6 +211,7 @@ struct sBoxColliderComponent : sComponent
     {
         this->pos = component->pos;
         this->size = component->size;
+        this->isTrigger = component->isTrigger;
     }
 
     virtual void update(sComponent* component)
@@ -223,6 +224,9 @@ struct sBoxColliderComponent : sComponent
 
     // Scale
     glm::vec3 size;
+
+    // isTrigger
+    bool isTrigger;
 
     // Box model
     std::shared_ptr<Box> box;
@@ -245,6 +249,7 @@ struct sSphereColliderComponent : sComponent
     {
         this->pos = component->pos;
         this->radius = component->radius;
+        this->isTrigger = component->isTrigger;
     }
 
     virtual void update(sComponent* component)
@@ -254,6 +259,10 @@ struct sSphereColliderComponent : sComponent
 
     glm::vec3 pos;
     float radius;
+
+    // isTrigger
+    bool isTrigger;
+
     std::shared_ptr<Sphere> sphere;
     bool display;
 };

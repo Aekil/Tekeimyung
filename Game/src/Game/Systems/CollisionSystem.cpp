@@ -3,6 +3,7 @@
 
 #include <Engine/Window/GameWindow.hpp>
 #include <Engine/Physics/Collisions.hpp>
+#include <Engine/Graphics/Geometries/Geometry.hpp>
 
 #include <Game/Components.hh>
 #include <Game/EntityFactory.hpp>
@@ -21,119 +22,60 @@ void    CollisionSystem::update(EntityManager &em, float elapsedTime)
 
     this->forEachEntity(em, [&](Entity* entity)
     {
-        if (entity->getComponent<sBoxColliderComponent>())
-        {
-            this->moveHitbox(entity, elapsedTime);
-            sDirectionComponent* direction = entity->getComponent<sDirectionComponent>();
-            sPositionComponent* position = entity->getComponent<sPositionComponent>();
-            uint16_t layer = (uint16_t)position->z;
+        if (entity->getComponent<sBoxColliderComponent>() == nullptr && entity->getComponent<sSphereColliderComponent>() == nullptr) return;
 
-            // Check Collision with tile
-            // CRASH ON SPAWN RANDOM ENTITIES
-            if ((*_map)[layer][(uint32_t)std::floor(position->value.y)][(uint32_t)std::floor(position->value.x)].get() != 0 ||
-                (layer > 0 && (*collisionMap)[layer - 1][(uint32_t)std::floor(position->value.y)][(uint32_t)std::floor(position->value.x)] == eColType::CAN_NOT_WALK))
-            {
-                if (this->staticResolution(entity))
-                {
-                    position->value -= direction->value * elapsedTime;
-                }
-            }
-            else
-            {
-
-                // Check Collision with dynamic entities
-                for (auto &&entityId : (*_map)[layer].getEntities())
-                {
-                    Entity* entityB = em.getEntity(entityId);
-                    if (!entityB) continue;
-
-                    sPositionComponent* positionB = entityB->getComponent<sPositionComponent>();
-                    if (entity->id != entityB->id)
-                    {
-                        //position->value -= direction->value;
-                        if (this->isColliding(entity, entityB))
-                        {
-                            if (this->dynamicResolution(em, entity, entityB))
-                            {
-                                position->value -= direction->value * elapsedTime;
-                            }
-                        }
-
-                    }
-                }
-
-            }
-         /*   if (entity->getComponent<sRenderComponent>()->_sprite != nullptr) // undo movement simulation
-            {
-                sRectHitboxComponent* rectHitbox = entity->getComponent<sRectHitboxComponent>();
-                sRenderComponent* renderComponent = entity->getComponent<sRenderComponent>();
-                glm::vec3 oldGraphPos = Map::mapToGraphPosition(position->value, position->z, renderComponent->_sprite);
-                rectHitbox->min.x = oldGraphPos.x;
-                rectHitbox->min.y = oldGraphPos.y;
-                rectHitbox->max.x = oldGraphPos.x + renderComponent->spriteSize.x;
-                rectHitbox->max.y = oldGraphPos.y + renderComponent->spriteSize.y;
-                position->value -= direction->value * elapsedTime;
-            }*/
-        }
-    });
-}
-
-void    CollisionSystem::moveHitbox(Entity *entity, float elapsedTime) // simulate movement
-{
-/*    if (entity->getComponent<sRenderComponent>()->_sprite != nullptr)
-    {
-        sPositionComponent* position = entity->getComponent<sPositionComponent>();
         sDirectionComponent* direction = entity->getComponent<sDirectionComponent>();
-        sRenderComponent* renderComponent = entity->getComponent<sRenderComponent>();
+        sPositionComponent* position = entity->getComponent<sPositionComponent>();
+        uint16_t layer = (uint16_t)position->z;
 
-        glm::vec2 nextPos = position->value + direction->value * elapsedTime;
-        glm::vec3 nextGraphPos = Map::mapToGraphPosition(nextPos, position->z, renderComponent->_sprite);
+        //// Check Collision with tile
+        //// CRASH ON SPAWN RANDOM ENTITIES
+        //if ((*_map)[layer][(uint32_t)std::floor(position->value.y)][(uint32_t)std::floor(position->value.x)].get() != 0 ||
+        //    (layer > 0 && (*collisionMap)[layer - 1][(uint32_t)std::floor(position->value.y)][(uint32_t)std::floor(position->value.x)] == eColType::CAN_NOT_WALK))
+        //{
+        //    if (this->staticResolution(entity))
+        //    {
+        //        position->value -= direction->value * elapsedTime;
+        //    }
+        //}
+        //else
+        //{
 
-        if (entity->getComponent<sRectHitboxComponent>() != nullptr)
+        this->forEachEntity(em, [&](Entity* entityB)
         {
-            sRectHitboxComponent* rectHitbox = entity->getComponent<sRectHitboxComponent>();
+            if (entityB->getComponent<sBoxColliderComponent>() == nullptr && entityB->getComponent<sSphereColliderComponent>() == nullptr) return;
 
-            rectHitbox->min.x = nextGraphPos.x;
-            rectHitbox->min.y = nextGraphPos.y;;
-            rectHitbox->max.x = nextGraphPos.x + renderComponent->spriteSize.x;
-            rectHitbox->max.y = nextGraphPos.y + renderComponent->spriteSize.y;
-
-            position->value = nextPos;
-
-            // same in movement system, common code ?
-            position->value.x = std::max(0.0f, position->value.x);
-            position->value.x = std::min((float)_map->getWidth() - 0.01f, position->value.x);
-            position->value.y = std::max(0.0f, position->value.y);
-            position->value.y = std::min((float)_map->getHeight() - 0.01f, position->value.y);
-        }
-        else if (entity->getComponent<sCircleHitboxComponent>() != nullptr)
-        {
-            sCircleHitboxComponent* circleHitbox = entity->getComponent<sCircleHitboxComponent>();
-
-            circleHitbox->center.x = nextGraphPos.x + (renderComponent->spriteSize.x / 2);
-            circleHitbox->center.y = nextGraphPos.y + (renderComponent->spriteSize.y / 2);
-        }
-    }*/
+            sPositionComponent* positionB = entityB->getComponent<sPositionComponent>();
+            if (entity->id != entityB->id)
+            {
+                if (this->isColliding(entity, entityB))
+                {
+                    if (!entityB->getComponent<sSphereColliderComponent>()->isTrigger)
+                        position->value -= direction->value * elapsedTime;
+                    //TODO : Add a call to a callback on the object
+                }
+            }
+        });
+    });
 }
 
 bool    CollisionSystem::isColliding(Entity *firstEntity, Entity *secondEntity)
 {
-/*    if (firstEntity->getComponent<sRectHitboxComponent>() != nullptr && secondEntity->getComponent<sRectHitboxComponent>() != nullptr)
+    if (firstEntity->getComponent<sSphereColliderComponent>() != nullptr && secondEntity->getComponent<sSphereColliderComponent>() != nullptr)
     {
-        sRectHitboxComponent* rectHitboxFirst = firstEntity->getComponent<sRectHitboxComponent>();
-        sRectHitboxComponent* rectHitboxSecond = secondEntity->getComponent<sRectHitboxComponent>();
+        sTransformComponent* firstTransform = firstEntity->getComponent<sTransformComponent>();
+        sTransformComponent* secondTransform = secondEntity->getComponent<sTransformComponent>();
+        sSphereColliderComponent* firstSphereCollider = firstEntity->getComponent<sSphereColliderComponent>();
+        sSphereColliderComponent* secondSphereCollider = secondEntity->getComponent<sSphereColliderComponent>();
 
-        return (Collisions::rectHitboxCheck(&rectHitboxFirst->min, &rectHitboxFirst->max,
-            &rectHitboxSecond->min, &rectHitboxSecond->max));
+        return (Collisions::sphereColliderCheck(
+            firstSphereCollider->pos + firstTransform->pos,
+            firstSphereCollider->radius * std::max({ firstTransform->scale.x, firstTransform->scale.y, firstTransform->scale.z }) * SIZE_UNIT,
+            secondSphereCollider->pos + secondTransform->pos,
+            secondSphereCollider->radius * std::max({ secondTransform->scale.x, secondTransform->scale.y, secondTransform->scale.z }) * SIZE_UNIT
+        ));
     }
-    else if (firstEntity->getComponent<sCircleHitboxComponent>() != nullptr && secondEntity->getComponent<sCircleHitboxComponent>() != nullptr)
-    {
-        sCircleHitboxComponent* circleHitboxFirst = firstEntity->getComponent<sCircleHitboxComponent>();
-        sCircleHitboxComponent* circleHitboxSecond = secondEntity->getComponent<sCircleHitboxComponent>();
 
-        return (Collisions::circleHitboxCheck(&circleHitboxFirst->center, circleHitboxFirst->radius,
-            &circleHitboxSecond->center, circleHitboxSecond->radius));
-    }*/
     return (false);
 }
 
