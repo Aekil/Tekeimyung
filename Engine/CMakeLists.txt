@@ -7,6 +7,7 @@ file(GLOB_RECURSE source_files src/*)
 file(GLOB_RECURSE include_files include/*)
 file(GLOB_RECURSE imgui_source_files ${CMAKE_SOURCE_DIR}/external/imgui/*.cpp*)
 file(GLOB_RECURSE imGuizmo_source_files ${CMAKE_SOURCE_DIR}/external/imGuizmo/*.cpp*)
+
 #file(GLOB_RECURSE fmod_source_files ${CMAKE_SOURCE_DIR}/external/fmod/lib/*.cs*)
 #file(GLOB_RECURSE fmt_source_files ${CMAKE_SOURCE_DIR}/external/fmt/*.cc*)
 
@@ -50,7 +51,27 @@ find_package(GLEW 3.0.0 REQUIRED)
 find_package(OpenGL REQUIRED)
 
 # Find FMOD library
-#find_package(FMOD REQUIRED)
+
+#Set Assimp directory and library on Windows
+IF (WIN32)
+  set(ASSIMP_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/external/Assimp/include)
+  include_directories(${ASSIMP_INCLUDE_DIR})
+  IF (CMAKE_SIZEOF_VOID_P EQUAL 8)
+    find_library(assimp assimp PATHS ${CMAKE_SOURCE_DIR}/external/Assimp/lib/x64)
+  ELSE()
+    find_library(assimp assimp PATHS ${CMAKE_SOURCE_DIR}/external/Assimp/lib/x86)
+  ENDIF()
+ENDIF()
+
+IF (WIN32)
+#Set FMOD directory and library on Windows
+  set(FMOD_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/external/fmod/inc)
+    find_library(FMOD_LIBRARY fmodL64_vc PATHS ${CMAKE_SOURCE_DIR}/external/fmod/lib)
+  ELSE()
+    find_package(FMOD REQUIRED)
+ENDIF()
+
+
 
 # Add project and libraries includes
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include ${GLFW_INCLUDE_DIR} ${GLEW_INCLUDE_DIR} ${OPENGL_INCLUDE_DIR} ${FMOD_INCLUDE_DIR})
@@ -60,8 +81,6 @@ include_directories(${CMAKE_SOURCE_DIR}/external/glm/)
 include_directories(${CMAKE_SOURCE_DIR}/external/stb_image/)
 include_directories(${CMAKE_SOURCE_DIR}/external/imgui/)
 include_directories(${CMAKE_SOURCE_DIR}/external/imGuizmo/)
-#include_directories(${CMAKE_SOURCE_DIR}/external/fmod)
-#include_directories(${CMAKE_SOURCE_DIR}/external/fmt/)
 
 # Include dirent only for windows
 # Linux have his own header
@@ -75,17 +94,6 @@ add_library(${EXECUTABLE_NAME} STATIC ${source_files} ${imgui_source_files} ${in
 #Disable ImGui C4244 warnings on Windows
 IF (WIN32)
   set_property(SOURCE ${imgui_source_files} APPEND_STRING PROPERTY COMPILE_FLAGS "/wd4244")
-ENDIF()
-
-#Include Assimp directory on Windows
-IF (WIN32)
-set(ASSIMP_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/external/Assimp/include)
-  include_directories(${ASSIMP_INCLUDE_DIR})
-  IF (CMAKE_SIZEOF_VOID_P EQUAL 8)
-    find_library(assimp assimp PATHS ${CMAKE_SOURCE_DIR}/external/Assimp/lib/x64)
-  ELSE()
-    find_library(assimp assimp PATHS ${CMAKE_SOURCE_DIR}/external/Assimp/lib/x86)
-  ENDIF()
 ENDIF()
 
 # Link libraries with executable

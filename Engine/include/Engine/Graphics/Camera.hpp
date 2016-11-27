@@ -18,6 +18,20 @@ public:
         glm::vec3       dir;
     }                   Constants;
 
+    typedef struct
+    {
+        float           left;
+        float           right;
+        float           top;
+        float           bottom;
+    }                   sScreen;
+
+    enum class eProj: uint8_t
+    {
+        PERSPECTIVE = 0,
+        ORTHOGRAPHIC = 1
+    };
+
 public:
     Camera();
     ~Camera();
@@ -28,12 +42,15 @@ public:
     const glm::mat4&    getView() const;
     const glm::mat4&    getProj() const;
     const UniformBuffer& getUbo() const;
+    float               getAspect() const;
+    float               getFov() const;
 
     void                setFov(float fov);
     void                setAspect(float aspect);
     void                setNear(float near);
     void                setFar(float far);
     void                setDir(const glm::vec3& dir);
+    void                setScreen(const sScreen& screen);
 
     void                translate(const glm::vec3& pos);
     void                zoom(float amount);
@@ -64,6 +81,12 @@ private:
     float               _near;
     // Far clipping plane
     float               _far;
+
+    float               _zoom;
+
+    sScreen             _screen;
+
+    eProj               _proj;
 
     /*
     ** View

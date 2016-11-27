@@ -3,6 +3,8 @@
 #include <Engine/Utils/Logger.hpp>
 #include <Engine/Utils/DebugWindow.hpp>
 
+#define LIMIT_WIDTH 600
+
 class LogDebugWindow: public DebugWindow
 {
 public:

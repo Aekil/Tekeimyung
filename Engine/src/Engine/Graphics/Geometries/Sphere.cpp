@@ -1,4 +1,3 @@
-#include <iostream>
 #include <Engine/Graphics/Geometries/Sphere.hpp>
 
 Sphere::Sphere(Sphere::sInfo& info): Geometry(Geometry::eType::SPHERE)

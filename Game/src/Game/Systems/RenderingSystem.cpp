@@ -22,6 +22,16 @@ RenderingSystem::RenderingSystem(Map* map, std::unordered_map<uint32_t, sEmitter
     _camera.translate(glm::vec3(350.0f, 250.0f, 300.0f));
     _camera.setDir(glm::vec3(-30.0f));
     _camera.getUbo().bind(_shaderProgram, "camera");
+
+    // Set camera screen
+    float size = 500.0f;
+    Camera::sScreen screen;
+    screen.right = size * _camera.getAspect();
+    screen.left = -screen.right;
+    screen.top = size;
+    screen.bottom = -screen.top;
+    _camera.setScreen(screen);
+
     Camera::setInstance(&_camera);
 }
 
@@ -212,7 +222,6 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
     glDepthMask(GL_TRUE);
     // Disable blending for opaque objects
     glDisable(GL_BLEND);
-
 
     // Display imgui windows
     ImGui::Render();

@@ -11,7 +11,7 @@
 #include <Engine/Graphics/Model.hpp>
 
 
-Model::Model() : _anim(0), _color({1.0f, 1.0f, 1.0f, 1.0f}) {}
+Model::Model() : _anim(0), _color({1.0f, 1.0f, 1.0f, 1.0f}), _primitiveType(GL_TRIANGLES) {}
 
 Model::~Model() {}
 
@@ -110,7 +110,7 @@ const std::vector<std::shared_ptr<Mesh> > &Model::getMeshs() const
     return (_meshs);
 }
 
-void    Model::draw(const ShaderProgram& shaderProgram, GLuint primitiveType) const
+void    Model::draw(const ShaderProgram& shaderProgram) const
 {
     // Model matrix
     GLint uniModel = shaderProgram.getUniformLocation("model");
@@ -131,7 +131,7 @@ void    Model::draw(const ShaderProgram& shaderProgram, GLuint primitiveType) co
         mesh->material.bind(shaderProgram);
 
         // Draw to screen
-        glDrawElements(primitiveType, (GLuint)mesh->indices.size(), GL_UNSIGNED_INT, BUFFER_OFFSET((GLuint)mesh->idxOffset * sizeof(GLuint)));
+        glDrawElements(_primitiveType, (GLuint)mesh->indices.size(), GL_UNSIGNED_INT, BUFFER_OFFSET((GLuint)mesh->idxOffset * sizeof(GLuint)));
     }
 }
 

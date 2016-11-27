@@ -33,7 +33,6 @@ include_directories(${CMAKE_SOURCE_DIR}/external/glm)
 include_directories(${CMAKE_SOURCE_DIR}/external/imgui/)
 include_directories(${CMAKE_SOURCE_DIR}/external/imGuizmo/)
 include_directories(${CMAKE_SOURCE_DIR}/external/jsoncpp)
-#include_directories(${CMAKE_SOURCE_DIR}/external/fmod/inc)
 
 # Include dirent only for windows
 # Linux have his own header

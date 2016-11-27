@@ -47,7 +47,7 @@ bool    GameWindow::initialize()
     _screenWidth = vidmode->width;
     _screenHeight = vidmode->height;
 
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
@@ -84,19 +84,106 @@ bool    GameWindow::initialize()
 
     glViewport(0, 0, _bufferWidth, _bufferHeight);
     setRunning(true);
+
+    #if defined(ENGINE_DEBUG)
+        initDebugOutput();
+    #endif
+
     return (true);
 }
 
 void	GameWindow::registerEvents()
 {
 	glfwSetWindowUserPointer(_window, this);
-    //glfwSetWindowCloseCallback(_window, GameWindow::closeCallback);
     glfwSetKeyCallback(_window, GameWindow::keyCallback);
     glfwSetCharCallback(_window, GameWindow::charCallback);
     glfwSetMouseButtonCallback(_window, GameWindow::buttonCallback);
     glfwSetCursorEnterCallback(_window, GameWindow::cursorEnterCallback);
     glfwSetCursorPosCallback(_window, GameWindow::cursorPositionCallback);
     glfwSetScrollCallback(_window, GameWindow::scrollCallback);
+}
+
+void APIENTRY   GameWindow::debugOutput(GLenum source, GLenum type, GLenum id,
+                            GLenum severity, GLsizei length,
+                            const GLchar* message, const void* userParam)
+{
+    std::string sourceString;
+    std::string typeString;
+
+    switch (source)
+    {
+        case GL_DEBUG_SOURCE_API:
+            sourceString = "SOURCE_API";
+        break;
+        case GL_DEBUG_SOURCE_WINDOW_SYSTEM:
+            sourceString = "WINDOW_SYSTEM";
+        break;
+        case GL_DEBUG_SOURCE_SHADER_COMPILER:
+            sourceString = "SHADER_COMPILER";
+        break;
+        case GL_DEBUG_SOURCE_THIRD_PARTY:
+            sourceString = "THIRD_PARTY";
+        break;
+        case GL_DEBUG_SOURCE_APPLICATION:
+            sourceString = "SOURCE_APPLICATION";
+        break;
+        case GL_DEBUG_SOURCE_OTHER:
+            sourceString = "SOURCE_OTHER";
+        break;
+        default:
+            sourceString = "UNDEFINED";
+        break;
+    }
+
+    switch (type)
+    {
+        case GL_DEBUG_TYPE_ERROR:
+            typeString = "ERROR";
+        break;
+        case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
+            typeString = "DEPRECATED_BEHAVIOR";
+        break;
+        case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
+            typeString = "UNDEFINED_BEHAVIOR";
+        break;
+        case GL_DEBUG_TYPE_PORTABILITY:
+            typeString = "PORTABILITY";
+        break;
+        case GL_DEBUG_TYPE_PERFORMANCE:
+            typeString = "PERFORMANCE";
+        break;
+        case GL_DEBUG_TYPE_MARKER:
+            typeString = "MARKER";
+        break;
+        case GL_DEBUG_TYPE_PUSH_GROUP:
+            typeString = "PUSH_GROUP";
+        break;
+        case GL_DEBUG_TYPE_POP_GROUP:
+            typeString = "POP_GROUP";
+        break;
+        case GL_DEBUG_TYPE_OTHER:
+            typeString = "OTHER";
+        break;
+        default:
+            typeString = "UNDEFINED";
+        break;
+    }
+
+    if (severity == GL_DEBUG_SEVERITY_HIGH)
+    {
+        LOG_ERROR("[OpenGL][%s][%s] %s", sourceString.c_str(), typeString.c_str(), message);
+    }
+    else if (severity == GL_DEBUG_SEVERITY_MEDIUM ||
+        severity == GL_DEBUG_SEVERITY_LOW)
+    {
+        LOG_WARN("[OpenGL][%s][%s] %s", sourceString.c_str(), typeString.c_str(), message);
+    }
+}
+
+void    GameWindow::initDebugOutput()
+{
+    glEnable(GL_DEBUG_OUTPUT);
+    glDebugMessageCallback(GameWindow::debugOutput, nullptr);
 }
 
 int     GameWindow::getScreenWidth() const
