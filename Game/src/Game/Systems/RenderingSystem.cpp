@@ -21,7 +21,6 @@ RenderingSystem::RenderingSystem(Map* map, std::unordered_map<uint32_t, sEmitter
 
     _camera.translate(glm::vec3(350.0f, 250.0f, 300.0f));
     _camera.setDir(glm::vec3(-30.0f));
-    _camera.getUbo().bind(_shaderProgram, "camera");
 
     // Set camera screen
     float size = 500.0f;
@@ -50,6 +49,8 @@ bool    RenderingSystem::init()
         // Must be the same unit as material textures. See Material::loadFromAssimp
         glUniform1i(_shaderProgram.getUniformLocation("AmbientTexture"), 0);
         glUniform1i(_shaderProgram.getUniformLocation("DiffuseTexture"), 1);
+
+        _camera.getUbo().bind(_shaderProgram, "camera");
     }
     catch(const Exception& e)
     {
