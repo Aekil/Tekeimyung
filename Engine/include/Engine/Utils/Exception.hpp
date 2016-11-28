@@ -6,7 +6,7 @@
 #include <cstdio>
 
 #include <Engine/Utils/Debug.hpp>
-#include <Engine/Utils/Utils.hh>
+#include <Engine/Utils/Helper.hpp>
 
 #define FORMAT_BUFFER_SIZE  512
 
@@ -88,5 +88,5 @@ public:
 
 #define EXCEPT(type, format, ...)\
 do {\
-    throw type(formatMessage(format, ## __VA_ARGS__), __FILE__, FUNCTION, __LINE__);\
+    throw type(Helper::formatMessage(format, ## __VA_ARGS__), __FILE__, FUNCTION, __LINE__);\
 } while (0)

@@ -138,7 +138,7 @@ bool    PlayState::init()
     ASSERT(particleSystem != nullptr, "Particle system should not be null");
 
     _world.addSystem<RenderingSystem>(_map, particleSystem->getEmitters());
-
+    
     addDebugWindow<OverlayDebugWindow>();
     addDebugWindow<EntityDebugWindow>(_map, glm::vec2(0, 80), glm::vec2(450, 350));
     addDebugWindow<LogDebugWindow>(Logger::getInstance(), glm::vec2(0, 430), glm::vec2(300, 200));

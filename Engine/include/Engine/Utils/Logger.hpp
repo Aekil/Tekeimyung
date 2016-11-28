@@ -6,7 +6,7 @@
 #include <imgui.h>
 
 #include <Engine/Utils/Debug.hpp>
-#include <Engine/Utils/Utils.hh>
+#include <Engine/Utils/Helper.hpp>
 
 /**
     The textual representation of the calendar time given by the asctime function
@@ -18,11 +18,11 @@
 */
 #define ASCTIME_BUFFER_SIZE (26)
 
-#define LOG_TRACE(format, ...) Logger::getInstance()->log(Logger::eLogLevel::TRACE, formatMessage(format, ## __VA_ARGS__))
-#define LOG_DEBUG(format, ...) Logger::getInstance()->log(Logger::eLogLevel::DEBUG, formatMessage(format, ## __VA_ARGS__))
-#define LOG_INFO(format, ...)  Logger::getInstance()->log(Logger::eLogLevel::INFO, formatMessage(format, ## __VA_ARGS__))
-#define LOG_WARN(format, ...)  Logger::getInstance()->log(Logger::eLogLevel::WARN, formatMessage(format, ## __VA_ARGS__))
-#define LOG_ERROR(format, ...) Logger::getInstance()->log(Logger::eLogLevel::ERROR, formatMessage(format, ## __VA_ARGS__))
+#define LOG_TRACE(format, ...) Logger::getInstance()->log(Logger::eLogLevel::TRACE, Helper::formatMessage(format, ## __VA_ARGS__))
+#define LOG_DEBUG(format, ...) Logger::getInstance()->log(Logger::eLogLevel::DEBUG, Helper::formatMessage(format, ## __VA_ARGS__))
+#define LOG_INFO(format, ...)  Logger::getInstance()->log(Logger::eLogLevel::INFO, Helper::formatMessage(format, ## __VA_ARGS__))
+#define LOG_WARN(format, ...)  Logger::getInstance()->log(Logger::eLogLevel::WARN, Helper::formatMessage(format, ## __VA_ARGS__))
+#define LOG_ERROR(format, ...) Logger::getInstance()->log(Logger::eLogLevel::ERROR, Helper::formatMessage(format, ## __VA_ARGS__))
 
 class           Logger
 {

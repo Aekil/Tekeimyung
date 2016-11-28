@@ -5,13 +5,13 @@
 #include <map>
 
 #include <Engine/Utils/Debug.hpp>
-#include <Engine/Utils/Utils.hh>
+#include <Engine/Utils/Helper.hpp>
 #include <Engine/Utils/Timer.hpp>
 #include <Engine/Utils/DebugWindow.hpp>
 
 #define ENABLE_COLOR    true
 
-#define FMT_MSG(format, ...)  (formatMessage(format, ## __VA_ARGS__))
+#define FMT_MSG(format, ...)  (Helper::formatMessage(format, ## __VA_ARGS__))
 
 typedef struct sMonitoring
 {
