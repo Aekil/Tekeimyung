@@ -7,6 +7,8 @@
 
 #include <Engine/Utils/Timer.hpp>
 #include <Engine/Utils/MonitoringDebugWindow.hpp>
+#include <Engine/Graphics/Model.hpp>
+#include <Engine/Graphics/Geometries/Geometry.hpp>
 
 #include <Game/Components.hh>
 

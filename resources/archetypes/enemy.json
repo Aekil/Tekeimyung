@@ -17,7 +17,6 @@
                     "g": 0,
                     "b": 0
                 },
-                "type": "OBJECT",
                 "animated": true,
                 "animation": {
                     "orientations": ["NW", "N", "NE", "E", "W", "SW", "S", "SE"],
@@ -33,16 +32,6 @@
             },
             "sTypeComponent": {
                 "type": "CHARACTER"
-            },
-            "sRectHitboxComponent": {
-                "min": {
-                    "x": 614,
-                    "y": 188.8
-                },
-                "max": {
-                    "x": 669,
-                    "y": 123.9
-                }
             },
             "sAIComponent": {}
         }

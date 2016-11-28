@@ -1,6 +1,7 @@
 {
    "components" : {
       "sParticleEmitterComponent" : {
+         "texture" : "resources/sprites/particles/particle_circle.png",
          "angle" : 0,
          "angle_variance" : 360.00003051757813,
          "color" : {
@@ -47,30 +48,6 @@
          "x" : 0,
          "y" : 0,
          "z" : 0
-      },
-      "sRenderComponent" : {
-         "animated" : false,
-         "animation" : {
-            "frames" : {
-               "x" : 0,
-               "y" : 0
-            },
-            "offset" : {
-               "x" : 0,
-               "y" : 0
-            }
-         },
-         "color" : {
-            "b" : 1,
-            "g" : 1,
-            "r" : 1
-         },
-         "spriteSize" : {
-            "x" : 0,
-            "y" : 0
-         },
-         "texture" : "resources/sprites/particles/particle_circle.png",
-         "type" : "OBJECT"
       },
       "sTypeComponent" : {
          "type" : "OBJECT"

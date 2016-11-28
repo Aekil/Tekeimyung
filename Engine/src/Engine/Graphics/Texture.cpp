@@ -4,10 +4,11 @@
 #include <stb_image/stb_image.h>
 
 #include <Engine/Utils/Exception.hpp>
+#include <Engine/Utils/Logger.hpp>
 
 #include <Engine/Graphics/Texture.hpp>
 
-Texture::Texture(): _data(nullptr), _comp(0) {}
+Texture::Texture(): _data(nullptr), _comp(0), _unit(GL_TEXTURE0) {}
 
 Texture::~Texture()
 {
@@ -20,6 +21,8 @@ Texture::~Texture()
 
 void    Texture::loadFromFile (const std::string &fileName)
 {
+    LOG_INFO("Loading texture \"%s\"", fileName.c_str());
+
     // Load image data and force  components number
     _data = stbi_load(fileName.c_str(), &_width, &_height, &_comp, 4);
 
@@ -47,8 +50,14 @@ void    Texture::loadFromFile (const std::string &fileName)
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
+void    Texture::setUnit(GLenum unit)
+{
+    _unit = unit;
+}
+
 void    Texture::bind() const
 {
+    glActiveTexture(_unit);
     glBindTexture(GL_TEXTURE_2D, _texture);
 }
 

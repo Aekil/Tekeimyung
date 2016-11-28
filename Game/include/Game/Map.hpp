@@ -94,7 +94,7 @@ public:
     CollisionMap*           getCollisionMap() const;
     bool                    isValidPosition(glm::ivec3& pos) const;
 
-    static glm::vec3        mapToGraphPosition(glm::vec2& mapPos, float z, Sprite *sprite);
+    static glm::vec3        mapToGraphPosition(glm::vec2& mapPos, float z);
 
 private:
     Layer*                  _map;

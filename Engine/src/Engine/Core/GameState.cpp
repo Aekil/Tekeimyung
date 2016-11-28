@@ -1,5 +1,7 @@
+#include <iostream>
 #include <imgui.h>
 #include <imgui_impl_glfw_gl3.h>
+#include <ImGuizmo.h>
 
 #include <Engine/Utils/Exception.hpp>
 #include <Engine/Utils/MonitoringDebugWindow.hpp>
@@ -30,17 +32,20 @@ bool    GameState::update(float elapsedTime)
     {
         ImGui_ImplGlfwGL3_NewFrame();
         {
-            // Update GameState debug windows
-            for (auto&& debugWindow: _debugWindows)
+            ImGuizmo::BeginFrame();
             {
-                if (debugWindow->isDisplayed())
-                    debugWindow->build();
-            }
+                // Update GameState debug windows
+                for (auto&& debugWindow: _debugWindows)
+                {
+                    if (debugWindow->isDisplayed())
+                        debugWindow->build();
+                }
 
-            // Update GameState systems
-            for (auto&& system: _world.getSystems())
-            {
-                system->update(_world.getEntityManager(), elapsedTime);
+                // Update GameState systems
+                for (auto&& system: _world.getSystems())
+                {
+                    system->update(_world.getEntityManager(), elapsedTime);
+                }
             }
         }
     }

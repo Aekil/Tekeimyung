@@ -1,32 +1,41 @@
 #pragma once
 
+#include <ImGuizmo.h>
 #include <utility>
+#include <algorithm>
+
+#include <ECS/Entity.hpp>
 
 #include <Engine/Utils/Exception.hpp>
 #include <Engine/Utils/Logger.hpp>
+#include <Engine/Utils/Debug.hpp>
 
 #include <Game/Utils/JsonValue.hpp>
 #include <Game/Components.hh>
 
 // Generate map initializer lists
 // ex: { "sRenderComponent", sRenderComponent }, { "sPositionComponent", sPositionComponent }
-#define COMPONENTS_TYPES()\
-    GENERATE_PAIRS(sRenderComponent),\
-    GENERATE_PAIRS(sPositionComponent),\
-    GENERATE_PAIRS(sInputComponent),\
-    GENERATE_PAIRS(sDirectionComponent),\
-    GENERATE_PAIRS(sRectHitboxComponent),\
-    GENERATE_PAIRS(sCircleHitboxComponent),\
-    GENERATE_PAIRS(sGravityComponent),\
-    GENERATE_PAIRS(sTypeComponent),\
-    GENERATE_PAIRS(sAIComponent),\
-    GENERATE_PAIRS(sPlayerComponent),\
-    GENERATE_PAIRS(sParticleEmitterComponent),\
-    GENERATE_PAIRS(sTowerAIComponent),\
-    GENERATE_PAIRS(sProjectileComponent),\
-    GENERATE_PAIRS(sWaveComponent)\
+#define COMPONENTS_TYPES(PROCESS)\
+    PROCESS(sRenderComponent),\
+    PROCESS(sPositionComponent),\
+    PROCESS(sInputComponent),\
+    PROCESS(sDirectionComponent),\
+    PROCESS(sBoxColliderComponent),\
+    PROCESS(sSphereColliderComponent),\
+    PROCESS(sGravityComponent),\
+    PROCESS(sTypeComponent),\
+    PROCESS(sAIComponent),\
+    PROCESS(sPlayerComponent),\
+    PROCESS(sParticleEmitterComponent),\
+    PROCESS(sTowerAIComponent),\
+    PROCESS(sProjectileComponent),\
+    PROCESS(sWaveComponent),\
+    PROCESS(sNameComponent),\
+    PROCESS(sTransformComponent)\
 
 #define GENERATE_PAIRS(COMPONENT) { #COMPONENT, new ComponentFactory<COMPONENT>() }
+
+#define GENERATE_PAIRS_HASHS(COMPONENT) { typeid(COMPONENT).hash_code(), #COMPONENT }
 
 
 /*
@@ -42,25 +51,31 @@ public:
     // Json load/save
     virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json) = 0;
     virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType) = 0;
+    virtual void save(const std::string& entityType, sComponent* component) = 0;
+    virtual void remove(const std::string& entityType) = 0;
 
     // IComponentFactory methods
     static bool                                                     componentTypeExists(const std::string& type);
-    static eOrientation                                             stringToOrientation(const std::string& orientationStr);
-    static std::string                                              orientationToString(eOrientation orientation);
     static void                                                     initComponent(const std::string& entityType, const std::string& name, const JsonValue& value);
     static sComponent*                                              createComponent(const std::string& entityType, const std::string& name);
     static IComponentFactory*                                       getFactory(const std::string& name);
+
+    static std::string                                              getComponentNameWithHash(std::size_t hash);
+    static std::size_t                                              getComponentHashWithName(const std::string& name);
+    static const std::unordered_map<std::size_t, std::string>&      getComponentsTypesHashs();
 
     // ComponentFactory overloaded classes methods
     // Ex: ComponentFactory<sPositionComponent>, ComponentFactory<sInputComponent>
     virtual sComponent*                                             clone(const std::string& entityType) = 0;
     virtual void                                                    addComponent(const std::string& entityType, sComponent* component) = 0;
     virtual void                                                    saveComponentJson(const std::string& entityType, const JsonValue& json) = 0;
-    virtual bool                                                    updateEditor(const std::string& entityType, sComponent** component_) = 0;
-
+    virtual bool                                                    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity) = 0;
 private:
     // Store Components types
     static std::unordered_map<std::string, IComponentFactory*>      _componentsTypes;
+
+    // Map lookup to get component name with component hash
+    static std::unordered_map<std::size_t, std::string>             _componentsTypesHashs;
 };
 
 
@@ -89,6 +104,17 @@ public:
         return _componentsJson[entityType];
     }
 
+    virtual void save(const std::string& entityType, sComponent* component)
+    {
+        delete _components[entityType];
+        _components[entityType] = component->clone();
+    }
+
+    virtual void remove(const std::string& entityType)
+    {
+        _components.erase(entityType);
+    }
+
     // Add entity in component entities map
     virtual void addComponent(const std::string& entityType, sComponent* component)
     {
@@ -104,7 +130,7 @@ public:
 
     // Overload this function to display the component editor
     // The component_ pointer have to be set to component pointer (_components[entityType] = component)
-    virtual bool    updateEditor(const std::string& entityType, sComponent** component_)
+    virtual bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity)
     {
         return (false);
     }
@@ -148,9 +174,7 @@ public:
     virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
 
 private:
-    virtual bool    updateEditor(const std::string& entityType, sComponent** component_);
-    virtual Sprite::eType stringToSpriteType(const std::string& spriteTypeStr);
-    virtual std::string spriteTypeToString(Sprite::eType spriteType);
+    virtual bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity);
 };
 
 
@@ -194,28 +218,32 @@ public:
 
 
 /*
-** sRectHitboxComponent
+** sBoxColliderComponent
 */
 
 template <>
-class ComponentFactory<sRectHitboxComponent>: public BaseComponentFactory<sRectHitboxComponent>
+class ComponentFactory<sBoxColliderComponent>: public BaseComponentFactory<sBoxColliderComponent>
 {
 public:
     virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
     virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
+
+    virtual bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity);
 };
 
 
 /*
-** sCircleHitboxComponent
+** sSphereColliderComponent
 */
 
 template <>
-class ComponentFactory<sCircleHitboxComponent>: public BaseComponentFactory<sCircleHitboxComponent>
+class ComponentFactory<sSphereColliderComponent>: public BaseComponentFactory<sSphereColliderComponent>
 {
 public:
     virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
     virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
+
+    virtual bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity);
 };
 
 
@@ -280,7 +308,8 @@ class ComponentFactory<sParticleEmitterComponent>: public BaseComponentFactory<s
 public:
     virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
     virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
-    virtual bool    updateEditor(const std::string& entityType, sComponent** component_);
+
+    virtual bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity);
 };
 
 
@@ -295,7 +324,7 @@ public:
     virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
     virtual JsonValue&  saveToJson(const std::string& entityType, const std::string& componentType);
 
-    virtual bool    updateEditor(const std::string& entityType, sComponent** component_);
+    virtual bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity);
 };
 
 
@@ -310,8 +339,9 @@ public:
     virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
     virtual JsonValue&  saveToJson(const std::string& entityType, const std::string& componentType);
 
-    virtual bool    updateEditor(const std::string& entityType, sComponent** component_);
+    virtual bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity);
 };
+
 
 /*
 ** sWaveComponent
@@ -322,4 +352,35 @@ class ComponentFactory<sWaveComponent> : public BaseComponentFactory<sWaveCompon
 {
 public:
     virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
+};
+
+
+/*
+** sNameComponent
+*/
+
+template <>
+class ComponentFactory<sNameComponent> : public BaseComponentFactory<sNameComponent>
+{
+public:
+    virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
+};
+
+
+/*
+** sTransformComponent
+*/
+
+template <>
+class ComponentFactory<sTransformComponent> : public BaseComponentFactory<sTransformComponent>
+{
+public:
+    virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
+    virtual JsonValue&  saveToJson(const std::string& entityType, const std::string& componentType);
+
+    virtual bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity);
+
+    // Update transforms with gizmos
+    // Used for multiple components: sTransformComponent, sBoxColliderComponent
+    static bool     updateTransforms(glm::vec3& pos, glm::vec3& scale, glm::vec3& rotation, glm::mat4& transform, ImGuizmo::MODE mode);
 };

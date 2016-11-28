@@ -1,25 +1,33 @@
 #pragma once
 
-#include <iostream>
+#include <memory>
 #include <vector>
 #include <string>
 #include <cstdint>
 #include <glm/vec2.hpp>
 #include <glm/vec4.hpp>
+#include <glm/mat4x4.hpp>
+#include <glm/gtx/quaternion.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include <ECS/Component.hh>
 
 #include <Engine/Window/Keyboard.hpp>
 #include <Engine/Graphics/Animation.hpp>
 #include <Engine/Graphics/Sprite.hpp>
-#include <Engine/Utils/Timer.hpp>
+#include <Engine/Graphics/Model.hpp>
+#include <Engine/Graphics/Geometries/Geometry.hpp>
+#include <Engine/Graphics/Geometries/GeometryFactory.hpp>
+#include <Engine/Graphics/Geometries/Box.hpp>
+#include <Engine/Graphics/Geometries/Sphere.hpp>
+#include <Engine/Utils/RessourceManager.hpp>
 
 
 struct sRenderComponent: sComponent
 {
     sRenderComponent() = default;
-    sRenderComponent(Sprite::eType type, const std::string& texture, bool animated = false, glm::vec2 frames = {0, 0}, const std::vector<eOrientation>& orientations = {}, const glm::vec2& spriteSize = {0, 0})
-    : texture(texture), type(type), animated(animated), frames(frames), orientations(orientations), spriteSize(spriteSize), _sprite(nullptr), spriteSheetOffset(0, 0) {}
+    sRenderComponent(const std::string& modelFile, bool animated = false)
+    : modelFile(modelFile), animated(animated) {}
 
     virtual sComponent* clone()
     {
@@ -31,14 +39,12 @@ struct sRenderComponent: sComponent
 
     virtual void update(sRenderComponent* component)
     {
-        this->texture = component->texture;
+        this->modelFile = component->modelFile;
         this->color = component->color;
-        this->type = component->type;
         this->animated = component->animated;
-        this->frames = component->frames;
-        this->spriteSize = component->spriteSize;
-        this->orientations = component->orientations;
-        this->spriteSheetOffset = component->spriteSheetOffset;
+        this->_model = component->_model;
+        this->type = component->type;
+        this->texture = component->texture;
     }
 
     virtual void update(sComponent* component)
@@ -46,22 +52,25 @@ struct sRenderComponent: sComponent
         update(static_cast<sRenderComponent*>(component));
     }
 
-    std::string texture;
-    glm::vec3 color;
-    Sprite::eType type;
+    void initModel()
+    {
+        if (type == Geometry::eType::MESH)
+            _model = RessourceManager::getInstance()->getModel(modelFile);
+        else
+            _model = GeometryFactory::create(type, texture);
+    }
+
+    std::string modelFile;
+    glm::vec4 color;
     bool animated;
 
-    // Frames numbers in sprite sheet
-    glm::uvec2 frames;
+    std::shared_ptr<Model> _model;
 
-    // Sprite sheet offset
-    glm::vec2 spriteSheetOffset;
+    // Model type
+    Geometry::eType type;
 
-    // Sprite width and height
-    glm::vec2 spriteSize;
-    Sprite* _sprite;
-
-    std::vector<eOrientation> orientations;
+    // texture for geometries
+    std::string texture;
 };
 
 struct sPositionComponent: sComponent
@@ -132,7 +141,7 @@ struct sInputComponent: sComponent {
 struct sDirectionComponent : sComponent
 {
     sDirectionComponent() = default;
-    sDirectionComponent(const glm::vec2& dir, float speed = 1.0f) : value(dir), orientation(eOrientation::N), moved(false), speed(speed) {}
+    sDirectionComponent(const glm::vec2& dir, float speed = 1.0f) : value(dir), moved(false), speed(speed) {}
 
     virtual sComponent* clone()
     {
@@ -156,65 +165,72 @@ struct sDirectionComponent : sComponent
     }
 
     glm::vec2 value;
-    eOrientation orientation;
+    glm::vec3 orientation;
     float speed;
     bool moved;
 };
 
-struct sRectHitboxComponent : sComponent
+struct sBoxColliderComponent : sComponent
 {
-    sRectHitboxComponent() = default;
-    sRectHitboxComponent(glm::vec2 min, glm::vec2 max) : min(min), max(max) {}
+    sBoxColliderComponent(): display(true) {}
 
     virtual sComponent* clone()
     {
-        sRectHitboxComponent* component = new sRectHitboxComponent();
+        sBoxColliderComponent* component = new sBoxColliderComponent();
         component->update(this);
 
         return (component);
     }
 
-    virtual void update(sRectHitboxComponent* component)
+    virtual void update(sBoxColliderComponent* component)
     {
-        this->min = component->min;
-        this->max = component->max;
+        this->pos = component->pos;
+        this->size = component->size;
     }
 
     virtual void update(sComponent* component)
     {
-        update(static_cast<sRectHitboxComponent*>(component));
+        update(static_cast<sBoxColliderComponent*>(component));
     }
 
-    glm::vec2 min;
-    glm::vec2 max;
+    // Relative position to sTransformComponent
+    glm::vec3 pos;
+
+    // Scale
+    glm::vec3 size;
+
+    // Box model
+    std::shared_ptr<Box> box;
+    bool display;
 };
 
-struct sCircleHitboxComponent : sComponent
+struct sSphereColliderComponent : sComponent
 {
-    sCircleHitboxComponent() = default;
-    sCircleHitboxComponent(glm::vec2 center, float radius) : center(center), radius(radius) {}
+    sSphereColliderComponent(): display(true) {}
 
     virtual sComponent* clone()
     {
-        sCircleHitboxComponent* component = new sCircleHitboxComponent();
+        sSphereColliderComponent* component = new sSphereColliderComponent();
         component->update(this);
 
         return (component);
     }
 
-    virtual void update(sCircleHitboxComponent* component)
+    virtual void update(sSphereColliderComponent* component)
     {
-        this->center = component->center;
+        this->pos = component->pos;
         this->radius = component->radius;
     }
 
     virtual void update(sComponent* component)
     {
-        update(static_cast<sCircleHitboxComponent*>(component));
+        update(static_cast<sSphereColliderComponent*>(component));
     }
 
-    glm::vec2 center;
+    glm::vec3 pos;
     float radius;
+    std::shared_ptr<Sphere> sphere;
+    bool display;
 };
 
 struct sGravityComponent : sComponent
@@ -353,6 +369,8 @@ struct sParticleEmitterComponent : sComponent
         this->sizeFinish = component->sizeFinish;
         this->sizeStartVariance = component->sizeStartVariance;
         this->sizeFinishVariance = component->sizeFinishVariance;
+
+        this->texture = component->texture;
     }
 
     virtual void update(sComponent* component)
@@ -392,6 +410,9 @@ struct sParticleEmitterComponent : sComponent
     float sizeFinish;
     float sizeStartVariance;
     float sizeFinishVariance;
+
+    // Particles texture
+    std::string texture;
 };
 
 struct sNameComponent : sComponent
@@ -509,9 +530,59 @@ struct sWaveComponent : sComponent
         update(static_cast<sWaveComponent*>(component));
     }
 
-    //eArchetype  type;
     glm::vec3   spawnPos;
     float       secBeforeSpawn;
     int         nSpawn;
-    //Timer*      timer;
+};
+
+
+struct sTransformComponent : sComponent
+{
+    sTransformComponent(): scale({1.0f, 1.0f, 1.0f}), transform(1.0f), needUpdate(true) {}
+
+    virtual sComponent* clone()
+    {
+        sTransformComponent* component = new sTransformComponent();
+        component->update(this);
+
+        return (component);
+    }
+
+    virtual void update(sTransformComponent* component)
+    {
+        this->pos = component->pos;
+        this->scale = component->scale;
+        this->rotation = component->rotation;
+        this->transform = component->transform;
+    }
+
+    virtual void update(sComponent* component)
+    {
+        update(static_cast<sTransformComponent*>(component));
+    }
+
+    const glm::mat4& getTransform()
+    {
+        if (needUpdate)
+        {
+            glm::mat4 orientation;
+            orientation = glm::rotate(orientation, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+            orientation = glm::rotate(orientation, glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+            orientation = glm::rotate(orientation, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+
+            needUpdate = false;
+            glm::mat4 transformMatrix(1.0f);
+            transformMatrix = glm::translate(transformMatrix, glm::vec3(pos.x, pos.y, pos.z)) * orientation;
+            transformMatrix = glm::scale(transformMatrix, scale);
+            transform = transformMatrix;
+        }
+
+        return (transform);
+    }
+
+    glm::vec3   pos;
+    glm::vec3   scale;
+    glm::vec3   rotation;
+    glm::mat4   transform;
+    bool        needUpdate;
 };

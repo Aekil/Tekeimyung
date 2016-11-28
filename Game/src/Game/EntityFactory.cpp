@@ -1,8 +1,12 @@
+#include <algorithm>
+#include <iostream>
+
 #include <Game/ComponentFactory.hpp>
 #include <dirent.h> // This include have to be called after "ComponentFactory.hpp"
 
 #include <Engine/Utils/Debug.hpp>
 #include <Engine/Utils/Logger.hpp>
+#include <Engine/Utils/Helper.hpp>
 #include <Engine/Utils/Exception.hpp>
 #include <Engine/Utils/RessourceManager.hpp>
 
@@ -50,6 +54,8 @@ void EntityFactory::loadDirectory(const std::string& archetypesDir)
             if (!EntityFactory::entityTypeExists(typeName)) // The macro ENTITIES_TYPES did not create the type
                 EXCEPT(InvalidParametersException, "Failed to read entity archetype: Entity type \"%s\" does not exist", typeName.c_str());
 
+            _entitiesFiles[typeName] = path;
+
             // Create entity components
             auto &&components = parsed.get("components", {}).get();
             for (Json::ValueIterator it = components.begin(); it != components.end(); it++)
@@ -62,8 +68,14 @@ void EntityFactory::loadDirectory(const std::string& archetypesDir)
 
                 LOG_INFO("Add %s component %s", typeName.c_str(), componentName.c_str());
                 IComponentFactory::initComponent(typeName, componentName, JsonValue(*it));
-                _entitiesFiles[typeName] = path;
                 _entities[typeName].push_back(componentName);
+            }
+
+            // Add sTransformation component if not found
+            if (std::find(_entities[typeName].begin(), _entities[typeName].end(), "sTransformComponent") == _entities[typeName].end())
+            {
+                IComponentFactory::initComponent(typeName, "sTransformComponent", {});
+                _entities[typeName].push_back("sTransformComponent");
             }
         }
         // No file extension, is directory
@@ -109,6 +121,24 @@ Entity* EntityFactory::createEntity(const std::string& typeName)
     return (cloneEntity(typeName));
 }
 
+void    EntityFactory::createEntityType(const std::string& typeName)
+{
+    // Add entity to factory
+    std::string filePath = ARCHETYPES_LOCATION + std::string("/") + Helper::lowerCaseString(typeName) + ".json";
+    _entitiesFiles[typeName] = filePath;
+    _typesString.push_back(_entitiesFiles.find(typeName)->first.c_str());
+
+    // Add transform component
+    IComponentFactory::initComponent(typeName, "sTransformComponent", {});
+    _entities[typeName].push_back("sTransformComponent");
+
+    // Create file
+    RessourceManager::getInstance()->createFile(filePath, "{\"name\": \"" + typeName + "\"}");
+
+    // Create entity instance to edit
+    createEntity(typeName);
+}
+
 void EntityFactory::bindEntityManager(EntityManager* em)
 {
     _em = em;
@@ -122,6 +152,21 @@ const std::vector<const char*>& EntityFactory::getTypesString()
 const std::list<std::string>&   EntityFactory::getComponents(const std::string& typeName)
 {
     return _entities[typeName];
+}
+
+const void   EntityFactory::removeComponent(const std::string& typeName, const std::string& component)
+{
+    auto& components = _entities[typeName];
+    auto foundComponent = std::find(components.begin(), components.end(), component);
+    if (foundComponent != components.end())
+    {
+        components.erase(foundComponent);
+    }
+}
+
+const void   EntityFactory::addComponent(const std::string& typeName, const std::string& component)
+{
+    _entities[typeName].push_back(component);
 }
 
 const std::string& EntityFactory::getFile(const std::string& typeName)
@@ -158,7 +203,24 @@ void    EntityFactory::updateEntityComponent(const std::string& entityName, ICom
         if (name->value == entityName)
         {
             sComponent* entityComponent = entity->getComponent(component->getTypeInfo().hash_code());
-            entityComponent->update(component);
+            if (entityComponent)
+            {
+                std::string componentName = IComponentFactory::getComponentNameWithHash(component->getTypeInfo().hash_code());
+
+                // Only the scale have to be copied
+                if (componentName == "sTransformComponent")
+                {
+                    sTransformComponent* transform = static_cast<sTransformComponent*>(component);
+                    sTransformComponent* entityTransform = static_cast<sTransformComponent*>(entityComponent);
+
+                    entityTransform->scale = transform->scale;
+                    entityTransform->needUpdate = true;
+                }
+                else
+                {
+                    entityComponent->update(component);
+                }
+            }
         }
     }
 }

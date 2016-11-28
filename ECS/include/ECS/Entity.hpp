@@ -1,6 +1,5 @@
 #pragma once
 
-#include <iostream>
 #include <vector>
 #include <typeinfo>
 #include <cstdint>
@@ -62,6 +61,24 @@ public:
         }
 
         return (nullptr);
+    }
+
+    std::vector<sComponent*>&       getComponents()
+    {
+        return _components;
+    }
+
+    void                            removeComponent(sComponent* component)
+    {
+        for (auto it = _components.begin(); it != _components.end(); ++it)
+        {
+            if (*it == component)
+            {
+                delete *it;
+                _components.erase(it);
+                return;
+            }
+        }
     }
 
     // Check if the entity has the component with corresponding hashcode => typeid(component).hash_code()

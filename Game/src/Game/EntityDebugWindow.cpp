@@ -1,3 +1,4 @@
+#include <sstream>
 #include <imgui.h>
 
 #include <Engine/Utils/Helper.hpp>
@@ -9,18 +10,15 @@
 #include <Game/EntityDebugWindow.hpp>
 
 
-EntityDebugWindow::EntityDebugWindow(Map* map, const glm::vec2& pos, const glm::vec2& size):
-                                    _map(map), DebugWindow("Live edition", pos, size), _selectedEntity(0) {}
+uint32_t    EntityDebugWindow::_selectedEntityId = 0;
+
+EntityDebugWindow::EntityDebugWindow(EntityManager* em, Map* map, const glm::vec2& pos, const glm::vec2& size):
+                                    _em(em), _map(map), DebugWindow("Live edition", pos, size) {}
 
 EntityDebugWindow::~EntityDebugWindow() {}
 
 void    EntityDebugWindow::build()
 {
-    static bool saveEntityButton = false;
-    static bool spawnEntityButton = false;
-    std::vector<const char*>& typesString = const_cast<std::vector<const char*>&>(EntityFactory::getTypesString());
-    const char** list = typesString.data();
-
     if (!ImGui::Begin(_title.c_str(), &_displayed, ImGuiWindowFlags_NoResize))
     {
         ImGui::End();
@@ -30,42 +28,152 @@ void    EntityDebugWindow::build()
     ImGui::SetWindowSize(ImVec2(_size.x, _size.y), ImGuiSetCond_Always);
     ImGui::SetWindowPos(ImVec2(_pos.x, _pos.y), ImGuiSetCond_Always);
 
-    // Draw components
-    ImGui::ListBox("Entities types", &_selectedEntity, list, (int)EntityFactory::getTypesString().capacity(), 4);
-
-    const char* entityName = list[_selectedEntity];
-
-
-    if (ImGui::CollapsingHeader(entityName, ImGuiTreeNodeFlags_DefaultOpen))
+    // Create entity type
+    static char typeName[64];
+    ImGui::InputText("##default", typeName, 64);
+    ImGui::SameLine();
+    ImGui::PushStyleColor(ImGuiCol_Button, ImColor(0.27f, 0.51f, 0.70f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImColor(0.39f, 0.58f, 0.92f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImColor(0.49f, 0.68f, 0.92f, 1.0f));
+        if (ImGui::Button("Create entity type") && std::string(typeName).size() > 0)
     {
-        // Iterate over all components names
-        auto&& components = EntityFactory::getComponents(entityName);
-        for (auto &&componentName: components)
-        {
-            IComponentFactory* compFactory = IComponentFactory::getFactory(componentName);
-            sComponent* component = nullptr;
+        if (EntityFactory::entityTypeExists(typeName))
+            LOG_ERROR("Can't create entity type %s, it already exists", typeName);
+        else
+            EntityFactory::createEntityType(typeName);
+    }
+    ImGui::PopStyleColor(3);
 
-            // The component data has changed
-            if (compFactory->updateEditor(entityName, &component))
+    // Entities list
+    static ImGuiTextFilter filter;
+
+    filter.Draw();
+    ImGui::BeginChild("Entities list", ImVec2(150, 0), true);
+    for (auto it: _em->getEntities())
+    {
+        std::stringstream name;
+        Entity* entity = it.second;
+        sNameComponent* nameComp = entity->getComponent<sNameComponent>();
+
+        ASSERT(nameComp != nullptr, "The entity should have a name");
+        name << "[" << entity->id << "] " << nameComp->value;
+        if (filter.PassFilter(name.str().c_str()) == true)
+        {
+            if (ImGui::Selectable(name.str().c_str(), _selectedEntityId == entity->id))
             {
-                ASSERT(component != nullptr, "component should be set in updateEditor");
-                EntityFactory::updateEntityComponent(entityName, compFactory, component);
+                _selectedEntityId = entity->id;
             }
         }
+    }
+    ImGui::EndChild();
 
-        saveEntityButton = ImGui::Button("Save changes");
-        spawnEntityButton = ImGui::Button("Spawn entity");
-        if (saveEntityButton)
-            saveEntityToJson(list[_selectedEntity]);
-        else if (spawnEntityButton)
-            spawnEntity(list[_selectedEntity]);
-
+    if (_em->getEntities().size() == 0)
+    {
+        ImGui::End();
+        return;
     }
 
+    Entity* selectedEntity = _em->getEntity(_selectedEntityId);
+
+    // The entity has been deleted or none is selected
+    if (!selectedEntity)
+    {
+        selectedEntity = _em->getEntities().begin()->second;
+        _selectedEntityId = selectedEntity->id;
+    }
+
+    displayEntityDebug(selectedEntity);
     ImGui::End();
 }
 
-void    EntityDebugWindow::saveEntityToJson(const std::string& typeName)
+void    EntityDebugWindow::displayEntityDebug(Entity* entity)
+{
+    ImGui::SameLine();
+    ImGui::BeginGroup();
+    sNameComponent* nameComp = entity->getComponent<sNameComponent>();
+    ASSERT(nameComp != nullptr, "The entity should have a name");
+
+    std::string entityName = nameComp->value;
+    ImGui::PushItemWidth(200);
+    if (ImGui::CollapsingHeader(entityName.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        // Add component button
+        ImGui::PushStyleColor(ImGuiCol_Button, ImColor(0.27f, 0.51f, 0.70f, 1.0f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImColor(0.39f, 0.58f, 0.92f, 1.0f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImColor(0.49f, 0.68f, 0.92f, 1.0f));
+        if (ImGui::Button("Add component"))
+        {
+            ImGui::OpenPopup("components");
+        }
+        ImGui::SameLine();
+        if (ImGui::Button("Apply changes to template"))
+        {
+            saveEntityTemplate(entityName, entity);
+            saveEntityTemplateToJson(entityName);
+        }
+        ImGui::PopStyleColor(3);
+
+        // Display new component that can be added
+        if (ImGui::BeginPopup("components"))
+        {
+            for (auto componentHash: IComponentFactory::getComponentsTypesHashs())
+            {
+                // Entity does not have this component, display it
+                if (!entity->hasComponent(componentHash.first))
+                {
+                    // Component button pressed, add it to the entity
+                    if (ImGui::Button(componentHash.second.c_str()))
+                    {
+                        // Get component factory to create a new one
+                        IComponentFactory* newComponentFactory = IComponentFactory::getFactory(componentHash.second);
+                        ASSERT(newComponentFactory != nullptr, "The component factory should exist");
+
+                        // Send fake entity name and json to loadFromJson to have the component fields initialized with default values
+                        sComponent* newComponent = newComponentFactory->loadFromJson("", {});
+                        entity->addComponent(newComponent);
+                    }
+                }
+            }
+            ImGui::EndPopup();
+        }
+        // Display all components debug
+        for (uint32_t i = 0; i < entity->getComponents().size(); ++i)
+        {
+            sComponent* component = entity->getComponents()[i];
+            std::string componentName = IComponentFactory::getComponentNameWithHash(component->getTypeInfo().hash_code());
+            ASSERT(componentName.size() > 0, "The component name should exist");
+            IComponentFactory* compFactory = IComponentFactory::getFactory(componentName);
+            sComponent* savedComponent = nullptr;
+
+            // Display component debug
+            if (ImGui::CollapsingHeader(componentName.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+            {
+                // Remove component button
+                std::string removeButton = std::string("Remove " + componentName);
+                if (componentName != "sTransformComponent" &&
+                    componentName != "sNameComponent" &&
+                    ImGui::Button(removeButton.c_str()))
+                {
+                    entity->removeComponent(component);
+                    --i;
+                }
+                // Component debug content
+                else if (compFactory->updateEditor(entityName, &savedComponent, component, entity))
+                {
+                    ASSERT(component != nullptr, "component should be set in updateEditor");
+                }
+            }
+        }
+    }
+    ImGui::EndGroup();
+}
+
+uint32_t    EntityDebugWindow::getSelectedEntityId()
+{
+    return (_selectedEntityId);
+}
+
+void    EntityDebugWindow::saveEntityTemplateToJson(const std::string& typeName)
 {
     JsonWriter jsonWriter;
     JsonValue json;
@@ -83,6 +191,54 @@ void    EntityDebugWindow::saveEntityToJson(const std::string& typeName)
     jsonWriter.write(EntityFactory::getFile(typeName), json);
 
     LOG_INFO("Entity %s saved", typeName.c_str());
+}
+
+void    EntityDebugWindow::saveEntityTemplate(const std::string& typeName, Entity* entity)
+{
+    {
+        auto &&components = EntityFactory::getComponents(typeName);
+        // Remove deleted components from factories
+        for (auto it = components.begin(); it != components.end();)
+        {
+            auto component = *it;
+            std::size_t componentHash = IComponentFactory::getComponentHashWithName(component);
+            auto compFactory = IComponentFactory::getFactory(component);
+            ASSERT(compFactory != nullptr, "The factory should exist");
+
+            // The component has been removed, delete it from EntityFactory and ComponentFactory
+            if (!entity->hasComponent(componentHash))
+            {
+                ++it;
+                EntityFactory::removeComponent(typeName, component);
+                compFactory->remove(typeName);
+            }
+            else
+                ++it;
+        }
+    }
+
+    {
+        auto &&components = EntityFactory::getComponents(typeName);
+
+        // Save entity components
+        for (auto component: entity->getComponents())
+        {
+            std::string componentName = IComponentFactory::getComponentNameWithHash(component->getTypeInfo().hash_code());
+            auto compFactory = IComponentFactory::getFactory(componentName);
+            ASSERT(compFactory != nullptr, "The factory should exist");
+            compFactory->save(typeName, component);
+
+            // The component does not exist in entityFactory
+            if (componentName != "sNameComponent" && std::find(components.begin(), components.end(), componentName) == components.end())
+            {
+                // Add component to EntityFactory
+                EntityFactory::addComponent(typeName, componentName);
+            }
+
+            // Update other entities component
+            EntityFactory::updateEntityComponent(typeName, compFactory, component);
+        }
+    }
 }
 
 glm::vec3   EntityDebugWindow::getRandomPos()

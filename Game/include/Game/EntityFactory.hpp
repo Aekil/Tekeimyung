@@ -27,6 +27,7 @@
 #define GENERATE_ENUM(ENUM) ENUM
 #define GENERATE_STRING(STRING) #STRING
 
+#define ARCHETYPES_LOCATION "resources/archetypes"
 
 
 
@@ -45,14 +46,19 @@ public:
     static Entity*                                          createEntity(const std::string& typeName);
     static void                                             bindEntityManager(EntityManager* em);
 
+    static void                                             createEntityType(const std::string& typeName);
+
     static const std::vector<const char*>&                  getTypesString();
+    static bool                                             entityTypeExists(const std::string& type);
+
     static const std::list<std::string>&                    getComponents(const std::string& typeName);
+    static const void                                       removeComponent(const std::string& typeName, const std::string& component);
+    static const void                                       addComponent(const std::string& typeName, const std::string& component);
     static const std::string&                               getFile(const std::string& typeName);
 
     static void                                             updateEntityComponent(const std::string& entityName, IComponentFactory* compFactory, sComponent* component);
 
 private:
-    static bool                                             entityTypeExists(const std::string& type);
     static Entity*                                          cloneEntity(const std::string& typeName);
 
 private:

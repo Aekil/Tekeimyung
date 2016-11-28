@@ -26,7 +26,7 @@ public:
     virtual void    update(EntityManager &em, float elapsedTime);
 
 private:
-    void            movementKeys(Entity *entity);
+    void            movementKeys(Entity *entity, float elapsedTime);
 
 private:
     uint16_t        _keyMonitoring;

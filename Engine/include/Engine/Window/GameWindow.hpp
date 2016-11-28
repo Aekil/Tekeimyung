@@ -17,7 +17,6 @@ public:
                                         ~GameWindow();
 
     bool                                initialize();
-	void								registerEvents();
 
     int                                 getScreenWidth() const;
     int	                                getScreenHeight() const;
@@ -38,6 +37,7 @@ public:
     void                                close();
     void                                shutdown();
 
+private:
     static void                         closeCallback(GLFWwindow* window);
 	static void							keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
     static void                         buttonCallback(GLFWwindow* window, int button, int action, int mods);
@@ -50,6 +50,14 @@ public:
 
     static void                         charCallback(GLFWwindow* window, unsigned int c);
     static bool                         sendImGuiCharCallback(GameWindow* gameWindow, GLFWwindow* window, unsigned int c);
+
+    void                                registerEvents();
+
+    static void APIENTRY                debugOutput(GLenum source, GLenum type, GLenum id,
+                                                    GLenum severity, GLsizei length,
+                                                    const GLchar* message, const void* userParam);
+    void                                initDebugOutput();
+
 
 private:
     GLFWmonitor*                        _monitor;

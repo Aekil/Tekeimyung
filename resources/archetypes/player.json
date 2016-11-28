@@ -1,51 +1,62 @@
 {
-    "name": "PLAYER",
-    "components": {
-            "sPositionComponent": {
-                "x": 9,
-                "y": 8,
-                "z": 1
-            },
-            "sDirectionComponent": {
-                "x": 0,
-                "y": 0,
-                "speed": 2.0
-            },
-            "sRenderComponent": {
-                "texture": "resources/sprites/characters/soldierSpriteSheet.png",
-                "type": "OBJECT",
-                "animated": true,
-                "animation": {
-                    "orientations": ["NW", "N", "NE", "E", "W", "SW", "S", "SE"],
-                    "frames": {
-                        "x": 9,
-                        "y": 8
-                    }
-                },
-                "spriteSize": {
-                    "width": 55.0,
-                    "height": 64.9
-                }
-            },
-            "sInputComponent": {
-                "left": "Q",
-                "right": "D",
-                "up": "Z",
-                "down": "S"
-            },
-            "sTypeComponent": {
-                "type": "CHARACTER"
-            },
-            "sRectHitboxComponent": {
-                "min": {
-                    "x": 614,
-                    "y": 188.8
-                },
-                "max": {
-                    "x": 669,
-                    "y": 123.9
-                }
-            },
-            "sPlayerComponent": {}
-        }
+   "components" : {
+      "sDirectionComponent" : {
+         "speed" : 1,
+         "x" : 0,
+         "y" : 0
+      },
+      "sInputComponent" : {
+         "down" : "K",
+         "left" : "J",
+         "right" : "L",
+         "up" : "I"
+      },
+      "sPlayerComponent" : {},
+      "sPositionComponent" : {
+         "x" : 9,
+         "y" : 5,
+         "z" : 1
+      },
+      "sRenderComponent" : {
+         "animated" : false,
+         "color" : {
+            "a" : 1,
+            "b" : 1,
+            "g" : 1,
+            "r" : 1
+         },
+         "geometry" : null,
+         "model" : "resources/models/characters/player.DAE",
+         "type" : "MESH"
+      },
+      "sSphereColliderComponent" : {
+         "pos" : {
+            "x" : 0,
+            "y" : 7.9999990463256836,
+            "z" : 0
+         },
+         "radius" : 9
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 225,
+            "y" : 12.5,
+            "z" : 125
+         },
+         "rotation" : {
+            "x" : 0.00010427342931507155,
+            "y" : 83.6292724609375,
+            "z" : 0.00010427049710415304
+         },
+         "scale" : {
+            "x" : 0.99999517202377319,
+            "y" : 0.99999994039535522,
+            "z" : 0.99999517202377319
+         }
+      },
+      "sTypeComponent" : {
+         "type" : "CHARACTER"
+      }
+   },
+   "name" : "PLAYER"
 }

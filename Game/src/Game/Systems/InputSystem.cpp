@@ -1,3 +1,6 @@
+#include <cmath>
+#include <glm/gtc/matrix_transform.hpp>
+
 #include <Engine/Window/GameWindow.hpp>
 
 #include <Game/Components.hh>
@@ -19,73 +22,45 @@ void    InputSystem::update(EntityManager &em, float elapsedTime)
     Timer timer;
 
     forEachEntity(em, [&](Entity *entity) {
-        movementKeys(entity);
+        movementKeys(entity, elapsedTime);
     });
 
     _data.timeSec = timer.getElapsedTime();
     MonitoringDebugWindow::getInstance()->updateSystem(_keyMonitoring, _data);
 }
 
-void    InputSystem::movementKeys(Entity *entity)
+void    InputSystem::movementKeys(Entity *entity, float elapsedTime)
 {
     auto &&keyboard = GameWindow::getInstance()->getKeyboard();
     sInputComponent *input = entity->getComponent<sInputComponent>();
     sDirectionComponent *direction = entity->getComponent<sDirectionComponent>();
+    sTransformComponent *transform = entity->getComponent<sTransformComponent>();
 
     direction->value = glm::vec2(0.0f, 0.0f);
     direction->moved = true;
 
-    if (KB_P(LEFT) && KB_P(UP) && KB_P(RIGHT) && KB_P(DOWN))
+    if (KB_P(LEFT))
     {
-        // No movement for the 4 directional keys pressed at the same time
-        direction->orientation = eOrientation::S;
+        transform->rotation.y += 180.0f * elapsedTime;
+        transform->rotation.y = std::fmod(transform->rotation.y, 360.0f);
+        transform->needUpdate = true;
     }
-    else if (KB_ONLY_LEFT || (KB_P(LEFT) && KB_P(UP) && KB_P(DOWN)))
+    else if (KB_P(RIGHT))
     {
-        direction->orientation = eOrientation::W;
-        direction->value.x -= direction->speed;
-        direction->value.y += direction->speed;
+        transform->rotation.y -= 180.0f * elapsedTime;
+        transform->rotation.y = std::fmod(transform->rotation.y, 360.0f);
+        transform->needUpdate = true;
     }
-    else if (KB_ONLY_UP || (KB_P(LEFT) && KB_P(UP) && KB_P(RIGHT)))
+    if (KB_P(UP))
     {
-        direction->orientation = eOrientation::N;
-        direction->value.x -= direction->speed;
-        direction->value.y -= direction->speed;
+        float angle = glm::radians(-transform->rotation.y + 90.0f);
+        direction->value.x += glm::cos(angle);
+        direction->value.y += glm::sin(angle);
     }
-    else if (KB_ONLY_RIGHT || (KB_P(RIGHT) && KB_P(UP) && KB_P(DOWN)))
+    else if (KB_P(DOWN))
     {
-        direction->orientation = eOrientation::E;
-        direction->value.x += direction->speed;
-        direction->value.y -= direction->speed;
-    }
-    else if (KB_ONLY_DOWN || (KB_P(DOWN) && KB_P(LEFT) && KB_P(RIGHT)))
-    {
-        direction->orientation = eOrientation::S;
-        direction->value.x += direction->speed;
-        direction->value.y += direction->speed;
-    }
-    else if (KB_P(LEFT) && KB_P(UP))
-    {
-        direction->orientation = eOrientation::NW;
-        direction->value.x -= direction->speed;
-    }
-    else if (KB_P(LEFT) && KB_P(DOWN))
-    {
-        direction->orientation = eOrientation::SW;
-        direction->value.y += direction->speed;
-    }
-    else if (KB_P(RIGHT) && KB_P(UP))
-    {
-        direction->orientation = eOrientation::NE;
-        direction->value.y -= direction->speed;
-    }
-    else if (KB_P(RIGHT) && KB_P(DOWN))
-    {
-        direction->orientation = eOrientation::SE;
-        direction->value.x += direction->speed;
-    }
-    else
-    {
-        direction->moved = false;
+        float angle = glm::radians(-transform->rotation.y + 90.0f);
+        direction->value.x -= glm::cos(angle);
+        direction->value.y -= glm::sin(angle);
     }
 }

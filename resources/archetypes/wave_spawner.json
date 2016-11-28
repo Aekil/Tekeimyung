@@ -7,8 +7,7 @@
                 "z": 0
             },
             "sRenderComponent": {
-                "texture": "resources/sprites/blocks/block_brown.png",
-                "type": "TILE"
+                "model": "resources/models/blocks/block_brown.DAE"
             },
             "sTypeComponent": {
                 "type": "TILE_WALKABLE"

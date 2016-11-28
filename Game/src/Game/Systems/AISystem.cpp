@@ -22,7 +22,6 @@ void    AISystem::update(EntityManager &em, float elapsedTime)
         sDirectionComponent *direction = entity->getComponent<sDirectionComponent>();
 
         direction->value.x = direction->speed;
-        direction->orientation = eOrientation::SE;
         direction->moved = true;
     });
 

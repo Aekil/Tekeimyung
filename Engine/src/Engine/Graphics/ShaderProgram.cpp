@@ -43,7 +43,7 @@ void    ShaderProgram::attachShader(GLenum shaderType, const std::string& fileNa
     {
         std::string shaderTypeName = shaderNameFromType(shaderType);
         glGetShaderInfoLog(_shaders[shaderType], 512, NULL, infoLog);
-        EXCEPT(RendererAPIException, "Failed to compile shader \"%s\"", shaderTypeName.c_str());
+        EXCEPT(RendererAPIException, "Failed to compile shader \"%s\"\nError: %s", shaderTypeName.c_str(), infoLog);
     }
 
     // Attach shaders to shader program
@@ -100,5 +100,15 @@ void    ShaderProgram::use()
 
 GLuint  ShaderProgram::getUniformLocation(const char* location) const
 {
-    return glGetUniformLocation(_shaderProgram, location);
+    return (glGetUniformLocation(_shaderProgram, location));
+}
+
+GLuint  ShaderProgram::getUniformBlockIndex(const char* name) const
+{
+    return (glGetUniformBlockIndex(_shaderProgram, name));
+}
+
+void    ShaderProgram::bindBlock(GLuint uniformBlockIndex, GLuint uniformBlockBinding) const
+{
+    glUniformBlockBinding(_shaderProgram, uniformBlockIndex, uniformBlockBinding);
 }

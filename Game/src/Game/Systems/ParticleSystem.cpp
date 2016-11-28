@@ -5,6 +5,7 @@
 
 #include <Engine/Window/GameWindow.hpp>
 #include <Engine/Utils/Helper.hpp>
+#include <Engine/Graphics/Geometries/Plane.hpp>
 
 #include <Game/Map.hpp>
 
@@ -36,26 +37,15 @@ void    ParticleSystem::initEmitter(Entity* entity)
 void    ParticleSystem::updateEmitter(EntityManager &em, Entity* entity, float elapsedTime)
 {
     sParticleEmitterComponent *emitterComp = entity->getComponent<sParticleEmitterComponent>();
-    sPositionComponent *position = entity->getComponent<sPositionComponent>();
-    sRenderComponent *sprite = entity->getComponent<sRenderComponent>();
-    sDirectionComponent *direction = entity->getComponent<sDirectionComponent>();
+    sTransformComponent *transform = entity->getComponent<sTransformComponent>();
     sEmitter* emitter = _emitters[entity->id];
-
-    if (!sprite->_sprite)
-        return;
-
-    bool moved = direction && direction->moved;
-    eOrientation orientation = direction ? direction->orientation : eOrientation::N;
-    glm::vec3 graphPos = Map::mapToGraphPosition(position->value, position->z, sprite->_sprite);
-    sprite->_sprite->update(graphPos, moved, orientation, sprite->color);
 
     // Update particles
     for (unsigned int i = 0; i < emitter->particlesNb; i++)
     {
         glm::vec3 velocity;
 
-        velocity.x = emitter->particles[i].velocity.x * elapsedTime * emitter->particles[i].speed;
-        velocity.y = emitter->particles[i].velocity.y * elapsedTime * emitter->particles[i].speed;
+        velocity = emitter->particles[i].velocity * elapsedTime * emitter->particles[i].speed;
 
         emitter->particles[i].pos += velocity;
         emitter->particles[i].life--;
@@ -90,7 +80,7 @@ void    ParticleSystem::updateEmitter(EntityManager &em, Entity* entity, float e
             em.destroyEntityRegister(entity);
         }
     }
-    // Create new particles each second
+    // Create new particles each rate
     else if (emitter->timer.getElapsedTime() >= emitterComp->rate)
     {
         for (uint32_t i = 0; i < emitterComp->spawnNb; i++)
@@ -99,9 +89,12 @@ void    ParticleSystem::updateEmitter(EntityManager &em, Entity* entity, float e
             float angle = Helper::randFloat(0, emitterComp->angleVariance);
             float angleRadian = glm::radians(std::fmod(angle - emitterComp->angle, 360.0f));
 
-            particle.pos = sprite->_sprite->getPos();
-            particle.velocity.x = glm::cos(angleRadian);
-            particle.velocity.y = glm::sin(angleRadian);
+            particle.pos = transform->pos;
+            float theta = Helper::randFloat(0.0f, 1.0f) * (2.0f * glm::pi<float>());
+            float phi = (glm::pi<float>() / 2.0f) - (Helper::randFloat(0.0f, 1.0f) * angleRadian);
+            particle.velocity.x = glm::cos(theta) * glm::cos(phi);
+            particle.velocity.z = glm::sin(theta) * glm::cos(phi);
+            particle.velocity.y =  glm::sin(phi);
             particle.speed = emitterComp->speed + Helper::randFloat(0, emitterComp->speedVariance);
             particle.life = emitterComp->life + Helper::randInt(0, emitterComp->lifeVariance);
 
@@ -156,8 +149,10 @@ void    ParticleSystem::update(EntityManager &em, float elapsedTime)
         auto it = _emitters.cbegin();
         while (it != _emitters.cend())
         {
-            // The emitter has been deleted, remove it from the map
-            if (!em.getEntity(it->first))
+            Entity* entity = em.getEntity(it->first);
+            // The emitter has been deleted or the component has been removed, remove it from the map
+            if (!entity ||
+                !entity->getComponent<sParticleEmitterComponent>())
             {
                 uint32_t emitterId = it->first;
                 ++it;

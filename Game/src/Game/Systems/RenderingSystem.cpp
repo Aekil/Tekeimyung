@@ -1,3 +1,4 @@
+#include <iostream>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -8,15 +9,30 @@
 #include <Engine/Utils/Exception.hpp>
 #include <Engine/Window/GameWindow.hpp>
 
+#include <Game/EntityDebugWindow.hpp>
+
 #include <Game/Systems/RenderingSystem.hpp>
 
 
 RenderingSystem::RenderingSystem(Map* map, std::unordered_map<uint32_t, sEmitter*>* particleEmitters): _map(map), _particleEmitters(particleEmitters)
 {
-    addDependency<sPositionComponent>();
     addDependency<sRenderComponent>();
 
     _keyMonitoring = MonitoringDebugWindow::getInstance()->registerSystem(RENDERING_SYSTEM_NAME);
+
+    _camera.translate(glm::vec3(350.0f, 250.0f, 300.0f));
+    _camera.setDir(glm::vec3(-30.0f));
+
+    // Set camera screen
+    float size = 500.0f;
+    Camera::sScreen screen;
+    screen.right = size * _camera.getAspect();
+    screen.left = -screen.right;
+    screen.top = size;
+    screen.bottom = -screen.top;
+    _camera.setScreen(screen);
+
+    Camera::setInstance(&_camera);
 }
 
 RenderingSystem::~RenderingSystem() {}
@@ -29,6 +45,13 @@ bool    RenderingSystem::init()
         _shaderProgram.attachShader(GL_FRAGMENT_SHADER, "resources/shaders/shader.frag");
         _shaderProgram.link();
         _shaderProgram.use();
+
+        // Set texture location unit
+        // Must be the same unit as material textures. See Material::loadFromAssimp
+        glUniform1i(_shaderProgram.getUniformLocation("AmbientTexture"), 0);
+        glUniform1i(_shaderProgram.getUniformLocation("DiffuseTexture"), 1);
+
+        _camera.getUbo().bind(_shaderProgram, "camera");
     }
     catch(const Exception& e)
     {
@@ -39,51 +62,65 @@ bool    RenderingSystem::init()
     // Enable blend for transparency
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    // Enable depth buffer
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+
+    // Activate back culling
+    //glEnable(GL_CULL_FACE);
     return (true);
 }
 
 void    RenderingSystem::renderEntity(Entity* entity)
 {
-    Sprite* sprite = getSprite(entity);
+    auto&& model = getModel(entity);
 
-    // Model matrice
-    glm::mat4 trans;
-    trans = glm::translate(trans, glm::vec3(sprite->getPos().x, sprite->getPos().y, 0.0f));
-    GLint uniTrans = _shaderProgram.getUniformLocation("trans");
-    glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(trans));
-
-    // Color vector
-    GLint uniColor = _shaderProgram.getUniformLocation("color");
-    glUniform4f(uniColor, sprite->getColor().x, sprite->getColor().y, sprite->getColor().z, 1.0f);
-
-    // Draw sprite
-    sprite->draw();
+    // Draw model
+    model->draw(_shaderProgram);
 }
 
-void    RenderingSystem::renderEntities(EntityManager& em, std::list<uint32_t>::const_iterator& it, uint16_t layer, uint32_t x, uint32_t y)
+void    RenderingSystem::renderCollider(Entity* entity)
 {
-    Entity* entity;
-    sPositionComponent *position;
-
-    if (it == (*_map)[layer].getEntities().cend())
+    if (!entity)
         return;
 
-    entity = em.getEntity(*it);
-    ASSERT(entity != nullptr, "The entity should exists");
-
-    position = entity->getComponent<sPositionComponent>();
-    while (std::floor(position->value.x) == x && std::floor(position->value.y) == y)
+    sBoxColliderComponent* boxCollider = entity->getComponent<sBoxColliderComponent>();
+    sSphereColliderComponent* sphereCollider = entity->getComponent<sSphereColliderComponent>();
+    sTransformComponent *transform = entity->getComponent<sTransformComponent>();
+    if (boxCollider && boxCollider->display)
     {
-        renderEntity(entity);
-        it++;
+        if (!boxCollider->box)
+        {
+            Box::sInfo boxInfo;
+            boxInfo.width = boxCollider->size.x;
+            boxInfo.height = boxCollider->size.y;
+            boxInfo.length = boxCollider->size.z;
+            boxCollider->box = std::make_shared<Box>(boxInfo);
+        }
 
-        if (it == (*_map)[layer].getEntities().cend())
-            break;
+        glm::mat4 boxTransform = transform->transform;
+        boxTransform = glm::translate(boxTransform, boxCollider->pos);
+        boxTransform = glm::scale(boxTransform, boxCollider->size);
 
-        entity = em.getEntity(*it);
-        ASSERT(entity != nullptr, "The entity should exists");
+        boxCollider->box->update(glm::vec4(0.87f, 1.0f, 1.0f, 0.1f), boxTransform);
+        boxCollider->box->draw(_shaderProgram);
+    }
+    if (sphereCollider && sphereCollider->display)
+    {
+        if (!sphereCollider->sphere)
+        {
+            Sphere::sInfo sphereInfo;
+            sphereInfo.radius = sphereCollider->radius;
+            sphereCollider->sphere = std::make_shared<Sphere>(sphereInfo);
+        }
 
-        position = entity->getComponent<sPositionComponent>();
+        glm::mat4 sphereTransform = transform->transform;
+        sphereTransform = glm::translate(sphereTransform, sphereCollider->pos);
+        sphereTransform = glm::scale(sphereTransform, glm::vec3(sphereCollider->radius));
+
+        sphereCollider->sphere->update(glm::vec4(0.87f, 1.0f, 1.0f, 0.1f), sphereTransform);
+        sphereCollider->sphere->draw(_shaderProgram);
     }
 }
 
@@ -99,39 +136,28 @@ void    RenderingSystem::renderParticles(EntityManager& em)
         if (entity == nullptr)
             continue;
 
-        sRenderComponent *sprite = entity->getComponent<sRenderComponent>();
+        sRenderComponent *render = entity->getComponent<sRenderComponent>();
+        auto&& model = getModel(entity);
 
-
-        if (!sprite->_sprite)
-        {
-            Sprite::sCreateInfo createInfo;
-            sprite->_sprite = new Sprite(sprite->type, _shaderProgram);
-
-            getSpriteCreateInfo(createInfo, sprite);
-            sprite->_sprite->loadFromTexture(createInfo);
-        }
+        // Only freeze camera rotation for plans
+        if (render->type == Geometry::eType::PLANE)
+            _camera.freezeRotations(true);
 
         for (unsigned int i = 0; i < emitter->particlesNb; i++)
         {
             auto &&particle = emitter->particles[i];
 
             // Model matrice
-            glm::mat4 trans;
-            glm::mat4 scale;
-            glm::mat4 modelTrans;
-            trans = glm::translate(trans, glm::vec3(particle.pos.x, particle.pos.y, 0.0f));
-            scale = glm::scale(scale, glm::vec3(particle.size, particle.size, particle.size));
-            modelTrans = trans * scale;
-            GLint uniTrans = _shaderProgram.getUniformLocation("trans");
-            glUniformMatrix4fv(uniTrans, 1, GL_FALSE, glm::value_ptr(modelTrans));
-
-            // Color vector
-            GLint uniColor = _shaderProgram.getUniformLocation("color");
-            glUniform4f(uniColor, particle.color.x, particle.color.y, particle.color.z, particle.color.w);
+            glm::mat4 transformMatrix(1.0f);
+            transformMatrix = glm::translate(transformMatrix, glm::vec3(particle.pos.x, particle.pos.y, particle.pos.z));
+            transformMatrix = glm::scale(transformMatrix, glm::vec3(particle.size, particle.size, particle.size));
+            model->update(particle.color, transformMatrix);
 
             // Draw sprite
-            sprite->_sprite->draw();
+            model->draw(_shaderProgram);
         }
+
+        _camera.freezeRotations(false);
     }
 
     // Activate transparency blending
@@ -142,44 +168,63 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
 {
     Timer timer;
     // Clear color buffer
-    glClear (GL_COLOR_BUFFER_BIT);
+    glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    // Unfree camera rotation to display normal models
+   _camera.freezeRotations(false);
 
-    for (auto &&id: (*_map)[1].getEntities())
-    {
-        sPositionComponent *position;
-        Entity* entity = em.getEntity(id);
-        if (entity == nullptr)
-            continue;
-        position = entity->getComponent<sPositionComponent>();
-    }
+    _camera.update(_shaderProgram, elapsedTime);
 
-    for (uint16_t layer = 0; layer < _map->getLayersNb(); layer++)
-    {
-        // Order the entities to properly render !
-        // If not, the render will not work
-        (*_map)[layer].orderEntities(em);
-        auto &&it = (*_map)[layer].getEntities().cbegin();
-        for (uint32_t y = 0; y < _map->getHeight(); y++)
+    // Iterate over particle emitters
+    forEachEntity(em, [&](Entity *entity) {
+        // Don't display particle systems
+        if (!entity->getComponent<sParticleEmitterComponent>())
         {
-            for (uint32_t x = 0; x < _map->getWidth(); x++)
+
+
+            if (!isTransparentEntity(entity))
+                renderEntity(entity);
+            else
+                _transparentEntities[entity->id] = entity;
+        }
+    });
+
+    // Enable blend to blend transparent ojects and particles
+    glEnable(GL_BLEND);
+    // Disable write to the depth buffer so that the depth of transparent objects is not written
+    // because we don't want a transparent object to hide an other transparent object
+    glDepthMask(GL_FALSE);
+
+    // Display transparent entities
+    {
+        auto it = _transparentEntities.begin();
+        while (it != _transparentEntities.end())
+        {
+            // Get fresh entity pointer to handle deletion
+            Entity* entity = em.getEntity(it->first);
+            if (!entity)
             {
-                // Orthogonal projection matrice
-                glm::mat4 ortho = glm::ortho(0.0f, (float)GameWindow::getInstance()->getScreenWidth() * 1.3f, 0.0f, (float)GameWindow::getInstance()->getScreenHeight() * 1.3f);
-                GLint uniProj = _shaderProgram.getUniformLocation("proj");
-                glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(ortho));
-
-                Entity* tile = em.getEntity((*_map)[layer][y][x].get());
-
-                if (tile)
-                    renderEntity(tile);
-
-                renderEntities(em, it, layer, x, y);
+                uint32_t id = it->first;
+                ++it;
+                _transparentEntities.erase(id);
+            }
+            else
+            {
+                renderEntity(entity);
+                ++it;
             }
         }
     }
 
+
+    renderCollider(em.getEntity(EntityDebugWindow::getSelectedEntityId()));
+
     renderParticles(em);
+
+    // Enable depth buffer for opaque objects
+    glDepthMask(GL_TRUE);
+    // Disable blending for opaque objects
+    glDisable(GL_BLEND);
 
     // Display imgui windows
     ImGui::Render();
@@ -191,44 +236,33 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
     MonitoringDebugWindow::getInstance()->updateSystem(_keyMonitoring, _data);
 }
 
-Sprite*   RenderingSystem::getSprite(Entity* entity)
+bool    RenderingSystem::isTransparentEntity(Entity* entity) const
 {
-    int id = entity->id;
-    sRenderComponent *sprite = entity->getComponent<sRenderComponent>();
-    sPositionComponent *position = entity->getComponent<sPositionComponent>();
-    sDirectionComponent *direction = entity->getComponent<sDirectionComponent>();
+    sRenderComponent *model = entity->getComponent<sRenderComponent>();
 
-    if (sprite == nullptr)
-        return (nullptr);
-    // The entity does not exist in the render system
-    if (!sprite->_sprite)
-    {
-        Sprite::sCreateInfo createInfo;
-        sprite->_sprite = new Sprite(sprite->type, _shaderProgram);
-
-        getSpriteCreateInfo(createInfo, sprite);
-        sprite->_sprite->loadFromTexture(createInfo);
-
-    }
-
-    // Update entity graphic position
-    bool moved = direction && direction->moved;
-    eOrientation orientation = direction ? direction->orientation : eOrientation::N;
-    glm::vec3 graphPos = Map::mapToGraphPosition(position->value, position->z, sprite->_sprite);
-    sprite->_sprite->update(graphPos, moved, orientation, sprite->color);
-
-    return (sprite->_sprite);
+    return (model->type == Geometry::eType::PLANE);
 }
 
-void    RenderingSystem::getSpriteCreateInfo(Sprite::sCreateInfo& createInfo, sRenderComponent *sprite)
+std::shared_ptr<Model>  RenderingSystem::getModel(Entity* entity)
 {
-    createInfo.textureFile = sprite->texture;
-    createInfo.animated = sprite->animated;
-    createInfo.frames = sprite->frames;
-    createInfo.offset = sprite->spriteSheetOffset;
-    createInfo.orientations = sprite->orientations;
-    createInfo.spriteSize = sprite->spriteSize;
-    createInfo.color = sprite->color;
+    int id = entity->id;
+    sRenderComponent *model = entity->getComponent<sRenderComponent>();
+    sTransformComponent *transform = entity->getComponent<sTransformComponent>();
+
+    // The entity does not exist in the render system
+    if (!model->_model)
+    {
+        model->initModel();
+    }
+
+    if (transform->needUpdate)
+    {
+        model->_model->update(model->color, transform->getTransform());
+    }
+    else
+        model->_model->update(model->color, transform->transform);
+
+    return (model->_model);
 }
 
 const ShaderProgram&  RenderingSystem::getShaderProgram() const

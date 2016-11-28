@@ -1,13 +1,20 @@
+#include <algorithm>
 #include <sstream>
 #include <imgui.h>
 #include <imgui_impl_glfw_gl3.h>
+#include <glm/gtx/matrix_decompose.hpp>
+#include <ImGuizmo.h>
 #include <glm/gtc/type_ptr.hpp>
 
 #include <Engine/Window/Keyboard.hpp>
+#include <Engine/Window/GameWindow.hpp>
+#include <Engine/Utils/RessourceManager.hpp>
+#include <Engine/Graphics/Camera.hpp>
 
 #include <Game/ComponentFactory.hpp>
 
-std::unordered_map<std::string, IComponentFactory*>  IComponentFactory::_componentsTypes = { COMPONENTS_TYPES() };
+std::unordered_map<std::string, IComponentFactory*>  IComponentFactory::_componentsTypes = { COMPONENTS_TYPES(GENERATE_PAIRS) };
+std::unordered_map<std::size_t, std::string>  IComponentFactory::_componentsTypesHashs = { COMPONENTS_TYPES(GENERATE_PAIRS_HASHS) };
 
 
 /*
@@ -23,50 +30,6 @@ bool    IComponentFactory::componentTypeExists(const std::string& type)
     }
 
     return (false);
-}
-
-eOrientation IComponentFactory::stringToOrientation(const std::string& orientationStr)
-{
-    if (orientationStr == "N")
-        return eOrientation::N;
-    else if (orientationStr == "NE")
-        return eOrientation::NE;
-    else if (orientationStr == "E")
-        return eOrientation::E;
-    else if (orientationStr == "SE")
-        return eOrientation::SE;
-    else if (orientationStr == "S")
-        return eOrientation::S;
-    else if (orientationStr == "SW")
-        return eOrientation::SW;
-    else if (orientationStr == "W")
-        return eOrientation::W;
-    else if (orientationStr == "NW")
-        return eOrientation::NW;
-
-    EXCEPT(NotImplementedException, "Failed to load sRenderComponent:  the orientation %s does not exist", orientationStr);
-}
-
-std::string IComponentFactory::orientationToString(eOrientation orientation)
-{
-    if (orientation == eOrientation::N)
-        return ("N");
-    else if (orientation == eOrientation::NE)
-        return ("NE");
-    else if (orientation == eOrientation::E)
-        return ("E");
-    else if (orientation == eOrientation::SE)
-        return ("SE");
-    else if (orientation == eOrientation::S)
-        return ("S");
-    else if (orientation == eOrientation::SW)
-        return ("SW");
-    else if (orientation == eOrientation::W)
-        return ("W");
-    else if (orientation == eOrientation::NW)
-        return ("NW");
-
-    EXCEPT(NotImplementedException, "Failed to save sRenderComponent:  the orientation type does not exist");
 }
 
 void    IComponentFactory::initComponent(const std::string& entityType, const std::string& name, const JsonValue& value)
@@ -100,6 +63,26 @@ IComponentFactory*   IComponentFactory::getFactory(const std::string& name)
     return _componentsTypes[name];
 }
 
+std::string IComponentFactory::getComponentNameWithHash(std::size_t hash)
+{
+    return (_componentsTypesHashs[hash]);
+}
+
+std::size_t IComponentFactory::getComponentHashWithName(const std::string& name)
+{
+    for (auto component: _componentsTypesHashs)
+    {
+        if (component.second == name)
+            return (component.first);
+    }
+    return (-1);
+}
+
+const std::unordered_map<std::size_t, std::string>& IComponentFactory::getComponentsTypesHashs()
+{
+    return (_componentsTypesHashs);
+}
+
 /*
 ** sRenderComponent
 */
@@ -107,100 +90,105 @@ IComponentFactory*   IComponentFactory::getFactory(const std::string& name)
 sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
 {
     sRenderComponent* component = new sRenderComponent();
-    JsonValue animation = json.get("animation", {});
 
     // Initialize some values
-    component->animated = false;
-    component->spriteSheetOffset = {0, 0};
-
-    // Sprite texture
+    component->animated = json.getBool("animated", false);
+    component->modelFile = json.getString("model", "resources/models/default.DAE");
+    component->color = json.getColor4f("color", { 1.0f, 1.0f, 1.0f, 1.0f });
     component->texture = json.getString("texture", "");
 
-    // Sprite type
-    component->type = stringToSpriteType(json.getString("type", ""));
-
-    // Sprite size
-    component->spriteSize = json.getVec2f("spriteSize", { "width", "height" }, { 0.0f, 0.0f });
-
-    // Sprite color
-    component->color = json.getColor3f("color", { 1.0f, 1.0f, 1.0f });
-
-    // Sprite animation
-    if (json.getBool("animated", false) && animation.size() > 0)
-    {
-        component->animated = true;
-        component->frames = animation.getUVec2f("frames", { 0, 0 });
-        component->spriteSheetOffset = animation.getVec2f("offset", { 0.0f, 0.0f });
-        for (auto &&orientation: animation.get("orientations", {}).get())
-        {
-            component->orientations.push_back(stringToOrientation(orientation.asString()));
-        }
-    }
+    std::string geometryName = json.getString("type", "MESH");
+    component->type = Geometry::getGeometryType(geometryName);
 
     return (component);
 }
 
 JsonValue&    ComponentFactory<sRenderComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
 {
-    std::vector<std::string> orientations;
-    JsonValue animation;
     JsonValue& json = _componentsJson[entityType];
     sRenderComponent* component = static_cast<sRenderComponent*>(_components[entityType]);
 
 
-    // Write animation
-    animation.setUVec2f("frames", component->frames);
-    animation.setVec2f("offset", component->spriteSheetOffset);
-    // Convert orientations into string
-    for (auto &&orientation: component->orientations)
-    {
-        orientations.push_back(orientationToString(orientation));
-    }
-    animation.setStringVec("orientations", orientations);
-    json.setValue("animation", animation);
     json.setBool("animated", component->animated);
-
+    json.setString("model", component->modelFile);
+    json.setColor4f("color", component->color);
+    json.setString("type", Geometry::getGeometryTypeString(component->type));
     json.setString("texture", component->texture);
-    json.setString("type", spriteTypeToString(component->type));
-    json.setVec2f("spriteSize", component->spriteSize);
-    json.setColor3f("color", component->color);
 
     return (json);
 }
 
-bool    ComponentFactory<sRenderComponent>::updateEditor(const std::string& entityType, sComponent** component_)
+bool    ComponentFactory<sRenderComponent>::updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity)
 {
-    sRenderComponent* component = static_cast<sRenderComponent*>(_components[entityType]);
-    *component_ = component;
+    sRenderComponent* component = static_cast<sRenderComponent*>(entityComponent ? entityComponent : _components[entityType]);
+    *savedComponent = component;
     bool changed = false;
+    bool typeChanged = false;
+    bool textureChanged = false;
+    bool modelChanged = false;
 
-    ImGui::PushItemWidth(200);
-    if (ImGui::CollapsingHeader("sRenderComponent", ImGuiTreeNodeFlags_DefaultOpen))
+    changed |= ImGui::ColorEdit3("color", glm::value_ptr(component->color));
+
+    static std::vector<const char*>& typesString = const_cast<std::vector<const char*>&>(Geometry::getTypesString());
+    int selectedType = static_cast<int>(std::find(typesString.cbegin(), typesString.cend(), Geometry::getGeometryTypeString(component->type)) - typesString.begin());
+    const char** typesList = typesString.data();
+
+    typeChanged = ImGui::ListBox("Model type", &selectedType, typesList, (int)Geometry::getTypesString().size(), 4);
+    if (typeChanged)
+        component->type = Geometry::getGeometryType(typesString[selectedType]);
+
+    // Plan
+    if (component->type == Geometry::eType::PLANE)
     {
-        changed |= ImGui::ColorEdit3("color", glm::value_ptr(component->color));
+        // Plan texture
+        {
+            static RessourceManager* resourceManager = RessourceManager::getInstance();
+            static std::vector<const char*>& texturesString = const_cast<std::vector<const char*>&>(resourceManager->getTexturesNames());
+            const char** texturesList = texturesString.data();
+            int selectedTexture = -1;
+            Texture* texture;
+
+            if (component->texture.size() > 0)
+            {
+                texture = &resourceManager->getTexture(component->texture);
+                selectedTexture = static_cast<int>(std::find(texturesString.cbegin(), texturesString.cend(), texture->getId()) - texturesString.begin());
+            }
+
+            if (ImGui::ListBox("texture", &selectedTexture, texturesList, (int)resourceManager->getTexturesNames().size(), 4))
+            {
+                textureChanged = true;
+                texture = &resourceManager->getTexture(texturesString[selectedTexture]);
+                component->texture = texture->getPath();
+            }
+        }
+
+    }
+    // MESH
+    else if (component->type == Geometry::eType::MESH)
+    {
+        static RessourceManager* resourceManager = RessourceManager::getInstance();
+        static std::vector<const char*>& modelsString = const_cast<std::vector<const char*>&>(resourceManager->getModelsNames());
+        auto model = resourceManager->getModel(component->modelFile);
+        int selectedModel = static_cast<int>(std::find(modelsString.cbegin(), modelsString.cend(), model->getId()) - modelsString.begin());
+        const char** modelsList = modelsString.data();
+
+        if (ImGui::ListBox("model", &selectedModel, modelsList, (int)resourceManager->getModelsNames().size(), 4))
+        {
+            modelChanged = true;
+            model = resourceManager->getModel(modelsString[selectedModel]);
+            component->modelFile = model->getPath();
+        }
+    }
+
+    changed |= typeChanged || textureChanged || modelChanged;
+
+    if (typeChanged || textureChanged || modelChanged)
+    {
+        // Remove the model to auto reload the new model
+        component->_model = nullptr;
     }
 
     return (changed);
-}
-
-Sprite::eType ComponentFactory<sRenderComponent>::stringToSpriteType(const std::string& spriteTypeStr)
-{
-    if (spriteTypeStr == "OBJECT")
-        return Sprite::eType::OBJECT;
-    else if (spriteTypeStr == "TILE")
-        return Sprite::eType::TILE;
-
-    EXCEPT(NotImplementedException, "Failed to load sRenderComponent:  the sprite type %s does not exist", spriteTypeStr);
-}
-
-std::string ComponentFactory<sRenderComponent>::spriteTypeToString(Sprite::eType spriteType)
-{
-    if (spriteType == Sprite::eType::OBJECT)
-        return ("OBJECT");
-    else if (spriteType == Sprite::eType::TILE)
-        return ("TILE");
-
-    EXCEPT(NotImplementedException, "Failed to save sRenderComponent:  the sprite type does not exist");
 }
 
 
@@ -275,7 +263,6 @@ sComponent* ComponentFactory<sDirectionComponent>::loadFromJson(const std::strin
 
     component->value.x = json.getFloat("x", 0.0f);
     component->value.y = json.getFloat("y", 0.0f);
-    component->orientation =  stringToOrientation(json.getString("orientation", "N"));
     component->speed =  json.getFloat("speed", 1.0f);
 
     return (component);
@@ -288,7 +275,6 @@ JsonValue&    ComponentFactory<sDirectionComponent>::saveToJson(const std::strin
 
     json.setFloat("x", component->value.x);
     json.setFloat("y", component->value.y);
-    json.setString("orientation", orientationToString(component->orientation));
     json.setFloat("speed", component->speed);
 
     return (json);
@@ -296,54 +282,110 @@ JsonValue&    ComponentFactory<sDirectionComponent>::saveToJson(const std::strin
 
 
 /*
-** sRectHitboxComponent
+** sBoxColliderComponent
 */
 
-sComponent* ComponentFactory<sRectHitboxComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
+sComponent* ComponentFactory<sBoxColliderComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
 {
-    sRectHitboxComponent* component = new sRectHitboxComponent();
+    sBoxColliderComponent* component = new sBoxColliderComponent();
 
-    component->min = json.getVec2f("min", { 0.0f, 0.0f });
-    component->max = json.getVec2f("max", { 0.0f, 0.0f });
+    component->pos = json.getVec3f("pos", { 0.0f, 0.0f, 0.0f });
+    component->size = json.getVec3f("size", { 2.0f, 2.0f, 2.0f });
 
     return (component);
 }
 
-JsonValue&    ComponentFactory<sRectHitboxComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
+JsonValue&    ComponentFactory<sBoxColliderComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
 {
     JsonValue& json = _componentsJson[entityType];
-    sRectHitboxComponent* component = static_cast<sRectHitboxComponent*>(_components[entityType]);
+    sBoxColliderComponent* component = static_cast<sBoxColliderComponent*>(_components[entityType]);
 
-    json.setVec2f("min", component->min);
-    json.setVec2f("max", component->max);
+    json.setVec3f("pos", component->pos);
+    json.setVec3f("size", component->size);
 
     return (json);
 }
 
+bool    ComponentFactory<sBoxColliderComponent>::updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity)
+{
+    sBoxColliderComponent* component = static_cast<sBoxColliderComponent*>(entityComponent ? entityComponent : _components[entityType]);
+    *savedComponent = component;
+    bool changed = false;
+
+    if (ImGui::Button("Reset"))
+    {
+        sRenderComponent* render = entity->getComponent<sRenderComponent>();
+        component->pos = glm::vec3(render->_model->getMin().x - 0.5f, render->_model->getMin().y - 0.5f, render->_model->getMin().z - 0.5f);
+        component->size.x = (render->_model->getSize().x + 1.0f) / SIZE_UNIT;
+        component->size.y = (render->_model->getSize().y + 1.0f) / SIZE_UNIT;
+        component->size.z = (render->_model->getSize().z + 1.0f) / SIZE_UNIT;
+    }
+    if (ImGui::Button(component->display ? "Hide" : "Display"))
+    {
+        component->display = !component->display;
+    }
+
+    ImGui::InputFloat3("position", glm::value_ptr(component->pos), 3);
+    ImGui::InputFloat3("size", glm::value_ptr(component->size), 3);
+
+    return (changed);
+}
 
 /*
-** sCircleHitboxComponent
+** sSphereColliderComponent
 */
 
-sComponent* ComponentFactory<sCircleHitboxComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
+sComponent* ComponentFactory<sSphereColliderComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
 {
-    sCircleHitboxComponent* component = new sCircleHitboxComponent();
+    sSphereColliderComponent* component = new sSphereColliderComponent();
 
-    component->center = json.getVec2f("center", { 0.0f, 0.0f });
-    component->radius = json.getFloat("radius", 0.0f);
+    component->pos = json.getVec3f("pos", { 0.0f, 0.0f, 0.0f });
+    component->radius = json.getFloat("radius", 2.0f);
 
     return (component);
 }
 
-JsonValue&    ComponentFactory<sCircleHitboxComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
+JsonValue&    ComponentFactory<sSphereColliderComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
 {
     JsonValue& json = _componentsJson[entityType];
-    sCircleHitboxComponent* component = static_cast<sCircleHitboxComponent*>(_components[entityType]);
+    sSphereColliderComponent* component = static_cast<sSphereColliderComponent*>(_components[entityType]);
 
-    json.setVec2f("center", component->center);
+    json.setVec3f("pos", component->pos);
     json.setFloat("radius", component->radius);
 
     return (json);
+}
+
+bool    ComponentFactory<sSphereColliderComponent>::updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity)
+{
+    sSphereColliderComponent* component = static_cast<sSphereColliderComponent*>(entityComponent ? entityComponent : _components[entityType]);
+    *savedComponent = component;
+    bool changed = false;
+
+    if (ImGui::Button("Reset"))
+    {
+        sRenderComponent* render = entity->getComponent<sRenderComponent>();
+
+        float modelMaxSize = render->_model->getSize().x;
+        if (render->_model->getSize().y > modelMaxSize)
+            modelMaxSize = render->_model->getSize().y;
+        if (render->_model->getSize().z > modelMaxSize)
+            modelMaxSize = render->_model->getSize().z;
+        component->radius = (modelMaxSize / 2.0f + 1.0f) / SIZE_UNIT;
+        component->pos = glm::vec3(render->_model->getMin().x + (render->_model->getSize().x / 2.0f),
+                                    render->_model->getMin().y + (render->_model->getSize().y / 2.0f),
+                                    render->_model->getMin().z + (render->_model->getSize().z / 2.0f));
+    }
+    if (ImGui::Button(component->display ? "Hide" : "Display"))
+    {
+        component->display = !component->display;
+    }
+
+
+    ImGui::InputFloat3("position", glm::value_ptr(component->pos), 3);
+    ImGui::InputFloat("radius", &component->radius, 3.0f);
+
+    return (changed);
 }
 
 
@@ -445,6 +487,7 @@ sComponent* ComponentFactory<sAIComponent>::loadFromJson(const std::string& enti
     return (component);
 }
 
+
 /*
 ** sPlayerComponent
 */
@@ -455,6 +498,7 @@ sComponent* ComponentFactory<sPlayerComponent>::loadFromJson(const std::string& 
 
     return (component);
 }
+
 
 /*
 ** sParticleEmitterComponent
@@ -467,13 +511,13 @@ sComponent* ComponentFactory<sParticleEmitterComponent>::loadFromJson(const std:
     JsonValue size = json.get("size", {});
 
     component->rate = json.getFloat("rate", 0.0f);
-    component->spawnNb = json.getUInt("spawn_nb", 0);
+    component->spawnNb = json.getUInt("spawn_nb", 1);
     component->emitterLife = json.getFloat("emitter_life", 0.0f);
-    component->life = json.getUInt("life", 0);
+    component->life = json.getUInt("life", 80);
     component->lifeVariance = json.getUInt("life_variance", 0);
-    component->angle = json.getFloat("angle", 0.0f);
+    component->angle = json.getFloat("angle", 30.0f);
     component->angleVariance = json.getFloat("angle_variance", 0.0f);
-    component->speed = json.getFloat("speed", 0.0f);
+    component->speed = json.getFloat("speed", 30.0f);
     component->speedVariance =  json.getFloat("speed_variance", 0.0f);
 
     if (color.size() > 0)
@@ -483,6 +527,11 @@ sComponent* ComponentFactory<sParticleEmitterComponent>::loadFromJson(const std:
         component->colorFinish = color.getColor4f("finish", { 1.0f, 1.0f, 1.0f, 1.0f });
         component->colorFinishVariance = color.getColor4f("finish_variance", { 1.0f, 1.0f, 1.0f, 1.0f });
     }
+    else
+    {
+        component->colorStart = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+        component->colorFinish = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f);
+    }
 
     if (size.size() > 0)
     {
@@ -491,6 +540,13 @@ sComponent* ComponentFactory<sParticleEmitterComponent>::loadFromJson(const std:
         component->sizeStartVariance =  size.getFloat("start_variance", 1.0f);
         component->sizeFinishVariance =  size.getFloat("finish_variance", 1.0f);
     }
+    else
+    {
+        component->sizeStart = 1.0f;
+        component->sizeFinish = 0.0f;
+    }
+
+    component->texture = json.getString("texture", "");
 
     return (component);
 }
@@ -526,37 +582,40 @@ JsonValue&    ComponentFactory<sParticleEmitterComponent>::saveToJson(const std:
     json.setFloat("speed", component->speed);
     json.setFloat("speed_variance", component->speedVariance);
 
+    json.setString("texture", component->texture);
+
     return (json);
 }
 
-bool    ComponentFactory<sParticleEmitterComponent>::updateEditor(const std::string& entityType, sComponent** component_)
+bool    ComponentFactory<sParticleEmitterComponent>::updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity)
 {
-    sParticleEmitterComponent* component = static_cast<sParticleEmitterComponent*>(_components[entityType]);
-    *component_ = component;
+    sParticleEmitterComponent* component = static_cast<sParticleEmitterComponent*>(entityComponent ? entityComponent : _components[entityType]);
+    *savedComponent = component;
     bool changed = false;
 
-    ImGui::PushItemWidth(200);
-    if (ImGui::CollapsingHeader("sParticleEmitterComponent", ImGuiTreeNodeFlags_DefaultOpen))
-    {
-        changed |= ImGui::SliderFloat("Emitter life (0 to disable)", &component->emitterLife, 0.0f, 10.0f);
-        changed |= ImGui::SliderFloat("Rate", &component->rate, 0.0f, 3.0f);
-        changed |= ImGui::SliderInt("Particles number per spawn", (int*)&component->spawnNb, 0, 50);
-        changed |= ImGui::SliderFloat("Angle", &component->angle, 0.0f, 360.0f);
-        changed |= ImGui::SliderFloat("Angle variance", &component->angleVariance, 0.0f, 360.0f);
-        changed |= ImGui::SliderFloat("Speed", &component->speed, 0.0f, 200.0f);
-        changed |= ImGui::SliderFloat("Speed variance", &component->speedVariance, 0.0f, 200.0f);
-        changed |= ImGui::SliderInt("Life", (int*)&component->life, 0, 200);
-        changed |= ImGui::SliderInt("Life variance", (int*)&component->lifeVariance, 0, 200);
-        changed |= ImGui::ColorEdit4("Start color", glm::value_ptr(component->colorStart));
-        changed |= ImGui::ColorEdit4("Finish color", glm::value_ptr(component->colorFinish));
-        changed |= ImGui::SliderFloat("Start size", &component->sizeStart, 0.0f, 5.0f);
-        changed |= ImGui::SliderFloat("Finish size", &component->sizeFinish, 0.0f, 5.0f);
-        changed |= ImGui::SliderFloat("Start size variance", &component->sizeStartVariance, 0.0f, 5.0f);
-        changed |= ImGui::SliderFloat("Finish size variance", &component->sizeFinishVariance, 0.0f, 5.0f);
-    }
+    changed |= ImGui::SliderFloat("Emitter life (0 to disable)", &component->emitterLife, 0.0f, 10.0f);
+    changed |= ImGui::SliderFloat("Rate", &component->rate, 0.0f, 3.0f);
+    changed |= ImGui::SliderInt("Particles number per spawn", (int*)&component->spawnNb, 0, 50);
+    changed |= ImGui::SliderFloat("Angle", &component->angle, 0.0f, 360.0f);
+    changed |= ImGui::SliderFloat("Angle variance", &component->angleVariance, 0.0f, 360.0f);
+    changed |= ImGui::SliderFloat("Speed", &component->speed, 0.0f, 200.0f);
+    changed |= ImGui::SliderFloat("Speed variance", &component->speedVariance, 0.0f, 200.0f);
+    changed |= ImGui::SliderInt("Life", (int*)&component->life, 0, 200);
+    changed |= ImGui::SliderInt("Life variance", (int*)&component->lifeVariance, 0, 200);
+    changed |= ImGui::ColorEdit4("Start color", glm::value_ptr(component->colorStart));
+    changed |= ImGui::ColorEdit4("Finish color", glm::value_ptr(component->colorFinish));
+    changed |= ImGui::SliderFloat("Start size", &component->sizeStart, 0.0f, 5.0f);
+    changed |= ImGui::SliderFloat("Finish size", &component->sizeFinish, 0.0f, 5.0f);
+    changed |= ImGui::SliderFloat("Start size variance", &component->sizeStartVariance, 0.0f, 5.0f);
+    changed |= ImGui::SliderFloat("Finish size variance", &component->sizeFinishVariance, 0.0f, 5.0f);
 
     return (changed);
 }
+
+
+/*
+** sTowerAIComponent
+*/
 
 sComponent* ComponentFactory<sTowerAIComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
 {
@@ -582,23 +641,25 @@ JsonValue&  ComponentFactory<sTowerAIComponent>::saveToJson(const std::string& e
     return (json);
 }
 
-bool    ComponentFactory<sTowerAIComponent>::updateEditor(const std::string& entityType, sComponent** component_)
+bool    ComponentFactory<sTowerAIComponent>::updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity)
 {
     sTowerAIComponent*  component;
     bool    changed;
 
-    component = static_cast<sTowerAIComponent*>(_components[entityType]);
-    *component_ = component;
+    component = static_cast<sTowerAIComponent*>(entityComponent ? entityComponent : _components[entityType]);
+    *savedComponent = component;
     changed = false;
-    if (ImGui::CollapsingHeader("sTowerAIComponent", ImGuiTreeNodeFlags_DefaultOpen))
-    {
-        changed |= ImGui::SliderFloat("Radius", &component->radius, 0.0f, 10.0f);
-        changed |= ImGui::SliderFloat("Fire rate", &component->fireRate, 0.0f, 10.0f);
-        changed |= ImGui::SliderFloat("Projectile speed", &component->projectileSpeed, 0.0f, 10.0f);
-    }
+    changed |= ImGui::SliderFloat("Radius", &component->radius, 0.0f, 10.0f);
+    changed |= ImGui::SliderFloat("Fire rate", &component->fireRate, 0.0f, 10.0f);
+    changed |= ImGui::SliderFloat("Projectile speed", &component->projectileSpeed, 0.0f, 10.0f);
 
     return (changed);
 }
+
+
+/*
+** sProjectileComponent
+*/
 
 sComponent* ComponentFactory<sProjectileComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
 {
@@ -622,34 +683,36 @@ JsonValue&  ComponentFactory<sProjectileComponent>::saveToJson(const std::string
     return (json);
 }
 
-bool        ComponentFactory<sProjectileComponent>::updateEditor(const std::string& entityType, sComponent** component_)
+bool        ComponentFactory<sProjectileComponent>::updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity)
 {
     sProjectileComponent*   component;
     bool                    changed;
     std::stringstream       converter;
     std::string             buffer;
 
-    component = static_cast<sProjectileComponent*>(_components[entityType]);
-    *component_ = component;
+    component = static_cast<sProjectileComponent*>(entityComponent ? entityComponent : _components[entityType]);
+    *savedComponent = component;
     changed = false;
-    if (ImGui::CollapsingHeader("sProjectileComponent", ImGuiTreeNodeFlags_DefaultOpen))
+    converter << component->shooterId;
+    converter >> buffer;
+    ImGui::TextDisabled("Shooter ID: %s", buffer.c_str());
+    if (component->guided == true) ImGui::Separator();
+    changed |= ImGui::Checkbox("Make projectile guided !", &component->guided);
+    if (component->guided == true)
     {
-        converter << component->shooterId;
+        converter << component->targetId;
         converter >> buffer;
-        ImGui::TextDisabled("Shooter ID: %s", buffer.c_str());
-        if (component->guided == true) ImGui::Separator();
-        changed |= ImGui::Checkbox("Make projectile guided !", &component->guided);
-        if (component->guided == true)
-        {
-            converter << component->targetId;
-            converter >> buffer;
-            ImGui::TextDisabled("Target ID: %s", buffer.c_str());
-        }
-        // Add IMGUI implementation for RangeMax 
+        ImGui::TextDisabled("Target ID: %s", buffer.c_str());
     }
+    // Add IMGUI implementation for RangeMax
 
     return (changed);
 }
+
+
+/*
+** sWaveComponent
+*/
 
 sComponent* ComponentFactory<sWaveComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
 {
@@ -662,4 +725,92 @@ sComponent* ComponentFactory<sWaveComponent>::loadFromJson(const std::string& en
     component->nSpawn = json.getInt("nSpawn", 10);
 
     return (component);
+}
+
+
+/*
+** sNameComponent
+*/
+
+sComponent* ComponentFactory<sNameComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
+{
+    sNameComponent*   component;
+
+    component = new sNameComponent();
+
+    component->value = json.getString("name", "default");
+
+    return (component);
+}
+
+
+/*
+** sTransformComponent
+*/
+
+sComponent* ComponentFactory<sTransformComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
+{
+    sTransformComponent*   component;
+
+    component = new sTransformComponent();
+
+    component->scale = json.getVec3f("scale", { 1.0f, 1.0f, 1.0f });
+    component->pos = json.getVec3f("pos", { 0.0f, 0.0f, 0.0f });
+    component->rotation = json.getVec3f("rotation", { 0.0f, 0.0f, 0.0f });
+
+    return (component);
+}
+
+JsonValue&    ComponentFactory<sTransformComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
+{
+    JsonValue& json = _componentsJson[entityType];
+    sTransformComponent* component = static_cast<sTransformComponent*>(_components[entityType]);
+
+
+    json.setVec3f("scale", component->scale);
+    json.setVec3f("pos", component->pos);
+    json.setVec3f("rotation", component->rotation);
+
+    return (json);
+}
+
+bool    ComponentFactory<sTransformComponent>::updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity)
+{
+    sTransformComponent* component = static_cast<sTransformComponent*>(entityComponent ? entityComponent : _components[entityType]);
+    *savedComponent = component;
+    bool changed = false;
+
+    ComponentFactory<sTransformComponent>::updateTransforms(component->pos,
+                                                            component->scale,
+                                                            component->rotation,
+                                                            component->transform,
+                                                            ImGuizmo::LOCAL);
+
+    return (false);
+}
+
+bool    ComponentFactory<sTransformComponent>::updateTransforms(glm::vec3& pos, glm::vec3& scale, glm::vec3& rotation, glm::mat4& transform, ImGuizmo::MODE mode)
+{
+    auto &&keyboard = GameWindow::getInstance()->getKeyboard();
+    Camera* camera = Camera::getInstance();
+    static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::TRANSLATE);
+
+    if (ImGui::RadioButton("Translate", mCurrentGizmoOperation == ImGuizmo::TRANSLATE) || keyboard.isPressed(Keyboard::eKey::T))
+        mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
+    ImGui::SameLine();
+    if (ImGui::RadioButton("Rotate", mCurrentGizmoOperation == ImGuizmo::ROTATE) || keyboard.isPressed(Keyboard::eKey::R))
+        mCurrentGizmoOperation = ImGuizmo::ROTATE;
+    ImGui::SameLine();
+    if (ImGui::RadioButton("Scale", mCurrentGizmoOperation == ImGuizmo::SCALE) || keyboard.isPressed(Keyboard::eKey::E))
+        mCurrentGizmoOperation = ImGuizmo::SCALE;
+    ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transform), glm::value_ptr(pos), glm::value_ptr(rotation), glm::value_ptr(scale));
+    ImGui::InputFloat3("Translate", glm::value_ptr(pos), 3);
+    ImGui::InputFloat3("Rotation", glm::value_ptr(rotation), 3);
+    ImGui::InputFloat3("Scale", glm::value_ptr(scale), 3);
+    ImGuizmo::RecomposeMatrixFromComponents(glm::value_ptr(pos), glm::value_ptr(rotation), glm::value_ptr(scale), glm::value_ptr(transform));
+
+    ImGuizmo::Manipulate(glm::value_ptr(camera->getView()), glm::value_ptr(camera->getProj()), mCurrentGizmoOperation, mode, glm::value_ptr(transform), nullptr, nullptr);
+    ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transform), glm::value_ptr(pos), glm::value_ptr(rotation), glm::value_ptr(scale));
+
+    return (false);
 }

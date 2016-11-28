@@ -158,7 +158,7 @@ void    TowerAISystem::fire(Entity* shooter, Entity* enemy)
     Entity*                 fireball;
     sPositionComponent*     fireballPosition;
     sDirectionComponent*    fireballDirection;
-    sRectHitboxComponent*   fireballHitbox;
+    //sRectHitboxComponent*   fireballHitbox;
 
     towerAIComponent = shooter->getComponent<sTowerAIComponent>();
     if (towerAIComponent->lastShotTime >= towerAIComponent->fireRate)
@@ -177,9 +177,9 @@ void    TowerAISystem::fire(Entity* shooter, Entity* enemy)
         fireballDirection->value = glm::normalize(enemyPosition->value - fireballPosition->value);
         fireballDirection->speed = towerAIComponent->projectileSpeed;
 
-        fireball->addComponent<sRectHitboxComponent>();
-        fireballHitbox = fireball->getComponent<sRectHitboxComponent>();
-        fireballHitbox->min = glm::vec2(fireballPosition->value - 14.0f);
-        fireballHitbox->max = glm::vec2(fireballPosition->value + 14.0f);
+        //fireball->addComponent<sRectHitboxComponent>();
+        //fireballHitbox = fireball->getComponent<sRectHitboxComponent>();
+        //fireballHitbox->min = glm::vec2(fireballPosition->value - 14.0f);
+        //fireballHitbox->max = glm::vec2(fireballPosition->value + 14.0f);
     }
 }

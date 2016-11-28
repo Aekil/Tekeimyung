@@ -1,6 +1,7 @@
 {
    "components" : {
       "sParticleEmitterComponent" : {
+         "texture" : "resources/sprites/particles/particle_circle.png",
          "angle" : 0,
          "angle_variance" : 0,
          "color" : {
@@ -71,8 +72,7 @@
             "x" : 0,
             "y" : 0
          },
-         "texture" : "resources/sprites/particles/particle_circle.png",
-         "type" : "OBJECT"
+         "texture" : "resources/sprites/particles/particle_circle.png"
       },
       "sTypeComponent" : {
          "type" : "OBJECT"

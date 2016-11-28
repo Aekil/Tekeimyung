@@ -7,9 +7,7 @@
                 "z": 0
             },
             "sRenderComponent": {
-                "texture": "resources/sprites/towers/tower_fire.png",
-                "type": "TILE",
-                "animated": false
+                "model": "resources/models/towers/tower_fire.DAE"
             },
 			"sTowerAIComponent": {
 				"radius": 4.2,

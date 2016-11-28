@@ -1,4 +1,7 @@
+#include <iostream>
+
 #include <Engine/Utils/Exception.hpp>
+#include <Engine/Utils/RessourceManager.hpp>
 #include <Engine/Core/Engine.hpp>
 
 #include <Game/EntityFactory.hpp>
@@ -15,7 +18,9 @@ int     main()
             return (1);
 
         // Load entities after engine initialization to have logs
-        EntityFactory::loadDirectory("resources/archetypes");
+        EntityFactory::loadDirectory(ARCHETYPES_LOCATION);
+        // Load textures and models
+        RessourceManager::getInstance()->loadResources("resources");
 
         if (!gameStateManager.addState<PlayState>())
             return (1);

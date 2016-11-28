@@ -24,7 +24,7 @@ void    CollisionSystem::update(EntityManager &em, float elapsedTime)
 
     this->forEachEntity(em, [&](Entity* entity)
     {
-        if (entity->getComponent<sRectHitboxComponent>())
+        if (entity->getComponent<sBoxColliderComponent>())
         {
             this->moveHitbox(entity, elapsedTime);
             sDirectionComponent* direction = entity->getComponent<sDirectionComponent>();
@@ -43,7 +43,7 @@ void    CollisionSystem::update(EntityManager &em, float elapsedTime)
             }
             else
             {
-                
+
                 // Check Collision with dynamic entities
                 for (auto &&entityId : (*_map)[layer].getEntities())
                 {
@@ -60,24 +60,23 @@ void    CollisionSystem::update(EntityManager &em, float elapsedTime)
                             {
                                 position->value -= direction->value * elapsedTime;
                             }
-                            std::cout << "Collision between " << entity->id << " and " << entityB->id << std::endl;
                         }
 
                     }
                 }
-                
+
             }
-            if (entity->getComponent<sRenderComponent>()->_sprite != nullptr) // undo movement simulation
+         /*   if (entity->getComponent<sRenderComponent>()->_sprite != nullptr) // undo movement simulation
             {
                 sRectHitboxComponent* rectHitbox = entity->getComponent<sRectHitboxComponent>();
                 sRenderComponent* renderComponent = entity->getComponent<sRenderComponent>();
                 glm::vec3 oldGraphPos = Map::mapToGraphPosition(position->value, position->z, renderComponent->_sprite);
-                rectHitbox->min.x = oldGraphPos.x /*+ renderComponent->spriteSize.x / 2*/;
-                rectHitbox->min.y = oldGraphPos.y /*+ renderComponent->spriteSize.y / 2*/;
+                rectHitbox->min.x = oldGraphPos.x;
+                rectHitbox->min.y = oldGraphPos.y;
                 rectHitbox->max.x = oldGraphPos.x + renderComponent->spriteSize.x;
                 rectHitbox->max.y = oldGraphPos.y + renderComponent->spriteSize.y;
                 position->value -= direction->value * elapsedTime;
-            }
+            }*/
         }
     });
     _data.timeSec = timer.getElapsedTime();
@@ -86,7 +85,7 @@ void    CollisionSystem::update(EntityManager &em, float elapsedTime)
 
 void    CollisionSystem::moveHitbox(Entity *entity, float elapsedTime) // simulate movement
 {
-    if (entity->getComponent<sRenderComponent>()->_sprite != nullptr)
+/*    if (entity->getComponent<sRenderComponent>()->_sprite != nullptr)
     {
         sPositionComponent* position = entity->getComponent<sPositionComponent>();
         sDirectionComponent* direction = entity->getComponent<sDirectionComponent>();
@@ -99,8 +98,8 @@ void    CollisionSystem::moveHitbox(Entity *entity, float elapsedTime) // simula
         {
             sRectHitboxComponent* rectHitbox = entity->getComponent<sRectHitboxComponent>();
 
-            rectHitbox->min.x = nextGraphPos.x /*+ renderComponent->spriteSize.x / 2*/;
-            rectHitbox->min.y = nextGraphPos.y /*+ renderComponent->spriteSize.y / 2*/;;
+            rectHitbox->min.x = nextGraphPos.x;
+            rectHitbox->min.y = nextGraphPos.y;;
             rectHitbox->max.x = nextGraphPos.x + renderComponent->spriteSize.x;
             rectHitbox->max.y = nextGraphPos.y + renderComponent->spriteSize.y;
 
@@ -119,12 +118,12 @@ void    CollisionSystem::moveHitbox(Entity *entity, float elapsedTime) // simula
             circleHitbox->center.x = nextGraphPos.x + (renderComponent->spriteSize.x / 2);
             circleHitbox->center.y = nextGraphPos.y + (renderComponent->spriteSize.y / 2);
         }
-    }
+    }*/
 }
 
 bool    CollisionSystem::isColliding(Entity *firstEntity, Entity *secondEntity)
 {
-    if (firstEntity->getComponent<sRectHitboxComponent>() != nullptr && secondEntity->getComponent<sRectHitboxComponent>() != nullptr)
+/*    if (firstEntity->getComponent<sRectHitboxComponent>() != nullptr && secondEntity->getComponent<sRectHitboxComponent>() != nullptr)
     {
         sRectHitboxComponent* rectHitboxFirst = firstEntity->getComponent<sRectHitboxComponent>();
         sRectHitboxComponent* rectHitboxSecond = secondEntity->getComponent<sRectHitboxComponent>();
@@ -139,7 +138,7 @@ bool    CollisionSystem::isColliding(Entity *firstEntity, Entity *secondEntity)
 
         return (Collisions::circleHitboxCheck(&circleHitboxFirst->center, circleHitboxFirst->radius,
             &circleHitboxSecond->center, circleHitboxSecond->radius));
-    }
+    }*/
     return (false);
 }
 
