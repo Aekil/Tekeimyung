@@ -5,13 +5,9 @@
 
 std::shared_ptr<MonitoringDebugWindow>   MonitoringDebugWindow::_monitoringDebugWindow = nullptr;
 
-//MonitoringDebugWindow::MonitoringDebugWindow() {}
-
 MonitoringDebugWindow::MonitoringDebugWindow(const glm::vec2& pos, const glm::vec2& size) :
     DebugWindow("Monitoring", pos, size)
 {
-    //_msgList.push_back(FMT_MSG("Collision system : %f secondes", 0.0012564));
-    //this->setDisplayed(true);
 }
 
 MonitoringDebugWindow::~MonitoringDebugWindow() {}
@@ -32,30 +28,64 @@ void    MonitoringDebugWindow::build()
         ImGui::End();
         return;
     }
-    // Set Window params
     ImGui::SetWindowSize(ImVec2(_size.x, _size.y), ImGuiSetCond_Always);
     ImGui::SetWindowPos(ImVec2(_pos.x, _pos.y), ImGuiSetCond_Always);
 
-    // Draw components
-    /*ImGui::TextUnformatted(_logger->getLog().begin(), _logger->getLog().end());
-
-    if (ImGui::GetItemRectSize().x > _size.x)
-        _size.x = ImGui::GetItemRectSize().x;
-
-    // A Log was added since last update
-    if ((uint32_t)_logger->getLog().size() > _lastLogSize)
-    {
-        _lastLogSize = _logger->getLog().size();
-        ImGui::SetScrollHere(1.0f);
-    }*/
-
+    bool resetTimer = false;
     for (auto&& system : _systemsRegistered)
     {
+        if (_checkSec.getElapsedTime() >= 1) // if 1sec past
+        {
+            // update adverage
+            system.second.oldAvg = system.second.avgTimeSec;
+            system.second.avgTimeSec = calcTimeAverage(system.second.timeLogs);
+            // set bool to reset Timer after the systems loop
+            resetTimer = true;
+            // clear timeLogs
+            system.second.timeLogs.clear();
+        }
+        else // if 1sec not past
+        {
+            system.second.timeLogs.push_back(system.second.timeSec); // update timeLogs
+        }
         
-        ImGui::Text(FMT_MSG("%s : %f ms", system.second.name.c_str(), system.second.timeMs).c_str);
+        // display monitoring informations (time average)
+        if (ENABLE_COLOR) // if macro ENABLE_COLOR = true, display with colors
+        {
+            // color calculation depending on time variation
+            ImColor color;
+            bool colored = true;
+
+            if (system.second.oldAvg < system.second.avgTimeSec)
+                color.Value = ImColor(200, 100, 100);
+            else
+                color.Value = ImColor(100, 200, 100);
+
+            float diff = SEC_TO_MS(system.second.oldAvg) - SEC_TO_MS(system.second.avgTimeSec);
+
+            if (diff < 0)
+                diff *= -1;
+
+            if (diff < 0.1)
+                colored = false;
+
+            if (!colored)
+                color.Value = ImColor(255, 255, 255);
+
+            // display informations
+            ImGui::TextColored(color, FMT_MSG("%-20s : %+2c %.2f ms (%.3f ms)", system.second.name.c_str(), (system.second.oldAvg < system.second.avgTimeSec) ? '+' : '-',
+                SEC_TO_MS(system.second.avgTimeSec), SEC_TO_MS(system.second.timeSec)).c_str());
+        }
+        else // if not, display in white (default color)
+        {
+            // display informations
+            ImGui::Text(FMT_MSG("%-20s : %+2c %.2f ms (%.3f ms)", system.second.name.c_str(), (system.second.oldAvg < system.second.avgTimeSec) ? '+' : '-',
+                SEC_TO_MS(system.second.avgTimeSec), SEC_TO_MS(system.second.timeSec)).c_str());
+        }
         ImGui::Separator();
     }
-    //_systemsRegistered.clear();
+    if (resetTimer) // reset timer if needed (1s past)
+        _checkSec.reset();
 
     ImGui::End();
 }
@@ -65,12 +95,28 @@ uint16_t    MonitoringDebugWindow::registerSystem(std::string name)
     static uint16_t keyID = 0;
 
     _systemsRegistered[keyID].name = name;
-    _systemsRegistered[keyID].timeMs = 0; // ?
+    _systemsRegistered[keyID].timeSec = 0;
+    _systemsRegistered[keyID].avgTimeSec = 0;
+    _systemsRegistered[keyID].oldAvg = 0;
     
     return (keyID++);
 }
 
 void    MonitoringDebugWindow::updateSystem(uint16_t key, tMonitoring newData)
 {
-    _systemsRegistered[key].timeMs = newData.timeMs;
+    _systemsRegistered[key].timeSec = newData.timeSec;
+}
+
+float   MonitoringDebugWindow::calcTimeAverage(std::vector<float> timeLogs)
+{
+    float avg = 0;
+
+    for (auto&& time : timeLogs)
+    {
+        avg += time;
+    }
+    avg /= timeLogs.capacity();
+   
+
+    return (avg);
 }

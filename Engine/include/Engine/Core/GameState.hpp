@@ -25,6 +25,12 @@ public:
         _debugWindows.push_back(debugWindow);
     }
 
+    template<typename T>
+    void                            addDebugWindow(std::shared_ptr<T> newDebugWindow)
+    {
+        _debugWindows.push_back(newDebugWindow);
+    }
+
 protected:
     World                   _world;
     std::vector<std::shared_ptr<DebugWindow>> _debugWindows;

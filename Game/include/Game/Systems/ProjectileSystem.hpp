@@ -4,9 +4,9 @@
 
 #include <Engine/Utils/MonitoringDebugWindow.hpp>
 
-#define MONITORING_NAME "Projectile system"
+#define PROJECTILE_SYSTEM_NAME "Projectile system"
 
-class               ProjectileSystem : public System
+class ProjectileSystem : public System
 {
 public:
     explicit        ProjectileSystem();
@@ -16,4 +16,5 @@ public:
 private:
     std::vector<Entity*>    _projectiles;
     uint16_t                _keyMonitoring;
+    tMonitoring             _data;
 };

@@ -1,5 +1,7 @@
 #pragma once
 
+#define SEC_TO_MS(s) (s * 1000)
+
 class Timer
 {
 public:

@@ -9,13 +9,15 @@ AISystem::AISystem()
     addDependency<sAIComponent>();
     addDependency<sDirectionComponent>();
 
-    _keyMonitoring = MonitoringDebugWindow::getInstance()->registerSystem(MONITORING_NAME);
+    _keyMonitoring = MonitoringDebugWindow::getInstance()->registerSystem(AI_SYSTEM_NAME);
 }
 
 AISystem::~AISystem() {}
 
 void    AISystem::update(EntityManager &em, float elapsedTime)
 {
+    Timer timer;
+
     forEachEntity(em, [&](Entity *entity) {
         sDirectionComponent *direction = entity->getComponent<sDirectionComponent>();
 
@@ -23,4 +25,7 @@ void    AISystem::update(EntityManager &em, float elapsedTime)
         direction->orientation = eOrientation::SE;
         direction->moved = true;
     });
+
+    _data.timeSec = timer.getElapsedTime();
+    MonitoringDebugWindow::getInstance()->updateSystem(_keyMonitoring, _data);
 }

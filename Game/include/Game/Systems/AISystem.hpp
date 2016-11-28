@@ -4,7 +4,7 @@
 
 #include <Engine/Utils/MonitoringDebugWindow.hpp>
 
-#define MONITORING_NAME "AI system"
+#define AI_SYSTEM_NAME "AI system"
 
 class AISystem: public System
 {

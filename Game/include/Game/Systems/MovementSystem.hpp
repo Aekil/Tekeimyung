@@ -6,7 +6,7 @@
 
 #include <Game/Map.hpp>
 
-#define MONITORING_NAME "Movement system"
+#define MOVEMENT_SYSTEM_NAME "Movement system"
 
 class MovementSystem : public System
 {
@@ -18,4 +18,5 @@ public:
 private:
     Map*            _map;
     uint16_t        _keyMonitoring;
+    tMonitoring     _data;
 };

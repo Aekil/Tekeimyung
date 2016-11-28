@@ -36,7 +36,6 @@ bool    GameState::update(float elapsedTime)
                 if (debugWindow->isDisplayed())
                     debugWindow->build();
             }
-            MonitoringDebugWindow::getInstance()->build();
 
             // Update GameState systems
             for (auto&& system: _world.getSystems())

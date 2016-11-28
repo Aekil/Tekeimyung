@@ -6,7 +6,7 @@
 
 #include <Game/Map.hpp>
 
-#define MONITORING_NAME "TowerAI system"
+#define TOWER_AI_SYSTEM_NAME "TowerAI system"
 
 class   TowerAISystem : public System
 {
@@ -22,6 +22,7 @@ private:
     void        fire(Entity* shooter, Entity* enemy);
 
 private:
-    Map*        _map;
-    uint16_t    _keyMonitoring;
+    Map*            _map;
+    uint16_t        _keyMonitoring;
+    tMonitoring     _data;
 };

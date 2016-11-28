@@ -4,7 +4,7 @@
 
 #include <Engine/Utils/MonitoringDebugWindow.hpp>
 
-#define MONITORING_NAME "Input system"
+#define INPUT_SYSTEM_NAME "Input system"
 
 #define LEFT            input->moveLeft
 #define UP              input->moveUp
@@ -30,4 +30,5 @@ private:
 
 private:
     uint16_t        _keyMonitoring;
+    tMonitoring     _data;
 };

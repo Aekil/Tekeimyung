@@ -8,7 +8,7 @@
 #include <Game/EntityFactory.hpp>
 #include <Game/Map.hpp>
 
-#define MONITORING_NAME "Wave system"
+#define WAVE_SYSTEM_NAME "Wave system"
 
 class   WaveSystem : public System
 {
@@ -24,5 +24,6 @@ private:
     Timer*                  _timer;
     Map*                    _map;
     uint16_t                _keyMonitoring;
+    tMonitoring             _data;
     //std::vector<Entity*>    _enemies;
 };

@@ -4,7 +4,7 @@
 
 #include <Engine/Utils/MonitoringDebugWindow.hpp>
 
-#define MONITORING_NAME "Gravity system"
+#define GRAVITY_SYSTEM_NAME "Gravity system"
 
 class GravitySystem : public System
 {
@@ -15,4 +15,5 @@ public:
 
 private:
     uint16_t        _keyMonitoring;
+    tMonitoring     _data;
 };

@@ -5,9 +5,6 @@
 #include <imgui.h>
 #include <imgui_impl_glfw_gl3.h>
 
-#include <Engine/Utils/Logger.hpp>
-#include <Engine/Utils/Timer.hpp>
-#include <Engine/Utils/Debug.hpp>
 #include <Engine/Utils/Exception.hpp>
 #include <Engine/Window/GameWindow.hpp>
 
@@ -19,7 +16,7 @@ RenderingSystem::RenderingSystem(Map* map, std::unordered_map<uint32_t, sEmitter
     addDependency<sPositionComponent>();
     addDependency<sRenderComponent>();
 
-    _keyMonitoring = MonitoringDebugWindow::getInstance()->registerSystem(MONITORING_NAME);
+    _keyMonitoring = MonitoringDebugWindow::getInstance()->registerSystem(RENDERING_SYSTEM_NAME);
 }
 
 RenderingSystem::~RenderingSystem() {}
@@ -189,8 +186,9 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
 
     // Display screen
     GameWindow::getInstance()->display();
-    //MonitoringDebugWindow::getInstance()->registerSystem(FMT_MSG("Render system : %f secondes", timer.getElapsedTime()));
-    //LOG_INFO("Render system : %f secondes", timer.getElapsedTime());
+
+    _data.timeSec = timer.getElapsedTime();
+    MonitoringDebugWindow::getInstance()->updateSystem(_keyMonitoring, _data);
 }
 
 Sprite*   RenderingSystem::getSprite(Entity* entity)

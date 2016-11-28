@@ -1,8 +1,6 @@
 #include <cmath>
 #include <algorithm>
 
-#include <Engine/Utils/Timer.hpp>
-
 #include <Game/Components.hh>
 
 #include <Game/Systems/MovementSystem.hpp>
@@ -12,7 +10,7 @@ MovementSystem::MovementSystem(Map* map): _map(map)
     this->addDependency<sPositionComponent>();
     this->addDependency<sDirectionComponent>();
 
-    _keyMonitoring = MonitoringDebugWindow::getInstance()->registerSystem(MONITORING_NAME);
+    _keyMonitoring = MonitoringDebugWindow::getInstance()->registerSystem(MOVEMENT_SYSTEM_NAME);
 }
 
 void    MovementSystem::update(EntityManager &em, float elapsedTime)
@@ -30,6 +28,7 @@ void    MovementSystem::update(EntityManager &em, float elapsedTime)
         position->value.y = std::max(0.0f, position->value.y);
         position->value.y = std::min((float)_map->getHeight() - 0.01f, position->value.y);
     });
-    //MonitoringDebugWindow::getInstance()->registerSystem(FMT_MSG("Movement system : %f secondes", timer.getElapsedTime()));
-    //LOG_INFO("Movement system : %f secondes", timer.getElapsedTime());
+
+    _data.timeSec = timer.getElapsedTime();
+    MonitoringDebugWindow::getInstance()->updateSystem(_keyMonitoring, _data);
 }

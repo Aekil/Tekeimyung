@@ -8,13 +8,14 @@ WaveSystem::WaveSystem(Map* map) : _map(map)
     addDependency<sWaveComponent>();
     addDependency<sPositionComponent>();
 
-    _keyMonitoring = MonitoringDebugWindow::getInstance()->registerSystem(MONITORING_NAME);
+    _keyMonitoring = MonitoringDebugWindow::getInstance()->registerSystem(WAVE_SYSTEM_NAME);
 }
 
 WaveSystem::~WaveSystem() {}
 
 void    WaveSystem::update(EntityManager &em, float elapsedTime)
 {
+    Timer timer;
     bool reset = false;
 
     forEachEntity(em, [&](Entity *entity)
@@ -32,6 +33,9 @@ void    WaveSystem::update(EntityManager &em, float elapsedTime)
     });
     if (reset)
         _timer->reset();
+
+    _data.timeSec = timer.getElapsedTime();
+    MonitoringDebugWindow::getInstance()->updateSystem(_keyMonitoring, _data);
 }
 
 Entity*    WaveSystem::createEntity(Map* map, const glm::vec3& pos, eArchetype type)

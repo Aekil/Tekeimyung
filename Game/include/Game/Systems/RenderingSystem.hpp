@@ -12,7 +12,7 @@
 #include <Game/Map.hpp>
 #include <Game/Systems/ParticleSystem.hpp>
 
-#define MONITORING_NAME "Rendering system"
+#define RENDERING_SYSTEM_NAME "Rendering system"
 
 class RenderingSystem: public System
 {
@@ -38,4 +38,5 @@ private:
     Map*                                        _map;
     std::unordered_map<uint32_t, sEmitter*>*    _particleEmitters;
     uint16_t                                    _keyMonitoring;
+    tMonitoring                                 _data;
 };

@@ -6,7 +6,7 @@
 
 #include <Game/Map.hpp>
 
-#define MONITORING_NAME "Collision system"
+#define COLLISION_SYSTEM_NAME "Collision system"
 
 class CollisionSystem : public System
 {
