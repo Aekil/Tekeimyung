@@ -9,8 +9,6 @@ Sphere::Sphere(Sphere::sInfo& info): Geometry(Geometry::eType::SPHERE)
     // Sphere mesh
     std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
 
-
-
     float const R = 1.0f / (float)(rings - 1);
     float const S = 1.0f / (float)(sectors - 1);
 

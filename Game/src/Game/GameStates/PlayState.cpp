@@ -12,6 +12,7 @@
 #include <Engine/Sound/SoundManager.hpp>
 
 #include <Game/Systems/RenderingSystem.hpp>
+#include <Game/Systems/ResolutionSystem.hpp>
 #include <Game/Systems/MovementSystem.hpp>
 #include <Game/Systems/GravitySystem.hpp>
 #include <Game/Systems/CollisionSystem.hpp>
@@ -28,7 +29,7 @@
 #include <Game/GameStates/PlayState.hpp>
 
 
-PlayState::PlayState(): _windowImgui(true) {}
+PlayState::PlayState() : _windowImgui(true) {}
 
 PlayState::~PlayState() {}
 
@@ -36,7 +37,9 @@ void    PlayState::createTile(const glm::vec3& pos, eArchetype type)
 {
     Entity* tile;
 
+
     tile = EntityFactory::createEntity(type);
+
     sPositionComponent* tilePos = tile->getComponent<sPositionComponent>();
     sTransformComponent *tileTransform = tile->getComponent<sTransformComponent>();
     tilePos->value.y = pos.y;
@@ -136,7 +139,7 @@ bool    PlayState::init()
 
     _world.addSystem<MovementSystem>(_map);
     _world.addSystem<CollisionSystem>(_map);
-
+    _world.addSystem<ResolutionSystem>();
     _world.addSystem<ParticleSystem>();
     _world.addSystem<RenderingSystem>(_map, _world.getSystem<ParticleSystem>()->getEmitters());
 

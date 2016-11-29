@@ -291,6 +291,7 @@ sComponent* ComponentFactory<sBoxColliderComponent>::loadFromJson(const std::str
 
     component->pos = json.getVec3f("pos", { 0.0f, 0.0f, 0.0f });
     component->size = json.getVec3f("size", { 2.0f, 2.0f, 2.0f });
+    component->isTrigger = json.getBool("isTrigger", false);
 
     return (component);
 }
@@ -302,6 +303,7 @@ JsonValue&    ComponentFactory<sBoxColliderComponent>::saveToJson(const std::str
 
     json.setVec3f("pos", component->pos);
     json.setVec3f("size", component->size);
+    json.setBool("isTrigger", component->isTrigger);
 
     return (json);
 }
@@ -341,6 +343,7 @@ sComponent* ComponentFactory<sSphereColliderComponent>::loadFromJson(const std::
 
     component->pos = json.getVec3f("pos", { 0.0f, 0.0f, 0.0f });
     component->radius = json.getFloat("radius", 2.0f);
+    component->isTrigger = json.getBool("isTrigger", false);
 
     return (component);
 }
@@ -352,6 +355,7 @@ JsonValue&    ComponentFactory<sSphereColliderComponent>::saveToJson(const std::
 
     json.setVec3f("pos", component->pos);
     json.setFloat("radius", component->radius);
+    json.setBool("isTrigger", component->isTrigger);
 
     return (json);
 }
@@ -381,6 +385,11 @@ bool    ComponentFactory<sSphereColliderComponent>::updateEditor(const std::stri
         component->display = !component->display;
     }
 
+
+    if (ImGui::Button(component->isTrigger ? "Trigger" : "No trigger"))
+    {
+        component->isTrigger = !component->isTrigger;
+    }
 
     ImGui::InputFloat3("position", glm::value_ptr(component->pos), 3);
     ImGui::InputFloat("radius", &component->radius, 3.0f);
@@ -414,6 +423,20 @@ JsonValue&    ComponentFactory<sGravityComponent>::saveToJson(const std::string&
     return (json);
 }
 
+/*
+** sResolutionComponent
+*/
+sComponent* ComponentFactory<sResolutionComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
+{
+    sResolutionComponent* component = new sResolutionComponent();
+
+    component->collidingState= eCollisionState::NO_COLLISION;
+    component->entityId = -1;
+    component->onCollisionEnter = Resolutions::getInstance()->getResolutionByName(json.getString("onCollisionEnter", ""));
+    component->onCollisionExit = Resolutions::getInstance()->getResolutionByName(json.getString("onCollisionExit", ""));
+
+    return (component);
+}
 
 /*
 ** sTypeComponent

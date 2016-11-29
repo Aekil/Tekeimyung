@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
 
 typedef struct sRectHitbox
 {
@@ -25,6 +26,8 @@ public:
 
     static bool         circleHitboxCheck(tCircleHitbox *hb1, tCircleHitbox *hb2);
     static bool         circleHitboxCheck(glm::vec2 *center1, float radius1, glm::vec2 *center2, float radius2);
+
+    static bool         sphereColliderCheck(glm::vec3 pos1, float radius1, glm::vec3 pos2, float radius2);
 
 private:
 

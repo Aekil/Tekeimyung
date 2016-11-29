@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <cstdint>
+#include <functional>
 #include <glm/vec2.hpp>
 #include <glm/vec4.hpp>
 #include <glm/mat4x4.hpp>
@@ -186,6 +187,7 @@ struct sBoxColliderComponent : sComponent
     {
         this->pos = component->pos;
         this->size = component->size;
+        this->isTrigger = component->isTrigger;
     }
 
     virtual void update(sComponent* component)
@@ -198,6 +200,9 @@ struct sBoxColliderComponent : sComponent
 
     // Scale
     glm::vec3 size;
+
+    // isTrigger
+    bool isTrigger;
 
     // Box model
     std::shared_ptr<Box> box;
@@ -220,6 +225,7 @@ struct sSphereColliderComponent : sComponent
     {
         this->pos = component->pos;
         this->radius = component->radius;
+        this->isTrigger = component->isTrigger;
     }
 
     virtual void update(sComponent* component)
@@ -229,6 +235,10 @@ struct sSphereColliderComponent : sComponent
 
     glm::vec3 pos;
     float radius;
+
+    // isTrigger
+    bool isTrigger;
+
     std::shared_ptr<Sphere> sphere;
     bool display;
 };
@@ -535,6 +545,49 @@ struct sWaveComponent : sComponent
     int         nSpawn;
 };
 
+enum class eCollisionState : int
+{
+    NO_COLLISION = 0,
+    ENTERING_COLLISION,
+    IS_COLLIDING,
+    EXIT_COLLISION,
+};
+
+struct sResolutionComponent : sComponent
+{
+    virtual sComponent* clone()
+    {
+        sResolutionComponent* component = new sResolutionComponent();
+        component->update(this);
+
+        return (component);
+    }
+
+    virtual void update(sResolutionComponent* component)
+    {
+        this->entityId = component->entityId;
+        this->collidingState = component->collidingState;
+        this->onCollisionEnter = component->onCollisionEnter;
+        this->onCollisionExit = component->onCollisionExit;
+    }
+
+    virtual void update(sComponent* component)
+    {
+        update(static_cast<sResolutionComponent*>(component));
+    }
+
+    //Callback for enter collision
+    std::function<void(int entityId)> onCollisionEnter;
+
+    //Callback for exit collision
+    std::function<void(int entityId)> onCollisionExit;
+
+    //Entity id with which is colliding
+    int entityId;
+
+    //Boolean if we need to resolve collisions or not
+    eCollisionState collidingState;
+};
 
 struct sTransformComponent : sComponent
 {

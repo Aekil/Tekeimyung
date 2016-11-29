@@ -47,3 +47,11 @@ bool    Collisions::circleHitboxCheck(glm::vec2 *center1, float radius1, glm::ve
         return (true);
     return (false);
 }
+
+bool    Collisions::sphereColliderCheck(glm::vec3 pos1, float radius1, glm::vec3 pos2, float radius2)
+{
+    float distance = pow((pos1.x - pos2.x), 2) + pow((pos1.y - pos2.y), 2) + pow((pos1.z - pos2.z), 2);
+
+    float sumRadius = pow(radius2 + radius1, 2);
+    return (distance <= sumRadius);
+}
