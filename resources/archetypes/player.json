@@ -5,6 +5,9 @@
          "x" : 0,
          "y" : 0
       },
+      "sResolutionComponent" : {
+         "onCollisionEnter" : "onCollisionEnterPlayer"
+      },
       "sInputComponent" : {
          "down" : "K",
          "left" : "J",
@@ -35,7 +38,7 @@
             "y" : 7.9999990463256836,
             "z" : 0
          },
-         "radius" : 9
+         "radius" : 0.9
       },
       "sTransformComponent" : {
          "pos" : {

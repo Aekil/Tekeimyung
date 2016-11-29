@@ -11,6 +11,7 @@
 #include <Engine/Sound/SoundManager.hpp>
 
 #include <Game/Systems/RenderingSystem.hpp>
+#include <Game/Systems/ResolutionSystem.hpp>
 #include <Game/Systems/MovementSystem.hpp>
 #include <Game/Systems/GravitySystem.hpp>
 #include <Game/Systems/CollisionSystem.hpp>
@@ -35,7 +36,22 @@ void    PlayState::createTile(const glm::vec3& pos, eArchetype type)
 {
     Entity* tile;
 
-    tile = EntityFactory::createEntity(type);
+
+    if ((int)type == 42) 
+    {
+        tile = EntityFactory::createEntity(eArchetype::PLAYER);
+
+        sInputComponent *lol = tile->getComponent<sInputComponent>();
+        lol->moveUp = Keyboard::eKey::KP_8;
+        lol->moveDown = Keyboard::eKey::KP_5;
+        lol->moveRight = Keyboard::eKey::KP_6;
+        lol->moveLeft = Keyboard::eKey::KP_4;
+    } 
+    else
+    {
+        tile = EntityFactory::createEntity(type);
+    }
+
     sPositionComponent* tilePos = tile->getComponent<sPositionComponent>();
     sTransformComponent *tileTransform = tile->getComponent<sTransformComponent>();
     tilePos->value.y = pos.y;
@@ -96,6 +112,8 @@ bool    PlayState::init()
     // Create character
     createTile(glm::vec3(9, 5, 1), eArchetype::PLAYER);
 
+    createTile(glm::vec3(9, 7, 1), (eArchetype)42);
+
     // Initialize base map
     for (int y = 0; y < 15; y++) {
         for (int x = 0; x < 20; x++) {
@@ -135,6 +153,7 @@ bool    PlayState::init()
 
     _world.addSystem<MovementSystem>(_map);
     _world.addSystem<CollisionSystem>(_map);
+    _world.addSystem<ResolutionSystem>();
     _world.addSystem<ParticleSystem>();
     _world.addSystem<RenderingSystem>(_map, _world.getSystem<ParticleSystem>()->getEmitters());
 

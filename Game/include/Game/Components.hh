@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <cstdint>
+#include <functional>
 #include <glm/vec2.hpp>
 #include <glm/vec4.hpp>
 #include <glm/mat4x4.hpp>
@@ -544,6 +545,45 @@ struct sWaveComponent : sComponent
     int         nSpawn;
 };
 
+enum class eCollisionState : int
+{
+    NO_COLLISION = 0,
+    ENTERING_COLLISION,
+    IS_COLLIDING,
+    EXIT_COLLISION,
+};
+
+struct sResolutionComponent : sComponent
+{
+    virtual sComponent* clone()
+    {
+        sResolutionComponent* component = new sResolutionComponent();
+        component->update(this);
+
+        return (component);
+    }
+
+    virtual void update(sResolutionComponent* component)
+    {
+        this->entityId = component->entityId;
+        this->collidingState = component->collidingState;
+        this->onCollisionEnter = component->onCollisionEnter;
+    }
+
+    virtual void update(sComponent* component)
+    {
+        update(static_cast<sResolutionComponent*>(component));
+    }
+
+    //Callback for collision
+    std::function<void(int entityId)> onCollisionEnter;
+
+    //Entity id with which is colliding
+    int entityId;
+
+    //Boolean if we need to resolve collisions or not
+    eCollisionState collidingState;
+};
 
 struct sTransformComponent : sComponent
 {

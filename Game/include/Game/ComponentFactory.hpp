@@ -11,6 +11,7 @@
 #include <Engine/Utils/Debug.hpp>
 
 #include <Game/Utils/JsonValue.hpp>
+#include <Game/Utils/Resolutions.hpp>
 #include <Game/Components.hh>
 
 // Generate map initializer lists
@@ -31,7 +32,8 @@
     PROCESS(sProjectileComponent),\
     PROCESS(sWaveComponent),\
     PROCESS(sNameComponent),\
-    PROCESS(sTransformComponent)\
+    PROCESS(sTransformComponent),\
+    PROCESS(sResolutionComponent)\
 
 #define GENERATE_PAIRS(COMPONENT) { #COMPONENT, new ComponentFactory<COMPONENT>() }
 
@@ -246,6 +248,16 @@ public:
     virtual bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity);
 };
 
+/*
+** sResolutionComponent
+*/
+template <>
+class ComponentFactory<sResolutionComponent> : public BaseComponentFactory<sResolutionComponent>
+{
+public:
+    virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
+    virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
+};
 
 /*
 ** sGravityComponent

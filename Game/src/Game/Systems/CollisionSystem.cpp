@@ -48,11 +48,23 @@ void    CollisionSystem::update(EntityManager &em, float elapsedTime)
             sPositionComponent* positionB = entityB->getComponent<sPositionComponent>();
             if (entity->id != entityB->id)
             {
+                sResolutionComponent* resolution = entity->getComponent<sResolutionComponent>();
+
                 if (this->isColliding(entity, entityB))
                 {
                     if (!entityB->getComponent<sSphereColliderComponent>()->isTrigger)
                         position->value -= direction->value * elapsedTime;
-                    //TODO : Add a call to a callback on the object
+
+                    if (resolution->collidingState == eCollisionState::NO_COLLISION) 
+                    {
+                        resolution->collidingState = eCollisionState::ENTERING_COLLISION;
+                        resolution->entityId = entityB->id;
+                    }
+                }
+                else
+                {
+                    if (resolution->collidingState == eCollisionState::IS_COLLIDING)
+                        resolution->collidingState = eCollisionState::NO_COLLISION;
                 }
             }
         });
