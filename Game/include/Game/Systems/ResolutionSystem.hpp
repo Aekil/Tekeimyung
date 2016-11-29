@@ -2,16 +2,18 @@
 
 #include <ECS/System.hpp>
 
-#include <Engine/Utils/MonitoringDebugWindow.hpp>
+#include <Engine/Utils/MonitoringDebugWindow.hpp> 
 
 #define RESOLUTION_SYSTEM_NAME "Resolution system"
 
-START_SYSTEM(ResolutionSystem)
+class ResolutionSystem : public System
+{
 public:
     ResolutionSystem();
     virtual                                     ~ResolutionSystem();
     virtual void                                update(EntityManager &em, float elapsedTime);
 
 private:
-    ADD_MONITORING_VAR
-END_SYSTEM(ResolutionSystem)
+    uint16_t                                    _keyMonitoring;
+    tMonitoring                                 _data;
+};
