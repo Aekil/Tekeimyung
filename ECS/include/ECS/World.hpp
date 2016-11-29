@@ -23,11 +23,11 @@ public:
     template<typename T>
     T*                      getSystem()
     {
-        const std::type_info& typeInfo = typeid(T);
+        uint32_t id = T::identifier;
 
         for (auto system_: _systems)
         {
-            if (system_->getTypeInfo().hash_code() == typeInfo.hash_code())
+            if (system_->getId() == id)
             {
                 return (static_cast<T*>(system_));
             }

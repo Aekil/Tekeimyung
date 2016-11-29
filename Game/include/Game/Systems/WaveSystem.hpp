@@ -10,14 +10,13 @@
 
 #define WAVE_SYSTEM_NAME "Wave system"
 
-class   WaveSystem : public System
-{
+START_SYSTEM(WaveSystem)
 public:
     WaveSystem(Map* map);
     virtual ~WaveSystem();
 
     virtual void            update(EntityManager &em, float elapsedTime);
-    
+
     static Entity*          createEntity(Map* map, const glm::vec3& pos, eArchetype type);
 
 private:
@@ -25,5 +24,4 @@ private:
     Map*                    _map;
     uint16_t                _keyMonitoring;
     tMonitoring             _data;
-    //std::vector<Entity*>    _enemies;
-};
+END_SYSTEM(WaveSystem)

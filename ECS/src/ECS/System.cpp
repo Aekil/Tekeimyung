@@ -1,6 +1,6 @@
 #include <ECS/System.hpp>
 
-System::System() {}
+System::System(uint32_t id): _id(id) {}
 
 System::~System() {}
 
@@ -28,4 +28,10 @@ void    System::forEachEntity(EntityManager& em, std::function<void(Entity* enti
             callback(entity.second);
     }
     em.destroyEntities();
+}
+
+
+uint32_t    System::getId() const
+{
+    return (_id);
 }

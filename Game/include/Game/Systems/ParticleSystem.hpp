@@ -44,8 +44,7 @@ struct sEmitter
     Timer                   timer;
 };
 
-class ParticleSystem: public System
-{
+START_SYSTEM(ParticleSystem)
 public:
     ParticleSystem();
     virtual ~ParticleSystem();
@@ -62,4 +61,4 @@ private:
     std::unordered_map<uint32_t, sEmitter*>     _emitters;
     uint16_t                                    _keyMonitoring;
     tMonitoring                                 _data;
-};
+END_SYSTEM(ParticleSystem)

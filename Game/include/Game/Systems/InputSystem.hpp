@@ -17,8 +17,7 @@
 #define KB_ONLY_RIGHT   (KB_P(RIGHT) && !KB_P(LEFT) && !KB_P(UP) && !KB_P(DOWN))
 #define KB_ONLY_DOWN    (KB_P(DOWN) && !KB_P(RIGHT) && !KB_P(UP) && !KB_P(LEFT))
 
-class InputSystem: public System
-{
+START_SYSTEM(InputSystem)
 public:
     InputSystem();
     virtual ~InputSystem();
@@ -31,4 +30,4 @@ private:
 private:
     uint16_t        _keyMonitoring;
     tMonitoring     _data;
-};
+END_SYSTEM(InputSystem)

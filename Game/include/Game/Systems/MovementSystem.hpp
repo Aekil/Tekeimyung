@@ -8,8 +8,7 @@
 
 #define MOVEMENT_SYSTEM_NAME "Movement system"
 
-class MovementSystem : public System
-{
+START_SYSTEM(MovementSystem)
 public:
     MovementSystem(Map* map);
     virtual ~MovementSystem() {};
@@ -19,4 +18,4 @@ private:
     Map*            _map;
     uint16_t        _keyMonitoring;
     tMonitoring     _data;
-};
+END_SYSTEM(MovementSystem)

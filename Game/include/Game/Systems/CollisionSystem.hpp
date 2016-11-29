@@ -8,8 +8,7 @@
 
 #define COLLISION_SYSTEM_NAME "Collision system"
 
-class CollisionSystem : public System
-{
+START_SYSTEM(CollisionSystem)
 public:
     CollisionSystem(Map* map);
     virtual ~CollisionSystem() {};
@@ -25,4 +24,4 @@ private:
     Map*            _map;
     uint16_t        _keyMonitoring;
     tMonitoring     _data;
-};
+END_SYSTEM(CollisionSystem)
