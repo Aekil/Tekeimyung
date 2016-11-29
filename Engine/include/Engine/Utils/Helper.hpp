@@ -1,5 +1,7 @@
 #pragma once
 
+#include <fstream>
+#include <memory>
 #include <string>
 #include <assimp/matrix4x4.h>
 #include <assimp/quaternion.h>
@@ -8,15 +10,33 @@
 #include <glm/gtc/quaternion.hpp>
 #include <glm/vec3.hpp>
 
+#include <Engine/Utils/Debug.hpp>
+
+
 class Helper
 {
 public:
     Helper();
     ~Helper();
+    
     static float        randFloat(float from, float to);
     static int          randInt(int from, int to);
+
     static void         copyAssimpMat(const aiMatrix4x4& from, glm::mat4& to);
     static void         copyAssimpQuat(const aiQuaternion& from, glm::quat& to);
     static void         copyAssimpVec3(const aiVector3D& from, glm::vec3& to);
     static std::string  lowerCaseString(const std::string& str);
+
+    template<typename... Args>
+    static std::string formatMessage(const char* format, Args... args)
+    {
+        std::string buffer;
+        buffer.resize(512);
+        int size = snprintf(const_cast<char*>(buffer.c_str()), 512, format, args...);
+
+        ASSERT(size >= 0, "The formated message should correctly be copied in the buffer");
+
+        buffer.resize(size);
+        return buffer;
+    }
 };

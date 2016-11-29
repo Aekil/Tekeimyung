@@ -5,6 +5,7 @@
 #include <Engine/Utils/Exception.hpp>
 #include <Engine/Utils/OverlayDebugWindow.hpp>
 #include <Engine/Utils/LogDebugWindow.hpp>
+#include <Engine/Utils/MonitoringDebugWindow.hpp>
 #include <Engine/Window/Keyboard.hpp>
 #include <Engine/Window/HandleFullscreenEvent.hpp>
 #include <Engine/Window/GameWindow.hpp>
@@ -160,6 +161,7 @@ bool    PlayState::init()
     addDebugWindow<OverlayDebugWindow>();
     addDebugWindow<EntityDebugWindow>(&em, _map, glm::vec2(0, 80), glm::vec2(600, 350));
     addDebugWindow<LogDebugWindow>(Logger::getInstance(), glm::vec2(0, 430), glm::vec2(300, 200));
+    addDebugWindow<MonitoringDebugWindow>(MonitoringDebugWindow::getInstance());
 
     // Play sound
 /*    static int idSoundBkgdMusic = SoundManager::getInstance()->registerSound("ressources/sounds/Kalimba.mp3", BACKGROUND_SOUND);

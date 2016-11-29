@@ -10,10 +10,14 @@ MovementSystem::MovementSystem(Map* map): _map(map)
     this->addDependency<sPositionComponent>();
     this->addDependency<sDirectionComponent>();
     this->addDependency<sTransformComponent>();
+
+    _keyMonitoring = MonitoringDebugWindow::getInstance()->registerSystem(MOVEMENT_SYSTEM_NAME);
 }
 
 void    MovementSystem::update(EntityManager &em, float elapsedTime)
 {
+    Timer timer;
+    
     this->forEachEntity(em, [&](Entity* entity) {
         sDirectionComponent *direction = entity->getComponent<sDirectionComponent>();
         sPositionComponent *position = entity->getComponent<sPositionComponent>();
@@ -34,4 +38,7 @@ void    MovementSystem::update(EntityManager &em, float elapsedTime)
             transform->needUpdate = true;
         }
     });
+
+    _data.timeSec = timer.getElapsedTime();
+    MonitoringDebugWindow::getInstance()->updateSystem(_keyMonitoring, _data);
 }

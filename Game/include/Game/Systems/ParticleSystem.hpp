@@ -6,10 +6,13 @@
 #include <ECS/System.hpp>
 
 #include <Engine/Utils/Timer.hpp>
+#include <Engine/Utils/MonitoringDebugWindow.hpp>
 #include <Engine/Graphics/Model.hpp>
 #include <Engine/Graphics/Geometries/Geometry.hpp>
 
 #include <Game/Components.hh>
+
+#define PARTICLE_SYSTEM_NAME "Particle system"
 
 #define MAX_PARTICLES   5000
 
@@ -57,4 +60,6 @@ private:
 
 private:
     std::unordered_map<uint32_t, sEmitter*>     _emitters;
+    uint16_t                                    _keyMonitoring;
+    tMonitoring                                 _data;
 };

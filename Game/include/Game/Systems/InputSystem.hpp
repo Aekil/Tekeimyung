@@ -2,6 +2,10 @@
 
 #include <ECS/System.hpp>
 
+#include <Engine/Utils/MonitoringDebugWindow.hpp>
+
+#define INPUT_SYSTEM_NAME "Input system"
+
 #define LEFT            input->moveLeft
 #define UP              input->moveUp
 #define RIGHT           input->moveRight
@@ -23,4 +27,8 @@ public:
 
 private:
     void            movementKeys(Entity *entity, float elapsedTime);
+
+private:
+    uint16_t        _keyMonitoring;
+    tMonitoring     _data;
 };

@@ -2,7 +2,11 @@
 
 #include <ECS/System.hpp>
 
+#include <Engine/Utils/MonitoringDebugWindow.hpp>
+
 #include <Game/Map.hpp>
+
+#define MOVEMENT_SYSTEM_NAME "Movement system"
 
 class MovementSystem : public System
 {
@@ -13,4 +17,6 @@ public:
 
 private:
     Map*            _map;
+    uint16_t        _keyMonitoring;
+    tMonitoring     _data;
 };

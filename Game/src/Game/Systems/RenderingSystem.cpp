@@ -6,7 +6,6 @@
 #include <imgui.h>
 #include <imgui_impl_glfw_gl3.h>
 
-#include <Engine/Utils/Debug.hpp>
 #include <Engine/Utils/Exception.hpp>
 #include <Engine/Window/GameWindow.hpp>
 
@@ -19,9 +18,10 @@ RenderingSystem::RenderingSystem(Map* map, std::unordered_map<uint32_t, sEmitter
 {
     addDependency<sRenderComponent>();
 
+    _keyMonitoring = MonitoringDebugWindow::getInstance()->registerSystem(RENDERING_SYSTEM_NAME);
+
     _camera.translate(glm::vec3(350.0f, 250.0f, 300.0f));
     _camera.setDir(glm::vec3(-30.0f));
-    _camera.getUbo().bind(_shaderProgram, "camera");
 
     // Set camera screen
     float size = 500.0f;
@@ -50,6 +50,8 @@ bool    RenderingSystem::init()
         // Must be the same unit as material textures. See Material::loadFromAssimp
         glUniform1i(_shaderProgram.getUniformLocation("AmbientTexture"), 0);
         glUniform1i(_shaderProgram.getUniformLocation("DiffuseTexture"), 1);
+
+        _camera.getUbo().bind(_shaderProgram, "camera");
     }
     catch(const Exception& e)
     {
@@ -164,6 +166,7 @@ void    RenderingSystem::renderParticles(EntityManager& em)
 
 void    RenderingSystem::update(EntityManager& em, float elapsedTime)
 {
+    Timer timer;
     // Clear color buffer
     glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -228,6 +231,9 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
 
     // Display screen
     GameWindow::getInstance()->display();
+
+    _data.timeSec = timer.getElapsedTime();
+    MonitoringDebugWindow::getInstance()->updateSystem(_keyMonitoring, _data);
 }
 
 bool    RenderingSystem::isTransparentEntity(Entity* entity) const

@@ -2,12 +2,19 @@
 
 #include <ECS/System.hpp>
 
-class               ProjectileSystem : public System
+#include <Engine/Utils/MonitoringDebugWindow.hpp>
+
+#define PROJECTILE_SYSTEM_NAME "Projectile system"
+
+class ProjectileSystem : public System
 {
 public:
     explicit        ProjectileSystem();
     virtual         ~ProjectileSystem();
     virtual void    update(EntityManager &em, float elapsedTime);
+
 private:
     std::vector<Entity*>    _projectiles;
+    uint16_t                _keyMonitoring;
+    tMonitoring             _data;
 };

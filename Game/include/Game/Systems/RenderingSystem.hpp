@@ -5,6 +5,7 @@
 
 #include <ECS/System.hpp>
 
+#include <Engine/Utils/MonitoringDebugWindow.hpp>
 #include <Engine/Graphics/ShaderProgram.hpp>
 #include <Engine/Graphics/Model.hpp>
 #include <Engine/Graphics/Camera.hpp>
@@ -12,6 +13,8 @@
 #include <Game/Components.hh>
 #include <Game/Map.hpp>
 #include <Game/Systems/ParticleSystem.hpp>
+
+#define RENDERING_SYSTEM_NAME "Rendering system"
 
 class RenderingSystem: public System
 {
@@ -36,6 +39,9 @@ private:
 
     Map*                                        _map;
     std::unordered_map<uint32_t, sEmitter*>*    _particleEmitters;
+
+    uint16_t                                    _keyMonitoring;
+    tMonitoring                                 _data;
 
     Camera                                      _camera;
 

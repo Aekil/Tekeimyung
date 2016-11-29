@@ -6,7 +6,8 @@
          "y" : 0
       },
       "sResolutionComponent" : {
-         "onCollisionEnter" : "onCollisionEnterPlayer"
+         "onCollisionEnter" : "onCollisionEnterPlayer",
+         "onCollisionExit" : "onCollisionExitPlayer"
       },
       "sInputComponent" : {
          "down" : "K",

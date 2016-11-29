@@ -4,6 +4,7 @@
 #include <ImGuizmo.h>
 
 #include <Engine/Utils/Exception.hpp>
+#include <Engine/Utils/MonitoringDebugWindow.hpp>
 #include <Engine/Window/GameWindow.hpp>
 
 #include <Engine/Core/GameState.hpp>
@@ -34,10 +35,10 @@ bool    GameState::update(float elapsedTime)
             ImGuizmo::BeginFrame();
             {
                 // Update GameState debug windows
-                for (auto&& debugWinwdow: _debugWindows)
+                for (auto&& debugWindow: _debugWindows)
                 {
-                    if (debugWinwdow->isDisplayed())
-                        debugWinwdow->build();
+                    if (debugWindow->isDisplayed())
+                        debugWindow->build();
                 }
 
                 // Update GameState systems

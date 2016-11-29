@@ -1,8 +1,6 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/string_cast.hpp>
 
-#include <Engine/Utils/Timer.hpp>
-
 #include <Game/Components.hh>
 #include <Game/EntityFactory.hpp>
 
@@ -12,12 +10,16 @@ TowerAISystem::TowerAISystem(Map* map) : _map(map)
 {
     addDependency<sTowerAIComponent>();
     addDependency<sPositionComponent>();
+
+    _keyMonitoring = MonitoringDebugWindow::getInstance()->registerSystem(TOWER_AI_SYSTEM_NAME);
 }
 
 TowerAISystem::~TowerAISystem() {}
 
 void    TowerAISystem::update(EntityManager &em, float elapsedTime)
 {
+    Timer timer;
+
     forEachEntity(em, [&](Entity *entity)
     {
         sTowerAIComponent*      towerAIComponent = entity->getComponent<sTowerAIComponent>();
@@ -59,6 +61,9 @@ void    TowerAISystem::update(EntityManager &em, float elapsedTime)
         if (towerAIComponent->lastShotTime >= towerAIComponent->fireRate)
             towerAIComponent->lastShotTime = 0.0f;
     });
+
+    _data.timeSec = timer.getElapsedTime();
+    MonitoringDebugWindow::getInstance()->updateSystem(_keyMonitoring, _data);
 }
 
 /** @brief  This function checks for the nearest entity in range of an entity that gets the TowerAIComponent component.

@@ -15,6 +15,9 @@ ParticleSystem::ParticleSystem()
 {
     addDependency<sParticleEmitterComponent>();
     addDependency<sPositionComponent>();
+    addDependency<sRenderComponent>();
+
+    _keyMonitoring = MonitoringDebugWindow::getInstance()->registerSystem(PARTICLE_SYSTEM_NAME);
 }
 
 ParticleSystem::~ParticleSystem() {}
@@ -124,6 +127,7 @@ void    ParticleSystem::removeEmitter(uint32_t id)
 
 void    ParticleSystem::update(EntityManager &em, float elapsedTime)
 {
+    Timer timer;
     uint32_t activeEmitters = 0;
 
     // Iterate over particle emitters
@@ -158,6 +162,9 @@ void    ParticleSystem::update(EntityManager &em, float elapsedTime)
                 ++it;
         }
     }
+
+    _data.timeSec = timer.getElapsedTime();
+    MonitoringDebugWindow::getInstance()->updateSystem(_keyMonitoring, _data);
 }
 
 std::unordered_map<uint32_t, sEmitter*>* ParticleSystem::getEmitters()

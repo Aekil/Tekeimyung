@@ -14,10 +14,13 @@ CollisionSystem::CollisionSystem(Map* map) : _map(map)
 {
     this->addDependency<sPositionComponent>();
     this->addDependency<sDirectionComponent>();
+
+    _keyMonitoring = MonitoringDebugWindow::getInstance()->registerSystem(COLLISION_SYSTEM_NAME);
 }
 
 void    CollisionSystem::update(EntityManager &em, float elapsedTime)
 {
+    Timer   timer;
     CollisionMap* collisionMap = _map->getCollisionMap();
 
     this->forEachEntity(em, [&](Entity* entity)
@@ -69,6 +72,8 @@ void    CollisionSystem::update(EntityManager &em, float elapsedTime)
             }
         });
     });
+    _data.timeSec = timer.getElapsedTime();
+    MonitoringDebugWindow::getInstance()->updateSystem(_keyMonitoring, _data);
 }
 
 bool    CollisionSystem::isColliding(Entity *firstEntity, Entity *secondEntity)

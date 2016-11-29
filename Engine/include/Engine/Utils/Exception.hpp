@@ -6,6 +6,7 @@
 #include <cstdio>
 
 #include <Engine/Utils/Debug.hpp>
+#include <Engine/Utils/Helper.hpp>
 
 #define FORMAT_BUFFER_SIZE  512
 
@@ -85,20 +86,7 @@ public:
     : Exception{"RendererAPIException", description, file, function, line} {}
 };
 
-template<typename... Args>
-std::string formatMessage(const char* format, Args... args)
-{
-    std::string buffer;
-    buffer.resize(FORMAT_BUFFER_SIZE);
-    int size = snprintf(const_cast<char*>(buffer.c_str()), FORMAT_BUFFER_SIZE, format, args...);
-
-    ASSERT(size >= 0, "The formated message should correctly be copied in the buffer");
-
-    buffer.resize(size);
-    return buffer;
-}
-
 #define EXCEPT(type, format, ...)\
 do {\
-    throw type(formatMessage(format, ## __VA_ARGS__), __FILE__, FUNCTION, __LINE__);\
+    throw type(Helper::formatMessage(format, ## __VA_ARGS__), __FILE__, FUNCTION, __LINE__);\
 } while (0)

@@ -12,12 +12,16 @@ ProjectileSystem::ProjectileSystem()
     addDependency<sProjectileComponent>();
     addDependency<sPositionComponent>();
     addDependency<sDirectionComponent>();
+
+    _keyMonitoring = MonitoringDebugWindow::getInstance()->registerSystem(PROJECTILE_SYSTEM_NAME);
 }
 
 ProjectileSystem::~ProjectileSystem() {}
 
 void    ProjectileSystem::update(EntityManager &em, float elapsedTime)
 {
+    Timer timer;
+
     forEachEntity(em, [&](Entity *entity)
     {
         sProjectileComponent* component = entity->getComponent<sProjectileComponent>();
@@ -46,4 +50,7 @@ void    ProjectileSystem::update(EntityManager &em, float elapsedTime)
             }
         }
     });
+
+    _data.timeSec = timer.getElapsedTime();
+    MonitoringDebugWindow::getInstance()->updateSystem(_keyMonitoring, _data);
 }
