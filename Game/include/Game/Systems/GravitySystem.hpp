@@ -6,8 +6,7 @@
 
 #define GRAVITY_SYSTEM_NAME "Gravity system"
 
-class GravitySystem : public System
-{
+START_SYSTEM(GravitySystem)
 public:
     GravitySystem();
     virtual ~GravitySystem() {};
@@ -16,4 +15,4 @@ public:
 private:
     uint16_t        _keyMonitoring;
     tMonitoring     _data;
-};
+END_SYSTEM(GravitySystem)

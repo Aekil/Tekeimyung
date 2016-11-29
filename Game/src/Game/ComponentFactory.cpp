@@ -14,7 +14,7 @@
 #include <Game/ComponentFactory.hpp>
 
 std::unordered_map<std::string, IComponentFactory*>  IComponentFactory::_componentsTypes = { COMPONENTS_TYPES(GENERATE_PAIRS) };
-std::unordered_map<std::size_t, std::string>  IComponentFactory::_componentsTypesHashs = { COMPONENTS_TYPES(GENERATE_PAIRS_HASHS) };
+std::unordered_map<uint32_t, std::string>  IComponentFactory::_componentsTypesHashs = { COMPONENTS_TYPES(GENERATE_PAIRS_HASHS) };
 
 
 /*
@@ -63,7 +63,7 @@ IComponentFactory*   IComponentFactory::getFactory(const std::string& name)
     return _componentsTypes[name];
 }
 
-std::string IComponentFactory::getComponentNameWithHash(std::size_t hash)
+std::string IComponentFactory::getComponentNameWithHash(uint32_t hash)
 {
     return (_componentsTypesHashs[hash]);
 }
@@ -78,7 +78,7 @@ std::size_t IComponentFactory::getComponentHashWithName(const std::string& name)
     return (-1);
 }
 
-const std::unordered_map<std::size_t, std::string>& IComponentFactory::getComponentsTypesHashs()
+const std::unordered_map<uint32_t, std::string>& IComponentFactory::getComponentsTypesHashs()
 {
     return (_componentsTypesHashs);
 }

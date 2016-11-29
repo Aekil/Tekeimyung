@@ -8,8 +8,7 @@
 
 #define TOWER_AI_SYSTEM_NAME "TowerAI system"
 
-class   TowerAISystem : public System
-{
+START_SYSTEM(TowerAISystem)
 public:
     TowerAISystem(Map* map);
     virtual     ~TowerAISystem();
@@ -25,4 +24,4 @@ private:
     Map*            _map;
     uint16_t        _keyMonitoring;
     tMonitoring     _data;
-};
+END_SYSTEM(TowerAISystem)

@@ -37,7 +37,7 @@
 
 #define GENERATE_PAIRS(COMPONENT) { #COMPONENT, new ComponentFactory<COMPONENT>() }
 
-#define GENERATE_PAIRS_HASHS(COMPONENT) { typeid(COMPONENT).hash_code(), #COMPONENT }
+#define GENERATE_PAIRS_HASHS(COMPONENT) { COMPONENT::identifier, #COMPONENT }
 
 
 /*
@@ -62,9 +62,9 @@ public:
     static sComponent*                                              createComponent(const std::string& entityType, const std::string& name);
     static IComponentFactory*                                       getFactory(const std::string& name);
 
-    static std::string                                              getComponentNameWithHash(std::size_t hash);
+    static std::string                                              getComponentNameWithHash(uint32_t hash);
     static std::size_t                                              getComponentHashWithName(const std::string& name);
-    static const std::unordered_map<std::size_t, std::string>&      getComponentsTypesHashs();
+    static const std::unordered_map<uint32_t, std::string>&         getComponentsTypesHashs();
 
     // ComponentFactory overloaded classes methods
     // Ex: ComponentFactory<sPositionComponent>, ComponentFactory<sInputComponent>
@@ -77,7 +77,7 @@ private:
     static std::unordered_map<std::string, IComponentFactory*>      _componentsTypes;
 
     // Map lookup to get component name with component hash
-    static std::unordered_map<std::size_t, std::string>             _componentsTypesHashs;
+    static std::unordered_map<uint32_t, std::string>             _componentsTypesHashs;
 };
 
 

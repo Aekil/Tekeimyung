@@ -6,8 +6,7 @@
 
 #define PROJECTILE_SYSTEM_NAME "Projectile system"
 
-class ProjectileSystem : public System
-{
+START_SYSTEM(ProjectileSystem)
 public:
     explicit        ProjectileSystem();
     virtual         ~ProjectileSystem();
@@ -17,4 +16,4 @@ private:
     std::vector<Entity*>    _projectiles;
     uint16_t                _keyMonitoring;
     tMonitoring             _data;
-};
+END_SYSTEM(ProjectileSystem)

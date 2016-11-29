@@ -16,8 +16,7 @@
 
 #define RENDERING_SYSTEM_NAME "Rendering system"
 
-class RenderingSystem: public System
-{
+START_SYSTEM(RenderingSystem)
 public:
     RenderingSystem(Map* map, std::unordered_map<uint32_t, sEmitter*>* particleEmitters);
     virtual ~RenderingSystem();
@@ -46,4 +45,4 @@ private:
     Camera                                      _camera;
 
     std::unordered_map<uint32_t, Entity*>       _transparentEntities;
-};
+END_SYSTEM(RenderingSystem)

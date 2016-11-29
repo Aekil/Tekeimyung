@@ -140,7 +140,7 @@ void    EntityDebugWindow::displayEntityDebug(Entity* entity)
         for (uint32_t i = 0; i < entity->getComponents().size(); ++i)
         {
             sComponent* component = entity->getComponents()[i];
-            std::string componentName = IComponentFactory::getComponentNameWithHash(component->getTypeInfo().hash_code());
+            std::string componentName = IComponentFactory::getComponentNameWithHash(component->id);
             ASSERT(componentName.size() > 0, "The component name should exist");
             IComponentFactory* compFactory = IComponentFactory::getFactory(componentName);
             sComponent* savedComponent = nullptr;
@@ -223,7 +223,7 @@ void    EntityDebugWindow::saveEntityTemplate(const std::string& typeName, Entit
         // Save entity components
         for (auto component: entity->getComponents())
         {
-            std::string componentName = IComponentFactory::getComponentNameWithHash(component->getTypeInfo().hash_code());
+            std::string componentName = IComponentFactory::getComponentNameWithHash(component->id);
             auto compFactory = IComponentFactory::getFactory(componentName);
             ASSERT(compFactory != nullptr, "The factory should exist");
             compFactory->save(typeName, component);

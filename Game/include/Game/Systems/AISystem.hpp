@@ -6,8 +6,7 @@
 
 #define AI_SYSTEM_NAME "AI system"
 
-class AISystem: public System
-{
+START_SYSTEM(AISystem)
 public:
     AISystem();
     virtual ~AISystem();
@@ -16,4 +15,4 @@ public:
 private:
     uint16_t        _keyMonitoring;
     tMonitoring     _data;
-};
+END_SYSTEM(AISystem)

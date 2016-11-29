@@ -37,11 +37,9 @@ public:
     template<typename componentType>
     componentType*                  getComponent()
     {
-        const std::type_info& typeInfo = typeid(componentType);
-
         for (auto component: _components)
         {
-            if (component->getTypeInfo().hash_code() == typeInfo.hash_code())
+            if (component->id == componentType::identifier)
             {
                 return static_cast<componentType*>(component);
             }
@@ -54,7 +52,7 @@ public:
     {
         for (auto component: _components)
         {
-            if (component->getTypeInfo().hash_code() == componentHashCode)
+            if (component->id == componentHashCode)
             {
                 return (component);
             }
@@ -81,12 +79,12 @@ public:
         }
     }
 
-    // Check if the entity has the component with corresponding hashcode => typeid(component).hash_code()
+    // Check if the entity has the component with corresponding hashcode
     bool                            hasComponent(size_t componentHashCode)
     {
         for (auto component: _components)
         {
-            if (component->getTypeInfo().hash_code() == componentHashCode)
+            if (component->id == componentHashCode)
             {
                 return (true);
             }
