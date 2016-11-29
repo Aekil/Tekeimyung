@@ -23,12 +23,7 @@
 #include <Engine/Utils/RessourceManager.hpp>
 
 
-struct sRenderComponent: sComponent
-{
-    sRenderComponent() = default;
-    sRenderComponent(const std::string& modelFile, bool animated = false)
-    : modelFile(modelFile), animated(animated) {}
-
+START_COMPONENT(sRenderComponent)
     virtual sComponent* clone()
     {
         sRenderComponent* component = new sRenderComponent();
@@ -71,13 +66,9 @@ struct sRenderComponent: sComponent
 
     // texture for geometries
     std::string texture;
-};
+END_COMPONENT(sRenderComponent)
 
-struct sPositionComponent: sComponent
-{
-    sPositionComponent() = default;
-    sPositionComponent(glm::vec2 value, float z): value(value), z(z) {}
-
+START_COMPONENT(sPositionComponent)
     virtual sComponent* clone()
     {
         sPositionComponent* component = new sPositionComponent();
@@ -102,15 +93,9 @@ struct sPositionComponent: sComponent
 
     //  Z coordinates (aka layer)
     float   z;
-};
+END_COMPONENT(sPositionComponent)
 
-struct sInputComponent: sComponent {
-    sInputComponent() = default;
-    sInputComponent(Keyboard::eKey moveLeft,
-                    Keyboard::eKey moveRight,
-                    Keyboard::eKey moveUp,
-                    Keyboard::eKey moveDown): moveLeft(moveLeft), moveRight(moveRight), moveUp(moveUp), moveDown(moveDown) {}
-
+START_COMPONENT(sInputComponent)
     virtual sComponent* clone()
     {
         sInputComponent* component = new sInputComponent();
@@ -136,12 +121,10 @@ struct sInputComponent: sComponent {
     Keyboard::eKey          moveRight;
     Keyboard::eKey          moveUp;
     Keyboard::eKey          moveDown;
-};
+END_COMPONENT(sInputComponent)
 
-struct sDirectionComponent : sComponent
-{
-    sDirectionComponent() = default;
-    sDirectionComponent(const glm::vec2& dir, float speed = 1.0f) : value(dir), moved(false), speed(speed) {}
+START_COMPONENT(sDirectionComponent)
+    sDirectionComponent(const glm::vec2& dir, float speed = 1.0f) : value(dir), moved(false), speed(speed), sComponent(sDirectionComponent::identifier) {}
 
     virtual sComponent* clone()
     {
@@ -166,14 +149,11 @@ struct sDirectionComponent : sComponent
 
     glm::vec2 value;
     glm::vec3 orientation;
-    float speed;
-    bool moved;
-};
+    float speed = 1.0f;
+    bool moved = false;
+END_COMPONENT(sDirectionComponent)
 
-struct sBoxColliderComponent : sComponent
-{
-    sBoxColliderComponent(): display(true) {}
-
+START_COMPONENT(sBoxColliderComponent)
     virtual sComponent* clone()
     {
         sBoxColliderComponent* component = new sBoxColliderComponent();
@@ -201,13 +181,10 @@ struct sBoxColliderComponent : sComponent
 
     // Box model
     std::shared_ptr<Box> box;
-    bool display;
-};
+    bool display = true;
+END_COMPONENT(sBoxColliderComponent)
 
-struct sSphereColliderComponent : sComponent
-{
-    sSphereColliderComponent(): display(true) {}
-
+START_COMPONENT(sSphereColliderComponent)
     virtual sComponent* clone()
     {
         sSphereColliderComponent* component = new sSphereColliderComponent();
@@ -230,14 +207,10 @@ struct sSphereColliderComponent : sComponent
     glm::vec3 pos;
     float radius;
     std::shared_ptr<Sphere> sphere;
-    bool display;
-};
+    bool display = true;
+END_COMPONENT(sSphereColliderComponent)
 
-struct sGravityComponent : sComponent
-{
-    sGravityComponent() = default;
-    sGravityComponent(glm::vec2 value) : value(value) {}
-
+START_COMPONENT(sGravityComponent)
     virtual sComponent* clone()
     {
         sGravityComponent* component = new sGravityComponent();
@@ -257,7 +230,7 @@ struct sGravityComponent : sComponent
     }
 
     glm::vec2 value;
-};
+END_COMPONENT(sGravityComponent)
 
 enum class eEntityType
 {
@@ -269,11 +242,7 @@ enum class eEntityType
     TILE_STAIRS_DOWN = 5
 };
 
-struct sTypeComponent: sComponent
-{
-    sTypeComponent() = default;
-    sTypeComponent(eEntityType type): type(type) {}
-
+START_COMPONENT(sTypeComponent)
     virtual sComponent* clone()
     {
         sTypeComponent* component = new sTypeComponent();
@@ -293,12 +262,9 @@ struct sTypeComponent: sComponent
     }
 
     eEntityType type;
-};
+END_COMPONENT(sTypeComponent)
 
-struct sAIComponent : sComponent
-{
-    sAIComponent() = default;
-
+START_COMPONENT(sAIComponent)
     virtual sComponent* clone()
     {
         sAIComponent* component = new sAIComponent();
@@ -313,12 +279,9 @@ struct sAIComponent : sComponent
     {
         update(static_cast<sAIComponent*>(component));
     }
-};
+END_COMPONENT(sAIComponent)
 
-struct sPlayerComponent : sComponent
-{
-    sPlayerComponent() = default;
-
+START_COMPONENT(sPlayerComponent)
     virtual sComponent* clone()
     {
         sPlayerComponent* component = new sPlayerComponent();
@@ -333,13 +296,10 @@ struct sPlayerComponent : sComponent
     {
         update(static_cast<sPlayerComponent*>(component));
     }
-};
+END_COMPONENT(sPlayerComponent)
 
 
-struct sParticleEmitterComponent : sComponent
-{
-    sParticleEmitterComponent() = default;
-
+START_COMPONENT(sParticleEmitterComponent)
     virtual sComponent* clone()
     {
         sParticleEmitterComponent* component = new sParticleEmitterComponent();
@@ -413,12 +373,10 @@ struct sParticleEmitterComponent : sComponent
 
     // Particles texture
     std::string texture;
-};
+END_COMPONENT(sParticleEmitterComponent)
 
-struct sNameComponent : sComponent
-{
-    sNameComponent() = default;
-    sNameComponent(const std::string& name): value(name) {}
+START_COMPONENT(sNameComponent)
+    sNameComponent(const std::string& name): value(name), sComponent(sNameComponent::identifier) {}
 
     virtual sComponent* clone()
     {
@@ -439,12 +397,9 @@ struct sNameComponent : sComponent
     }
 
     std::string value;
-};
+END_COMPONENT(sNameComponent)
 
-struct sTowerAIComponent : sComponent
-{
-    sTowerAIComponent() = default;
-
+START_COMPONENT(sTowerAIComponent)
     virtual sComponent* clone()
     {
         sTowerAIComponent*  component = new sTowerAIComponent();
@@ -472,12 +427,9 @@ struct sTowerAIComponent : sComponent
     float   lastShotTime;
 
     uint32_t    targetId;
-};
+END_COMPONENT(sTowerAIComponent)
 
-struct  sProjectileComponent : sComponent
-{
-    sProjectileComponent() = default;
-
+START_COMPONENT(sProjectileComponent)
     virtual sComponent* clone()
     {
         sProjectileComponent*  component = new sProjectileComponent();
@@ -504,12 +456,9 @@ struct  sProjectileComponent : sComponent
     bool        guided;
     float       rangeMax;
     uint32_t    targetId;
-};
+END_COMPONENT(sProjectileComponent)
 
-struct sWaveComponent : sComponent
-{
-    sWaveComponent() = default;
-
+START_COMPONENT(sWaveComponent)
     virtual sComponent* clone()
     {
         sWaveComponent* component = new sWaveComponent();
@@ -533,13 +482,10 @@ struct sWaveComponent : sComponent
     glm::vec3   spawnPos;
     float       secBeforeSpawn;
     int         nSpawn;
-};
+END_COMPONENT(sWaveComponent)
 
 
-struct sTransformComponent : sComponent
-{
-    sTransformComponent(): scale({1.0f, 1.0f, 1.0f}), transform(1.0f), needUpdate(true) {}
-
+START_COMPONENT(sTransformComponent)
     virtual sComponent* clone()
     {
         sTransformComponent* component = new sTransformComponent();
@@ -581,8 +527,8 @@ struct sTransformComponent : sComponent
     }
 
     glm::vec3   pos;
-    glm::vec3   scale;
+    glm::vec3   scale = {1.0f, 1.0f, 1.0f};
     glm::vec3   rotation;
-    glm::mat4   transform;
-    bool        needUpdate;
-};
+    glm::mat4   transform = glm::mat4(1.0f);
+    bool        needUpdate = true;
+END_COMPONENT(sTransformComponent)

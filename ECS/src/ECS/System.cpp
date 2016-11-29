@@ -15,10 +15,9 @@ void    System::forEachEntity(EntityManager& em, std::function<void(Entity* enti
     {
         bool hasComponents = true;
 
-        for (auto componentType : _components)
+        for (auto componentHash : _components)
         {
-            size_t hashCode = componentType.hash_code();
-            if (!entity.second->hasComponent(hashCode))
+            if (!entity.second->hasComponent(componentHash))
             {
                 hasComponents = false;
                 break;
