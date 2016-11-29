@@ -502,8 +502,7 @@ enum class eCollisionState : int
     EXIT_COLLISION,
 };
 
-struct sResolutionComponent : sComponent
-{
+START_COMPONENT(sResolutionComponent)
     virtual sComponent* clone()
     {
         sResolutionComponent* component = new sResolutionComponent();
@@ -536,7 +535,7 @@ struct sResolutionComponent : sComponent
 
     //Boolean if we need to resolve collisions or not
     eCollisionState collidingState;
-};
+END_COMPONENT(sResolutionComponent)
 
 START_COMPONENT(sTransformComponent)
     virtual sComponent* clone()

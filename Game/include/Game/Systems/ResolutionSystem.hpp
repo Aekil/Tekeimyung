@@ -2,12 +2,11 @@
 
 #include <ECS/System.hpp>
 
-#include <Engine/Utils/MonitoringDebugWindow.hpp> 
+#include <Engine/Utils/MonitoringDebugWindow.hpp>
 
 #define RESOLUTION_SYSTEM_NAME "Resolution system"
 
-class ResolutionSystem : public System
-{
+START_SYSTEM(ResolutionSystem)
 public:
     ResolutionSystem();
     virtual                                     ~ResolutionSystem();
@@ -16,4 +15,4 @@ public:
 private:
     uint16_t                                    _keyMonitoring;
     tMonitoring                                 _data;
-};
+END_SYSTEM(ResolutionSystem)

@@ -1,6 +1,5 @@
 #pragma once
 
-#include <typeinfo>
 #include <cstdint>
 #include <ECS/crc32.hh>
 
