@@ -6,12 +6,15 @@
 ResolutionSystem::ResolutionSystem()
 {
     addDependency<sResolutionComponent>();
+    _keyMonitoring = MonitoringDebugWindow::getInstance()->registerSystem(RESOLUTION_SYSTEM_NAME);
 }
 
 ResolutionSystem::~ResolutionSystem() { }
 
 void ResolutionSystem::update(EntityManager &em, float elapsedTime)
 {
+    Timer timer;
+
     this->forEachEntity(em, [&](Entity* entity)
     {
         sResolutionComponent* resolutionComponent = entity->getComponent<sResolutionComponent>();
@@ -27,4 +30,7 @@ void ResolutionSystem::update(EntityManager &em, float elapsedTime)
             resolutionComponent->collidingState = eCollisionState::NO_COLLISION;
         }
     });
+
+    _data.timeSec = timer.getElapsedTime();
+    MonitoringDebugWindow::getInstance()->updateSystem(_keyMonitoring, _data);
 }

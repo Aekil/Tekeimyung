@@ -29,7 +29,7 @@
 #include <Game/GameStates/PlayState.hpp>
 
 
-PlayState::PlayState(): _windowImgui(true) {}
+PlayState::PlayState() : _windowImgui(true) {}
 
 PlayState::~PlayState() {}
 
@@ -38,20 +38,7 @@ void    PlayState::createTile(const glm::vec3& pos, eArchetype type)
     Entity* tile;
 
 
-    if ((int)type == 42) 
-    {
-        tile = EntityFactory::createEntity(eArchetype::PLAYER);
-
-        sInputComponent *lol = tile->getComponent<sInputComponent>();
-        lol->moveUp = Keyboard::eKey::KP_8;
-        lol->moveDown = Keyboard::eKey::KP_5;
-        lol->moveRight = Keyboard::eKey::KP_6;
-        lol->moveLeft = Keyboard::eKey::KP_4;
-    } 
-    else
-    {
-        tile = EntityFactory::createEntity(type);
-    }
+    tile = EntityFactory::createEntity(type);
 
     sPositionComponent* tilePos = tile->getComponent<sPositionComponent>();
     sTransformComponent *tileTransform = tile->getComponent<sTransformComponent>();
@@ -112,8 +99,6 @@ bool    PlayState::init()
 
     // Create character
     createTile(glm::vec3(9, 5, 1), eArchetype::PLAYER);
-
-    createTile(glm::vec3(9, 7, 1), (eArchetype)42);
 
     // Initialize base map
     for (int y = 0; y < 15; y++) {
