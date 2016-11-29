@@ -256,7 +256,6 @@ class ComponentFactory<sResolutionComponent> : public BaseComponentFactory<sReso
 {
 public:
     virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
-    virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
 };
 
 /*

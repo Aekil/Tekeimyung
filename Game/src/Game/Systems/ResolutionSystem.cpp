@@ -21,5 +21,10 @@ void ResolutionSystem::update(EntityManager &em, float elapsedTime)
             resolutionComponent->onCollisionEnter(resolutionComponent->entityId);
             resolutionComponent->collidingState = eCollisionState::IS_COLLIDING;
         }
+        else if (resolutionComponent->collidingState == eCollisionState::EXIT_COLLISION)
+        {
+            resolutionComponent->onCollisionExit(resolutionComponent->entityId);
+            resolutionComponent->collidingState = eCollisionState::NO_COLLISION;
+        }
     });
 }

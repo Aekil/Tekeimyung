@@ -568,6 +568,7 @@ struct sResolutionComponent : sComponent
         this->entityId = component->entityId;
         this->collidingState = component->collidingState;
         this->onCollisionEnter = component->onCollisionEnter;
+        this->onCollisionExit = component->onCollisionExit;
     }
 
     virtual void update(sComponent* component)
@@ -575,8 +576,11 @@ struct sResolutionComponent : sComponent
         update(static_cast<sResolutionComponent*>(component));
     }
 
-    //Callback for collision
+    //Callback for enter collision
     std::function<void(int entityId)> onCollisionEnter;
+
+    //Callback for exit collision
+    std::function<void(int entityId)> onCollisionExit;
 
     //Entity id with which is colliding
     int entityId;

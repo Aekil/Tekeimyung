@@ -64,7 +64,7 @@ void    CollisionSystem::update(EntityManager &em, float elapsedTime)
                 else
                 {
                     if (resolution->collidingState == eCollisionState::IS_COLLIDING)
-                        resolution->collidingState = eCollisionState::NO_COLLISION;
+                        resolution->collidingState = eCollisionState::EXIT_COLLISION;
                 }
             }
         });

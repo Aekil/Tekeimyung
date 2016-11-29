@@ -433,20 +433,10 @@ sComponent* ComponentFactory<sResolutionComponent>::loadFromJson(const std::stri
     component->collidingState= eCollisionState::NO_COLLISION;
     component->entityId = -1;
     component->onCollisionEnter = Resolutions::getInstance()->getResolutionByName(json.getString("onCollisionEnter", ""));
+    component->onCollisionExit = Resolutions::getInstance()->getResolutionByName(json.getString("onCollisionExit", ""));
 
     return (component);
 }
-
-JsonValue&    ComponentFactory<sResolutionComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
-{
-    JsonValue& json = _componentsJson[entityType];
-    sResolutionComponent* component = static_cast<sResolutionComponent*>(_components[entityType]);
-
-    json.setString("onCollisionEnter", "onCollisionEnterPlayer");
-
-    return (json);
-}
-
 
 /*
 ** sTypeComponent
