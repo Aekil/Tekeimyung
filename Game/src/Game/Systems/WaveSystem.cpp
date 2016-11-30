@@ -1,4 +1,7 @@
+#include <Engine/Utils/Debug.hpp>
+
 #include <Game/Components.hh>
+#include <Game/Utils/PlayStates.hpp>
 
 #include <Game/Systems/WaveSystem.hpp>
 
@@ -26,7 +29,7 @@ void    WaveSystem::update(EntityManager &em, float elapsedTime)
         waveComponent->spawnPos = glm::vec3(position->value.x + 0.5f, position->value.y + 0.5f, position->z + 1);
         if (waveComponent->nSpawn > 0 && _timer->getElapsedTime() > waveComponent->secBeforeSpawn)
         {
-            createEntity(_map, waveComponent->spawnPos, eArchetype::ENEMY);
+            createEntityFromWave(_map, waveComponent->spawnPos, eArchetype::ENEMY);
             waveComponent->nSpawn -= 1;
             reset = true;
         }
@@ -38,7 +41,25 @@ void    WaveSystem::update(EntityManager &em, float elapsedTime)
     MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, _monitoringData);
 }
 
-Entity*    WaveSystem::createEntity(Map* map, const glm::vec3& pos, eArchetype type)
+uint32_t    WaveSystem::createWave(Map* map, const glm::vec3& pos, eArchetype type)
+{
+    Entity* waveEntity;
+    
+    waveEntity = PlayStates::createTile(map, pos, type);
+    
+    return (waveEntity->id);
+}
+
+void     WaveSystem::setNbEntities(EntityManager &em, uint32_t waveEntityID, int entityNb)
+{
+    Entity *waveEntity;
+    
+    waveEntity = em.getEntity(waveEntityID);
+    sWaveComponent* wave = waveEntity->getComponent<sWaveComponent>();
+    wave->nSpawn = entityNb;
+}
+
+Entity*    WaveSystem::createEntityFromWave(Map* map, const glm::vec3& pos, eArchetype type)
 {
     Entity* entity = EntityFactory::createEntity(type);
 

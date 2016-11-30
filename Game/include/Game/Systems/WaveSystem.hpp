@@ -17,7 +17,11 @@ public:
 
     virtual void            update(EntityManager &em, float elapsedTime);
 
-    static Entity*          createEntity(Map* map, const glm::vec3& pos, eArchetype type);
+    static uint32_t         createWave(Map* map, const glm::vec3& pos, eArchetype type);
+    static void             setNbEntities(EntityManager &em, uint32_t waveEntityID, int entityNb);
+        
+private:
+    Entity*                 createEntityFromWave(Map* map, const glm::vec3& pos, eArchetype type);
 
 private:
     Timer*                  _timer;

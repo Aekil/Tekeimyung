@@ -25,6 +25,7 @@
 #include <Game/Components.hh>
 #include <Game/EntityDebugWindow.hpp>
 #include <Game/EntityFactory.hpp>
+#include <Game/Utils/PlayStates.hpp>
 
 #include <Game/GameStates/PlayState.hpp>
 
@@ -32,59 +33,6 @@
 PlayState::PlayState() : _windowImgui(true) {}
 
 PlayState::~PlayState() {}
-
-void    PlayState::createTile(const glm::vec3& pos, eArchetype type)
-{
-    Entity* tile;
-
-
-    tile = EntityFactory::createEntity(type);
-
-    sPositionComponent* tilePos = tile->getComponent<sPositionComponent>();
-    sTransformComponent *tileTransform = tile->getComponent<sTransformComponent>();
-    tilePos->value.y = pos.y;
-    tilePos->value.x = pos.x;
-    tilePos->z = pos.z;
-    (*_map)[(uint16_t)pos.z][(uint32_t)pos.y][(uint32_t)pos.x] = tile->id;
-    tileTransform->pos = Map::mapToGraphPosition(tilePos->value, tilePos->z);
-}
-
-void    PlayState::createWave(const glm::vec3& pos, eArchetype type)
-{
-    createTile(pos, type);
-}
-
-Entity* PlayState::createParticlesEmittor(const glm::vec3& pos, eArchetype type)
-{
-    Entity* ps;
-    sPositionComponent* psPos;
-    sTransformComponent *psTransform;
-
-    ps = EntityFactory::createEntity(type);
-    psPos = ps->getComponent<sPositionComponent>();
-    psTransform = ps->getComponent<sTransformComponent>();
-    psPos->value.x = pos.x;
-    psPos->value.y = pos.y;
-    psPos->z = pos.z;
-    psTransform->pos = Map::mapToGraphPosition(psPos->value, psPos->z);
-
-    return (ps);
-}
-
-
-void    PlayState::goTo(Entity* emitter, Entity* character)
-{
-    sPositionComponent* emitterPos;
-    sPositionComponent* characterPos;
-
-    emitterPos = emitter->getComponent<sPositionComponent>();
-    characterPos = character->getComponent<sPositionComponent>();
-
-    if (!emitterPos || !characterPos)
-        EXCEPT(InternalErrorException, "sPositionComponent missing");
-
-    emitter->addComponent<sDirectionComponent>(glm::normalize(characterPos->value - emitterPos->value) * 4.0f);
-}
 
 bool    PlayState::init()
 {
@@ -95,41 +43,37 @@ bool    PlayState::init()
     _map = new Map(em, 20, 15, 4);
 
     // Create particles emitter
-    createParticlesEmittor(glm::vec3(12, 5, 1), eArchetype::EMITTER_WATER);
+    PlayStates::createParticlesEmittor(glm::vec3(12, 5, 1), eArchetype::EMITTER_WATER);
 
     // Create character
-    createTile(glm::vec3(9, 5, 1), eArchetype::PLAYER);
+    PlayStates::createTile(_map, glm::vec3(9, 5, 1), eArchetype::PLAYER);
 
     // Initialize base map
     for (int y = 0; y < 15; y++) {
         for (int x = 0; x < 20; x++) {
-            createTile(glm::vec3(x, y, 0), eArchetype::BLOCK_GREEN);
+            PlayStates::createTile(_map, glm::vec3(x, y, 0), eArchetype::BLOCK_GREEN);
         }
     }
 
     for (int y = 0; y < 4; y++) {
         for (int x = 0; x < 20; x++) {
-            createTile(glm::vec3(x, y, 1), eArchetype::BLOCK_BROWN);
+            PlayStates::createTile(_map, glm::vec3(x, y, 1), eArchetype::BLOCK_BROWN);
         }
     }
 
     for (int y = 8; y < 15; y++) {
         for (int x = 0; x < 20; x++) {
-            createTile(glm::vec3(x, y, 1), eArchetype::BLOCK_BROWN);
+            PlayStates::createTile(_map, glm::vec3(x, y, 1), eArchetype::BLOCK_BROWN);
         }
     }
 
     // Create wave
-/*    for (int i = 0; i < 2; i++) {
-        for (int j = 0; j < 1; j++) {
-            // create wave
-            createWave(glm::vec3(j, 5.0f + i, 0), eArchetype::WAVE_SPAWNER);
-        }
-    }*/
+    static uint32_t waveEntityID = WaveSystem::createWave(_map, glm::vec3(0, 5.0f, 0), eArchetype::WAVE_SPAWNER);
+    WaveSystem::setNbEntities(em, waveEntityID, 5);
 
     // Create towers
-    createTile(glm::vec3(7, 4, 1), eArchetype::TOWER_FIRE);
-    createTile(glm::vec3(7, 7, 1), eArchetype::TOWER_FIRE);
+    PlayStates::createTile(_map, glm::vec3(7, 4, 1), eArchetype::TOWER_FIRE);
+    PlayStates::createTile(_map, glm::vec3(7, 7, 1), eArchetype::TOWER_FIRE);
 
     _world.addSystem<WaveSystem>(_map);
     _world.addSystem<InputSystem>();
