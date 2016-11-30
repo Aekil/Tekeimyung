@@ -1,5 +1,8 @@
 #pragma once
 
+#include <string>
+#include <Engine/Utils/Helper.hpp>
+
 #if defined(_DEBUG)
     #define ENGINE_DEBUG true
 
@@ -10,17 +13,17 @@
     #endif
 
 #include <cstdlib>
-    #define ASSERT(expression, message) \
-        if (Debug::engineAssert(expression, message, __FILE__, FUNCTION, __LINE__) == false) \
+    #define ASSERT(expression, format, ...) \
+        if (Debug::engineAssert(expression, Helper::formatMessage(format, ## __VA_ARGS__), __FILE__, FUNCTION, __LINE__) == false) \
             std::abort();
 #else
     #define ENGINE_DEBUG false
 
-    #define ASSERT(expression, message)
+    #define ASSERT(expression, format, ...)
 #endif
 
 class           Debug
 {
 public:
-    static bool engineAssert(bool expression, const char* message, const char* filename, const char* function, unsigned int line);
+    static bool engineAssert(bool expression, std::string message, const char* filename, const char* function, unsigned int line);
 };

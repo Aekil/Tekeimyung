@@ -32,7 +32,7 @@ Geometry::eType   Geometry::getType() const
 
 Geometry::eType Geometry::getGeometryType(const std::string& typeString)
 {
-    ASSERT(_typesFromString.find(typeString) != _typesFromString.end(), "The type should exist");
+    ASSERT(_typesFromString.find(typeString) != _typesFromString.end(), "The type \"%s\" should exist", typeString);
 
     return (_typesFromString[typeString]);
 }
