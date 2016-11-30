@@ -39,16 +39,21 @@ void    UniformBuffer::update(void* data, uint32_t size)
     }
 }
 
-void    UniformBuffer::bind(const ShaderProgram& shaderProgram, const char* blockName) const
+void    UniformBuffer::bind(const ShaderProgram& shaderProgram, const char* blockName)
 {
-    // Uniform block index in shader
-    GLuint uniformBlockIndex = shaderProgram.getUniformBlockIndex(blockName);
+    if (blockName != _boundBlock)
+    {
+        _boundBlock = blockName;
+
+        // Uniform block index in shader
+        _boundBlockIndex = shaderProgram.getUniformBlockIndex(blockName);
+    }
 
     // Bind UBO
     glBindBufferBase(GL_UNIFORM_BUFFER, _bindingPoint, _UBO);
 
     // Bind UBO with uniform block in shader
-    shaderProgram.bindBlock(uniformBlockIndex, _bindingPoint);
+    shaderProgram.bindBlock(_boundBlockIndex, _bindingPoint);
 }
 
 void    UniformBuffer::setBindingPoint(uint16_t bindingPoint)

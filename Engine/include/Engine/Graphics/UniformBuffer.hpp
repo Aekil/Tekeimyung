@@ -14,7 +14,7 @@ public:
     void                    update(void* data, uint32_t size);
 
     // Bind UBO with uniform buffer block in shader
-    void                    bind(const ShaderProgram& shaderProgram, const char* blockName) const;
+    void                    bind(const ShaderProgram& shaderProgram, const char* blockName);
 
     void                    setBindingPoint(uint16_t bindingPoint);
 
@@ -25,4 +25,7 @@ private:
     bool                    _firstUpdate;
 
     GLuint                  _bindingPoint;
+
+    std::string             _boundBlock;
+    GLuint                  _boundBlockIndex;
 };

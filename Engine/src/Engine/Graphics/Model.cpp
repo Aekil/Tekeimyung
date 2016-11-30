@@ -113,11 +113,11 @@ const std::vector<std::shared_ptr<Mesh> > &Model::getMeshs() const
 void    Model::draw(const ShaderProgram& shaderProgram) const
 {
     // Model matrix
-    GLint uniModel = shaderProgram.getUniformLocation("model");
+    static GLint uniModel = shaderProgram.getUniformLocation("model");
     glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(_transform));
 
     // Model color
-    GLint colorModel = shaderProgram.getUniformLocation("modelColor");
+    static GLint colorModel = shaderProgram.getUniformLocation("modelColor");
     glUniform4f(colorModel, _color.x, _color.y, _color.z,_color.w);
 
     // Bones matrices

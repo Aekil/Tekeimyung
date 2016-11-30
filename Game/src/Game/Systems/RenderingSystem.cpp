@@ -51,7 +51,7 @@ bool    RenderingSystem::init()
         glUniform1i(_shaderProgram.getUniformLocation("AmbientTexture"), 0);
         glUniform1i(_shaderProgram.getUniformLocation("DiffuseTexture"), 1);
 
-        _camera.getUbo().bind(_shaderProgram, "camera");
+        const_cast<UniformBuffer&>(_camera.getUbo()).bind(_shaderProgram, "camera");
     }
     catch(const Exception& e)
     {
