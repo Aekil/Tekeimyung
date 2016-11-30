@@ -1,4 +1,5 @@
 #include <cmath>
+#include <algorithm>
 
 #include <Engine/Physics/Collisions.hpp>
 
@@ -8,50 +9,30 @@ Collisions::Collisions()
 Collisions::~Collisions()
 {}
 
-bool    Collisions::rectHitboxCheck(tRectHitbox *hb1, tRectHitbox *hb2)
-{
-    if ((hb1->max.x < hb2->min.x || hb1->min.x > hb2->max.x) ||
-        (hb1->max.y < hb2->min.y || hb1->min.y > hb2->max.y))
-        return (false);
-    return (true);
-}
-
-bool    Collisions::rectHitboxCheck(glm::vec2 *min1, glm::vec2 *max1, glm::vec2 *min2, glm::vec2 *max2)
-{
-    if ((max1->x < min2->x || min1->x > max2->x) ||
-        (max1->y < min2->y || min1->y > max2->y))
-        return (false);
-    return (true);
-}
-
-bool    Collisions::circleHitboxCheck(tCircleHitbox *hb1, tCircleHitbox *hb2)
-{
-    float radius;
-    float result;
-
-    radius = pow((hb1->radius + hb2->radius), 2);
-    result = pow((hb1->center.x + hb2->center.x), 2) + pow((hb1->center.y + hb2->center.y), 2);
-    if (radius < result)
-        return (true);
-    return (false);
-}
-
-bool    Collisions::circleHitboxCheck(glm::vec2 *center1, float radius1, glm::vec2 *center2, float radius2)
-{
-    float radius;
-    float result;
-
-    radius = pow((radius1 + radius2), 2);
-    result = pow((center1->x + center2->x), 2) + pow((center1->y + center2->y), 2);
-    if (radius < result)
-        return (true);
-    return (false);
-}
-
-bool    Collisions::sphereColliderCheck(glm::vec3 pos1, float radius1, glm::vec3 pos2, float radius2)
+bool    Collisions::sphereVSsphere(glm::vec3 pos1, float radius1, glm::vec3 pos2, float radius2)
 {
     float distance = pow((pos1.x - pos2.x), 2) + pow((pos1.y - pos2.y), 2) + pow((pos1.z - pos2.z), 2);
 
     float sumRadius = pow(radius2 + radius1, 2);
     return (distance <= sumRadius);
+}
+
+bool    Collisions::pointVSAABB(glm::vec3 point, glm::vec3 boxPosition, glm::vec3 boxSize)
+{
+    return  (point.x >= boxPosition.x && point.x <= boxPosition.x + boxSize.x) &&
+            (point.y >= boxPosition.y && point.y <= boxPosition.y + boxSize.y) &&
+            (point.z >= boxPosition.z && point.z <= boxPosition.z + boxSize.z);
+}
+
+bool    Collisions::sphereVSAABB(glm::vec3 spherePosition, float sphereRadius, glm::vec3 boxPosition, glm::vec3 boxSize)
+{
+    float x = std::max(boxPosition.x, std::min(spherePosition.x, boxPosition.x + boxSize.x));
+    float y = std::max(boxPosition.y, std::min(spherePosition.y, boxPosition.y + boxSize.y));
+    float z = std::max(boxPosition.z, std::min(spherePosition.z, boxPosition.z + boxSize.z));
+
+    float distance = sqrt(  (x - spherePosition.x) * (x - spherePosition.x) +
+                            (y - spherePosition.y) * (y - spherePosition.y) +
+                            (z - spherePosition.z) * (z - spherePosition.z));
+
+    return distance < sphereRadius;
 }

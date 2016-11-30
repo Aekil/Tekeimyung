@@ -1,13 +1,12 @@
 #include <Game/Components.hh>
-#include <Game/Utils/Resolutions.hpp>
 
 #include <Game/Systems/ResolutionSystem.hpp>
+#include <Game/Utils/Resolutions.hpp>
 
 ResolutionSystem::ResolutionSystem()
 {
     addDependency<sResolutionComponent>();
-
-    _monitoringKey = MonitoringDebugWindow::getInstance()->registerSystem(RESOLUTION_SYSTEM_NAME);
+    _keyMonitoring = MonitoringDebugWindow::getInstance()->registerSystem(RESOLUTION_SYSTEM_NAME);
 }
 
 ResolutionSystem::~ResolutionSystem() { }
@@ -32,6 +31,6 @@ void ResolutionSystem::update(EntityManager &em, float elapsedTime)
         }
     });
 
-    _monitoringData.timeSec = timer.getElapsedTime();
-    MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, _monitoringData);
+    _data.timeSec = timer.getElapsedTime();
+    MonitoringDebugWindow::getInstance()->updateSystem(_keyMonitoring, _data);
 }
