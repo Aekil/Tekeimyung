@@ -12,9 +12,11 @@
             "sTypeComponent": {
                 "type": "TILE_WALKABLE"
             },
-			"sWaveComponent": {
-			"secBeforeSpawn": 2,
-			"nSpawn": 10
-			}
+      "sWaveComponent": {
+        "firstWait": false,
+        "secBeforeFirstSpawn": 3,
+        "secBeforeEachSpawn": 2,
+        "nSpawn": 10
+      }
         }
 }

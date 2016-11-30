@@ -480,7 +480,9 @@ START_COMPONENT(sWaveComponent)
     virtual void update(sWaveComponent* component)
     {
         this->spawnPos = component->spawnPos;
-        this->secBeforeSpawn = component->secBeforeSpawn;
+        this->firstWait = component->firstWait;
+        this->secBeforeFirstSpawn = component->secBeforeFirstSpawn;
+        this->secBeforeEachSpawn = component->secBeforeEachSpawn;
         this->nSpawn = component->nSpawn;
     }
 
@@ -490,7 +492,9 @@ START_COMPONENT(sWaveComponent)
     }
 
     glm::vec3   spawnPos;
-    float       secBeforeSpawn;
+    bool        firstWait;
+    float       secBeforeFirstSpawn;
+    float       secBeforeEachSpawn;
     int         nSpawn;
 END_COMPONENT(sWaveComponent)
 

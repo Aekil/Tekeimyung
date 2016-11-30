@@ -19,6 +19,8 @@ public:
 
     static uint32_t         createWave(Map* map, const glm::vec3& pos, eArchetype type);
     static void             setNbEntities(EntityManager &em, uint32_t waveEntityID, int entityNb);
+    static void             setSecBeforeFirstSpawn(EntityManager &em, uint32_t waveEntityID, float secBeforeFirstSpawn);
+    static void             setSecBeforeEachSpawn(EntityManager &em, uint32_t waveEntityID, float secBeforeEachSpawn);
         
 private:
     Entity*                 createEntityFromWave(Map* map, const glm::vec3& pos, eArchetype type);

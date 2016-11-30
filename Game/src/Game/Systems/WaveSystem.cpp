@@ -24,14 +24,25 @@ void    WaveSystem::update(EntityManager &em, float elapsedTime)
     forEachEntity(em, [&](Entity *entity)
     {
         sWaveComponent* waveComponent = entity->getComponent<sWaveComponent>();
-        sPositionComponent* position = entity->getComponent<sPositionComponent>();
-
-        waveComponent->spawnPos = glm::vec3(position->value.x + 0.5f, position->value.y + 0.5f, position->z + 1);
-        if (waveComponent->nSpawn > 0 && _timer->getElapsedTime() > waveComponent->secBeforeSpawn)
+        if (waveComponent)
         {
-            createEntityFromWave(_map, waveComponent->spawnPos, eArchetype::ENEMY);
-            waveComponent->nSpawn -= 1;
-            reset = true;
+            if (waveComponent->firstWait || _timer->getElapsedTime() > waveComponent->secBeforeFirstSpawn)
+            {
+                if (!waveComponent->firstWait)
+                {
+                    reset = true; // if you want to wait the time between each spawn in addition of the first one, just replace this line by "_timer->reset();"
+                    waveComponent->firstWait = true;
+                }
+                sPositionComponent* position = entity->getComponent<sPositionComponent>();
+
+                waveComponent->spawnPos = glm::vec3(position->value.x + 0.5f, position->value.y + 0.5f, position->z + 1);
+                if (waveComponent->nSpawn > 0 && _timer->getElapsedTime() > waveComponent->secBeforeEachSpawn)
+                {
+                    createEntityFromWave(_map, waveComponent->spawnPos, eArchetype::ENEMY);
+                    waveComponent->nSpawn -= 1;
+                    reset = true;
+                }
+            }
         }
     });
     if (reset)
@@ -57,6 +68,24 @@ void     WaveSystem::setNbEntities(EntityManager &em, uint32_t waveEntityID, int
     waveEntity = em.getEntity(waveEntityID);
     sWaveComponent* wave = waveEntity->getComponent<sWaveComponent>();
     wave->nSpawn = entityNb;
+}
+
+void     WaveSystem::setSecBeforeFirstSpawn(EntityManager &em, uint32_t waveEntityID, float secBeforeFirstSpawn)
+{
+    Entity *waveEntity;
+
+    waveEntity = em.getEntity(waveEntityID);
+    sWaveComponent* wave = waveEntity->getComponent<sWaveComponent>();
+    wave->secBeforeFirstSpawn = secBeforeFirstSpawn;
+}
+
+void     WaveSystem::setSecBeforeEachSpawn(EntityManager &em, uint32_t waveEntityID, float secBeforeEachSpawn)
+{
+    Entity *waveEntity;
+
+    waveEntity = em.getEntity(waveEntityID);
+    sWaveComponent* wave = waveEntity->getComponent<sWaveComponent>();
+    wave->secBeforeEachSpawn = secBeforeEachSpawn;
 }
 
 Entity*    WaveSystem::createEntityFromWave(Map* map, const glm::vec3& pos, eArchetype type)

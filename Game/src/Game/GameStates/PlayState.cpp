@@ -70,6 +70,8 @@ bool    PlayState::init()
     // Create wave
     static uint32_t waveEntityID = WaveSystem::createWave(_map, glm::vec3(0, 5.0f, 0), eArchetype::WAVE_SPAWNER);
     WaveSystem::setNbEntities(em, waveEntityID, 5);
+    WaveSystem::setSecBeforeFirstSpawn(em, waveEntityID, 3);
+    WaveSystem::setSecBeforeEachSpawn(em, waveEntityID, 2);
 
     // Create towers
     PlayStates::createTile(_map, glm::vec3(7, 4, 1), eArchetype::TOWER_FIRE);
