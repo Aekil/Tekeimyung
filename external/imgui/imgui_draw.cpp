@@ -1452,9 +1452,9 @@ void ImFontAtlas::RenderCustomTexData(int pass, void* p_rects)
 {
     // A work of art lies ahead! (. = white layer, X = black layer, others are blank)
     // The white texels on the top left are the ones we'll use everywhere in ImGui to render filled shapes.
-    const int TEX_DATA_W = 90;
-    const int TEX_DATA_H = 27;
-    const char texture_data[TEX_DATA_W*TEX_DATA_H+1] =
+    const int TEX_data_W = 90;
+    const int TEX_data_H = 27;
+    const char texture_data[TEX_data_W*TEX_data_H+1] =
     {
         "..-         -XXXXXXX-    X    -           X           -XXXXXXX          -          XXXXXXX"
         "..-         -X.....X-   X.X   -          X.X          -X.....X          -          X.....X"
@@ -1491,19 +1491,19 @@ void ImFontAtlas::RenderCustomTexData(int pass, void* p_rects)
         // Request rectangles
         stbrp_rect r;
         memset(&r, 0, sizeof(r));
-        r.w = (TEX_DATA_W*2)+1;
-        r.h = TEX_DATA_H+1;
+        r.w = (TEX_data_W*2)+1;
+        r.h = TEX_data_H+1;
         rects.push_back(r);
     }
     else if (pass == 1)
     {
         // Render/copy pixels
         const stbrp_rect& r = rects[0];
-        for (int y = 0, n = 0; y < TEX_DATA_H; y++)
-            for (int x = 0; x < TEX_DATA_W; x++, n++)
+        for (int y = 0, n = 0; y < TEX_data_H; y++)
+            for (int x = 0; x < TEX_data_W; x++, n++)
             {
                 const int offset0 = (int)(r.x + x) + (int)(r.y + y) * TexWidth;
-                const int offset1 = offset0 + 1 + TEX_DATA_W;
+                const int offset1 = offset0 + 1 + TEX_data_W;
                 TexPixelsAlpha8[offset0] = texture_data[n] == '.' ? 0xFF : 0x00;
                 TexPixelsAlpha8[offset1] = texture_data[n] == 'X' ? 0xFF : 0x00;
             }
@@ -1533,7 +1533,7 @@ void ImFontAtlas::RenderCustomTexData(int pass, void* p_rects)
             cursor_data.HotOffset = cursor_datas[type][2];
             cursor_data.TexUvMin[0] = (pos) * tex_uv_scale;
             cursor_data.TexUvMax[0] = (pos + size) * tex_uv_scale;
-            pos.x += TEX_DATA_W+1;
+            pos.x += TEX_data_W+1;
             cursor_data.TexUvMin[1] = (pos) * tex_uv_scale;
             cursor_data.TexUvMax[1] = (pos + size) * tex_uv_scale;
         }

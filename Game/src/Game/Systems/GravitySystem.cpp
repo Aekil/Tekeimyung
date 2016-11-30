@@ -8,7 +8,7 @@ GravitySystem::GravitySystem()
     this->addDependency<sPositionComponent>();
     this->addDependency<sDirectionComponent>();
 
-    _keyMonitoring = MonitoringDebugWindow::getInstance()->registerSystem(GRAVITY_SYSTEM_NAME);
+    _monitoringKey = MonitoringDebugWindow::getInstance()->registerSystem(GRAVITY_SYSTEM_NAME);
 }
 
 void GravitySystem::update(EntityManager &em, float elapsedTime)
@@ -23,5 +23,5 @@ void GravitySystem::update(EntityManager &em, float elapsedTime)
     });
 
     _data.timeSec = timer.getElapsedTime();
-    MonitoringDebugWindow::getInstance()->updateSystem(_keyMonitoring, _data);
+    MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, _data);
 }

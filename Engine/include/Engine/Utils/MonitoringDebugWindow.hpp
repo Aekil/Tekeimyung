@@ -9,9 +9,15 @@
 #include <Engine/Utils/Timer.hpp>
 #include <Engine/Utils/DebugWindow.hpp>
 
-#define ENABLE_COLOR    true
+#define ENABLE_COLOR            true
 
-#define FMT_MSG(format, ...)  (Helper::formatMessage(format, ## __VA_ARGS__))
+#define FMT_MSG(format, ...)    (Helper::formatMessage(format, ## __VA_ARGS__))
+
+#define ADD_MONITORING_VAR      \
+                                private: \
+                                    uint16_t        _monitoringKey; \
+                                    tMonitoring     _data;  // If no others variables to update than timeSec,
+                                                            // replace tMonitoring _data by float _timeSec to optimize
 
 typedef struct sMonitoring
 {

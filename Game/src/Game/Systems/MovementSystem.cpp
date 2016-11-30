@@ -11,7 +11,7 @@ MovementSystem::MovementSystem(Map* map): _map(map)
     this->addDependency<sDirectionComponent>();
     this->addDependency<sTransformComponent>();
 
-    _keyMonitoring = MonitoringDebugWindow::getInstance()->registerSystem(MOVEMENT_SYSTEM_NAME);
+    _monitoringKey = MonitoringDebugWindow::getInstance()->registerSystem(MOVEMENT_SYSTEM_NAME);
 }
 
 void    MovementSystem::update(EntityManager &em, float elapsedTime)
@@ -40,5 +40,5 @@ void    MovementSystem::update(EntityManager &em, float elapsedTime)
     });
 
     _data.timeSec = timer.getElapsedTime();
-    MonitoringDebugWindow::getInstance()->updateSystem(_keyMonitoring, _data);
+    MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, _data);
 }

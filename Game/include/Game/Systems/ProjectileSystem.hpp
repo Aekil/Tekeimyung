@@ -14,6 +14,6 @@ public:
 
 private:
     std::vector<Entity*>    _projectiles;
-    uint16_t                _keyMonitoring;
-    tMonitoring             _data;
+    
+    ADD_MONITORING_VAR
 END_SYSTEM(ProjectileSystem)

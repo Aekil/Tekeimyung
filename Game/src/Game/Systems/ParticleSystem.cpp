@@ -17,7 +17,7 @@ ParticleSystem::ParticleSystem()
     addDependency<sPositionComponent>();
     addDependency<sRenderComponent>();
 
-    _keyMonitoring = MonitoringDebugWindow::getInstance()->registerSystem(PARTICLE_SYSTEM_NAME);
+    _monitoringKey = MonitoringDebugWindow::getInstance()->registerSystem(PARTICLE_SYSTEM_NAME);
 }
 
 ParticleSystem::~ParticleSystem() {}
@@ -164,7 +164,7 @@ void    ParticleSystem::update(EntityManager &em, float elapsedTime)
     }
 
     _data.timeSec = timer.getElapsedTime();
-    MonitoringDebugWindow::getInstance()->updateSystem(_keyMonitoring, _data);
+    MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, _data);
 }
 
 std::unordered_map<uint32_t, sEmitter*>* ParticleSystem::getEmitters()

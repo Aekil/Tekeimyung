@@ -21,6 +21,6 @@ private:
 
 private:
     Map*            _map;
-    uint16_t        _keyMonitoring;
-    tMonitoring     _data;
+    
+    ADD_MONITORING_VAR
 END_SYSTEM(CollisionSystem)

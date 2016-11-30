@@ -1,3 +1,5 @@
+#include <Engine/Utils/Logger.hpp>
+
 #include <Game/Utils/Resolutions.hpp>
 
 std::shared_ptr<Resolutions> Resolutions::_instance;

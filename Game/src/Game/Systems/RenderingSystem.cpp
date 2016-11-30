@@ -18,7 +18,7 @@ RenderingSystem::RenderingSystem(Map* map, std::unordered_map<uint32_t, sEmitter
 {
     addDependency<sRenderComponent>();
 
-    _keyMonitoring = MonitoringDebugWindow::getInstance()->registerSystem(RENDERING_SYSTEM_NAME);
+    _monitoringKey = MonitoringDebugWindow::getInstance()->registerSystem(RENDERING_SYSTEM_NAME);
 
     _camera.translate(glm::vec3(350.0f, 250.0f, 300.0f));
     _camera.setDir(glm::vec3(-30.0f));
@@ -233,7 +233,7 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
     GameWindow::getInstance()->display();
 
     _data.timeSec = timer.getElapsedTime();
-    MonitoringDebugWindow::getInstance()->updateSystem(_keyMonitoring, _data);
+    MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, _data);
 }
 
 bool    RenderingSystem::isTransparentEntity(Entity* entity) const

@@ -39,8 +39,7 @@ private:
     Map*                                        _map;
     std::unordered_map<uint32_t, sEmitter*>*    _particleEmitters;
 
-    uint16_t                                    _keyMonitoring;
-    tMonitoring                                 _data;
+    ADD_MONITORING_VAR
 
     Camera                                      _camera;
 

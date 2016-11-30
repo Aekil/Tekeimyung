@@ -11,7 +11,7 @@ TowerAISystem::TowerAISystem(Map* map) : _map(map)
     addDependency<sTowerAIComponent>();
     addDependency<sPositionComponent>();
 
-    _keyMonitoring = MonitoringDebugWindow::getInstance()->registerSystem(TOWER_AI_SYSTEM_NAME);
+    _monitoringKey = MonitoringDebugWindow::getInstance()->registerSystem(TOWER_AI_SYSTEM_NAME);
 }
 
 TowerAISystem::~TowerAISystem() {}
@@ -63,7 +63,7 @@ void    TowerAISystem::update(EntityManager &em, float elapsedTime)
     });
 
     _data.timeSec = timer.getElapsedTime();
-    MonitoringDebugWindow::getInstance()->updateSystem(_keyMonitoring, _data);
+    MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, _data);
 }
 
 /** @brief  This function checks for the nearest entity in range of an entity that gets the TowerAIComponent component.

@@ -59,6 +59,6 @@ private:
 
 private:
     std::unordered_map<uint32_t, sEmitter*>     _emitters;
-    uint16_t                                    _keyMonitoring;
-    tMonitoring                                 _data;
+    
+    ADD_MONITORING_VAR
 END_SYSTEM(ParticleSystem)

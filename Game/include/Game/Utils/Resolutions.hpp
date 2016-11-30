@@ -4,8 +4,6 @@
 #include <functional>
 #include <memory>
 
-#include <Engine/Utils/Logger.hpp>
-
 class Resolutions
 {
 public:

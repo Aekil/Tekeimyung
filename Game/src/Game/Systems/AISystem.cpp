@@ -9,7 +9,7 @@ AISystem::AISystem()
     addDependency<sAIComponent>();
     addDependency<sDirectionComponent>();
 
-    _keyMonitoring = MonitoringDebugWindow::getInstance()->registerSystem(AI_SYSTEM_NAME);
+    _monitoringKey = MonitoringDebugWindow::getInstance()->registerSystem(AI_SYSTEM_NAME);
 }
 
 AISystem::~AISystem() {}
@@ -26,5 +26,5 @@ void    AISystem::update(EntityManager &em, float elapsedTime)
     });
 
     _data.timeSec = timer.getElapsedTime();
-    MonitoringDebugWindow::getInstance()->updateSystem(_keyMonitoring, _data);
+    MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, _data);
 }
