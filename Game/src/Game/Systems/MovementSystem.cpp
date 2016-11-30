@@ -39,6 +39,6 @@ void    MovementSystem::update(EntityManager &em, float elapsedTime)
         }
     });
 
-    _data.timeSec = timer.getElapsedTime();
-    MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, _data);
+    _monitoringData.timeSec = timer.getElapsedTime();
+    MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, _monitoringData);
 }

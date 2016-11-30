@@ -16,8 +16,8 @@
 #define ADD_MONITORING_VAR      \
                                 private: \
                                     uint16_t        _monitoringKey; \
-                                    tMonitoring     _data;  // If no others variables to update than timeSec,
-                                                            // replace tMonitoring _data by float _timeSec to optimize
+                                    tMonitoring     _monitoringData;  // If no others variables to update than timeSec,
+                                                                      // replace tMonitoring _data by float _timeSec to optimize
 
 typedef struct sMonitoring
 {

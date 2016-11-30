@@ -34,8 +34,8 @@ void    WaveSystem::update(EntityManager &em, float elapsedTime)
     if (reset)
         _timer->reset();
 
-    _data.timeSec = timer.getElapsedTime();
-    MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, _data);
+    _monitoringData.timeSec = timer.getElapsedTime();
+    MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, _monitoringData);
 }
 
 Entity*    WaveSystem::createEntity(Map* map, const glm::vec3& pos, eArchetype type)

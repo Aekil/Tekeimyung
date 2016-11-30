@@ -22,6 +22,6 @@ void GravitySystem::update(EntityManager &em, float elapsedTime)
         direction->value += gravity->value * elapsedTime;
     });
 
-    _data.timeSec = timer.getElapsedTime();
-    MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, _data);
+    _monitoringData.timeSec = timer.getElapsedTime();
+    MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, _monitoringData);
 }
