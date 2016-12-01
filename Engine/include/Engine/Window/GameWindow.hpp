@@ -4,6 +4,7 @@
 #include <string>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <glm/vec4.hpp>
 
 #include <Engine/Window/Keyboard.hpp>
 #include <Engine/Window/Mouse.hpp>
@@ -20,11 +21,16 @@ public:
 
     int                                 getScreenWidth() const;
     int	                                getScreenHeight() const;
+    int                                 getBufferWidth() const;
+    int                                 getBufferHeight() const;
     std::string	                        getTitle() const;
     bool                                isFullscreen() const;
     static std::shared_ptr<GameWindow>  getInstance();
 	Keyboard&							getKeyboard();
     Mouse&                              getMouse();
+
+    void                                setViewport(const glm::ivec4& viewport);
+    const glm::ivec4                    getViewport() const;
 
     void                                maximize();
     void                                toggleFullscreen();
@@ -68,6 +74,8 @@ private:
     int                                 _screenHeight;
     int                                 _bufferWidth;
     int                                 _bufferHeight;
+
+    glm::ivec4                          _viewport;
 
     std::string                         _title;
     bool                                _fullscreen;
