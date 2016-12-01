@@ -18,9 +18,9 @@ void    Entity::addComponent(sComponent* component)
     _em->notifyEntityNewComponent(this, component);
 }
 
-sComponent* Entity::getComponent(size_t componentHashCode)
+sComponent* Entity::getComponent(size_t componentHashCode) const
 {
-    for (auto component: _components)
+    for (const auto& component: _components)
     {
         if (component->id == componentHashCode)
         {
@@ -50,9 +50,9 @@ void    Entity::removeComponent(sComponent* component)
     }
 }
 
-bool    Entity::hasComponent(size_t componentHashCode)
+bool    Entity::hasComponent(size_t componentHashCode) const
 {
-    for (auto component: _components)
+    for (const auto& component: _components)
     {
         if (component->id == componentHashCode)
         {

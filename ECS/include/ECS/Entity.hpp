@@ -27,9 +27,9 @@ public:
     }
 
     template<typename componentType>
-    componentType*                  getComponent()
+    componentType*                  getComponent() const
     {
-        for (auto component: _components)
+        for (const auto& component: _components)
         {
             if (component->id == componentType::identifier)
             {
@@ -40,13 +40,13 @@ public:
         return (nullptr);
     }
 
-    sComponent*                     getComponent(size_t componentHashCode);
+    sComponent*                     getComponent(size_t componentHashCode) const;
     std::vector<sComponent*>&       getComponents();
 
     void                            removeComponent(sComponent* component);
 
     // Check if the entity has the component with corresponding hashcode
-    bool                            hasComponent(size_t componentHashCode);
+    bool                            hasComponent(size_t componentHashCode) const;
 
 public:
     uint32_t                        id;
