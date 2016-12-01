@@ -28,6 +28,8 @@ private:
     Entity*                             createParticlesEmittor(const glm::vec3& pos, eArchetype type);
     void                                goTo(Entity* emitter, Entity* character);
 
+    Entity*                             getSelectedEntity();
+
 private:
     Map*                                _map;
     bool                                _windowImgui;
