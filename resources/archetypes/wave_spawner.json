@@ -14,9 +14,9 @@
             },
       "sWaveComponent": {
         "firstWait": false,
+        "nbEntities": 10,
         "secBeforeFirstSpawn": 3,
-        "secBeforeEachSpawn": 2,
-        "nbEntities": 10
+        "secBeforeEachSpawn": 2
       }
         }
 }

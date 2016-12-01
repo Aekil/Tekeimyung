@@ -469,6 +469,13 @@ START_COMPONENT(sProjectileComponent)
     uint32_t    targetId;
 END_COMPONENT(sProjectileComponent)
 
+typedef struct sWaveData
+{
+    int         nbEntities;
+    float       secBeforeFirstSpawn;
+    float       secBeforeEachSpawn;
+}               tWaveData;
+
 START_COMPONENT(sWaveComponent)
     virtual sComponent* clone()
     {
@@ -482,10 +489,10 @@ START_COMPONENT(sWaveComponent)
     {
         this->spawnPos = component->spawnPos;
         this->firstWait = component->firstWait;
-        this->secBeforeFirstSpawn = component->secBeforeFirstSpawn;
-        this->secBeforeEachSpawn = component->secBeforeEachSpawn;
-        this->nbEntities = component->nbEntities;
-        this->timer = component->timer; // ?
+        this->data.nbEntities = component->data.nbEntities;
+        this->data.secBeforeFirstSpawn = component->data.secBeforeFirstSpawn;
+        this->data.secBeforeEachSpawn = component->data.secBeforeEachSpawn;
+        //this->timer = component->timer; // ?
     }
 
     virtual void update(sComponent* component)
@@ -495,9 +502,7 @@ START_COMPONENT(sWaveComponent)
 
     glm::vec3   spawnPos;
     bool        firstWait;
-    float       secBeforeFirstSpawn;
-    float       secBeforeEachSpawn;
-    int         nbEntities;
+    tWaveData   data;
     Timer       timer;
 END_COMPONENT(sWaveComponent)
 
