@@ -1,4 +1,3 @@
-#include <sstream>
 #include <imgui.h>
 
 #include <Engine/Utils/Helper.hpp>
@@ -51,18 +50,18 @@ void    EntityDebugWindow::build()
     ImGui::BeginChild("Entities list", ImVec2(150, 0), true);
     for (auto it: _em->getEntities())
     {
-        std::stringstream name;
         Entity* entity = it.second;
-        sNameComponent* nameComp = entity->getComponent<sNameComponent>();
+        sNameComponent* name = entity->getComponent<sNameComponent>();
 
-        ASSERT(nameComp != nullptr, "The entity should have a name");
-        name << "[" << entity->id << "] " << nameComp->value;
-        if (filter.PassFilter(name.str().c_str()) == true)
+        ASSERT(name != nullptr, "The entity should have a name");
+        if (filter.PassFilter(name->value.c_str()) == true)
         {
-            if (ImGui::Selectable(name.str().c_str(), _selectedEntityId == entity->id))
+            ImGui::PushID(entity->id);
+            if (ImGui::Selectable(name->value.c_str(), _selectedEntityId == entity->id))
             {
                 _selectedEntityId = entity->id;
             }
+            ImGui::PopID();
         }
     }
     ImGui::EndChild();
@@ -149,10 +148,10 @@ void    EntityDebugWindow::displayEntityDebug(Entity* entity)
             if (ImGui::CollapsingHeader(componentName.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
             {
                 // Remove component button
-                std::string removeButton = std::string("Remove " + componentName);
+                ImGui::PushID(componentName.c_str());
                 if (componentName != "sTransformComponent" &&
                     componentName != "sNameComponent" &&
-                    ImGui::Button(removeButton.c_str()))
+                    ImGui::Button("Remove component"))
                 {
                     entity->removeComponent(component);
                     --i;
@@ -162,6 +161,7 @@ void    EntityDebugWindow::displayEntityDebug(Entity* entity)
                 {
                     ASSERT(component != nullptr, "component should be set in updateEditor");
                 }
+                ImGui::PopID();
             }
         }
     }
