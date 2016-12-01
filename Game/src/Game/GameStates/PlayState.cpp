@@ -68,10 +68,18 @@ bool    PlayState::init()
     }
 
     // Create wave
-    static uint32_t waveEntityID = WaveSystem::createWave(_map, glm::vec3(0, 5.0f, 0), eArchetype::WAVE_SPAWNER);
+    static uint32_t waveEntityID = WaveSystem::createWave(_map, glm::vec3(0.5, 5.5f, 0.5), eArchetype::WAVE_SPAWNER);
     WaveSystem::setNbEntities(em, waveEntityID, 5);
     WaveSystem::setSecBeforeFirstSpawn(em, waveEntityID, 3);
     WaveSystem::setSecBeforeEachSpawn(em, waveEntityID, 2);
+    static uint32_t waveEntityID2 = WaveSystem::createWave(_map, glm::vec3(0, 8.0f, 1), eArchetype::WAVE_SPAWNER);
+    sWaveComponent wave;
+    wave.nbEntities = 5;
+    wave.secBeforeFirstSpawn = 5;
+    wave.secBeforeEachSpawn = 2;
+    WaveSystem::setAllFields(em, waveEntityID2, wave);
+    static uint32_t waveEntityID3 = WaveSystem::createWave(_map, glm::vec3(0, 11.0f, 1), eArchetype::WAVE_SPAWNER);
+    WaveSystem::setSecBeforeFirstSpawn(em, waveEntityID3, 2);
 
     // Create towers
     PlayStates::createTile(_map, glm::vec3(7, 4, 1), eArchetype::TOWER_FIRE);

@@ -22,6 +22,7 @@
 #include <Engine/Graphics/Geometries/Box.hpp>
 #include <Engine/Graphics/Geometries/Sphere.hpp>
 #include <Engine/Utils/RessourceManager.hpp>
+#include <Engine/Utils/Timer.hpp>
 
 
 START_COMPONENT(sRenderComponent)
@@ -483,7 +484,8 @@ START_COMPONENT(sWaveComponent)
         this->firstWait = component->firstWait;
         this->secBeforeFirstSpawn = component->secBeforeFirstSpawn;
         this->secBeforeEachSpawn = component->secBeforeEachSpawn;
-        this->nSpawn = component->nSpawn;
+        this->nbEntities = component->nbEntities;
+        this->timer = component->timer; // ?
     }
 
     virtual void update(sComponent* component)
@@ -495,7 +497,8 @@ START_COMPONENT(sWaveComponent)
     bool        firstWait;
     float       secBeforeFirstSpawn;
     float       secBeforeEachSpawn;
-    int         nSpawn;
+    int         nbEntities;
+    Timer       timer;
 END_COMPONENT(sWaveComponent)
 
 enum class eCollisionState : int

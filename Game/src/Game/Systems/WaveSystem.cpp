@@ -1,4 +1,5 @@
 #include <Engine/Utils/Debug.hpp>
+#include <Engine/Utils/Timer.hpp>
 
 #include <Game/Components.hh>
 #include <Game/Utils/PlayStates.hpp>
@@ -7,7 +8,6 @@
 
 WaveSystem::WaveSystem(Map* map) : _map(map)
 {
-    _timer = new Timer();
     addDependency<sWaveComponent>();
     addDependency<sPositionComponent>();
 
@@ -26,27 +26,30 @@ void    WaveSystem::update(EntityManager &em, float elapsedTime)
         sWaveComponent* waveComponent = entity->getComponent<sWaveComponent>();
         if (waveComponent)
         {
-            if (waveComponent->firstWait || _timer->getElapsedTime() > waveComponent->secBeforeFirstSpawn)
+            if (!waveComponent->firstWait)
             {
-                if (!waveComponent->firstWait)
+                if (waveComponent->timer.getElapsedTime() > waveComponent->secBeforeFirstSpawn)
                 {
-                    reset = true; // if you want to wait the time between each spawn in addition of the first one, just replace this line by "_timer->reset();"
+                    waveComponent->timer.reset();
                     waveComponent->firstWait = true;
                 }
+            }
+            if (waveComponent->firstWait)
+            {
                 sPositionComponent* position = entity->getComponent<sPositionComponent>();
 
                 waveComponent->spawnPos = glm::vec3(position->value.x + 0.5f, position->value.y + 0.5f, position->z + 1);
-                if (waveComponent->nSpawn > 0 && _timer->getElapsedTime() > waveComponent->secBeforeEachSpawn)
+                if (waveComponent->nbEntities > 0 && waveComponent->timer.getElapsedTime() > waveComponent->secBeforeEachSpawn)
                 {
+                    waveComponent->timer.reset();
                     createEntityFromWave(_map, waveComponent->spawnPos, eArchetype::ENEMY);
-                    waveComponent->nSpawn -= 1;
-                    reset = true;
+                    waveComponent->nbEntities -= 1;
+                    if (waveComponent->nbEntities == 0)
+                        em.destroyEntityRegister(entity);
                 }
             }
         }
     });
-    if (reset)
-        _timer->reset();
 
     _monitoringData.timeSec = timer.getElapsedTime();
     MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, _monitoringData);
@@ -67,7 +70,7 @@ void     WaveSystem::setNbEntities(EntityManager &em, uint32_t waveEntityID, int
     
     waveEntity = em.getEntity(waveEntityID);
     sWaveComponent* wave = waveEntity->getComponent<sWaveComponent>();
-    wave->nSpawn = entityNb;
+    wave->nbEntities = entityNb;
 }
 
 void     WaveSystem::setSecBeforeFirstSpawn(EntityManager &em, uint32_t waveEntityID, float secBeforeFirstSpawn)
@@ -86,6 +89,17 @@ void     WaveSystem::setSecBeforeEachSpawn(EntityManager &em, uint32_t waveEntit
     waveEntity = em.getEntity(waveEntityID);
     sWaveComponent* wave = waveEntity->getComponent<sWaveComponent>();
     wave->secBeforeEachSpawn = secBeforeEachSpawn;
+}
+
+void     WaveSystem::setAllFields(EntityManager &em, uint32_t waveEntityID, sWaveComponent &waveData)
+{
+    Entity *waveEntity;
+
+    waveEntity = em.getEntity(waveEntityID);
+    sWaveComponent* wave = waveEntity->getComponent<sWaveComponent>();
+    wave->nbEntities = waveData.nbEntities;
+    wave->secBeforeFirstSpawn = waveData.secBeforeFirstSpawn;
+    wave->secBeforeEachSpawn = waveData.secBeforeEachSpawn;
 }
 
 Entity*    WaveSystem::createEntityFromWave(Map* map, const glm::vec3& pos, eArchetype type)

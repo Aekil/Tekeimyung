@@ -16,7 +16,7 @@
         "firstWait": false,
         "secBeforeFirstSpawn": 3,
         "secBeforeEachSpawn": 2,
-        "nSpawn": 10
+        "nbEntities": 10
       }
         }
 }

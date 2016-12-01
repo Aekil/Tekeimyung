@@ -2,7 +2,6 @@
 
 #include <ECS/System.hpp>
 
-#include <Engine/Utils/Timer.hpp>
 #include <Engine/Utils/MonitoringDebugWindow.hpp>
 
 #include <Game/EntityFactory.hpp>
@@ -21,12 +20,12 @@ public:
     static void             setNbEntities(EntityManager &em, uint32_t waveEntityID, int entityNb);
     static void             setSecBeforeFirstSpawn(EntityManager &em, uint32_t waveEntityID, float secBeforeFirstSpawn);
     static void             setSecBeforeEachSpawn(EntityManager &em, uint32_t waveEntityID, float secBeforeEachSpawn);
+    static void             setAllFields(EntityManager &em, uint32_t waveEntityID, sWaveComponent &waveData);
         
 private:
     Entity*                 createEntityFromWave(Map* map, const glm::vec3& pos, eArchetype type);
 
 private:
-    Timer*                  _timer;
     Map*                    _map;
 
     ADD_MONITORING_VAR
