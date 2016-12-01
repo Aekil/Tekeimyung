@@ -23,14 +23,14 @@ public:
 
     virtual void update(EntityManager& em, float elapsedTime);
     virtual bool                            init();
-    void                                    renderEntity(Entity* entity);
+    void                                    renderEntity(sRenderComponent *render, Entity* entity);
     void                                    renderCollider(Entity* entity);
     void                                    renderParticles(EntityManager& em);
     const ShaderProgram&                    getShaderProgram() const;
 
 private:
-    bool                                    isTransparentEntity(Entity* entity) const;
-    std::shared_ptr<Model>                  getModel(Entity* entity);
+    bool                                    isTransparent(sRenderComponent *render) const;
+    std::shared_ptr<Model>                  getModel(sRenderComponent *render);
 
 private:
     // Shader program
