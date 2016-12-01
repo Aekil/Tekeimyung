@@ -5,32 +5,25 @@
 
 #include <ECS/Component.hh>
 
+class EntityManager;
+
 class Entity
 {
 public:
-    Entity(uint32_t id_): id(id_) {}
+    Entity(EntityManager* em, uint32_t id_): id(id_), _em(em) {}
     ~Entity() {}
 
-    bool operator==(uint32_t id_)
-    {
-        return (id == id_);
-    }
+    bool operator==(uint32_t id_);
+    bool operator==(Entity &entity);
 
-    bool operator==(Entity &entity)
-    {
-        return (id == entity.id);
-    }
+    void                            addComponent(sComponent* component);
 
     template<typename componentType, typename... Args>
     void                            addComponent(Args... args)
     {
         sComponent* component = new componentType(args...);
         _components.push_back(component);
-    }
-
-    void                            addComponent(sComponent* component)
-    {
-        _components.push_back(component);
+        _em->notifyEntityNewComponent(this, component);
     }
 
     template<typename componentType>
@@ -47,52 +40,18 @@ public:
         return (nullptr);
     }
 
-    sComponent*                     getComponent(size_t componentHashCode)
-    {
-        for (auto component: _components)
-        {
-            if (component->id == componentHashCode)
-            {
-                return (component);
-            }
-        }
+    sComponent*                     getComponent(size_t componentHashCode);
+    std::vector<sComponent*>&       getComponents();
 
-        return (nullptr);
-    }
-
-    std::vector<sComponent*>&       getComponents()
-    {
-        return _components;
-    }
-
-    void                            removeComponent(sComponent* component)
-    {
-        for (auto it = _components.begin(); it != _components.end(); ++it)
-        {
-            if (*it == component)
-            {
-                delete *it;
-                _components.erase(it);
-                return;
-            }
-        }
-    }
+    void                            removeComponent(sComponent* component);
 
     // Check if the entity has the component with corresponding hashcode
-    bool                            hasComponent(size_t componentHashCode)
-    {
-        for (auto component: _components)
-        {
-            if (component->id == componentHashCode)
-            {
-                return (true);
-            }
-        }
-
-        return (false);
-    }
+    bool                            hasComponent(size_t componentHashCode);
 
 public:
     uint32_t                        id;
     std::vector<sComponent*>        _components;
+
+private:
+    EntityManager*                  _em;
 };

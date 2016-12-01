@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <memory>
 
 #include <ECS/EntityManager.hpp>
 #include <ECS/System.hpp>
@@ -11,7 +12,7 @@ public:
     World();
     ~World();
 
-    EntityManager&          getEntityManager();
+    EntityManager*          getEntityManager();
     std::vector<System*>&   getSystems();
 
     template<typename T, typename... Args>
@@ -36,7 +37,11 @@ public:
         return (nullptr);
     }
 
+    void                        notifyEntityNewComponent(Entity* entity, sComponent* component);
+    void                        notifyEntityRemovedComponent(Entity* entity, sComponent* component);
+    void                        notifyEntityDeleted(Entity* entity);
+
 private:
-    EntityManager           _entityManager;
+    std::shared_ptr<EntityManager>  _entityManager;
     std::vector<System*>    _systems;
 };

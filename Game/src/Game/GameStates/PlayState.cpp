@@ -36,11 +36,23 @@ PlayState::~PlayState() {}
 
 bool    PlayState::init()
 {
-    EntityManager &em = _world.getEntityManager();
+    EntityManager* em = _world.getEntityManager();
 
-    EntityFactory::bindEntityManager(&em);
+    EntityFactory::bindEntityManager(em);
 
-    _map = new Map(em, 20, 15, 4);
+    _map = new Map(*em, 20, 15, 4);
+
+    _world.addSystem<WaveSystem>(_map);
+    _world.addSystem<InputSystem>();
+    _world.addSystem<TowerAISystem>(_map);
+    _world.addSystem<AISystem>();
+    _world.addSystem<ProjectileSystem>();
+
+    _world.addSystem<MovementSystem>(_map);
+    _world.addSystem<CollisionSystem>(_map);
+    _world.addSystem<ResolutionSystem>();
+    _world.addSystem<ParticleSystem>();
+    _world.addSystem<RenderingSystem>(_map, _world.getSystem<ParticleSystem>()->getEmitters());
 
     // Create particles emitter
     PlayStates::createParticlesEmittor(glm::vec3(12, 5, 1), eArchetype::EMITTER_WATER);
@@ -69,39 +81,27 @@ bool    PlayState::init()
 
     // Create wave
     static uint32_t waveEntityID = WaveSystem::createWave(_map, glm::vec3(0.5, 5.5f, 0.5), eArchetype::WAVE_SPAWNER);
-    WaveSystem::setNbEntities(em, waveEntityID, 5);
-    WaveSystem::setSecBeforeFirstSpawn(em, waveEntityID, 3); // method 1
-    WaveSystem::setSecBeforeEachSpawn(em, waveEntityID, 2);
+    WaveSystem::setNbEntities(*em, waveEntityID, 5);
+    WaveSystem::setSecBeforeFirstSpawn(*em, waveEntityID, 3); // method 1
+    WaveSystem::setSecBeforeEachSpawn(*em, waveEntityID, 2);
 
     static uint32_t waveEntityID2 = WaveSystem::createWave(_map, glm::vec3(0, 8.0f, 1), eArchetype::WAVE_SPAWNER);
     tWaveData waveData = { 5, 5, 2 };
-    WaveSystem::setAllFields(em, waveEntityID2, waveData); // method 2
+    WaveSystem::setAllFields(*em, waveEntityID2, waveData); // method 2
 
     static uint32_t waveEntityID3 = WaveSystem::createWave(_map, glm::vec3(0, 11.0f, 1), eArchetype::WAVE_SPAWNER);
-    WaveSystem::setSecBeforeFirstSpawn(em, waveEntityID3, 1);
-    WaveSystem::setSecBeforeEachSpawn(em, waveEntityID3, 3); // method 1 (partial)
+    WaveSystem::setSecBeforeFirstSpawn(*em, waveEntityID3, 1);
+    WaveSystem::setSecBeforeEachSpawn(*em, waveEntityID3, 3); // method 1 (partial)
 
     static uint32_t waveEntityID4 = WaveSystem::createWave(_map, glm::vec3(0, 2.0f, 1), eArchetype::WAVE_SPAWNER);
-    WaveSystem::setAllFields(em, waveEntityID4, *WaveSystem::getStructData(3, 1, 5)); // method 3 : how to delete the tWaveData* in this use ?
+    WaveSystem::setAllFields(*em, waveEntityID4, *WaveSystem::getStructData(3, 1, 5)); // method 3 : how to delete the tWaveData* in this use ?
 
     // Create towers
     PlayStates::createTile(_map, glm::vec3(7, 4, 1), eArchetype::TOWER_FIRE);
     PlayStates::createTile(_map, glm::vec3(7, 7, 1), eArchetype::TOWER_FIRE);
 
-    _world.addSystem<WaveSystem>(_map);
-    _world.addSystem<InputSystem>();
-    _world.addSystem<TowerAISystem>(_map);
-    _world.addSystem<AISystem>();
-    _world.addSystem<ProjectileSystem>();
-
-    _world.addSystem<MovementSystem>(_map);
-    _world.addSystem<CollisionSystem>(_map);
-    _world.addSystem<ResolutionSystem>();
-    _world.addSystem<ParticleSystem>();
-    _world.addSystem<RenderingSystem>(_map, _world.getSystem<ParticleSystem>()->getEmitters());
-
     addDebugWindow<OverlayDebugWindow>();
-    addDebugWindow<EntityDebugWindow>(&em, _map, glm::vec2(0, 80), glm::vec2(600, 350));
+    addDebugWindow<EntityDebugWindow>(em, _map, glm::vec2(0, 80), glm::vec2(600, 350));
     addDebugWindow<LogDebugWindow>(Logger::getInstance(), glm::vec2(0, 430), glm::vec2(300, 200));
     addDebugWindow<MonitoringDebugWindow>(MonitoringDebugWindow::getInstance());
 
