@@ -14,8 +14,6 @@
 #include <ECS/Component.hh>
 
 #include <Engine/Window/Keyboard.hpp>
-#include <Engine/Graphics/Animation.hpp>
-#include <Engine/Graphics/Sprite.hpp>
 #include <Engine/Graphics/Model.hpp>
 #include <Engine/Graphics/Geometries/Geometry.hpp>
 #include <Engine/Graphics/Geometries/GeometryFactory.hpp>
