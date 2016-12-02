@@ -162,7 +162,7 @@ void    RenderingSystem::renderParticles(EntityManager& em)
         sRenderComponent *render = entity->getComponent<sRenderComponent>();
         auto&& model = getModel(render);
 
-        // Only freeze camera rotation for plans
+        // Only freeze camera rotation for planes
         if (render->type == Geometry::eType::PLANE)
             _camera.freezeRotations(true);
 

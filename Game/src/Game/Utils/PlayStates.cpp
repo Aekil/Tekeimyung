@@ -20,6 +20,7 @@ Entity*    PlayStates::createTile(Map* map, const glm::vec3& pos, eArchetype typ
     tilePos->z = pos.z;
     (*map)[(uint16_t)pos.z][(uint32_t)pos.y][(uint32_t)pos.x] = tile->id;
     tileTransform->pos = Map::mapToGraphPosition(tilePos->value, tilePos->z);
+    tileTransform->updateTransform();
 
     return (tile);
 }
@@ -37,6 +38,7 @@ Entity* PlayStates::createParticlesEmittor(const glm::vec3& pos, eArchetype type
     psPos->value.y = pos.y;
     psPos->z = pos.z;
     psTransform->pos = Map::mapToGraphPosition(psPos->value, psPos->z);
+    psTransform->updateTransform();
 
     return (ps);
 }

@@ -571,7 +571,7 @@ START_COMPONENT(sTransformComponent)
         update(static_cast<sTransformComponent*>(component));
     }
 
-    const glm::mat4& getTransform()
+    void updateTransform()
     {
         if (needUpdate)
         {
@@ -586,7 +586,11 @@ START_COMPONENT(sTransformComponent)
             transformMatrix = glm::scale(transformMatrix, scale);
             transform = transformMatrix;
         }
+    }
 
+    const glm::mat4& getTransform()
+    {
+        updateTransform();
         return (transform);
     }
 
