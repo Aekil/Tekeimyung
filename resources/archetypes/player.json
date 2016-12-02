@@ -30,7 +30,7 @@
             "r" : 1
          },
          "geometry" : null,
-         "model" : "resources/models/characters/player.DAE",
+         "model" : "resources/models/characters/character.DAE",
          "type" : "MESH"
       },
       "sSphereColliderComponent" : {
@@ -44,7 +44,7 @@
       "sTransformComponent" : {
          "pos" : {
             "x" : 225,
-            "y" : 12.5,
+            "y" : 30,
             "z" : 125
          },
          "rotation" : {
