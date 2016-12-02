@@ -25,8 +25,13 @@ public:
     virtual bool                            init();
     void                                    renderEntity(sRenderComponent *render, Entity* entity);
     void                                    renderCollider(Entity* entity);
+    void                                    renderColliders(EntityManager& em);
     void                                    renderParticles(EntityManager& em);
     const ShaderProgram&                    getShaderProgram() const;
+
+    virtual void                            onEntityNewComponent(Entity* entity, sComponent* component);
+    virtual void                            onEntityRemovedComponent(Entity* entity, sComponent* component);
+    virtual void                            onEntityDeleted(Entity* entity);
 
 private:
     bool                                    isTransparent(sRenderComponent *render) const;
@@ -44,4 +49,6 @@ private:
     Camera                                      _camera;
 
     std::unordered_map<uint32_t, Entity*>       _transparentEntities;
+
+    std::vector<uint32_t>                       _collidableEntities;
 END_SYSTEM(RenderingSystem)

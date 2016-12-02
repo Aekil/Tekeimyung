@@ -123,6 +123,30 @@ void    RenderingSystem::renderCollider(Entity* entity)
     }
 }
 
+void    RenderingSystem::renderColliders(EntityManager& em)
+{
+    static bool displayAllColliders = false;
+
+    auto &&keyboard = GameWindow::getInstance()->getKeyboard();
+
+    if (keyboard.getStateMap()[Keyboard::eKey::C] == Keyboard::eKeyState::KEY_PRESSED)
+        displayAllColliders = !displayAllColliders;
+
+    if (displayAllColliders)
+    {
+        for (uint32_t& entityId: _collidableEntities)
+        {
+            Entity* entity = em.getEntity(entityId);
+            if (!entity)
+                continue;
+
+            renderCollider(entity);
+        }
+    }
+
+    renderCollider(em.getEntity(EntityDebugWindow::getSelectedEntityId()));
+}
+
 void    RenderingSystem::renderParticles(EntityManager& em)
 {
     // Activate additive blending
@@ -216,7 +240,7 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
     }
 
 
-    renderCollider(em.getEntity(EntityDebugWindow::getSelectedEntityId()));
+    renderColliders(em);
 
     renderParticles(em);
 
@@ -255,4 +279,51 @@ std::shared_ptr<Model>  RenderingSystem::getModel(sRenderComponent *render)
 const ShaderProgram&  RenderingSystem::getShaderProgram() const
 {
     return _shaderProgram;
+}
+
+void    RenderingSystem::onEntityNewComponent(Entity* entity, sComponent* component)
+{
+    System::onEntityNewComponent(entity, component);
+
+    // The entity match RenderingSystem dependencies
+    // and the new component is a collider
+    if (entityMatchDependencies(entity) &&
+        (entity->hasComponent<sBoxColliderComponent>() ||
+        entity->hasComponent<sSphereColliderComponent>()))
+    {
+        // The entity is not already in the collidable entities vector
+        if (std::find(_collidableEntities.cbegin(), _collidableEntities.cend(), entity->id) == _collidableEntities.cend())
+        {
+            _collidableEntities.push_back(entity->id);
+        }
+    }
+}
+
+void    RenderingSystem::onEntityRemovedComponent(Entity* entity, sComponent* component)
+{
+    System::onEntityRemovedComponent(entity, component);
+
+    // The component is a collider
+    if (component->id == sBoxColliderComponent::identifier ||
+        component->id == sSphereColliderComponent::identifier)
+    {
+        // The entity is in the collidable entities vector
+        auto foundEntity = std::find(_collidableEntities.cbegin(), _collidableEntities.cend(), entity->id);
+        if (foundEntity != _collidableEntities.cend())
+        {
+            _collidableEntities.erase(foundEntity);
+        }
+    }
+}
+
+void    RenderingSystem::onEntityDeleted(Entity* entity)
+{
+    System::onEntityDeleted(entity);
+
+    auto foundEntity = std::find(_collidableEntities.cbegin(), _collidableEntities.cend(), entity->id);
+    // The entity is in the system list
+    if (foundEntity != _collidableEntities.cend())
+    {
+        _collidableEntities.erase(foundEntity);
+    }
 }

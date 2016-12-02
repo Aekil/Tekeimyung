@@ -29,15 +29,7 @@ public:
     template<typename componentType>
     componentType*                  getComponent() const
     {
-        for (const auto& component: _components)
-        {
-            if (component->id == componentType::identifier)
-            {
-                return static_cast<componentType*>(component);
-            }
-        }
-
-        return (nullptr);
+        return static_cast<componentType*>(getComponent(componentType::identifier));
     }
 
     sComponent*                     getComponent(size_t componentHashCode) const;
@@ -47,6 +39,12 @@ public:
 
     // Check if the entity has the component with corresponding hashcode
     bool                            hasComponent(size_t componentHashCode) const;
+
+    template<typename componentType>
+    bool                            hasComponent() const
+    {
+        return (hasComponent(componentType::identifier));
+    }
 
 public:
     uint32_t                        id;
