@@ -571,24 +571,24 @@ START_COMPONENT(sTransformComponent)
 
     void updateTransform()
     {
-        if (needUpdate)
-        {
-            glm::mat4 orientation;
-            orientation = glm::rotate(orientation, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
-            orientation = glm::rotate(orientation, glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-            orientation = glm::rotate(orientation, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+        glm::mat4 orientation;
+        orientation = glm::rotate(orientation, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+        orientation = glm::rotate(orientation, glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+        orientation = glm::rotate(orientation, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
 
-            needUpdate = false;
-            glm::mat4 transformMatrix(1.0f);
-            transformMatrix = glm::translate(transformMatrix, glm::vec3(pos.x, pos.y, pos.z)) * orientation;
-            transformMatrix = glm::scale(transformMatrix, scale);
-            transform = transformMatrix;
-        }
+        needUpdate = false;
+        glm::mat4 transformMatrix(1.0f);
+        transformMatrix = glm::translate(transformMatrix, glm::vec3(pos.x, pos.y, pos.z)) * orientation;
+        transformMatrix = glm::scale(transformMatrix, scale);
+        transform = transformMatrix;
     }
 
     const glm::mat4& getTransform()
     {
-        updateTransform();
+        if (needUpdate)
+        {
+            updateTransform();
+        }
         return (transform);
     }
 

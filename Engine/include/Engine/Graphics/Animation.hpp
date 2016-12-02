@@ -1,0 +1,24 @@
+#pragma once
+
+#include <Engine/Graphics/ParamAnimation.hpp>
+
+class Animation
+{
+public:
+    Animation();
+    ~Animation();
+
+    void                    addParamAnimation(std::shared_ptr<IParamAnimation> paramAnimation);
+
+    void                    update();
+    void                    reset();
+
+private:
+    // An animation has got multiple params animations
+    // Ex: position, rotation and scale animation
+    std::vector<std::shared_ptr<IParamAnimation> >  _paramsAnimations;
+
+    // Animation name
+    std::string                     _name;
+    bool                            _loop;
+};
