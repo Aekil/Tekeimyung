@@ -3,32 +3,17 @@
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 
-typedef struct sRectHitbox
-{
-    glm::vec2   min;
-    glm::vec2   max;
-}               tRectHitbox;
-
-typedef struct sCircleHitbox
-{
-    glm::vec2   center;
-    float       radius;
-}               tCircleHitbox;
-
 class Collisions
 {
 public:
     Collisions();
     ~Collisions();
 
-    static bool         rectHitboxCheck(tRectHitbox *hb1, tRectHitbox *hb2);
-    static bool         rectHitboxCheck(glm::vec2 *min1, glm::vec2 *max1, glm::vec2 *min2, glm::vec2 *max2);
+    static bool         sphereVSsphere(glm::vec3 pos1, float radius1, glm::vec3 pos2, float radius2);
 
-    static bool         circleHitboxCheck(tCircleHitbox *hb1, tCircleHitbox *hb2);
-    static bool         circleHitboxCheck(glm::vec2 *center1, float radius1, glm::vec2 *center2, float radius2);
+    static bool         pointVSAABB(glm::vec3 point, glm::vec3 boxPosition, glm::vec3 boxSize);
 
-    static bool         sphereColliderCheck(glm::vec3 pos1, float radius1, glm::vec3 pos2, float radius2);
-
+    static bool         sphereVSAABB(glm::vec3 spherePosition, float sphereRadius, glm::vec3 boxPosition, glm::vec3 boxSize);
 private:
 
 };

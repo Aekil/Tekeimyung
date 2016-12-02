@@ -1,18 +1,20 @@
 #include <algorithm>
 #include <random>
 
+#include <ECS/World.hpp>
+
 #include <ECS/EntityManager.hpp>
 
 int                         EntityManager::_entityId = 1;
 
 
-EntityManager::EntityManager() {}
+EntityManager::EntityManager(World& world): _world(world) {}
 
 EntityManager::~EntityManager() {}
 
 Entity* EntityManager::createEntity()
 {
-    Entity* entity = new Entity(_entityId++);
+    Entity* entity = new Entity(this, _entityId++);
 
     _entities[entity->id] = entity;
     return (entity);
@@ -20,6 +22,7 @@ Entity* EntityManager::createEntity()
 
 void    EntityManager::destroyEntity(Entity* entity)
 {
+    _world.notifyEntityDeleted(entity);
     std::for_each(entity->_components.begin(), entity->_components.end(), [](sComponent* component)
     {
         delete component;
@@ -56,4 +59,14 @@ Entity* EntityManager::getEntity(uint32_t id) const
     auto &&it = _entities.find(id);
 
     return (it != _entities.end() ? it->second : nullptr);
+}
+
+void    EntityManager::notifyEntityNewComponent(Entity* entity, sComponent* component)
+{
+    _world.notifyEntityNewComponent(entity, component);
+}
+
+void    EntityManager::notifyEntityRemovedComponent(Entity* entity, sComponent* component)
+{
+    _world.notifyEntityRemovedComponent(entity, component);
 }

@@ -13,5 +13,6 @@ public:
     virtual void                                update(EntityManager &em, float elapsedTime);
 
 private:
-    ADD_MONITORING_VAR
-END_SYSTEM(ResolutionSystem)
+    uint16_t                                    _keyMonitoring;
+    tMonitoring                                 _data;
+END_SYSTEM(RenderingSystem)

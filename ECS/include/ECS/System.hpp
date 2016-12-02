@@ -25,9 +25,18 @@ public:
 
     uint32_t                            getId() const;
 
+    bool                                hasDependency(sComponent* component) const;
+    bool                                entityMatchDependencies(Entity* entity) const;
+
+    virtual void                        onEntityNewComponent(Entity* entity, sComponent* component);
+    virtual void                        onEntityRemovedComponent(Entity* entity, sComponent* component);
+    virtual void                        onEntityDeleted(Entity* entity);
+
 protected:
     // Store components hashs
     std::vector<uint32_t>           _components;
+
+    std::vector<uint32_t>           _entities;
 
     uint32_t                        _id;
 };

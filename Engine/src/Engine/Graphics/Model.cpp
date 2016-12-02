@@ -11,7 +11,7 @@
 #include <Engine/Graphics/Model.hpp>
 
 
-Model::Model() : _anim(0), _color({1.0f, 1.0f, 1.0f, 1.0f}), _primitiveType(GL_TRIANGLES) {}
+Model::Model() : _anim(0), _primitiveType(GL_TRIANGLES) {}
 
 Model::~Model() {}
 
@@ -110,18 +110,15 @@ const std::vector<std::shared_ptr<Mesh> > &Model::getMeshs() const
     return (_meshs);
 }
 
-void    Model::draw(const ShaderProgram& shaderProgram) const
+void    Model::draw(const ShaderProgram& shaderProgram, const glm::vec4& color, const glm::mat4 transform) const
 {
     // Model matrix
     static GLint uniModel = shaderProgram.getUniformLocation("model");
-    glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(_transform));
+    glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(transform));
 
     // Model color
     static GLint colorModel = shaderProgram.getUniformLocation("modelColor");
-    glUniform4f(colorModel, _color.x, _color.y, _color.z,_color.w);
-
-    // Bones matrices
-    //_skeleton.getUbo().bind(shaderProgram, "bones");
+    glUniform4f(colorModel, color.x, color.y, color.z, color.w);
 
     // Bind buffer
     _buffer.bind();
@@ -148,40 +145,6 @@ const glm::vec3&    Model::getMin() const
 const glm::vec3&    Model::getMax() const
 {
     return (_max);
-}
-
-void    Model::update(const glm::vec4& color, const glm::mat4 transform)
-{
-    _color = color;
-    _transform = transform;
-
-   /* if (_skeleton.getBones().size() <= 0)
-        return;
-
-    if (_anim >= 32.0f)
-        _anim = 0.0f;
-    updateBonesTransforms(_scene, _scene->mRootNode, glm::mat4(1.0), _anim);
-    for (auto &&mesh : getMeshs())
-    {
-        auto &&vertexs = mesh->vertexs;
-
-        for (uint32_t k = 0; k < vertexs.size(); k++, i++)
-        {
-            glm::mat4 trans(1.0);
-            for (uint32_t j = 0; j < BONES_PER_VERTEX; j++)
-            {
-               Skeleton::sBone* bone = _skeleton.getBoneById(vertexs[k].bonesIds[j]);
-                trans = trans + (bone->finalTransform * vertexs[k].bonesWeights[j]);
-            }
-            glm::vec4 pos = trans * glm::vec4(vertexs[k].pos, 1.0);
-            _vertexData[i].pos = glm::vec3(pos.x, pos.y, pos.z);
-        }
-    }
-    _anim++;
-
-    _buffer.updateData(_vertexData, getVertexsSize(), _indexData, getIndicesSize());*/
-    //_skeleton.updateUniformBuffer();
-
 }
 
 void    Model::initVertexData()

@@ -16,8 +16,6 @@ public:
 
 private:
     bool            isColliding(Entity *firstEntity, Entity *secondEntity);
-    bool            staticResolution(Entity *firstEntity);
-    bool            dynamicResolution(EntityManager &em, Entity *firstEntity, Entity *secondEntity);
 
 private:
     Map*            _map;

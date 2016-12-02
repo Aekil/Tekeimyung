@@ -167,6 +167,7 @@ void    Camera::update(const ShaderProgram& shaderProgram, float elapsedTime)
             ASSERT(0, "Unknown projection type");
 
         _needUpdateProj = false;
+        _ubo.update(&_constants, sizeof(_constants));
     }
     if (_needUpdateView)
     {
@@ -183,9 +184,9 @@ void    Camera::update(const ShaderProgram& shaderProgram, float elapsedTime)
             ASSERT(0, "Unknown projection type");
 
         _needUpdateView = false;
+        _ubo.update(&_constants, sizeof(_constants));
     }
 
-    _ubo.update(&_constants, sizeof(_constants));
 }
 
 void    Camera::freezeRotations(bool freeze)

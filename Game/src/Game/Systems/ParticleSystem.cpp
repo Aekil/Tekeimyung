@@ -83,6 +83,11 @@ void    ParticleSystem::updateEmitter(EntityManager &em, Entity* entity, float e
     // Create new particles each rate
     else if (emitter->timer.getElapsedTime() >= emitterComp->rate)
     {
+        glm::mat4 emitterOrientation;
+        emitterOrientation = glm::rotate(emitterOrientation, glm::radians(transform->rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+        emitterOrientation = glm::rotate(emitterOrientation, glm::radians(transform->rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+        emitterOrientation = glm::rotate(emitterOrientation, glm::radians(transform->rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+
         for (uint32_t i = 0; i < emitterComp->spawnNb; i++)
         {
             sParticle particle;
@@ -95,14 +100,17 @@ void    ParticleSystem::updateEmitter(EntityManager &em, Entity* entity, float e
             particle.velocity.x = glm::cos(theta) * glm::cos(phi);
             particle.velocity.z = glm::sin(theta) * glm::cos(phi);
             particle.velocity.y =  glm::sin(phi);
+
+            particle.velocity = glm::vec3(emitterOrientation * glm::vec4(particle.velocity, 0.0f));
+
             particle.speed = emitterComp->speed + Helper::randFloat(0, emitterComp->speedVariance);
             particle.life = emitterComp->life + Helper::randInt(0, emitterComp->lifeVariance);
 
             particle.color = emitterComp->colorStart;
             particle.colorStep = (emitterComp->colorFinish - emitterComp->colorStart) / glm::vec4((float)emitterComp->life);
 
-            particle.size = emitterComp->sizeStart;
-            particle.sizeStep = (emitterComp->sizeFinish - emitterComp->sizeStart) / emitterComp->life;
+            particle.size = emitterComp->sizeStart * transform->scale;
+            particle.sizeStep = ((emitterComp->sizeFinish - emitterComp->sizeStart) / emitterComp->life) * transform->scale;
 
             // Can add a particle in particles list
             if (emitter->particlesNb != emitter->particles.size())

@@ -1,15 +1,42 @@
 #include <ECS/World.hpp>
 
-World::World() {}
+World::World()
+{
+    _entityManager = std::make_shared<EntityManager>(*this);
+}
 
 World::~World() {}
 
-EntityManager&	World::getEntityManager()
+EntityManager*	World::getEntityManager()
 {
-    return (_entityManager);
+    return (_entityManager.get());
 }
 
 std::vector<System*>&	World::getSystems()
 {
     return (_systems);
+}
+
+void    World::notifyEntityNewComponent(Entity* entity, sComponent* component)
+{
+    for (auto system_: _systems)
+    {
+        system_->onEntityNewComponent(entity, component);
+    }
+}
+
+void    World::notifyEntityRemovedComponent(Entity* entity, sComponent* component)
+{
+    for (auto system_: _systems)
+    {
+        system_->onEntityRemovedComponent(entity, component);
+    }
+}
+
+void    World::notifyEntityDeleted(Entity* entity)
+{
+    for (auto system_: _systems)
+    {
+        system_->onEntityDeleted(entity);
+    }
 }

@@ -82,7 +82,7 @@ bool    GameWindow::initialize()
     registerEvents();
     ImGui_ImplGlfwGL3_Init(_window, false);
 
-    glViewport(0, 0, _bufferWidth, _bufferHeight);
+    setViewport(glm::ivec4(0.0f, 0.0f, _bufferWidth, _bufferHeight));
     setRunning(true);
 
     #if defined(ENGINE_DEBUG)
@@ -196,6 +196,16 @@ int     GameWindow::getScreenHeight() const
     return (_screenHeight);
 }
 
+int     GameWindow::getBufferWidth() const
+{
+    return (_bufferWidth);
+}
+
+int     GameWindow::getBufferHeight() const
+{
+    return (_bufferHeight);
+}
+
 std::string     GameWindow::getTitle() const
 {
     return (_title);
@@ -222,6 +232,17 @@ Keyboard&	GameWindow::getKeyboard()
 Mouse&      GameWindow::getMouse()
 {
     return (_mouse);
+}
+
+void    GameWindow::setViewport(const glm::ivec4& viewport)
+{
+    _viewport = viewport;
+    glViewport(_viewport.x, _viewport.y, _viewport.z, _viewport.w);
+}
+
+const glm::ivec4 GameWindow::getViewport() const
+{
+    return (_viewport);
 }
 
 void    GameWindow::maximize()

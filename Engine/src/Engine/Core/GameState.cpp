@@ -44,7 +44,7 @@ bool    GameState::update(float elapsedTime)
                 // Update GameState systems
                 for (auto&& system: _world.getSystems())
                 {
-                    system->update(_world.getEntityManager(), elapsedTime);
+                    system->update(*_world.getEntityManager(), elapsedTime);
                 }
             }
         }

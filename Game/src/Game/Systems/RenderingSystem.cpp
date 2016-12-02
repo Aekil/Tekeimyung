@@ -72,12 +72,13 @@ bool    RenderingSystem::init()
     return (true);
 }
 
-void    RenderingSystem::renderEntity(Entity* entity)
+void    RenderingSystem::renderEntity(sRenderComponent *render, Entity* entity)
 {
-    auto&& model = getModel(entity);
+    sTransformComponent *transform = entity->getComponent<sTransformComponent>();
+    auto&& model = getModel(render);
 
     // Draw model
-    model->draw(_shaderProgram);
+    model->draw(_shaderProgram, render->color, transform->getTransform());
 }
 
 void    RenderingSystem::renderCollider(Entity* entity)
@@ -103,8 +104,7 @@ void    RenderingSystem::renderCollider(Entity* entity)
         boxTransform = glm::translate(boxTransform, boxCollider->pos);
         boxTransform = glm::scale(boxTransform, boxCollider->size);
 
-        boxCollider->box->update(glm::vec4(0.87f, 1.0f, 1.0f, 0.1f), boxTransform);
-        boxCollider->box->draw(_shaderProgram);
+        boxCollider->box->draw(_shaderProgram, glm::vec4(0.87f, 1.0f, 1.0f, 0.1f), boxTransform);
     }
     if (sphereCollider && sphereCollider->display)
     {
@@ -119,9 +119,32 @@ void    RenderingSystem::renderCollider(Entity* entity)
         sphereTransform = glm::translate(sphereTransform, sphereCollider->pos);
         sphereTransform = glm::scale(sphereTransform, glm::vec3(sphereCollider->radius));
 
-        sphereCollider->sphere->update(glm::vec4(0.87f, 1.0f, 1.0f, 0.1f), sphereTransform);
-        sphereCollider->sphere->draw(_shaderProgram);
+        sphereCollider->sphere->draw(_shaderProgram, glm::vec4(0.87f, 1.0f, 1.0f, 0.1f), sphereTransform);
     }
+}
+
+void    RenderingSystem::renderColliders(EntityManager& em)
+{
+    static bool displayAllColliders = false;
+
+    auto &&keyboard = GameWindow::getInstance()->getKeyboard();
+
+    if (keyboard.getStateMap()[Keyboard::eKey::C] == Keyboard::eKeyState::KEY_PRESSED)
+        displayAllColliders = !displayAllColliders;
+
+    if (displayAllColliders)
+    {
+        for (uint32_t& entityId: _collidableEntities)
+        {
+            Entity* entity = em.getEntity(entityId);
+            if (!entity)
+                continue;
+
+            renderCollider(entity);
+        }
+    }
+
+    renderCollider(em.getEntity(EntityDebugWindow::getSelectedEntityId()));
 }
 
 void    RenderingSystem::renderParticles(EntityManager& em)
@@ -137,9 +160,9 @@ void    RenderingSystem::renderParticles(EntityManager& em)
             continue;
 
         sRenderComponent *render = entity->getComponent<sRenderComponent>();
-        auto&& model = getModel(entity);
+        auto&& model = getModel(render);
 
-        // Only freeze camera rotation for plans
+        // Only freeze camera rotation for planes
         if (render->type == Geometry::eType::PLANE)
             _camera.freezeRotations(true);
 
@@ -150,11 +173,10 @@ void    RenderingSystem::renderParticles(EntityManager& em)
             // Model matrice
             glm::mat4 transformMatrix(1.0f);
             transformMatrix = glm::translate(transformMatrix, glm::vec3(particle.pos.x, particle.pos.y, particle.pos.z));
-            transformMatrix = glm::scale(transformMatrix, glm::vec3(particle.size, particle.size, particle.size));
-            model->update(particle.color, transformMatrix);
+            transformMatrix = glm::scale(transformMatrix, particle.size);
 
             // Draw sprite
-            model->draw(_shaderProgram);
+            model->draw(_shaderProgram, particle.color, transformMatrix);
         }
 
         _camera.freezeRotations(false);
@@ -180,10 +202,10 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
         // Don't display particle systems
         if (!entity->getComponent<sParticleEmitterComponent>())
         {
+            sRenderComponent *render = entity->getComponent<sRenderComponent>();
 
-
-            if (!isTransparentEntity(entity))
-                renderEntity(entity);
+            if (!isTransparent(render))
+                renderEntity(render, entity);
             else
                 _transparentEntities[entity->id] = entity;
         }
@@ -210,14 +232,15 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
             }
             else
             {
-                renderEntity(entity);
+                sRenderComponent *render = entity->getComponent<sRenderComponent>();
+                renderEntity(render, entity);
                 ++it;
             }
         }
     }
 
 
-    renderCollider(em.getEntity(EntityDebugWindow::getSelectedEntityId()));
+    renderColliders(em);
 
     renderParticles(em);
 
@@ -236,36 +259,71 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
     MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, _monitoringData);
 }
 
-bool    RenderingSystem::isTransparentEntity(Entity* entity) const
+bool    RenderingSystem::isTransparent(sRenderComponent *render) const
 {
-    sRenderComponent *model = entity->getComponent<sRenderComponent>();
 
-    return (model->type == Geometry::eType::PLANE);
+    return (render->type == Geometry::eType::PLANE);
 }
 
-std::shared_ptr<Model>  RenderingSystem::getModel(Entity* entity)
+std::shared_ptr<Model>  RenderingSystem::getModel(sRenderComponent *render)
 {
-    int id = entity->id;
-    sRenderComponent *model = entity->getComponent<sRenderComponent>();
-    sTransformComponent *transform = entity->getComponent<sTransformComponent>();
-
     // The entity does not exist in the render system
-    if (!model->_model)
+    if (!render->_model)
     {
-        model->initModel();
+        render->initModel();
     }
 
-    if (transform->needUpdate)
-    {
-        model->_model->update(model->color, transform->getTransform());
-    }
-    else
-        model->_model->update(model->color, transform->transform);
-
-    return (model->_model);
+    return (render->_model);
 }
 
 const ShaderProgram&  RenderingSystem::getShaderProgram() const
 {
     return _shaderProgram;
+}
+
+void    RenderingSystem::onEntityNewComponent(Entity* entity, sComponent* component)
+{
+    System::onEntityNewComponent(entity, component);
+
+    // The entity match RenderingSystem dependencies
+    // and the new component is a collider
+    if (entityMatchDependencies(entity) &&
+        (entity->hasComponent<sBoxColliderComponent>() ||
+        entity->hasComponent<sSphereColliderComponent>()))
+    {
+        // The entity is not already in the collidable entities vector
+        if (std::find(_collidableEntities.cbegin(), _collidableEntities.cend(), entity->id) == _collidableEntities.cend())
+        {
+            _collidableEntities.push_back(entity->id);
+        }
+    }
+}
+
+void    RenderingSystem::onEntityRemovedComponent(Entity* entity, sComponent* component)
+{
+    System::onEntityRemovedComponent(entity, component);
+
+    // The component is a collider
+    if (component->id == sBoxColliderComponent::identifier ||
+        component->id == sSphereColliderComponent::identifier)
+    {
+        // The entity is in the collidable entities vector
+        auto foundEntity = std::find(_collidableEntities.cbegin(), _collidableEntities.cend(), entity->id);
+        if (foundEntity != _collidableEntities.cend())
+        {
+            _collidableEntities.erase(foundEntity);
+        }
+    }
+}
+
+void    RenderingSystem::onEntityDeleted(Entity* entity)
+{
+    System::onEntityDeleted(entity);
+
+    auto foundEntity = std::find(_collidableEntities.cbegin(), _collidableEntities.cend(), entity->id);
+    // The entity is in the system list
+    if (foundEntity != _collidableEntities.cend())
+    {
+        _collidableEntities.erase(foundEntity);
+    }
 }

@@ -28,8 +28,7 @@ public:
     const glm::vec3&            getMin() const;
     const glm::vec3&            getMax() const;
 
-    void                        draw(const ShaderProgram& shaderProgram) const;
-    void                        update(const glm::vec4& color, const glm::mat4 transform);
+    void                        draw(const ShaderProgram& shaderProgram, const glm::vec4& color, const glm::mat4 transform) const;
 
 protected:
     void                        initVertexData();
@@ -52,10 +51,6 @@ protected:
 
     // OpenGL Buffers
     Buffer                              _buffer;
-
-    // Model position
-    glm::vec4                           _color;
-    glm::mat4                           _transform;
 
     // Model skeleton used for animations
     Skeleton                            _skeleton;
