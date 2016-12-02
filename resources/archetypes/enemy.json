@@ -1,38 +1,44 @@
 {
-    "name": "ENEMY",
-    "components": {
-            "sPositionComponent": {
-                "x": 9,
-                "y": 8,
-                "z": 1
-            },
-            "sDirectionComponent": {
-                "x": 0,
-                "y": 0
-            },
-            "sRenderComponent": {
-                "texture": "resources/sprites/characters/soldierSpriteSheet.png",
-                "color": {
-                    "r": 1,
-                    "g": 0,
-                    "b": 0
-                },
-                "animated": true,
-                "animation": {
-                    "orientations": ["NW", "N", "NE", "E", "W", "SW", "S", "SE"],
-                    "frames": {
-                        "x": 9,
-                        "y": 8
-                    }
-                },
-                "spriteSize": {
-                    "width": 55.0,
-                    "height": 64.9
-                }
-            },
-            "sTypeComponent": {
-                "type": "CHARACTER"
-            },
-            "sAIComponent": {}
-        }
+   "components" : {
+      "sAIComponent" : {},
+      "sDirectionComponent" : {
+         "speed" : 1,
+         "x" : 1,
+         "y" : 0
+      },
+      "sPositionComponent" : {
+         "x" : 19.989999771118164,
+         "y" : 6,
+         "z" : 1.5
+      },
+      "sRenderComponent" : {
+         "color" : {
+            "a" : 1,
+            "b" : 0.78431373834609985,
+            "g" : 0.31372550129890442,
+            "r" : 1
+         }
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 499.75,
+            "y" : 18.75,
+            "z" : 150
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : -30,
+            "z" : 0
+         },
+         "scale" : {
+            "x" : 0.59999990463256836,
+            "y" : 0.80000013113021851,
+            "z" : 0.80000132322311401
+         }
+      },
+      "sTypeComponent" : {
+         "type" : "CHARACTER"
+      }
+   },
+   "name" : "ENEMY"
 }

@@ -40,18 +40,3 @@ Entity* PlayStates::createParticlesEmittor(const glm::vec3& pos, eArchetype type
 
     return (ps);
 }
-
-
-void    PlayStates::goTo(Entity* emitter, Entity* character)
-{
-    sPositionComponent* emitterPos;
-    sPositionComponent* characterPos;
-
-    emitterPos = emitter->getComponent<sPositionComponent>();
-    characterPos = character->getComponent<sPositionComponent>();
-
-    if (!emitterPos || !characterPos)
-        EXCEPT(InternalErrorException, "sPositionComponent missing");
-
-    emitter->addComponent<sDirectionComponent>(glm::normalize(characterPos->value - emitterPos->value) * 4.0f);
-}
