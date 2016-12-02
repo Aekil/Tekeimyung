@@ -13,7 +13,7 @@
                 "type": "TILE_WALKABLE"
             },
       "sWaveComponent": {
-        "firstWait": false,
+        "firstWaitFinished": false,
         "nbEntities": 10,
         "secBeforeFirstSpawn": 3,
         "secBeforeEachSpawn": 2
