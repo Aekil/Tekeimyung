@@ -203,12 +203,10 @@ void    EntityFactory::updateEntityComponent(const std::string& entityName, ICom
         if (name->value == entityName)
         {
             sComponent* entityComponent = entity->getComponent(component->id);
-            if (entityComponent)
+            if (entityComponent && entityComponent->id != sPositionComponent::identifier)
             {
-                std::string componentName = IComponentFactory::getComponentNameWithHash(component->id);
-
                 // Only the scale have to be copied
-                if (componentName == "sTransformComponent")
+                if (entityComponent->id == sTransformComponent::identifier)
                 {
                     sTransformComponent* transform = static_cast<sTransformComponent*>(component);
                     sTransformComponent* entityTransform = static_cast<sTransformComponent*>(entityComponent);
