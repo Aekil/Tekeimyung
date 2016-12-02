@@ -124,11 +124,8 @@ bool    PlayState::update(float elapsedTime)
     if (selectedEntity)
     {
         sRenderComponent* render = selectedEntity->getComponent<sRenderComponent>();
-        sTransformComponent* transform = selectedEntity->getComponent<sTransformComponent>();
-        sNameComponent* name = selectedEntity->getComponent<sNameComponent>();
 
         render->color = glm::vec4(1.0f, 0.0f, 0.0f, 0.0f);
-        render->_model->update(render->color, transform->getTransform());
     }
 
     return (GameState::update(elapsedTime));
@@ -151,11 +148,11 @@ Entity* PlayState::getSelectedEntity()
     // Get 3D point on far plane
     glm::vec3 farPoint = glm::unProject(farScreen, camera->getView(), camera->getProj(), gameWindow->getViewport());
 
-    EntityManager &em = _world.getEntityManager();
+    EntityManager* em = _world.getEntityManager();
     Entity* selectedEntity = nullptr;
     float selectedEntityDist = 0.0f;
 
-    for (auto it : em.getEntities())
+    for (auto it : em->getEntities())
     {
         Entity* entity = it.second;
         sRenderComponent* render = entity->getComponent<sRenderComponent>();
