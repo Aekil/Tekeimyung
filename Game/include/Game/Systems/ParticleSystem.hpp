@@ -31,9 +31,9 @@ struct sParticle
     glm::vec4 colorStep;
 
     // Particle scale
-    float size;
+    glm::vec3 size;
     // Increment size by sizeStep each frame
-    float sizeStep;
+    glm::vec3 sizeStep;
 };
 
 struct sEmitter
@@ -59,6 +59,6 @@ private:
 
 private:
     std::unordered_map<uint32_t, sEmitter*>     _emitters;
-    
+
     ADD_MONITORING_VAR
 END_SYSTEM(ParticleSystem)

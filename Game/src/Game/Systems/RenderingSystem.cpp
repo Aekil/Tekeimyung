@@ -173,7 +173,7 @@ void    RenderingSystem::renderParticles(EntityManager& em)
             // Model matrice
             glm::mat4 transformMatrix(1.0f);
             transformMatrix = glm::translate(transformMatrix, glm::vec3(particle.pos.x, particle.pos.y, particle.pos.z));
-            transformMatrix = glm::scale(transformMatrix, glm::vec3(particle.size, particle.size, particle.size));
+            transformMatrix = glm::scale(transformMatrix, particle.size);
 
             // Draw sprite
             model->draw(_shaderProgram, particle.color, transformMatrix);
