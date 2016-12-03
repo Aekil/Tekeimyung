@@ -2,7 +2,10 @@ template <typename T>
 ParamAnimation<T>::ParamAnimation(const std::string& name, T* param): IParamAnimation(name), _param(param), _currentKeyFrame(0)
 {
     if (_param)
+    {
         _startValue = *_param;
+        _initialValue = *_param;
+    }
 }
 
 template <typename T>
@@ -48,7 +51,7 @@ void    ParamAnimation<T>::reset()
 
     _timer.reset();
     _currentKeyFrame = 0;
-    _startValue = *_param;
+    _startValue = _initialValue;
 }
 
 template <typename T>

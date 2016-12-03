@@ -51,7 +51,7 @@ public:
     std::vector<sKeyFrame>& getKeyFrames() { return (_keyFrames); }
     const std::vector<sKeyFrame>& getKeyFrames() const { return (_keyFrames); }
 
-    void                    setParam(T* param) { _param = param; reset(); }
+    void                    setParam(T* param) { _param = param; _initialValue = *param; reset(); }
 
     virtual bool            update();
     virtual void            reset();
@@ -66,6 +66,9 @@ private:
     // param updated during the animation
     T*                      _param;
 
+    T                       _initialValue;
+
+    // start value used for interpolation with  sKeyFrame::value
     T                       _startValue;
 
     uint16_t                _currentKeyFrame;

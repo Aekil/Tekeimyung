@@ -10,6 +10,7 @@
 #include <Engine/Window/GameWindow.hpp>
 #include <Engine/Utils/RessourceManager.hpp>
 #include <Engine/Graphics/Camera.hpp>
+#include <Game/EntityFactory.hpp>
 
 #include <Game/ComponentFactory.hpp>
 
@@ -339,18 +340,29 @@ bool    ComponentFactory<sRenderComponent>::updateEditor(const std::string& enti
         component->_model = nullptr;
     }
 
-    updateAnimationsEditor(component);
+    updateAnimationsEditor(component, entity);
 
     return (changed);
 }
 
-bool    ComponentFactory<sRenderComponent>::updateAnimationsEditor(sRenderComponent* component)
+bool    ComponentFactory<sRenderComponent>::updateAnimationsEditor(sRenderComponent* component, Entity* entity)
 {
     if (component->_animations.size() > 0 && !component->_selectedAnimation)
         component->_selectedAnimation = component->_animations[0];
 
+    ImGui::Text("\n");
+    ImGui::Text("Animations");
+    ImGui::SameLine();
+
+    // Add new animation button
+    if (ImGui::Button("Create"))
+    {
+        std::shared_ptr<Animation> animation = std::make_shared<Animation>("animation");
+        component->_selectedAnimation = animation;
+        component->_animations.push_back(animation);
+    }
+
     // Animations list
-    ImGui::Text("\n Animations");
     ImGui::BeginChild("Animations", ImVec2(0, 100), true);
     for (auto animation: component->_animations)
     {
@@ -369,20 +381,78 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationsEditor(sRenderCompon
     ImGui::PushStyleColor(ImGuiCol_HeaderHovered, ImColor(0.39f, 0.58f, 0.92f, 1.0f));
     ImGui::PushStyleColor(ImGuiCol_HeaderActive, ImColor(0.49f, 0.68f, 0.92f, 1.0f));
 
-    // Animation name
+    // Animation name text
     ImGui::Text("\n");
     ImGui::Text(component->_selectedAnimation->getName().c_str());
+
+    // Remove animation
+    ImGui::SameLine();
+    if (ImGui::Button("Remove"))
+    {
+        component->_animations.erase(std::find(component->_animations.begin(), component->_animations.end(), component->_selectedAnimation));
+        component->_selectedAnimation = nullptr;
+        ImGui::PopStyleColor(3);
+        return (false);
+    }
+
+    // Add animation param
+    ImGui::SameLine();
+    if (ImGui::Button("New param"))
+    {
+        ImGui::OpenPopup("params");
+    }
+
+    // New animation param selection
+    if (ImGui::BeginPopup("params"))
+    {
+        static const std::vector<std::string> params = { "color", "position", "scale", "rotation" };
+        for (auto param: params)
+        {
+            // Add new param
+            if (ImGui::Button(param.c_str()))
+            {
+                if (param == "color")
+                    component->_selectedAnimation->addParamAnimation(std::make_shared<ParamAnimation<glm::vec4> >(param, nullptr));
+                else
+                    component->_selectedAnimation->addParamAnimation(std::make_shared<ParamAnimation<glm::vec3> >(param, nullptr));
+                EntityFactory::initAnimations(entity);
+            }
+        }
+        ImGui::EndPopup();
+    }
+
+    return (updateParamsAnimationsEditor(component, entity));
+}
+
+bool    ComponentFactory<sRenderComponent>::updateParamsAnimationsEditor(sRenderComponent* component, Entity* entity)
+{
     uint32_t frameNb = 0;
 
-    for (auto paramAnimation: component->_selectedAnimation->getParamsAnimations())
+    auto& paramsAnimations = component->_selectedAnimation->getParamsAnimations();
+    for (auto it = paramsAnimations.begin(); it != paramsAnimations.end();)
     {
+        auto paramAnimation = *it;
         // Animation param display
         if (ImGui::CollapsingHeader(paramAnimation->getName().c_str(), ImGuiTreeNodeFlags_DefaultOpen))
         {
+            ImGui::PushID(paramAnimation->getName().c_str());
+            // Remove animation param
+            if (ImGui::Button("Remove"))
+            {
+                LOG_INFO("Remove %s", paramAnimation->getName().c_str());
+                it = paramsAnimations.erase(it);
+                ImGui::PopID();
+                continue;
+            }
+            else
+                ++it;
+
             if (paramAnimation->getName() == "color")
                 updateAnimationParamColor(paramAnimation, frameNb);
             else
                 updateAnimationParamTranslate(paramAnimation, frameNb);
+
+            ImGui::PopID();
         }
     }
     ImGui::Text("\n");
@@ -396,14 +466,38 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationParamTranslate(std::s
     auto paramAnimation = std::static_pointer_cast<ParamAnimation<glm::vec3>>(paramAnimation_);
     uint32_t totalFrames = (uint32_t)paramAnimation->getKeyFrames().size();
 
+    // add animation param key frame
+    ImGui::SameLine();
+    if (ImGui::Button("Add key frame"))
+    {
+        ParamAnimation<glm::vec3>::sKeyFrame keyFrame;
+        keyFrame.duration = 1.0f;
+        keyFrame.value = glm::vec3(0.0f, 0.0f, 0.0f);
+        keyFrame.easing = ParamAnimation<glm::vec3>::eEasing::NONE;
+        paramAnimation->addKeyFrame(keyFrame);
+    }
+
+    ImGui::Text("\n");
     for (uint32_t i = 0; i < totalFrames; ++i)
     {
         ParamAnimation<glm::vec3>::sKeyFrame& keyFrame = paramAnimation->getKeyFrames()[i];
 
-        ImGui::Text("Frame %d", i);
+        ImGui::Text("Frame %d ", i);
         ImGui::PushID(frameNb++);
-        ImGui::InputFloat3("value", glm::value_ptr(keyFrame.value));
-        ImGui::InputFloat("duration", &keyFrame.duration);
+
+        ImGui::SameLine();
+        if (ImGui::Button("Remove"))
+        {
+            paramAnimation->getKeyFrames().erase(paramAnimation->getKeyFrames().begin() + i);
+            --i;
+            --totalFrames;
+        }
+        else
+        {
+            ImGui::InputFloat3("value", glm::value_ptr(keyFrame.value));
+            ImGui::InputFloat("duration", &keyFrame.duration);
+        }
+
         ImGui::PopID();
         ImGui::Text("\n");
     }
@@ -416,14 +510,38 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationParamColor(std::share
     auto paramAnimation = std::static_pointer_cast<ParamAnimation<glm::vec4>>(paramAnimation_);
     uint32_t totalFrames = (uint32_t)paramAnimation->getKeyFrames().size();
 
+    // add animation param key frame
+    ImGui::SameLine();
+    if (ImGui::Button("Add key frame"))
+    {
+        ParamAnimation<glm::vec4>::sKeyFrame keyFrame;
+        keyFrame.duration = 1.0f;
+        keyFrame.value = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
+        keyFrame.easing = ParamAnimation<glm::vec4>::eEasing::NONE;
+        paramAnimation->addKeyFrame(keyFrame);
+    }
+
+    ImGui::Text("\n");
     for (uint32_t i = 0; i < totalFrames; ++i)
     {
         ParamAnimation<glm::vec4>::sKeyFrame& keyFrame = paramAnimation->getKeyFrames()[i];
 
-        ImGui::Text("Frame %d", i);
+        ImGui::Text("Frame %d ", i);
         ImGui::PushID(frameNb++);
-        ImGui::ColorEdit4("value", glm::value_ptr(keyFrame.value));
-        ImGui::InputFloat("duration", &keyFrame.duration);
+
+        ImGui::SameLine();
+        if (ImGui::Button("Remove"))
+        {
+            paramAnimation->getKeyFrames().erase(paramAnimation->getKeyFrames().begin() + i);
+            --i;
+            --totalFrames;
+        }
+        else
+        {
+            ImGui::ColorEdit4("value", glm::value_ptr(keyFrame.value));
+            ImGui::InputFloat("duration", &keyFrame.duration);
+        }
+
         ImGui::PopID();
         ImGui::Text("\n");
     }

@@ -58,9 +58,10 @@ public:
 
     static void                                             updateEntityComponent(const std::string& entityName, IComponentFactory* compFactory, sComponent* component);
 
+    static void                                             initAnimations(Entity* entity);
+
 private:
     static Entity*                                          cloneEntity(const std::string& typeName);
-    static void                                             initAnimations(Entity* entity);
 
 private:
     // Store entities components names (ComponentFactory has components)
