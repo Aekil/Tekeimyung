@@ -1,11 +1,5 @@
 template <typename T>
-ParamAnimation<T>::ParamAnimation(const std::string& name, T* param): IParamAnimation(name), _param(param), _currentKeyFrame(0)
-{
-    if (_param)
-    {
-        _initialValue = *_param;
-    }
-}
+ParamAnimation<T>::ParamAnimation(const std::string& name, T* param): IParamAnimation(name), _param(param), _currentKeyFrame(0) {}
 
 template <typename T>
 ParamAnimation<T>::~ParamAnimation() {}
