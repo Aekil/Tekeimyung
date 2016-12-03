@@ -6,6 +6,7 @@ class Animation
 {
 public:
     Animation(const std::string& name);
+    Animation(const Animation& rhs);
     ~Animation();
 
     void                    addParamAnimation(std::shared_ptr<IParamAnimation> paramAnimation);
@@ -14,6 +15,7 @@ public:
     void                    reset();
 
     const std::string&      getName() const;
+    bool                    isLoop() const;
 
     std::vector<std::shared_ptr<IParamAnimation> >&  getParamsAnimations();
     const std::vector<std::shared_ptr<IParamAnimation> >&  getParamsAnimations() const;

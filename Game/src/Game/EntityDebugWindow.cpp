@@ -226,6 +226,21 @@ void    EntityDebugWindow::saveEntityTemplate(const std::string& typeName, Entit
             std::string componentName = IComponentFactory::getComponentNameWithHash(component->id);
             auto compFactory = IComponentFactory::getFactory(componentName);
             ASSERT(compFactory != nullptr, "The factory should exist");
+
+            // Reverse animtions
+            if (component->id == sTransformComponent::identifier)
+            {
+                sRenderComponent* render = entity->getComponent<sRenderComponent>();
+                sTransformComponent* transform = static_cast<sTransformComponent*>(component);
+
+                if (render->_selectedAnimation)
+                {
+                    render->_selectedAnimation->reset();
+                    render->_selectedAnimation->update();
+                    transform->updateTransform();
+                }
+            }
+
             compFactory->save(typeName, component);
 
             // The component does not exist in entityFactory
@@ -236,7 +251,7 @@ void    EntityDebugWindow::saveEntityTemplate(const std::string& typeName, Entit
             }
 
             // Update other entities component
-            EntityFactory::updateEntityComponent(typeName, compFactory, component);
+            EntityFactory::updateEntitiesComponents(entity, typeName, compFactory, component);
         }
     }
 }

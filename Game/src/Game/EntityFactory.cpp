@@ -198,10 +198,11 @@ Entity* EntityFactory::cloneEntity(const std::string& typeName)
 void    EntityFactory::initAnimations(Entity* entity)
 {
     sRenderComponent* render = entity->getComponent<sRenderComponent>();
-    sTransformComponent* transform = entity->getComponent<sTransformComponent>();
 
-    if (!render)
+    if (!render || render->_animations.size() == 0)
         return;
+
+    sTransformComponent* transform = entity->getComponent<sTransformComponent>();
 
     for (auto animation: render->_animations)
     {
@@ -222,14 +223,14 @@ void    EntityFactory::initAnimations(Entity* entity)
         render->_selectedAnimation = render->_animations[0];
 }
 
-void    EntityFactory::updateEntityComponent(const std::string& entityName, IComponentFactory* compFactory, sComponent* component)
+void    EntityFactory::updateEntitiesComponents(Entity* from, const std::string& entityName, IComponentFactory* compFactory, sComponent* component)
 {
     for (auto &&entity_: _em->getEntities())
     {
         Entity* entity = entity_.second;
         sNameComponent* name = entity->getComponent<sNameComponent>();
 
-        if (name->value == entityName)
+        if (name->value == entityName && entity != from)
         {
             sComponent* entityComponent = entity->getComponent(component->id);
             if (entityComponent && entityComponent->id != sPositionComponent::identifier)
@@ -248,6 +249,9 @@ void    EntityFactory::updateEntityComponent(const std::string& entityName, ICom
                     entityComponent->update(component);
                 }
             }
+
+            if (component->id == sRenderComponent::identifier)
+                initAnimations(entity);
         }
     }
 }

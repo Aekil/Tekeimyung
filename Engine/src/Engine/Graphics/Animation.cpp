@@ -2,6 +2,17 @@
 
 Animation::Animation(const std::string& name): _name(name), _loop(true) {}
 
+Animation::Animation(const Animation& rhs)
+{
+    _name = rhs.getName();
+    _loop = rhs.isLoop();
+
+    for (const auto& paramAnimation: rhs.getParamsAnimations())
+    {
+        _paramsAnimations.push_back(paramAnimation->clone());
+    }
+}
+
 Animation::~Animation() {}
 
 void    Animation::addParamAnimation(std::shared_ptr<IParamAnimation> paramAnimation)
@@ -35,6 +46,11 @@ void    Animation::reset()
 const std::string&  Animation::getName() const
 {
     return (_name);
+}
+
+bool    Animation::isLoop() const
+{
+    return (_loop);
 }
 
 std::vector<std::shared_ptr<IParamAnimation> >& Animation::getParamsAnimations()

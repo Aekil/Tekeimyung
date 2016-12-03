@@ -5,7 +5,7 @@ template <typename T>
 ParamAnimation<T>::~ParamAnimation() {}
 
 template <typename T>
-void    ParamAnimation<T>::addKeyFrame(sKeyFrame& keyFrame)
+void    ParamAnimation<T>::addKeyFrame(const sKeyFrame& keyFrame)
 {
     _keyFrames.push_back(keyFrame);
 }
@@ -47,6 +47,19 @@ void    ParamAnimation<T>::reset()
     _timer.reset();
     _currentKeyFrame = 0;
     _startValue = T();
+}
+
+template <typename T>
+std::shared_ptr<IParamAnimation>    ParamAnimation<T>::clone()
+{
+    auto paramAnimation = std::make_shared<ParamAnimation<T>>(_name, nullptr);
+
+    for (const auto& keyFrame: _keyFrames)
+    {
+        paramAnimation->addKeyFrame(keyFrame);
+    }
+
+    return (paramAnimation);
 }
 
 template <typename T>

@@ -227,7 +227,6 @@ JsonValue&    ComponentFactory<sRenderComponent>::saveToJson(const std::string& 
         animations.push_back(animationJson);
     }
     json.setValueVec("animations", animations);
-    std::cout << json.get() << std::endl;
 
     return (json);
 }

@@ -56,7 +56,7 @@ public:
     static const void                                       addComponent(const std::string& typeName, const std::string& component);
     static const std::string&                               getFile(const std::string& typeName);
 
-    static void                                             updateEntityComponent(const std::string& entityName, IComponentFactory* compFactory, sComponent* component);
+    static void                                             updateEntitiesComponents(Entity* from, const std::string& entityName, IComponentFactory* compFactory, sComponent* component);
 
     static void                                             initAnimations(Entity* entity);
 

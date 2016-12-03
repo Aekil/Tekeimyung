@@ -12,11 +12,12 @@ public:
     IParamAnimation(const std::string& name): _name(name) {}
     virtual ~IParamAnimation() {}
 
-    virtual bool            update() { return (false); }
-    virtual void            reset() {}
+    virtual bool            update() = 0;
+    virtual void            reset() = 0;
+    virtual std::shared_ptr<IParamAnimation> clone() = 0;
     const std::string&      getName() { return (_name); }
 
-private:
+protected:
     std::string             _name;
 };
 
@@ -47,14 +48,21 @@ public:
     ParamAnimation(const std::string& name, T* param);
     virtual ~ParamAnimation();
 
-    void                    addKeyFrame(sKeyFrame& keyFrame);
+    void                    addKeyFrame(const sKeyFrame& keyFrame);
     std::vector<sKeyFrame>& getKeyFrames() { return (_keyFrames); }
     const std::vector<sKeyFrame>& getKeyFrames() const { return (_keyFrames); }
+    const sKeyFrame* getCurrentKeyFrame() const
+    {
+        if (_currentKeyFrame > _keyFrames >= _keyFrames.size())
+            return (nullptr);
+        return (_keyFrames[_currentKeyFrame]);
+    }
 
     void                    setParam(T* param) { _param = param; reset(); }
 
     virtual bool            update();
     virtual void            reset();
+    virtual std::shared_ptr<IParamAnimation>    clone();
 
 private:
     T                       getNewValue(const sKeyFrame& keyFrame);
@@ -69,7 +77,7 @@ private:
     // Last value from getNewValue()
     T                       _lastValue;
 
-    // Start value used for interpolation with  sKeyFrame::value
+    // Start value used for interpolation with sKeyFrame::value
     T                       _startValue;
 
     uint16_t                _currentKeyFrame;
