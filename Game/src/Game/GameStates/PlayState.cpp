@@ -61,7 +61,7 @@ bool    PlayState::init()
     PlayStates::createParticlesEmittor(glm::vec3(12, 5, 1), eArchetype::EMITTER_WATER);
 
     // Create character
-    _player = PlayStates::createTile(_map, glm::vec3(9, 5, 1), eArchetype::PLAYER);
+    Entity* player = PlayStates::createTile(_map, glm::vec3(9, 5, 1), eArchetype::PLAYER);
 
     // Initialize base map
     for (int y = 0; y < 15; y++) {
@@ -128,17 +128,6 @@ bool    PlayState::update(float elapsedTime)
 
         render->color = glm::vec4(1.0f, 0.0f, 0.0f, 0.0f);
     }
-
-
-    sRenderComponent* render = _player->getComponent<sRenderComponent>();
-    sTransformComponent* transform = _player->getComponent<sTransformComponent>();
-
-    for (auto animation: render->_animations)
-    {
-        animation->update();
-    }
-
-    transform->updateTransform();
 
     return (GameState::update(elapsedTime));
 }

@@ -68,6 +68,8 @@ private:
 
     T                       _initialValue;
 
+    T                       _lastValue;
+
     // start value used for interpolation with  sKeyFrame::value
     T                       _startValue;
 

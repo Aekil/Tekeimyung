@@ -3,7 +3,6 @@ ParamAnimation<T>::ParamAnimation(const std::string& name, T* param): IParamAnim
 {
     if (_param)
     {
-        _startValue = *_param;
         _initialValue = *_param;
     }
 }
@@ -24,20 +23,22 @@ bool    ParamAnimation<T>::update()
     if (!_param || _keyFrames.size() == 0)
         return (false);
 
-    // This is the end of the param animation, reset it
+    // This is the end of the param animation
     if (_currentKeyFrame >= _keyFrames.size())
         return (false);
 
     // Update the param value
     const sKeyFrame& keyFrame = _keyFrames[_currentKeyFrame];
-    *_param = getNewValue(keyFrame);
+    T newValue = getNewValue(keyFrame);
+    *_param += (newValue - _lastValue);
+    _lastValue = newValue;
 
     // Go to next key frame if current is finished
     if (_timer.getElapsedTime() >= keyFrame.duration)
     {
         _timer.reset();
         _currentKeyFrame++;
-        _startValue = *_param;
+        _startValue = keyFrame.value;
     }
 
     return (true);
@@ -51,13 +52,16 @@ void    ParamAnimation<T>::reset()
 
     _timer.reset();
     _currentKeyFrame = 0;
-    _startValue = _initialValue;
+    _startValue = T();
 }
 
 template <typename T>
 T   ParamAnimation<T>::getNewValue(const sKeyFrame& keyFrame)
 {
     float ellapsedTime = _timer.getElapsedTime();
+
+    if (!keyFrame.duration)
+        return (keyFrame.value);
 
     switch (keyFrame.easing)
     {

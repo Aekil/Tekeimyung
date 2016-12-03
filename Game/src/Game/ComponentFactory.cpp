@@ -103,9 +103,9 @@ sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& 
 
     // Load animations
     auto animations = json.get()["animations"];
-    if (animations.type() != Json::ValueType::arrayValue)
+    if (animations.size() > 0 && animations.type() != Json::ValueType::arrayValue)
     {
-        LOG_ERROR("%s::sRenderComponent loadFromJson error: animations is not an array");
+        LOG_ERROR("%s::sRenderComponent loadFromJson error: animations is not an array", entityType.c_str());
         return (component);
     }
 
@@ -119,7 +119,8 @@ sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& 
         auto animationParams = animation["params"];
         if (animationParams.type() != Json::ValueType::arrayValue)
         {
-            LOG_ERROR("%s::sRenderComponent loadFromJson error: animation params is not an array for animation \"%s\"", compAnimation->getName().c_str());
+            LOG_ERROR("%s::sRenderComponent loadFromJson error: animation params is not an array for animation \"%s\"", entityType.c_str(), compAnimation->getName().c_str());
+            component->_animations.push_back(compAnimation);
             break;
         }
 
@@ -152,7 +153,7 @@ void    ComponentFactory<sRenderComponent>::loadTranslateParamAnimation(std::sha
     auto keyFrames = json.get()["frames"];
     if (keyFrames.type() != Json::ValueType::arrayValue)
     {
-        LOG_ERROR("%s::sRenderComponent loadFromJson error: animation param frames is not an array for animation param \"%s\"", paramAnimation->getName().c_str());
+        LOG_ERROR("sRenderComponent loadFromJson error: animation param frames is not an array for animation param \"%s\"", paramAnimation->getName().c_str());
         return;
     }
 
@@ -226,8 +227,7 @@ JsonValue&    ComponentFactory<sRenderComponent>::saveToJson(const std::string& 
         animations.push_back(animationJson);
     }
     json.setValueVec("animations", animations);
-
-    std::cout << "SAVE: " << json.get() << std::endl;
+    std::cout << json.get() << std::endl;
 
     return (json);
 }
@@ -1164,11 +1164,14 @@ bool    ComponentFactory<sTransformComponent>::updateEditor(const std::string& e
     *savedComponent = component;
     bool changed = false;
 
-    ComponentFactory<sTransformComponent>::updateTransforms(component->pos,
+    if (ComponentFactory<sTransformComponent>::updateTransforms(component->pos,
                                                             component->scale,
                                                             component->rotation,
                                                             component->transform,
-                                                            ImGuizmo::LOCAL);
+                                                            ImGuizmo::LOCAL))
+    {
+        component->updateTransform();
+    }
 
     return (false);
 }
@@ -1178,6 +1181,7 @@ bool    ComponentFactory<sTransformComponent>::updateTransforms(glm::vec3& pos, 
     auto &&keyboard = GameWindow::getInstance()->getKeyboard();
     Camera* camera = Camera::getInstance();
     static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::TRANSLATE);
+    bool changed = false;
 
     if (ImGui::RadioButton("Translate", mCurrentGizmoOperation == ImGuizmo::TRANSLATE) || keyboard.isPressed(Keyboard::eKey::T))
         mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
@@ -1187,14 +1191,15 @@ bool    ComponentFactory<sTransformComponent>::updateTransforms(glm::vec3& pos, 
     ImGui::SameLine();
     if (ImGui::RadioButton("Scale", mCurrentGizmoOperation == ImGuizmo::SCALE) || keyboard.isPressed(Keyboard::eKey::E))
         mCurrentGizmoOperation = ImGuizmo::SCALE;
-    ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transform), glm::value_ptr(pos), glm::value_ptr(rotation), glm::value_ptr(scale));
-    ImGui::InputFloat3("Translate", glm::value_ptr(pos), 3);
-    ImGui::InputFloat3("Rotation", glm::value_ptr(rotation), 3);
-    ImGui::InputFloat3("Scale", glm::value_ptr(scale), 3);
-    ImGuizmo::RecomposeMatrixFromComponents(glm::value_ptr(pos), glm::value_ptr(rotation), glm::value_ptr(scale), glm::value_ptr(transform));
+    //ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transform), glm::value_ptr(pos), glm::value_ptr(rotation), glm::value_ptr(scale));
+    changed |= ImGui::InputFloat3("Translate", glm::value_ptr(pos), 3);
+    changed |= ImGui::InputFloat3("Rotation", glm::value_ptr(rotation), 3);
+    changed |= ImGui::InputFloat3("Scale", glm::value_ptr(scale), 3);
+
+    /*ImGuizmo::RecomposeMatrixFromComponents(glm::value_ptr(pos), glm::value_ptr(rotation), glm::value_ptr(scale), glm::value_ptr(transform));
 
     ImGuizmo::Manipulate(glm::value_ptr(camera->getView()), glm::value_ptr(camera->getProj()), mCurrentGizmoOperation, mode, glm::value_ptr(transform), nullptr, nullptr);
-    ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transform), glm::value_ptr(pos), glm::value_ptr(rotation), glm::value_ptr(scale));
+    ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transform), glm::value_ptr(pos), glm::value_ptr(rotation), glm::value_ptr(scale));*/
 
-    return (false);
+    return (changed);
 }

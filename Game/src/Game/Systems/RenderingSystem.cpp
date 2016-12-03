@@ -77,6 +77,15 @@ void    RenderingSystem::renderEntity(sRenderComponent *render, Entity* entity)
     sTransformComponent *transform = entity->getComponent<sTransformComponent>();
     auto&& model = getModel(render);
 
+    // Update animation
+    if (render->_selectedAnimation)
+    {
+        sTransformComponent* transform = entity->getComponent<sTransformComponent>();
+
+        render->_selectedAnimation->update();
+        transform->needUpdate = true;
+    }
+
     // Draw model
     model->draw(_shaderProgram, render->color, transform->getTransform());
 }
