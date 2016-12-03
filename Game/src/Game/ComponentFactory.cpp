@@ -100,12 +100,98 @@ sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& 
     std::string geometryName = json.getString("type", "MESH");
     component->type = Geometry::getGeometryType(geometryName);
 
+    // Load animations
+    auto animations = json.get()["animations"];
+    if (animations.type() != Json::ValueType::arrayValue)
+    {
+        LOG_ERROR("%s::sRenderComponent loadFromJson error: animations is not an array");
+        return (component);
+    }
+
+    for (const auto& animation: animations)
+    {
+        // Load animation
+        JsonValue animationJon(animation);
+        std::shared_ptr<Animation> compAnimation = std::make_shared<Animation>(animationJon.getString("name", "animation"));
+
+        // Load animation params
+        auto animationParams = animation["params"];
+        if (animationParams.type() != Json::ValueType::arrayValue)
+        {
+            LOG_ERROR("%s::sRenderComponent loadFromJson error: animation params is not an array for animation \"%s\"", compAnimation->getName().c_str());
+            break;
+        }
+
+        for (const auto& animationParam: animationParams)
+        {
+            JsonValue animationParamJson(animationParam);
+            std::string name = animationParamJson.getString("name", "param");
+            if (name == "color")
+            {
+                std::shared_ptr<ParamAnimation<glm::vec4> > colorParam = std::make_shared<ParamAnimation<glm::vec4> >(name, nullptr);
+                loadColorParamAnimation(colorParam, animationParamJson);
+                compAnimation->addParamAnimation(colorParam);
+            }
+            else
+            {
+                std::shared_ptr<ParamAnimation<glm::vec3> > translateParam = std::make_shared<ParamAnimation<glm::vec3> >(name, nullptr);
+                loadTranslateParamAnimation(translateParam, animationParamJson);
+                compAnimation->addParamAnimation(translateParam);
+            }
+        }
+
+        component->_animations.push_back(compAnimation);
+    }
+
     return (component);
+}
+
+void    ComponentFactory<sRenderComponent>::loadTranslateParamAnimation(std::shared_ptr<ParamAnimation<glm::vec3>> paramAnimation, JsonValue& json)
+{
+    auto keyFrames = json.get()["frames"];
+    if (keyFrames.type() != Json::ValueType::arrayValue)
+    {
+        LOG_ERROR("%s::sRenderComponent loadFromJson error: animation param frames is not an array for animation param \"%s\"", paramAnimation->getName().c_str());
+        return;
+    }
+
+    for (const auto& keyFrame: keyFrames)
+    {
+        JsonValue keyFrameJson(keyFrame);
+        ParamAnimation<glm::vec3>::sKeyFrame key;
+
+        key.duration = keyFrameJson.getFloat("duration", 1.0f);
+        key.value = keyFrameJson.getVec3f("value", glm::vec3(0.0f, 0.0f, 0.0f));
+        key.easing = ParamAnimation<glm::vec3>::eEasing::NONE;
+        paramAnimation->addKeyFrame(key);
+    }
+}
+
+void    ComponentFactory<sRenderComponent>::loadColorParamAnimation(std::shared_ptr<ParamAnimation<glm::vec4>> paramAnimation, JsonValue& json)
+{
+    auto keyFrames = json.get()["frames"];
+    if (keyFrames.type() != Json::ValueType::arrayValue)
+    {
+        LOG_ERROR("%s::sRenderComponent loadFromJson error: animation param frames is not an array for animation param \"%s\"", paramAnimation->getName().c_str());
+        return;
+    }
+
+    for (const auto& keyFrame: keyFrames)
+    {
+        JsonValue keyFrameJson(keyFrame);
+        ParamAnimation<glm::vec4>::sKeyFrame key;
+
+        key.duration = keyFrameJson.getFloat("duration", 1.0f);
+        key.value = keyFrameJson.getVec4f("value", glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
+        key.easing = ParamAnimation<glm::vec4>::eEasing::NONE;
+        paramAnimation->addKeyFrame(key);
+    }
 }
 
 JsonValue&    ComponentFactory<sRenderComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
 {
     JsonValue& json = _componentsJson[entityType];
+    std::vector<JsonValue> animations;
     sRenderComponent* component = static_cast<sRenderComponent*>(_components[entityType]);
 
 
@@ -115,7 +201,72 @@ JsonValue&    ComponentFactory<sRenderComponent>::saveToJson(const std::string& 
     json.setString("type", Geometry::getGeometryTypeString(component->type));
     json.setString("texture", component->texture);
 
+    // Save animations
+    for (const auto& animation: component->_animations)
+    {
+        JsonValue animationJson;
+        std::vector<JsonValue> paramsAnimation;
+
+        animationJson.setString("name", animation->getName());
+        // Save animation params
+        for (const auto& paramAnimation: animation->getParamsAnimations())
+        {
+            JsonValue paramAnimationJson;
+            if (paramAnimation->getName() == "color")
+                saveColorParamAnimation(paramAnimation, paramAnimationJson);
+            else
+                saveTranslateParamAnimation(paramAnimation, paramAnimationJson);
+
+            paramAnimationJson.setString("name", paramAnimation->getName());
+            paramsAnimation.push_back(paramAnimationJson);
+        }
+
+        animationJson.setValueVec("params", paramsAnimation);
+        animations.push_back(animationJson);
+    }
+    json.setValueVec("animations", animations);
+
+    std::cout << "SAVE: " << json.get() << std::endl;
+
     return (json);
+}
+
+void    ComponentFactory<sRenderComponent>::saveTranslateParamAnimation(std::shared_ptr<IParamAnimation> paramAnimation_, JsonValue& json)
+{
+    auto paramAnimation = std::static_pointer_cast<ParamAnimation<glm::vec3>>(paramAnimation_);
+    uint32_t totalFrames = (uint32_t)paramAnimation->getKeyFrames().size();
+    std::vector<JsonValue> keyFrames;
+
+    for (uint32_t i = 0; i < totalFrames; ++i)
+    {
+        ParamAnimation<glm::vec3>::sKeyFrame& keyFrame = paramAnimation->getKeyFrames()[i];
+        JsonValue keyFrameJson;
+
+        keyFrameJson.setVec3f("value", keyFrame.value);
+        keyFrameJson.setFloat("duration", keyFrame.duration);
+        keyFrames.push_back(keyFrameJson);
+    }
+
+    json.setValueVec("frames", keyFrames);
+}
+
+void    ComponentFactory<sRenderComponent>::saveColorParamAnimation(std::shared_ptr<IParamAnimation> paramAnimation_, JsonValue& json)
+{
+    auto paramAnimation = std::static_pointer_cast<ParamAnimation<glm::vec4>>(paramAnimation_);
+    uint32_t totalFrames = (uint32_t)paramAnimation->getKeyFrames().size();
+    std::vector<JsonValue> keyFrames;
+
+    for (uint32_t i = 0; i < totalFrames; ++i)
+    {
+        ParamAnimation<glm::vec4>::sKeyFrame& keyFrame = paramAnimation->getKeyFrames()[i];
+        JsonValue keyFrameJson;
+
+        keyFrameJson.setVec4f("value", keyFrame.value);
+        keyFrameJson.setFloat("duration", keyFrame.duration);
+        keyFrames.push_back(keyFrameJson);
+    }
+
+    json.setValueVec("frames", keyFrames);
 }
 
 bool    ComponentFactory<sRenderComponent>::updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity)
@@ -188,7 +339,96 @@ bool    ComponentFactory<sRenderComponent>::updateEditor(const std::string& enti
         component->_model = nullptr;
     }
 
+    updateAnimationsEditor(component);
+
     return (changed);
+}
+
+bool    ComponentFactory<sRenderComponent>::updateAnimationsEditor(sRenderComponent* component)
+{
+    if (component->_animations.size() > 0 && !component->_selectedAnimation)
+        component->_selectedAnimation = component->_animations[0];
+
+    // Animations list
+    ImGui::Text("\n Animations");
+    ImGui::BeginChild("Animations", ImVec2(0, 100), true);
+    for (auto animation: component->_animations)
+    {
+        if (ImGui::Selectable(animation->getName().c_str(), component->_selectedAnimation == animation))
+            {
+                component->_selectedAnimation = animation;
+            }
+    }
+    ImGui::EndChild();
+
+    if (!component->_selectedAnimation)
+        return (false);
+
+    // Animation params style
+    ImGui::PushStyleColor(ImGuiCol_Header, ImColor(0.27f, 0.51f, 0.70f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_HeaderHovered, ImColor(0.39f, 0.58f, 0.92f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_HeaderActive, ImColor(0.49f, 0.68f, 0.92f, 1.0f));
+
+    // Animation name
+    ImGui::Text("\n");
+    ImGui::Text(component->_selectedAnimation->getName().c_str());
+    uint32_t frameNb = 0;
+
+    for (auto paramAnimation: component->_selectedAnimation->getParamsAnimations())
+    {
+        // Animation param display
+        if (ImGui::CollapsingHeader(paramAnimation->getName().c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            if (paramAnimation->getName() == "color")
+                updateAnimationParamColor(paramAnimation, frameNb);
+            else
+                updateAnimationParamTranslate(paramAnimation, frameNb);
+        }
+    }
+    ImGui::Text("\n");
+
+    ImGui::PopStyleColor(3);
+    return (false);
+}
+
+bool    ComponentFactory<sRenderComponent>::updateAnimationParamTranslate(std::shared_ptr<IParamAnimation> paramAnimation_, uint32_t& frameNb)
+{
+    auto paramAnimation = std::static_pointer_cast<ParamAnimation<glm::vec3>>(paramAnimation_);
+    uint32_t totalFrames = (uint32_t)paramAnimation->getKeyFrames().size();
+
+    for (uint32_t i = 0; i < totalFrames; ++i)
+    {
+        ParamAnimation<glm::vec3>::sKeyFrame& keyFrame = paramAnimation->getKeyFrames()[i];
+
+        ImGui::Text("Frame %d", i);
+        ImGui::PushID(frameNb++);
+        ImGui::InputFloat3("value", glm::value_ptr(keyFrame.value));
+        ImGui::InputFloat("duration", &keyFrame.duration);
+        ImGui::PopID();
+        ImGui::Text("\n");
+    }
+
+    return (false);
+}
+
+bool    ComponentFactory<sRenderComponent>::updateAnimationParamColor(std::shared_ptr<IParamAnimation> paramAnimation_, uint32_t& frameNb)
+{
+    auto paramAnimation = std::static_pointer_cast<ParamAnimation<glm::vec4>>(paramAnimation_);
+    uint32_t totalFrames = (uint32_t)paramAnimation->getKeyFrames().size();
+
+    for (uint32_t i = 0; i < totalFrames; ++i)
+    {
+        ParamAnimation<glm::vec4>::sKeyFrame& keyFrame = paramAnimation->getKeyFrames()[i];
+
+        ImGui::Text("Frame %d", i);
+        ImGui::PushID(frameNb++);
+        ImGui::ColorEdit4("value", glm::value_ptr(keyFrame.value));
+        ImGui::InputFloat("duration", &keyFrame.duration);
+        ImGui::PopID();
+        ImGui::Text("\n");
+    }
+
+    return (false);
 }
 
 

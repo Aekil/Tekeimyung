@@ -5,10 +5,6 @@
          "x" : 0,
          "y" : 0
       },
-      "sResolutionComponent" : {
-         "onCollisionEnter" : "onCollisionEnterPlayer",
-         "onCollisionExit" : "onCollisionExitPlayer"
-      },
       "sInputComponent" : {
          "down" : "K",
          "left" : "J",
@@ -23,39 +19,117 @@
       },
       "sRenderComponent" : {
          "animated" : false,
+         "animations" : [
+            {
+               "name" : "Test animation",
+               "params" : [
+                  {
+                     "frames" : [
+                        {
+                           "duration" : 2,
+                           "value" : {
+                              "w" : 1,
+                              "x" : 0,
+                              "y" : 0,
+                              "z" : 1
+                           }
+                        },
+                        {
+                           "duration" : 2,
+                           "value" : {
+                              "w" : 1,
+                              "x" : 1,
+                              "y" : 0,
+                              "z" : 0
+                           }
+                        }
+                     ],
+                     "name" : "color"
+                  },
+                  {
+                     "frames" : [
+                        {
+                           "duration" : 2,
+                           "value" : {
+                              "x" : 2,
+                              "y" : 2,
+                              "z" : 2
+                           }
+                        },
+                        {
+                           "duration" : 2,
+                           "value" : {
+                              "x" : 1,
+                              "y" : 1,
+                              "z" : 1
+                           }
+                        }
+                     ],
+                     "name" : "scale"
+                  },
+                  {
+                     "frames" : [
+                        {
+                           "duration" : 2,
+                           "value" : {
+                              "x" : 0,
+                              "y" : 360,
+                              "z" : 0
+                           }
+                        },
+                        {
+                           "duration" : 2,
+                           "value" : {
+                              "x" : 0,
+                              "y" : 0,
+                              "z" : 0
+                           }
+                        }
+                     ],
+                     "name" : "rotation"
+                  }
+               ]
+            }
+         ],
          "color" : {
             "a" : 1,
-            "b" : 1,
-            "g" : 1,
-            "r" : 1
+            "b" : 0.11668745428323746,
+            "g" : 0,
+            "r" : 0.88331252336502075
          },
          "geometry" : null,
          "model" : "resources/models/characters/character.DAE",
+         "texture" : "",
          "type" : "MESH"
       },
+      "sResolutionComponent" : {
+         "onCollisionEnter" : "onCollisionEnterPlayer",
+         "onCollisionExit" : "onCollisionExitPlayer"
+      },
       "sSphereColliderComponent" : {
+         "isTrigger" : false,
          "pos" : {
             "x" : 0,
             "y" : 7.9999990463256836,
             "z" : 0
          },
-         "radius" : 0.9
+         "radius" : 0.89999997615814209
       },
       "sTransformComponent" : {
          "pos" : {
             "x" : 225,
-            "y" : 30,
+            "y" : 12.5,
             "z" : 125
          },
          "rotation" : {
-            "x" : 0.00010427342931507155,
-            "y" : 83.6292724609375,
-            "z" : 0.00010427049710415304
+            "x" : 0,
+            "y" : 42.007568359375,
+            "z" : 0
          },
          "scale" : {
-            "x" : 0.99999517202377319,
-            "y" : 0.99999994039535522,
-            "z" : 0.99999517202377319
+            "x" : 1.1166895627975464,
+            "y" : 1.1166895627975464,
+            "z" : 1.1166895627975464
          }
       },
       "sTypeComponent" : {

@@ -5,13 +5,18 @@
 class Animation
 {
 public:
-    Animation();
+    Animation(const std::string& name);
     ~Animation();
 
     void                    addParamAnimation(std::shared_ptr<IParamAnimation> paramAnimation);
 
     void                    update();
     void                    reset();
+
+    const std::string&      getName() const;
+
+    std::vector<std::shared_ptr<IParamAnimation> >&  getParamsAnimations();
+    const std::vector<std::shared_ptr<IParamAnimation> >&  getParamsAnimations() const;
 
 private:
     // An animation has got multiple params animations

@@ -60,6 +60,7 @@ public:
 
 private:
     static Entity*                                          cloneEntity(const std::string& typeName);
+    static void                                             initAnimations(Entity* entity);
 
 private:
     // Store entities components names (ComponentFactory has components)

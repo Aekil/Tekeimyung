@@ -62,71 +62,6 @@ bool    PlayState::init()
 
     // Create character
     _player = PlayStates::createTile(_map, glm::vec3(9, 5, 1), eArchetype::PLAYER);
-    sRenderComponent* render = _player->getComponent<sRenderComponent>();
-    sTransformComponent* transform = _player->getComponent<sTransformComponent>();
-
-    using colorParam = ParamAnimation<glm::vec4>;
-    using scaleParam = ParamAnimation<glm::vec3>;
-    using rotationParam = ParamAnimation<glm::vec3>;
-
-    std::shared_ptr<colorParam > testColorAnimation = std::make_shared<colorParam >(&render->color);
-    std::shared_ptr<scaleParam > testScaleAnimation = std::make_shared<scaleParam >(&transform->scale);
-    std::shared_ptr<rotationParam > testRotationAnimation = std::make_shared<rotationParam >(&transform->rotation);
-
-    // Color key frame 1
-    colorParam::sKeyFrame colorKeyFrame1;
-    colorKeyFrame1.duration = 2.0f;
-    colorKeyFrame1.startValue = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
-    colorKeyFrame1.endValue = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
-    colorKeyFrame1.easing = colorParam::eEasing::EASE_IN;
-    testColorAnimation->addKeyFrame(colorKeyFrame1);
-
-    // Color key frame 2
-    colorParam::sKeyFrame colorKeyFrame2;
-    colorKeyFrame2.duration = 2.0f;
-    colorKeyFrame2.startValue = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
-    colorKeyFrame2.endValue = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
-    colorKeyFrame2.easing = colorParam::eEasing::EASE_OUT;
-    testColorAnimation->addKeyFrame(colorKeyFrame2);
-
-
-    // Scale key frame 1
-    scaleParam::sKeyFrame scaleKeyFrame1;
-    scaleKeyFrame1.duration = 2.0f;
-    scaleKeyFrame1.startValue = glm::vec3(1.0f, 1.0f, 1.0f);
-    scaleKeyFrame1.endValue = glm::vec3(2.0f, 2.0f, 2.0f);
-    scaleKeyFrame1.easing = scaleParam::eEasing::EASE_IN;
-    testScaleAnimation->addKeyFrame(scaleKeyFrame1);
-
-    // Scale key frame 2
-    scaleParam::sKeyFrame scaleKeyFrame2;
-    scaleKeyFrame2.duration = 2.0f;
-    scaleKeyFrame2.startValue = glm::vec3(2.0f, 2.0f, 2.0f);
-    scaleKeyFrame2.endValue = glm::vec3(1.0f, 1.0f, 1.0f);
-    scaleKeyFrame2.easing = scaleParam::eEasing::EASE_OUT;
-    testScaleAnimation->addKeyFrame(scaleKeyFrame2);
-
-
-    // Rotation key frame 1
-    rotationParam::sKeyFrame rotationKeyFrame1;
-    rotationKeyFrame1.duration = 3.0f;
-    rotationKeyFrame1.startValue = glm::vec3(0.0f, 0.0f, 0.0f);
-    rotationKeyFrame1.endValue = glm::vec3(0.0f, 360.0f, 0.0f);
-    rotationKeyFrame1.easing = rotationParam::eEasing::EASE_IN;
-    testRotationAnimation->addKeyFrame(rotationKeyFrame1);
-
-    // Rotation key frame 2
-    rotationParam::sKeyFrame rotationKeyFrame2;
-    rotationKeyFrame2.duration = 3.0f;
-    rotationKeyFrame2.startValue = glm::vec3(0.0f, 360.0f, 0.0f);
-    rotationKeyFrame2.endValue = glm::vec3(0.0f, 0.0f, 0.0f);
-    rotationKeyFrame2.easing = rotationParam::eEasing::EASE_OUT;
-    testRotationAnimation->addKeyFrame(rotationKeyFrame2);
-
-
-    _animation.addParamAnimation(testColorAnimation);
-    _animation.addParamAnimation(testScaleAnimation);
-    _animation.addParamAnimation(testRotationAnimation);
 
     // Initialize base map
     for (int y = 0; y < 15; y++) {
@@ -194,8 +129,15 @@ bool    PlayState::update(float elapsedTime)
         render->color = glm::vec4(1.0f, 0.0f, 0.0f, 0.0f);
     }
 
-    _animation.update();
+
+    sRenderComponent* render = _player->getComponent<sRenderComponent>();
     sTransformComponent* transform = _player->getComponent<sTransformComponent>();
+
+    for (auto animation: render->_animations)
+    {
+        animation->update();
+    }
+
     transform->updateTransform();
 
     return (GameState::update(elapsedTime));

@@ -148,6 +148,14 @@ void    JsonValue::setValue(const std::string& index, const JsonValue& value)
     _json[index] = value.get();
 }
 
+void    JsonValue::setValueVec(const std::string& index, const std::vector<JsonValue>& value)
+{
+    for (uint32_t i = 0; i < value.size(); i++)
+    {
+        _json[index][i] = value[i].get();
+    }
+}
+
 void    JsonValue::setBool(const std::string& index, bool value)
 {
     _json[index] = value;

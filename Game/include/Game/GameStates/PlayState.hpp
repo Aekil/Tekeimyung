@@ -38,6 +38,5 @@ private:
 
     // Entity enemies for demo
     //std::vector<Entity*>                _enemies;
-    Animation                           _animation;
     Entity*                             _player;
 };

@@ -1,6 +1,6 @@
 #include <Engine/Graphics/Animation.hpp>
 
-Animation::Animation(): _loop(true) {}
+Animation::Animation(const std::string& name): _name(name), _loop(true) {}
 
 Animation::~Animation() {}
 
@@ -30,4 +30,19 @@ void    Animation::reset()
     {
         paramAnimation->reset();
     }
+}
+
+const std::string&  Animation::getName() const
+{
+    return (_name);
+}
+
+std::vector<std::shared_ptr<IParamAnimation> >& Animation::getParamsAnimations()
+{
+    return (_paramsAnimations);
+}
+
+const std::vector<std::shared_ptr<IParamAnimation> >& Animation::getParamsAnimations() const
+{
+    return (_paramsAnimations);
 }

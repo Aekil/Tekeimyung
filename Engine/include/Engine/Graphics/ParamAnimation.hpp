@@ -9,11 +9,15 @@ struct sKeyFrame;
 class IParamAnimation
 {
 public:
-    IParamAnimation() {}
+    IParamAnimation(const std::string& name): _name(name) {}
     virtual ~IParamAnimation() {}
 
     virtual bool            update() { return (false); }
     virtual void            reset() {}
+    const std::string&      getName() { return (_name); }
+
+private:
+    std::string             _name;
 };
 
 // Param animation
@@ -23,7 +27,7 @@ template <typename T>
 class ParamAnimation: public IParamAnimation
 {
 public:
-    // Easing equation interpolations between startValue and endValue
+    // Easing equation interpolations between ParamAnimation::startValue and sKeyFrame::value
     enum class eEasing: char
     {
         NONE = 0,
@@ -35,16 +39,19 @@ public:
     struct sKeyFrame
     {
         float duration;
-        T startValue;
-        T endValue;
+        T value;
         eEasing easing;
     };
 
 public:
-    ParamAnimation(T* param);
+    ParamAnimation(const std::string& name, T* param);
     virtual ~ParamAnimation();
 
-    virtual void            addKeyFrame(sKeyFrame& keyFrame);
+    void                    addKeyFrame(sKeyFrame& keyFrame);
+    std::vector<sKeyFrame>& getKeyFrames() { return (_keyFrames); }
+    const std::vector<sKeyFrame>& getKeyFrames() const { return (_keyFrames); }
+
+    void                    setParam(T* param) { _param = param; reset(); }
 
     virtual bool            update();
     virtual void            reset();
@@ -58,6 +65,8 @@ private:
 
     // param updated during the animation
     T*                      _param;
+
+    T                       _startValue;
 
     uint16_t                _currentKeyFrame;
 };
