@@ -420,7 +420,10 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationsEditor(sRenderCompon
         ImGui::EndPopup();
     }
 
-    return (updateParamsAnimationsEditor(component, entity));
+    updateParamsAnimationsEditor(component, entity);
+    ImGui::PopStyleColor(3);
+
+    return (false);
 }
 
 bool    ComponentFactory<sRenderComponent>::updateParamsAnimationsEditor(sRenderComponent* component, Entity* entity)
@@ -453,10 +456,10 @@ bool    ComponentFactory<sRenderComponent>::updateParamsAnimationsEditor(sRender
 
             ImGui::PopID();
         }
+        else
+            ++it;
     }
     ImGui::Text("\n");
-
-    ImGui::PopStyleColor(3);
     return (false);
 }
 
