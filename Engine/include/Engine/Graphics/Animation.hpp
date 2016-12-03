@@ -15,6 +15,8 @@ public:
     void                    reset();
 
     const std::string&      getName() const;
+    void                    setName(const std::string& name);
+
     bool                    isLoop() const;
 
     std::vector<std::shared_ptr<IParamAnimation> >&  getParamsAnimations();

@@ -48,6 +48,11 @@ const std::string&  Animation::getName() const
     return (_name);
 }
 
+void    Animation::setName(const std::string& name)
+{
+    _name = name;
+}
+
 bool    Animation::isLoop() const
 {
     return (_loop);

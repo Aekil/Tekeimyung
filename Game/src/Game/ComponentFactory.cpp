@@ -420,6 +420,18 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationsEditor(sRenderCompon
         ImGui::EndPopup();
     }
 
+    // Edit animation name
+    const std::string& animationName = component->_selectedAnimation->getName();
+    std::vector<char> animationNameVec(animationName.cbegin(), animationName.cend());
+    animationNameVec.push_back(0);
+    animationNameVec.resize(64);
+
+    if (ImGui::InputText("Name", animationNameVec.data(), animationNameVec.size()))
+    {
+        component->_selectedAnimation->setName(animationNameVec.data());
+    }
+
+    // Edit animation params
     updateParamsAnimationsEditor(component, entity);
     ImGui::PopStyleColor(3);
 
