@@ -220,26 +220,23 @@ void    EntityDebugWindow::saveEntityTemplate(const std::string& typeName, Entit
     {
         auto &&components = EntityFactory::getComponents(typeName);
 
+        // Reverse animations
+        sRenderComponent* render = entity->getComponent<sRenderComponent>();
+        if (render && render->_selectedAnimation)
+        {
+            sTransformComponent* transform = entity->getComponent<sTransformComponent>();
+
+            render->_selectedAnimation->reset();
+            render->_selectedAnimation->update();
+            transform->updateTransform();
+        }
+
         // Save entity components
         for (auto component: entity->getComponents())
         {
             std::string componentName = IComponentFactory::getComponentNameWithHash(component->id);
             auto compFactory = IComponentFactory::getFactory(componentName);
             ASSERT(compFactory != nullptr, "The factory should exist");
-
-            // Reverse animtions
-            if (component->id == sTransformComponent::identifier)
-            {
-                sRenderComponent* render = entity->getComponent<sRenderComponent>();
-                sTransformComponent* transform = static_cast<sTransformComponent*>(component);
-
-                if (render->_selectedAnimation)
-                {
-                    render->_selectedAnimation->reset();
-                    render->_selectedAnimation->update();
-                    transform->updateTransform();
-                }
-            }
 
             compFactory->save(typeName, component);
 

@@ -28,6 +28,12 @@ template <typename T>
 class ParamAnimation: public IParamAnimation
 {
 public:
+    enum class eInterpolationType: char
+    {
+        RELATIVE = 0,
+        ABSOLUTE = 1
+    };
+
     // Easing equation interpolations between ParamAnimation::startValue and sKeyFrame::value
     enum class eEasing: char
     {
@@ -45,7 +51,7 @@ public:
     };
 
 public:
-    ParamAnimation(const std::string& name, T* param);
+    ParamAnimation(const std::string& name, T* param, eInterpolationType type = eInterpolationType::RELATIVE);
     virtual ~ParamAnimation();
 
     void                    addKeyFrame(const sKeyFrame& keyFrame);
@@ -58,7 +64,19 @@ public:
         return (_keyFrames[_currentKeyFrame]);
     }
 
-    void                    setParam(T* param) { _param = param; reset(); }
+    void                    setParam(T* param)
+    {
+        _param = param;
+
+        if (_type == eInterpolationType::ABSOLUTE && _param)
+        {
+            _initialValue = *_param;
+            _startValue = *_param;
+            _lastValue = *_param;
+        }
+
+        reset();
+    }
 
     virtual bool            update();
     virtual void            reset();
@@ -73,6 +91,8 @@ private:
 
     // Param updated during the animation
     T*                      _param;
+    // Initial value of _param
+    T                       _initialValue;
 
     // Last value from getNewValue()
     T                       _lastValue;
@@ -81,6 +101,9 @@ private:
     T                       _startValue;
 
     uint16_t                _currentKeyFrame;
+
+    // Interpolation type to use
+    eInterpolationType      _type;
 };
 
 #include <Engine/Graphics/ParamAnimation.inl>

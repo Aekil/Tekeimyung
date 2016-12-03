@@ -1,5 +1,9 @@
 template <typename T>
-ParamAnimation<T>::ParamAnimation(const std::string& name, T* param): IParamAnimation(name), _param(param), _currentKeyFrame(0) {}
+ParamAnimation<T>::ParamAnimation(const std::string& name, T* param, eInterpolationType type):
+                                IParamAnimation(name), _currentKeyFrame(0), _type(type)
+{
+    setParam(param);
+}
 
 template <typename T>
 ParamAnimation<T>::~ParamAnimation() {}
@@ -46,13 +50,13 @@ void    ParamAnimation<T>::reset()
 
     _timer.reset();
     _currentKeyFrame = 0;
-    _startValue = T();
+    _startValue = _type == eInterpolationType::ABSOLUTE ? _initialValue : T();
 }
 
 template <typename T>
 std::shared_ptr<IParamAnimation>    ParamAnimation<T>::clone()
 {
-    auto paramAnimation = std::make_shared<ParamAnimation<T>>(_name, nullptr);
+    auto paramAnimation = std::make_shared<ParamAnimation<T>>(_name, nullptr, _type);
 
     for (const auto& keyFrame: _keyFrames)
     {

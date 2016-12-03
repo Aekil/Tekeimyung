@@ -130,7 +130,7 @@ sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& 
             std::string name = animationParamJson.getString("name", "param");
             if (name == "color")
             {
-                std::shared_ptr<ParamAnimation<glm::vec4> > colorParam = std::make_shared<ParamAnimation<glm::vec4> >(name, nullptr);
+                std::shared_ptr<ParamAnimation<glm::vec4> > colorParam = std::make_shared<ParamAnimation<glm::vec4> >(name, nullptr, ParamAnimation<glm::vec4>::eInterpolationType::ABSOLUTE);
                 loadColorParamAnimation(colorParam, animationParamJson);
                 compAnimation->addParamAnimation(colorParam);
             }
@@ -278,7 +278,7 @@ bool    ComponentFactory<sRenderComponent>::updateEditor(const std::string& enti
     bool textureChanged = false;
     bool modelChanged = false;
 
-    changed |= ImGui::ColorEdit3("color", glm::value_ptr(component->color));
+    changed |= ImGui::ColorEdit4("color", glm::value_ptr(component->color));
 
     static std::vector<const char*>& typesString = const_cast<std::vector<const char*>&>(Geometry::getTypesString());
     int selectedType = static_cast<int>(std::find(typesString.cbegin(), typesString.cend(), Geometry::getGeometryTypeString(component->type)) - typesString.begin());
@@ -411,7 +411,7 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationsEditor(sRenderCompon
             if (ImGui::Button(param.c_str()))
             {
                 if (param == "color")
-                    component->_selectedAnimation->addParamAnimation(std::make_shared<ParamAnimation<glm::vec4> >(param, nullptr));
+                    component->_selectedAnimation->addParamAnimation(std::make_shared<ParamAnimation<glm::vec4> >(param, nullptr, ParamAnimation<glm::vec4>::eInterpolationType::ABSOLUTE));
                 else
                     component->_selectedAnimation->addParamAnimation(std::make_shared<ParamAnimation<glm::vec3> >(param, nullptr));
                 EntityFactory::initAnimations(entity);
