@@ -156,7 +156,7 @@ void    RenderingSystem::renderColliders(EntityManager& em)
     renderCollider(em.getEntity(EntityDebugWindow::getSelectedEntityId()));
 }
 
-void    RenderingSystem::renderParticles(EntityManager& em)
+void    RenderingSystem::renderParticles(EntityManager& em, float elapsedTime)
 {
     // Activate additive blending
     glBlendFunc(GL_SRC_ALPHA, GL_ONE);
@@ -170,6 +170,15 @@ void    RenderingSystem::renderParticles(EntityManager& em)
 
         sRenderComponent *render = entity->getComponent<sRenderComponent>();
         auto&& model = getModel(render);
+
+        // Update animation
+        if (render->_animator.isPlaying())
+        {
+            sTransformComponent* transform = entity->getComponent<sTransformComponent>();
+
+            render->_animator.update(elapsedTime);
+            transform->needUpdate = true;
+        }
 
         // Only freeze camera rotation for planes
         if (render->type == Geometry::eType::PLANE)
@@ -251,7 +260,7 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
 
     renderColliders(em);
 
-    renderParticles(em);
+    renderParticles(em, elapsedTime);
 
     // Enable depth buffer for opaque objects
     glDepthMask(GL_TRUE);
