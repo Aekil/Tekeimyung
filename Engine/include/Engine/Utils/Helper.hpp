@@ -40,4 +40,6 @@ public:
     {
         return ((1.0f - time) * from + time * to);
     }
+
+    static float        parametricBlend(float t);
 };
