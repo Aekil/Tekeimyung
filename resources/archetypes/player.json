@@ -27,6 +27,7 @@
                      "frames" : [
                         {
                            "duration" : 0.5,
+                           "easing" : "NONE",
                            "value" : {
                               "x" : 0,
                               "y" : 0,
@@ -35,6 +36,7 @@
                         },
                         {
                            "duration" : 1,
+                           "easing" : "NONE",
                            "value" : {
                               "x" : 0,
                               "y" : 0,
@@ -43,6 +45,7 @@
                         },
                         {
                            "duration" : 0.5,
+                           "easing" : "NONE",
                            "value" : {
                               "x" : 0,
                               "y" : 0,
@@ -61,6 +64,7 @@
                      "frames" : [
                         {
                            "duration" : 1,
+                           "easing" : "NONE",
                            "value" : {
                               "x" : 0,
                               "y" : 20,
@@ -69,6 +73,7 @@
                         },
                         {
                            "duration" : 1,
+                           "easing" : "NONE",
                            "value" : {
                               "x" : 0,
                               "y" : 0,
@@ -87,6 +92,7 @@
                      "frames" : [
                         {
                            "duration" : 1,
+                           "easing" : "NONE",
                            "value" : {
                               "w" : 1,
                               "x" : 1,
@@ -96,6 +102,7 @@
                         },
                         {
                            "duration" : 1,
+                           "easing" : "NONE",
                            "value" : {
                               "w" : 1,
                               "x" : 0,
@@ -105,6 +112,7 @@
                         },
                         {
                            "duration" : 1,
+                           "easing" : "NONE",
                            "value" : {
                               "w" : 1,
                               "x" : 0,
@@ -114,6 +122,7 @@
                         },
                         {
                            "duration" : 1,
+                           "easing" : "NONE",
                            "value" : {
                               "w" : 1,
                               "x" : 1,
@@ -123,6 +132,7 @@
                         },
                         {
                            "duration" : 1,
+                           "easing" : "NONE",
                            "value" : {
                               "w" : 1,
                               "x" : 1,
@@ -132,6 +142,7 @@
                         },
                         {
                            "duration" : 1,
+                           "easing" : "NONE",
                            "value" : {
                               "w" : 1,
                               "x" : 0,
@@ -146,6 +157,7 @@
                      "frames" : [
                         {
                            "duration" : 2,
+                           "easing" : "NONE",
                            "value" : {
                               "x" : 5,
                               "y" : 5,
@@ -154,6 +166,7 @@
                         },
                         {
                            "duration" : 1,
+                           "easing" : "NONE",
                            "value" : {
                               "x" : 3,
                               "y" : 3,
@@ -162,6 +175,7 @@
                         },
                         {
                            "duration" : 1,
+                           "easing" : "NONE",
                            "value" : {
                               "x" : 4,
                               "y" : 4,
@@ -170,6 +184,7 @@
                         },
                         {
                            "duration" : 2,
+                           "easing" : "NONE",
                            "value" : {
                               "x" : 0,
                               "y" : 0,
@@ -183,6 +198,7 @@
                      "frames" : [
                         {
                            "duration" : 1,
+                           "easing" : "NONE",
                            "value" : {
                               "x" : 0,
                               "y" : 90,
@@ -191,6 +207,7 @@
                         },
                         {
                            "duration" : 1,
+                           "easing" : "NONE",
                            "value" : {
                               "x" : 0,
                               "y" : 20,
@@ -199,6 +216,7 @@
                         },
                         {
                            "duration" : 1,
+                           "easing" : "NONE",
                            "value" : {
                               "x" : 50,
                               "y" : 10,
@@ -207,6 +225,7 @@
                         },
                         {
                            "duration" : 1,
+                           "easing" : "NONE",
                            "value" : {
                               "x" : 30,
                               "y" : 50,
@@ -215,6 +234,7 @@
                         },
                         {
                            "duration" : 2,
+                           "easing" : "NONE",
                            "value" : {
                               "x" : 0,
                               "y" : 0,
@@ -228,6 +248,7 @@
                      "frames" : [
                         {
                            "duration" : 1,
+                           "easing" : "NONE",
                            "value" : {
                               "x" : 0,
                               "y" : 360,
@@ -236,6 +257,7 @@
                         },
                         {
                            "duration" : 1,
+                           "easing" : "NONE",
                            "value" : {
                               "x" : 0,
                               "y" : 360,
@@ -244,6 +266,7 @@
                         },
                         {
                            "duration" : 1,
+                           "easing" : "NONE",
                            "value" : {
                               "x" : 360,
                               "y" : 0,
@@ -252,6 +275,7 @@
                         },
                         {
                            "duration" : 1,
+                           "easing" : "NONE",
                            "value" : {
                               "x" : 0,
                               "y" : 360,
@@ -260,6 +284,7 @@
                         },
                         {
                            "duration" : 2,
+                           "easing" : "NONE",
                            "value" : {
                               "x" : 0,
                               "y" : 0,
@@ -268,6 +293,34 @@
                         }
                      ],
                      "name" : "rotation"
+                  }
+               ]
+            },
+            {
+               "name" : "Moving up/doww (easing in/easing out)",
+               "params" : [
+                  {
+                     "frames" : [
+                        {
+                           "duration" : 1,
+                           "easing" : "EASE_IN",
+                           "value" : {
+                              "x" : 0,
+                              "y" : 20,
+                              "z" : 0
+                           }
+                        },
+                        {
+                           "duration" : 1,
+                           "easing" : "EASE_OUT",
+                           "value" : {
+                              "x" : 0,
+                              "y" : 0,
+                              "z" : 0
+                           }
+                        }
+                     ],
+                     "name" : "position"
                   }
                ]
             }
@@ -298,13 +351,13 @@
       },
       "sTransformComponent" : {
          "pos" : {
-            "x" : 225.00021362304688,
-            "y" : 14.000005722045898,
-            "z" : 125.00020599365234
+            "x" : 225,
+            "y" : 12.499721527099609,
+            "z" : 125.0001220703125
          },
          "rotation" : {
             "x" : 0,
-            "y" : -84.007652282714844,
+            "y" : -84.007659912109375,
             "z" : 0
          },
          "scale" : {
