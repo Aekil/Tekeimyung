@@ -1,5 +1,5 @@
 {
-    "name": "WAVE_SPAWNER",
+    "name": "BLOCK_SPAWNER",
     "components": {
             "sPositionComponent": {
                 "x": 0,
@@ -12,11 +12,12 @@
             "sTypeComponent": {
                 "type": "TILE_WALKABLE"
             },
-      "sWaveComponent": {
+      "sSpawnerComponent": {
         "firstWaitFinished": false,
-        "nbEntities": 10,
+        "nbEntities": 5,
         "secBeforeFirstSpawn": 3,
-        "secBeforeEachSpawn": 2
+        "secBeforeEachSpawn": 2,
+        "secBeforeLastSpawn": 5
       }
         }
 }

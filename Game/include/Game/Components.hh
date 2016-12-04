@@ -469,42 +469,44 @@ START_COMPONENT(sProjectileComponent)
     uint32_t    targetId;
 END_COMPONENT(sProjectileComponent)
 
-typedef struct sWaveData
+typedef struct  sSpawnerData
 {
     int         nbEntities;
     float       secBeforeFirstSpawn;
     float       secBeforeEachSpawn;
-}               tWaveData;
+    float       secBeforeLastSpawn;
+}               tSpawnerData;
 
-START_COMPONENT(sWaveComponent)
+START_COMPONENT(sSpawnerComponent)
     virtual sComponent* clone()
     {
-        sWaveComponent* component = new sWaveComponent();
+        sSpawnerComponent* component = new sSpawnerComponent();
         component->update(this);
 
         return (component);
     }
 
-    virtual void update(sWaveComponent* component)
+    virtual void update(sSpawnerComponent* component)
     {
         this->spawnPos = component->spawnPos;
         this->firstWaitFinished = component->firstWaitFinished;
         this->data.nbEntities = component->data.nbEntities;
         this->data.secBeforeFirstSpawn = component->data.secBeforeFirstSpawn;
         this->data.secBeforeEachSpawn = component->data.secBeforeEachSpawn;
+        this->data.secBeforeLastSpawn = component->data.secBeforeLastSpawn;
         //this->timer = component->timer; // ?
     }
 
     virtual void update(sComponent* component)
     {
-        update(static_cast<sWaveComponent*>(component));
+        update(static_cast<sSpawnerComponent*>(component));
     }
 
-    glm::vec3   spawnPos;
-    bool        firstWaitFinished;
-    tWaveData   data;
-    Timer       timer;
-END_COMPONENT(sWaveComponent)
+    glm::vec3       spawnPos;
+    bool            firstWaitFinished;
+    tSpawnerData    data;
+    Timer           timer;
+END_COMPONENT(sSpawnerComponent)
 
 enum class eCollisionState : int
 {

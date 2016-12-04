@@ -30,7 +30,7 @@
     PROCESS(sParticleEmitterComponent),\
     PROCESS(sTowerAIComponent),\
     PROCESS(sProjectileComponent),\
-    PROCESS(sWaveComponent),\
+    PROCESS(sSpawnerComponent),\
     PROCESS(sNameComponent),\
     PROCESS(sTransformComponent),\
     PROCESS(sResolutionComponent)\
@@ -355,11 +355,11 @@ public:
 
 
 /*
-** sWaveComponent
+** sSpawnerComponent
 */
 
 template <>
-class ComponentFactory<sWaveComponent> : public BaseComponentFactory<sWaveComponent>
+class ComponentFactory<sSpawnerComponent> : public BaseComponentFactory<sSpawnerComponent>
 {
 public:
     virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);

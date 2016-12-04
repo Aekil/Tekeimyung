@@ -734,20 +734,21 @@ bool        ComponentFactory<sProjectileComponent>::updateEditor(const std::stri
 
 
 /*
-** sWaveComponent
+** sSpawnerComponent
 */
 
-sComponent* ComponentFactory<sWaveComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
+sComponent* ComponentFactory<sSpawnerComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
 {
-    sWaveComponent*   component;
+    sSpawnerComponent*   component;
 
-    component = new sWaveComponent();
+    component = new sSpawnerComponent();
 
     //component->spawnPos = json.getVec3f("spawnPos", glm::vec3(0, 0, 0));
     component->firstWaitFinished = json.getBool("firstWaitFinished", false);
-    component->data.nbEntities = json.getInt("nSpawn", 10);
-    component->data.secBeforeFirstSpawn = json.getFloat("secBeforeFirstSpawn", 2);
-    component->data.secBeforeEachSpawn = json.getFloat("secBeforeEachSpawn", 3);
+    component->data.nbEntities = json.getInt("nSpawn", 5);
+    component->data.secBeforeFirstSpawn = json.getFloat("secBeforeFirstSpawn", 3);
+    component->data.secBeforeEachSpawn = json.getFloat("secBeforeEachSpawn", 2);
+    component->data.secBeforeLastSpawn = json.getFloat("secBeforeLastSpawn", 4);
     //component->timer
 
     return (component);

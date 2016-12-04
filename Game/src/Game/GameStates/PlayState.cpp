@@ -23,7 +23,7 @@
 #include <Game/Systems/InputSystem.hpp>
 #include <Game/Systems/TowerAISystem.hpp>
 #include <Game/Systems/ProjectileSystem.hpp>
-#include <Game/Systems/WaveSystem.hpp>
+#include <Game/Systems/SpawnerSystem.hpp>
 #include <Game/Components.hh>
 #include <Game/EntityDebugWindow.hpp>
 #include <Game/EntityFactory.hpp>
@@ -44,7 +44,7 @@ bool    PlayState::init()
 
     _map = new Map(*em, 20, 15, 4);
 
-    _world.addSystem<WaveSystem>(_map);
+    _world.addSystem<SpawnerSystem>(_map);
     _world.addSystem<InputSystem>();
     _world.addSystem<TowerAISystem>(_map);
     _world.addSystem<AISystem>();
@@ -81,22 +81,23 @@ bool    PlayState::init()
         }
     }
 
-    // Create wave
-    static uint32_t waveEntityID = WaveSystem::createWave(_map, glm::vec3(0.5, 5.5f, 0.5), eArchetype::WAVE_SPAWNER);
-    WaveSystem::setNbEntities(*em, waveEntityID, 5);
-    WaveSystem::setSecBeforeFirstSpawn(*em, waveEntityID, 3); // method 1
-    WaveSystem::setSecBeforeEachSpawn(*em, waveEntityID, 2);
+    // Create spawner
+    static uint32_t spawnerEntityID = SpawnerSystem::createSpawner(_map, glm::vec3(0.5, 5.5f, 0.5), eArchetype::BLOCK_SPAWNER);
+    SpawnerSystem::setNbEntities(*em, spawnerEntityID, 5);
+    SpawnerSystem::setSecBeforeFirstSpawn(*em, spawnerEntityID, 5); // method 1
+    SpawnerSystem::setSecBeforeEachSpawn(*em, spawnerEntityID, 2);
+    SpawnerSystem::setSecBeforeEachSpawn(*em, spawnerEntityID, 5);
 
-    static uint32_t waveEntityID2 = WaveSystem::createWave(_map, glm::vec3(0, 8.0f, 1), eArchetype::WAVE_SPAWNER);
-    tWaveData waveData = { 5, 5, 2 };
-    WaveSystem::setAllFields(*em, waveEntityID2, waveData); // method 2
+    static uint32_t spawnerEntityID2 = SpawnerSystem::createSpawner(_map, glm::vec3(0, 8.0f, 1), eArchetype::BLOCK_SPAWNER);
+    tSpawnerData spawnerData = { 5, 5, 2, 5 };
+    SpawnerSystem::setAllFields(*em, spawnerEntityID2, spawnerData); // method 2
 
-    static uint32_t waveEntityID3 = WaveSystem::createWave(_map, glm::vec3(0, 11.0f, 1), eArchetype::WAVE_SPAWNER);
-    WaveSystem::setSecBeforeFirstSpawn(*em, waveEntityID3, 1);
-    WaveSystem::setSecBeforeEachSpawn(*em, waveEntityID3, 3); // method 1 (partial)
+    static uint32_t spawnerEntityID3 = SpawnerSystem::createSpawner(_map, glm::vec3(0, 11.0f, 1), eArchetype::BLOCK_SPAWNER);
+    SpawnerSystem::setSecBeforeFirstSpawn(*em, spawnerEntityID3, 1);
+    SpawnerSystem::setSecBeforeEachSpawn(*em, spawnerEntityID3, 3); // method 1 (partial)
 
-    static uint32_t waveEntityID4 = WaveSystem::createWave(_map, glm::vec3(0, 2.0f, 1), eArchetype::WAVE_SPAWNER);
-    WaveSystem::setAllFields(*em, waveEntityID4, *WaveSystem::getStructData(3, 1, 5)); // method 3 : how to delete the tWaveData* in this use ?
+    static uint32_t spawnerEntityID4 = SpawnerSystem::createSpawner(_map, glm::vec3(0, 2.0f, 1), eArchetype::BLOCK_SPAWNER);
+    SpawnerSystem::setAllFields(*em, spawnerEntityID4, *SpawnerSystem::getStructData(3, 1, 5, 2)); // method 3 : how to delete the tSpawnerData* in this use ?
 
     // Create towers
     PlayStates::createTile(_map, glm::vec3(7, 4, 1), eArchetype::TOWER_FIRE);

@@ -22,12 +22,6 @@ class PlayState: public GameState
     virtual bool                        init();
     virtual bool                        update(float elapsedTime);
 
-/*private:
-    void                                createTile(const glm::vec3& pos, eArchetype type);
-    void                                createWave(const glm::vec3& pos, eArchetype type);
-    Entity*                             createParticlesEmittor(const glm::vec3& pos, eArchetype type);
-    void                                goTo(Entity* emitter, Entity* character);*/
-
     Entity*                             getSelectedEntity();
 
 private:

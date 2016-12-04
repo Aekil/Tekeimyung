@@ -34,5 +34,5 @@ bool    Collisions::sphereVSAABB(glm::vec3 spherePosition, float sphereRadius, g
                             (y - spherePosition.y) * (y - spherePosition.y) +
                             (z - spherePosition.z) * (z - spherePosition.z));
 
-    return distance < sphereRadius;
+    return (distance < sphereRadius);
 }

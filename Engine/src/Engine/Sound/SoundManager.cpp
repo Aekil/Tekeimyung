@@ -29,7 +29,7 @@ std::shared_ptr<SoundManager>   SoundManager::getInstance()
     {
         _soundManager = std::make_shared<SoundManager>();
     }
-    return _soundManager;
+    return (_soundManager);
 }
 
 bool    SoundManager::initialize()
