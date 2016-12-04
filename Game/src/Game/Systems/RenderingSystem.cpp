@@ -78,11 +78,11 @@ void    RenderingSystem::renderEntity(sRenderComponent *render, Entity* entity)
     auto&& model = getModel(render);
 
     // Update animation
-    if (render->_selectedAnimation)
+    if (render->_animator.isPlaying())
     {
         sTransformComponent* transform = entity->getComponent<sTransformComponent>();
 
-        render->_selectedAnimation->update();
+        render->_animator.update();
         transform->needUpdate = true;
     }
 

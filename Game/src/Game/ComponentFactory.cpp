@@ -113,14 +113,14 @@ sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& 
     {
         // Load animation
         JsonValue animationJon(animation);
-        std::shared_ptr<Animation> compAnimation = std::make_shared<Animation>(animationJon.getString("name", "animation"));
+        AnimationPtr compAnimation = std::make_shared<Animation>(animationJon.getString("name", "animation"));
 
         // Load animation params
         auto animationParams = animation["params"];
         if (animationParams.type() != Json::ValueType::arrayValue)
         {
             LOG_ERROR("%s::sRenderComponent loadFromJson error: animation params is not an array for animation \"%s\"", entityType.c_str(), compAnimation->getName().c_str());
-            component->_animations.push_back(compAnimation);
+            component->_animator.addAnimation(compAnimation);
             break;
         }
 
@@ -142,7 +142,7 @@ sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& 
             }
         }
 
-        component->_animations.push_back(compAnimation);
+        component->_animator.addAnimation(compAnimation);
     }
 
     return (component);
@@ -204,7 +204,7 @@ JsonValue&    ComponentFactory<sRenderComponent>::saveToJson(const std::string& 
     json.setString("texture", component->texture);
 
     // Save animations
-    for (const auto& animation: component->_animations)
+    for (const auto& animation: component->_animator.getAnimations())
     {
         JsonValue animationJson;
         std::vector<JsonValue> paramsAnimation;
@@ -346,9 +346,6 @@ bool    ComponentFactory<sRenderComponent>::updateEditor(const std::string& enti
 
 bool    ComponentFactory<sRenderComponent>::updateAnimationsEditor(sRenderComponent* component, Entity* entity)
 {
-    if (component->_animations.size() > 0 && !component->_selectedAnimation)
-        component->_selectedAnimation = component->_animations[0];
-
     ImGui::Text("\n");
     ImGui::Text("Animations");
     ImGui::SameLine();
@@ -356,23 +353,23 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationsEditor(sRenderCompon
     // Add new animation button
     if (ImGui::Button("Create"))
     {
-        std::shared_ptr<Animation> animation = std::make_shared<Animation>("animation");
-        component->_selectedAnimation = animation;
-        component->_animations.push_back(animation);
+        AnimationPtr animation = std::make_shared<Animation>("animation");
+        component->_animator.addAnimation(animation);
+        component->_animator.play("animation");
     }
 
     // Animations list
     ImGui::BeginChild("Animations", ImVec2(0, 100), true);
-    for (auto animation: component->_animations)
+    for (auto animation: component->_animator.getAnimations())
     {
-        if (ImGui::Selectable(animation->getName().c_str(), component->_selectedAnimation == animation))
-            {
-                component->_selectedAnimation = animation;
-            }
+        if (ImGui::Selectable(animation->getName().c_str(), component->_animator.getCurrentAnimation() == animation))
+        {
+            component->_animator.play(animation->getName());
+        }
     }
     ImGui::EndChild();
 
-    if (!component->_selectedAnimation)
+    if (!component->_animator.isPlaying())
         return (false);
 
     // Animation params style
@@ -380,16 +377,17 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationsEditor(sRenderCompon
     ImGui::PushStyleColor(ImGuiCol_HeaderHovered, ImColor(0.39f, 0.58f, 0.92f, 1.0f));
     ImGui::PushStyleColor(ImGuiCol_HeaderActive, ImColor(0.49f, 0.68f, 0.92f, 1.0f));
 
+    AnimationPtr playedAnimation = component->_animator.getCurrentAnimation();
+
     // Animation name text
     ImGui::Text("\n");
-    ImGui::Text(component->_selectedAnimation->getName().c_str());
+    ImGui::Text(playedAnimation->getName().c_str());
 
     // Remove animation
     ImGui::SameLine();
     if (ImGui::Button("Remove"))
     {
-        component->_animations.erase(std::find(component->_animations.begin(), component->_animations.end(), component->_selectedAnimation));
-        component->_selectedAnimation = nullptr;
+        component->_animator.removeAnimation(playedAnimation);
         ImGui::PopStyleColor(3);
         return (false);
     }
@@ -411,9 +409,9 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationsEditor(sRenderCompon
             if (ImGui::Button(param.c_str()))
             {
                 if (param == "color")
-                    component->_selectedAnimation->addParamAnimation(std::make_shared<ParamAnimation<glm::vec4> >(param, nullptr, ParamAnimation<glm::vec4>::eInterpolationType::ABSOLUTE));
+                    playedAnimation->addParamAnimation(std::make_shared<ParamAnimation<glm::vec4> >(param, nullptr, ParamAnimation<glm::vec4>::eInterpolationType::ABSOLUTE));
                 else
-                    component->_selectedAnimation->addParamAnimation(std::make_shared<ParamAnimation<glm::vec3> >(param, nullptr));
+                    playedAnimation->addParamAnimation(std::make_shared<ParamAnimation<glm::vec3> >(param, nullptr));
                 EntityFactory::initAnimations(entity);
             }
         }
@@ -421,28 +419,28 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationsEditor(sRenderCompon
     }
 
     // Edit animation name
-    const std::string& animationName = component->_selectedAnimation->getName();
+    const std::string& animationName = playedAnimation->getName();
     std::vector<char> animationNameVec(animationName.cbegin(), animationName.cend());
     animationNameVec.push_back(0);
     animationNameVec.resize(64);
 
     if (ImGui::InputText("Name", animationNameVec.data(), animationNameVec.size()))
     {
-        component->_selectedAnimation->setName(animationNameVec.data());
+        playedAnimation->setName(animationNameVec.data());
     }
 
     // Edit animation params
-    updateParamsAnimationsEditor(component, entity);
+    updateParamsAnimationsEditor(playedAnimation, entity);
     ImGui::PopStyleColor(3);
 
     return (false);
 }
 
-bool    ComponentFactory<sRenderComponent>::updateParamsAnimationsEditor(sRenderComponent* component, Entity* entity)
+bool    ComponentFactory<sRenderComponent>::updateParamsAnimationsEditor(AnimationPtr playedAnimation, Entity* entity)
 {
     uint32_t frameNb = 0;
 
-    auto& paramsAnimations = component->_selectedAnimation->getParamsAnimations();
+    auto& paramsAnimations = playedAnimation->getParamsAnimations();
     for (auto it = paramsAnimations.begin(); it != paramsAnimations.end();)
     {
         auto paramAnimation = *it;

@@ -222,12 +222,12 @@ void    EntityDebugWindow::saveEntityTemplate(const std::string& typeName, Entit
 
         // Reverse animations
         sRenderComponent* render = entity->getComponent<sRenderComponent>();
-        if (render && render->_selectedAnimation)
+        if (render && render->_animator.isPlaying())
         {
             sTransformComponent* transform = entity->getComponent<sTransformComponent>();
 
-            render->_selectedAnimation->reset();
-            render->_selectedAnimation->update();
+            render->_animator.stop();
+            render->_animator.update();
             transform->updateTransform();
         }
 

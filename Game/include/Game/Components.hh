@@ -19,7 +19,7 @@
 #include <Engine/Graphics/Geometries/GeometryFactory.hpp>
 #include <Engine/Graphics/Geometries/Box.hpp>
 #include <Engine/Graphics/Geometries/Sphere.hpp>
-#include <Engine/Graphics/Animation.hpp>
+#include <Engine/Graphics/Animator.hpp>
 #include <Engine/Utils/RessourceManager.hpp>
 #include <Engine/Utils/Timer.hpp>
 
@@ -41,18 +41,7 @@ START_COMPONENT(sRenderComponent)
         this->_model = component->_model;
         this->type = component->type;
         this->texture = component->texture;
-        this->_animations.clear();
-        this->_selectedAnimation = nullptr;
-
-        uint32_t nbAnimations = (uint32_t)component->_animations.size();
-        for (uint32_t i = 0; i < nbAnimations; ++i)
-        {
-            auto animation = component->_animations[i];
-            this->_animations.push_back(std::make_shared<Animation>(*animation));
-        }
-
-        if (nbAnimations > 0)
-            this->_selectedAnimation = this->_animations[0];
+        this->_animator = component->_animator;
     }
 
     virtual void update(sComponent* component)
@@ -73,10 +62,8 @@ START_COMPONENT(sRenderComponent)
     bool animated;
 
     std::shared_ptr<Model> _model;
-    std::vector<std::shared_ptr<Animation> > _animations;
 
-    // Selected animation in the editor
-    std::shared_ptr<Animation>              _selectedAnimation;
+    Animator                _animator;
 
     // Model type
     Geometry::eType type;

@@ -199,12 +199,12 @@ void    EntityFactory::initAnimations(Entity* entity)
 {
     sRenderComponent* render = entity->getComponent<sRenderComponent>();
 
-    if (!render || render->_animations.size() == 0)
+    if (!render || !render->_animator.isPlaying())
         return;
 
     sTransformComponent* transform = entity->getComponent<sTransformComponent>();
 
-    for (auto animation: render->_animations)
+    for (auto animation: render->_animator.getAnimations())
     {
         for (auto paramAnimation: animation->getParamsAnimations())
         {
@@ -219,8 +219,8 @@ void    EntityFactory::initAnimations(Entity* entity)
         }
     }
 
-    if (render->_animations.size() > 0 && !render->_selectedAnimation)
-        render->_selectedAnimation = render->_animations[0];
+    if (render->_animator.getAnimations().size() > 0 && !render->_animator.isPlaying())
+        render->_animator.play(render->_animator.getAnimations()[0]->getName());
 }
 
 void    EntityFactory::updateEntitiesComponents(Entity* from, const std::string& entityName, IComponentFactory* compFactory, sComponent* component)
