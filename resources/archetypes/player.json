@@ -21,7 +21,67 @@
          "animated" : false,
          "animations" : [
             {
-               "name" : "Player animation test",
+               "name" : "Moving left/right",
+               "params" : [
+                  {
+                     "frames" : [
+                        {
+                           "duration" : 0.5,
+                           "value" : {
+                              "x" : 0,
+                              "y" : 0,
+                              "z" : 20
+                           }
+                        },
+                        {
+                           "duration" : 1,
+                           "value" : {
+                              "x" : 0,
+                              "y" : 0,
+                              "z" : -20
+                           }
+                        },
+                        {
+                           "duration" : 0.5,
+                           "value" : {
+                              "x" : 0,
+                              "y" : 0,
+                              "z" : 0
+                           }
+                        }
+                     ],
+                     "name" : "position"
+                  }
+               ]
+            },
+            {
+               "name" : "Moving up/down",
+               "params" : [
+                  {
+                     "frames" : [
+                        {
+                           "duration" : 1,
+                           "value" : {
+                              "x" : 0,
+                              "y" : 20,
+                              "z" : 0
+                           }
+                        },
+                        {
+                           "duration" : 1,
+                           "value" : {
+                              "x" : 0,
+                              "y" : 0,
+                              "z" : 0
+                           }
+                        }
+                     ],
+                     "name" : "position"
+                  }
+               ]
+            },
+            {
+               "name" : "whut ?",
                "params" : [
                   {
                      "frames" : [
@@ -38,7 +98,43 @@
                            "duration" : 1,
                            "value" : {
                               "w" : 1,
+                              "x" : 0,
+                              "y" : 1,
+                              "z" : 0
+                           }
+                        },
+                        {
+                           "duration" : 1,
+                           "value" : {
+                              "w" : 1,
+                              "x" : 0,
+                              "y" : 0,
+                              "z" : 1
+                           }
+                        },
+                        {
+                           "duration" : 1,
+                           "value" : {
+                              "w" : 1,
                               "x" : 1,
+                              "y" : 1,
+                              "z" : 0
+                           }
+                        },
+                        {
+                           "duration" : 1,
+                           "value" : {
+                              "w" : 1,
+                              "x" : 1,
+                              "y" : 0,
+                              "z" : 1
+                           }
+                        },
+                        {
+                           "duration" : 1,
+                           "value" : {
+                              "w" : 1,
+                              "x" : 0,
                               "y" : 1,
                               "z" : 1
                            }
@@ -49,15 +145,31 @@
                   {
                      "frames" : [
                         {
-                           "duration" : 1,
+                           "duration" : 2,
                            "value" : {
-                              "x" : 1,
-                              "y" : 1,
-                              "z" : 1
+                              "x" : 5,
+                              "y" : 5,
+                              "z" : 5
                            }
                         },
                         {
                            "duration" : 1,
+                           "value" : {
+                              "x" : 3,
+                              "y" : 3,
+                              "z" : 3
+                           }
+                        },
+                        {
+                           "duration" : 1,
+                           "value" : {
+                              "x" : 4,
+                              "y" : 4,
+                              "z" : 4
+                           }
+                        },
+                        {
+                           "duration" : 2,
                            "value" : {
                               "x" : 0,
                               "y" : 0,
@@ -73,12 +185,36 @@
                            "duration" : 1,
                            "value" : {
                               "x" : 0,
-                              "y" : 50,
+                              "y" : 90,
                               "z" : 0
                            }
                         },
                         {
                            "duration" : 1,
+                           "value" : {
+                              "x" : 0,
+                              "y" : 20,
+                              "z" : 60
+                           }
+                        },
+                        {
+                           "duration" : 1,
+                           "value" : {
+                              "x" : 50,
+                              "y" : 10,
+                              "z" : 90
+                           }
+                        },
+                        {
+                           "duration" : 1,
+                           "value" : {
+                              "x" : 30,
+                              "y" : 50,
+                              "z" : 10
+                           }
+                        },
+                        {
+                           "duration" : 2,
                            "value" : {
                               "x" : 0,
                               "y" : 0,
@@ -87,14 +223,59 @@
                         }
                      ],
                      "name" : "position"
+                  },
+                  {
+                     "frames" : [
+                        {
+                           "duration" : 1,
+                           "value" : {
+                              "x" : 0,
+                              "y" : 360,
+                              "z" : 0
+                           }
+                        },
+                        {
+                           "duration" : 1,
+                           "value" : {
+                              "x" : 0,
+                              "y" : 360,
+                              "z" : 360
+                           }
+                        },
+                        {
+                           "duration" : 1,
+                           "value" : {
+                              "x" : 360,
+                              "y" : 0,
+                              "z" : 360
+                           }
+                        },
+                        {
+                           "duration" : 1,
+                           "value" : {
+                              "x" : 0,
+                              "y" : 360,
+                              "z" : 0
+                           }
+                        },
+                        {
+                           "duration" : 2,
+                           "value" : {
+                              "x" : 0,
+                              "y" : 0,
+                              "z" : 0
+                           }
+                        }
+                     ],
+                     "name" : "rotation"
                   }
                ]
             }
          ],
          "color" : {
             "a" : 1,
-            "b" : 0.3997802734375,
-            "g" : 0.3997802734375,
+            "b" : 0.98333263397216797,
+            "g" : 0.98333263397216797,
             "r" : 1
          },
          "geometry" : null,
@@ -117,19 +298,19 @@
       },
       "sTransformComponent" : {
          "pos" : {
-            "x" : 225,
-            "y" : 10,
-            "z" : 125
+            "x" : 225.00021362304688,
+            "y" : 14.000005722045898,
+            "z" : 125.00020599365234
          },
          "rotation" : {
             "x" : 0,
-            "y" : -87.6278076171875,
+            "y" : -84.007652282714844,
             "z" : 0
          },
          "scale" : {
-            "x" : 1,
-            "y" : 1,
-            "z" : 1
+            "x" : 1.0416684150695801,
+            "y" : 1.0416684150695801,
+            "z" : 1.0416684150695801
          }
       },
       "sTypeComponent" : {

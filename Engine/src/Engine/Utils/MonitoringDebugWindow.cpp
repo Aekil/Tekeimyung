@@ -21,7 +21,7 @@ std::shared_ptr<MonitoringDebugWindow>   MonitoringDebugWindow::getInstance()
     return _monitoringDebugWindow;
 }
 
-void    MonitoringDebugWindow::build()
+void    MonitoringDebugWindow::build(float elapsedTime)
 {
     if (!ImGui::Begin(_title.c_str(), &_displayed, ImGuiWindowFlags_NoResize))
     {
@@ -48,7 +48,7 @@ void    MonitoringDebugWindow::build()
         {
             system.second.timeLogs.push_back(system.second.timeSec); // update timeLogs
         }
-        
+
         // display monitoring informations (time average)
         if (ENABLE_COLOR) // if macro ENABLE_COLOR = true, display with colors
         {
@@ -98,7 +98,7 @@ uint16_t    MonitoringDebugWindow::registerSystem(std::string name)
     _systemsRegistered[keyID].timeSec = 0;
     _systemsRegistered[keyID].avgTimeSec = 0;
     _systemsRegistered[keyID].oldAvg = 0;
-    
+
     return (keyID++);
 }
 
@@ -116,7 +116,7 @@ float   MonitoringDebugWindow::calcTimeAverage(std::vector<float> timeLogs)
         avg += time;
     }
     avg /= timeLogs.capacity();
-   
+
 
     return (avg);
 }

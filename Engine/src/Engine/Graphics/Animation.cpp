@@ -21,13 +21,13 @@ void    Animation::addParamAnimation(std::shared_ptr<IParamAnimation> paramAnima
     _paramsAnimations.push_back(paramAnimation);
 }
 
-void    Animation::update()
+void    Animation::update(float elapsedTime)
 {
     bool resetAnimation = true;
     for (auto paramAnimation: _paramsAnimations)
     {
         // ParamAnimation::update return true if the param animation is not finished
-        if (paramAnimation->update())
+        if (paramAnimation->update(elapsedTime))
             resetAnimation = false;
     }
 

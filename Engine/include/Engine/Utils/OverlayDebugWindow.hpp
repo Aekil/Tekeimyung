@@ -8,5 +8,5 @@ public:
     OverlayDebugWindow();
     virtual ~OverlayDebugWindow();
 
-    virtual void        build();
+    virtual void        build(float elapsedTime);
 };

@@ -11,7 +11,7 @@ public:
 
     void                    addParamAnimation(std::shared_ptr<IParamAnimation> paramAnimation);
 
-    void                    update();
+    void                    update(float elapsedTime);
     void                    reset();
 
     const std::string&      getName() const;

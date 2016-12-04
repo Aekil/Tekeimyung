@@ -226,6 +226,7 @@ JsonValue&    ComponentFactory<sRenderComponent>::saveToJson(const std::string& 
         animationJson.setValueVec("params", paramsAnimation);
         animations.push_back(animationJson);
     }
+
     json.setValueVec("animations", animations);
 
     return (json);
@@ -387,7 +388,9 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationsEditor(sRenderCompon
     ImGui::SameLine();
     if (ImGui::Button("Remove"))
     {
+        sTransformComponent* transform = entity->getComponent<sTransformComponent>();
         component->_animator.removeAnimation(playedAnimation);
+        transform->needUpdate = true;
         ImGui::PopStyleColor(3);
         return (false);
     }
@@ -451,7 +454,6 @@ bool    ComponentFactory<sRenderComponent>::updateParamsAnimationsEditor(Animati
             // Remove animation param
             if (ImGui::Button("Remove"))
             {
-                LOG_INFO("Remove %s", paramAnimation->getName().c_str());
                 it = paramsAnimations.erase(it);
                 ImGui::PopID();
                 continue;

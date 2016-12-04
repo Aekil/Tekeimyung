@@ -12,7 +12,7 @@ public:
     IParamAnimation(const std::string& name): _name(name) {}
     virtual ~IParamAnimation() {}
 
-    virtual bool            update() = 0;
+    virtual bool            update(float elapsedTime) = 0;
     virtual void            reset() = 0;
     virtual std::shared_ptr<IParamAnimation> clone() = 0;
     const std::string&      getName() { return (_name); }
@@ -78,7 +78,7 @@ public:
         reset();
     }
 
-    virtual bool            update();
+    virtual bool            update(float elapsedTime);
     virtual void            reset();
     virtual std::shared_ptr<IParamAnimation>    clone();
 
@@ -87,7 +87,8 @@ private:
 
 private:
     std::vector<sKeyFrame>  _keyFrames;
-    Timer                   _timer;
+
+    float                   _elapsedTime;
 
     // Param updated during the animation
     T*                      _param;

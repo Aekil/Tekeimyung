@@ -23,7 +23,7 @@ public:
 
     virtual void update(EntityManager& em, float elapsedTime);
     virtual bool                            init();
-    void                                    renderEntity(sRenderComponent *render, Entity* entity);
+    void                                    renderEntity(sRenderComponent *render, Entity* entity, float elapsedTime);
     void                                    renderCollider(Entity* entity);
     void                                    renderColliders(EntityManager& em);
     void                                    renderParticles(EntityManager& em);

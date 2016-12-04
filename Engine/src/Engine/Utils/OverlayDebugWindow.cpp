@@ -6,7 +6,7 @@ OverlayDebugWindow::OverlayDebugWindow(): DebugWindow() {}
 
 OverlayDebugWindow::~OverlayDebugWindow() {}
 
-void    OverlayDebugWindow::build()
+void    OverlayDebugWindow::build(float elapsedTime)
 {
     ImGui::SetNextWindowPos(ImVec2(10, 10));
     if (!ImGui::Begin(_title.c_str(), &_displayed, ImVec2(0, 0), 0.3f,

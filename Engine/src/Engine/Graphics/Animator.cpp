@@ -7,6 +7,7 @@ Animator::Animator(): _currentAnimation(nullptr) {}
 Animator::Animator(const Animator& rhs): _currentAnimation(nullptr)
 {
     _animations.clear();
+    _currentAnimation = nullptr;
 
     uint32_t nbAnimations = (uint32_t)rhs.getAnimations().size();
     for (uint32_t i = 0; i < nbAnimations; ++i)
@@ -24,6 +25,7 @@ Animator::~Animator() {}
 Animator&   Animator::operator=(const Animator& rhs)
 {
     _animations.clear();
+    _currentAnimation = nullptr;
 
     uint32_t nbAnimations = (uint32_t)rhs.getAnimations().size();
     for (uint32_t i = 0; i < nbAnimations; ++i)
@@ -46,7 +48,11 @@ void    Animator::addAnimation(AnimationPtr animation)
 void    Animator::removeAnimation(AnimationPtr animation)
 {
     if (animation == _currentAnimation)
+    {
+        stop();
+        update(0);
         _currentAnimation = nullptr;
+    }
 
     _animations.erase(std::find(_animations.begin(), _animations.end(), animation));
 }
@@ -96,7 +102,10 @@ bool    Animator::play(const std::string& name)
 
     // An animation is already playing, reset it to reset transforms
     if (_currentAnimation)
+    {
         _currentAnimation->reset();
+        _currentAnimation->update(0);
+    }
 
     // Set new played animation
     _currentAnimation = animation;
@@ -125,8 +134,8 @@ void    Animator::stop()
         _currentAnimation->reset();
 }
 
-void    Animator::update()
+void    Animator::update(float elapsedTime)
 {
     if (_currentAnimation)
-        _currentAnimation->update();
+        _currentAnimation->update(elapsedTime);
 }

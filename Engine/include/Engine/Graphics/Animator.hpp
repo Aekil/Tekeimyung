@@ -29,7 +29,7 @@ public:
     AnimationPtr                        getCurrentAnimation() const;
 
     void                                stop();
-    void                                update();
+    void                                update(float elapsedTime);
 
 private:
     std::vector<AnimationPtr>           _animations;

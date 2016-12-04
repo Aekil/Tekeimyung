@@ -36,7 +36,7 @@ public:
 
     static std::shared_ptr<MonitoringDebugWindow>   getInstance();
 
-    virtual void                                    build();
+    virtual void                                    build(float elapsedTime);
 
     uint16_t                                        registerSystem(std::string name);
     void                                            updateSystem(uint16_t key, tMonitoring newData);

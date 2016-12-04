@@ -72,7 +72,7 @@ bool    RenderingSystem::init()
     return (true);
 }
 
-void    RenderingSystem::renderEntity(sRenderComponent *render, Entity* entity)
+void    RenderingSystem::renderEntity(sRenderComponent *render, Entity* entity, float elapsedTime)
 {
     sTransformComponent *transform = entity->getComponent<sTransformComponent>();
     auto&& model = getModel(render);
@@ -82,7 +82,7 @@ void    RenderingSystem::renderEntity(sRenderComponent *render, Entity* entity)
     {
         sTransformComponent* transform = entity->getComponent<sTransformComponent>();
 
-        render->_animator.update();
+        render->_animator.update(elapsedTime);
         transform->needUpdate = true;
     }
 
@@ -214,7 +214,7 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
             sRenderComponent *render = entity->getComponent<sRenderComponent>();
 
             if (!isTransparent(render))
-                renderEntity(render, entity);
+                renderEntity(render, entity, elapsedTime);
             else
                 _transparentEntities[entity->id] = entity;
         }
@@ -242,7 +242,7 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
             else
             {
                 sRenderComponent *render = entity->getComponent<sRenderComponent>();
-                renderEntity(render, entity);
+                renderEntity(render, entity, elapsedTime);
                 ++it;
             }
         }

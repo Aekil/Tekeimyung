@@ -1,6 +1,6 @@
 template <typename T>
 ParamAnimation<T>::ParamAnimation(const std::string& name, T* param, eInterpolationType type):
-                                IParamAnimation(name), _currentKeyFrame(0), _type(type)
+                                IParamAnimation(name), _currentKeyFrame(0), _type(type), _elapsedTime(0.0f)
 {
     setParam(param);
 }
@@ -15,8 +15,10 @@ void    ParamAnimation<T>::addKeyFrame(const sKeyFrame& keyFrame)
 }
 
 template <typename T>
-bool    ParamAnimation<T>::update()
+bool    ParamAnimation<T>::update(float elapsedTime)
 {
+    _elapsedTime += elapsedTime;
+
     // There is no key frame in the param animation
     if (!_param || _keyFrames.size() == 0)
         return (false);
@@ -32,9 +34,9 @@ bool    ParamAnimation<T>::update()
     _lastValue = newValue;
 
     // Go to next key frame if current is finished
-    if (_timer.getElapsedTime() >= keyFrame.duration)
+    if (_elapsedTime >= keyFrame.duration)
     {
-        _timer.reset();
+        _elapsedTime = 0.0f;
         _currentKeyFrame++;
         _startValue = keyFrame.value;
     }
@@ -48,7 +50,7 @@ void    ParamAnimation<T>::reset()
     if (!_param)
         return;
 
-    _timer.reset();
+    _elapsedTime = 0.0f;
     _currentKeyFrame = 0;
     _startValue = _type == eInterpolationType::ABSOLUTE ? _initialValue : T();
 }
@@ -69,19 +71,17 @@ std::shared_ptr<IParamAnimation>    ParamAnimation<T>::clone()
 template <typename T>
 T   ParamAnimation<T>::getNewValue(const sKeyFrame& keyFrame)
 {
-    float ellapsedTime = _timer.getElapsedTime();
-
     if (!keyFrame.duration)
         return (keyFrame.value);
 
     switch (keyFrame.easing)
     {
         case ParamAnimation<T>::eEasing::NONE:
-            return Helper::lerp<T>(_startValue, keyFrame.value, ellapsedTime / keyFrame.duration);
+            return Helper::lerp<T>(_startValue, keyFrame.value, _elapsedTime / keyFrame.duration);
         case ParamAnimation<T>::eEasing::EASE_IN:
-            return Helper::lerp<T>(_startValue, keyFrame.value, sin(ellapsedTime / keyFrame.duration * glm::pi<float>() * 0.5f));
+            return Helper::lerp<T>(_startValue, keyFrame.value, sin(_elapsedTime / keyFrame.duration * glm::pi<float>() * 0.5f));
         case ParamAnimation<T>::eEasing::EASE_OUT:
-            return Helper::lerp<T>(_startValue, keyFrame.value, 1.0f - cos(ellapsedTime / keyFrame.duration * glm::pi<float>() * 0.5f));
+            return Helper::lerp<T>(_startValue, keyFrame.value, 1.0f - cos(_elapsedTime / keyFrame.duration * glm::pi<float>() * 0.5f));
         default:
         return (_startValue);
     }

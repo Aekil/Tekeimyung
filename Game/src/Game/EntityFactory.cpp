@@ -218,9 +218,6 @@ void    EntityFactory::initAnimations(Entity* entity)
                 std::static_pointer_cast<ParamAnimation<glm::vec4>>(paramAnimation)->setParam(&render->color);
         }
     }
-
-    if (render->_animator.getAnimations().size() > 0 && !render->_animator.isPlaying())
-        render->_animator.play(render->_animator.getAnimations()[0]->getName());
 }
 
 void    EntityFactory::updateEntitiesComponents(Entity* from, const std::string& entityName, IComponentFactory* compFactory, sComponent* component)
