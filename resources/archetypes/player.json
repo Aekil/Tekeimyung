@@ -64,16 +64,16 @@
                      "frames" : [
                         {
                            "duration" : 1,
-                           "easing" : "NONE",
+                           "easing" : "EASE_IN",
                            "value" : {
                               "x" : 0,
-                              "y" : 20,
+                              "y" : 100,
                               "z" : 0
                            }
                         },
                         {
                            "duration" : 1,
-                           "easing" : "NONE",
+                           "easing" : "EASE_OUT",
                            "value" : {
                               "x" : 0,
                               "y" : 0,
@@ -323,6 +323,88 @@
                      "name" : "position"
                   }
                ]
+            },
+            {
+               "name" : "bouncing",
+               "params" : [
+                  {
+                     "frames" : [
+                        {
+                           "duration" : 0.5,
+                           "easing" : "EASE_IN",
+                           "value" : {
+                              "x" : 0,
+                              "y" : 40,
+                              "z" : 0
+                           }
+                        },
+                        {
+                           "duration" : 0.5,
+                           "easing" : "EASE_OUT",
+                           "value" : {
+                              "x" : 0,
+                              "y" : 0,
+                              "z" : 0
+                           }
+                        },
+                        {
+                           "duration" : 0.5,
+                           "easing" : "EASE_IN",
+                           "value" : {
+                              "x" : 0,
+                              "y" : 20,
+                              "z" : 0
+                           }
+                        },
+                        {
+                           "duration" : 0.5,
+                           "easing" : "EASE_OUT",
+                           "value" : {
+                              "x" : 0,
+                              "y" : 0,
+                              "z" : 0
+                           }
+                        },
+                        {
+                           "duration" : 0.25,
+                           "easing" : "EASE_IN",
+                           "value" : {
+                              "x" : 0,
+                              "y" : 10,
+                              "z" : 0
+                           }
+                        },
+                        {
+                           "duration" : 0.25,
+                           "easing" : "EASE_OUT",
+                           "value" : {
+                              "x" : 0,
+                              "y" : 0,
+                              "z" : 0
+                           }
+                        },
+                        {
+                           "duration" : 0.25,
+                           "easing" : "EASE_IN",
+                           "value" : {
+                              "x" : 0,
+                              "y" : 5,
+                              "z" : 0
+                           }
+                        },
+                        {
+                           "duration" : 0.25,
+                           "easing" : "EASE_OUT",
+                           "value" : {
+                              "x" : 0,
+                              "y" : 0,
+                              "z" : 0
+                           }
+                        }
+                     ],
+                     "name" : "position"
+                  }
+               ]
             }
          ],
          "color" : {
@@ -352,8 +434,8 @@
       "sTransformComponent" : {
          "pos" : {
             "x" : 225,
-            "y" : 12.499721527099609,
-            "z" : 125.0001220703125
+            "y" : 12.499866485595703,
+            "z" : 124.99993896484375
          },
          "rotation" : {
             "x" : 0,

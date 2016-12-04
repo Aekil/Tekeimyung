@@ -42,4 +42,6 @@ public:
     }
 
     static float        parametricBlend(float t);
+    static float        smoothStep(float t);
+    static float        smootherStep(float t);
 };

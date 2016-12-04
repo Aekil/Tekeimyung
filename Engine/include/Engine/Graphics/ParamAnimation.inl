@@ -74,16 +74,21 @@ T   ParamAnimation<T>::getNewValue(const sKeyFrame& keyFrame)
     if (!keyFrame.duration)
         return (keyFrame.value);
 
+    // Value between 0 and 1
+    float time = _elapsedTime / keyFrame.duration;
+
     switch (keyFrame.easing)
     {
         case IParamAnimation::eEasing::NONE:
-            return Helper::lerp<T>(_startValue, keyFrame.value, _elapsedTime / keyFrame.duration);
+            return Helper::lerp<T>(_startValue, keyFrame.value, time);
         case IParamAnimation::eEasing::EASE_IN:
-            return Helper::lerp<T>(_startValue, keyFrame.value, sin(_elapsedTime / keyFrame.duration * glm::pi<float>() * 0.5f));
+            return Helper::lerp<T>(_startValue, keyFrame.value, sin(time * glm::pi<float>() * 0.5f));
         case IParamAnimation::eEasing::EASE_OUT:
-            return Helper::lerp<T>(_startValue, keyFrame.value, 1.0f - cos(_elapsedTime / keyFrame.duration * glm::pi<float>() * 0.5f));
+            return Helper::lerp<T>(_startValue, keyFrame.value, 1.0f - cos(time * glm::pi<float>() * 0.5f));
         case IParamAnimation::eEasing::EASE_IN_OUT:
-            return Helper::lerp<T>(_startValue, keyFrame.value, Helper::parametricBlend(_elapsedTime / keyFrame.duration));
+            return Helper::lerp<T>(_startValue, keyFrame.value, Helper::smootherStep(time));
+        case IParamAnimation::eEasing::EXPONENTIAL:
+            return Helper::lerp<T>(_startValue, keyFrame.value, time * time);
         default:
             return (_startValue);
     }
