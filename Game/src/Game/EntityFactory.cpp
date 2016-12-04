@@ -227,7 +227,7 @@ void    EntityFactory::reverseAnimations(Entity* entity)
     {
         sTransformComponent* transform = entity->getComponent<sTransformComponent>();
 
-        render->_animator.stop();
+        render->_animator.reset();
         render->_animator.update(0);
         transform->updateTransform();
     }

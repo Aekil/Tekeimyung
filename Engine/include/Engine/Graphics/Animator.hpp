@@ -29,6 +29,7 @@ public:
     AnimationPtr                        getCurrentAnimation() const;
 
     void                                stop();
+    void                                reset();
     void                                update(float elapsedTime);
 
 private:

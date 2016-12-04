@@ -128,11 +128,19 @@ AnimationPtr    Animator::getCurrentAnimation() const
     return (_currentAnimation);
 }
 
-void    Animator::stop()
+void    Animator::reset()
 {
     if (_currentAnimation)
         _currentAnimation->reset();
 }
+
+void    Animator::stop()
+{
+    reset();
+    update(0);
+    _currentAnimation = nullptr;
+}
+
 
 void    Animator::update(float elapsedTime)
 {
