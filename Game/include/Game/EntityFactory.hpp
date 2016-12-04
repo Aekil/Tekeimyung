@@ -59,6 +59,7 @@ public:
     static void                                             updateEntitiesComponents(Entity* from, const std::string& entityName, IComponentFactory* compFactory, sComponent* component);
 
     static void                                             initAnimations(Entity* entity);
+    static void                                             reverseAnimations(Entity* entity);
 
 private:
     static Entity*                                          cloneEntity(const std::string& typeName);

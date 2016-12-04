@@ -187,7 +187,7 @@ private:
     virtual bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity);
     bool            updateAnimationsEditor(sRenderComponent* component, Entity* entity);
     bool            updateParamsAnimationsEditor(AnimationPtr playedAnimation, Entity* entity);
-    bool            updateAnimationParamTranslate(std::shared_ptr<IParamAnimation> paramAnimation_, uint32_t& frameNb);
+    bool            updateAnimationParamTranslate(Entity* entity, std::shared_ptr<IParamAnimation> paramAnimation_, uint32_t& frameNb);
     bool            updateAnimationParamColor(std::shared_ptr<IParamAnimation> paramAnimation_, uint32_t& frameNb);
 };
 

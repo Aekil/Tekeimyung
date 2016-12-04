@@ -444,9 +444,9 @@ bool    ComponentFactory<sRenderComponent>::updateParamsAnimationsEditor(Animati
     uint32_t frameNb = 0;
 
     auto& paramsAnimations = playedAnimation->getParamsAnimations();
-    for (auto it = paramsAnimations.begin(); it != paramsAnimations.end();)
+    for (uint32_t i = 0; i < paramsAnimations.size();)
     {
-        auto paramAnimation = *it;
+        auto paramAnimation = paramsAnimations[i];
         // Animation param display
         if (ImGui::CollapsingHeader(paramAnimation->getName().c_str(), ImGuiTreeNodeFlags_DefaultOpen))
         {
@@ -454,28 +454,30 @@ bool    ComponentFactory<sRenderComponent>::updateParamsAnimationsEditor(Animati
             // Remove animation param
             if (ImGui::Button("Remove"))
             {
-                it = paramsAnimations.erase(it);
+                sTransformComponent* transform = entity->getComponent<sTransformComponent>();
+                playedAnimation->removeParamAnimation(paramAnimation);
+                transform->needUpdate = true;
                 ImGui::PopID();
                 continue;
             }
             else
-                ++it;
+                ++i;
 
             if (paramAnimation->getName() == "color")
                 updateAnimationParamColor(paramAnimation, frameNb);
             else
-                updateAnimationParamTranslate(paramAnimation, frameNb);
+                updateAnimationParamTranslate(entity, paramAnimation, frameNb);
 
             ImGui::PopID();
         }
         else
-            ++it;
+            ++i;
     }
     ImGui::Text("\n");
     return (false);
 }
 
-bool    ComponentFactory<sRenderComponent>::updateAnimationParamTranslate(std::shared_ptr<IParamAnimation> paramAnimation_, uint32_t& frameNb)
+bool    ComponentFactory<sRenderComponent>::updateAnimationParamTranslate(Entity* entity, std::shared_ptr<IParamAnimation> paramAnimation_, uint32_t& frameNb)
 {
     auto paramAnimation = std::static_pointer_cast<ParamAnimation<glm::vec3>>(paramAnimation_);
     uint32_t totalFrames = (uint32_t)paramAnimation->getKeyFrames().size();
@@ -494,7 +496,7 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationParamTranslate(std::s
     ImGui::Text("\n");
     for (uint32_t i = 0; i < totalFrames; ++i)
     {
-        ParamAnimation<glm::vec3>::sKeyFrame& keyFrame = paramAnimation->getKeyFrames()[i];
+        ParamAnimation<glm::vec3>::sKeyFrame& keyFrame = paramAnimation->getKeyFrame(i);
 
         ImGui::Text("Frame %d ", i);
         ImGui::PushID(frameNb++);
@@ -502,9 +504,15 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationParamTranslate(std::s
         ImGui::SameLine();
         if (ImGui::Button("Remove"))
         {
-            paramAnimation->getKeyFrames().erase(paramAnimation->getKeyFrames().begin() + i);
+            paramAnimation->removeKeyFrame(i);
             --i;
             --totalFrames;
+
+            if (totalFrames == 0)
+            {
+                sTransformComponent* transform = entity->getComponent<sTransformComponent>();
+                transform->needUpdate = true;
+            }
         }
         else
         {
@@ -538,7 +546,7 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationParamColor(std::share
     ImGui::Text("\n");
     for (uint32_t i = 0; i < totalFrames; ++i)
     {
-        ParamAnimation<glm::vec4>::sKeyFrame& keyFrame = paramAnimation->getKeyFrames()[i];
+        ParamAnimation<glm::vec4>::sKeyFrame& keyFrame = paramAnimation->getKeyFrame(i);
 
         ImGui::Text("Frame %d ", i);
         ImGui::PushID(frameNb++);
@@ -546,7 +554,7 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationParamColor(std::share
         ImGui::SameLine();
         if (ImGui::Button("Remove"))
         {
-            paramAnimation->getKeyFrames().erase(paramAnimation->getKeyFrames().begin() + i);
+            paramAnimation->removeKeyFrame(i);
             --i;
             --totalFrames;
         }

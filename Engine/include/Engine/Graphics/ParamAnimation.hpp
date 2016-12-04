@@ -55,8 +55,37 @@ public:
     virtual ~ParamAnimation();
 
     void                    addKeyFrame(const sKeyFrame& keyFrame);
-    std::vector<sKeyFrame>& getKeyFrames() { return (_keyFrames); }
-    const std::vector<sKeyFrame>& getKeyFrames() const { return (_keyFrames); }
+
+    void                    removeKeyFrame(std::size_t index)
+    {
+        // Reverse param animation before removing the last key frame
+        if (_keyFrames.size() == 1)
+        {
+            reset();
+            update(0);
+        }
+
+        _keyFrames.erase(_keyFrames.begin() + index);
+    }
+
+    std::vector<sKeyFrame>& getKeyFrames()
+    {
+        return (_keyFrames);
+    }
+    const std::vector<sKeyFrame>& getKeyFrames() const
+    {
+        return (_keyFrames);
+    }
+
+    const sKeyFrame& getKeyFrame(std::size_t index) const
+    {
+        return _keyFrames[index];
+    }
+    sKeyFrame&      getKeyFrame(std::size_t index)
+    {
+        return _keyFrames[index];
+    }
+
     const sKeyFrame* getCurrentKeyFrame() const
     {
         if (_currentKeyFrame > _keyFrames >= _keyFrames.size())

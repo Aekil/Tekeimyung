@@ -221,15 +221,7 @@ void    EntityDebugWindow::saveEntityTemplate(const std::string& typeName, Entit
         auto &&components = EntityFactory::getComponents(typeName);
 
         // Reverse animations
-        sRenderComponent* render = entity->getComponent<sRenderComponent>();
-        if (render && render->_animator.isPlaying())
-        {
-            sTransformComponent* transform = entity->getComponent<sTransformComponent>();
-
-            render->_animator.stop();
-            render->_animator.update(0);
-            transform->updateTransform();
-        }
+        EntityFactory::reverseAnimations(entity);
 
         // Save entity components
         for (auto component: entity->getComponents())

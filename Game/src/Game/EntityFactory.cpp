@@ -220,6 +220,19 @@ void    EntityFactory::initAnimations(Entity* entity)
     }
 }
 
+void    EntityFactory::reverseAnimations(Entity* entity)
+{
+    sRenderComponent* render = entity->getComponent<sRenderComponent>();
+    if (render && render->_animator.isPlaying())
+    {
+        sTransformComponent* transform = entity->getComponent<sTransformComponent>();
+
+        render->_animator.stop();
+        render->_animator.update(0);
+        transform->updateTransform();
+    }
+}
+
 void    EntityFactory::updateEntitiesComponents(Entity* from, const std::string& entityName, IComponentFactory* compFactory, sComponent* component)
 {
     for (auto &&entity_: _em->getEntities())
@@ -230,6 +243,15 @@ void    EntityFactory::updateEntitiesComponents(Entity* from, const std::string&
         if (name->value == entityName && entity != from)
         {
             sComponent* entityComponent = entity->getComponent(component->id);
+
+            // Reverse animations if we are overwriting them
+            if (component->id == sRenderComponent::identifier)
+            {
+                reverseAnimations(entity);
+            }
+
+
+            // Don't save positionComponent
             if (entityComponent && entityComponent->id != sPositionComponent::identifier)
             {
                 // Only the scale have to be copied

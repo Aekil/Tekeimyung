@@ -15,10 +15,35 @@ Animation::Animation(const Animation& rhs)
 
 Animation::~Animation() {}
 
-void    Animation::addParamAnimation(std::shared_ptr<IParamAnimation> paramAnimation)
+void    Animation::addParamAnimation(IParamAnimationPtr paramAnimation)
 {
     paramAnimation->reset();
     _paramsAnimations.push_back(paramAnimation);
+}
+
+void    Animation::removeParamAnimation(IParamAnimationPtr paramAnimation)
+{
+    reset();
+    update(0);
+
+    _paramsAnimations.erase(std::find(_paramsAnimations.begin(), _paramsAnimations.end(), paramAnimation));
+}
+
+void    Animation::removeParamAnimation(const std::string& name)
+{
+    IParamAnimationPtr paramAnimation = getParamAnimation(name);
+    removeParamAnimation(paramAnimation);
+}
+
+IParamAnimationPtr  Animation::getParamAnimation(const std::string& name)
+{
+    for (const IParamAnimationPtr paramAnimation: _paramsAnimations)
+    {
+        if (paramAnimation->getName() == name)
+            return (paramAnimation);
+    }
+
+    return (nullptr);
 }
 
 void    Animation::update(float elapsedTime)
@@ -58,12 +83,12 @@ bool    Animation::isLoop() const
     return (_loop);
 }
 
-std::vector<std::shared_ptr<IParamAnimation> >& Animation::getParamsAnimations()
+std::vector<IParamAnimationPtr >& Animation::getParamsAnimations()
 {
     return (_paramsAnimations);
 }
 
-const std::vector<std::shared_ptr<IParamAnimation> >& Animation::getParamsAnimations() const
+const std::vector<IParamAnimationPtr >& Animation::getParamsAnimations() const
 {
     return (_paramsAnimations);
 }

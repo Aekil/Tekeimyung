@@ -2,6 +2,8 @@
 
 #include <Engine/Graphics/ParamAnimation.hpp>
 
+using IParamAnimationPtr = std::shared_ptr<IParamAnimation>;
+
 class Animation
 {
 public:
@@ -9,7 +11,12 @@ public:
     Animation(const Animation& rhs);
     ~Animation();
 
-    void                    addParamAnimation(std::shared_ptr<IParamAnimation> paramAnimation);
+    void                    addParamAnimation(IParamAnimationPtr paramAnimation);
+
+    void                    removeParamAnimation(IParamAnimationPtr paramAnimation);
+    void                    removeParamAnimation(const std::string& name);
+
+    IParamAnimationPtr      getParamAnimation(const std::string& name);
 
     void                    update(float elapsedTime);
     void                    reset();
@@ -19,13 +26,13 @@ public:
 
     bool                    isLoop() const;
 
-    std::vector<std::shared_ptr<IParamAnimation> >&  getParamsAnimations();
-    const std::vector<std::shared_ptr<IParamAnimation> >&  getParamsAnimations() const;
+    std::vector<IParamAnimationPtr >&  getParamsAnimations();
+    const std::vector<IParamAnimationPtr >&  getParamsAnimations() const;
 
 private:
     // An animation has got multiple params animations
     // Ex: position, rotation and scale animation
-    std::vector<std::shared_ptr<IParamAnimation> >  _paramsAnimations;
+    std::vector<IParamAnimationPtr >  _paramsAnimations;
 
     // Animation name
     std::string                     _name;
