@@ -130,7 +130,7 @@ sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& 
             std::string name = animationParamJson.getString("name", "param");
             if (name == "color")
             {
-                std::shared_ptr<ParamAnimation<glm::vec4> > colorParam = std::make_shared<ParamAnimation<glm::vec4> >(name, nullptr, ParamAnimation<glm::vec4>::eInterpolationType::ABSOLUTE);
+                std::shared_ptr<ParamAnimation<glm::vec4> > colorParam = std::make_shared<ParamAnimation<glm::vec4> >(name, nullptr, IParamAnimation::eInterpolationType::ABSOLUTE);
                 loadColorParamAnimation(colorParam, animationParamJson);
                 compAnimation->addParamAnimation(colorParam);
             }
@@ -161,10 +161,11 @@ void    ComponentFactory<sRenderComponent>::loadTranslateParamAnimation(std::sha
     {
         JsonValue keyFrameJson(keyFrame);
         ParamAnimation<glm::vec3>::sKeyFrame key;
+        std::string easingType = keyFrameJson.getString("easing", "NONE");
 
         key.duration = keyFrameJson.getFloat("duration", 1.0f);
         key.value = keyFrameJson.getVec3f("value", glm::vec3(0.0f, 0.0f, 0.0f));
-        key.easing = ParamAnimation<glm::vec3>::eEasing::NONE;
+        key.easing = IParamAnimation::getEasingTypeFromString(easingType);
         paramAnimation->addKeyFrame(key);
     }
 }
@@ -182,10 +183,12 @@ void    ComponentFactory<sRenderComponent>::loadColorParamAnimation(std::shared_
     {
         JsonValue keyFrameJson(keyFrame);
         ParamAnimation<glm::vec4>::sKeyFrame key;
+        std::string easingType = keyFrameJson.getString("easing", "NONE");
 
         key.duration = keyFrameJson.getFloat("duration", 1.0f);
         key.value = keyFrameJson.getVec4f("value", glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
-        key.easing = ParamAnimation<glm::vec4>::eEasing::NONE;
+        key.easing = IParamAnimation::getEasingTypeFromString(easingType);
+
         paramAnimation->addKeyFrame(key);
     }
 }
@@ -245,6 +248,7 @@ void    ComponentFactory<sRenderComponent>::saveTranslateParamAnimation(std::sha
 
         keyFrameJson.setVec3f("value", keyFrame.value);
         keyFrameJson.setFloat("duration", keyFrame.duration);
+        keyFrameJson.setString("easing", IParamAnimation::getEasingStringFromType(keyFrame.easing));
         keyFrames.push_back(keyFrameJson);
     }
 
@@ -264,6 +268,7 @@ void    ComponentFactory<sRenderComponent>::saveColorParamAnimation(std::shared_
 
         keyFrameJson.setVec4f("value", keyFrame.value);
         keyFrameJson.setFloat("duration", keyFrame.duration);
+        keyFrameJson.setString("easing", IParamAnimation::getEasingStringFromType(keyFrame.easing));
         keyFrames.push_back(keyFrameJson);
     }
 
@@ -412,7 +417,7 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationsEditor(sRenderCompon
             if (ImGui::Button(param.c_str()))
             {
                 if (param == "color")
-                    playedAnimation->addParamAnimation(std::make_shared<ParamAnimation<glm::vec4> >(param, nullptr, ParamAnimation<glm::vec4>::eInterpolationType::ABSOLUTE));
+                    playedAnimation->addParamAnimation(std::make_shared<ParamAnimation<glm::vec4> >(param, nullptr, IParamAnimation::eInterpolationType::ABSOLUTE));
                 else
                     playedAnimation->addParamAnimation(std::make_shared<ParamAnimation<glm::vec3> >(param, nullptr));
                 EntityFactory::initAnimations(entity);
@@ -479,6 +484,9 @@ bool    ComponentFactory<sRenderComponent>::updateParamsAnimationsEditor(Animati
 
 bool    ComponentFactory<sRenderComponent>::updateAnimationParamTranslate(Entity* entity, std::shared_ptr<IParamAnimation> paramAnimation_, uint32_t& frameNb)
 {
+    static auto easingTypesString = const_cast<std::vector<const char*>&>(ParamAnimation<glm::vec4>::getEasingTypesString());
+    const char** easingTypesList = easingTypesString.data();
+
     auto paramAnimation = std::static_pointer_cast<ParamAnimation<glm::vec3>>(paramAnimation_);
     uint32_t totalFrames = (uint32_t)paramAnimation->getKeyFrames().size();
 
@@ -489,7 +497,7 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationParamTranslate(Entity
         ParamAnimation<glm::vec3>::sKeyFrame keyFrame;
         keyFrame.duration = 1.0f;
         keyFrame.value = glm::vec3(0.0f, 0.0f, 0.0f);
-        keyFrame.easing = ParamAnimation<glm::vec3>::eEasing::NONE;
+        keyFrame.easing = IParamAnimation::eEasing::NONE;
         paramAnimation->addKeyFrame(keyFrame);
     }
 
@@ -518,6 +526,14 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationParamTranslate(Entity
         {
             ImGui::InputFloat3("value", glm::value_ptr(keyFrame.value));
             ImGui::InputFloat("duration", &keyFrame.duration);
+
+            // Easing type listBox
+            ParamAnimation<glm::vec3>::getEasingStringFromType(keyFrame.easing);
+            int selectedType = static_cast<int>(std::find(easingTypesString.cbegin(), easingTypesString.cend(), ParamAnimation<glm::vec3>::getEasingStringFromType(keyFrame.easing)) - easingTypesString.begin());
+            if (ImGui::ListBox("Easing", &selectedType, easingTypesList, (int)easingTypesString.size(), 4))
+            {
+                keyFrame.easing = ParamAnimation<glm::vec3>::getEasingTypeFromString(easingTypesString[selectedType]);
+            }
         }
 
         ImGui::PopID();
@@ -529,6 +545,9 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationParamTranslate(Entity
 
 bool    ComponentFactory<sRenderComponent>::updateAnimationParamColor(std::shared_ptr<IParamAnimation> paramAnimation_, uint32_t& frameNb)
 {
+    static auto easingTypesString = const_cast<std::vector<const char*>&>(ParamAnimation<glm::vec4>::getEasingTypesString());
+    const char** easingTypesList = easingTypesString.data();
+
     auto paramAnimation = std::static_pointer_cast<ParamAnimation<glm::vec4>>(paramAnimation_);
     uint32_t totalFrames = (uint32_t)paramAnimation->getKeyFrames().size();
 
@@ -539,7 +558,7 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationParamColor(std::share
         ParamAnimation<glm::vec4>::sKeyFrame keyFrame;
         keyFrame.duration = 1.0f;
         keyFrame.value = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
-        keyFrame.easing = ParamAnimation<glm::vec4>::eEasing::NONE;
+        keyFrame.easing = IParamAnimation::eEasing::NONE;
         paramAnimation->addKeyFrame(keyFrame);
     }
 
@@ -562,6 +581,14 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationParamColor(std::share
         {
             ImGui::ColorEdit4("value", glm::value_ptr(keyFrame.value));
             ImGui::InputFloat("duration", &keyFrame.duration);
+
+            // Easing type listBox
+            ParamAnimation<glm::vec4>::getEasingStringFromType(keyFrame.easing);
+            int selectedType = static_cast<int>(std::find(easingTypesString.cbegin(), easingTypesString.cend(), ParamAnimation<glm::vec4>::getEasingStringFromType(keyFrame.easing)) - easingTypesString.begin());
+            if (ImGui::ListBox("Easing", &selectedType, easingTypesList, (int)easingTypesString.size(), 4))
+            {
+                keyFrame.easing = ParamAnimation<glm::vec4>::getEasingTypeFromString(easingTypesString[selectedType]);
+            }
         }
 
         ImGui::PopID();

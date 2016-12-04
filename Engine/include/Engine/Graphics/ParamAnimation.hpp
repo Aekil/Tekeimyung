@@ -1,13 +1,41 @@
 #include <vector>
 #include <memory>
+#include <unordered_map>
 
 #include <Engine/Utils/Timer.hpp>
 #include <Engine/Utils/Helper.hpp>
+
+// Generate a list
+// string: "PLAYER", "TILE1", "TILE2"
+// enum: PLAYER, TILE1, TILE2
+#define EASING_TYPES(PROCESS)\
+    PROCESS(NONE),\
+    PROCESS(EASE_IN),\
+    PROCESS(EASE_OUT),\
+
+#define GENERATE_EASING_ENUM(EASING) EASING
+#define GENERATE_EASING_STRING(EASING) #EASING
+#define GENERATE_EASING_FROM_STRING_PAIRS(EASING) { #EASING, IParamAnimation::eEasing::EASING }
+#define GENERATE_EASING_FROM_ENUM_PAIRS(EASING) { IParamAnimation::eEasing::EASING, #EASING }
 
 struct sKeyFrame;
 
 class IParamAnimation
 {
+public:
+    enum class eInterpolationType: char
+    {
+        RELATIVE = 0,
+        ABSOLUTE = 1
+    };
+
+
+    // Easing equation interpolations between ParamAnimation::startValue and sKeyFrame::value
+    enum class eEasing: char
+    {
+        EASING_TYPES(GENERATE_EASING_ENUM)
+    };
+
 public:
     IParamAnimation(const std::string& name): _name(name) {}
     virtual ~IParamAnimation() {}
@@ -17,8 +45,28 @@ public:
     virtual std::shared_ptr<IParamAnimation> clone() = 0;
     const std::string&      getName() { return (_name); }
 
+    static const std::string& getEasingStringFromType(eEasing easingType)
+    {
+        return (_easingTypesFromEnum[easingType]);
+    }
+
+    static eEasing getEasingTypeFromString(const std::string& easingString)
+    {
+        return (_easingTypesFromString[easingString]);
+    }
+
+    static const std::vector<const char*> getEasingTypesString()
+    {
+        return (_easingTypesString);
+    }
+
 protected:
     std::string             _name;
+
+private:
+    static std::vector<const char*>                 _easingTypesString;
+    static std::unordered_map<std::string, eEasing> _easingTypesFromString;
+    static std::unordered_map<eEasing, std::string> _easingTypesFromEnum;
 };
 
 // Param animation
@@ -28,20 +76,6 @@ template <typename T>
 class ParamAnimation: public IParamAnimation
 {
 public:
-    enum class eInterpolationType: char
-    {
-        RELATIVE = 0,
-        ABSOLUTE = 1
-    };
-
-    // Easing equation interpolations between ParamAnimation::startValue and sKeyFrame::value
-    enum class eEasing: char
-    {
-        NONE = 0,
-        EASE_IN = 1,
-        EASE_OUT = 2
-    };
-
     // Key frame
     struct sKeyFrame
     {

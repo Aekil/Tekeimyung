@@ -121,14 +121,14 @@ bool    PlayState::update(float elapsedTime)
     if (GameWindow::getInstance()->getKeyboard().getStateMap()[_pair.first] == Keyboard::eKeyState::KEY_PRESSED)
         _pair.second->execute();
 
-    Entity* selectedEntity = getSelectedEntity();
+/*    Entity* selectedEntity = getSelectedEntity();
     if (selectedEntity)
     {
         sRenderComponent* render = selectedEntity->getComponent<sRenderComponent>();
 
         render->color = glm::vec4(1.0f, 0.0f, 0.0f, 0.0f);
     }
-
+*/
     return (GameState::update(elapsedTime));
 }
 

@@ -76,11 +76,11 @@ T   ParamAnimation<T>::getNewValue(const sKeyFrame& keyFrame)
 
     switch (keyFrame.easing)
     {
-        case ParamAnimation<T>::eEasing::NONE:
+        case IParamAnimation::eEasing::NONE:
             return Helper::lerp<T>(_startValue, keyFrame.value, _elapsedTime / keyFrame.duration);
-        case ParamAnimation<T>::eEasing::EASE_IN:
+        case IParamAnimation::eEasing::EASE_IN:
             return Helper::lerp<T>(_startValue, keyFrame.value, sin(_elapsedTime / keyFrame.duration * glm::pi<float>() * 0.5f));
-        case ParamAnimation<T>::eEasing::EASE_OUT:
+        case IParamAnimation::eEasing::EASE_OUT:
             return Helper::lerp<T>(_startValue, keyFrame.value, 1.0f - cos(_elapsedTime / keyFrame.duration * glm::pi<float>() * 0.5f));
         default:
         return (_startValue);
