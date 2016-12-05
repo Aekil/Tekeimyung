@@ -199,7 +199,7 @@ void    EntityFactory::initAnimations(Entity* entity)
 {
     sRenderComponent* render = entity->getComponent<sRenderComponent>();
 
-    if (!render || !render->_animator.isPlaying())
+    if (!render || render->_animator.getAnimationsNb() == 0)
         return;
 
     sTransformComponent* transform = entity->getComponent<sTransformComponent>();

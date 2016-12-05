@@ -1,11 +1,12 @@
 #include <Engine/Graphics/Animation.hpp>
 
-Animation::Animation(const std::string& name): _name(name), _loop(true) {}
+Animation::Animation(const std::string& name): _name(name), _loop(true), _isPlaying(false) {}
 
 Animation::Animation(const Animation& rhs)
 {
     _name = rhs.getName();
     _loop = rhs.isLoop();
+    _isPlaying = rhs.isPlaying();
 
     for (const auto& paramAnimation: rhs.getParamsAnimations())
     {
@@ -27,6 +28,8 @@ void    Animation::removeParamAnimation(IParamAnimationPtr paramAnimation)
     update(0);
 
     _paramsAnimations.erase(std::find(_paramsAnimations.begin(), _paramsAnimations.end(), paramAnimation));
+    if (_paramsAnimations.size() == 0)
+        _isPlaying = false;
 }
 
 void    Animation::removeParamAnimation(const std::string& name)
@@ -48,20 +51,21 @@ IParamAnimationPtr  Animation::getParamAnimation(const std::string& name)
 
 void    Animation::update(float elapsedTime)
 {
-    bool resetAnimation = true;
+    _isPlaying = false;
     for (auto paramAnimation: _paramsAnimations)
     {
         // ParamAnimation::update return true if the param animation is not finished
         if (paramAnimation->update(elapsedTime))
-            resetAnimation = false;
+            _isPlaying = true;
     }
 
-    if (resetAnimation && _loop)
+    if (!_isPlaying && _loop)
         reset();
 }
 
 void    Animation::reset()
 {
+    _isPlaying = true;
     for (auto paramAnimation: _paramsAnimations)
     {
         paramAnimation->reset();
@@ -81,6 +85,16 @@ void    Animation::setName(const std::string& name)
 bool    Animation::isLoop() const
 {
     return (_loop);
+}
+
+void    Animation::isLoop(bool isLoop)
+{
+    _loop = isLoop;
+}
+
+bool    Animation::isPlaying() const
+{
+    return (_isPlaying);
 }
 
 std::vector<IParamAnimationPtr >& Animation::getParamsAnimations()

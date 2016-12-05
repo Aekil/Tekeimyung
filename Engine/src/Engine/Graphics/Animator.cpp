@@ -15,9 +15,6 @@ Animator::Animator(const Animator& rhs): _currentAnimation(nullptr)
         AnimationPtr animation = rhs.getAnimations()[i];
         addAnimation(std::make_shared<Animation>(*animation));
     }
-
-    if (nbAnimations > 0)
-        _currentAnimation = _animations[0];
 }
 
 Animator::~Animator() {}
@@ -33,9 +30,6 @@ Animator&   Animator::operator=(const Animator& rhs)
         AnimationPtr animation = rhs.getAnimations()[i];
         addAnimation(std::make_shared<Animation>(*animation));
     }
-
-    if (nbAnimations > 0)
-        _currentAnimation = _animations[0];
 
     return (*this);
 }
@@ -84,10 +78,17 @@ std::vector<AnimationPtr>&  Animator::getAnimations()
     return (_animations);
 }
 
-bool    Animator::play(const std::string& name)
+uint32_t    Animator::getAnimationsNb() const
 {
-    // The animation is already playing
-    if (_currentAnimation && _currentAnimation->getName() == name)
+    return ((uint32_t)_animations.size());
+}
+
+bool    Animator::play(const std::string& name, bool loop)
+{
+    if (_currentAnimation &&
+        _currentAnimation->getName() == name && // The animation is already playing
+        _currentAnimation->isPlaying() &&
+        _currentAnimation->isLoop() == loop) // The animation loop did not change
         return (true);
 
     // Get new animation pointer
@@ -109,18 +110,23 @@ bool    Animator::play(const std::string& name)
 
     // Set new played animation
     _currentAnimation = animation;
+    _currentAnimation->reset();
+    _currentAnimation->isLoop(loop);
 
     return (true);
 }
 
 bool    Animator::isPlaying(const std::string& name) const
 {
-    return (_currentAnimation && _currentAnimation->getName() == name);
+    return (_currentAnimation &&
+        _currentAnimation->getName() == name &&
+        _currentAnimation->isPlaying());
 }
 
 bool    Animator::isPlaying() const
 {
-    return (_currentAnimation != nullptr);
+    return (_currentAnimation != nullptr &&
+        _currentAnimation->isPlaying());
 }
 
 AnimationPtr    Animator::getCurrentAnimation() const

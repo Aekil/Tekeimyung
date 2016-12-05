@@ -25,6 +25,9 @@ public:
     void                    setName(const std::string& name);
 
     bool                    isLoop() const;
+    void                    isLoop(bool isLoop);
+
+    bool                    isPlaying() const;
 
     std::vector<IParamAnimationPtr >&  getParamsAnimations();
     const std::vector<IParamAnimationPtr >&  getParamsAnimations() const;
@@ -37,4 +40,6 @@ private:
     // Animation name
     std::string                     _name;
     bool                            _loop;
+
+    bool                            _isPlaying;
 };

@@ -22,7 +22,9 @@ public:
     const std::vector<AnimationPtr>&    getAnimations() const;
     std::vector<AnimationPtr>&          getAnimations();
 
-    bool                                play(const std::string& name);
+    uint32_t                            getAnimationsNb() const;
+
+    bool                                play(const std::string& name, bool loop = true);
     bool                                isPlaying(const std::string& name) const;
     bool                                isPlaying() const;
 

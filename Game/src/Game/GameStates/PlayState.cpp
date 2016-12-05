@@ -113,6 +113,20 @@ bool    PlayState::init()
     SoundManager::getInstance()->playSound(idSoundBkgdMusic);*/
 
     _pair = std::make_pair(Keyboard::eKey::F, new HandleFullscreenEvent());
+
+
+    // Play first animation of entities
+    for (auto entity: em->getEntities())
+    {
+        sRenderComponent* render = entity.second->getComponent<sRenderComponent>();
+        if (render && render->_animator.getAnimationsNb() > 0)
+        {
+            AnimationPtr currentAnimation = render->_animator.getAnimations()[0];
+            render->_animator.play(currentAnimation->getName());
+        }
+    }
+
+
     return (true);
 }
 

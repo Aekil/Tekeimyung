@@ -370,12 +370,12 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationsEditor(sRenderCompon
     {
         if (ImGui::Selectable(animation->getName().c_str(), component->_animator.getCurrentAnimation() == animation))
         {
-            component->_animator.play(animation->getName());
+            component->_animator.play(animation->getName(), animation->isLoop());
         }
     }
     ImGui::EndChild();
 
-    if (!component->_animator.isPlaying())
+    if (!component->_animator.getCurrentAnimation())
         return (false);
 
     // Animation params style
@@ -385,13 +385,20 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationsEditor(sRenderCompon
 
     AnimationPtr playedAnimation = component->_animator.getCurrentAnimation();
 
-    // Animation name text
+    // Edit animation name
     ImGui::Text("\n");
-    ImGui::Text(playedAnimation->getName().c_str());
+    const std::string& animationName = playedAnimation->getName();
+    std::vector<char> animationNameVec(animationName.cbegin(), animationName.cend());
+    animationNameVec.push_back(0);
+    animationNameVec.resize(64);
 
-    // Remove animation
-    ImGui::SameLine();
-    if (ImGui::Button("Remove"))
+    if (ImGui::InputText("Name", animationNameVec.data(), animationNameVec.size()))
+    {
+        playedAnimation->setName(animationNameVec.data());
+    }
+
+    // Delete animation
+    if (ImGui::Button("Delete"))
     {
         sTransformComponent* transform = entity->getComponent<sTransformComponent>();
         component->_animator.removeAnimation(playedAnimation);
@@ -407,7 +414,21 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationsEditor(sRenderCompon
         ImGui::OpenPopup("params");
     }
 
+    ImGui::SameLine();
+    if (ImGui::Button("Play"))
+    {
+        component->_animator.play(playedAnimation->getName(), playedAnimation->isLoop());
+    }
+
+    bool loop = playedAnimation->isLoop();
+    if (ImGui::Checkbox("Loop (preview, not saved)", &loop))
+    {
+        component->_animator.play(playedAnimation->getName(), loop);
+    }
+
     // New animation param selection
+    ImGui::Text("\n");
+    ImGui::Text("Params:");
     if (ImGui::BeginPopup("params"))
     {
         static const std::vector<std::string> params = { "color", "position", "scale", "rotation" };
@@ -424,17 +445,6 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationsEditor(sRenderCompon
             }
         }
         ImGui::EndPopup();
-    }
-
-    // Edit animation name
-    const std::string& animationName = playedAnimation->getName();
-    std::vector<char> animationNameVec(animationName.cbegin(), animationName.cend());
-    animationNameVec.push_back(0);
-    animationNameVec.resize(64);
-
-    if (ImGui::InputText("Name", animationNameVec.data(), animationNameVec.size()))
-    {
-        playedAnimation->setName(animationNameVec.data());
     }
 
     // Edit animation params
