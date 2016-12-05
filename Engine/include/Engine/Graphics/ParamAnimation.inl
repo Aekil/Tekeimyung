@@ -1,6 +1,6 @@
 template <typename T>
 ParamAnimation<T>::ParamAnimation(const std::string& name, T* param, eInterpolationType type):
-                                IParamAnimation(name), _currentKeyFrame(0), _type(type), _elapsedTime(0.0f), _lastKeyTime(0.0f)
+                                IParamAnimation(name), _currentKeyFrame(0), _type(type), _elapsedTime(0.0f), _lastKeyTime(0.0f), _lastFrameId(0)
 {
     setParam(param);
 }
@@ -9,9 +9,27 @@ template <typename T>
 ParamAnimation<T>::~ParamAnimation() {}
 
 template <typename T>
-void    ParamAnimation<T>::addKeyFrame(const sKeyFrame& keyFrame)
+bool    ParamAnimation<T>::compareKeyFramesByTime(const sKeyFrame& a, const sKeyFrame& b)
 {
-    _keyFrames.push_back(keyFrame);
+    return (a.time < b.time);
+}
+
+template <typename T>
+void    ParamAnimation<T>::addKeyFrame(const sKeyFrame& keyFrame, bool sort)
+{
+    sKeyFrame key = keyFrame;
+    key.id = _lastFrameId;
+    _keyFrames.push_back(key);
+    _lastFrameId++;
+
+    if (sort)
+        sortKeyFrames();
+}
+
+template <typename T>
+void    ParamAnimation<T>::sortKeyFrames()
+{
+    std::sort(_keyFrames.begin(), _keyFrames.end(), compareKeyFramesByTime);
 }
 
 template <typename T>
@@ -63,7 +81,7 @@ std::shared_ptr<IParamAnimation>    ParamAnimation<T>::clone()
 
     for (const auto& keyFrame: _keyFrames)
     {
-        paramAnimation->addKeyFrame(keyFrame);
+        paramAnimation->addKeyFrame(keyFrame, false);
     }
 
     return (paramAnimation);

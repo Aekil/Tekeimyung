@@ -498,7 +498,6 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationParamTranslate(Entity
     const char** easingTypesList = easingTypesString.data();
 
     auto paramAnimation = std::static_pointer_cast<ParamAnimation<glm::vec3>>(paramAnimation_);
-    uint32_t totalFrames = (uint32_t)paramAnimation->getKeyFrames().size();
 
     // add animation param key frame
     ImGui::SameLine();
@@ -511,13 +510,17 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationParamTranslate(Entity
         paramAnimation->addKeyFrame(keyFrame);
     }
 
+    uint32_t totalFrames = (uint32_t)paramAnimation->getKeyFrames().size();
+    bool sortKeyFrames = false;
+
     ImGui::Text("\n");
     for (uint32_t i = 0; i < totalFrames; ++i)
     {
         ParamAnimation<glm::vec3>::sKeyFrame& keyFrame = paramAnimation->getKeyFrame(i);
 
-        ImGui::Text("Frame %d ", i);
-        ImGui::PushID(frameNb++);
+        ImGui::Text("Frame %d ", keyFrame.id);
+        ImGui::PushID(keyFrame.id);
+        frameNb++;
 
         ImGui::SameLine();
         if (ImGui::Button("Remove"))
@@ -535,7 +538,8 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationParamTranslate(Entity
         else
         {
             ImGui::InputFloat3("value", glm::value_ptr(keyFrame.value));
-            ImGui::InputFloat("time", &keyFrame.time);
+            if (ImGui::InputFloat("time", &keyFrame.time, 1))
+                sortKeyFrames = true;
 
             // Easing type listBox
             ParamAnimation<glm::vec3>::getEasingStringFromType(keyFrame.easing);
@@ -550,6 +554,9 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationParamTranslate(Entity
         ImGui::Text("\n");
     }
 
+    if (sortKeyFrames)
+        paramAnimation->sortKeyFrames();
+
     return (false);
 }
 
@@ -559,7 +566,6 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationParamColor(std::share
     const char** easingTypesList = easingTypesString.data();
 
     auto paramAnimation = std::static_pointer_cast<ParamAnimation<glm::vec4>>(paramAnimation_);
-    uint32_t totalFrames = (uint32_t)paramAnimation->getKeyFrames().size();
 
     // add animation param key frame
     ImGui::SameLine();
@@ -567,18 +573,22 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationParamColor(std::share
     {
         ParamAnimation<glm::vec4>::sKeyFrame keyFrame;
         keyFrame.time = 1.0f;
-        keyFrame.value = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
+        keyFrame.value = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
         keyFrame.easing = IParamAnimation::eEasing::NONE;
         paramAnimation->addKeyFrame(keyFrame);
     }
+
+    uint32_t totalFrames = (uint32_t)paramAnimation->getKeyFrames().size();
+    bool sortKeyFrames = false;
 
     ImGui::Text("\n");
     for (uint32_t i = 0; i < totalFrames; ++i)
     {
         ParamAnimation<glm::vec4>::sKeyFrame& keyFrame = paramAnimation->getKeyFrame(i);
 
-        ImGui::Text("Frame %d ", i);
-        ImGui::PushID(frameNb++);
+        ImGui::Text("Frame %d ", keyFrame.id);
+        ImGui::PushID(keyFrame.id);
+        frameNb++;
 
         ImGui::SameLine();
         if (ImGui::Button("Remove"))
@@ -590,7 +600,8 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationParamColor(std::share
         else
         {
             ImGui::ColorEdit4("value", glm::value_ptr(keyFrame.value));
-            ImGui::InputFloat("time", &keyFrame.time);
+            if (ImGui::InputFloat("time", &keyFrame.time))
+                sortKeyFrames = true;
 
             // Easing type listBox
             ParamAnimation<glm::vec4>::getEasingStringFromType(keyFrame.easing);
@@ -604,6 +615,9 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationParamColor(std::share
         ImGui::PopID();
         ImGui::Text("\n");
     }
+
+    if (sortKeyFrames)
+        paramAnimation->sortKeyFrames();
 
     return (false);
 }

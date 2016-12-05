@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <vector>
 #include <memory>
 #include <unordered_map>
@@ -81,6 +82,8 @@ public:
     // Key frame
     struct sKeyFrame
     {
+        uint32_t id;
+
         float time;
         T value;
         eEasing easing;
@@ -90,7 +93,10 @@ public:
     ParamAnimation(const std::string& name, T* param, eInterpolationType type = eInterpolationType::RELATIVE);
     virtual ~ParamAnimation();
 
-    void                    addKeyFrame(const sKeyFrame& keyFrame);
+    static bool             compareKeyFramesByTime(const sKeyFrame& a, const sKeyFrame& b);
+
+    void                    addKeyFrame(const sKeyFrame& keyFrame, bool sort = true);
+    void                    sortKeyFrames();
 
     void                    removeKeyFrame(std::size_t index)
     {
@@ -171,6 +177,8 @@ private:
 
     // Interpolation type to use
     eInterpolationType      _type;
+
+    uint32_t                _lastFrameId;
 };
 
 #include <Engine/Graphics/ParamAnimation.inl>
