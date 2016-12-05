@@ -81,7 +81,7 @@ public:
     // Key frame
     struct sKeyFrame
     {
-        float duration;
+        float time;
         T value;
         eEasing easing;
     };
@@ -154,6 +154,7 @@ private:
     std::vector<sKeyFrame>  _keyFrames;
 
     float                   _elapsedTime;
+    float                   _lastKeyTime;
 
     // Param updated during the animation
     T*                      _param;

@@ -1,6 +1,6 @@
 template <typename T>
 ParamAnimation<T>::ParamAnimation(const std::string& name, T* param, eInterpolationType type):
-                                IParamAnimation(name), _currentKeyFrame(0), _type(type), _elapsedTime(0.0f)
+                                IParamAnimation(name), _currentKeyFrame(0), _type(type), _elapsedTime(0.0f), _lastKeyTime(0.0f)
 {
     setParam(param);
 }
@@ -34,9 +34,9 @@ bool    ParamAnimation<T>::update(float elapsedTime)
     _lastValue = newValue;
 
     // Go to next key frame if current is finished
-    if (_elapsedTime >= keyFrame.duration)
+    if (_elapsedTime >= keyFrame.time)
     {
-        _elapsedTime = 0.0f;
+        _lastKeyTime = keyFrame.time;
         _currentKeyFrame++;
         _startValue = keyFrame.value;
     }
@@ -51,6 +51,7 @@ void    ParamAnimation<T>::reset()
         return;
 
     _elapsedTime = 0.0f;
+    _lastKeyTime = 0.0f;
     _currentKeyFrame = 0;
     _startValue = _type == eInterpolationType::ABSOLUTE ? _initialValue : T();
 }
@@ -71,11 +72,11 @@ std::shared_ptr<IParamAnimation>    ParamAnimation<T>::clone()
 template <typename T>
 T   ParamAnimation<T>::getNewValue(const sKeyFrame& keyFrame)
 {
-    if (!keyFrame.duration)
+    if (!keyFrame.time || !(keyFrame.time - _lastKeyTime))
         return (keyFrame.value);
 
     // Value between 0 and 1
-    float time = _elapsedTime / keyFrame.duration;
+    float time = (_elapsedTime - _lastKeyTime) / (keyFrame.time - _lastKeyTime);
 
     switch (keyFrame.easing)
     {

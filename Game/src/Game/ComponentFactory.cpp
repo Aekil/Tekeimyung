@@ -163,7 +163,7 @@ void    ComponentFactory<sRenderComponent>::loadTranslateParamAnimation(std::sha
         ParamAnimation<glm::vec3>::sKeyFrame key;
         std::string easingType = keyFrameJson.getString("easing", "NONE");
 
-        key.duration = keyFrameJson.getFloat("duration", 1.0f);
+        key.time = keyFrameJson.getFloat("time", 1.0f);
         key.value = keyFrameJson.getVec3f("value", glm::vec3(0.0f, 0.0f, 0.0f));
         key.easing = IParamAnimation::getEasingTypeFromString(easingType);
         paramAnimation->addKeyFrame(key);
@@ -185,7 +185,7 @@ void    ComponentFactory<sRenderComponent>::loadColorParamAnimation(std::shared_
         ParamAnimation<glm::vec4>::sKeyFrame key;
         std::string easingType = keyFrameJson.getString("easing", "NONE");
 
-        key.duration = keyFrameJson.getFloat("duration", 1.0f);
+        key.time = keyFrameJson.getFloat("time", 1.0f);
         key.value = keyFrameJson.getVec4f("value", glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
         key.easing = IParamAnimation::getEasingTypeFromString(easingType);
 
@@ -247,7 +247,7 @@ void    ComponentFactory<sRenderComponent>::saveTranslateParamAnimation(std::sha
         JsonValue keyFrameJson;
 
         keyFrameJson.setVec3f("value", keyFrame.value);
-        keyFrameJson.setFloat("duration", keyFrame.duration);
+        keyFrameJson.setFloat("time", keyFrame.time);
         keyFrameJson.setString("easing", IParamAnimation::getEasingStringFromType(keyFrame.easing));
         keyFrames.push_back(keyFrameJson);
     }
@@ -267,7 +267,7 @@ void    ComponentFactory<sRenderComponent>::saveColorParamAnimation(std::shared_
         JsonValue keyFrameJson;
 
         keyFrameJson.setVec4f("value", keyFrame.value);
-        keyFrameJson.setFloat("duration", keyFrame.duration);
+        keyFrameJson.setFloat("time", keyFrame.time);
         keyFrameJson.setString("easing", IParamAnimation::getEasingStringFromType(keyFrame.easing));
         keyFrames.push_back(keyFrameJson);
     }
@@ -505,7 +505,7 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationParamTranslate(Entity
     if (ImGui::Button("Add key frame"))
     {
         ParamAnimation<glm::vec3>::sKeyFrame keyFrame;
-        keyFrame.duration = 1.0f;
+        keyFrame.time = 1.0f;
         keyFrame.value = glm::vec3(0.0f, 0.0f, 0.0f);
         keyFrame.easing = IParamAnimation::eEasing::NONE;
         paramAnimation->addKeyFrame(keyFrame);
@@ -535,7 +535,7 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationParamTranslate(Entity
         else
         {
             ImGui::InputFloat3("value", glm::value_ptr(keyFrame.value));
-            ImGui::InputFloat("duration", &keyFrame.duration);
+            ImGui::InputFloat("time", &keyFrame.time);
 
             // Easing type listBox
             ParamAnimation<glm::vec3>::getEasingStringFromType(keyFrame.easing);
@@ -566,7 +566,7 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationParamColor(std::share
     if (ImGui::Button("Add key frame"))
     {
         ParamAnimation<glm::vec4>::sKeyFrame keyFrame;
-        keyFrame.duration = 1.0f;
+        keyFrame.time = 1.0f;
         keyFrame.value = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
         keyFrame.easing = IParamAnimation::eEasing::NONE;
         paramAnimation->addKeyFrame(keyFrame);
@@ -590,7 +590,7 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationParamColor(std::share
         else
         {
             ImGui::ColorEdit4("value", glm::value_ptr(keyFrame.value));
-            ImGui::InputFloat("duration", &keyFrame.duration);
+            ImGui::InputFloat("time", &keyFrame.time);
 
             // Easing type listBox
             ParamAnimation<glm::vec4>::getEasingStringFromType(keyFrame.easing);
