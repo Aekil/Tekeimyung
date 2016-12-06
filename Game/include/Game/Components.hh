@@ -490,7 +490,7 @@ START_COMPONENT(sWaveComponent)
         this->data.nbEntities = component->data.nbEntities;
         this->data.secBeforeFirstSpawn = component->data.secBeforeFirstSpawn;
         this->data.secBeforeEachSpawn = component->data.secBeforeEachSpawn;
-        //this->timer = component->timer; // ?
+        this->timeRec = component->timeRec;
     }
 
     virtual void update(sComponent* component)
@@ -501,7 +501,7 @@ START_COMPONENT(sWaveComponent)
     glm::vec3   spawnPos;
     bool        firstWaitFinished;
     tWaveData   data;
-    Timer       timer;
+    float       timeRec;
 END_COMPONENT(sWaveComponent)
 
 enum class eCollisionState : int

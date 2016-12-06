@@ -18,8 +18,8 @@
                                 private: \
                                     uint16_t        _monitoringKey;
 
-#define ABS(x)                  (x < 0 ? -x : x)
-#define TIME_DIFF_RATIO         (0.1)
+#define ABS(x)                  ((x) < 0 ? -(x) : (x))
+#define TIME_DIFF_RATIO         (0.03)
 
 typedef struct sMonitoring
 {
@@ -45,9 +45,9 @@ public:
 
 private:
     float                                           calcTimeAverage(std::vector<float> timeLogs);
-    void                                            updateTimeLogsSystem(std::pair<const uint16_t, tMonitoring>& system, bool *resetCheckSec);
-    ImColor                                         getDisplayColor(std::pair<const uint16_t, tMonitoring>& system);
-    void                                            displaySystem(std::pair<const uint16_t, tMonitoring>& system);
+    void                                            updateTimeLogsSystem(tMonitoring& system, bool *resetCheckSec);
+    ImColor                                         getDisplayColor(tMonitoring& system);
+    void                                            displaySystem(tMonitoring& system);
 
 private:
     static std::shared_ptr<MonitoringDebugWindow>   _monitoringDebugWindow;

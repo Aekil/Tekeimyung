@@ -748,7 +748,7 @@ sComponent* ComponentFactory<sWaveComponent>::loadFromJson(const std::string& en
     component->data.nbEntities = json.getInt("nSpawn", 10);
     component->data.secBeforeFirstSpawn = json.getFloat("secBeforeFirstSpawn", 2);
     component->data.secBeforeEachSpawn = json.getFloat("secBeforeEachSpawn", 3);
-    //component->timer
+    component->timeRec = 0;
 
     return (component);
 }

@@ -26,13 +26,14 @@ void    WaveSystem::update(EntityManager &em, float elapsedTime)
         sWaveComponent* waveComponent = entity->getComponent<sWaveComponent>();
         if (waveComponent)
         {
+            waveComponent->timeRec += elapsedTime; // update time record
             if (!waveComponent->firstWaitFinished) // first spawn time isn't finished
             {
-                if (waveComponent->timer.getElapsedTime() > waveComponent->data.secBeforeFirstSpawn)
+                if (waveComponent->timeRec > waveComponent->data.secBeforeFirstSpawn)
                 {
                     skipTimeFirstSpawn = true; // remember to skip time condition (/additionnals time) for first spawn
                     waveComponent->firstWaitFinished = true;
-                    waveComponent->timer.reset(); // reset timer here to correctly wait time until next spawn
+                    waveComponent->timeRec = 0; // reset time record here to correctly wait time until next spawn
                 }
             }
             if (waveComponent->firstWaitFinished) // first spawn time is finished
@@ -42,10 +43,10 @@ void    WaveSystem::update(EntityManager &em, float elapsedTime)
                 waveComponent->spawnPos = glm::vec3(position->value.x + 0.5f, position->value.y + 0.5f, position->z + 1); // center the spawn point
                 // if there is entities to spawn & ( enough waited time OR first spawn time is skipped)
                 if (waveComponent->data.nbEntities > 0 &&
-                    (skipTimeFirstSpawn || waveComponent->timer.getElapsedTime() > waveComponent->data.secBeforeEachSpawn))
+                    (skipTimeFirstSpawn || waveComponent->timeRec > waveComponent->data.secBeforeEachSpawn))
                 {
                     skipTimeFirstSpawn = false; // disable skip of waiting time
-                    waveComponent->timer.reset(); // reset timer for next spawn
+                    waveComponent->timeRec = 0; // reset time record for next spawn
                     createEntityFromWave(_map, waveComponent->spawnPos, eArchetype::ENEMY); // spawn entity
                     waveComponent->data.nbEntities -= 1; // count number of entities left to spawn
                     if (waveComponent->data.nbEntities == 0) // if no more entities left to spawn
