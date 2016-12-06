@@ -58,9 +58,10 @@ uint16_t    MonitoringDebugWindow::registerSystem(std::string name)
     return (keyID++);
 }
 
-void    MonitoringDebugWindow::updateSystem(uint16_t key, float timeSec)
+void    MonitoringDebugWindow::updateSystem(uint16_t key, float timeSec, uint32_t nbEntities)
 {
     _systemsRegistered[key].timeSec = timeSec;
+    _systemsRegistered[key].nbEntities = nbEntities;
 }
 
 float   MonitoringDebugWindow::calcTimeAverage(std::vector<float> timeLogs)
@@ -121,13 +122,13 @@ void    MonitoringDebugWindow::displaySystem(tMonitoring& system)
 #if (ENABLE_COLOR) // display with colors
     {
         ImColor color = getDisplayColor(system);
-        ImGui::TextColored(color, FMT_MSG("%-20s : %+3c  %.2f ms   (%.3f)", system.name.c_str(), (system.oldAvg < system.avgTimeSec) ? '+' : '-',
+        ImGui::TextColored(color, FMT_MSG("%-20s | %4d  : %+3c  %.2f ms   (%.3f)", system.name.c_str(), (int)system.nbEntities, (system.oldAvg < system.avgTimeSec) ? '+' : '-',
             SEC_TO_MS(system.avgTimeSec), SEC_TO_MS(system.avgTimeSec)).c_str());
     }
 #else // display all in white
     {
         ImGui::Text(FMT_MSG("%-20s : %+3c  %.2f ms   (%.3f)", system.name.c_str(), (system.oldAvg < system.avgTimeSec) ? '+' : '-',
-            SEC_TO_MS(system.avgTimeSec), SEC_TO_MS(system.avgTimeSec)).c_str());
+            SEC_TO_MS(system.avgTimeSec), SEC_TO_MS(system.avgTimeSec)).c_str()); // not always uptodate compared to colored display
     }
 #endif
     ImGui::Separator(); // separate each display system

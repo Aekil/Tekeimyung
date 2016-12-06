@@ -17,13 +17,15 @@ AISystem::~AISystem() {}
 void    AISystem::update(EntityManager &em, float elapsedTime)
 {
     Timer timer;
+    uint32_t nbEntities = 0;
 
     forEachEntity(em, [&](Entity *entity) {
         sDirectionComponent *direction = entity->getComponent<sDirectionComponent>();
 
         direction->value.x = direction->speed;
         direction->moved = true;
+        ++nbEntities;
     });
 
-    MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, timer.getElapsedTime());
+    MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, timer.getElapsedTime(), nbEntities);
 }

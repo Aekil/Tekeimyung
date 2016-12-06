@@ -189,6 +189,7 @@ void    RenderingSystem::renderParticles(EntityManager& em)
 void    RenderingSystem::update(EntityManager& em, float elapsedTime)
 {
     Timer timer;
+    uint32_t nbEntities = 0;
     // Clear color buffer
     glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -209,6 +210,7 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
             else
                 _transparentEntities[entity->id] = entity;
         }
+        ++nbEntities;
     });
 
     // Enable blend to blend transparent ojects and particles
@@ -255,7 +257,7 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
     // Display screen
     GameWindow::getInstance()->display();
 
-    MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, timer.getElapsedTime());
+    MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, timer.getElapsedTime(), nbEntities);
 }
 
 bool    RenderingSystem::isTransparent(sRenderComponent *render) const

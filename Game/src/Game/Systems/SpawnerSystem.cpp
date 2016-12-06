@@ -19,6 +19,7 @@ SpawnerSystem::~SpawnerSystem() {}
 void    SpawnerSystem::update(EntityManager &em, float elapsedTime)
 {
     Timer timer;
+    uint32_t nbEntities = 0;
     bool skipTimeFirstSpawn = false;
 
     forEachEntity(em, [&](Entity *entity)
@@ -49,9 +50,10 @@ void    SpawnerSystem::update(EntityManager &em, float elapsedTime)
                 }
             }
         }
+        ++nbEntities;
     });
 
-    MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, timer.getElapsedTime());
+    MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, timer.getElapsedTime(), nbEntities);
 }
 
 uint32_t    SpawnerSystem::createSpawner(Map* map, const glm::vec3& pos, eArchetype type)

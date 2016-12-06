@@ -27,13 +27,14 @@ typedef struct sMonitoring
     float               timeSec;
     float               avgTimeSec;
     float               oldAvg;
+    uint32_t            nbEntities;
     std::vector<float>  timeLogs;
 }                       tMonitoring;
 
 class MonitoringDebugWindow : public DebugWindow
 {
 public:
-    MonitoringDebugWindow(const glm::vec2& pos = glm::vec2(0, 650), const glm::vec2& size = glm::vec2(350, 300));
+    MonitoringDebugWindow(const glm::vec2& pos = glm::vec2(0, 650), const glm::vec2& size = glm::vec2(450, 300));
     virtual ~MonitoringDebugWindow();
 
     static std::shared_ptr<MonitoringDebugWindow>   getInstance();
@@ -41,7 +42,7 @@ public:
     virtual void                                    build(float elapsedTime);
 
     uint16_t                                        registerSystem(std::string name);
-    void                                            updateSystem(uint16_t key, float timeSec);
+    void                                            updateSystem(uint16_t key, float timeSec, uint32_t nbEntities);
 
 private:
     float                                           calcTimeAverage(std::vector<float> timeLogs);

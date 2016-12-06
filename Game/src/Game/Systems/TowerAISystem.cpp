@@ -19,6 +19,7 @@ TowerAISystem::~TowerAISystem() {}
 void    TowerAISystem::update(EntityManager &em, float elapsedTime)
 {
     Timer timer;
+    uint32_t nbEntities = 0;
 
     forEachEntity(em, [&](Entity *entity)
     {
@@ -60,9 +61,10 @@ void    TowerAISystem::update(EntityManager &em, float elapsedTime)
         }
         if (towerAIComponent->lastShotTime >= towerAIComponent->fireRate)
             towerAIComponent->lastShotTime = 0.0f;
+        ++nbEntities;
     });
 
-    MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, timer.getElapsedTime());
+    MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, timer.getElapsedTime(), nbEntities);
 }
 
 /** @brief  This function checks for the nearest entity in range of an entity that gets the TowerAIComponent component.

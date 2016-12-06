@@ -21,6 +21,7 @@ CollisionSystem::CollisionSystem(Map* map) : _map(map)
 void    CollisionSystem::update(EntityManager &em, float elapsedTime)
 {
     Timer   timer;
+    uint32_t nbEntities = 0;
 
     this->forEachEntity(em, [&](Entity* entity)
     {
@@ -56,9 +57,10 @@ void    CollisionSystem::update(EntityManager &em, float elapsedTime)
                 }
             }
         });
+        ++nbEntities;
     });
 
-    MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, timer.getElapsedTime());
+    MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, timer.getElapsedTime(), nbEntities);
 }
 
 bool    CollisionSystem::isColliding(Entity *firstEntity, Entity *secondEntity)

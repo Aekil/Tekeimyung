@@ -20,12 +20,14 @@ InputSystem::~InputSystem() {}
 void    InputSystem::update(EntityManager &em, float elapsedTime)
 {
     Timer timer;
+    uint32_t nbEntities = 0;
 
     forEachEntity(em, [&](Entity *entity) {
         movementKeys(entity, elapsedTime);
+        ++nbEntities;
     });
 
-    MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, timer.getElapsedTime());
+    MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, timer.getElapsedTime(), nbEntities);
 }
 
 void    InputSystem::movementKeys(Entity *entity, float elapsedTime)

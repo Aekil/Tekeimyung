@@ -14,13 +14,15 @@ GravitySystem::GravitySystem()
 void GravitySystem::update(EntityManager &em, float elapsedTime)
 {
     Timer timer;
+    uint32_t nbEntities = 0;
 
     this->forEachEntity(em, [&](Entity* entity) {
         sDirectionComponent* direction = entity->getComponent<sDirectionComponent>();
         sGravityComponent* gravity = entity->getComponent<sGravityComponent>();
 
         direction->value += gravity->value * elapsedTime;
+        ++nbEntities;
     });
 
-    MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, timer.getElapsedTime());
+    MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, timer.getElapsedTime(), nbEntities);
 }

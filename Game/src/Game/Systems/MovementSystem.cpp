@@ -17,6 +17,7 @@ MovementSystem::MovementSystem(Map* map): _map(map)
 void    MovementSystem::update(EntityManager &em, float elapsedTime)
 {
     Timer timer;
+    uint32_t nbEntities = 0;
     
     this->forEachEntity(em, [&](Entity* entity) {
         sDirectionComponent *direction = entity->getComponent<sDirectionComponent>();
@@ -37,7 +38,8 @@ void    MovementSystem::update(EntityManager &em, float elapsedTime)
             transform->pos = Map::mapToGraphPosition(position->value, position->z);
             transform->needUpdate = true;
         }
+        ++nbEntities;
     });
 
-    MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, timer.getElapsedTime());
+    MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, timer.getElapsedTime(), nbEntities);
 }

@@ -21,6 +21,7 @@ ProjectileSystem::~ProjectileSystem() {}
 void    ProjectileSystem::update(EntityManager &em, float elapsedTime)
 {
     Timer timer;
+    uint32_t nbEntities = 0;
 
     forEachEntity(em, [&](Entity *entity)
     {
@@ -49,7 +50,8 @@ void    ProjectileSystem::update(EntityManager &em, float elapsedTime)
                 }
             }
         }
+        ++nbEntities;
     });
 
-    MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, timer.getElapsedTime());
+    MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, timer.getElapsedTime(), nbEntities);
 }

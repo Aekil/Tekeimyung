@@ -14,6 +14,7 @@ ResolutionSystem::~ResolutionSystem() { }
 void ResolutionSystem::update(EntityManager &em, float elapsedTime)
 {
     Timer timer;
+    uint32_t nbEntities = 0;
 
     this->forEachEntity(em, [&](Entity* entity)
     {
@@ -29,7 +30,8 @@ void ResolutionSystem::update(EntityManager &em, float elapsedTime)
             resolutionComponent->onCollisionExit(resolutionComponent->entityId);
             resolutionComponent->collidingState = eCollisionState::NO_COLLISION;
         }
+        ++nbEntities;
     });
 
-    MonitoringDebugWindow::getInstance()->updateSystem(_keyMonitoring, timer.getElapsedTime());
+    MonitoringDebugWindow::getInstance()->updateSystem(_keyMonitoring, timer.getElapsedTime(), nbEntities);
 }
