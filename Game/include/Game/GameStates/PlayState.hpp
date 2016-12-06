@@ -14,10 +14,8 @@
 #include <Game/EntityFactory.hpp>
 #include <Game/Map.hpp>
 
-class PlayState: public GameState
-{
+START_GAMESTATE(PlayState)
  public:
-    PlayState();
     virtual ~PlayState();
 
     virtual bool                        init();
@@ -27,9 +25,5 @@ class PlayState: public GameState
 
 private:
     Map*                                _map;
-    bool                                _windowImgui;
     std::pair <Keyboard::eKey, IInputEvent *>    _pair;
-
-    // Entity enemies for demo
-    //std::vector<Entity*>                _enemies;
-};
+END_GAMESTATE(PlayState)

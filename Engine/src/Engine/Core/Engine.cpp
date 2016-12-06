@@ -9,7 +9,7 @@ Engine::~Engine() {}
 
 bool    Engine::init()
 {
-    _window = std::make_shared<GameWindow>();
+    _window = std::make_shared<GameWindow>(&_gameStateManager);
     if (!_window->initialize())
         return (false);
 
@@ -28,9 +28,10 @@ bool    Engine::init()
 bool    Engine::run()
 {
     // FPS counter
-    Timer       timer;
+    Timer&       timer = _window->getTimer();
     float       timePerFrame;
 
+    timer.reset();
     timePerFrame = 1.0f / 60.0f;
     while (_window->isRunning())
     {

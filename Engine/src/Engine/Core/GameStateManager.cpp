@@ -14,7 +14,9 @@ void    GameStateManager::removeCurrentState()
 
 std::shared_ptr<GameState> GameStateManager::getCurrentState() const
 {
-    return (_states.back());
+    if (hasStates())
+        return (_states.back());
+    return (nullptr);
 }
 
 bool    GameStateManager::hasStates() const

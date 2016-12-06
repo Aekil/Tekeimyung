@@ -5,6 +5,8 @@
 
 #include <Engine/Core/GameState.hpp>
 
+class GameState;
+
 class GameStateManager
 {
 public:
@@ -14,7 +16,7 @@ public:
     template<typename T>
     bool                                        addState()
     {
-        std::shared_ptr<T> gameState = std::make_shared<T>();
+        std::shared_ptr<T> gameState = std::make_shared<T>(this);
         if (!gameState->init() || !gameState->initSystems())
         {
             return (false);

@@ -29,11 +29,10 @@
 #include <Game/EntityDebugWindow.hpp>
 #include <Game/EntityFactory.hpp>
 #include <Game/Utils/PlayStates.hpp>
+#include <Game/GameStates/PauseState.hpp>
 
 #include <Game/GameStates/PlayState.hpp>
 
-
-PlayState::PlayState() : _windowImgui(true) {}
 
 PlayState::~PlayState() {}
 
@@ -141,17 +140,18 @@ bool    PlayState::init()
 
 bool    PlayState::update(float elapsedTime)
 {
-    if (GameWindow::getInstance()->getKeyboard().getStateMap()[_pair.first] == Keyboard::eKeyState::KEY_PRESSED)
+    auto& gameWindow = GameWindow::getInstance();
+    auto &&keyboard = GameWindow::getInstance()->getKeyboard();
+
+    if (keyboard.getStateMap()[_pair.first] == Keyboard::eKeyState::KEY_PRESSED)
         _pair.second->execute();
 
-/*    Entity* selectedEntity = getSelectedEntity();
-    if (selectedEntity)
+    if (keyboard.getStateMap()[Keyboard::eKey::ESCAPE] == Keyboard::eKeyState::KEY_PRESSED ||
+        gameWindow->hasLostFocus())
     {
-        sRenderComponent* render = selectedEntity->getComponent<sRenderComponent>();
-
-        render->color = glm::vec4(1.0f, 0.0f, 0.0f, 0.0f);
+        _gameStateManager->addState<PauseState>();
     }
-*/
+
     return (GameState::update(elapsedTime));
 }
 
