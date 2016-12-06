@@ -469,6 +469,12 @@ START_COMPONENT(sProjectileComponent)
     uint32_t    targetId;
 END_COMPONENT(sProjectileComponent)
 
+/*typedef struct  sEntSpawnData
+{
+    float       secBeforeSpawn;
+    eArchetype  type;
+}               tEntSpawnData;*/
+
 typedef struct  sSpawnerData
 {
     int         nbEntities;

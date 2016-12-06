@@ -1,16 +1,10 @@
 {
-    "name": "BLOCK_SPAWNER",
+    "name": "SPAWNER",
     "components": {
             "sPositionComponent": {
                 "x": 0,
                 "y": 0,
                 "z": 0
-            },
-            "sRenderComponent": {
-                "model": "resources/models/blocks/block_brown.DAE"
-            },
-            "sTypeComponent": {
-                "type": "TILE_WALKABLE"
             },
       "sSpawnerComponent": {
         "firstWaitFinished": false,
