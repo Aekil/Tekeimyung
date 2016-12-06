@@ -11,7 +11,7 @@ public:
     LogDebugWindow(std::shared_ptr<Logger> logger, const glm::vec2& pos, const glm::vec2& size);
     virtual ~LogDebugWindow();
 
-    virtual void        build();
+    virtual void        build(float elapsedTime);
 
 private:
     std::shared_ptr<Logger> _logger;

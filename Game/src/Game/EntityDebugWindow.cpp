@@ -16,7 +16,7 @@ EntityDebugWindow::EntityDebugWindow(EntityManager* em, Map* map, const glm::vec
 
 EntityDebugWindow::~EntityDebugWindow() {}
 
-void    EntityDebugWindow::build()
+void    EntityDebugWindow::build(float elapsedTime)
 {
     if (!ImGui::Begin(_title.c_str(), &_displayed, ImGuiWindowFlags_NoResize))
     {

@@ -1,12 +1,11 @@
-#include <imgui.h>
-
 #include <Engine/Utils/MonitoringDebugWindow.hpp>
 
 
 std::shared_ptr<MonitoringDebugWindow>   MonitoringDebugWindow::_monitoringDebugWindow = nullptr;
 
 MonitoringDebugWindow::MonitoringDebugWindow(const glm::vec2& pos, const glm::vec2& size) :
-    DebugWindow("Monitoring", pos, size)
+    DebugWindow("Monitoring", pos, size),
+    _checkSec(0)
 {
 }
 
@@ -21,8 +20,11 @@ std::shared_ptr<MonitoringDebugWindow>   MonitoringDebugWindow::getInstance()
     return _monitoringDebugWindow;
 }
 
-void    MonitoringDebugWindow::build()
+void    MonitoringDebugWindow::build(float elapsedTime)
 {
+    _checkSec += elapsedTime; // update time record
+
+    // Construction of ImGui window with params
     if (!ImGui::Begin(_title.c_str(), &_displayed, ImGuiWindowFlags_NoResize))
     {
         ImGui::End();
@@ -31,61 +33,15 @@ void    MonitoringDebugWindow::build()
     ImGui::SetWindowSize(ImVec2(_size.x, _size.y), ImGuiSetCond_Always);
     ImGui::SetWindowPos(ImVec2(_pos.x, _pos.y), ImGuiSetCond_Always);
 
-    bool resetTimer = false;
-    for (auto&& system : _systemsRegistered)
+    bool resetCheckSec = false;
+    // update & display timeLogs for each monitored system
+    for (std::pair<const uint16_t, tMonitoring>& system : _systemsRegistered) 
     {
-        if (_checkSec.getElapsedTime() >= 1) // if 1sec past
-        {
-            // update adverage
-            system.second.oldAvg = system.second.avgTimeSec;
-            system.second.avgTimeSec = calcTimeAverage(system.second.timeLogs);
-            // set bool to reset Timer after the systems loop
-            resetTimer = true;
-            // clear timeLogs
-            system.second.timeLogs.clear();
-        }
-        else // if 1sec not past
-        {
-            system.second.timeLogs.push_back(system.second.timeSec); // update timeLogs
-        }
-        
-        // display monitoring informations (time average)
-        if (ENABLE_COLOR) // if macro ENABLE_COLOR = true, display with colors
-        {
-            // color calculation depending on time variation
-            ImColor color;
-            bool colored = true;
-
-            if (system.second.oldAvg < system.second.avgTimeSec)
-                color.Value = ImColor(200, 100, 100);
-            else
-                color.Value = ImColor(100, 200, 100);
-
-            float diff = SEC_TO_MS(system.second.oldAvg) - SEC_TO_MS(system.second.avgTimeSec);
-
-            if (diff < 0)
-                diff *= -1;
-
-            if (diff < 0.1)
-                colored = false;
-
-            if (!colored)
-                color.Value = ImColor(255, 255, 255);
-
-            // display informations
-            ImGui::TextColored(color, FMT_MSG("%-20s : %+2c %.2f ms (%.3f ms)", system.second.name.c_str(), (system.second.oldAvg < system.second.avgTimeSec) ? '+' : '-',
-                SEC_TO_MS(system.second.avgTimeSec), SEC_TO_MS(system.second.timeSec)).c_str());
-        }
-        else // if not, display in white (default color)
-        {
-            // display informations
-            ImGui::Text(FMT_MSG("%-20s : %+2c %.2f ms (%.3f ms)", system.second.name.c_str(), (system.second.oldAvg < system.second.avgTimeSec) ? '+' : '-',
-                SEC_TO_MS(system.second.avgTimeSec), SEC_TO_MS(system.second.timeSec)).c_str());
-        }
-        ImGui::Separator();
+        updateTimeLogsSystem(system, &resetCheckSec);
+        displaySystem(system);
     }
-    if (resetTimer) // reset timer if needed (1s past)
-        _checkSec.reset();
+    if (resetCheckSec) // reset time record each 1s past
+        _checkSec = 0;
 
     ImGui::End();
 }
@@ -102,9 +58,9 @@ uint16_t    MonitoringDebugWindow::registerSystem(std::string name)
     return (keyID++);
 }
 
-void    MonitoringDebugWindow::updateSystem(uint16_t key, tMonitoring newData)
+void    MonitoringDebugWindow::updateSystem(uint16_t key, float timeSec)
 {
-    _systemsRegistered[key].timeSec = newData.timeSec;
+    _systemsRegistered[key].timeSec = timeSec;
 }
 
 float   MonitoringDebugWindow::calcTimeAverage(std::vector<float> timeLogs)
@@ -117,6 +73,62 @@ float   MonitoringDebugWindow::calcTimeAverage(std::vector<float> timeLogs)
     }
     avg /= timeLogs.capacity();
    
-
     return (avg);
+}
+
+void    MonitoringDebugWindow::updateTimeLogsSystem(std::pair<const uint16_t, tMonitoring>& system, bool *resetCheckSec)
+{
+    if (_checkSec >= 1) // if 1sec past
+    {
+        // update time average
+        system.second.oldAvg = system.second.avgTimeSec;
+        system.second.avgTimeSec = calcTimeAverage(system.second.timeLogs);
+
+        *resetCheckSec = true; // remember to reset time after updating all systems
+
+        system.second.timeLogs.clear(); // clear timeLogs
+    }
+    else // if 1sec not past
+    {
+        system.second.timeLogs.push_back(system.second.timeSec); // update timeLogs
+    }
+}
+
+ImColor    MonitoringDebugWindow::getDisplayColor(std::pair<const uint16_t, tMonitoring>& system)
+{
+    ImColor color;
+
+    // get absolute value of time difference between old and new time average of the system
+    float timeDiff = ABS(SEC_TO_MS(system.second.oldAvg) - SEC_TO_MS(system.second.avgTimeSec));
+
+    // define if system display will be colored or not, depending on timeDiff & TIME_DIFF_RATIO
+    if (timeDiff > TIME_DIFF_RATIO)
+    {
+        // process color
+        if (system.second.oldAvg < system.second.avgTimeSec) // old performance shorter than old one
+            color.Value = ImColor(200, 100, 100); // red
+        else // new performance shorter than old one
+            color.Value = ImColor(100, 200, 100); // green
+    }
+    else
+        color.Value = ImColor(255, 255, 255); // white
+
+    return (color);
+}
+
+void    MonitoringDebugWindow::displaySystem(std::pair<const uint16_t, tMonitoring>& system)
+{
+#if (ENABLE_COLOR) // display with colors
+    {
+        ImColor color = getDisplayColor(system);
+        ImGui::TextColored(color, FMT_MSG("%-20s : %+2c %.2f ms (%.3f ms)", system.second.name.c_str(), (system.second.oldAvg < system.second.avgTimeSec) ? '+' : '-',
+            SEC_TO_MS(system.second.avgTimeSec), SEC_TO_MS(system.second.timeSec)).c_str());
+    }
+#else // display all in white
+    {
+        ImGui::Text(FMT_MSG("%-20s : %+2c %.2f ms (%.3f ms)", system.second.name.c_str(), (system.second.oldAvg < system.second.avgTimeSec) ? '+' : '-',
+            SEC_TO_MS(system.second.avgTimeSec), SEC_TO_MS(system.second.timeSec)).c_str());
+    }
+#endif
+    ImGui::Separator(); // separate each display system
 }
