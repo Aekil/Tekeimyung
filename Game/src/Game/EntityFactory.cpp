@@ -270,7 +270,18 @@ void    EntityFactory::updateEntitiesComponents(Entity* from, const std::string&
             }
 
             if (component->id == sRenderComponent::identifier)
+            {
+
                 initAnimations(entity);
+
+                sRenderComponent* render = static_cast<sRenderComponent*>(entityComponent);
+
+                if (render && render->_animator.getAnimationsNb() > 0)
+                {
+                    AnimationPtr currentAnimation = render->_animator.getAnimations()[0];
+                    render->_animator.play(currentAnimation->getName());
+                }
+            }
         }
     }
 }
