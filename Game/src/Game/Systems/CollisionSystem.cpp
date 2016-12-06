@@ -57,8 +57,8 @@ void    CollisionSystem::update(EntityManager &em, float elapsedTime)
             }
         });
     });
-    _monitoringData.timeSec = timer.getElapsedTime();
-    MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, _monitoringData);
+
+    MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, timer.getElapsedTime());
 }
 
 bool    CollisionSystem::isColliding(Entity *firstEntity, Entity *secondEntity)

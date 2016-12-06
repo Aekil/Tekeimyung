@@ -31,6 +31,5 @@ void ResolutionSystem::update(EntityManager &em, float elapsedTime)
         }
     });
 
-    _data.timeSec = timer.getElapsedTime();
-    MonitoringDebugWindow::getInstance()->updateSystem(_keyMonitoring, _data);
+    MonitoringDebugWindow::getInstance()->updateSystem(_keyMonitoring, timer.getElapsedTime());
 }

@@ -38,7 +38,7 @@ bool    GameState::update(float elapsedTime)
                 for (auto&& debugWindow: _debugWindows)
                 {
                     if (debugWindow->isDisplayed())
-                        debugWindow->build();
+                        debugWindow->build(elapsedTime);
                 }
 
                 // Update GameState systems

@@ -26,13 +26,14 @@ void    SpawnerSystem::update(EntityManager &em, float elapsedTime)
         sSpawnerComponent* spawnerComponent = entity->getComponent<sSpawnerComponent>();
         if (spawnerComponent)
         {
+            spawnerComponent->timeRec += elapsedTime; // update time record
             if (!spawnerComponent->firstWaitFinished) // first spawn time isn't finished
             {
-                if (spawnerComponent->timer.getElapsedTime() > spawnerComponent->data.secBeforeFirstSpawn)
+                if (spawnerComponent->timeRec > spawnerComponent->data.secBeforeFirstSpawn)
                 {
                     skipTimeFirstSpawn = true; // remember to skip time condition (/additionnals time) for first spawn
                     spawnerComponent->firstWaitFinished = true;
-                    spawnerComponent->timer.reset(); // reset timer here to correctly wait time until next spawn
+                    spawnerComponent->timeRec = 0; // reset time record here to correctly wait time until next spawn
                 }
             }
             if (spawnerComponent->firstWaitFinished) // first spawn time is finished
@@ -41,15 +42,8 @@ void    SpawnerSystem::update(EntityManager &em, float elapsedTime)
 
                 spawnerComponent->spawnPos = glm::vec3(position->value.x + 0.5f, position->value.y + 0.5f, position->z + 1); // center the spawn point
                 // if there is entities to spawn & ( enough waited time OR first spawn time is skipped)
-                if (spawnerComponent->data.nbEntities == 1)
-                {
-                    if (skipTimeFirstSpawn || spawnerComponent->timer.getElapsedTime() > spawnerComponent->data.secBeforeLastSpawn)
-                    {
-                        spawn(em, entity, spawnerComponent, &skipTimeFirstSpawn);
-                    }
-                }
-                else if (spawnerComponent->data.nbEntities > 0 &&
-                    (skipTimeFirstSpawn || spawnerComponent->timer.getElapsedTime() > spawnerComponent->data.secBeforeEachSpawn))
+                if (spawnerComponent->data.nbEntities > 0 &&
+                    (skipTimeFirstSpawn || spawnerComponent->timeRec > spawnerComponent->data.secBeforeEachSpawn))
                 {
                     spawn(em, entity, spawnerComponent, &skipTimeFirstSpawn);
                 }
@@ -57,8 +51,7 @@ void    SpawnerSystem::update(EntityManager &em, float elapsedTime)
         }
     });
 
-    _monitoringData.timeSec = timer.getElapsedTime();
-    MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, _monitoringData);
+    MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, timer.getElapsedTime());
 }
 
 uint32_t    SpawnerSystem::createSpawner(Map* map, const glm::vec3& pos, eArchetype type)
@@ -145,7 +138,7 @@ Entity*    SpawnerSystem::createEntityFromSpawner(Map* map, const glm::vec3& pos
 void    SpawnerSystem::spawn(EntityManager &em, Entity* entity, sSpawnerComponent* spawnerComponent, bool *skipTimeFirstSpawn)
 {
     *skipTimeFirstSpawn = false; // disable skip of waiting time
-    spawnerComponent->timer.reset(); // reset timer for next spawn
+    spawnerComponent->timeRec = 0; // reset time record for next spawn
     createEntityFromSpawner(_map, spawnerComponent->spawnPos, eArchetype::ENEMY); // spawn entity
     spawnerComponent->data.nbEntities -= 1; // count number of entities left to spawn
     if (spawnerComponent->data.nbEntities == 0) // if no more entities left to spawn

@@ -3,6 +3,7 @@
 #include <memory>
 #include <vector>
 #include <map>
+#include <imgui.h>
 
 #include <Engine/Utils/Debug.hpp>
 #include <Engine/Utils/Helper.hpp>
@@ -15,9 +16,10 @@
 
 #define ADD_MONITORING_VAR      \
                                 private: \
-                                    uint16_t        _monitoringKey; \
-                                    tMonitoring     _monitoringData;  // If no others variables to update than timeSec,
-                                                                      // replace tMonitoring _data by float _timeSec to optimize
+                                    uint16_t        _monitoringKey;
+
+#define ABS(x)                  ((x) < 0 ? -(x) : (x))
+#define TIME_DIFF_RATIO         (0.03)
 
 typedef struct sMonitoring
 {
@@ -36,18 +38,21 @@ public:
 
     static std::shared_ptr<MonitoringDebugWindow>   getInstance();
 
-    virtual void                                    build();
+    virtual void                                    build(float elapsedTime);
 
     uint16_t                                        registerSystem(std::string name);
-    void                                            updateSystem(uint16_t key, tMonitoring newData);
+    void                                            updateSystem(uint16_t key, float timeSec);
 
 private:
     float                                           calcTimeAverage(std::vector<float> timeLogs);
+    void                                            updateTimeLogsSystem(tMonitoring& system, bool *resetCheckSec);
+    ImColor                                         getDisplayColor(tMonitoring& system);
+    void                                            displaySystem(tMonitoring& system);
 
 private:
     static std::shared_ptr<MonitoringDebugWindow>   _monitoringDebugWindow;
 
     std::map<uint16_t, tMonitoring>                 _systemsRegistered;
-    Timer                                           _checkSec;
+    float                                           _checkSec;
 };
 

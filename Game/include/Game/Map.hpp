@@ -8,8 +8,6 @@
 
 #include <ECS/EntityManager.hpp>
 
-#include <Engine/Graphics/Sprite.hpp>
-
 #include <Game/CollisionMap.hpp>
 
 class CollisionMap;

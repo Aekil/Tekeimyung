@@ -749,7 +749,7 @@ sComponent* ComponentFactory<sSpawnerComponent>::loadFromJson(const std::string&
     component->data.secBeforeFirstSpawn = json.getFloat("secBeforeFirstSpawn", 3);
     component->data.secBeforeEachSpawn = json.getFloat("secBeforeEachSpawn", 2);
     component->data.secBeforeLastSpawn = json.getFloat("secBeforeLastSpawn", 4);
-    //component->timer
+    component->timeRec = 0;
 
     return (component);
 }

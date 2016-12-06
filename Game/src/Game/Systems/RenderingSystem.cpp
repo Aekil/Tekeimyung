@@ -255,8 +255,7 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
     // Display screen
     GameWindow::getInstance()->display();
 
-    _monitoringData.timeSec = timer.getElapsedTime();
-    MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, _monitoringData);
+    MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, timer.getElapsedTime());
 }
 
 bool    RenderingSystem::isTransparent(sRenderComponent *render) const

@@ -62,8 +62,7 @@ void    TowerAISystem::update(EntityManager &em, float elapsedTime)
             towerAIComponent->lastShotTime = 0.0f;
     });
 
-    _monitoringData.timeSec = timer.getElapsedTime();
-    MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, _monitoringData);
+    MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, timer.getElapsedTime());
 }
 
 /** @brief  This function checks for the nearest entity in range of an entity that gets the TowerAIComponent component.

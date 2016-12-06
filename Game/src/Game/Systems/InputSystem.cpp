@@ -25,8 +25,7 @@ void    InputSystem::update(EntityManager &em, float elapsedTime)
         movementKeys(entity, elapsedTime);
     });
 
-    _monitoringData.timeSec = timer.getElapsedTime();
-    MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, _monitoringData);
+    MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, timer.getElapsedTime());
 }
 
 void    InputSystem::movementKeys(Entity *entity, float elapsedTime)

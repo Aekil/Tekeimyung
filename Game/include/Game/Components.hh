@@ -14,8 +14,6 @@
 #include <ECS/Component.hh>
 
 #include <Engine/Window/Keyboard.hpp>
-#include <Engine/Graphics/Animation.hpp>
-#include <Engine/Graphics/Sprite.hpp>
 #include <Engine/Graphics/Model.hpp>
 #include <Engine/Graphics/Geometries/Geometry.hpp>
 #include <Engine/Graphics/Geometries/GeometryFactory.hpp>
@@ -500,7 +498,7 @@ START_COMPONENT(sSpawnerComponent)
         this->data.secBeforeFirstSpawn = component->data.secBeforeFirstSpawn;
         this->data.secBeforeEachSpawn = component->data.secBeforeEachSpawn;
         this->data.secBeforeLastSpawn = component->data.secBeforeLastSpawn;
-        //this->timer = component->timer; // ?
+        this->timeRec = component->timeRec;
     }
 
     virtual void update(sComponent* component)
@@ -511,7 +509,7 @@ START_COMPONENT(sSpawnerComponent)
     glm::vec3       spawnPos;
     bool            firstWaitFinished;
     tSpawnerData    data;
-    Timer           timer;
+    float           timeRec;
 END_COMPONENT(sSpawnerComponent)
 
 enum class eCollisionState : int
