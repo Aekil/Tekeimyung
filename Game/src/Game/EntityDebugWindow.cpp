@@ -220,12 +220,16 @@ void    EntityDebugWindow::saveEntityTemplate(const std::string& typeName, Entit
     {
         auto &&components = EntityFactory::getComponents(typeName);
 
+        // Reverse animations
+        EntityFactory::reverseAnimations(entity);
+
         // Save entity components
         for (auto component: entity->getComponents())
         {
             std::string componentName = IComponentFactory::getComponentNameWithHash(component->id);
             auto compFactory = IComponentFactory::getFactory(componentName);
             ASSERT(compFactory != nullptr, "The factory should exist");
+
             compFactory->save(typeName, component);
 
             // The component does not exist in entityFactory
@@ -236,7 +240,7 @@ void    EntityDebugWindow::saveEntityTemplate(const std::string& typeName, Entit
             }
 
             // Update other entities component
-            EntityFactory::updateEntityComponent(typeName, compFactory, component);
+            EntityFactory::updateEntitiesComponents(entity, typeName, compFactory, component);
         }
     }
 }

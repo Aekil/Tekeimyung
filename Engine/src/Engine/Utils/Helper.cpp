@@ -69,3 +69,19 @@ std::string Helper::lowerCaseString(const std::string& str)
 
     return (lowerCase);
 }
+
+float   Helper::parametricBlend(float t)
+{
+    float square = t * t;
+    return (square / (2.0f * (square - t) + 1.0f));
+}
+
+float   Helper::smoothStep(float t)
+{
+    return (t * t * (3.0f - 2.0f * t));
+}
+
+float   Helper::smootherStep(float t)
+{
+    return (t * t * t * (t * (6.0f * t - 15.0f) + 10.0f));
+}

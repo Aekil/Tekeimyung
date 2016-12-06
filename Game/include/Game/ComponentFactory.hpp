@@ -40,6 +40,8 @@
 #define GENERATE_PAIRS_HASHS(COMPONENT) { COMPONENT::identifier, #COMPONENT }
 
 
+class IParamAnimation;
+
 /*
 ** IComponentFactory
 */
@@ -176,7 +178,17 @@ public:
     virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
 
 private:
+    void            loadTranslateParamAnimation(std::shared_ptr<ParamAnimation<glm::vec3>> paramAnimation, JsonValue& json);
+    void            loadColorParamAnimation(std::shared_ptr<ParamAnimation<glm::vec4>> paramAnimation, JsonValue& json);
+
+    void            saveTranslateParamAnimation(std::shared_ptr<IParamAnimation> paramAnimation_, JsonValue& json);
+    void            saveColorParamAnimation(std::shared_ptr<IParamAnimation> paramAnimation_, JsonValue& json);
+
     virtual bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity);
+    bool            updateAnimationsEditor(sRenderComponent* component, Entity* entity);
+    bool            updateParamsAnimationsEditor(AnimationPtr playedAnimation, Entity* entity);
+    bool            updateAnimationParamTranslate(Entity* entity, std::shared_ptr<IParamAnimation> paramAnimation_, uint32_t& frameNb);
+    bool            updateAnimationParamColor(std::shared_ptr<IParamAnimation> paramAnimation_, uint32_t& frameNb);
 };
 
 

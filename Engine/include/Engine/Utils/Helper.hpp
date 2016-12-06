@@ -24,8 +24,8 @@ public:
     static void         copyAssimpVec3(const aiVector3D& from, glm::vec3& to);
     static std::string  lowerCaseString(const std::string& str);
 
-    template<typename... Args>
-    static std::string formatMessage(const char* format, Args... args)
+    template <typename... Args>
+    static std::string  formatMessage(const char* format, Args... args)
     {
         std::string buffer;
         buffer.resize(512);
@@ -34,4 +34,14 @@ public:
         buffer.resize(size);
         return buffer;
     }
+
+    template <typename T>
+    static T            lerp(T from, T to, float time)
+    {
+        return ((1.0f - time) * from + time * to);
+    }
+
+    static float        parametricBlend(float t);
+    static float        smoothStep(float t);
+    static float        smootherStep(float t);
 };

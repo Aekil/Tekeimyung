@@ -10,6 +10,7 @@
 #include <Engine/Window/GameWindow.hpp>
 #include <Engine/Utils/RessourceManager.hpp>
 #include <Engine/Graphics/Camera.hpp>
+#include <Game/EntityFactory.hpp>
 
 #include <Game/ComponentFactory.hpp>
 
@@ -100,12 +101,102 @@ sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& 
     std::string geometryName = json.getString("type", "MESH");
     component->type = Geometry::getGeometryType(geometryName);
 
+    // Load animations
+    auto animations = json.get()["animations"];
+    if (animations.size() > 0 && animations.type() != Json::ValueType::arrayValue)
+    {
+        LOG_ERROR("%s::sRenderComponent loadFromJson error: animations is not an array", entityType.c_str());
+        return (component);
+    }
+
+    for (const auto& animation: animations)
+    {
+        // Load animation
+        JsonValue animationJon(animation);
+        AnimationPtr compAnimation = std::make_shared<Animation>(animationJon.getString("name", "animation"));
+
+        // Load animation params
+        auto animationParams = animation["params"];
+        if (animationParams.type() != Json::ValueType::arrayValue)
+        {
+            LOG_ERROR("%s::sRenderComponent loadFromJson error: animation params is not an array for animation \"%s\"", entityType.c_str(), compAnimation->getName().c_str());
+            component->_animator.addAnimation(compAnimation);
+            break;
+        }
+
+        for (const auto& animationParam: animationParams)
+        {
+            JsonValue animationParamJson(animationParam);
+            std::string name = animationParamJson.getString("name", "param");
+            if (name == "color")
+            {
+                std::shared_ptr<ParamAnimation<glm::vec4> > colorParam = std::make_shared<ParamAnimation<glm::vec4> >(name, nullptr, IParamAnimation::eInterpolationType::ABSOLUTE);
+                loadColorParamAnimation(colorParam, animationParamJson);
+                compAnimation->addParamAnimation(colorParam);
+            }
+            else
+            {
+                std::shared_ptr<ParamAnimation<glm::vec3> > translateParam = std::make_shared<ParamAnimation<glm::vec3> >(name, nullptr);
+                loadTranslateParamAnimation(translateParam, animationParamJson);
+                compAnimation->addParamAnimation(translateParam);
+            }
+        }
+
+        component->_animator.addAnimation(compAnimation);
+    }
+
     return (component);
+}
+
+void    ComponentFactory<sRenderComponent>::loadTranslateParamAnimation(std::shared_ptr<ParamAnimation<glm::vec3>> paramAnimation, JsonValue& json)
+{
+    auto keyFrames = json.get()["frames"];
+    if (keyFrames.type() != Json::ValueType::arrayValue)
+    {
+        LOG_ERROR("sRenderComponent loadFromJson error: animation param frames is not an array for animation param \"%s\"", paramAnimation->getName().c_str());
+        return;
+    }
+
+    for (const auto& keyFrame: keyFrames)
+    {
+        JsonValue keyFrameJson(keyFrame);
+        ParamAnimation<glm::vec3>::sKeyFrame key;
+        std::string easingType = keyFrameJson.getString("easing", "NONE");
+
+        key.time = keyFrameJson.getFloat("time", 1.0f);
+        key.value = keyFrameJson.getVec3f("value", glm::vec3(0.0f, 0.0f, 0.0f));
+        key.easing = IParamAnimation::getEasingTypeFromString(easingType);
+        paramAnimation->addKeyFrame(key);
+    }
+}
+
+void    ComponentFactory<sRenderComponent>::loadColorParamAnimation(std::shared_ptr<ParamAnimation<glm::vec4>> paramAnimation, JsonValue& json)
+{
+    auto keyFrames = json.get()["frames"];
+    if (keyFrames.type() != Json::ValueType::arrayValue)
+    {
+        LOG_ERROR("%s::sRenderComponent loadFromJson error: animation param frames is not an array for animation param \"%s\"", paramAnimation->getName().c_str());
+        return;
+    }
+
+    for (const auto& keyFrame: keyFrames)
+    {
+        JsonValue keyFrameJson(keyFrame);
+        ParamAnimation<glm::vec4>::sKeyFrame key;
+        std::string easingType = keyFrameJson.getString("easing", "NONE");
+
+        key.time = keyFrameJson.getFloat("time", 1.0f);
+        key.value = keyFrameJson.getVec4f("value", glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
+        key.easing = IParamAnimation::getEasingTypeFromString(easingType);
+
+        paramAnimation->addKeyFrame(key);
+    }
 }
 
 JsonValue&    ComponentFactory<sRenderComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
 {
     JsonValue& json = _componentsJson[entityType];
+    std::vector<JsonValue> animations;
     sRenderComponent* component = static_cast<sRenderComponent*>(_components[entityType]);
 
 
@@ -115,7 +206,73 @@ JsonValue&    ComponentFactory<sRenderComponent>::saveToJson(const std::string& 
     json.setString("type", Geometry::getGeometryTypeString(component->type));
     json.setString("texture", component->texture);
 
+    // Save animations
+    for (const auto& animation: component->_animator.getAnimations())
+    {
+        JsonValue animationJson;
+        std::vector<JsonValue> paramsAnimation;
+
+        animationJson.setString("name", animation->getName());
+        // Save animation params
+        for (const auto& paramAnimation: animation->getParamsAnimations())
+        {
+            JsonValue paramAnimationJson;
+            if (paramAnimation->getName() == "color")
+                saveColorParamAnimation(paramAnimation, paramAnimationJson);
+            else
+                saveTranslateParamAnimation(paramAnimation, paramAnimationJson);
+
+            paramAnimationJson.setString("name", paramAnimation->getName());
+            paramsAnimation.push_back(paramAnimationJson);
+        }
+
+        animationJson.setValueVec("params", paramsAnimation);
+        animations.push_back(animationJson);
+    }
+
+    json.setValueVec("animations", animations);
+
     return (json);
+}
+
+void    ComponentFactory<sRenderComponent>::saveTranslateParamAnimation(std::shared_ptr<IParamAnimation> paramAnimation_, JsonValue& json)
+{
+    auto paramAnimation = std::static_pointer_cast<ParamAnimation<glm::vec3>>(paramAnimation_);
+    uint32_t totalFrames = (uint32_t)paramAnimation->getKeyFrames().size();
+    std::vector<JsonValue> keyFrames;
+
+    for (uint32_t i = 0; i < totalFrames; ++i)
+    {
+        ParamAnimation<glm::vec3>::sKeyFrame& keyFrame = paramAnimation->getKeyFrames()[i];
+        JsonValue keyFrameJson;
+
+        keyFrameJson.setVec3f("value", keyFrame.value);
+        keyFrameJson.setFloat("time", keyFrame.time);
+        keyFrameJson.setString("easing", IParamAnimation::getEasingStringFromType(keyFrame.easing));
+        keyFrames.push_back(keyFrameJson);
+    }
+
+    json.setValueVec("frames", keyFrames);
+}
+
+void    ComponentFactory<sRenderComponent>::saveColorParamAnimation(std::shared_ptr<IParamAnimation> paramAnimation_, JsonValue& json)
+{
+    auto paramAnimation = std::static_pointer_cast<ParamAnimation<glm::vec4>>(paramAnimation_);
+    uint32_t totalFrames = (uint32_t)paramAnimation->getKeyFrames().size();
+    std::vector<JsonValue> keyFrames;
+
+    for (uint32_t i = 0; i < totalFrames; ++i)
+    {
+        ParamAnimation<glm::vec4>::sKeyFrame& keyFrame = paramAnimation->getKeyFrames()[i];
+        JsonValue keyFrameJson;
+
+        keyFrameJson.setVec4f("value", keyFrame.value);
+        keyFrameJson.setFloat("time", keyFrame.time);
+        keyFrameJson.setString("easing", IParamAnimation::getEasingStringFromType(keyFrame.easing));
+        keyFrames.push_back(keyFrameJson);
+    }
+
+    json.setValueVec("frames", keyFrames);
 }
 
 bool    ComponentFactory<sRenderComponent>::updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity)
@@ -127,7 +284,7 @@ bool    ComponentFactory<sRenderComponent>::updateEditor(const std::string& enti
     bool textureChanged = false;
     bool modelChanged = false;
 
-    changed |= ImGui::ColorEdit3("color", glm::value_ptr(component->color));
+    changed |= ImGui::ColorEdit4("color", glm::value_ptr(component->color));
 
     static std::vector<const char*>& typesString = const_cast<std::vector<const char*>&>(Geometry::getTypesString());
     int selectedType = static_cast<int>(std::find(typesString.cbegin(), typesString.cend(), Geometry::getGeometryTypeString(component->type)) - typesString.begin());
@@ -188,7 +345,281 @@ bool    ComponentFactory<sRenderComponent>::updateEditor(const std::string& enti
         component->_model = nullptr;
     }
 
+    updateAnimationsEditor(component, entity);
+
     return (changed);
+}
+
+bool    ComponentFactory<sRenderComponent>::updateAnimationsEditor(sRenderComponent* component, Entity* entity)
+{
+    ImGui::Text("\n");
+    ImGui::Text("Animations");
+    ImGui::SameLine();
+
+    // Add new animation button
+    if (ImGui::Button("Create"))
+    {
+        AnimationPtr animation = std::make_shared<Animation>("animation");
+        component->_animator.addAnimation(animation);
+        component->_animator.play("animation");
+    }
+
+    // Animations list
+    ImGui::BeginChild("Animations", ImVec2(0, 100), true);
+    for (auto animation: component->_animator.getAnimations())
+    {
+        if (ImGui::Selectable(animation->getName().c_str(), component->_animator.getCurrentAnimation() == animation))
+        {
+            component->_animator.play(animation->getName(), animation->isLoop());
+        }
+    }
+    ImGui::EndChild();
+
+    if (!component->_animator.getCurrentAnimation())
+        return (false);
+
+    // Animation params style
+    ImGui::PushStyleColor(ImGuiCol_Header, ImColor(0.27f, 0.51f, 0.70f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_HeaderHovered, ImColor(0.39f, 0.58f, 0.92f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_HeaderActive, ImColor(0.49f, 0.68f, 0.92f, 1.0f));
+
+    AnimationPtr playedAnimation = component->_animator.getCurrentAnimation();
+
+    // Edit animation name
+    ImGui::Text("\n");
+    const std::string& animationName = playedAnimation->getName();
+    std::vector<char> animationNameVec(animationName.cbegin(), animationName.cend());
+    animationNameVec.push_back(0);
+    animationNameVec.resize(64);
+
+    if (ImGui::InputText("Name", animationNameVec.data(), animationNameVec.size()))
+    {
+        playedAnimation->setName(animationNameVec.data());
+    }
+
+    // Delete animation
+    if (ImGui::Button("Delete"))
+    {
+        sTransformComponent* transform = entity->getComponent<sTransformComponent>();
+        component->_animator.removeAnimation(playedAnimation);
+        transform->needUpdate = true;
+        ImGui::PopStyleColor(3);
+        return (false);
+    }
+
+    // Add animation param
+    ImGui::SameLine();
+    if (ImGui::Button("New param"))
+    {
+        ImGui::OpenPopup("params");
+    }
+
+    ImGui::SameLine();
+    if (ImGui::Button("Play"))
+    {
+        component->_animator.play(playedAnimation->getName(), playedAnimation->isLoop());
+    }
+
+    bool loop = playedAnimation->isLoop();
+    if (ImGui::Checkbox("Loop (preview, not saved)", &loop))
+    {
+        component->_animator.play(playedAnimation->getName(), loop);
+    }
+
+    // New animation param selection
+    ImGui::Text("\n");
+    ImGui::Text("Params:");
+    if (ImGui::BeginPopup("params"))
+    {
+        static const std::vector<std::string> params = { "color", "position", "scale", "rotation" };
+        for (auto param: params)
+        {
+            // Add new param
+            if (ImGui::Button(param.c_str()))
+            {
+                if (param == "color")
+                    playedAnimation->addParamAnimation(std::make_shared<ParamAnimation<glm::vec4> >(param, nullptr, IParamAnimation::eInterpolationType::ABSOLUTE));
+                else
+                    playedAnimation->addParamAnimation(std::make_shared<ParamAnimation<glm::vec3> >(param, nullptr));
+                EntityFactory::initAnimations(entity);
+            }
+        }
+        ImGui::EndPopup();
+    }
+
+    // Edit animation params
+    updateParamsAnimationsEditor(playedAnimation, entity);
+    ImGui::PopStyleColor(3);
+
+    return (false);
+}
+
+bool    ComponentFactory<sRenderComponent>::updateParamsAnimationsEditor(AnimationPtr playedAnimation, Entity* entity)
+{
+    uint32_t frameNb = 0;
+
+    auto& paramsAnimations = playedAnimation->getParamsAnimations();
+    for (uint32_t i = 0; i < paramsAnimations.size();)
+    {
+        auto paramAnimation = paramsAnimations[i];
+        // Animation param display
+        if (ImGui::CollapsingHeader(paramAnimation->getName().c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            ImGui::PushID(paramAnimation->getName().c_str());
+            // Remove animation param
+            if (ImGui::Button("Remove"))
+            {
+                sTransformComponent* transform = entity->getComponent<sTransformComponent>();
+                playedAnimation->removeParamAnimation(paramAnimation);
+                transform->needUpdate = true;
+                ImGui::PopID();
+                continue;
+            }
+            else
+                ++i;
+
+            if (paramAnimation->getName() == "color")
+                updateAnimationParamColor(paramAnimation, frameNb);
+            else
+                updateAnimationParamTranslate(entity, paramAnimation, frameNb);
+
+            ImGui::PopID();
+        }
+        else
+            ++i;
+    }
+    ImGui::Text("\n");
+    return (false);
+}
+
+bool    ComponentFactory<sRenderComponent>::updateAnimationParamTranslate(Entity* entity, std::shared_ptr<IParamAnimation> paramAnimation_, uint32_t& frameNb)
+{
+    static auto easingTypesString = const_cast<std::vector<const char*>&>(ParamAnimation<glm::vec4>::getEasingTypesString());
+    const char** easingTypesList = easingTypesString.data();
+
+    auto paramAnimation = std::static_pointer_cast<ParamAnimation<glm::vec3>>(paramAnimation_);
+
+    // add animation param key frame
+    ImGui::SameLine();
+    if (ImGui::Button("Add key frame"))
+    {
+        ParamAnimation<glm::vec3>::sKeyFrame keyFrame;
+        keyFrame.time = 1.0f;
+        keyFrame.value = glm::vec3(0.0f, 0.0f, 0.0f);
+        keyFrame.easing = IParamAnimation::eEasing::NONE;
+        paramAnimation->addKeyFrame(keyFrame);
+    }
+
+    uint32_t totalFrames = (uint32_t)paramAnimation->getKeyFrames().size();
+    bool sortKeyFrames = false;
+
+    ImGui::Text("\n");
+    for (uint32_t i = 0; i < totalFrames; ++i)
+    {
+        ParamAnimation<glm::vec3>::sKeyFrame& keyFrame = paramAnimation->getKeyFrame(i);
+
+        ImGui::Text("Frame %d ", keyFrame.id);
+        ImGui::PushID(keyFrame.id);
+        frameNb++;
+
+        ImGui::SameLine();
+        if (ImGui::Button("Remove"))
+        {
+            paramAnimation->removeKeyFrame(i);
+            --i;
+            --totalFrames;
+
+            if (totalFrames == 0)
+            {
+                sTransformComponent* transform = entity->getComponent<sTransformComponent>();
+                transform->needUpdate = true;
+            }
+        }
+        else
+        {
+            ImGui::InputFloat3("value", glm::value_ptr(keyFrame.value));
+            if (ImGui::InputFloat("time", &keyFrame.time, 1))
+                sortKeyFrames = true;
+
+            // Easing type listBox
+            ParamAnimation<glm::vec3>::getEasingStringFromType(keyFrame.easing);
+            int selectedType = static_cast<int>(std::find(easingTypesString.cbegin(), easingTypesString.cend(), ParamAnimation<glm::vec3>::getEasingStringFromType(keyFrame.easing)) - easingTypesString.begin());
+            if (ImGui::ListBox("Easing", &selectedType, easingTypesList, (int)easingTypesString.size(), 4))
+            {
+                keyFrame.easing = ParamAnimation<glm::vec3>::getEasingTypeFromString(easingTypesString[selectedType]);
+            }
+        }
+
+        ImGui::PopID();
+        ImGui::Text("\n");
+    }
+
+    if (sortKeyFrames)
+        paramAnimation->sortKeyFrames();
+
+    return (false);
+}
+
+bool    ComponentFactory<sRenderComponent>::updateAnimationParamColor(std::shared_ptr<IParamAnimation> paramAnimation_, uint32_t& frameNb)
+{
+    static auto easingTypesString = const_cast<std::vector<const char*>&>(ParamAnimation<glm::vec4>::getEasingTypesString());
+    const char** easingTypesList = easingTypesString.data();
+
+    auto paramAnimation = std::static_pointer_cast<ParamAnimation<glm::vec4>>(paramAnimation_);
+
+    // add animation param key frame
+    ImGui::SameLine();
+    if (ImGui::Button("Add key frame"))
+    {
+        ParamAnimation<glm::vec4>::sKeyFrame keyFrame;
+        keyFrame.time = 1.0f;
+        keyFrame.value = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+        keyFrame.easing = IParamAnimation::eEasing::NONE;
+        paramAnimation->addKeyFrame(keyFrame);
+    }
+
+    uint32_t totalFrames = (uint32_t)paramAnimation->getKeyFrames().size();
+    bool sortKeyFrames = false;
+
+    ImGui::Text("\n");
+    for (uint32_t i = 0; i < totalFrames; ++i)
+    {
+        ParamAnimation<glm::vec4>::sKeyFrame& keyFrame = paramAnimation->getKeyFrame(i);
+
+        ImGui::Text("Frame %d ", keyFrame.id);
+        ImGui::PushID(keyFrame.id);
+        frameNb++;
+
+        ImGui::SameLine();
+        if (ImGui::Button("Remove"))
+        {
+            paramAnimation->removeKeyFrame(i);
+            --i;
+            --totalFrames;
+        }
+        else
+        {
+            ImGui::ColorEdit4("value", glm::value_ptr(keyFrame.value));
+            if (ImGui::InputFloat("time", &keyFrame.time))
+                sortKeyFrames = true;
+
+            // Easing type listBox
+            ParamAnimation<glm::vec4>::getEasingStringFromType(keyFrame.easing);
+            int selectedType = static_cast<int>(std::find(easingTypesString.cbegin(), easingTypesString.cend(), ParamAnimation<glm::vec4>::getEasingStringFromType(keyFrame.easing)) - easingTypesString.begin());
+            if (ImGui::ListBox("Easing", &selectedType, easingTypesList, (int)easingTypesString.size(), 4))
+            {
+                keyFrame.easing = ParamAnimation<glm::vec4>::getEasingTypeFromString(easingTypesString[selectedType]);
+            }
+        }
+
+        ImGui::PopID();
+        ImGui::Text("\n");
+    }
+
+    if (sortKeyFrames)
+        paramAnimation->sortKeyFrames();
+
+    return (false);
 }
 
 
@@ -807,11 +1238,14 @@ bool    ComponentFactory<sTransformComponent>::updateEditor(const std::string& e
     *savedComponent = component;
     bool changed = false;
 
-    ComponentFactory<sTransformComponent>::updateTransforms(component->pos,
+    if (ComponentFactory<sTransformComponent>::updateTransforms(component->pos,
                                                             component->scale,
                                                             component->rotation,
                                                             component->transform,
-                                                            ImGuizmo::LOCAL);
+                                                            ImGuizmo::LOCAL))
+    {
+        component->updateTransform();
+    }
 
     return (false);
 }
@@ -821,6 +1255,7 @@ bool    ComponentFactory<sTransformComponent>::updateTransforms(glm::vec3& pos, 
     auto &&keyboard = GameWindow::getInstance()->getKeyboard();
     Camera* camera = Camera::getInstance();
     static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::TRANSLATE);
+    bool changed = false;
 
     if (ImGui::RadioButton("Translate", mCurrentGizmoOperation == ImGuizmo::TRANSLATE) || keyboard.isPressed(Keyboard::eKey::T))
         mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
@@ -830,14 +1265,15 @@ bool    ComponentFactory<sTransformComponent>::updateTransforms(glm::vec3& pos, 
     ImGui::SameLine();
     if (ImGui::RadioButton("Scale", mCurrentGizmoOperation == ImGuizmo::SCALE) || keyboard.isPressed(Keyboard::eKey::E))
         mCurrentGizmoOperation = ImGuizmo::SCALE;
-    ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transform), glm::value_ptr(pos), glm::value_ptr(rotation), glm::value_ptr(scale));
-    ImGui::InputFloat3("Translate", glm::value_ptr(pos), 3);
-    ImGui::InputFloat3("Rotation", glm::value_ptr(rotation), 3);
-    ImGui::InputFloat3("Scale", glm::value_ptr(scale), 3);
-    ImGuizmo::RecomposeMatrixFromComponents(glm::value_ptr(pos), glm::value_ptr(rotation), glm::value_ptr(scale), glm::value_ptr(transform));
+    //ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transform), glm::value_ptr(pos), glm::value_ptr(rotation), glm::value_ptr(scale));
+    changed |= ImGui::InputFloat3("Translate", glm::value_ptr(pos), 3);
+    changed |= ImGui::InputFloat3("Rotation", glm::value_ptr(rotation), 3);
+    changed |= ImGui::InputFloat3("Scale", glm::value_ptr(scale), 3);
+
+    /*ImGuizmo::RecomposeMatrixFromComponents(glm::value_ptr(pos), glm::value_ptr(rotation), glm::value_ptr(scale), glm::value_ptr(transform));
 
     ImGuizmo::Manipulate(glm::value_ptr(camera->getView()), glm::value_ptr(camera->getProj()), mCurrentGizmoOperation, mode, glm::value_ptr(transform), nullptr, nullptr);
-    ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transform), glm::value_ptr(pos), glm::value_ptr(rotation), glm::value_ptr(scale));
+    ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transform), glm::value_ptr(pos), glm::value_ptr(rotation), glm::value_ptr(scale));*/
 
-    return (false);
+    return (changed);
 }

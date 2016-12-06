@@ -11,6 +11,7 @@
 #include <Engine/Window/GameWindow.hpp>
 #include <Engine/Sound/SoundManager.hpp>
 #include <Engine/Graphics/Camera.hpp>
+#include <Engine/Graphics/Animation.hpp>
 #include <Engine/Physics/Collisions.hpp>
 
 #include <Game/Systems/RenderingSystem.hpp>
@@ -60,7 +61,7 @@ bool    PlayState::init()
     PlayStates::createParticlesEmittor(glm::vec3(12, 5, 1), eArchetype::EMITTER_WATER);
 
     // Create character
-    PlayStates::createTile(_map, glm::vec3(9, 5, 1), eArchetype::PLAYER);
+    Entity* player = PlayStates::createTile(_map, glm::vec3(9, 5, 1), eArchetype::PLAYER);
 
     // Initialize base map
     for (int y = 0; y < 15; y++) {
@@ -107,7 +108,6 @@ bool    PlayState::init()
     tSpawnerData spawnerData2 = { 5, 15, 2, 3 };
     SpawnerSystem::setAllFields(*em, spawnerEntityID2, spawnerData2);*/
 
-
     // Create towers
     PlayStates::createTile(_map, glm::vec3(7, 4, 1), eArchetype::TOWER_FIRE);
     PlayStates::createTile(_map, glm::vec3(7, 7, 1), eArchetype::TOWER_FIRE);
@@ -122,6 +122,20 @@ bool    PlayState::init()
     SoundManager::getInstance()->playSound(idSoundBkgdMusic);*/
 
     _pair = std::make_pair(Keyboard::eKey::F, new HandleFullscreenEvent());
+
+
+    // Play first animation of entities
+    for (auto entity: em->getEntities())
+    {
+        sRenderComponent* render = entity.second->getComponent<sRenderComponent>();
+        if (render && render->_animator.getAnimationsNb() > 0)
+        {
+            AnimationPtr currentAnimation = render->_animator.getAnimations()[0];
+            render->_animator.play(currentAnimation->getName());
+        }
+    }
+
+
     return (true);
 }
 
@@ -130,14 +144,14 @@ bool    PlayState::update(float elapsedTime)
     if (GameWindow::getInstance()->getKeyboard().getStateMap()[_pair.first] == Keyboard::eKeyState::KEY_PRESSED)
         _pair.second->execute();
 
-    Entity* selectedEntity = getSelectedEntity();
+/*    Entity* selectedEntity = getSelectedEntity();
     if (selectedEntity)
     {
         sRenderComponent* render = selectedEntity->getComponent<sRenderComponent>();
 
         render->color = glm::vec4(1.0f, 0.0f, 0.0f, 0.0f);
     }
-
+*/
     return (GameState::update(elapsedTime));
 }
 

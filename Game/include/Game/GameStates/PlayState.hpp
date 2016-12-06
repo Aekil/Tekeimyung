@@ -9,6 +9,7 @@
 
 #include <Engine/Window/IInputEvent.hpp>
 #include <Engine/Core/GameState.hpp>
+#include <Engine/Graphics/Animation.hpp>
 
 #include <Game/EntityFactory.hpp>
 #include <Game/Map.hpp>

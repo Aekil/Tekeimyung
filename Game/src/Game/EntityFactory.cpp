@@ -190,19 +190,68 @@ Entity* EntityFactory::cloneEntity(const std::string& typeName)
 
     clone->addComponent<sNameComponent>(typeName);
 
+    initAnimations(clone);
+
     return (clone);
 }
 
-void    EntityFactory::updateEntityComponent(const std::string& entityName, IComponentFactory* compFactory, sComponent* component)
+void    EntityFactory::initAnimations(Entity* entity)
+{
+    sRenderComponent* render = entity->getComponent<sRenderComponent>();
+
+    if (!render || render->_animator.getAnimationsNb() == 0)
+        return;
+
+    sTransformComponent* transform = entity->getComponent<sTransformComponent>();
+
+    for (auto animation: render->_animator.getAnimations())
+    {
+        for (auto paramAnimation: animation->getParamsAnimations())
+        {
+            if (transform && paramAnimation->getName() == "position")
+                std::static_pointer_cast<ParamAnimation<glm::vec3>>(paramAnimation)->setParam(&transform->pos);
+            else if (transform && paramAnimation->getName() == "rotation")
+                std::static_pointer_cast<ParamAnimation<glm::vec3>>(paramAnimation)->setParam(&transform->rotation);
+            else if (transform && paramAnimation->getName() == "scale")
+                std::static_pointer_cast<ParamAnimation<glm::vec3>>(paramAnimation)->setParam(&transform->scale);
+            else if (transform && paramAnimation->getName() == "color")
+                std::static_pointer_cast<ParamAnimation<glm::vec4>>(paramAnimation)->setParam(&render->color);
+        }
+    }
+}
+
+void    EntityFactory::reverseAnimations(Entity* entity)
+{
+    sRenderComponent* render = entity->getComponent<sRenderComponent>();
+    if (render && render->_animator.isPlaying())
+    {
+        sTransformComponent* transform = entity->getComponent<sTransformComponent>();
+
+        render->_animator.reset();
+        render->_animator.update(0);
+        transform->updateTransform();
+    }
+}
+
+void    EntityFactory::updateEntitiesComponents(Entity* from, const std::string& entityName, IComponentFactory* compFactory, sComponent* component)
 {
     for (auto &&entity_: _em->getEntities())
     {
         Entity* entity = entity_.second;
         sNameComponent* name = entity->getComponent<sNameComponent>();
 
-        if (name->value == entityName)
+        if (name->value == entityName && entity != from)
         {
             sComponent* entityComponent = entity->getComponent(component->id);
+
+            // Reverse animations if we are overwriting them
+            if (component->id == sRenderComponent::identifier)
+            {
+                reverseAnimations(entity);
+            }
+
+
+            // Don't save positionComponent
             if (entityComponent && entityComponent->id != sPositionComponent::identifier)
             {
                 // Only the scale have to be copied
@@ -217,6 +266,20 @@ void    EntityFactory::updateEntityComponent(const std::string& entityName, ICom
                 else
                 {
                     entityComponent->update(component);
+                }
+            }
+
+            if (component->id == sRenderComponent::identifier)
+            {
+
+                initAnimations(entity);
+
+                sRenderComponent* render = static_cast<sRenderComponent*>(entityComponent);
+
+                if (render && render->_animator.getAnimationsNb() > 0)
+                {
+                    AnimationPtr currentAnimation = render->_animator.getAnimations()[0];
+                    render->_animator.play(currentAnimation->getName());
                 }
             }
         }

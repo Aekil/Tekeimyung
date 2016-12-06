@@ -19,6 +19,7 @@
 #include <Engine/Graphics/Geometries/GeometryFactory.hpp>
 #include <Engine/Graphics/Geometries/Box.hpp>
 #include <Engine/Graphics/Geometries/Sphere.hpp>
+#include <Engine/Graphics/Animator.hpp>
 #include <Engine/Utils/RessourceManager.hpp>
 #include <Engine/Utils/Timer.hpp>
 
@@ -40,6 +41,7 @@ START_COMPONENT(sRenderComponent)
         this->_model = component->_model;
         this->type = component->type;
         this->texture = component->texture;
+        this->_animator = component->_animator;
     }
 
     virtual void update(sComponent* component)
@@ -60,6 +62,8 @@ START_COMPONENT(sRenderComponent)
     bool animated;
 
     std::shared_ptr<Model> _model;
+
+    Animator                _animator;
 
     // Model type
     Geometry::eType type;
@@ -579,24 +583,24 @@ START_COMPONENT(sTransformComponent)
 
     void updateTransform()
     {
-        if (needUpdate)
-        {
-            glm::mat4 orientation;
-            orientation = glm::rotate(orientation, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
-            orientation = glm::rotate(orientation, glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-            orientation = glm::rotate(orientation, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+        glm::mat4 orientation;
+        orientation = glm::rotate(orientation, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+        orientation = glm::rotate(orientation, glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+        orientation = glm::rotate(orientation, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
 
-            needUpdate = false;
-            glm::mat4 transformMatrix(1.0f);
-            transformMatrix = glm::translate(transformMatrix, glm::vec3(pos.x, pos.y, pos.z)) * orientation;
-            transformMatrix = glm::scale(transformMatrix, scale);
-            transform = transformMatrix;
-        }
+        needUpdate = false;
+        glm::mat4 transformMatrix(1.0f);
+        transformMatrix = glm::translate(transformMatrix, glm::vec3(pos.x, pos.y, pos.z)) * orientation;
+        transformMatrix = glm::scale(transformMatrix, scale);
+        transform = transformMatrix;
     }
 
     const glm::mat4& getTransform()
     {
-        updateTransform();
+        if (needUpdate)
+        {
+            updateTransform();
+        }
         return (transform);
     }
 

@@ -51,6 +51,7 @@ class JsonValue
 
     // Set any value to key
     void                                setValue(const std::string& index, const JsonValue& value);
+    void                                setValueVec(const std::string& index, const std::vector<JsonValue>& value);
 
     // Set scalar/string/bool
     void                                setBool(const std::string& index, bool value);

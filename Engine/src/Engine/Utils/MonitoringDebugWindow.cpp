@@ -35,7 +35,7 @@ void    MonitoringDebugWindow::build(float elapsedTime)
 
     bool resetCheckSec = false;
     // update & display timeLogs for each monitored system
-    for (std::pair<const uint16_t, tMonitoring>& system : _systemsRegistered) 
+    for (std::pair<const uint16_t, tMonitoring>& system : _systemsRegistered)
     {
         updateTimeLogsSystem(system.second, &resetCheckSec);
         displaySystem(system.second);
@@ -54,7 +54,7 @@ uint16_t    MonitoringDebugWindow::registerSystem(std::string name)
     _systemsRegistered[keyID].timeSec = 0;
     _systemsRegistered[keyID].avgTimeSec = 0;
     _systemsRegistered[keyID].oldAvg = 0;
-    
+
     return (keyID++);
 }
 
@@ -73,7 +73,7 @@ float   MonitoringDebugWindow::calcTimeAverage(std::vector<float> timeLogs)
         avg += time;
     }
     avg /= timeLogs.capacity();
-   
+
     return (avg);
 }
 
