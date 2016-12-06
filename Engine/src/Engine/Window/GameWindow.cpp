@@ -369,7 +369,8 @@ void   GameWindow::posCallback(GLFWwindow* window, int xpos, int ypos)
     gameWindow = reinterpret_cast<GameWindow*>(glfwGetWindowUserPointer(window));
     ASSERT(gameWindow != nullptr, "GameWindow should not be null.");
 
-    gameWindow->getTimer().reset();
+    Timer& timer = gameWindow->getTimer();
+    timer.reset();
 }
 
 /**
