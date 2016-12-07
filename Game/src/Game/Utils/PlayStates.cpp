@@ -11,16 +11,9 @@ Entity*    PlayStates::createTile(Map* map, const glm::vec3& pos, eArchetype typ
     Entity* tile;
 
 
-    tile = EntityFactory::createEntity(type);
+    tile = EntityFactory::createEntity(type, pos);
 
-    sPositionComponent *tilePos = tile->getComponent<sPositionComponent>();
-    sTransformComponent *tileTransform = tile->getComponent<sTransformComponent>();
-    tilePos->value.y = pos.y;
-    tilePos->value.x = pos.x;
-    tilePos->z = pos.z;
     (*map)[(uint16_t)pos.z][(uint32_t)pos.y][(uint32_t)pos.x] = tile->id;
-    tileTransform->pos = Map::mapToGraphPosition(tilePos->value, tilePos->z);
-    tileTransform->updateTransform();
 
     return (tile);
 }
@@ -28,17 +21,8 @@ Entity*    PlayStates::createTile(Map* map, const glm::vec3& pos, eArchetype typ
 Entity* PlayStates::createParticlesEmittor(const glm::vec3& pos, eArchetype type)
 {
     Entity* ps;
-    sPositionComponent *psPos;
-    sTransformComponent *psTransform;
 
-    ps = EntityFactory::createEntity(type);
-    psPos = ps->getComponent<sPositionComponent>();
-    psTransform = ps->getComponent<sTransformComponent>();
-    psPos->value.x = pos.x;
-    psPos->value.y = pos.y;
-    psPos->z = pos.z;
-    psTransform->pos = Map::mapToGraphPosition(psPos->value, psPos->z);
-    psTransform->updateTransform();
+    ps = EntityFactory::createEntity(type, pos);
 
     return (ps);
 }
