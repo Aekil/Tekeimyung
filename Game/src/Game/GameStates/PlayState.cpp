@@ -29,33 +29,94 @@
 #include <Game/EntityDebugWindow.hpp>
 #include <Game/EntityFactory.hpp>
 #include <Game/Utils/PlayStates.hpp>
+#include <Game/GameStates/PauseState.hpp>
 
 #include <Game/GameStates/PlayState.hpp>
 
 
-PlayState::PlayState() : _windowImgui(true) {}
-
 PlayState::~PlayState() {}
+
+void    PlayState::onEnter()
+{
+    EntityFactory::bindEntityManager(_world.getEntityManager());
+}
 
 bool    PlayState::init()
 {
     EntityManager* em = _world.getEntityManager();
 
-    EntityFactory::bindEntityManager(em);
-
     _map = new Map(*em, 20, 15, 4);
 
-    _world.addSystem<SpawnerSystem>(_map);
-    _world.addSystem<InputSystem>();
-    _world.addSystem<TowerAISystem>(_map);
-    _world.addSystem<AISystem>();
-    _world.addSystem<ProjectileSystem>();
+    initCamera();
+    initSystems();
+    initEntities();
 
-    _world.addSystem<MovementSystem>(_map);
-    _world.addSystem<CollisionSystem>(_map);
-    _world.addSystem<ResolutionSystem>();
-    _world.addSystem<ParticleSystem>();
-    _world.addSystem<RenderingSystem>(_map, _world.getSystem<ParticleSystem>()->getEmitters());
+    addDebugWindow<OverlayDebugWindow>();
+    addDebugWindow<EntityDebugWindow>(em, _map, glm::vec2(0, 80), glm::vec2(600, 350));
+    addDebugWindow<LogDebugWindow>(Logger::getInstance(), glm::vec2(0, 430), glm::vec2(300, 200));
+    addDebugWindow<MonitoringDebugWindow>(MonitoringDebugWindow::getInstance());
+
+    // Play sound
+    static int idSoundBkgdMusic = SoundManager::getInstance()->registerSound("resources/sounds/Kalimba.mp3", BACKGROUND_SOUND);
+    SoundManager::getInstance()->playSound(idSoundBkgdMusic);
+
+    _pair = std::make_pair(Keyboard::eKey::F, new HandleFullscreenEvent());
+
+
+    // Play first animation of entities
+    for (auto entity: em->getEntities())
+    {
+        sRenderComponent* render = entity.second->getComponent<sRenderComponent>();
+        if (render && render->_animator.getAnimationsNb() > 0)
+        {
+            AnimationPtr currentAnimation = render->_animator.getAnimations()[0];
+            render->_animator.play(currentAnimation->getName());
+        }
+    }
+
+
+    return (true);
+}
+
+bool    PlayState::update(float elapsedTime)
+{
+    auto& gameWindow = GameWindow::getInstance();
+    auto &&keyboard = GameWindow::getInstance()->getKeyboard();
+
+    if (keyboard.getStateMap()[_pair.first] == Keyboard::eKeyState::KEY_PRESSED)
+        _pair.second->execute();
+
+    if (keyboard.getStateMap()[Keyboard::eKey::ESCAPE] == Keyboard::eKeyState::KEY_PRESSED ||
+        gameWindow->hasLostFocus())
+    {
+        _gameStateManager->addState<PauseState>();
+    }
+
+    updateCameraInputs(elapsedTime);
+
+    return (GameState::update(elapsedTime));
+}
+
+void    PlayState::initCamera()
+{
+    _camera.translate(glm::vec3(350.0f, 250.0f, 300.0f));
+    _camera.setDir(glm::vec3(-30.0f));
+
+    // Set camera screen
+    float size = 500.0f;
+    Camera::sScreen screen;
+    screen.right = size * _camera.getAspect();
+    screen.left = -screen.right;
+    screen.top = size;
+    screen.bottom = -screen.top;
+    _camera.setScreen(screen);
+    _camera.setProjType(Camera::eProj::ORTHOGRAPHIC_3D);
+    _camera.setZoom(0.5f);
+}
+
+void    PlayState::initEntities()
+{
+    EntityManager* em = _world.getEntityManager();
 
     // Create particles emitter
     PlayStates::createParticlesEmittor(glm::vec3(12, 5, 1), eArchetype::EMITTER_WATER);
@@ -111,53 +172,27 @@ bool    PlayState::init()
     // Create towers
     PlayStates::createTile(_map, glm::vec3(7, 4, 1), eArchetype::TOWER_FIRE);
     PlayStates::createTile(_map, glm::vec3(7, 7, 1), eArchetype::TOWER_FIRE);
-
-    addDebugWindow<OverlayDebugWindow>();
-    addDebugWindow<EntityDebugWindow>(em, _map, glm::vec2(0, 80), glm::vec2(600, 350));
-    addDebugWindow<LogDebugWindow>(Logger::getInstance(), glm::vec2(0, 430), glm::vec2(300, 200));
-    addDebugWindow<MonitoringDebugWindow>(MonitoringDebugWindow::getInstance());
-
-    // Play sound
-    static int idSoundBkgdMusic = SoundManager::getInstance()->registerSound("resources/sounds/Kalimba.mp3", BACKGROUND_SOUND);
-    SoundManager::getInstance()->playSound(idSoundBkgdMusic);
-
-    _pair = std::make_pair(Keyboard::eKey::F, new HandleFullscreenEvent());
-
-
-    // Play first animation of entities
-    for (auto entity: em->getEntities())
-    {
-        sRenderComponent* render = entity.second->getComponent<sRenderComponent>();
-        if (render && render->_animator.getAnimationsNb() > 0)
-        {
-            AnimationPtr currentAnimation = render->_animator.getAnimations()[0];
-            render->_animator.play(currentAnimation->getName());
-        }
-    }
-
-
-    return (true);
 }
 
-bool    PlayState::update(float elapsedTime)
+bool    PlayState::initSystems()
 {
-    if (GameWindow::getInstance()->getKeyboard().getStateMap()[_pair.first] == Keyboard::eKeyState::KEY_PRESSED)
-        _pair.second->execute();
+    _world.addSystem<SpawnerSystem>(_map);
+    _world.addSystem<InputSystem>();
+    _world.addSystem<TowerAISystem>(_map);
+    _world.addSystem<AISystem>();
+    _world.addSystem<ProjectileSystem>();
 
-/*    Entity* selectedEntity = getSelectedEntity();
-    if (selectedEntity)
-    {
-        sRenderComponent* render = selectedEntity->getComponent<sRenderComponent>();
+    _world.addSystem<MovementSystem>(_map);
+    _world.addSystem<CollisionSystem>(_map);
+    _world.addSystem<ResolutionSystem>();
+    _world.addSystem<ParticleSystem>();
+    _world.addSystem<RenderingSystem>(&_camera, _map, _world.getSystem<ParticleSystem>()->getEmitters());
 
-        render->color = glm::vec4(1.0f, 0.0f, 0.0f, 0.0f);
-    }
-*/
-    return (GameState::update(elapsedTime));
+    return (GameState::initSystems());
 }
 
 Entity* PlayState::getSelectedEntity()
 {
-    auto camera = Camera::getInstance();
     auto gameWindow = GameWindow::getInstance();
     Mouse& mouse =  gameWindow->getMouse();
     Cursor& cursor = mouse.getCursor();
@@ -168,9 +203,9 @@ Entity* PlayState::getSelectedEntity()
 
     // Unproject 2D points to get 3D points
     // Get 3D point on near plane
-    glm::vec3 nearPoint = glm::unProject(nearScreen, camera->getView(), camera->getProj(), gameWindow->getViewport());
+    glm::vec3 nearPoint = glm::unProject(nearScreen, _camera.getView(), _camera.getProj(), gameWindow->getViewport());
     // Get 3D point on far plane
-    glm::vec3 farPoint = glm::unProject(farScreen, camera->getView(), camera->getProj(), gameWindow->getViewport());
+    glm::vec3 farPoint = glm::unProject(farScreen, _camera.getView(), _camera.getProj(), gameWindow->getViewport());
 
     EntityManager* em = _world.getEntityManager();
     Entity* selectedEntity = nullptr;
@@ -254,4 +289,35 @@ Entity* PlayState::getSelectedEntity()
     }
 
     return (selectedEntity);
+}
+
+void    PlayState::updateCameraInputs(float elapsedTime)
+{
+    auto &&keyboard = GameWindow::getInstance()->getKeyboard();
+    auto &&mouse = GameWindow::getInstance()->getMouse();
+    auto &&scroll = mouse.getScroll();
+    static double lastScrollOffset;
+
+    // Update position
+    if (keyboard.isPressed(Keyboard::eKey::D))
+        _camera.translate(glm::vec3(60.0f * elapsedTime, 0.0f, -60.0f * elapsedTime));
+    if (keyboard.isPressed(Keyboard::eKey::Q))
+        _camera.translate(glm::vec3(-60.0f * elapsedTime, 0.0f, 60.0f * elapsedTime));
+    if (keyboard.isPressed(Keyboard::eKey::Z))
+        _camera.translate(glm::vec3(-60.0f * elapsedTime, 0.0f, -60.0f * elapsedTime));
+    if (keyboard.isPressed(Keyboard::eKey::S))
+        _camera.translate(glm::vec3(60.0f * elapsedTime, 0.0f, 60.0f * elapsedTime));
+
+    // Update Projection type
+    if (keyboard.isPressed(Keyboard::eKey::O))
+        _camera.setProjType(Camera::eProj::ORTHOGRAPHIC_3D);
+    else if (keyboard.isPressed(Keyboard::eKey::P))
+        _camera.setProjType(Camera::eProj::PERSPECTIVE);
+
+    // Update zoom
+    double offset = scroll.yOffset - lastScrollOffset;
+
+    if (offset)
+        _camera.zoom((float)(-offset * elapsedTime));
+    lastScrollOffset = scroll.yOffset;
 }

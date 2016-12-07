@@ -8,67 +8,25 @@
 
 #include <Engine/Utils/Exception.hpp>
 #include <Engine/Window/GameWindow.hpp>
+#include <Engine/Graphics/Renderer.hpp>
 
 #include <Game/EntityDebugWindow.hpp>
 
 #include <Game/Systems/RenderingSystem.hpp>
 
 
-RenderingSystem::RenderingSystem(Map* map, std::unordered_map<uint32_t, sEmitter*>* particleEmitters): _map(map), _particleEmitters(particleEmitters)
+RenderingSystem::RenderingSystem(Camera* camera, Map* map, std::unordered_map<uint32_t, sEmitter*>* particleEmitters):
+                                _camera(camera), _map(map), _particleEmitters(particleEmitters)
 {
     addDependency<sRenderComponent>();
 
     _monitoringKey = MonitoringDebugWindow::getInstance()->registerSystem(RENDERING_SYSTEM_NAME);
-
-    _camera.translate(glm::vec3(350.0f, 250.0f, 300.0f));
-    _camera.setDir(glm::vec3(-30.0f));
-
-    // Set camera screen
-    float size = 500.0f;
-    Camera::sScreen screen;
-    screen.right = size * _camera.getAspect();
-    screen.left = -screen.right;
-    screen.top = size;
-    screen.bottom = -screen.top;
-    _camera.setScreen(screen);
-
-    Camera::setInstance(&_camera);
 }
 
 RenderingSystem::~RenderingSystem() {}
 
 bool    RenderingSystem::init()
 {
-    try
-    {
-        _shaderProgram.attachShader(GL_VERTEX_SHADER, "resources/shaders/shader.vert");
-        _shaderProgram.attachShader(GL_FRAGMENT_SHADER, "resources/shaders/shader.frag");
-        _shaderProgram.link();
-        _shaderProgram.use();
-
-        // Set texture location unit
-        // Must be the same unit as material textures. See Material::loadFromAssimp
-        glUniform1i(_shaderProgram.getUniformLocation("AmbientTexture"), 0);
-        glUniform1i(_shaderProgram.getUniformLocation("DiffuseTexture"), 1);
-
-        const_cast<UniformBuffer&>(_camera.getUbo()).bind(_shaderProgram, "camera");
-    }
-    catch(const Exception& e)
-    {
-        std::cerr << e.what() << std::endl;
-        return (false);
-    }
-
-    // Enable blend for transparency
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    // Enable depth buffer
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LESS);
-
-    // Activate back culling
-    //glEnable(GL_CULL_FACE);
     return (true);
 }
 
@@ -87,7 +45,7 @@ void    RenderingSystem::renderEntity(sRenderComponent *render, Entity* entity, 
     }
 
     // Draw model
-    model->draw(_shaderProgram, render->color, transform->getTransform());
+    Renderer::getInstance()->render(_camera, model, render->color, transform->getTransform());
 }
 
 void    RenderingSystem::renderCollider(Entity* entity)
@@ -113,7 +71,7 @@ void    RenderingSystem::renderCollider(Entity* entity)
         boxTransform = glm::translate(boxTransform, boxCollider->pos);
         boxTransform = glm::scale(boxTransform, boxCollider->size);
 
-        boxCollider->box->draw(_shaderProgram, glm::vec4(0.87f, 1.0f, 1.0f, 0.1f), boxTransform);
+        Renderer::getInstance()->render(_camera, boxCollider->box, glm::vec4(0.87f, 1.0f, 1.0f, 0.1f), boxTransform);
     }
     if (sphereCollider && sphereCollider->display)
     {
@@ -128,7 +86,7 @@ void    RenderingSystem::renderCollider(Entity* entity)
         sphereTransform = glm::translate(sphereTransform, sphereCollider->pos);
         sphereTransform = glm::scale(sphereTransform, glm::vec3(sphereCollider->radius));
 
-        sphereCollider->sphere->draw(_shaderProgram, glm::vec4(0.87f, 1.0f, 1.0f, 0.1f), sphereTransform);
+        Renderer::getInstance()->render(_camera, sphereCollider->sphere, glm::vec4(0.87f, 1.0f, 1.0f, 0.1f), sphereTransform);
     }
 }
 
@@ -158,6 +116,9 @@ void    RenderingSystem::renderColliders(EntityManager& em)
 
 void    RenderingSystem::renderParticles(EntityManager& em, float elapsedTime)
 {
+    if (!_particleEmitters)
+        return;
+
     // Activate additive blending
     glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
@@ -182,7 +143,7 @@ void    RenderingSystem::renderParticles(EntityManager& em, float elapsedTime)
 
         // Only freeze camera rotation for planes
         if (render->type == Geometry::eType::PLANE)
-            _camera.freezeRotations(true);
+            _camera->freezeRotations(true);
 
         for (unsigned int i = 0; i < emitter->particlesNb; i++)
         {
@@ -194,10 +155,10 @@ void    RenderingSystem::renderParticles(EntityManager& em, float elapsedTime)
             transformMatrix = glm::scale(transformMatrix, particle.size);
 
             // Draw sprite
-            model->draw(_shaderProgram, particle.color, transformMatrix);
+            Renderer::getInstance()->render(_camera, model, particle.color, transformMatrix);
         }
 
-        _camera.freezeRotations(false);
+        _camera->freezeRotations(false);
     }
 
     // Activate transparency blending
@@ -208,13 +169,11 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
 {
     Timer timer;
     uint32_t nbEntities = 0;
-    // Clear color buffer
-    glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Unfree camera rotation to display normal models
-   _camera.freezeRotations(false);
+   _camera->freezeRotations(false);
 
-    _camera.update(_shaderProgram, elapsedTime);
+    _camera->update(Renderer::getInstance()->getShaderProgram(), elapsedTime);
 
     // Iterate over particle emitters
     forEachEntity(em, [&](Entity *entity) {
@@ -269,12 +228,6 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
     // Disable blending for opaque objects
     glDisable(GL_BLEND);
 
-    // Display imgui windows
-    ImGui::Render();
-
-    // Display screen
-    GameWindow::getInstance()->display();
-
     MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, timer.getElapsedTime(), nbEntities);
 }
 
@@ -295,12 +248,7 @@ std::shared_ptr<Model>  RenderingSystem::getModel(sRenderComponent *render)
     return (render->_model);
 }
 
-const ShaderProgram&  RenderingSystem::getShaderProgram() const
-{
-    return _shaderProgram;
-}
-
-void    RenderingSystem::onEntityNewComponent(Entity* entity, sComponent* component)
+bool    RenderingSystem::onEntityNewComponent(Entity* entity, sComponent* component)
 {
     System::onEntityNewComponent(entity, component);
 
@@ -315,10 +263,12 @@ void    RenderingSystem::onEntityNewComponent(Entity* entity, sComponent* compon
         {
             _collidableEntities.push_back(entity->id);
         }
+        return (true);
     }
+    return (false);
 }
 
-void    RenderingSystem::onEntityRemovedComponent(Entity* entity, sComponent* component)
+bool    RenderingSystem::onEntityRemovedComponent(Entity* entity, sComponent* component)
 {
     System::onEntityRemovedComponent(entity, component);
 
@@ -331,11 +281,13 @@ void    RenderingSystem::onEntityRemovedComponent(Entity* entity, sComponent* co
         if (foundEntity != _collidableEntities.cend())
         {
             _collidableEntities.erase(foundEntity);
+            return (true);
         }
     }
+    return (false);
 }
 
-void    RenderingSystem::onEntityDeleted(Entity* entity)
+bool    RenderingSystem::onEntityDeleted(Entity* entity)
 {
     System::onEntityDeleted(entity);
 
@@ -344,5 +296,7 @@ void    RenderingSystem::onEntityDeleted(Entity* entity)
     if (foundEntity != _collidableEntities.cend())
     {
         _collidableEntities.erase(foundEntity);
+        return (true);
     }
+    return (false);
 }

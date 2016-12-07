@@ -9,7 +9,8 @@
 
 #include <Engine/Core/GameState.hpp>
 
-GameState::GameState() {}
+GameState::GameState(GameStateManager* gameStateManager, uint32_t id):
+                    _gameStateManager(gameStateManager), _id(id) {}
 
 GameState::~GameState() {}
 
@@ -56,4 +57,14 @@ bool    GameState::update(float elapsedTime)
     }
 
     return (true);
+}
+
+uint32_t    GameState::getId() const
+{
+    return (_id);
+}
+
+World&  GameState::getWorld()
+{
+    return (_world);
 }

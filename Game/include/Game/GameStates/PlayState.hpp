@@ -9,27 +9,31 @@
 
 #include <Engine/Window/IInputEvent.hpp>
 #include <Engine/Core/GameState.hpp>
-#include <Engine/Graphics/Animation.hpp>
+#include <Engine/Graphics/Camera.hpp>
 
 #include <Game/EntityFactory.hpp>
 #include <Game/Map.hpp>
 
-class PlayState: public GameState
-{
+START_GAMESTATE(PlayState)
  public:
-    PlayState();
     virtual ~PlayState();
 
+    virtual void                        onEnter();
     virtual bool                        init();
     virtual bool                        update(float elapsedTime);
+
+    void                                initCamera();
+    void                                initEntities();
+    virtual bool                        initSystems();
+
+private:
+    void                                updateCameraInputs(float elapsedTime);
 
     Entity*                             getSelectedEntity();
 
 private:
     Map*                                _map;
-    bool                                _windowImgui;
     std::pair <Keyboard::eKey, IInputEvent *>    _pair;
 
-    // Entity enemies for demo
-    //std::vector<Entity*>                _enemies;
-};
+    Camera                              _camera;
+END_GAMESTATE(PlayState)

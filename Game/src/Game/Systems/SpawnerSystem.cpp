@@ -59,16 +59,16 @@ void    SpawnerSystem::update(EntityManager &em, float elapsedTime)
 uint32_t    SpawnerSystem::createSpawner(Map* map, const glm::vec3& pos, eArchetype type)
 {
     Entity* spawnerEntity;
-    
+
     spawnerEntity = PlayStates::createTile(map, pos, type);
-    
+
     return (spawnerEntity->id);
 }
 
 void     SpawnerSystem::setNbEntities(EntityManager &em, uint32_t spawnerEntityID, int entityNb)
 {
     Entity *spawnerEntity;
-    
+
     spawnerEntity = em.getEntity(spawnerEntityID);
     sSpawnerComponent* spawner = spawnerEntity->getComponent<sSpawnerComponent>();
     spawner->data.nbEntities = entityNb;
@@ -122,12 +122,7 @@ tSpawnerData*  SpawnerSystem::getStructData(int nbEnt, float firstTime, float ea
 
 Entity*    SpawnerSystem::createEntityFromSpawner(Map* map, const glm::vec3& pos, eArchetype type)
 {
-    Entity* entity = EntityFactory::createEntity(type);
-
-    sPositionComponent* posEntity = entity->getComponent<sPositionComponent>();
-    posEntity->value.x = pos.x;
-    posEntity->value.y = pos.y;
-    posEntity->z = pos.z;
+    Entity* entity = EntityFactory::createEntity(type, pos);
 
     (*map)[(uint16_t)pos.z].addEntity(entity->id);
 

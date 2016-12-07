@@ -133,15 +133,10 @@ Entity* TowerAISystem::createFireball(Entity* shooter, Entity* target)
 {
     Entity*                 fireball;
     sPositionComponent*     shooterPosition;
-    sPositionComponent*     fireballPosition;
     sProjectileComponent*   projectileComponent;
 
-    fireball = EntityFactory::createEntity(eArchetype::FIRE_BALL);
     shooterPosition = shooter->getComponent<sPositionComponent>();
-    fireballPosition = fireball->getComponent<sPositionComponent>();
-    fireballPosition->value.x = shooterPosition->value.x;
-    fireballPosition->value.y = shooterPosition->value.y;
-    fireballPosition->z = shooterPosition->z;
+    fireball = EntityFactory::createEntity(eArchetype::FIRE_BALL, glm::vec3(shooterPosition->value, shooterPosition->z));
 
     projectileComponent = fireball->getComponent<sProjectileComponent>();
     projectileComponent->shooterId = shooter->id;

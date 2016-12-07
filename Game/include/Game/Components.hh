@@ -610,3 +610,26 @@ START_COMPONENT(sTransformComponent)
     glm::mat4   transform = glm::mat4(1.0f);
     bool        needUpdate = true;
 END_COMPONENT(sTransformComponent)
+
+
+START_COMPONENT(sButtonComponent)
+    virtual sComponent* clone()
+    {
+        sButtonComponent* component = new sButtonComponent();
+        component->update(this);
+
+        return (component);
+    }
+
+    virtual void update(sButtonComponent* component)
+    {
+        this->selected = component->selected;
+    }
+
+    virtual void update(sComponent* component)
+    {
+        update(static_cast<sButtonComponent*>(component));
+    }
+
+    bool        selected = false;
+END_COMPONENT(sButtonComponent)

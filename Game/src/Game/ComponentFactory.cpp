@@ -1277,3 +1277,17 @@ bool    ComponentFactory<sTransformComponent>::updateTransforms(glm::vec3& pos, 
 
     return (changed);
 }
+
+
+/*
+** sButtonComponent
+*/
+
+sComponent* ComponentFactory<sButtonComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
+{
+    sButtonComponent*   component;
+
+    component = new sButtonComponent();
+
+    return (component);
+}
