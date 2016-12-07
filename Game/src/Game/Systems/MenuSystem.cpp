@@ -70,7 +70,7 @@ void    MenuSystem::setSelected(Entity* entity)
 
     // Set new color of selected button
     sRenderComponent* render = entity->getComponent<sRenderComponent>();
-    render->color = glm::vec4(1.5f, 0.0f, 0.0f, 1.0f);
+    render->color = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
     button->selected = true;
 }
 
