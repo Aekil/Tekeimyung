@@ -40,7 +40,6 @@ void    SpawnerSystem::update(EntityManager &em, float elapsedTime)
             if (spawnerComponent->firstWaitFinished) // first spawn time is finished
             {
                 sPositionComponent* position = entity->getComponent<sPositionComponent>();
-
                 spawnerComponent->spawnPos = glm::vec3(position->value.x + 0.5f, position->value.y + 0.5f, position->z + 1); // center the spawn point
                 // if there is entities to spawn & ( enough waited time OR first spawn time is skipped)
                 if (spawnerComponent->data.nbEntities > 0 &&
@@ -59,16 +58,16 @@ void    SpawnerSystem::update(EntityManager &em, float elapsedTime)
 uint32_t    SpawnerSystem::createSpawner(Map* map, const glm::vec3& pos, eArchetype type)
 {
     Entity* spawnerEntity;
-    
+
     spawnerEntity = PlayStates::createTile(map, pos, type);
-    
+
     return (spawnerEntity->id);
 }
 
 void     SpawnerSystem::setNbEntities(EntityManager &em, uint32_t spawnerEntityID, int entityNb)
 {
     Entity *spawnerEntity;
-    
+
     spawnerEntity = em.getEntity(spawnerEntityID);
     sSpawnerComponent* spawner = spawnerEntity->getComponent<sSpawnerComponent>();
     spawner->data.nbEntities = entityNb;
@@ -125,9 +124,12 @@ Entity*    SpawnerSystem::createEntityFromSpawner(Map* map, const glm::vec3& pos
     Entity* entity = EntityFactory::createEntity(type);
 
     sPositionComponent* posEntity = entity->getComponent<sPositionComponent>();
+    sTransformComponent* transform = entity->getComponent<sTransformComponent>();
     posEntity->value.x = pos.x;
     posEntity->value.y = pos.y;
     posEntity->z = pos.z;
+    transform->pos = Map::mapToGraphPosition(posEntity->value, posEntity->z);
+    transform->needUpdate = true;
 
     (*map)[(uint16_t)pos.z].addEntity(entity->id);
 

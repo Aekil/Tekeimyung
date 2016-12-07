@@ -4,6 +4,7 @@
 #include <Game/Components.hh>
 
 #include <Game/Systems/MovementSystem.hpp>
+#include <Engine/Utils/Logger.hpp>
 
 MovementSystem::MovementSystem(Map* map): _map(map)
 {

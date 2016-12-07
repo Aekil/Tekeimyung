@@ -18,8 +18,11 @@ public:
     virtual ~GameState();
 
     virtual bool            init() = 0;
+    virtual void            onEnter() {}
+
     virtual bool            initSystems();
     virtual bool            update(float elapsedTime);
+
 
     uint32_t                getId() const;
 
@@ -35,6 +38,8 @@ public:
     {
         _debugWindows.push_back(newDebugWindow);
     }
+
+    World&                          getWorld();
 
 protected:
     World                   _world;

@@ -32,7 +32,7 @@ RenderingSystem::RenderingSystem(Map* map, std::unordered_map<uint32_t, sEmitter
     screen.bottom = -screen.top;
     _camera.setScreen(screen);
 
-    Camera::setInstance(&_camera);
+    //Camera::setInstance(&_camera);
 }
 
 RenderingSystem::~RenderingSystem() {}
@@ -158,6 +158,9 @@ void    RenderingSystem::renderColliders(EntityManager& em)
 
 void    RenderingSystem::renderParticles(EntityManager& em, float elapsedTime)
 {
+    if (!_particleEmitters)
+        return;
+
     // Activate additive blending
     glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
@@ -208,8 +211,6 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
 {
     Timer timer;
     uint32_t nbEntities = 0;
-    // Clear color buffer
-    glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Unfree camera rotation to display normal models
    _camera.freezeRotations(false);
@@ -268,12 +269,6 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
     glDepthMask(GL_TRUE);
     // Disable blending for opaque objects
     glDisable(GL_BLEND);
-
-    // Display imgui windows
-    ImGui::Render();
-
-    // Display screen
-    GameWindow::getInstance()->display();
 
     MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, timer.getElapsedTime(), nbEntities);
 }

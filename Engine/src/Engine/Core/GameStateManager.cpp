@@ -6,9 +6,11 @@ GameStateManager::~GameStateManager() {}
 
 void    GameStateManager::removeCurrentState()
 {
-    if (!_states.empty())
+    if (hasStates())
     {
         _states.pop_back();
+        if (hasStates())
+            _states.back()->onEnter();
     }
 }
 

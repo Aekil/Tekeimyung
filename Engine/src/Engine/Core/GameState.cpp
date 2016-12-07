@@ -63,3 +63,8 @@ uint32_t    GameState::getId() const
 {
     return (_id);
 }
+
+World&  GameState::getWorld()
+{
+    return (_world);
+}

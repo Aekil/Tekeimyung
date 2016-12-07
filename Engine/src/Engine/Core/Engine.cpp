@@ -1,3 +1,5 @@
+#include <imgui.h>
+
 #include <Engine/Utils/Logger.hpp>
 #include <Engine/Utils/Timer.hpp>
 
@@ -53,10 +55,20 @@ bool    Engine::run()
 
             auto &&currentState = _gameStateManager.getCurrentState();
 
+            // Clear color buffer
+            glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
             if (currentState->update(elapsedTime) == false)
             {
                 _gameStateManager.removeCurrentState();
             }
+
+
+            // Display imgui windows
+            ImGui::Render();
+
+            // Display screen
+            GameWindow::getInstance()->display();
         }
     }
     return (true);

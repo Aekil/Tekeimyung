@@ -18,6 +18,7 @@ START_GAMESTATE(PlayState)
  public:
     virtual ~PlayState();
 
+    virtual void                        onEnter();
     virtual bool                        init();
     virtual bool                        update(float elapsedTime);
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include <list>
+#include <vector>
 
 #include <Engine/Core/GameState.hpp>
 
@@ -17,6 +17,7 @@ public:
     bool                                        addState()
     {
         std::shared_ptr<T> gameState = std::make_shared<T>(this);
+        gameState->onEnter();
         if (!gameState->init() || !gameState->initSystems())
         {
             return (false);
@@ -31,7 +32,12 @@ public:
     std::shared_ptr<GameState>                  getCurrentState() const;
     bool                                        hasStates() const;
 
+    std::vector<std::shared_ptr<GameState>>&    getStates()
+    {
+        return (_states);
+    }
+
 private:
-    // States list
-    std::list<std::shared_ptr<GameState>>       _states;
+    // States vector
+    std::vector<std::shared_ptr<GameState>>     _states;
 };

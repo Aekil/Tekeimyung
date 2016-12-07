@@ -36,11 +36,14 @@
 
 PlayState::~PlayState() {}
 
+void    PlayState::onEnter()
+{
+    EntityFactory::bindEntityManager(_world.getEntityManager());
+}
+
 bool    PlayState::init()
 {
     EntityManager* em = _world.getEntityManager();
-
-    EntityFactory::bindEntityManager(em);
 
     _map = new Map(*em, 20, 15, 4);
 
