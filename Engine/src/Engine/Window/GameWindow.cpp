@@ -254,7 +254,7 @@ void    GameWindow::toggleFullscreen()
 {
     const GLFWvidmode*  vidmode = nullptr;
     GLFWmonitor*        monitor = nullptr;
-    int refreshRate = 0;
+    int                 refreshRate = 0;
 
     monitor = glfwGetWindowMonitor(_window);
     if (monitor != nullptr)

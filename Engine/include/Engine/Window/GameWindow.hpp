@@ -9,7 +9,7 @@
 #include <Engine/Window/Keyboard.hpp>
 #include <Engine/Window/Mouse.hpp>
 
-#define WINDOW_DEFAULT_TITLE    "Window default title - Powered by "
+#define WINDOW_DEFAULT_TITLE    "Team Tekeimyung - The Squirre"
 
 class GameWindow
 {
