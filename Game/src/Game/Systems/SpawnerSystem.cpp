@@ -122,12 +122,7 @@ tSpawnerData*  SpawnerSystem::getStructData(int nbEnt, float firstTime, float ea
 
 Entity*    SpawnerSystem::createEntityFromSpawner(Map* map, const glm::vec3& pos, eArchetype type)
 {
-    Entity* entity = EntityFactory::createEntity(type);
-
-    sPositionComponent* posEntity = entity->getComponent<sPositionComponent>();
-    posEntity->value.x = pos.x;
-    posEntity->value.y = pos.y;
-    posEntity->z = pos.z;
+    Entity* entity = EntityFactory::createEntity(type, pos);
 
     (*map)[(uint16_t)pos.z].addEntity(entity->id);
 

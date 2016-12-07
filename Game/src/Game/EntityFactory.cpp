@@ -11,6 +11,7 @@
 #include <Engine/Utils/RessourceManager.hpp>
 
 #include <Game/Utils/JsonReader.hpp>
+#include <Game/Map.hpp>
 
 #include <Game/EntityFactory.hpp>
 
@@ -114,6 +115,26 @@ Entity* EntityFactory::createEntity(eArchetype type)
     std::string typeName = _typesString[(int)type];
 
     return (cloneEntity(typeName));
+}
+
+Entity* EntityFactory::createEntity(eArchetype type, const glm::vec3& pos)
+{
+    Entity* entity = createEntity(type);
+
+    sPositionComponent* posEntity = entity->getComponent<sPositionComponent>();
+
+    if (posEntity)
+    {
+        posEntity->value.x = pos.x;
+        posEntity->value.y = pos.y;
+        posEntity->z = pos.z;
+
+        sTransformComponent* transformEntity = entity->getComponent<sTransformComponent>();
+        transformEntity->pos = Map::mapToGraphPosition(posEntity->value, posEntity->z);
+        transformEntity->needUpdate = true;
+    }
+
+    return (entity);
 }
 
 Entity* EntityFactory::createEntity(const std::string& typeName)
