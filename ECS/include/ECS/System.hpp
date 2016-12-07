@@ -28,9 +28,9 @@ public:
     bool                                hasDependency(sComponent* component) const;
     bool                                entityMatchDependencies(Entity* entity) const;
 
-    virtual void                        onEntityNewComponent(Entity* entity, sComponent* component);
-    virtual void                        onEntityRemovedComponent(Entity* entity, sComponent* component);
-    virtual void                        onEntityDeleted(Entity* entity);
+    virtual bool                        onEntityNewComponent(Entity* entity, sComponent* component);
+    virtual bool                        onEntityRemovedComponent(Entity* entity, sComponent* component);
+    virtual bool                        onEntityDeleted(Entity* entity);
 
 protected:
     // Store components hashs

@@ -33,7 +33,8 @@
     PROCESS(sSpawnerComponent),\
     PROCESS(sNameComponent),\
     PROCESS(sTransformComponent),\
-    PROCESS(sResolutionComponent)\
+    PROCESS(sResolutionComponent),\
+    PROCESS(sButtonComponent)\
 
 #define GENERATE_PAIRS(COMPONENT) { #COMPONENT, new ComponentFactory<COMPONENT>() }
 
@@ -406,4 +407,16 @@ public:
     // Update transforms with gizmos
     // Used for multiple components: sTransformComponent, sBoxColliderComponent
     static bool     updateTransforms(glm::vec3& pos, glm::vec3& scale, glm::vec3& rotation, glm::mat4& transform, ImGuizmo::MODE mode);
+};
+
+
+/*
+** sButtonComponent
+*/
+
+template <>
+class ComponentFactory<sButtonComponent> : public BaseComponentFactory<sButtonComponent>
+{
+public:
+    virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
 };

@@ -23,6 +23,10 @@ bool    Engine::init()
     if (!_soundManager->initialize())
         return (false);
 
+    _renderer = Renderer::getInstance();
+    if (!_renderer->initialize())
+        return (false);
+
     GameWindow::setInstance(_window);
     return (true);
 }

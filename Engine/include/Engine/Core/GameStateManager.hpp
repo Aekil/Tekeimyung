@@ -37,6 +37,8 @@ public:
         return (_states);
     }
 
+    void                                        clearStates();
+
 private:
     // States vector
     std::vector<std::shared_ptr<GameState>>     _states;

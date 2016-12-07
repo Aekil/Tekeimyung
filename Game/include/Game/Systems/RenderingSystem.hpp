@@ -18,7 +18,7 @@
 
 START_SYSTEM(RenderingSystem)
 public:
-    RenderingSystem(Map* map, std::unordered_map<uint32_t, sEmitter*>* particleEmitters);
+    RenderingSystem(Camera* camera, Map* map, std::unordered_map<uint32_t, sEmitter*>* particleEmitters);
     virtual ~RenderingSystem();
 
     virtual void update(EntityManager& em, float elapsedTime);
@@ -27,26 +27,22 @@ public:
     void                                    renderCollider(Entity* entity);
     void                                    renderColliders(EntityManager& em);
     void                                    renderParticles(EntityManager& em, float elapsedTime);
-    const ShaderProgram&                    getShaderProgram() const;
 
-    virtual void                            onEntityNewComponent(Entity* entity, sComponent* component);
-    virtual void                            onEntityRemovedComponent(Entity* entity, sComponent* component);
-    virtual void                            onEntityDeleted(Entity* entity);
+    virtual bool                            onEntityNewComponent(Entity* entity, sComponent* component);
+    virtual bool                            onEntityRemovedComponent(Entity* entity, sComponent* component);
+    virtual bool                            onEntityDeleted(Entity* entity);
 
 private:
     bool                                    isTransparent(sRenderComponent *render) const;
     std::shared_ptr<Model>                  getModel(sRenderComponent *render);
 
 private:
-    // Shader program
-    ShaderProgram                               _shaderProgram;
-
     Map*                                        _map;
     std::unordered_map<uint32_t, sEmitter*>*    _particleEmitters;
 
     ADD_MONITORING_VAR
 
-    Camera                                      _camera;
+    Camera*                                     _camera;
 
     std::unordered_map<uint32_t, Entity*>       _transparentEntities;
 

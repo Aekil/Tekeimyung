@@ -25,3 +25,8 @@ bool    GameStateManager::hasStates() const
 {
     return (_states.size() != 0);
 }
+
+void    GameStateManager::clearStates()
+{
+    _states.clear();
+}
