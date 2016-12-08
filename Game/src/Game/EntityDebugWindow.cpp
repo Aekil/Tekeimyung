@@ -132,7 +132,7 @@ void    EntityDebugWindow::displayEntityDebug(Entity* entity)
             ImGui::InputText("New type", newTypeName, 64);
             if (ImGui::Button("Create"))
             {
-                cloneEntity(entity, newTypeName);
+                cloneTemplate(entity, newTypeName);
                 ImGui::CloseCurrentPopup();
             }
             ImGui::EndPopup();
@@ -271,7 +271,7 @@ void    EntityDebugWindow::saveEntityTemplate(const std::string& typeName, Entit
     }
 }
 
-void    EntityDebugWindow::cloneEntity(Entity* entity, const std::string& newTypeName)
+void    EntityDebugWindow::cloneTemplate(Entity* entity, const std::string& newTypeName)
 {
     if (EntityFactory::entityTypeExists(newTypeName))
     {
@@ -312,6 +312,9 @@ void    EntityDebugWindow::cloneEntity(Entity* entity, const std::string& newTyp
             newEntity->addComponent(component->clone());
         }
     }
+
+    // Save the cloned template to json
+    saveEntityTemplateToJson(newTypeName);
 }
 
 glm::vec3   EntityDebugWindow::getRandomPos()

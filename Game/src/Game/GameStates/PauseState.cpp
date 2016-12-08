@@ -1,5 +1,7 @@
 #include <iostream>
+
 #include <Engine/Window/GameWindow.hpp>
+#include <Engine/Utils/LogDebugWindow.hpp>
 
 #include <Game/Systems/RenderingSystem.hpp>
 #include <Game/Systems/MenuSystem.hpp>
@@ -32,6 +34,7 @@ bool    PauseState::init()
 
     EntityManager* em = _world.getEntityManager();
     addDebugWindow<EntityDebugWindow>(em, nullptr, glm::vec2(0, 80), glm::vec2(600, 350));
+    addDebugWindow<LogDebugWindow>(Logger::getInstance(), glm::vec2(0, 430), glm::vec2(300, 200));
 
     initCamera();
 
@@ -98,6 +101,9 @@ void    PauseState::handleButtons()
 
     sButtonComponent* resume = _resumeButton->getComponent<sButtonComponent>();
     sButtonComponent* quit = _quitButton->getComponent<sButtonComponent>();
+
+    ASSERT(resume != nullptr, "Resume button should have sButtonComponent");
+    ASSERT(quit != nullptr, "Quit button should have sButtonComponent");
 
     // Space bar pressed, handle buttons action
     if (keyboard.getStateMap()[Keyboard::eKey::SPACE] == Keyboard::eKeyState::KEY_PRESSED)

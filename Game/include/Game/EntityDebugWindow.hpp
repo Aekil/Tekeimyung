@@ -21,7 +21,7 @@ private:
 
     void                saveEntityTemplateToJson(const std::string& typeName);
     void                saveEntityTemplate(const std::string& typeName, Entity* entity);
-    void                cloneEntity(Entity* entity, const std::string& newTypeName);
+    void                cloneTemplate(Entity* entity, const std::string& newTypeName);
 
     glm::vec3           getRandomPos();
     void                spawnEntity(const std::string& typeName);
