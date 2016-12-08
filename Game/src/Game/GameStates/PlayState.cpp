@@ -57,8 +57,8 @@ bool    PlayState::init()
     addDebugWindow<MonitoringDebugWindow>(MonitoringDebugWindow::getInstance());
 
     // Play sound
-    static int idSoundBkgdMusic = SoundManager::getInstance()->registerSound("resources/sounds/Kalimba.mp3", BACKGROUND_SOUND);
-    SoundManager::getInstance()->playSound(idSoundBkgdMusic);
+    /*static int idSoundBkgdMusic = SoundManager::getInstance()->registerSound("resources/sounds/Kalimba.mp3", BACKGROUND_SOUND);
+    SoundManager::getInstance()->playSound(idSoundBkgdMusic);*/
 
     _pair = std::make_pair(Keyboard::eKey::F, new HandleFullscreenEvent());
 

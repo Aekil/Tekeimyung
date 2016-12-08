@@ -142,7 +142,7 @@ Entity* EntityFactory::createEntity(const std::string& typeName)
     return (cloneEntity(typeName));
 }
 
-void    EntityFactory::createEntityType(const std::string& typeName)
+Entity* EntityFactory::createEntityType(const std::string& typeName)
 {
     // Add entity to factory
     std::string filePath = ARCHETYPES_LOCATION + std::string("/") + Helper::lowerCaseString(typeName) + ".json";
@@ -157,7 +157,7 @@ void    EntityFactory::createEntityType(const std::string& typeName)
     RessourceManager::getInstance()->createFile(filePath, "{\"name\": \"" + typeName + "\"}");
 
     // Create entity instance to edit
-    createEntity(typeName);
+    return (createEntity(typeName));
 }
 
 void EntityFactory::bindEntityManager(EntityManager* em)
