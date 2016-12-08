@@ -306,6 +306,7 @@ START_COMPONENT(sPlayerComponent)
     virtual void update(sPlayerComponent* component)
     {
         this->range = component->range;
+        this->rangeColor = component->rangeColor;
     }
 
     virtual void update(sComponent* component)
@@ -314,7 +315,8 @@ START_COMPONENT(sPlayerComponent)
     }
 
     uint16_t    range;
-    glm::vec3   lastPos;
+    glm::ivec3   lastPos;
+    glm::vec4 rangeColor;
 END_COMPONENT(sPlayerComponent)
 
 

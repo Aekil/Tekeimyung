@@ -16,6 +16,8 @@ public:
     virtual bool                        init();
     virtual void                        update(EntityManager &em, float elapsedTime);
 
+    void                                drawRange(EntityManager &em, const glm::vec4& color, const glm::ivec3& playerPos, uint32_t range);
+
 private:
     ADD_MONITORING_VAR
 

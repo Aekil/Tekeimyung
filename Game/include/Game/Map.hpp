@@ -90,9 +90,9 @@ public:
     uint32_t                getHeight() const;
     uint16_t                getLayersNb() const;
     CollisionMap*           getCollisionMap() const;
-    bool                    isValidPosition(glm::ivec3& pos) const;
+    bool                    isValidPosition(const glm::ivec3& pos) const;
 
-    static glm::vec3        mapToGraphPosition(glm::vec2& mapPos, float z);
+    static glm::vec3        mapToGraphPosition(const glm::vec2& mapPos, float z);
 
 private:
     Layer*                  _map;

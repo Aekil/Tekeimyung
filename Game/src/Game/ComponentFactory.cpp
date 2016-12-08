@@ -951,6 +951,7 @@ sComponent* ComponentFactory<sPlayerComponent>::loadFromJson(const std::string& 
     sPlayerComponent* component = new sPlayerComponent();
 
     component->range = json.getUInt("range", 2);
+    component->rangeColor = json.getColor4f("range_color", glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
 
     return (component);
 }
@@ -962,6 +963,7 @@ JsonValue&    ComponentFactory<sPlayerComponent>::saveToJson(const std::string& 
 
 
     json.setUInt("range", component->range);
+    json.setColor4f("range_color", component->rangeColor);
 
     return (json);
 }
@@ -974,6 +976,7 @@ bool    ComponentFactory<sPlayerComponent>::updateEditor(const std::string& enti
 
     int range = component->range;
     changed |= ImGui::InputInt("range", &range, 1, 10);
+    changed |= ImGui::ColorEdit4("range color", glm::value_ptr(component->rangeColor));
 
     component->range = range;
     return (changed);

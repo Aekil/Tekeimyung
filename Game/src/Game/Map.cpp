@@ -152,14 +152,14 @@ CollisionMap*   Map::getCollisionMap() const
     return (_collisionMap);
 }
 
-bool    Map::isValidPosition(glm::ivec3& pos) const
+bool    Map::isValidPosition(const glm::ivec3& pos) const
 {
     return (pos.x >= 0 && pos.x < (int)getWidth() &&
         pos.y >= 0 && pos.y < (int)getHeight() &&
         pos.z >= 0 && pos.z < (int)getLayersNb());
 }
 
-glm::vec3   Map::mapToGraphPosition(glm::vec2& mapPos, float z)
+glm::vec3   Map::mapToGraphPosition(const glm::vec2& mapPos, float z)
 {
     glm::vec3 graphPos;
     float tileWidthHalf = 25.0f;
