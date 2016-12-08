@@ -1,0 +1,35 @@
+{
+   "components" : {
+      "sRenderComponent" : {
+         "animated" : false,
+         "animations" : [],
+         "color" : {
+            "a" : 0.67843139171600342,
+            "b" : 0.38431373238563538,
+            "g" : 0,
+            "r" : 0
+         },
+         "model" : "resources/models/default.DAE",
+         "texture" : "",
+         "type" : "PLANE"
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : -1
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "scale" : {
+            "x" : 500,
+            "y" : 500,
+            "z" : 1
+         }
+      }
+   },
+   "name" : "BACKGROUND"
+}

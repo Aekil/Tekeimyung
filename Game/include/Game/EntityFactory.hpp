@@ -27,6 +27,9 @@
     PROCESS(BUTTON_RESUME),\
     PROCESS(BUTTON_QUIT),\
     PROCESS(BUTTON_TOGGLE_FULLSCREEN),\
+    PROCESS(BUTTON_HOW_TO_PLAY),\
+    PROCESS(HOW_TO_PLAY_MENU),\
+    PROCESS(BACKGROUND),\
 
 #define GENERATE_ENUM(ENUM) ENUM
 #define GENERATE_STRING(STRING) #STRING
@@ -51,7 +54,7 @@ public:
     static Entity*                                          createEntity(const std::string& typeName);
     static void                                             bindEntityManager(EntityManager* em);
 
-    static void                                             createEntityType(const std::string& typeName);
+    static Entity*                                          createEntityType(const std::string& typeName);
 
     static const std::vector<const char*>&                  getTypesString();
     static bool                                             entityTypeExists(const std::string& type);

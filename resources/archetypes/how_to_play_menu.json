@@ -1,0 +1,35 @@
+{
+   "components" : {
+      "sRenderComponent" : {
+         "animated" : false,
+         "animations" : [],
+         "color" : {
+            "a" : 1,
+            "b" : 1,
+            "g" : 1,
+            "r" : 1
+         },
+         "model" : "resources/models/default.DAE",
+         "texture" : "resources/sprites/buttons/howtoplay.png",
+         "type" : "PLANE"
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 710,
+            "y" : 258.5,
+            "z" : -1
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "scale" : {
+            "x" : 70,
+            "y" : 50,
+            "z" : 50
+         }
+      }
+   },
+   "name" : "HOW_TO_PLAY_MENU"
+}

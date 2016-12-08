@@ -1,11 +1,14 @@
 #include <iostream>
+
 #include <Engine/Window/GameWindow.hpp>
+#include <Engine/Utils/LogDebugWindow.hpp>
 
 #include <Game/Systems/RenderingSystem.hpp>
 #include <Game/Systems/MenuSystem.hpp>
 #include <Game/EntityDebugWindow.hpp>
 #include <Game/EntityFactory.hpp>
 #include <Game/Components.hh>
+#include <Game/GameStates/HowToPlayState.hpp>
 
 #include <Game/GameStates/PauseState.hpp>
 
@@ -32,10 +35,12 @@ bool    PauseState::init()
 
     EntityManager* em = _world.getEntityManager();
     addDebugWindow<EntityDebugWindow>(em, nullptr, glm::vec2(0, 80), glm::vec2(600, 350));
+    addDebugWindow<LogDebugWindow>(Logger::getInstance(), glm::vec2(0, 430), glm::vec2(300, 200));
 
     initCamera();
 
-    _resumeButton = createButton(eArchetype::BUTTON_RESUME, glm::vec2(0.0f, 80.0f));
+    _resumeButton = createButton(eArchetype::BUTTON_RESUME, glm::vec2(0.0f, 160.0f));
+    _howToPlayButton = createButton(eArchetype::BUTTON_HOW_TO_PLAY, glm::vec2(0.0f, 80.0f));
     _quitButton = createButton(eArchetype::BUTTON_QUIT, glm::vec2(0.0f, 0.0f));
     return (true);
 }
@@ -97,7 +102,11 @@ void    PauseState::handleButtons()
     auto &&keyboard = GameWindow::getInstance()->getKeyboard();
 
     sButtonComponent* resume = _resumeButton->getComponent<sButtonComponent>();
+    sButtonComponent* howToPlay = _howToPlayButton->getComponent<sButtonComponent>();
     sButtonComponent* quit = _quitButton->getComponent<sButtonComponent>();
+
+    ASSERT(resume != nullptr, "Resume button should have sButtonComponent");
+    ASSERT(quit != nullptr, "Quit button should have sButtonComponent");
 
     // Space bar pressed, handle buttons action
     if (keyboard.getStateMap()[Keyboard::eKey::SPACE] == Keyboard::eKeyState::KEY_PRESSED)
@@ -106,6 +115,11 @@ void    PauseState::handleButtons()
         if (resume->selected)
         {
             _gameStateManager->removeCurrentState();
+        }
+        // How to play button
+        else if (howToPlay->selected)
+        {
+            _gameStateManager->addState<HowToPlayState>();
         }
         // Quit button
         else if (quit->selected)
