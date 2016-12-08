@@ -26,5 +26,6 @@ private:
 
     Entity*                             _resumeButton;
     Entity*                             _howToPlayButton;
+    Entity*                             _optionsButton;
     Entity*                             _quitButton;
 END_GAMESTATE(PauseState)

@@ -9,6 +9,7 @@
 #include <Game/EntityFactory.hpp>
 #include <Game/Components.hh>
 #include <Game/GameStates/HowToPlayState.hpp>
+#include <Game/GameStates/OptionsMenuState.hpp>
 
 #include <Game/GameStates/PauseState.hpp>
 
@@ -41,6 +42,7 @@ bool    PauseState::init()
 
     _resumeButton = createButton(eArchetype::BUTTON_RESUME, glm::vec2(0.0f, 160.0f));
     _howToPlayButton = createButton(eArchetype::BUTTON_HOW_TO_PLAY, glm::vec2(0.0f, 80.0f));
+    _optionsButton = createButton(eArchetype::BUTTON_OPTIONS, glm::vec2(0.0f, 80.0f));
     _quitButton = createButton(eArchetype::BUTTON_QUIT, glm::vec2(0.0f, 0.0f));
     return (true);
 }
@@ -103,13 +105,14 @@ void    PauseState::handleButtons()
 
     sButtonComponent* resume = _resumeButton->getComponent<sButtonComponent>();
     sButtonComponent* howToPlay = _howToPlayButton->getComponent<sButtonComponent>();
+    sButtonComponent* options = _optionsButton->getComponent<sButtonComponent>();
     sButtonComponent* quit = _quitButton->getComponent<sButtonComponent>();
 
     ASSERT(resume != nullptr, "Resume button should have sButtonComponent");
     ASSERT(quit != nullptr, "Quit button should have sButtonComponent");
 
     // Space bar pressed, handle buttons action
-    if (keyboard.getStateMap()[Keyboard::eKey::SPACE] == Keyboard::eKeyState::KEY_PRESSED)
+    if (keyboard.getStateMap()[Keyboard::eKey::ENTER] == Keyboard::eKeyState::KEY_PRESSED)
     {
         // Resume button
         if (resume->selected)
@@ -120,6 +123,10 @@ void    PauseState::handleButtons()
         else if (howToPlay->selected)
         {
             _gameStateManager->addState<HowToPlayState>();
+        }
+        else if (options->selected)
+        {
+            _gameStateManager->addState<OptionsMenuState>();
         }
         // Quit button
         else if (quit->selected)

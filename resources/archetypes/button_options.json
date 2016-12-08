@@ -1,0 +1,36 @@
+{
+   "components" : {
+      "sButtonComponent" : null,
+      "sRenderComponent" : {
+         "animated" : false,
+         "animations" : [],
+         "color" : {
+            "a" : 1,
+            "b" : 0,
+            "g" : 0,
+            "r" : 1.5
+         },
+         "model" : "resources/models/default.DAE",
+         "texture" : "resources/sprites/buttons/button_options.png",
+         "type" : "PLANE"
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 955,
+            "y" : 603.5,
+            "z" : -1
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "scale" : {
+            "x" : 20,
+            "y" : 6,
+            "z" : 6
+         }
+      }
+   },
+   "name" : "BUTTON_OPTIONS"
+}
