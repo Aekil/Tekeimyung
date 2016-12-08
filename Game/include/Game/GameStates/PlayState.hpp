@@ -29,8 +29,6 @@ START_GAMESTATE(PlayState)
 private:
     void                                updateCameraInputs(float elapsedTime);
 
-    Entity*                             getSelectedEntity();
-
 private:
     Map*                                _map;
     std::pair <Keyboard::eKey, IInputEvent *>    _pair;

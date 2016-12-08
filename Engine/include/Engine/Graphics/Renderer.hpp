@@ -21,6 +21,7 @@ public:
                                             const glm::vec4& modelColor, const glm::mat4& modelTransform);
 
     ShaderProgram&                      getShaderProgram();
+    Camera*                             getCurrentCamera();
 
 private:
     ShaderProgram                       _shaderProgram;

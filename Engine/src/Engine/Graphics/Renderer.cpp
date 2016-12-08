@@ -6,7 +6,7 @@
 
 std::shared_ptr<Renderer>   Renderer::_instance = nullptr;
 
-Renderer::Renderer() {}
+Renderer::Renderer(): _currentCamera(nullptr) {}
 
 Renderer::~Renderer() {}
 
@@ -67,4 +67,9 @@ void    Renderer::render(Camera* camera, std::shared_ptr<Model> model,
 ShaderProgram&  Renderer::getShaderProgram()
 {
     return (_shaderProgram);
+}
+
+Camera* Renderer::getCurrentCamera()
+{
+    return (_currentCamera);
 }

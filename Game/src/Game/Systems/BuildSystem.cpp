@@ -3,11 +3,12 @@
 #include <Engine/Window/GameWindow.hpp>
 #include <Engine/Utils/Logger.hpp>
 
+#include <Game/EntityFactory.hpp>
 #include <Game/Components.hh>
 
 #include <Game/Systems/BuildSystem.hpp>
 
-BuildSystem::BuildSystem(Map* map): _map(map)
+BuildSystem::BuildSystem(EntityManager& em, Map* map): _map(map), _em(em)
 {
     addDependency<sPlayerComponent>();
     addDependency<sPositionComponent>();
@@ -19,21 +20,36 @@ BuildSystem::~BuildSystem() {}
 
 bool    BuildSystem::init()
 {
+    _tower = EntityFactory::createEntity(eArchetype::TOWER_FIRE);
     return (true);
 }
 
 void    BuildSystem::update(EntityManager &em, float elapsedTime)
 {
+    Entity* selectedEntity = _map->getSelectedEntity();
     Timer timer;
 
+    // Draw player range
     forEachEntity(em, [&](Entity* entity) {
         sPlayerComponent* player = entity->getComponent<sPlayerComponent>();
         sPositionComponent* pos = entity->getComponent<sPositionComponent>();
 
+        // Clear previous range
         drawRange(em, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::ivec3(player->lastPos.x, player->lastPos.y, player->lastPos.z), player->range);
         player->lastPos = glm::ivec3(pos->value, pos->z);
+        // Draw new previous range
         drawRange(em, player->rangeColor, glm::ivec3(player->lastPos.x, player->lastPos.y, player->lastPos.z), player->range);
+
+        if (selectedEntity)
+        {
+            sPositionComponent* pos = selectedEntity->getComponent<sPositionComponent>();
+            if (isInRange(player->lastPos, glm::ivec3(pos->value.x, pos->value.y, pos->z), player->range))
+            {
+                buildOnTile(glm::ivec3(pos->value.x, pos->value.y, pos->z));
+            }
+        }
     });
+
 
     MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, timer.getElapsedTime(), (uint32_t)_entities.size());
 }
@@ -60,4 +76,22 @@ void    BuildSystem::drawRange(EntityManager &em, const glm::vec4& color, const 
             }
         }
     }
+}
+
+bool    BuildSystem::isInRange(const glm::ivec3& playerPos, const glm::ivec3& objPos, uint32_t range) const
+{
+    glm::ivec3 rangePos = playerPos - (int)range;
+
+    return (objPos.z == playerPos.z - 1 &&
+        objPos.x >= rangePos.x &&
+        objPos.x <= rangePos.x * 2 &&
+        objPos.y >= rangePos.y &&
+        objPos.y <= rangePos.y * 2);
+}
+
+void    BuildSystem::buildOnTile(const glm::ivec3& pos)
+{
+    sTransformComponent* transform = _tower->getComponent<sTransformComponent>();
+    transform->pos = Map::mapToGraphPosition(glm::vec2(pos.x, pos.y), (float)pos.z + 1);
+    transform->needUpdate = true;
 }
