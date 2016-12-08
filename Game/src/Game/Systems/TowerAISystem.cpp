@@ -25,16 +25,16 @@ void    TowerAISystem::update(EntityManager &em, float elapsedTime)
     {
         sTowerAIComponent*      towerAIComponent = entity->getComponent<sTowerAIComponent>();
         sPositionComponent*     position = entity->getComponent<sPositionComponent>();
-        std::list<uint32_t>&    entities = (*_map)[(unsigned int) position->z].getEntities();
+        std::list<uint32_t>&    entities = (*_map)[(uint16_t) position->z].getEntities();
         uint32_t                targetId = 0;
 
-        towerAIComponent->lastShotTime += elapsedTime;
         if (towerAIComponent->targetId != 0)
         {
             Entity*             target = em.getEntity(towerAIComponent->targetId);
 
             if (target != nullptr)
             {
+                towerAIComponent->lastShotTime += elapsedTime;
                 if (isEntityInRange(entity, target) == true)
                     fire(entity, target);
                 else
@@ -54,6 +54,7 @@ void    TowerAISystem::update(EntityManager &em, float elapsedTime)
 
                 if (target != nullptr)
                 {
+                    towerAIComponent->lastShotTime += elapsedTime;
                     towerAIComponent->targetId = targetId;
                     fire(entity, target);
                 }
@@ -154,7 +155,6 @@ void    TowerAISystem::fire(Entity* shooter, Entity* enemy)
     Entity*                 fireball;
     sPositionComponent*     fireballPosition;
     sDirectionComponent*    fireballDirection;
-    //sRectHitboxComponent*   fireballHitbox;
 
     towerAIComponent = shooter->getComponent<sTowerAIComponent>();
     if (towerAIComponent->lastShotTime >= towerAIComponent->fireRate)
@@ -172,10 +172,5 @@ void    TowerAISystem::fire(Entity* shooter, Entity* enemy)
         fireballDirection = fireball->getComponent<sDirectionComponent>();
         fireballDirection->value = glm::normalize(enemyPosition->value - fireballPosition->value);
         fireballDirection->speed = towerAIComponent->projectileSpeed;
-
-        //fireball->addComponent<sRectHitboxComponent>();
-        //fireballHitbox = fireball->getComponent<sRectHitboxComponent>();
-        //fireballHitbox->min = glm::vec2(fireballPosition->value - 14.0f);
-        //fireballHitbox->max = glm::vec2(fireballPosition->value + 14.0f);
     }
 }

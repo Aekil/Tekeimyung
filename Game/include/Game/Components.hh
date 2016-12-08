@@ -437,7 +437,7 @@ START_COMPONENT(sTowerAIComponent)
     float   projectileSpeed;
 
     float   fireRate;
-    float   lastShotTime;
+    float   lastShotTime = 0.0f;
 
     uint32_t    targetId;
 END_COMPONENT(sTowerAIComponent)

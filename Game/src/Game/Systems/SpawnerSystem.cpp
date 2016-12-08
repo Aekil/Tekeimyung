@@ -1,3 +1,5 @@
+#include <glm/gtx/string_cast.hpp>
+
 #include <Engine/Utils/Debug.hpp>
 #include <Engine/Utils/Timer.hpp>
 
@@ -41,7 +43,7 @@ void    SpawnerSystem::update(EntityManager &em, float elapsedTime)
             {
                 sPositionComponent* position = entity->getComponent<sPositionComponent>();
 
-                spawnerComponent->spawnPos = glm::vec3(position->value.x + 0.5f, position->value.y + 0.5f, position->z + 1); // center the spawn point
+                spawnerComponent->spawnPos = glm::vec3(position->value.x + 0.5f, position->value.y + 0.5f, position->z); // center the spawn point
                 // if there is entities to spawn & ( enough waited time OR first spawn time is skipped)
                 if (spawnerComponent->data.nbEntities > 0 &&
                     (skipTimeFirstSpawn || spawnerComponent->timeRec > spawnerComponent->data.secBeforeEachSpawn))
