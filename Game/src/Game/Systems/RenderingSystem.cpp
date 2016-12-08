@@ -7,6 +7,7 @@
 #include <imgui_impl_glfw_gl3.h>
 
 #include <Engine/Utils/Exception.hpp>
+#include <Engine/Utils/Logger.hpp>
 #include <Engine/Window/GameWindow.hpp>
 #include <Engine/Graphics/Renderer.hpp>
 

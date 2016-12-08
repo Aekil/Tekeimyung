@@ -950,7 +950,33 @@ sComponent* ComponentFactory<sPlayerComponent>::loadFromJson(const std::string& 
 {
     sPlayerComponent* component = new sPlayerComponent();
 
+    component->range = json.getUInt("range", 2);
+
     return (component);
+}
+
+JsonValue&    ComponentFactory<sPlayerComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
+{
+    JsonValue& json = _componentsJson[entityType];
+    sPlayerComponent* component = static_cast<sPlayerComponent*>(_components[entityType]);
+
+
+    json.setUInt("range", component->range);
+
+    return (json);
+}
+
+bool    ComponentFactory<sPlayerComponent>::updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity)
+{
+    sPlayerComponent* component = static_cast<sPlayerComponent*>(entityComponent ? entityComponent : _components[entityType]);
+    *savedComponent = component;
+    bool changed = false;
+
+    int range = component->range;
+    changed |= ImGui::InputInt("range", &range, 1, 10);
+
+    component->range = range;
+    return (changed);
 }
 
 

@@ -25,6 +25,7 @@
 #include <Game/Systems/TowerAISystem.hpp>
 #include <Game/Systems/ProjectileSystem.hpp>
 #include <Game/Systems/SpawnerSystem.hpp>
+#include <Game/Systems/BuildSystem.hpp>
 #include <Game/Components.hh>
 #include <Game/EntityDebugWindow.hpp>
 #include <Game/EntityFactory.hpp>
@@ -146,7 +147,7 @@ void    PlayState::initEntities()
     // Create spawner
     static uint32_t spawnerEntityID = SpawnerSystem::createSpawner(_map, glm::vec3(0.5, 5.5f, 0.5), eArchetype::SPAWNER);
     SpawnerSystem::setNbEntities(*em, spawnerEntityID, 5);
-    SpawnerSystem::setSecBeforeFirstSpawn(*em, spawnerEntityID, 5); // method 1
+    SpawnerSystem::setSecBeforeFirstSpawn(*em, spawnerEntityID, 7); // method 1
     SpawnerSystem::setSecBeforeEachSpawn(*em, spawnerEntityID, 2);
     SpawnerSystem::setSecBeforeEachSpawn(*em, spawnerEntityID, 5);
 
@@ -181,6 +182,7 @@ bool    PlayState::initSystems()
     _world.addSystem<TowerAISystem>(_map);
     _world.addSystem<AISystem>();
     _world.addSystem<ProjectileSystem>();
+    _world.addSystem<BuildSystem>(_map);
 
     _world.addSystem<MovementSystem>(_map);
     _world.addSystem<CollisionSystem>(_map);

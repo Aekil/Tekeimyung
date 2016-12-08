@@ -319,6 +319,9 @@ class ComponentFactory<sPlayerComponent> : public BaseComponentFactory<sPlayerCo
 {
 public:
     virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
+    virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
+
+    virtual bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity);
 };
 
 

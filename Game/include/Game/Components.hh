@@ -303,12 +303,18 @@ START_COMPONENT(sPlayerComponent)
         return (component);
     }
 
-    virtual void update(sPlayerComponent* component) {}
+    virtual void update(sPlayerComponent* component)
+    {
+        this->range = component->range;
+    }
 
     virtual void update(sComponent* component)
     {
         update(static_cast<sPlayerComponent*>(component));
     }
+
+    uint16_t    range;
+    glm::vec3   lastPos;
 END_COMPONENT(sPlayerComponent)
 
 
