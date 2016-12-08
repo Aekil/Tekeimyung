@@ -108,8 +108,10 @@ void    PauseState::handleButtons()
     sButtonComponent* options = _optionsButton->getComponent<sButtonComponent>();
     sButtonComponent* quit = _quitButton->getComponent<sButtonComponent>();
 
-    ASSERT(resume != nullptr, "Resume button should have sButtonComponent");
-    ASSERT(quit != nullptr, "Quit button should have sButtonComponent");
+    ASSERT(resume != nullptr, "\"Resume Game\" button should have sButtonComponent");
+    ASSERT(howToPlay != nullptr, "\"How to Play\" button should have sButtonComponent");
+    ASSERT(options != nullptr, "\"Options\" button should have sButtonComponent");
+    ASSERT(quit != nullptr, "\"Quit Game\" button should have sButtonComponent");
 
     // Space bar pressed, handle buttons action
     if (keyboard.getStateMap()[Keyboard::eKey::ENTER] == Keyboard::eKeyState::KEY_PRESSED)

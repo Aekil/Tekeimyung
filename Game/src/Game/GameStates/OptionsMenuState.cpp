@@ -23,8 +23,8 @@ bool            OptionsMenuState::init()
 
     auto        playState = _gameStateManager->getStates()[statesNb - 1];
 
-    _optionsMenuStateWorld = &playState->getWorld();
-    _optionsMenuStateRenderSystem = _optionsMenuStateWorld->getSystem<RenderingSystem>();
+    _playstateWorld = &playState->getWorld();
+    _playstateRenderSystem = _playstateWorld->getSystem<RenderingSystem>();
 
     _world.addSystem<RenderingSystem>(&_camera, nullptr, nullptr);
     _world.addSystem<MenuSystem>();
@@ -44,8 +44,8 @@ bool        OptionsMenuState::update(float elapsedTime)
     auto    &&keyboard = GameWindow::getInstance()->getKeyboard();
 
     // Display the play game state
-    if (_optionsMenuStateRenderSystem)
-        _optionsMenuStateRenderSystem->update(*_optionsMenuStateWorld->getEntityManager(), 0);
+    if (_playstateRenderSystem)
+        _playstateRenderSystem->update(*_playstateWorld->getEntityManager(), 0);
 
     // Disable depth test to display 2D
     glDisable(GL_DEPTH_TEST);
@@ -99,6 +99,9 @@ void                    OptionsMenuState::handleButtons()
     auto                &&keyboard = GameWindow::getInstance()->getKeyboard();
     sButtonComponent*   toggleFullscreen = _toggleFullsreenButton->getComponent<sButtonComponent>();
     sButtonComponent*   returnButton = _returnButton->getComponent<sButtonComponent>();
+
+    ASSERT(toggleFullscreen != nullptr, "\"Toggle fullscreen\" button should have a sButtonComponent.");
+    ASSERT(returnButton != nullptr, "\"Return\" button should have a sButtonComponent.");
 
     //  Space bar pressed, handle buttons action
     if (keyboard.getStateMap()[Keyboard::eKey::ENTER] == Keyboard::eKeyState::KEY_PRESSED)

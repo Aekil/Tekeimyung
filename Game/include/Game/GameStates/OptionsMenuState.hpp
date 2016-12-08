@@ -21,8 +21,8 @@ START_GAMESTATE(OptionsMenuState)
      void           handleButtons();
 
 private:
-    System*         _optionsMenuStateRenderSystem;
-    World*          _optionsMenuStateWorld;
+    System*         _playstateRenderSystem;
+    World*          _playstateWorld;
 
     Camera          _camera;
 
