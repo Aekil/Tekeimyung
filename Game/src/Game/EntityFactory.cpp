@@ -201,7 +201,7 @@ Entity* EntityFactory::cloneEntity(const std::string& typeName)
     auto entityComponents = _entities.find(typeName);
 
     if (entityComponents == _entities.end())
-        EXCEPT(InvalidParametersException, "The entity type %s does not exist", typeName);
+        EXCEPT(InvalidParametersException, "The entity type %s does not exist", typeName.c_str());
 
     for (auto &&component: entityComponents->second)
     {
