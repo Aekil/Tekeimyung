@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <cstddef>
 #include <list>
+#include <vector>
 #include <unordered_map>
 #include <glm/vec3.hpp>
 
@@ -93,7 +94,7 @@ public:
     bool                    isValidPosition(const glm::ivec3& pos) const;
 
     static glm::vec3        mapToGraphPosition(const glm::vec2& mapPos, float z);
-    Entity*                 getSelectedEntity();
+    Entity*                 getSelectedEntity(Entity* ignoreEntityA = nullptr, Entity* ignoreEntityB = nullptr);
 
 private:
     Layer*                  _map;

@@ -49,7 +49,7 @@ bool    PlayState::init()
     _map = new Map(*em, 20, 15, 4);
 
     initCamera();
-    initSystems();
+    addSystems();
     initEntities();
 
     addDebugWindow<OverlayDebugWindow>();
@@ -175,7 +175,7 @@ void    PlayState::initEntities()
     PlayStates::createTile(_map, glm::vec3(7, 7, 1), eArchetype::TOWER_FIRE);
 }
 
-bool    PlayState::initSystems()
+void    PlayState::addSystems()
 {
     EntityManager* em = _world.getEntityManager();
 
@@ -184,15 +184,13 @@ bool    PlayState::initSystems()
     _world.addSystem<TowerAISystem>(_map);
     _world.addSystem<AISystem>();
     _world.addSystem<ProjectileSystem>();
-    _world.addSystem<BuildSystem>(*em, _map);
+    _world.addSystem<BuildSystem>(em, _map);
 
     _world.addSystem<MovementSystem>(_map);
     _world.addSystem<CollisionSystem>(_map);
     _world.addSystem<ResolutionSystem>();
     _world.addSystem<ParticleSystem>();
     _world.addSystem<RenderingSystem>(&_camera, _map, _world.getSystem<ParticleSystem>()->getEmitters());
-
-    return (GameState::initSystems());
 }
 
 

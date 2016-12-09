@@ -33,6 +33,9 @@ bool    RenderingSystem::init()
 
 void    RenderingSystem::renderEntity(sRenderComponent *render, Entity* entity, float elapsedTime)
 {
+    if (!render->_display)
+        return;
+
     sTransformComponent *transform = entity->getComponent<sTransformComponent>();
     auto&& model = getModel(render);
 

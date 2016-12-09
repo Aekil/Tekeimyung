@@ -11,7 +11,7 @@
 
 START_SYSTEM(BuildSystem)
 public:
-    BuildSystem(EntityManager& em, Map* map);
+    BuildSystem(EntityManager* em, Map* map);
     virtual ~BuildSystem();
 
     virtual bool                        init();
@@ -19,13 +19,15 @@ public:
 
     void                                drawRange(EntityManager &em, const glm::vec4& color, const glm::ivec3& playerPos, uint32_t range);
     bool                                isInRange(const glm::ivec3& playerPos, const glm::ivec3& objPos, uint32_t range) const;
+
     void                                buildOnTile(const glm::ivec3& pos);
+    void                                hideBuildingItem();
 
 private:
     ADD_MONITORING_VAR
 
     Map*                                _map;
-    EntityManager&                      _em;
+    EntityManager*                      _em;
 
     Entity*                             _tower;
 END_SYSTEM(BuildSystem)

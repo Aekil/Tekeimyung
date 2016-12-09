@@ -42,6 +42,7 @@ START_COMPONENT(sRenderComponent)
         this->type = component->type;
         this->texture = component->texture;
         this->_animator = component->_animator;
+        this->_display = component->_display;
     }
 
     virtual void update(sComponent* component)
@@ -67,6 +68,7 @@ START_COMPONENT(sRenderComponent)
 
     // Model type
     Geometry::eType type;
+    bool                    _display = true;
 
     // texture for geometries
     std::string texture;

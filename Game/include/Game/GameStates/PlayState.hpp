@@ -24,7 +24,7 @@ START_GAMESTATE(PlayState)
 
     void                                initCamera();
     void                                initEntities();
-    virtual bool                        initSystems();
+    void                                addSystems();
 
 private:
     void                                updateCameraInputs(float elapsedTime);

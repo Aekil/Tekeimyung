@@ -177,7 +177,7 @@ glm::vec3   Map::mapToGraphPosition(const glm::vec2& mapPos, float z)
     return (graphPos);
 }
 
-Entity* Map::getSelectedEntity()
+Entity* Map::getSelectedEntity(Entity* ignoreEntityA, Entity* ignoreEntityB)
 {
     auto gameWindow = GameWindow::getInstance();
     Mouse& mouse =  gameWindow->getMouse();
@@ -203,6 +203,12 @@ Entity* Map::getSelectedEntity()
     for (auto it : _em.getEntities())
     {
         Entity* entity = it.second;
+
+        // Ignore entity for raycasting calculation
+        if (entity == ignoreEntityA ||
+            entity == ignoreEntityB)
+            continue;
+
         sRenderComponent* render = entity->getComponent<sRenderComponent>();
         sTransformComponent* transform = entity->getComponent<sTransformComponent>();
 
