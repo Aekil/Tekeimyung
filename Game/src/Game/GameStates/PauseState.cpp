@@ -6,6 +6,8 @@
 #include <Game/EntityDebugWindow.hpp>
 #include <Game/EntityFactory.hpp>
 #include <Game/Components.hh>
+#include <Game/GameStates/ConfirmExitState.hpp>
+
 
 #include <Game/GameStates/PauseState.hpp>
 
@@ -49,12 +51,7 @@ bool    PauseState::update(float elapsedTime)
         _playStateRendersystem->update(*_playStateWorld->getEntityManager(), 0);
 
 
-    // Disable depth test to display 2D
-    glDisable(GL_DEPTH_TEST);
-
     bool success = GameState::update(elapsedTime);
-    // Enable depth test to display 3D
-    glEnable(GL_DEPTH_TEST);
 
     handleButtons();
 
@@ -110,7 +107,7 @@ void    PauseState::handleButtons()
         // Quit button
         else if (quit->selected)
         {
-            _gameStateManager->clearStates();
+            _gameStateManager->addState<ConfirmExitState>();
         }
     }
 }

@@ -104,11 +104,11 @@ bool    MenuSystem::onEntityNewComponent(Entity* entity, sComponent* component)
         if (!render->_model)
             render->initModel();
 
-        const glm::vec3& size = render->_model->getSize();
+        sTransformComponent* transform = entity->getComponent<sTransformComponent>();
+        const glm::vec3& size = render->_model->getSize() * transform->scale;
         float windowWidth = (float)GameWindow::getInstance()->getBufferWidth();
         float windowHeight = (float)GameWindow::getInstance()->getBufferHeight();
 
-        sTransformComponent* transform = entity->getComponent<sTransformComponent>();
         transform->pos.x = (windowWidth / 2.0f) - (size.x / 2.0f);
         transform->pos.y = (windowHeight / 2.0f) - (size.y / 2.0f);
         transform->pos.z = -1.0f;

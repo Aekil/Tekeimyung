@@ -50,6 +50,9 @@ public:
 
     Timer&                              getTimer();
 
+    void                                handleClose(GLFWwindow* window);
+    void                                registerCloseHandler(void (*closeHandler)(void*), void* data = nullptr);
+
 private:
     static void                         closeCallback(GLFWwindow* window);
     static void                         focusCallback(GLFWwindow* window, int focused);
@@ -97,4 +100,7 @@ private:
 
     bool                                _lostFocus;
     Timer                               _timer;
+
+    void                                (*_closeHandler)(void*);
+    void*                               _closeHandlerData;
 };

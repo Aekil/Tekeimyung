@@ -8,6 +8,14 @@
 
 #include <Game/EntityFactory.hpp>
 #include <Game/GameStates/PlayState.hpp>
+#include <Game/GameStates/ConfirmExitState.hpp>
+
+void    windowCloseHandler(void* data)
+{
+    Engine* engine = static_cast<Engine*>(data);
+
+    engine->getGameStateManager().addState<ConfirmExitState>();
+}
 
 int     main()
 {
@@ -23,6 +31,7 @@ int     main()
         EntityFactory::loadDirectory(ARCHETYPES_LOCATION);
         // Load textures and models
         RessourceManager::getInstance()->loadResources("resources");
+        GameWindow::getInstance()->registerCloseHandler(windowCloseHandler, &engine);
 
         if (!gameStateManager.addState<PlayState>())
             return (1);

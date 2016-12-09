@@ -1,0 +1,36 @@
+{
+   "components" : {
+      "sButtonComponent" : null,
+      "sRenderComponent" : {
+         "animated" : false,
+         "animations" : [],
+         "color" : {
+            "a" : 1,
+            "b" : 1,
+            "g" : 1,
+            "r" : 1
+         },
+         "model" : "resources/models/default.DAE",
+         "texture" : "resources/sprites/buttons/button_no.png",
+         "type" : "PLANE"
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 936.982177734375,
+            "y" : 490.97817993164063,
+            "z" : -1
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "scale" : {
+            "x" : 10,
+            "y" : 6,
+            "z" : 6
+         }
+      }
+   },
+   "name" : "BUTTON_CONFIRM_NO"
+}

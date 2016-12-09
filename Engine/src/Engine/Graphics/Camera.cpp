@@ -53,6 +53,11 @@ float   Camera::getFov() const
     return (_fov);
 }
 
+Camera::eProj   Camera::getProjType() const
+{
+    return (_projType);
+}
+
 void    Camera::setFov(float fov)
 {
     _fov = fov;
