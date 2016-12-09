@@ -22,6 +22,7 @@ public:
 
     ShaderProgram&                      getShaderProgram();
     Camera*                             getCurrentCamera();
+    void                                setCurrentCamera(Camera* camera);
 
 private:
     ShaderProgram                       _shaderProgram;

@@ -73,3 +73,8 @@ Camera* Renderer::getCurrentCamera()
 {
     return (_currentCamera);
 }
+
+void    Renderer::setCurrentCamera(Camera* camera)
+{
+    _currentCamera = camera;
+}

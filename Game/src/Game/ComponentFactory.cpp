@@ -1282,7 +1282,7 @@ bool    ComponentFactory<sTransformComponent>::updateEditor(const std::string& e
 bool    ComponentFactory<sTransformComponent>::updateTransforms(glm::vec3& pos, glm::vec3& scale, glm::vec3& rotation, glm::mat4& transform, ImGuizmo::MODE mode)
 {
     auto &&keyboard = GameWindow::getInstance()->getKeyboard();
-    Camera* camera = Camera::getInstance();
+    //Camera* camera = Camera::getInstance();
     static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::TRANSLATE);
     bool changed = false;
 

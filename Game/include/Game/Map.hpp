@@ -94,7 +94,7 @@ public:
     bool                    isValidPosition(const glm::ivec3& pos) const;
 
     static glm::vec3        mapToGraphPosition(const glm::vec2& mapPos, float z);
-    Entity*                 getSelectedEntity(bool onlyTiles = false);
+    static Entity*          getSelectedEntity(EntityManager* em, bool onlyTiles = false);
 
 private:
     Layer*                  _map;

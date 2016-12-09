@@ -177,7 +177,7 @@ glm::vec3   Map::mapToGraphPosition(const glm::vec2& mapPos, float z)
     return (graphPos);
 }
 
-Entity* Map::getSelectedEntity(bool onlyTiles)
+Entity* Map::getSelectedEntity(EntityManager* em, bool onlyTiles)
 {
     auto gameWindow = GameWindow::getInstance();
     Mouse& mouse =  gameWindow->getMouse();
@@ -200,7 +200,7 @@ Entity* Map::getSelectedEntity(bool onlyTiles)
     Entity* selectedEntity = nullptr;
     float selectedEntityDist = 0.0f;
 
-    for (auto it : _em.getEntities())
+    for (auto it : em->getEntities())
     {
         Entity* entity = it.second;
 
@@ -274,7 +274,7 @@ Entity* Map::getSelectedEntity(bool onlyTiles)
             float closestPointDist = glm::distance(nearPoint, closestPoint);
 
             // The ray can select multiple entities, we need to store the closest one
-            if (!selectedEntity || closestPointDist < selectedEntityDist)
+            if (selectedEntity == nullptr || closestPointDist <= selectedEntityDist)
             {
                 selectedEntityDist = closestPointDist;
                 selectedEntity = entity;

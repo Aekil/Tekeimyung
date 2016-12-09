@@ -28,6 +28,8 @@ void    BuildSystem::update(EntityManager &em, float elapsedTime)
 {
     Timer timer;
 
+    Entity* selectedEntity = Map::getSelectedEntity(&em, true);
+
     // Draw player range
     forEachEntity(em, [&](Entity* entity) {
         sPlayerComponent* player = entity->getComponent<sPlayerComponent>();
@@ -38,8 +40,6 @@ void    BuildSystem::update(EntityManager &em, float elapsedTime)
         player->lastPos = glm::ivec3(pos->value, pos->z);
         // Draw new previous range
         drawRange(em, player->rangeColor, glm::ivec3(player->lastPos.x, player->lastPos.y, player->lastPos.z), player->range);
-
-        Entity* selectedEntity = _map->getSelectedEntity(true);
 
         if (selectedEntity)
         {

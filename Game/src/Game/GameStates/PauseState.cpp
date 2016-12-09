@@ -1,4 +1,3 @@
-#include <iostream>
 #include <Engine/Window/GameWindow.hpp>
 
 #include <Game/Systems/RenderingSystem.hpp>
@@ -24,16 +23,17 @@ bool    PauseState::init()
     ASSERT(statesNb >= 1, "The pause State should not be the first state");
 
     auto playState = _gameStateManager->getStates()[statesNb - 1];
+
     _playStateWorld = &playState->getWorld();
     _playStateRendersystem = _playStateWorld->getSystem<RenderingSystem>();
 
+    initCamera();
     _world.addSystem<RenderingSystem>(&_camera, nullptr, nullptr);
     _world.addSystem<MenuSystem>();
 
     EntityManager* em = _world.getEntityManager();
     addDebugWindow<EntityDebugWindow>(em, nullptr, glm::vec2(0, 80), glm::vec2(600, 350));
 
-    initCamera();
 
     _resumeButton = createButton(eArchetype::BUTTON_RESUME, glm::vec2(0.0f, 80.0f));
     _quitButton = createButton(eArchetype::BUTTON_QUIT, glm::vec2(0.0f, 0.0f));
@@ -47,7 +47,6 @@ bool    PauseState::update(float elapsedTime)
     // Display the play game state
     if (_playStateRendersystem)
         _playStateRendersystem->update(*_playStateWorld->getEntityManager(), 0);
-
 
     // Disable depth test to display 2D
     glDisable(GL_DEPTH_TEST);
