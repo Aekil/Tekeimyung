@@ -49,7 +49,7 @@ bool    System::entityMatchDependencies(Entity* entity) const
     return (true);
 }
 
-void    System::onEntityNewComponent(Entity* entity, sComponent* component)
+bool    System::onEntityNewComponent(Entity* entity, sComponent* component)
 {
     // The system is dependant of the component
     if (hasDependency(component) &&
@@ -59,10 +59,12 @@ void    System::onEntityNewComponent(Entity* entity, sComponent* component)
         std::find(_entities.cbegin(), _entities.cend(), entity->id) == _entities.cend())
     {
         _entities.push_back(entity->id);
+        return (true);
     }
+    return (false);
 }
 
-void    System::onEntityRemovedComponent(Entity* entity, sComponent* component)
+bool    System::onEntityRemovedComponent(Entity* entity, sComponent* component)
 {
     // The system is dependant of the component
     if (hasDependency(component))
@@ -72,16 +74,20 @@ void    System::onEntityRemovedComponent(Entity* entity, sComponent* component)
         if (foundEntity != _entities.cend())
         {
             _entities.erase(foundEntity);
+            return (true);
         }
     }
+    return (false);
 }
 
-void    System::onEntityDeleted(Entity* entity)
+bool    System::onEntityDeleted(Entity* entity)
 {
     auto foundEntity = std::find(_entities.cbegin(), _entities.cend(), entity->id);
     // The entity is in the system list
     if (foundEntity != _entities.cend())
     {
         _entities.erase(foundEntity);
+        return (true);
     }
+    return (false);
 }

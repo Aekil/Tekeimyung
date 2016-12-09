@@ -1,3 +1,5 @@
+#include <imgui.h>
+
 #include <Engine/Utils/Logger.hpp>
 #include <Engine/Utils/Timer.hpp>
 
@@ -9,7 +11,7 @@ Engine::~Engine() {}
 
 bool    Engine::init()
 {
-    _window = std::make_shared<GameWindow>();
+    _window = std::make_shared<GameWindow>(&_gameStateManager);
     if (!_window->initialize())
         return (false);
 
@@ -21,16 +23,22 @@ bool    Engine::init()
     if (!_soundManager->initialize())
         return (false);
 
+    _renderer = Renderer::getInstance();
+    if (!_renderer->initialize())
+        return (false);
+
     GameWindow::setInstance(_window);
+    GameWindow::getInstance()->toggleFullscreen();
     return (true);
 }
 
 bool    Engine::run()
 {
     // FPS counter
-    Timer       timer;
+    Timer&       timer = _window->getTimer();
     float       timePerFrame;
 
+    timer.reset();
     timePerFrame = 1.0f / 60.0f;
     while (_window->isRunning())
     {
@@ -52,10 +60,20 @@ bool    Engine::run()
 
             auto &&currentState = _gameStateManager.getCurrentState();
 
+            // Clear color buffer
+            glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
             if (currentState->update(elapsedTime) == false)
             {
                 _gameStateManager.removeCurrentState();
             }
+
+
+            // Display imgui windows
+            ImGui::Render();
+
+            // Display screen
+            GameWindow::getInstance()->display();
         }
     }
     return (true);

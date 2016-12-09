@@ -10,9 +10,10 @@
 
 std::shared_ptr<GameWindow> GameWindow::_instance;
 
-GameWindow::GameWindow(const char *title) :
+GameWindow::GameWindow(GameStateManager* gameStateManager, const char *title) :
     _bufferWidth(0), _bufferHeight(0), _fullscreen(false),
-    _title(title), _monitor(nullptr), _window(nullptr), _running(false) {}
+    _title(title), _monitor(nullptr), _window(nullptr), _running(false), _gameStateManager(gameStateManager),
+    _lostFocus(false) {}
 
 GameWindow::~GameWindow() {}
 
@@ -101,6 +102,8 @@ void	GameWindow::registerEvents()
     glfwSetCursorEnterCallback(_window, GameWindow::cursorEnterCallback);
     glfwSetCursorPosCallback(_window, GameWindow::cursorPositionCallback);
     glfwSetScrollCallback(_window, GameWindow::scrollCallback);
+    glfwSetWindowFocusCallback(_window, GameWindow::focusCallback);
+    glfwSetWindowPosCallback(_window, GameWindow::posCallback);
 }
 
 void APIENTRY   GameWindow::debugOutput(GLenum source, GLenum type, GLenum id,
@@ -254,7 +257,7 @@ void    GameWindow::toggleFullscreen()
 {
     const GLFWvidmode*  vidmode = nullptr;
     GLFWmonitor*        monitor = nullptr;
-    int refreshRate = 0;
+    int                 refreshRate = 0;
 
     monitor = glfwGetWindowMonitor(_window);
     if (monitor != nullptr)
@@ -331,6 +334,43 @@ void    GameWindow::closeCallback(GLFWwindow* window)
 
     std::cout << "Callback has been called !" << std::endl;
     gameWindow->setRunning(false);
+}
+
+/**
+    Callback function used to handle the auto pause of the game
+    when the window lose the focus
+*/
+void    GameWindow::focusCallback(GLFWwindow* window, int focused)
+{
+    GameWindow*     gameWindow;
+
+    gameWindow = reinterpret_cast<GameWindow*>(glfwGetWindowUserPointer(window));
+    ASSERT(gameWindow != nullptr, "GameWindow should not be null.");
+
+    // The window gained the focus
+    if (focused)
+    {
+        gameWindow->hasLostFocus(false);
+    }
+    // The window lost focus
+    else
+    {
+        gameWindow->hasLostFocus(true);
+    }
+}
+
+/**
+    Callback function called when the window move
+*/
+void   GameWindow::posCallback(GLFWwindow* window, int xpos, int ypos)
+{
+    GameWindow*     gameWindow;
+
+    gameWindow = reinterpret_cast<GameWindow*>(glfwGetWindowUserPointer(window));
+    ASSERT(gameWindow != nullptr, "GameWindow should not be null.");
+
+    Timer& timer = gameWindow->getTimer();
+    timer.reset();
 }
 
 /**
@@ -526,4 +566,19 @@ bool    GameWindow::sendImGuiCharCallback(GameWindow* gameWindow, GLFWwindow* wi
         return (true);
     }
     return (false);
+}
+
+bool    GameWindow::hasLostFocus() const
+{
+    return (_lostFocus);
+}
+
+void    GameWindow::hasLostFocus(bool lostFocus)
+{
+    _lostFocus = lostFocus;
+}
+
+Timer&  GameWindow::getTimer()
+{
+    return (_timer);
 }

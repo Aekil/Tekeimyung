@@ -29,7 +29,8 @@ public:
     enum class eProj: uint8_t
     {
         PERSPECTIVE = 0,
-        ORTHOGRAPHIC = 1
+        ORTHOGRAPHIC_3D = 1,
+        ORTHOGRAPHIC_2D = 2
     };
 
 public:
@@ -41,7 +42,6 @@ public:
     const glm::vec3&    getPos() const;
     const glm::mat4&    getView() const;
     const glm::mat4&    getProj() const;
-    const UniformBuffer& getUbo() const;
     float               getAspect() const;
     float               getFov() const;
 
@@ -51,13 +51,16 @@ public:
     void                setFar(float far);
     void                setDir(const glm::vec3& dir);
     void                setScreen(const sScreen& screen);
+    void                setProjType(eProj projType);
 
     void                translate(const glm::vec3& pos);
     void                zoom(float amount);
+    void                setZoom(float amount);
 
     void                lookAt(const glm::vec3& pos, const glm::vec3& target, const glm::vec3& up);
 
     void                update(const ShaderProgram& shaderProgram, float elapsedTime);
+    void                updateUboData(UniformBuffer& ubo, bool forceUpdate = false);
     void                freezeRotations(bool freeze);
 
     static void         setInstance(Camera* instance);
@@ -65,10 +68,10 @@ public:
 
 private:
     Camera::Constants   _constants;
-    UniformBuffer       _ubo;
 
     bool                _needUpdateView;
     bool                _needUpdateProj;
+    bool                _needUpdateUbo;
 
     /*
     ** Projection
@@ -86,7 +89,7 @@ private:
 
     sScreen             _screen;
 
-    eProj               _proj;
+    eProj               _projType;
 
     /*
     ** View

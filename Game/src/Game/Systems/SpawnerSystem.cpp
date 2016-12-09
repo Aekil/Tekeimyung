@@ -1,3 +1,5 @@
+#include <glm/gtx/string_cast.hpp>
+
 #include <Engine/Utils/Debug.hpp>
 #include <Engine/Utils/Timer.hpp>
 #include <Engine/Sound/SoundManager.hpp>
@@ -52,7 +54,7 @@ void    SpawnerSystem::update(EntityManager &em, float elapsedTime)
             {
                 sPositionComponent* position = entity->getComponent<sPositionComponent>();
 
-                spawnerComponent->spawnPos = glm::vec3(position->value.x + 0.5f, position->value.y + 0.5f, position->z + 1); // center the spawn point
+                spawnerComponent->spawnPos = glm::vec3(position->value.x + 0.5f, position->value.y + 0.5f, position->z); // center the spawn point
                 // if there is entities to spawn & ( enough waited time OR first spawn time is skipped)
                 if (spawnerComponent->data.nbEntities > 0 &&
                     (skipTimeFirstSpawn || spawnerComponent->timeRec > spawnerComponent->data.secBeforeEachSpawn))
@@ -70,16 +72,16 @@ void    SpawnerSystem::update(EntityManager &em, float elapsedTime)
 uint32_t    SpawnerSystem::createSpawner(Map* map, const glm::vec3& pos, eArchetype type)
 {
     Entity* spawnerEntity;
-    
+
     spawnerEntity = PlayStates::createTile(map, pos, type);
-    
+
     return (spawnerEntity->id);
 }
 
 void     SpawnerSystem::setNbEntities(EntityManager &em, uint32_t spawnerEntityID, int entityNb)
 {
     Entity *spawnerEntity;
-    
+
     spawnerEntity = em.getEntity(spawnerEntityID);
     sSpawnerComponent* spawner = spawnerEntity->getComponent<sSpawnerComponent>();
     spawner->data.nbEntities = entityNb;

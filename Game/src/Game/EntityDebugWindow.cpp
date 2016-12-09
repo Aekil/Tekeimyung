@@ -247,6 +247,7 @@ void    EntityDebugWindow::saveEntityTemplate(const std::string& typeName, Entit
 
 glm::vec3   EntityDebugWindow::getRandomPos()
 {
+    ASSERT(_map != nullptr, "No map attached");
     CollisionMap* collisionMap = _map->getCollisionMap();
     eColType colType = eColType::CAN_NOT_WALK;
     glm::vec3 pos;
@@ -265,6 +266,7 @@ glm::vec3   EntityDebugWindow::getRandomPos()
 
 void    EntityDebugWindow::spawnEntity(const std::string& typeName)
 {
+    ASSERT(_map != nullptr, "No map attached");
     Entity* entity = EntityFactory::createEntity(typeName);
     sTypeComponent* type = entity->getComponent<sTypeComponent>();
     sPositionComponent* pos = entity->getComponent<sPositionComponent>();

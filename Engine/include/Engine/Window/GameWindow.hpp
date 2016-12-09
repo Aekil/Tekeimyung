@@ -6,15 +6,17 @@
 #include <GLFW/glfw3.h>
 #include <glm/vec4.hpp>
 
+#include <Engine/Core/GameStateManager.hpp>
 #include <Engine/Window/Keyboard.hpp>
 #include <Engine/Window/Mouse.hpp>
+#include <Engine/Utils/Timer.hpp>
 
-#define WINDOW_DEFAULT_TITLE    "Window default title - Powered by "
+#define WINDOW_DEFAULT_TITLE    "Team Tekeimyung - The Squirre"
 
 class GameWindow
 {
 public:
-    explicit                            GameWindow(const char *title = WINDOW_DEFAULT_TITLE);
+    explicit                            GameWindow(GameStateManager* gameStateManager, const char *title = WINDOW_DEFAULT_TITLE);
                                         ~GameWindow();
 
     bool                                initialize();
@@ -43,8 +45,16 @@ public:
     void                                close();
     void                                shutdown();
 
+    bool                                hasLostFocus() const;
+    void                                hasLostFocus(bool lostFocus);
+
+    Timer&                              getTimer();
+
 private:
     static void                         closeCallback(GLFWwindow* window);
+    static void                         focusCallback(GLFWwindow* window, int focused);
+    static void                         posCallback(GLFWwindow* window, int xpos, int ypos);
+
 	static void							keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
     static void                         buttonCallback(GLFWwindow* window, int button, int action, int mods);
     static bool                         sendImGuikeyCallback(GameWindow* gameWindow, GLFWwindow* window, int key, int scancode, int action, int mods);
@@ -64,7 +74,6 @@ private:
                                                     const GLchar* message, const void* userParam);
     void                                initDebugOutput();
 
-
 private:
     GLFWmonitor*                        _monitor;
     GLFWwindow*                         _window;
@@ -83,4 +92,9 @@ private:
     static std::shared_ptr<GameWindow>  _instance;
 	Keyboard							_keyboard;
     Mouse                               _mouse;
+
+    GameStateManager*                   _gameStateManager;
+
+    bool                                _lostFocus;
+    Timer                               _timer;
 };

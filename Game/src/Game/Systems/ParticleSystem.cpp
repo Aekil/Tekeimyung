@@ -5,6 +5,7 @@
 
 #include <Engine/Window/GameWindow.hpp>
 #include <Engine/Utils/Helper.hpp>
+#include <Engine/Utils/Logger.hpp>
 #include <Engine/Graphics/Geometries/Plane.hpp>
 
 #include <Game/Map.hpp>
@@ -30,6 +31,7 @@ void    ParticleSystem::initEmitter(Entity* entity)
 
     emitter->particles.resize(MAX_PARTICLES);
     emitter->particlesNb = 0;
+    emitter->elapsedTime = 0;
     _emitters[entity->id] = emitter;
 }
 
@@ -40,6 +42,7 @@ void    ParticleSystem::updateEmitter(EntityManager &em, Entity* entity, float e
     sTransformComponent *transform = entity->getComponent<sTransformComponent>();
     sEmitter* emitter = _emitters[entity->id];
 
+    emitter->elapsedTime += elapsedTime;
     // Update particles
     for (unsigned int i = 0; i < emitter->particlesNb; i++)
     {
@@ -81,7 +84,7 @@ void    ParticleSystem::updateEmitter(EntityManager &em, Entity* entity, float e
         }
     }
     // Create new particles each rate
-    else if (emitter->timer.getElapsedTime() >= emitterComp->rate)
+    else if (emitter->elapsedTime >= emitterComp->rate)
     {
         glm::mat4 emitterOrientation;
         emitterOrientation = glm::rotate(emitterOrientation, glm::radians(transform->rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
@@ -119,7 +122,8 @@ void    ParticleSystem::updateEmitter(EntityManager &em, Entity* entity, float e
                 emitter->particlesNb++;
             }
         }
-        emitter->timer.reset();
+
+        emitter->elapsedTime = 0;
     }
 }
 

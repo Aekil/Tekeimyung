@@ -12,12 +12,13 @@
 
 Camera*     Camera::_instance = nullptr;
 
-Camera::Camera(): _needUpdateView(false), _needUpdateProj(true), _fov(45.0f),
+Camera::Camera(): _needUpdateView(true), _needUpdateProj(true), _fov(45.0f),
                     _aspect(1920.0f / 1080.0f), _near(0.1f), _far(1000.0f),
-                    _up({0.0f, 1.0f, 0.0f}), _zoom(0.5f), _proj(Camera::eProj::ORTHOGRAPHIC)
+                    _up({0.0f, 1.0f, 0.0f}), _zoom(1.0f), _projType(Camera::eProj::ORTHOGRAPHIC_3D),
+                    _needUpdateUbo(true)
 {
     _constants.freezeRotations = 0;
-    _ubo.setBindingPoint(1);
+    _constants.view = glm::mat4(1.0f);
 }
 
 Camera::~Camera() {}
@@ -40,11 +41,6 @@ const glm::mat4&    Camera::getView() const
 const glm::mat4&    Camera::getProj() const
 {
     return (_constants.proj);
-}
-
-const UniformBuffer&    Camera::getUbo() const
-{
-    return (_ubo);
 }
 
 float   Camera::getAspect() const
@@ -93,6 +89,12 @@ void    Camera::setScreen(const sScreen& screen)
     _needUpdateProj = true;
 }
 
+void    Camera::setProjType(eProj projType)
+{
+    _projType = projType;
+    _needUpdateProj = _needUpdateView = true;
+}
+
 void    Camera::translate(const glm::vec3& pos)
 {
     _constants.pos += pos;
@@ -108,7 +110,18 @@ void    Camera::zoom(float amount)
     // Limit min zoom to 1.0f
     _zoom = std::min(_zoom, 0.5f);
 
-    if (_proj == Camera::eProj::ORTHOGRAPHIC)
+    if (_projType == Camera::eProj::ORTHOGRAPHIC_2D ||
+        _projType == Camera::eProj::ORTHOGRAPHIC_3D)
+        _needUpdateProj = true;
+    else
+        _needUpdateView = true;
+}
+
+void    Camera::setZoom(float amount)
+{
+    _zoom = amount;
+    if (_projType == Camera::eProj::ORTHOGRAPHIC_2D ||
+        _projType == Camera::eProj::ORTHOGRAPHIC_3D)
         _needUpdateProj = true;
     else
         _needUpdateView = true;
@@ -116,50 +129,17 @@ void    Camera::zoom(float amount)
 
 void    Camera::update(const ShaderProgram& shaderProgram, float elapsedTime)
 {
-    auto &&keyboard = GameWindow::getInstance()->getKeyboard();
-    auto &&mouse = GameWindow::getInstance()->getMouse();
-    auto &&scroll = mouse.getScroll();
-    static double lastScrollOffset;
-
-    // Update position
-    if (keyboard.isPressed(Keyboard::eKey::D))
-        translate(glm::vec3(60.0f * elapsedTime, 0.0f, -60.0f * elapsedTime));
-    if (keyboard.isPressed(Keyboard::eKey::Q))
-        translate(glm::vec3(-60.0f * elapsedTime, 0.0f, 60.0f * elapsedTime));
-    if (keyboard.isPressed(Keyboard::eKey::Z))
-        translate(glm::vec3(-60.0f * elapsedTime, 0.0f, -60.0f * elapsedTime));
-    if (keyboard.isPressed(Keyboard::eKey::S))
-        translate(glm::vec3(60.0f * elapsedTime, 0.0f, 60.0f * elapsedTime));
-
-    // Update Projection type
-    if (keyboard.isPressed(Keyboard::eKey::O))
-    {
-        _proj = Camera::eProj::ORTHOGRAPHIC;
-        _needUpdateProj = _needUpdateView = true;
-    }
-    if (keyboard.isPressed(Keyboard::eKey::P))
-    {
-        _proj = Camera::eProj::PERSPECTIVE;
-        _needUpdateProj = _needUpdateView = true;
-    }
-
-    // Update zoom
-    double offset = scroll.yOffset - lastScrollOffset;
-
-    if (offset)
-        zoom((float)(-offset * elapsedTime));
-    lastScrollOffset = scroll.yOffset;
-
     // Update matrix
     if (_needUpdateProj)
     {
-        if (_proj == Camera::eProj::ORTHOGRAPHIC)
+        if (_projType == Camera::eProj::ORTHOGRAPHIC_2D ||
+            _projType == Camera::eProj::ORTHOGRAPHIC_3D)
         {
             _constants.proj = glm::ortho(_screen.left * _zoom, _screen.right * _zoom,
                                             _screen.bottom * _zoom, _screen.top * _zoom,
                                             _near, _far);
         }
-        else if (_proj == Camera::eProj::PERSPECTIVE)
+        else if (_projType == Camera::eProj::PERSPECTIVE)
         {
             _constants.proj = glm::perspective(_fov, _aspect, _near, _far);
         }
@@ -167,26 +147,33 @@ void    Camera::update(const ShaderProgram& shaderProgram, float elapsedTime)
             ASSERT(0, "Unknown projection type");
 
         _needUpdateProj = false;
-        _ubo.update(&_constants, sizeof(_constants));
+        _needUpdateUbo = true;
     }
     if (_needUpdateView)
     {
-        if (_proj == Camera::eProj::ORTHOGRAPHIC)
+        if (_projType == Camera::eProj::ORTHOGRAPHIC_3D)
         {
             _constants.view = glm::lookAt(_constants.pos, _constants.pos + _constants.dir, _up);
         }
-        else if (_proj == Camera::eProj::PERSPECTIVE)
+        else if (_projType == Camera::eProj::PERSPECTIVE)
         {
             glm::vec3 newPos = _constants.pos - (glm::normalize(_constants.dir) * _zoom * 300.0f);
             _constants.view = glm::lookAt(newPos, newPos + _constants.dir, _up);
         }
-        else
+        else if (_projType != Camera::eProj::ORTHOGRAPHIC_2D)
             ASSERT(0, "Unknown projection type");
 
         _needUpdateView = false;
-        _ubo.update(&_constants, sizeof(_constants));
+        _needUpdateUbo = true;
     }
 
+}
+
+void    Camera::updateUboData(UniformBuffer& ubo, bool forceUpdate)
+{
+    if (_needUpdateUbo || forceUpdate)
+        ubo.update(&_constants, sizeof(_constants));
+    _needUpdateUbo = false;
 }
 
 void    Camera::freezeRotations(bool freeze)
@@ -196,7 +183,7 @@ void    Camera::freezeRotations(bool freeze)
         return;
 
     _constants.freezeRotations = static_cast<int>(freeze);
-    _ubo.update(&_constants, sizeof(_constants));
+    _needUpdateUbo = true;
 }
 
 void    Camera::setInstance(Camera* instance)

@@ -5,7 +5,6 @@
 
 #include <ECS/System.hpp>
 
-#include <Engine/Utils/Timer.hpp>
 #include <Engine/Utils/MonitoringDebugWindow.hpp>
 #include <Engine/Graphics/Model.hpp>
 #include <Engine/Graphics/Geometries/Geometry.hpp>
@@ -41,7 +40,7 @@ struct sEmitter
     std::vector<sParticle>  particles;
     unsigned int            particlesNb;
     float                   life;
-    Timer                   timer;
+    float                   elapsedTime;
 };
 
 START_SYSTEM(ParticleSystem)
