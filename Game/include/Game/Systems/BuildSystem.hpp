@@ -20,8 +20,10 @@ public:
     void                                drawRange(EntityManager &em, const glm::vec4& color, const glm::ivec3& playerPos, uint32_t range);
     bool                                isInRange(const glm::ivec3& playerPos, const glm::ivec3& objPos, uint32_t range) const;
 
-    void                                buildOnTile(const glm::ivec3& pos);
+    void                                displayBuildItem(const glm::ivec3& tilePos);
     void                                hideBuildingItem();
+
+    void                                buildItem(const glm::ivec3& tilePos);
 
 private:
     ADD_MONITORING_VAR

@@ -44,10 +44,12 @@ void    BuildSystem::update(EntityManager &em, float elapsedTime)
         if (selectedEntity)
         {
             sPositionComponent* selectedEntityPos = selectedEntity->getComponent<sPositionComponent>();
-            if (!(selectedEntityPos->value.x == pos->value.x && selectedEntityPos->value.y == pos->value.y)  &&
-                isInRange(player->lastPos, glm::ivec3(selectedEntityPos->value.x, selectedEntityPos->value.y, selectedEntityPos->z), player->range))
+            glm::ivec3 tilePos = glm::ivec3(selectedEntityPos->value.x, selectedEntityPos->value.y, selectedEntityPos->z);
+            if (!(tilePos.x == pos->value.x && tilePos.y == pos->value.y)  &&
+                isInRange(player->lastPos, tilePos, player->range))
             {
-                buildOnTile(glm::ivec3(selectedEntityPos->value.x, selectedEntityPos->value.y, selectedEntityPos->z));
+                displayBuildItem(tilePos);
+                buildItem(tilePos);
             }
             else
                 hideBuildingItem();
@@ -97,12 +99,12 @@ bool    BuildSystem::isInRange(const glm::ivec3& playerPos, const glm::ivec3& ob
     // Check it is in range
     return (objPos.z == playerPos.z - 1 &&
         objPos.x >= rangePos.x &&
-        objPos.x <= rangePos.x + range * 2 &&
+        objPos.x <= rangePos.x + (int)range * 2 &&
         objPos.y >= rangePos.y &&
-        objPos.y <= rangePos.y + range * 2);
+        objPos.y <= rangePos.y + (int)range * 2);
 }
 
-void    BuildSystem::buildOnTile(const glm::ivec3& pos)
+void    BuildSystem::displayBuildItem(const glm::ivec3& tilePos)
 {
     sTransformComponent* transform = _tower->getComponent<sTransformComponent>();
     sRenderComponent* render = _tower->getComponent<sRenderComponent>();
@@ -111,7 +113,7 @@ void    BuildSystem::buildOnTile(const glm::ivec3& pos)
     render->_display = true;
 
     // Set item on the tile
-    transform->pos = Map::mapToGraphPosition(glm::vec2(pos.x, pos.y), (float)pos.z + 1);
+    transform->pos = Map::mapToGraphPosition(glm::vec2(tilePos.x, tilePos.y), (float)tilePos.z + 1);
     transform->needUpdate = true;
 }
 
@@ -126,4 +128,35 @@ void    BuildSystem::hideBuildingItem()
     // Put it under the map so that it does not affect physics
     transform->pos = glm::vec3(0.0f, 0.0f, -1000.0f);
     transform->needUpdate = true;
+}
+
+void    BuildSystem::buildItem(const glm::ivec3& tilePos)
+{
+    auto &&mouse = GameWindow::getInstance()->getMouse();
+
+    // Build item if the mouse is pressed
+    if (mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_1] == Mouse::eButtonState::CLICK_PRESSED)
+    {
+        // Get item item
+        sNameComponent* name = _tower->getComponent<sNameComponent>();
+        ASSERT(name != nullptr, "The entity should have a name");
+
+        // Clone the item with his name
+        Entity* item = EntityFactory::cloneEntity(name->value);
+
+        // Set item position to tile position
+        sPositionComponent* itemPos = item->getComponent<sPositionComponent>();
+
+        itemPos->value.x = (float)tilePos.x;
+        itemPos->value.y = (float)tilePos.y;
+        itemPos->z = (float)tilePos.z + 1.0f;
+
+        // Update item transform
+        sTransformComponent* itemTransform = item->getComponent<sTransformComponent>();
+        itemTransform->pos = Map::mapToGraphPosition(itemPos->value, itemPos->z);
+
+
+        // Check no entity is on the tile
+        (*_map)[(uint16_t)itemPos->z][(uint32_t)itemPos->value.y][(uint32_t)itemPos->value.x] = item->id;
+    }
 }
