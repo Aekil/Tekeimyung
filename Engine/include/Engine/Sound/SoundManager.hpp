@@ -5,6 +5,8 @@
 #include <fmod_common.h>
 #include <fmod_errors.h>
 
+#define ENABLE_SOUND        false
+
 #define SOUND_MAX_CHANNELS  32
 #define NB_MAX_SOUNDS       64
 

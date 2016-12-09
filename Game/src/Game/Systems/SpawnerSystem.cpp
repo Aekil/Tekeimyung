@@ -1,5 +1,6 @@
 #include <Engine/Utils/Debug.hpp>
 #include <Engine/Utils/Timer.hpp>
+#include <Engine/Sound/SoundManager.hpp>
 
 #include <Game/Components.hh>
 #include <Game/Utils/PlayStates.hpp>
@@ -21,6 +22,7 @@ void    SpawnerSystem::update(EntityManager &em, float elapsedTime)
     Timer timer;
     uint32_t nbEntities = 0;
     bool skipTimeFirstSpawn = false;
+    static bool caca = false;
 
     forEachEntity(em, [&](Entity *entity)
     {
@@ -30,6 +32,15 @@ void    SpawnerSystem::update(EntityManager &em, float elapsedTime)
             spawnerComponent->timeRec += elapsedTime; // update time record
             if (!spawnerComponent->firstWaitFinished) // first spawn time isn't finished
             {
+#if (ENABLE_SOUND)
+                float tmpTimeBeforeStart = (spawnerComponent->data.secBeforeFirstSpawn - spawnerComponent->timeRec);
+                if (!caca && tmpTimeBeforeStart >= 5.5 && tmpTimeBeforeStart <= 6)
+                {
+                    caca = true;
+                    static int idWaveStartEffect = SoundManager::getInstance()->registerSound("resources/sounds/countdown5.mp3", DEFAULT_SOUND);
+                    SoundManager::getInstance()->playSound(idWaveStartEffect);
+                }
+#endif
                 if (spawnerComponent->timeRec > spawnerComponent->data.secBeforeFirstSpawn)
                 {
                     skipTimeFirstSpawn = true; // remember to skip time condition (/additionnals time) for first spawn
@@ -126,9 +137,10 @@ Entity*    SpawnerSystem::createEntityFromSpawner(Map* map, const glm::vec3& pos
 
     (*map)[(uint16_t)pos.z].addEntity(entity->id);
 
-    /*  static int idSoundSpawn = SoundManager::getInstance()->registerSound("resources/sounds/spawn.mp3", DEFAULT_SOUND);
-    SoundManager::getInstance()->playSound(idSoundSpawn);*/
-
+#if (ENABLE_SOUND)
+    static int idSoundSpawn = SoundManager::getInstance()->registerSound("resources/sounds/spawn.mp3", DEFAULT_SOUND);
+    SoundManager::getInstance()->playSound(idSoundSpawn);
+#endif
     return (entity);
 }
 

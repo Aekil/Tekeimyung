@@ -85,11 +85,11 @@ bool    PlayState::init()
     // Create spawner
     static uint32_t spawnerEntityID = SpawnerSystem::createSpawner(_map, glm::vec3(0.5, 5.5f, 0.5), eArchetype::SPAWNER);
     SpawnerSystem::setNbEntities(*em, spawnerEntityID, 5);
-    SpawnerSystem::setSecBeforeFirstSpawn(*em, spawnerEntityID, 5); // method 1
+    SpawnerSystem::setSecBeforeFirstSpawn(*em, spawnerEntityID, 8); // method 1
     SpawnerSystem::setSecBeforeEachSpawn(*em, spawnerEntityID, 2);
     SpawnerSystem::setSecBeforeEachSpawn(*em, spawnerEntityID, 5);
 
-    static uint32_t spawnerEntityID2 = SpawnerSystem::createSpawner(_map, glm::vec3(0, 8.0f, 1), eArchetype::SPAWNER);
+    /*static uint32_t spawnerEntityID2 = SpawnerSystem::createSpawner(_map, glm::vec3(0, 8.0f, 1), eArchetype::SPAWNER);
     tSpawnerData spawnerData = { 5, 5, 2, 5 };
     SpawnerSystem::setAllFields(*em, spawnerEntityID2, spawnerData); // method 2
 
@@ -98,7 +98,7 @@ bool    PlayState::init()
     SpawnerSystem::setSecBeforeEachSpawn(*em, spawnerEntityID3, 3); // method 1 (partial)
 
     static uint32_t spawnerEntityID4 = SpawnerSystem::createSpawner(_map, glm::vec3(0, 2.0f, 1), eArchetype::SPAWNER);
-    SpawnerSystem::setAllFields(*em, spawnerEntityID4, *SpawnerSystem::getStructData(3, 1, 5, 2)); // method 3 : how to delete the tSpawnerData* in this use ?
+    SpawnerSystem::setAllFields(*em, spawnerEntityID4, *SpawnerSystem::getStructData(3, 1, 5, 2));*/ // method 3 : how to delete the tSpawnerData* in this use ?
 
     /*static uint32_t spawnerEntityID = SpawnerSystem::createSpawner(_map, glm::vec3(0, 8.0f, 1), eArchetype::SPAWNER);
     tSpawnerData spawnerData = { 5, 3, 2, 3 };
@@ -118,9 +118,10 @@ bool    PlayState::init()
     addDebugWindow<MonitoringDebugWindow>(MonitoringDebugWindow::getInstance());
 
     // Play sound
-/*    static int idSoundBkgdMusic = SoundManager::getInstance()->registerSound("ressources/sounds/Kalimba.mp3", BACKGROUND_SOUND);
-    SoundManager::getInstance()->playSound(idSoundBkgdMusic);*/
-
+#if (ENABLE_SOUND)
+    static int idSoundBkgdMusic = SoundManager::getInstance()->registerSound("resources/sounds/Kalimba.mp3", BACKGROUND_SOUND);
+    SoundManager::getInstance()->playSound(idSoundBkgdMusic);
+#endif
     _pair = std::make_pair(Keyboard::eKey::F, new HandleFullscreenEvent());
 
 
