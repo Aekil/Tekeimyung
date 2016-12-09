@@ -643,3 +643,21 @@ START_COMPONENT(sButtonComponent)
 
     bool        selected = false;
 END_COMPONENT(sButtonComponent)
+
+
+START_COMPONENT(sTileComponent)
+    virtual sComponent* clone()
+    {
+        sTileComponent* component = new sTileComponent();
+        component->update(this);
+
+        return (component);
+    }
+
+    virtual void update(sTileComponent* component) {}
+
+    virtual void update(sComponent* component)
+    {
+        update(static_cast<sTileComponent*>(component));
+    }
+END_COMPONENT(sTileComponent)

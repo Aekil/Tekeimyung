@@ -177,7 +177,7 @@ glm::vec3   Map::mapToGraphPosition(const glm::vec2& mapPos, float z)
     return (graphPos);
 }
 
-Entity* Map::getSelectedEntity(Entity* ignoreEntityA, Entity* ignoreEntityB)
+Entity* Map::getSelectedEntity(bool onlyTiles)
 {
     auto gameWindow = GameWindow::getInstance();
     Mouse& mouse =  gameWindow->getMouse();
@@ -205,8 +205,7 @@ Entity* Map::getSelectedEntity(Entity* ignoreEntityA, Entity* ignoreEntityB)
         Entity* entity = it.second;
 
         // Ignore entity for raycasting calculation
-        if (entity == ignoreEntityA ||
-            entity == ignoreEntityB)
+        if (onlyTiles && !entity->getComponent<sTileComponent>())
             continue;
 
         sRenderComponent* render = entity->getComponent<sRenderComponent>();

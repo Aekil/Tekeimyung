@@ -39,7 +39,7 @@ void    BuildSystem::update(EntityManager &em, float elapsedTime)
         // Draw new previous range
         drawRange(em, player->rangeColor, glm::ivec3(player->lastPos.x, player->lastPos.y, player->lastPos.z), player->range);
 
-        Entity* selectedEntity = _map->getSelectedEntity(_tower, entity);
+        Entity* selectedEntity = _map->getSelectedEntity(true);
 
         if (selectedEntity)
         {

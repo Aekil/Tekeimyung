@@ -1320,3 +1320,17 @@ sComponent* ComponentFactory<sButtonComponent>::loadFromJson(const std::string& 
 
     return (component);
 }
+
+
+/*
+** sTileComponent
+*/
+
+sComponent* ComponentFactory<sTileComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
+{
+    sTileComponent*   component;
+
+    component = new sTileComponent();
+
+    return (component);
+}
