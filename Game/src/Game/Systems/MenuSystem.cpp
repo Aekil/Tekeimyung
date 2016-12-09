@@ -67,7 +67,6 @@ void    MenuSystem::update(EntityManager &em, float elapsedTime)
 
     }
 
-
     MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, timer.getElapsedTime(), nbEntities);
 }
 
@@ -94,7 +93,7 @@ void    MenuSystem::handleMouseHover(EntityManager &em)
         {
             removeSelected(em, _currentSelected);
             _currentSelected = i;
-            setSelected(em, _currentSelected);
+            setSelected(em, _currentSelected, true);
             _buttonHovered = true;
             return;
         }
@@ -110,23 +109,24 @@ void    MenuSystem::handleMouseHover(EntityManager &em)
     }
 }
 
-void    MenuSystem::setSelected(EntityManager &em, int buttonIdx)
+void    MenuSystem::setSelected(EntityManager &em, int buttonIdx, bool hovered)
 {
     // Out of range
     if (buttonIdx < 0 || buttonIdx >= _entities.size())
         return;
 
     Entity* entity = em.getEntity(_entities[_currentSelected]);
-    setSelected(entity);
+    setSelected(entity, hovered);
 }
 
-void    MenuSystem::setSelected(Entity* entity)
+void    MenuSystem::setSelected(Entity* entity, bool hovered)
 {
     // The entity does not exist
     if (!entity)
         return;
 
     sButtonComponent* button = entity->getComponent<sButtonComponent>();
+    button->hovered = hovered;
 
     // The button is already selected
     if (button->selected)
@@ -151,6 +151,7 @@ void    MenuSystem::removeSelected(EntityManager &em, int buttonIdx)
         return;
 
     sButtonComponent* button = entity->getComponent<sButtonComponent>();
+    button->hovered = false;
 
     // The button is not selected
     if (!button->selected)

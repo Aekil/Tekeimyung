@@ -634,6 +634,7 @@ START_COMPONENT(sButtonComponent)
     virtual void update(sButtonComponent* component)
     {
         this->selected = component->selected;
+        this->hovered = component->hovered;
     }
 
     virtual void update(sComponent* component)
@@ -642,6 +643,7 @@ START_COMPONENT(sButtonComponent)
     }
 
     bool        selected = false;
+    bool        hovered = false;
 END_COMPONENT(sButtonComponent)
 
 

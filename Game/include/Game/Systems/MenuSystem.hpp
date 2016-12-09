@@ -18,8 +18,8 @@ public:
 private:
     void                                handleMouseHover(EntityManager &em);
 
-    void                                setSelected(EntityManager &em, int buttonIdx);
-    void                                setSelected(Entity* entity);
+    void                                setSelected(EntityManager &em, int buttonIdx, bool hovered = false);
+    void                                setSelected(Entity* entity, bool hovered = false);
     void                                removeSelected(EntityManager &em, int buttonIdx);
 
 private:

@@ -94,22 +94,25 @@ Entity* PauseState::createButton(eArchetype type, const glm::vec2& pos)
 void    PauseState::handleButtons()
 {
     auto &&keyboard = GameWindow::getInstance()->getKeyboard();
+    auto &&mouse = GameWindow::getInstance()->getMouse();
 
     sButtonComponent* resume = _resumeButton->getComponent<sButtonComponent>();
     sButtonComponent* quit = _quitButton->getComponent<sButtonComponent>();
 
-    // Space bar pressed, handle buttons action
-    if (keyboard.getStateMap()[Keyboard::eKey::SPACE] == Keyboard::eKeyState::KEY_PRESSED)
+    bool spacebarPressed = keyboard.getStateMap()[Keyboard::eKey::SPACE] == Keyboard::eKeyState::KEY_PRESSED;
+    bool mouseClicked = mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_1] == Mouse::eButtonState::CLICK_PRESSED;
+    // Resume button
+    // Space bar pressed or mouse clicked
+    if ((spacebarPressed && resume->selected) ||
+        (mouseClicked && resume->hovered))
     {
-        // Resume button
-        if (resume->selected)
-        {
-            _gameStateManager->removeCurrentState();
-        }
-        // Quit button
-        else if (quit->selected)
-        {
-            _gameStateManager->clearStates();
-        }
+        _gameStateManager->removeCurrentState();
+    }
+    // Quit button
+    // Space bar pressed or mouse clicked
+    else if ((spacebarPressed && quit->selected) ||
+        (mouseClicked && quit->hovered))
+    {
+        _gameStateManager->clearStates();
     }
 }
