@@ -105,8 +105,8 @@ void    ConfirmExitState::initPopup()
 
     _confirmPopup = EntityFactory::createEntity(eArchetype::QUIT_CONFIRM_POPUP);
     _confirmText = EntityFactory::createEntity(eArchetype::QUIT_CONFIRM_TEXT);
-    _yesButton = createButton(eArchetype::BUTTON_CONFIRM_YES, glm::vec2(-60.0f, -10.0f));
     _noButton = createButton(eArchetype::BUTTON_CONFIRM_NO, glm::vec2(60.0f, -10.0f));
+    _yesButton = createButton(eArchetype::BUTTON_CONFIRM_YES, glm::vec2(-60.0f, -10.0f));
 
     // Text
     sRenderComponent* textRender = _confirmText->getComponent<sRenderComponent>();
