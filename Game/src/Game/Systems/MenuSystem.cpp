@@ -1,9 +1,12 @@
 #include <algorithm>
 
+#include <glm/gtx/string_cast.hpp>
+
 #include <Engine/Window/GameWindow.hpp>
 #include <Engine/Utils/Logger.hpp>
 
 #include <Game/Components.hh>
+#include <Game/EntityFactory.hpp>
 
 #include <Game/Systems/MenuSystem.hpp>
 
@@ -21,6 +24,7 @@ MenuSystem::~MenuSystem() {}
 bool    MenuSystem::init()
 {
     _currentSelected = 0;
+    setupSelectedIcon();
     return (true);
 }
 
@@ -52,7 +56,6 @@ void    MenuSystem::update(EntityManager &em, float elapsedTime)
         setSelected(em.getEntity(_entities[_currentSelected]));
     }
 
-
     MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, timer.getElapsedTime(), nbEntities);
 }
 
@@ -69,8 +72,17 @@ void    MenuSystem::setSelected(Entity* entity)
         return;
 
     // Set new color of selected button
-    sRenderComponent* render = entity->getComponent<sRenderComponent>();
-    render->color = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+    //sRenderComponent* render = entity->getComponent<sRenderComponent>();
+    //render->color = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+
+    //  Move the "selected" icon next to the selected button.
+    sTransformComponent*    iconTransform = _iconSelected->getComponent<sTransformComponent>();
+    sTransformComponent*    buttonTransform = entity->getComponent<sTransformComponent>();
+
+    iconTransform->pos.x = buttonTransform->pos.x - 42.0f;
+    iconTransform->pos.y = buttonTransform->pos.y + 4.0f;
+    iconTransform->needUpdate = true;
+
     button->selected = true;
 }
 
@@ -87,8 +99,9 @@ void    MenuSystem::removeSelected(Entity* entity)
         return;
 
     // Reset button color
-    sRenderComponent* render = entity->getComponent<sRenderComponent>();
-    render->color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+    //sRenderComponent* render = entity->getComponent<sRenderComponent>();
+    //render->color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+
     button->selected = false;
 }
 
@@ -106,8 +119,8 @@ bool    MenuSystem::onEntityNewComponent(Entity* entity, sComponent* component)
             render->initModel();
 
         const glm::vec3& size = render->_model->getSize() * transform->scale;
-        float windowWidth = (float)GameWindow::getInstance()->getBufferWidth();
-        float windowHeight = (float)GameWindow::getInstance()->getBufferHeight();
+        float windowWidth = (float) GameWindow::getInstance()->getBufferWidth();
+        float windowHeight = (float) GameWindow::getInstance()->getBufferHeight();
 
         transform->pos.x = (windowWidth / 2.0f) - (size.x / 2.0f);
         transform->pos.y = (windowHeight / 2.0f) - (size.y / 2.0f);
@@ -116,4 +129,9 @@ bool    MenuSystem::onEntityNewComponent(Entity* entity, sComponent* component)
         return (true);
     }
     return (false);
+}
+
+void    MenuSystem::setupSelectedIcon()
+{
+    _iconSelected = EntityFactory::createEntity(eArchetype::ICON_SELECTED);
 }

@@ -6,9 +6,9 @@
          "animations" : [],
          "color" : {
             "a" : 1,
-            "b" : 0,
-            "g" : 0,
-            "r" : 1.5
+            "b" : 1,
+            "g" : 1,
+            "r" : 1
          },
          "model" : "resources/models/default.DAE",
          "texture" : "resources/sprites/buttons/button_toggle_fullscreen.png",
@@ -16,8 +16,8 @@
       },
       "sTransformComponent" : {
          "pos" : {
-            "x" : 955,
-            "y" : 603.5,
+            "x" : 860,
+            "y" : 558.5,
             "z" : -1
          },
          "rotation" : {
@@ -26,7 +26,7 @@
             "z" : 0
          },
          "scale" : {
-            "x" : 20,
+            "x" : 60,
             "y" : 6,
             "z" : 6
          }

@@ -26,6 +26,8 @@ private:
 
     Camera          _camera;
 
-    Entity*         _toggleFullsreenButton;
+    Entity*         _toggleWindowModeButton;
     Entity*         _returnButton;
+
+    void            createToggleWindowModeButton();
 END_GAMESTATE(OptionsMenuState)

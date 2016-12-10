@@ -21,12 +21,13 @@ bool            OptionsMenuState::init()
 
     ASSERT(statesNb >= 2, "The Options menu state should not be the second state.");
 
-    auto        playState = _gameStateManager->getStates()[statesNb - 1];
+    auto        playState = _gameStateManager->getStates()[statesNb - 2];
 
     _playstateWorld = &playState->getWorld();
     _playstateRenderSystem = _playstateWorld->getSystem<RenderingSystem>();
 
-    _world.addSystem<RenderingSystem>(&_camera, nullptr, nullptr);
+    _world.addSystem<ParticleSystem>();
+    _world.addSystem<RenderingSystem>(&_camera, nullptr, _world.getSystem<ParticleSystem>()->getEmitters());
     _world.addSystem<MenuSystem>();
 
     EntityManager* em = _world.getEntityManager();
@@ -34,7 +35,7 @@ bool            OptionsMenuState::init()
 
     initCamera();
 
-    _toggleFullsreenButton = createButton(eArchetype::BUTTON_TOGGLE_FULLSCREEN, glm::vec2(0.0f, 80.0f));
+    createToggleWindowModeButton();
     _returnButton = createButton(eArchetype::BUTTON_RETURN, glm::vec2(0.0f, 0.0f));
     return (true);
 }
@@ -86,7 +87,7 @@ Entity*                     OptionsMenuState::createButton(eArchetype type, cons
     Entity*                 button;
     sTransformComponent*    transform;
 
-    button = button = EntityFactory::createEntity(type);
+    button = EntityFactory::createEntity(type);
     transform = button->getComponent<sTransformComponent>();
     transform->pos += glm::vec3(pos, 0.0f);
     transform->needUpdate = true;
@@ -97,19 +98,20 @@ Entity*                     OptionsMenuState::createButton(eArchetype type, cons
 void                    OptionsMenuState::handleButtons()
 {
     auto                &&keyboard = GameWindow::getInstance()->getKeyboard();
-    sButtonComponent*   toggleFullscreen = _toggleFullsreenButton->getComponent<sButtonComponent>();
+    sButtonComponent*   toggleWindowMode = _toggleWindowModeButton->getComponent<sButtonComponent>();
     sButtonComponent*   returnButton = _returnButton->getComponent<sButtonComponent>();
 
-    ASSERT(toggleFullscreen != nullptr, "\"Toggle fullscreen\" button should have a sButtonComponent.");
+    ASSERT(toggleWindowMode != nullptr, "\"Toggle window mode\" button should have a sButtonComponent.");
     ASSERT(returnButton != nullptr, "\"Return\" button should have a sButtonComponent.");
 
     //  Space bar pressed, handle buttons action
     if (keyboard.getStateMap()[Keyboard::eKey::ENTER] == Keyboard::eKeyState::KEY_PRESSED)
     {
         //  Quit button
-        if (toggleFullscreen->selected)
+        if (toggleWindowMode->selected)
         {
             GameWindow::getInstance()->toggleFullscreen();
+            createToggleWindowModeButton();
         }
         //  Resume button
         else if (returnButton->selected)
@@ -117,4 +119,16 @@ void                    OptionsMenuState::handleButtons()
             _gameStateManager->removeCurrentState();
         }
     }
+}
+
+void                OptionsMenuState::createToggleWindowModeButton()
+{
+    eArchetype      buttonArchetype;
+
+    //if (_toggleWindowModeButton != nullptr)
+        //_world.getEntityManager()->destroyEntity(_toggleWindowModeButton);
+    buttonArchetype = (GameWindow::getInstance()->isFullscreen() ?
+                       eArchetype::BUTTON_TOGGLE_WINDOWED :
+                       eArchetype::BUTTON_TOGGLE_FULLSCREEN);
+    _toggleWindowModeButton = createButton(buttonArchetype, glm::vec2(0.0f, 80.0f));
 }

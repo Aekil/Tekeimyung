@@ -31,7 +31,8 @@ bool    PauseState::init()
     _playStateWorld = &playState->getWorld();
     _playStateRendersystem = _playStateWorld->getSystem<RenderingSystem>();
 
-    _world.addSystem<RenderingSystem>(&_camera, nullptr, nullptr);
+    _world.addSystem<ParticleSystem>();
+    _world.addSystem<RenderingSystem>(&_camera, nullptr, _world.getSystem<ParticleSystem>()->getEmitters());
     _world.addSystem<MenuSystem>();
 
     EntityManager* em = _world.getEntityManager();
@@ -40,8 +41,8 @@ bool    PauseState::init()
 
     initCamera();
 
-    _resumeButton = createButton(eArchetype::BUTTON_RESUME, glm::vec2(0.0f, 160.0f));
-    _howToPlayButton = createButton(eArchetype::BUTTON_HOW_TO_PLAY, glm::vec2(0.0f, 80.0f));
+    _resumeButton = createButton(eArchetype::BUTTON_RESUME, glm::vec2(0.0f, 240.0f));
+    _howToPlayButton = createButton(eArchetype::BUTTON_HOW_TO_PLAY, glm::vec2(0.0f, 160.0f));
     _optionsButton = createButton(eArchetype::BUTTON_OPTIONS, glm::vec2(0.0f, 80.0f));
     _quitButton = createButton(eArchetype::BUTTON_QUIT, glm::vec2(0.0f, 0.0f));
     return (true);

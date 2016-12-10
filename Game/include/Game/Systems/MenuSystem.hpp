@@ -18,9 +18,11 @@ public:
 private:
     void                                setSelected(Entity* entity);
     void                                removeSelected(Entity* entity);
+    void                                setupSelectedIcon();
 
 private:
     ADD_MONITORING_VAR
 
     int                                 _currentSelected;
+    Entity*                             _iconSelected;
 END_SYSTEM(MenuSystem)
