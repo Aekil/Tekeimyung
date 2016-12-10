@@ -19,6 +19,7 @@ MenuSystem::MenuSystem()
     _monitoringKey = MonitoringDebugWindow::getInstance()->registerSystem(MENU_SYSTEM_NAME);
 
     _currentSelected = 0;
+    setupSelectedIcon();
     _buttonHovered = false;
 }
 
@@ -26,7 +27,6 @@ MenuSystem::~MenuSystem() {}
 
 bool    MenuSystem::init()
 {
-    setupSelectedIcon();
     return (true);
 }
 
@@ -76,18 +76,18 @@ void    MenuSystem::update(EntityManager &em, float elapsedTime)
 
 void    MenuSystem::handleMouseHover(EntityManager &em)
 {
-    float windowHeight = (float)GameWindow::getInstance()->getBufferHeight();
-    auto &&cursor = GameWindow::getInstance()->getMouse().getCursor();
-    uint32_t nbEntities = (uint32_t)_entities.size();
+    float       windowHeight = (float)GameWindow::getInstance()->getBufferHeight();
+    auto        &&cursor = GameWindow::getInstance()->getMouse().getCursor();
+    uint32_t    nbEntities = (uint32_t)_entities.size();
 
-    glm::vec2 cursorPos = glm::vec2(cursor.getX(), windowHeight - cursor.getY());
+    glm::vec2   cursorPos = glm::vec2(cursor.getX(), windowHeight - cursor.getY());
 
     for (uint32_t i = 0; i < nbEntities; ++i) {
         Entity* entity = em.getEntity(_entities[i]);
 
-        sRenderComponent* render = entity->getComponent<sRenderComponent>();
-        sTransformComponent* transform = entity->getComponent<sTransformComponent>();
-        const glm::vec3& size = render->_model->getSize() * transform->scale;
+        sRenderComponent*       render = entity->getComponent<sRenderComponent>();
+        sTransformComponent*    transform = entity->getComponent<sTransformComponent>();
+        const glm::vec3&        size = render->_model->getSize() * transform->scale;
 
         // Check the mouse is in the button (2D AABB collision)
         if (cursorPos.x >= transform->pos.x &&

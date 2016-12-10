@@ -29,5 +29,5 @@ private:
 
     int                                 _currentSelected;
     bool                                _buttonHovered;
-    Entity*                             _iconSelected;
+    Entity*                             _iconSelected = nullptr;
 END_SYSTEM(MenuSystem)
