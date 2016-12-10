@@ -167,22 +167,26 @@ Entity* ConfirmExitState::createButton(eArchetype type, const glm::vec2& pos)
 void    ConfirmExitState::handleButtons()
 {
     auto &&keyboard = GameWindow::getInstance()->getKeyboard();
+    auto &&mouse = GameWindow::getInstance()->getMouse();
 
     sButtonComponent* yes = _yesButton->getComponent<sButtonComponent>();
     sButtonComponent* no = _noButton->getComponent<sButtonComponent>();
 
-    // Space bar pressed, handle buttons action
-    if (keyboard.getStateMap()[Keyboard::eKey::SPACE] == Keyboard::eKeyState::KEY_PRESSED)
+    bool spacebarPressed = keyboard.getStateMap()[Keyboard::eKey::SPACE] == Keyboard::eKeyState::KEY_PRESSED;
+    bool mouseClicked = mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_1] == Mouse::eButtonState::CLICK_PRESSED;
+
+    // Yes button
+    // Space bar pressed or mouse clicked
+    if ((spacebarPressed && yes->selected) ||
+        (mouseClicked && yes->hovered))
     {
-        // Yes button
-        if (yes->selected)
-        {
-            _gameStateManager->clearStates();
-        }
-        // No button
-        else if (no->selected)
-        {
-            _gameStateManager->removeCurrentState();
-        }
+        _gameStateManager->clearStates();
+    }
+    // No button
+    // Space bar pressed or mouse clicked
+    else if ((spacebarPressed && no->selected) ||
+        (mouseClicked && no->hovered))
+    {
+        _gameStateManager->removeCurrentState();
     }
 }

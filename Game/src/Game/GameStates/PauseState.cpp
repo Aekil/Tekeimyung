@@ -110,6 +110,6 @@ void    PauseState::handleButtons()
     else if ((spacebarPressed && quit->selected) ||
         (mouseClicked && quit->hovered))
     {
-        _gameStateManager->clearStates();
+        _gameStateManager->addState<ConfirmExitState>();
     }
 }
