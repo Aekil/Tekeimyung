@@ -33,6 +33,10 @@
     PROCESS(BUTTON_OPTIONS),\
     PROCESS(HOW_TO_PLAY_MENU),\
     PROCESS(BACKGROUND),\
+    PROCESS(BUTTON_CONFIRM_YES),\
+    PROCESS(BUTTON_CONFIRM_NO),\
+    PROCESS(QUIT_CONFIRM_POPUP),\
+    PROCESS(QUIT_CONFIRM_TEXT),\
 
 #define GENERATE_ENUM(ENUM) ENUM
 #define GENERATE_STRING(STRING) #STRING
@@ -72,7 +76,7 @@ public:
     static void                                             initAnimations(Entity* entity);
     static void                                             reverseAnimations(Entity* entity);
 
-private:
+    static Entity*                                          cloneEntity(Entity* entity);
     static Entity*                                          cloneEntity(const std::string& typeName);
 
 private:

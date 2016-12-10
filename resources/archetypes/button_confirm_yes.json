@@ -1,10 +1,6 @@
 {
    "components" : {
-      "sPositionComponent" : {
-         "x" : 10,
-         "y" : 8,
-         "z" : 1
-      },
+      "sButtonComponent" : null,
       "sRenderComponent" : {
          "animated" : false,
          "animations" : [],
@@ -14,16 +10,15 @@
             "g" : 1,
             "r" : 1
          },
-         "model" : "resources/models/blocks/block_brown.DAE",
-         "texture" : "",
-         "type" : "MESH"
+         "model" : "resources/models/default.DAE",
+         "texture" : "resources/sprites/buttons/button_yes.png",
+         "type" : "PLANE"
       },
-      "sTileComponent" : null,
       "sTransformComponent" : {
          "pos" : {
-            "x" : 250,
-            "y" : 12.5,
-            "z" : 200
+            "x" : 936.982177734375,
+            "y" : 490.97817993164063,
+            "z" : -1
          },
          "rotation" : {
             "x" : 0,
@@ -31,14 +26,11 @@
             "z" : 0
          },
          "scale" : {
-            "x" : 1,
-            "y" : 1,
+            "x" : 10,
+            "y" : 6,
             "z" : 1
          }
-      },
-      "sTypeComponent" : {
-         "type" : "TILE_WALKABLE"
       }
    },
-   "name" : "BLOCK_BROWN"
+   "name" : "BUTTON_CONFIRM_YES"
 }

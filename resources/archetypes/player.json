@@ -11,7 +11,15 @@
          "right" : "L",
          "up" : "I"
       },
-      "sPlayerComponent" : {},
+      "sPlayerComponent" : {
+         "range" : 2,
+         "range_color" : {
+            "a" : 1,
+            "b" : 1,
+            "g" : 0.79607844352722168,
+            "r" : 1
+         }
+      },
       "sPositionComponent" : {
          "x" : 9,
          "y" : 5,
@@ -19,394 +27,7 @@
       },
       "sRenderComponent" : {
          "animated" : false,
-         "animations" : [
-            {
-               "name" : "Moving left/right",
-               "params" : [
-                  {
-                     "frames" : [
-                        {
-                           "easing" : "NONE",
-                           "time" : 0.5,
-                           "value" : {
-                              "x" : 0,
-                              "y" : 0,
-                              "z" : 20
-                           }
-                        },
-                        {
-                           "easing" : "NONE",
-                           "time" : 1.5,
-                           "value" : {
-                              "x" : 0,
-                              "y" : 0,
-                              "z" : -20
-                           }
-                        },
-                        {
-                           "easing" : "NONE",
-                           "time" : 2,
-                           "value" : {
-                              "x" : 0,
-                              "y" : 0,
-                              "z" : 0
-                           }
-                        }
-                     ],
-                     "name" : "position"
-                  }
-               ]
-            },
-            {
-               "name" : "Moving up/down",
-               "params" : [
-                  {
-                     "frames" : [
-                        {
-                           "easing" : "NONE",
-                           "time" : 1,
-                           "value" : {
-                              "x" : 0,
-                              "y" : 50,
-                              "z" : 0
-                           }
-                        },
-                        {
-                           "easing" : "NONE",
-                           "time" : 2,
-                           "value" : {
-                              "x" : 0,
-                              "y" : 0,
-                              "z" : 0
-                           }
-                        }
-                     ],
-                     "name" : "position"
-                  }
-               ]
-            },
-            {
-               "name" : "whut ?",
-               "params" : [
-                  {
-                     "frames" : [
-                        {
-                           "easing" : "NONE",
-                           "time" : 1,
-                           "value" : {
-                              "w" : 1,
-                              "x" : 1,
-                              "y" : 0,
-                              "z" : 0
-                           }
-                        },
-                        {
-                           "easing" : "NONE",
-                           "time" : 2,
-                           "value" : {
-                              "w" : 1,
-                              "x" : 0,
-                              "y" : 1,
-                              "z" : 0
-                           }
-                        },
-                        {
-                           "easing" : "NONE",
-                           "time" : 3,
-                           "value" : {
-                              "w" : 1,
-                              "x" : 0,
-                              "y" : 0,
-                              "z" : 1
-                           }
-                        },
-                        {
-                           "easing" : "NONE",
-                           "time" : 4,
-                           "value" : {
-                              "w" : 1,
-                              "x" : 1,
-                              "y" : 1,
-                              "z" : 0
-                           }
-                        },
-                        {
-                           "easing" : "NONE",
-                           "time" : 5,
-                           "value" : {
-                              "w" : 1,
-                              "x" : 1,
-                              "y" : 0,
-                              "z" : 1
-                           }
-                        },
-                        {
-                           "easing" : "NONE",
-                           "time" : 6,
-                           "value" : {
-                              "w" : 1,
-                              "x" : 0,
-                              "y" : 1,
-                              "z" : 1
-                           }
-                        }
-                     ],
-                     "name" : "color"
-                  },
-                  {
-                     "frames" : [
-                        {
-                           "easing" : "NONE",
-                           "time" : 2,
-                           "value" : {
-                              "x" : 5,
-                              "y" : 5,
-                              "z" : 5
-                           }
-                        },
-                        {
-                           "easing" : "NONE",
-                           "time" : 3,
-                           "value" : {
-                              "x" : 3,
-                              "y" : 3,
-                              "z" : 3
-                           }
-                        },
-                        {
-                           "easing" : "NONE",
-                           "time" : 4,
-                           "value" : {
-                              "x" : 4,
-                              "y" : 4,
-                              "z" : 4
-                           }
-                        },
-                        {
-                           "easing" : "NONE",
-                           "time" : 6,
-                           "value" : {
-                              "x" : 0,
-                              "y" : 0,
-                              "z" : 0
-                           }
-                        }
-                     ],
-                     "name" : "scale"
-                  },
-                  {
-                     "frames" : [
-                        {
-                           "easing" : "NONE",
-                           "time" : 1,
-                           "value" : {
-                              "x" : 0,
-                              "y" : 90,
-                              "z" : 0
-                           }
-                        },
-                        {
-                           "easing" : "NONE",
-                           "time" : 2,
-                           "value" : {
-                              "x" : 0,
-                              "y" : 20,
-                              "z" : 60
-                           }
-                        },
-                        {
-                           "easing" : "NONE",
-                           "time" : 3,
-                           "value" : {
-                              "x" : 50,
-                              "y" : 10,
-                              "z" : 90
-                           }
-                        },
-                        {
-                           "easing" : "NONE",
-                           "time" : 4,
-                           "value" : {
-                              "x" : 30,
-                              "y" : 50,
-                              "z" : 10
-                           }
-                        },
-                        {
-                           "easing" : "NONE",
-                           "time" : 6,
-                           "value" : {
-                              "x" : 0,
-                              "y" : 0,
-                              "z" : 0
-                           }
-                        }
-                     ],
-                     "name" : "position"
-                  },
-                  {
-                     "frames" : [
-                        {
-                           "easing" : "NONE",
-                           "time" : 1,
-                           "value" : {
-                              "x" : 0,
-                              "y" : 360,
-                              "z" : 0
-                           }
-                        },
-                        {
-                           "easing" : "NONE",
-                           "time" : 2,
-                           "value" : {
-                              "x" : 0,
-                              "y" : 360,
-                              "z" : 360
-                           }
-                        },
-                        {
-                           "easing" : "NONE",
-                           "time" : 3,
-                           "value" : {
-                              "x" : 360,
-                              "y" : 0,
-                              "z" : 360
-                           }
-                        },
-                        {
-                           "easing" : "NONE",
-                           "time" : 4,
-                           "value" : {
-                              "x" : 0,
-                              "y" : 360,
-                              "z" : 0
-                           }
-                        },
-                        {
-                           "easing" : "NONE",
-                           "time" : 6,
-                           "value" : {
-                              "x" : 0,
-                              "y" : 0,
-                              "z" : 0
-                           }
-                        }
-                     ],
-                     "name" : "rotation"
-                  }
-               ]
-            },
-            {
-               "name" : "Moving up/doww (easing in/easing out)",
-               "params" : [
-                  {
-                     "frames" : [
-                        {
-                           "easing" : "EASE_IN",
-                           "time" : 1,
-                           "value" : {
-                              "x" : 0,
-                              "y" : 50,
-                              "z" : 0
-                           }
-                        },
-                        {
-                           "easing" : "EASE_OUT",
-                           "time" : 2,
-                           "value" : {
-                              "x" : 0,
-                              "y" : 0,
-                              "z" : 0
-                           }
-                        }
-                     ],
-                     "name" : "position"
-                  }
-               ]
-            },
-            {
-               "name" : "bouncing",
-               "params" : [
-                  {
-                     "frames" : [
-                        {
-                           "easing" : "EASE_IN",
-                           "time" : 1,
-                           "value" : {
-                              "x" : 0,
-                              "y" : 40,
-                              "z" : 0
-                           }
-                        },
-                        {
-                           "easing" : "EASE_OUT",
-                           "time" : 2,
-                           "value" : {
-                              "x" : 0,
-                              "y" : 0,
-                              "z" : 0
-                           }
-                        },
-                        {
-                           "easing" : "EASE_IN",
-                           "time" : 3,
-                           "value" : {
-                              "x" : 0,
-                              "y" : 20,
-                              "z" : 0
-                           }
-                        },
-                        {
-                           "easing" : "EASE_OUT",
-                           "time" : 4,
-                           "value" : {
-                              "x" : 0,
-                              "y" : 0,
-                              "z" : 0
-                           }
-                        },
-                        {
-                           "easing" : "EASE_IN",
-                           "time" : 4.5,
-                           "value" : {
-                              "x" : 0,
-                              "y" : 10,
-                              "z" : 0
-                           }
-                        },
-                        {
-                           "easing" : "EASE_OUT",
-                           "time" : 5,
-                           "value" : {
-                              "x" : 0,
-                              "y" : 0,
-                              "z" : 0
-                           }
-                        },
-                        {
-                           "easing" : "EASE_IN",
-                           "time" : 5.25,
-                           "value" : {
-                              "x" : 0,
-                              "y" : 5,
-                              "z" : 0
-                           }
-                        },
-                        {
-                           "easing" : "EASE_OUT",
-                           "time" : 5.5,
-                           "value" : {
-                              "x" : 0,
-                              "y" : 0,
-                              "z" : 0
-                           }
-                        }
-                     ],
-                     "name" : "position"
-                  }
-               ]
-            }
-         ],
+         "animations" : [],
          "color" : {
             "a" : 1,
             "b" : 0.98333263397216797,
@@ -433,9 +54,9 @@
       },
       "sTransformComponent" : {
          "pos" : {
-            "x" : 224.99996948242188,
-            "y" : 12.500053405761719,
-            "z" : 125.00093078613281
+            "x" : 225.00003051757813,
+            "y" : 12.500007629394531,
+            "z" : 125.00090789794922
          },
          "rotation" : {
             "x" : 0,
@@ -443,9 +64,9 @@
             "z" : 0
          },
          "scale" : {
-            "x" : 1.0416684150695801,
-            "y" : 1.0416684150695801,
-            "z" : 1.0416684150695801
+            "x" : 1.0416662693023682,
+            "y" : 1.0416662693023682,
+            "z" : 1.0416662693023682
          }
       },
       "sTypeComponent" : {

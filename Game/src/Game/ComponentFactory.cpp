@@ -950,7 +950,36 @@ sComponent* ComponentFactory<sPlayerComponent>::loadFromJson(const std::string& 
 {
     sPlayerComponent* component = new sPlayerComponent();
 
+    component->range = json.getUInt("range", 2);
+    component->rangeColor = json.getColor4f("range_color", glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+
     return (component);
+}
+
+JsonValue&    ComponentFactory<sPlayerComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
+{
+    JsonValue& json = _componentsJson[entityType];
+    sPlayerComponent* component = static_cast<sPlayerComponent*>(_components[entityType]);
+
+
+    json.setUInt("range", component->range);
+    json.setColor4f("range_color", component->rangeColor);
+
+    return (json);
+}
+
+bool    ComponentFactory<sPlayerComponent>::updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity)
+{
+    sPlayerComponent* component = static_cast<sPlayerComponent*>(entityComponent ? entityComponent : _components[entityType]);
+    *savedComponent = component;
+    bool changed = false;
+
+    int range = component->range;
+    changed |= ImGui::InputInt("range", &range, 1, 10);
+    changed |= ImGui::ColorEdit4("range color", glm::value_ptr(component->rangeColor));
+
+    component->range = range;
+    return (changed);
 }
 
 
@@ -1253,7 +1282,7 @@ bool    ComponentFactory<sTransformComponent>::updateEditor(const std::string& e
 bool    ComponentFactory<sTransformComponent>::updateTransforms(glm::vec3& pos, glm::vec3& scale, glm::vec3& rotation, glm::mat4& transform, ImGuizmo::MODE mode)
 {
     auto &&keyboard = GameWindow::getInstance()->getKeyboard();
-    Camera* camera = Camera::getInstance();
+    //Camera* camera = Camera::getInstance();
     static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::TRANSLATE);
     bool changed = false;
 
@@ -1288,6 +1317,20 @@ sComponent* ComponentFactory<sButtonComponent>::loadFromJson(const std::string& 
     sButtonComponent*   component;
 
     component = new sButtonComponent();
+
+    return (component);
+}
+
+
+/*
+** sTileComponent
+*/
+
+sComponent* ComponentFactory<sTileComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
+{
+    sTileComponent*   component;
+
+    component = new sTileComponent();
 
     return (component);
 }

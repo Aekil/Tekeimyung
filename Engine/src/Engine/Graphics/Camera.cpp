@@ -53,6 +53,11 @@ float   Camera::getFov() const
     return (_fov);
 }
 
+Camera::eProj   Camera::getProjType() const
+{
+    return (_projType);
+}
+
 void    Camera::setFov(float fov)
 {
     _fov = fov;
@@ -132,12 +137,17 @@ void    Camera::update(const ShaderProgram& shaderProgram, float elapsedTime)
     // Update matrix
     if (_needUpdateProj)
     {
-        if (_projType == Camera::eProj::ORTHOGRAPHIC_2D ||
-            _projType == Camera::eProj::ORTHOGRAPHIC_3D)
+        if (_projType == Camera::eProj::ORTHOGRAPHIC_3D)
         {
             _constants.proj = glm::ortho(_screen.left * _zoom, _screen.right * _zoom,
                                             _screen.bottom * _zoom, _screen.top * _zoom,
                                             _near, _far);
+        }
+        else if (_projType == Camera::eProj::ORTHOGRAPHIC_2D)
+        {
+            _constants.proj = glm::ortho(_screen.left * _zoom, _screen.right * _zoom,
+                                            _screen.bottom * _zoom, _screen.top * _zoom,
+                                            0.0f, _far);
         }
         else if (_projType == Camera::eProj::PERSPECTIVE)
         {
