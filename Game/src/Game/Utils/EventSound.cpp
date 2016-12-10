@@ -58,6 +58,7 @@ void    EventSound::removeEventSound(int i)
     }
     else
     {
+        SoundManager::getInstance()->stopSound(_eventSoundDataList[i].soundID);
         _eventSoundDataList[i].soundID = -1;
         _eventSoundDataList[i].soundName = "";
         _eventSoundDataList[i].soundPath = "";
@@ -102,7 +103,9 @@ void    EventSound::loadEvents()
             {
                 eventSound->soundName = soundJson.getString("name", "");
                 eventSound->soundPath = soundJson.getString("path", "");
-                eventSound->soundID = SoundManager::getInstance()->registerSound(eventSound->soundPath, eventSound->soundType);
+
+                if (eventSound->soundPath.size() > 0)
+                    eventSound->soundID = SoundManager::getInstance()->registerSound(eventSound->soundPath, eventSound->soundType);
             }
         }
     }
@@ -160,6 +163,19 @@ tEventSound*    EventSound::getEventBySoundPath(const std::string& soundPath)
     for (int i = 0; i < _eventSoundDataList.size(); ++i)
     {
         if (_eventSoundDataList[i].soundPath == soundPath)
+        {
+            return (&_eventSoundDataList[i]);
+        }
+    }
+
+    return (nullptr);
+}
+
+tEventSound*    EventSound::getEventByEventType(const eEventSound& event)
+{
+    for (int i = 0; i < _eventSoundDataList.size(); ++i)
+    {
+        if (_eventSoundDataList[i].event == event)
         {
             return (&_eventSoundDataList[i]);
         }

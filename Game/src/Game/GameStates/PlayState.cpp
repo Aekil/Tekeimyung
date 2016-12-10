@@ -49,8 +49,6 @@ bool    PlayState::init()
 
     _map = new Map(*em, 20, 15, 4);
 
-    _isBackgroundSoundEnabled = false;
-
     initCamera();
     addSystems();
     initEntities();
@@ -61,21 +59,9 @@ bool    PlayState::init()
     addDebugWindow<MonitoringDebugWindow>(MonitoringDebugWindow::getInstance());
     addDebugWindow<SoundEditorWindow>(glm::vec2(1200, 80), glm::vec2(450, 450));
 
-    // Play sound
-#if (ENABLE_SOUND)
-    /*static int idSoundBkgdMusic = SoundManager::getInstance()->registerSound("resources/sounds/Kalimba.mp3", BACKGROUND_SOUND);
-    SoundManager::getInstance()->playSound(idSoundBkgdMusic);*/
-
-    if (!_isBackgroundSoundEnabled && EventSound::isEventLinkedToSound(eEventSound::BACKGROUND))
-    {
-        SoundManager::getInstance()->playSound(EventSound::getSoundIDFromEvent(eEventSound::BACKGROUND));
-        _isBackgroundSoundEnabled = true;
-    }
-#endif
-
     _pair = std::make_pair(Keyboard::eKey::F, new HandleFullscreenEvent());
 
-
+    _backgroundMusic = EventSound::getEventByEventType(eEventSound::BACKGROUND);
     // Play first animation of entities
     /*for (auto entity: em->getEntities())
     {
@@ -107,14 +93,13 @@ bool    PlayState::update(float elapsedTime)
 
     updateCameraInputs(elapsedTime);
 
-#if (ENABLE_SOUND) // enable background sound in real time with sound editor
-    if (!_isBackgroundSoundEnabled && EventSound::isEventLinkedToSound(eEventSound::BACKGROUND))
-    {
-        SoundManager::getInstance()->playSound(EventSound::getSoundIDFromEvent(eEventSound::BACKGROUND));
-        _isBackgroundSoundEnabled = true;
-    }
-#endif
-
+    // Play background music
+    #if (ENABLE_SOUND)
+        if (_backgroundMusic->soundID && !SoundManager::getInstance()->isSoundPlaying(_backgroundMusic->soundID))
+        {
+            SoundManager::getInstance()->playSound(_backgroundMusic->soundID);
+        }
+    #endif
     return (GameState::update(elapsedTime));
 }
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vector>
+#include <cstdint>
 #include <memory>
 #include <fmod.hpp>
 #include <fmod_common.h>
@@ -10,7 +10,7 @@
 
 #define SOUNDS_DIRECTORY    "resources/sounds"
 
-#define SOUND_MAX_CHANNELS  32
+#define NB_MAX_CHANNELS     32
 #define NB_MAX_SOUNDS       64
 
 enum class eSoundType: char {
@@ -21,11 +21,12 @@ enum class eSoundType: char {
 
 typedef struct sSound
 {
-    unsigned int        id;
+    uint32_t        id;
     std::string         name;
     bool                free;
     eSoundType          type;
     FMOD::Sound*        sound;
+    FMOD::Channel*      channel;
 }                   tSound;
 
 class SoundManager
@@ -43,9 +44,13 @@ public:
     bool                                    errorCheck();
     //std::string                             getErrorString();
 
-    void                                    freeSound(unsigned int id);
+    void                                    freeSound(uint32_t id);
     int                                     registerSound(const std::string& name, eSoundType type = eSoundType::NONE);
-    void                                    playSound(unsigned int id);
+
+    void                                    playSound(uint32_t id);
+    void                                    stopSound(uint32_t id);
+
+    bool                                    isSoundPlaying(uint32_t id);
 
     const char*                             getSoundNameFromID(int id) const;
 
@@ -54,7 +59,5 @@ private:
 
     FMOD_RESULT                             _result;
     FMOD::System*                           _system;
-    FMOD::Channel*                          _channel1;
-    FMOD::Channel*                          _channel2;
     tSound                                  _sounds[NB_MAX_SOUNDS];
 };

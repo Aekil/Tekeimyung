@@ -13,6 +13,7 @@
 
 #include <Game/EntityFactory.hpp>
 #include <Game/Map.hpp>
+#include <Game/Utils/EventSound.hpp>
 
 START_GAMESTATE(PlayState)
  public:
@@ -34,6 +35,5 @@ private:
     std::pair <Keyboard::eKey, IInputEvent *>    _pair;
 
     Camera                              _camera;
-
-    bool                                            _isBackgroundSoundEnabled;
+    tEventSound*                        _backgroundMusic = nullptr;
 END_GAMESTATE(PlayState)

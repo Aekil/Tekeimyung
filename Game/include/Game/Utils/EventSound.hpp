@@ -52,6 +52,7 @@ public:
     static void                             saveEvents();
 
     static tEventSound*                     getEventBySoundPath(const std::string& soundPath);
+    static tEventSound*                     getEventByEventType(const eEventSound& event);
 
 
 private:

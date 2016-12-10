@@ -79,7 +79,7 @@ void    SoundEditorWindow::build(float elapsedTime)
             ImGui::OpenPopup("Sounds");
         }
 
-        if (eventSoundData[i].soundID == -1)
+        if (eventSoundData[i].soundID != -1)
         {
             ImGui::SameLine();
             if (ImGui::Button("Remove sound"))

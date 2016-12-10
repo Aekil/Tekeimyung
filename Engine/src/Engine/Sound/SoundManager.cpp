@@ -10,15 +10,14 @@ std::shared_ptr<SoundManager>   SoundManager::_soundManager = nullptr;
 
 SoundManager::SoundManager() :
 _result(FMOD_OK),
-_system(nullptr),
-_channel1(nullptr),
-_channel2(nullptr)
+_system(nullptr)
 {
     for (int i = 0; i < NB_MAX_SOUNDS; i++)
     {
         _sounds[i].free = true;
         _sounds[i].id = i;
         _sounds[i].sound = nullptr;
+        _sounds[i].channel = nullptr;
         _sounds[i].type = eSoundType::DEFAULT_SOUND;
     }
 }
@@ -40,7 +39,7 @@ bool    SoundManager::initialize()
     if (!errorCheck())
         return (false);
 
-    _result = _system->init(SOUND_MAX_CHANNELS, FMOD_INIT_NORMAL, 0);
+    _result = _system->init(NB_MAX_CHANNELS, FMOD_INIT_NORMAL, 0);
     if (!errorCheck())
         return (false);
 
@@ -83,7 +82,7 @@ bool    SoundManager::errorCheck()
     return (true);
 }
 
-void    SoundManager::freeSound(unsigned int id)
+void    SoundManager::freeSound(uint32_t id)
 {
     if (_sounds[id].free == false)
     {
@@ -133,21 +132,38 @@ int     SoundManager::registerSound(const std::string& name, eSoundType type)
     return (-1); // no place available to register more sounds
 }
 
-void    SoundManager::playSound(unsigned int id)
+void    SoundManager::playSound(uint32_t id)
 {
     // Out of range
     if (id < 0 || id >= NB_MAX_SOUNDS)
         return;
 
-    if (_sounds[id].type == eSoundType::BACKGROUND_SOUND)
-    {
-        _result = _system->playSound(_sounds[id].sound, 0, false, &_channel1);
-    }
-    else
-    {
-        _result = _system->playSound(_sounds[id].sound, 0, false, &_channel2);
-    }
+    _result = _system->playSound(_sounds[id].sound, 0, false, &_sounds[id].channel);
     errorCheck();
+}
+
+void    SoundManager::stopSound(uint32_t id)
+{
+    if (id < 0 || id >= NB_MAX_SOUNDS || // Out of range
+        _sounds[id].channel == nullptr) // Not currently playing
+        return;
+
+    _result = _sounds[id].channel->stop();
+    errorCheck();
+}
+
+bool    SoundManager::isSoundPlaying(uint32_t id)
+{
+    bool isPlaying = false;
+
+    if (id < 0 || id >= NB_MAX_SOUNDS || // Out of range
+        _sounds[id].channel == nullptr) // Not currently playing
+        return (false);
+
+    _sounds[id].channel->isPlaying(&isPlaying);
+    errorCheck();
+
+    return (isPlaying);
 }
 
 const char*   SoundManager::getSoundNameFromID(int id) const
