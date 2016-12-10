@@ -26,19 +26,18 @@ MenuSystem::~MenuSystem() {}
 
 bool    MenuSystem::init()
 {
-    _currentSelected = 0;
     setupSelectedIcon();
     return (true);
 }
 
 void    MenuSystem::update(EntityManager &em, float elapsedTime)
 {
-    Timer timer;
-    uint32_t nbEntities = 0;
-    auto &&keyboard = GameWindow::getInstance()->getKeyboard();
+    Timer       timer;
+    uint32_t    nbEntities = 0;
+    auto        &&keyboard = GameWindow::getInstance()->getKeyboard();
 
-    bool upPressed = keyboard.getStateMap()[Keyboard::eKey::UP] == Keyboard::eKeyState::KEY_PRESSED;
-    bool downPressed = keyboard.getStateMap()[Keyboard::eKey::DOWN] == Keyboard::eKeyState::KEY_PRESSED;
+    bool        upPressed = keyboard.getStateMap()[Keyboard::eKey::UP] == Keyboard::eKeyState::KEY_PRESSED;
+    bool        downPressed = keyboard.getStateMap()[Keyboard::eKey::DOWN] == Keyboard::eKeyState::KEY_PRESSED;
 
     handleMouseHover(em);
 
@@ -137,10 +136,6 @@ void    MenuSystem::setSelected(Entity* entity, bool hovered)
     if (button->selected)
         return;
 
-    // Set new color of selected button
-    //sRenderComponent* render = entity->getComponent<sRenderComponent>();
-    //render->color = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
-
     //  Move the "selected" icon next to the selected button.
     sTransformComponent*    iconTransform = _iconSelected->getComponent<sTransformComponent>();
     sTransformComponent*    buttonTransform = entity->getComponent<sTransformComponent>();
@@ -170,10 +165,6 @@ void    MenuSystem::removeSelected(EntityManager &em, int buttonIdx)
     // The button is not selected
     if (!button->selected)
         return;
-
-    // Reset button color
-    //sRenderComponent* render = entity->getComponent<sRenderComponent>();
-    //render->color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 
     button->selected = false;
 }

@@ -16,7 +16,6 @@ public:
     virtual bool                        onEntityNewComponent(Entity* entity, sComponent* component);
 
 private:
-    void                                setSelected(Entity* entity);
     void                                removeSelected(Entity* entity);
     void                                setupSelectedIcon();
     void                                handleMouseHover(EntityManager &em);
