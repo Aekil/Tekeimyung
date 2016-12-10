@@ -79,7 +79,7 @@ void    SoundEditorWindow::build(float elapsedTime)
                 if (ImGui::Button(soundsStrings[j].name.c_str()))
                 {
                     // opti sound type
-                    int id = SoundManager::getInstance()->registerSound(soundsStrings[j].path, eSoundType::DEFAULT_SOUND);
+                    int id = SoundManager::getInstance()->registerSound(soundsStrings[j].path, eventSoundData[i].soundType);
                     if (id != -1)
                     {
                         EventSound::linkEventSound(i, id, soundsStrings[j].name);

@@ -24,6 +24,7 @@ int EventSound::getSoundIDFromEvent(eEventSound event)
             return (_eventSoundDataList[i].soundID);
         }
     }
+    ASSERT(false, "EventSound::getSoundIDFromEvent() not supposed to happen");
     return (-2); // not supposed to happen
 }
 
@@ -31,9 +32,7 @@ void    EventSound::setEventSoundID(int i, int id)
 {
     if (i < _eventSoundDataList.size())
     {
-        _eventSoundDataList[i].soundID = id;/*
-        if (id == -1)
-            _eventSoundDataList[i].soundName = "none";*/
+        _eventSoundDataList[i].soundID = id;
     }
     else
     {

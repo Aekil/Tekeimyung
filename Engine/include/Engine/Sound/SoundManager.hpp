@@ -13,7 +13,11 @@
 #define SOUND_MAX_CHANNELS  32
 #define NB_MAX_SOUNDS       64
 
-enum eSoundType { BACKGROUND_SOUND, DEFAULT_SOUND};
+enum class eSoundType: char {
+    NONE = 0,
+    BACKGROUND_SOUND = 1,
+    DEFAULT_SOUND = 2
+};
 
 typedef struct sSound
 {
@@ -40,7 +44,7 @@ public:
     //std::string                             getErrorString();
 
     void                                    freeSound(unsigned int id);
-    int                                     registerSound(const std::string& name, eSoundType type);
+    int                                     registerSound(const std::string& name, eSoundType type = eSoundType::NONE);
     void                                    playSound(unsigned int id);
 
     const char*                             getSoundNameFromID(int id) const;

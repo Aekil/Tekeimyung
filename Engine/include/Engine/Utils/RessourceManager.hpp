@@ -56,6 +56,7 @@ private:
     std::string                                     loadFile(const std::string basename, const std::string& fileName);
     Texture&                                        loadTexture(const std::string basename, const std::string& fileName);
     std::shared_ptr<Model>                          loadModel(const std::string basename, const std::string& fileName);
+    void                                            loadSound(const std::string basename, const std::string& fileName);
 
 private:
     // Store files content with their basename

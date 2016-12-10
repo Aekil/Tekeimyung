@@ -37,7 +37,7 @@ void    SpawnerSystem::update(EntityManager &em, float elapsedTime)
             {
 #if (ENABLE_SOUND)
                 float tmpTimeBeforeStart = (spawnerComponent->data.secBeforeFirstSpawn - spawnerComponent->timeRec);
-                if (!caca && tmpTimeBeforeStart >= 5.5 && tmpTimeBeforeStart <= 6)
+                if (!caca && tmpTimeBeforeStart >= 1.5 && tmpTimeBeforeStart <= 2.5)
                 {
                     caca = true;
                     /*static int idWaveStartEffect = SoundManager::getInstance()->registerSound("resources/sounds/countdown5.mp3", DEFAULT_SOUND);
@@ -148,7 +148,7 @@ Entity*    SpawnerSystem::createEntityFromSpawner(Map* map, const glm::vec3& pos
 #if (ENABLE_SOUND)
     /*static int idSoundSpawn = SoundManager::getInstance()->registerSound("resources/sounds/spawn.mp3", DEFAULT_SOUND);
     SoundManager::getInstance()->playSound(idSoundSpawn);*/
-    
+
 #endif
     return (entity);
 }

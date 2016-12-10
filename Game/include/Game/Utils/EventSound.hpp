@@ -3,14 +3,16 @@
 #include <vector>
 #include <unordered_map>
 
-#define EVENT_SOUND(PROCESS)\
-    PROCESS(BACKGROUND),\
-    PROCESS(COUNTDOWN_WAVE),\
-    PROCESS(BUILD),\
+#include <Engine/Sound/SoundManager.hpp>
 
-#define GENERATE_EVENTSOUND_ENUM(ENUM)                  ENUM
-#define GENERATE_EVENTSOUND_STRING(STRING)              #STRING
-#define GENERATE_EVENTSOUND_DATA(ENUM)                  { eEventSound::ENUM, #ENUM, -1 }
+#define EVENT_SOUND(PROCESS)\
+    PROCESS(BACKGROUND, BACKGROUND_SOUND),\
+    PROCESS(COUNTDOWN_WAVE, DEFAULT_SOUND),\
+    PROCESS(BUILD, DEFAULT_SOUND),\
+
+#define GENERATE_EVENTSOUND_ENUM(EVENT, SOUND_TYPE)     EVENT
+#define GENERATE_EVENTSOUND_STRING(EVENT, SOUND_TYPE)   #EVENT
+#define GENERATE_EVENTSOUND_DATA(EVENT, SOUND_TYPE)      { eEventSound::EVENT, #EVENT, -1, eSoundType::SOUND_TYPE }
 
 
 enum class eEventSound : uint16_t { EVENT_SOUND(GENERATE_EVENTSOUND_ENUM) };
@@ -20,6 +22,7 @@ typedef struct              sEventSound
     eEventSound             event;
     std::string             eventName;
     int                     soundID;
+    eSoundType              soundType;
     std::string             soundName;
 }                           tEventSound;
 

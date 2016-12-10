@@ -19,7 +19,7 @@ _channel2(nullptr)
         _sounds[i].free = true;
         _sounds[i].id = i;
         _sounds[i].sound = nullptr;
-        _sounds[i].type = DEFAULT_SOUND;
+        _sounds[i].type = eSoundType::DEFAULT_SOUND;
     }
 }
 
@@ -97,15 +97,25 @@ int     SoundManager::registerSound(const std::string& name, eSoundType type)
 {
     for (int i = 0; i < NB_MAX_SOUNDS; i++)
     {
-        if (_sounds[i].name == name)
-            return (_sounds[i].id);
-        else if (_sounds[i].free)
+        // The sound type changed, reload it to optimize
+        if (_sounds[i].name == name &&
+            _sounds[i].type != type)
+        {
+            _sounds[i].sound->release();
+            _sounds[i].sound = nullptr;
+            _sounds[i].free = true;
+        }
+
+        if (_sounds[i].free)
         {
             _sounds[i].free = false;
             _sounds[i].type = type;
             _sounds[i].name = name;
-            if (type == BACKGROUND_SOUND)
+            _sounds[i].id = i;
+            // Load music and default sound as streams
+            if (type == eSoundType::BACKGROUND_SOUND || type == eSoundType::NONE)
             {
+                _sounds[i].type = eSoundType::BACKGROUND_SOUND;
                 _result = _system->createStream(name.c_str(), FMOD_LOOP_NORMAL, 0, &_sounds[i].sound);
             }
             else // type == DEFAULT_SOUND
@@ -115,6 +125,8 @@ int     SoundManager::registerSound(const std::string& name, eSoundType type)
             errorCheck();
             return (_sounds[i].id);
         }
+        else if (_sounds[i].name == name)
+            return (_sounds[i].id);
     }
     LOG_INFO("No place available to register more sounds"); // log : info / warn ?
     return (-1); // no place available to register more sounds
@@ -122,7 +134,7 @@ int     SoundManager::registerSound(const std::string& name, eSoundType type)
 
 void    SoundManager::playSound(unsigned int id)
 {
-    if (_sounds[id].type == BACKGROUND_SOUND)
+    if (_sounds[id].type == eSoundType::BACKGROUND_SOUND)
     {
         _result = _system->playSound(_sounds[id].sound, 0, false, &_channel1);
     }
