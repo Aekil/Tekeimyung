@@ -114,6 +114,7 @@ void    MenuSystem::handleMouseHover(EntityManager &em)
     // But now is not hovered
     if (_buttonHovered)
     {
+        // Remove selection
         _buttonHovered = false;
         removeSelected(em, _currentSelected);
         _currentSelected = -1;
@@ -138,6 +139,9 @@ void    MenuSystem::setSelected(Entity* entity, bool hovered)
 
     sButtonComponent* button = entity->getComponent<sButtonComponent>();
     button->hovered = hovered;
+
+    // Display icon
+    _iconRender->_display = true;
 
     // The button is already selected
     if (button->selected)
@@ -165,6 +169,9 @@ void    MenuSystem::removeSelected(EntityManager &em, int buttonIdx)
     // The entity does not exist
     if (!entity)
         return;
+
+    // Hide icon
+    _iconRender->_display = false;
 
     sButtonComponent* button = entity->getComponent<sButtonComponent>();
     button->hovered = false;
@@ -205,4 +212,5 @@ bool    MenuSystem::onEntityNewComponent(Entity* entity, sComponent* component)
 void    MenuSystem::setupSelectedIcon()
 {
     _iconSelected = EntityFactory::createEntity(eArchetype::ICON_SELECTED);
+    _iconRender = _iconSelected->getComponent<sRenderComponent>();
 }

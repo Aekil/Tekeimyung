@@ -29,5 +29,7 @@ private:
 
     int                                 _currentSelected;
     bool                                _buttonHovered;
+
     Entity*                             _iconSelected = nullptr;
+    sRenderComponent*                   _iconRender = nullptr;
 END_SYSTEM(MenuSystem)
