@@ -15,12 +15,6 @@
 
 enum eSoundType { BACKGROUND_SOUND, DEFAULT_SOUND};
 
-typedef struct sSoundKey
-{
-    std::string     path;
-    std::string     name;
-}                   tSoundStrings;
-
 typedef struct sSound
 {
     unsigned int        id;
@@ -49,8 +43,6 @@ public:
     int                                     registerSound(const std::string& name, eSoundType type);
     void                                    playSound(unsigned int id);
 
-    void                                    addSoundStrings(std::string path, std::string name);
-    const std::vector<tSoundStrings>&       getSoundsStrings() const;
     const char*                             getSoundNameFromID(int id) const;
 
 private:
@@ -61,5 +53,4 @@ private:
     FMOD::Channel*                          _channel1;
     FMOD::Channel*                          _channel2;
     tSound                                  _sounds[NB_MAX_SOUNDS];
-    std::vector<tSoundStrings>              _soundsStrings;
 };

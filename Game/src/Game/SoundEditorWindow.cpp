@@ -2,6 +2,7 @@
 
 #include <Engine/Utils/Helper.hpp>
 #include <Engine/Utils/Logger.hpp>
+#include <Engine/Utils/RessourceManager.hpp>
 #include <Engine/Sound/SoundManager.hpp>
 
 #include <Game/SoundEditorWindow.hpp>
@@ -37,7 +38,7 @@ void    SoundEditorWindow::build(float elapsedTime)
     ImGui::SetWindowPos(ImVec2(_pos.x, _pos.y), ImGuiSetCond_Always);
 
     EventSound instance;
-    std::vector<tSoundStrings> soundsStrings = SoundManager::getInstance()->getSoundsStrings();
+    auto soundsStrings = RessourceManager::getInstance()->getSoundsStrings();
     /*static*/ std::vector<tEventSound> eventSoundData /*= EventSound::getEventSoundDataList()*/;
     eventSoundData = instance.getEventSoundDataList();
     /*if (EventSound::isEventLinkedToSound(eEventSound::BACKGROUND))

@@ -133,18 +133,6 @@ void    SoundManager::playSound(unsigned int id)
     errorCheck();
 }
 
-void    SoundManager::addSoundStrings(std::string path, std::string name)
-{
-    tSoundStrings tmp = { path, name };
-
-    _soundsStrings.push_back(tmp);
-}
-
-const std::vector<tSoundStrings>&  SoundManager::getSoundsStrings() const
-{
-    return (_soundsStrings);
-}
-
 const char*   SoundManager::getSoundNameFromID(int id) const
 {
     for (int i = 0; i < NB_MAX_SOUNDS; i++)

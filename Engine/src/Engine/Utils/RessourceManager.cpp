@@ -58,9 +58,10 @@ void    RessourceManager::loadResources(const std::string& directory)
             else if (std::find(soundsExtensions.cbegin(), soundsExtensions.cend(), extension) != soundsExtensions.cend())
             {
                 LOG_INFO("Sound found : %s", basename.c_str());
-                SoundManager::getInstance()->addSoundStrings(file, basename);
-                //_soundsNames.push_back(basename.c_str());
-                //loadSound(basename, file);
+                sSoundStrings soundString;
+                soundString.path = file;
+                soundString.name = basename;
+                _soundsStrings.push_back(soundString);
             }
         }
     }
@@ -262,6 +263,11 @@ std::shared_ptr<Model>  RessourceManager::getModel(const std::string& fileName)
 const std::vector<const char*>& RessourceManager::getModelsNames() const
 {
     return (_modelsNames);
+}
+
+const std::vector<RessourceManager::sSoundStrings>&  RessourceManager::getSoundsStrings() const
+{
+    return (_soundsStrings);
 }
 
 std::shared_ptr<Model>  RessourceManager::loadModel(const std::string basename, const std::string& fileName)

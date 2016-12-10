@@ -15,6 +15,21 @@
 
 class RessourceManager
 {
+private:
+    private:
+    struct sFile
+    {
+        std::string content;
+        std::string path;
+        std::string basename;
+    };
+
+    struct sSoundStrings
+    {
+        std::string     path;
+        std::string     name;
+    };
+
 public:
     RessourceManager();
     ~RessourceManager();
@@ -31,18 +46,10 @@ public:
     std::shared_ptr<Model>                          getModel(const std::string& fileName);
     const std::vector<const char*>&                 getModelsNames() const;
 
-    //const std::vector<const char*>&                 getSoundsNames() const;
+    const std::vector<sSoundStrings>&               getSoundsStrings() const;
 
     static RessourceManager*                        getInstance();
     static std::string                              getFileExtension(const std::string& fileName);
-
-private:
-    struct sFile
-    {
-        std::string content;
-        std::string path;
-        std::string basename;
-    };
 
 private:
     std::string                                     getBasename(const std::string& fileName);
@@ -64,9 +71,8 @@ private:
     // Store models basename list
     std::vector<const char*>                                _modelsNames;
 
-    //std::unordered_map<std::string, 
     // Store sounds basename list
-    //std::vector<const char*>                                _soundsNames;
+    std::vector<sSoundStrings>                              _soundsStrings;
 
     //Singleton instance
     static RessourceManager*                        _ressourceManager;
