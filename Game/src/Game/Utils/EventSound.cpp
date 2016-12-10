@@ -29,7 +29,7 @@ int EventSound::getSoundIDFromEvent(eEventSound event)
 
 void    EventSound::setEventSoundID(int i, int id)
 {
-    if (i <= _eventSoundDataList.size())
+    if (i < _eventSoundDataList.size())
     {
         _eventSoundDataList[i].soundID = id;/*
         if (id == -1)
@@ -41,12 +41,10 @@ void    EventSound::setEventSoundID(int i, int id)
     }
 }
 
-void    EventSound::linkEventSound(int i, int id, const char* name)
+void    EventSound::linkEventSound(int i, int id, const std::string& name)
 {
     EventSound::setEventSoundID(i, id);
     _eventSoundDataList[i].soundName = name;
-    if (i == 0)
-        LOG_DEBUG("HAHAHA : %s", _eventSoundDataList[i].soundName);
 }
 
 bool    EventSound::isEventLinkedToSound(eEventSound event)

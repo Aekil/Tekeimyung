@@ -10,22 +10,22 @@
 
 #define GENERATE_EVENTSOUND_ENUM(ENUM)                  ENUM
 #define GENERATE_EVENTSOUND_STRING(STRING)              #STRING
-#define GENERATE_EVENTSOUND_DATA(ENUM)                  { eEventSound::ENUM, #ENUM, -1, nullptr }
+#define GENERATE_EVENTSOUND_DATA(ENUM)                  { eEventSound::ENUM, #ENUM, -1 }
 
 
-enum class eEventSound { EVENT_SOUND(GENERATE_EVENTSOUND_ENUM) };
+enum class eEventSound : uint16_t { EVENT_SOUND(GENERATE_EVENTSOUND_ENUM) };
 
 typedef struct              sEventSound
 {
     eEventSound             event;
-    const char*             eventName;
+    std::string             eventName;
     int                     soundID;
-    const char*             soundName;
+    std::string             soundName;
 }                           tEventSound;
 
 class EventSound {
 public:
-    
+
 
 public:
     EventSound();
@@ -33,10 +33,10 @@ public:
 
     static const std::vector<tEventSound>&  getEventSoundDataList();
     static int                              getSoundIDFromEvent(eEventSound event);
-    
+
     static void                             setEventSoundID(int i, int id);
 
-    static void                             linkEventSound(int i, int id, const char* name);
+    static void                             linkEventSound(int i, int id, const std::string& name);
 
     static bool                             isEventLinkedToSound(eEventSound event);
 

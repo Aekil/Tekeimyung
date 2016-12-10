@@ -23,11 +23,11 @@ typedef struct sSoundKey
 
 typedef struct sSound
 {
-    unsigned int    id;
-    const char*     name;
-    bool            free;
-    eSoundType      type;
-    FMOD::Sound*    sound;
+    unsigned int        id;
+    std::string         name;
+    bool                free;
+    eSoundType          type;
+    FMOD::Sound*        sound;
 }                   tSound;
 
 class SoundManager
@@ -46,7 +46,7 @@ public:
     //std::string                             getErrorString();
 
     void                                    freeSound(unsigned int id);
-    int                                     registerSound(const char *name, eSoundType type);
+    int                                     registerSound(const std::string& name, eSoundType type);
     void                                    playSound(unsigned int id);
 
     void                                    addSoundStrings(std::string path, std::string name);

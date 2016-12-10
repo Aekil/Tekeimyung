@@ -43,7 +43,7 @@ void    SoundEditorWindow::build(float elapsedTime)
     /*if (EventSound::isEventLinkedToSound(eEventSound::BACKGROUND))
     {
         int idtmp = EventSound::getSoundIDFromEvent(eEventSound::BACKGROUND);
-        
+
     }*/
     //eventSoundData = EventSound::getEventSoundDataList();
 
@@ -51,22 +51,19 @@ void    SoundEditorWindow::build(float elapsedTime)
     ImGui::Separator();
     for (int i = 0; i < eventSoundData.size(); ++i)
     {
-        ImGui::PushID(eventSoundData[i].eventName);
+        ImGui::PushID(eventSoundData[i].eventName.c_str());
         ImGui::PushStyleColor(ImGuiCol_Button, ImColor(0.27f, 0.51f, 0.70f, 1.0f));
         ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImColor(0.39f, 0.58f, 0.92f, 1.0f));
         ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImColor(0.49f, 0.68f, 0.92f, 1.0f));
-        ImGui::Text(eventSoundData[i].eventName);
+        ImGui::Text(eventSoundData[i].eventName.c_str());
         //LOG_DEBUG("event n%d | id = %d", i, eventSoundData[i].id);
         if (eventSoundData[i].soundID != -1) // if one sound is linked to the event
         {
+            //LOG_INFO("SOUND NAME: %s", eventSoundData[i].soundName.c_str());
             ImGui::SameLine();
-            if (i == 0)
-            {
-                ImGui::Text(FMT_MSG(" | %s", SoundManager::getInstance()->getSoundNameFromID(eventSoundData[i].soundID)).c_str());
-            }
-            else
-                ImGui::Text(FMT_MSG(" | %s", eventSoundData[i].soundName/*SoundManager::getInstance()->getSoundNameFromID(eventSoundData[i].id)*/).c_str());
-            //LOG_DEBUG("display linked sound : %s", eventSoundData[i].soundName);
+            ImGui::Text(" | ");
+            ImGui::SameLine();
+            ImGui::Text(eventSoundData[i].soundName.c_str());
         }
         ImGui::SameLine();
         if (ImGui::Button("Link sound"))
@@ -81,19 +78,15 @@ void    SoundEditorWindow::build(float elapsedTime)
                 if (ImGui::Button(soundsStrings[j].name.c_str()))
                 {
                     // opti sound type
-                    int id = SoundManager::getInstance()->registerSound(soundsStrings[j].path.c_str(), eSoundType::DEFAULT_SOUND);
+                    int id = SoundManager::getInstance()->registerSound(soundsStrings[j].path, eSoundType::DEFAULT_SOUND);
                     if (id != -1)
                     {
-                        if (j == 0)
-                            LOG_DEBUG("0 grrr : %s", soundsStrings[j].name.c_str());
-                        EventSound::linkEventSound(i, id, soundsStrings[j].name.c_str());
-                        //EventSound::setEventSoundID(i, id);
-                        //eventSoundData[i].id = id; // link the sound (id) to the event
+                        EventSound::linkEventSound(i, id, soundsStrings[j].name);
                         LOG_DEBUG("sound created : id = %d", id);
                     }
                     else
                     {
-                        EventSound::setEventSoundID(i, -1);
+                        //EventSound::setEventSoundID(i, -1);
                         //eventSoundData[i].id = -1;
                         LOG_INFO("Can not create sound : %s", soundsStrings[j].name.c_str()); // log : info / warn ?
                     }

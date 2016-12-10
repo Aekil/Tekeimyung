@@ -18,7 +18,6 @@ _channel2(nullptr)
     {
         _sounds[i].free = true;
         _sounds[i].id = i;
-        _sounds[i].name = nullptr;
         _sounds[i].sound = nullptr;
         _sounds[i].type = DEFAULT_SOUND;
     }
@@ -89,28 +88,29 @@ void    SoundManager::freeSound(unsigned int id)
     if (_sounds[id].free == false)
     {
         _sounds[id].free = true;
-        _sounds[id].name = nullptr;
         _result = _sounds[id].sound->release();
         errorCheck();
     }
 }
 
-int     SoundManager::registerSound(const char *name, eSoundType type)
+int     SoundManager::registerSound(const std::string& name, eSoundType type)
 {
     for (int i = 0; i < NB_MAX_SOUNDS; i++)
     {
-        if (_sounds[i].free)
+        if (_sounds[i].name == name)
+            return (_sounds[i].id);
+        else if (_sounds[i].free)
         {
             _sounds[i].free = false;
             _sounds[i].type = type;
             _sounds[i].name = name;
             if (type == BACKGROUND_SOUND)
             {
-                _result = _system->createStream(name, FMOD_LOOP_NORMAL, 0, &_sounds[i].sound);
+                _result = _system->createStream(name.c_str(), FMOD_LOOP_NORMAL, 0, &_sounds[i].sound);
             }
             else // type == DEFAULT_SOUND
             {
-                _result = _system->createSound(name, FMOD_DEFAULT, 0, &_sounds[i].sound);
+                _result = _system->createSound(name.c_str(), FMOD_DEFAULT, 0, &_sounds[i].sound);
             }
             errorCheck();
             return (_sounds[i].id);
@@ -153,7 +153,7 @@ const char*   SoundManager::getSoundNameFromID(int id) const
         {
             if (!_sounds[i].free)
             {
-                return (_sounds[i].name);
+                return (_sounds[i].name.c_str());
             }
             else
             {
