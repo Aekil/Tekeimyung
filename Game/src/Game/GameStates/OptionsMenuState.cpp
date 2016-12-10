@@ -48,12 +48,7 @@ bool        OptionsMenuState::update(float elapsedTime)
     if (_playstateRenderSystem)
         _playstateRenderSystem->update(*_playstateWorld->getEntityManager(), 0);
 
-    // Disable depth test to display 2D
-    glDisable(GL_DEPTH_TEST);
-
     bool    success = GameState::update(elapsedTime);
-    // Enable depth test to display 3D
-    glEnable(GL_DEPTH_TEST);
 
     handleButtons();
 
