@@ -16,11 +16,15 @@ public:
     virtual bool                        onEntityNewComponent(Entity* entity, sComponent* component);
 
 private:
-    void                                setSelected(Entity* entity);
-    void                                removeSelected(Entity* entity);
+    void                                handleMouseHover(EntityManager &em);
+
+    void                                setSelected(EntityManager &em, int buttonIdx, bool hovered = false);
+    void                                setSelected(Entity* entity, bool hovered = false);
+    void                                removeSelected(EntityManager &em, int buttonIdx);
 
 private:
     ADD_MONITORING_VAR
 
     int                                 _currentSelected;
+    bool                                _buttonHovered;
 END_SYSTEM(MenuSystem)

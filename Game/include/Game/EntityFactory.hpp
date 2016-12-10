@@ -68,7 +68,7 @@ public:
     static void                                             initAnimations(Entity* entity);
     static void                                             reverseAnimations(Entity* entity);
 
-private:
+    static Entity*                                          cloneEntity(Entity* entity);
     static Entity*                                          cloneEntity(const std::string& typeName);
 
 private:

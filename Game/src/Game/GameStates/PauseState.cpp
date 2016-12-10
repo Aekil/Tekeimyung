@@ -1,4 +1,3 @@
-#include <iostream>
 #include <Engine/Window/GameWindow.hpp>
 
 #include <Game/Systems/RenderingSystem.hpp>
@@ -26,16 +25,17 @@ bool    PauseState::init()
     ASSERT(statesNb >= 1, "The pause State should not be the first state");
 
     auto playState = _gameStateManager->getStates()[statesNb - 1];
+
     _playStateWorld = &playState->getWorld();
     _playStateRendersystem = _playStateWorld->getSystem<RenderingSystem>();
 
+    initCamera();
     _world.addSystem<RenderingSystem>(&_camera, nullptr, nullptr);
     _world.addSystem<MenuSystem>();
 
     EntityManager* em = _world.getEntityManager();
     addDebugWindow<EntityDebugWindow>(em, nullptr, glm::vec2(0, 80), glm::vec2(600, 350));
 
-    initCamera();
 
     _resumeButton = createButton(eArchetype::BUTTON_RESUME, glm::vec2(0.0f, 80.0f));
     _quitButton = createButton(eArchetype::BUTTON_QUIT, glm::vec2(0.0f, 0.0f));
@@ -49,7 +49,6 @@ bool    PauseState::update(float elapsedTime)
     // Display the play game state
     if (_playStateRendersystem)
         _playStateRendersystem->update(*_playStateWorld->getEntityManager(), 0);
-
 
     bool success = GameState::update(elapsedTime);
 
@@ -92,22 +91,25 @@ Entity* PauseState::createButton(eArchetype type, const glm::vec2& pos)
 void    PauseState::handleButtons()
 {
     auto &&keyboard = GameWindow::getInstance()->getKeyboard();
+    auto &&mouse = GameWindow::getInstance()->getMouse();
 
     sButtonComponent* resume = _resumeButton->getComponent<sButtonComponent>();
     sButtonComponent* quit = _quitButton->getComponent<sButtonComponent>();
 
-    // Space bar pressed, handle buttons action
-    if (keyboard.getStateMap()[Keyboard::eKey::SPACE] == Keyboard::eKeyState::KEY_PRESSED)
+    bool spacebarPressed = keyboard.getStateMap()[Keyboard::eKey::SPACE] == Keyboard::eKeyState::KEY_PRESSED;
+    bool mouseClicked = mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_1] == Mouse::eButtonState::CLICK_PRESSED;
+    // Resume button
+    // Space bar pressed or mouse clicked
+    if ((spacebarPressed && resume->selected) ||
+        (mouseClicked && resume->hovered))
     {
-        // Resume button
-        if (resume->selected)
-        {
-            _gameStateManager->removeCurrentState();
-        }
-        // Quit button
-        else if (quit->selected)
-        {
-            _gameStateManager->addState<ConfirmExitState>();
-        }
+        _gameStateManager->removeCurrentState();
+    }
+    // Quit button
+    // Space bar pressed or mouse clicked
+    else if ((spacebarPressed && quit->selected) ||
+        (mouseClicked && quit->hovered))
+    {
+        _gameStateManager->clearStates();
     }
 }

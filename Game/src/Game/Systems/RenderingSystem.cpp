@@ -7,6 +7,7 @@
 #include <imgui_impl_glfw_gl3.h>
 
 #include <Engine/Utils/Exception.hpp>
+#include <Engine/Utils/Logger.hpp>
 #include <Engine/Window/GameWindow.hpp>
 #include <Engine/Graphics/Renderer.hpp>
 
@@ -32,6 +33,9 @@ bool    RenderingSystem::init()
 
 void    RenderingSystem::renderEntity(sRenderComponent *render, Entity* entity, float elapsedTime)
 {
+    if (!render->_display)
+        return;
+
     sTransformComponent *transform = entity->getComponent<sTransformComponent>();
     auto&& model = getModel(render);
 
