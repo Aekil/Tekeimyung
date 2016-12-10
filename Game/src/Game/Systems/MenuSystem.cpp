@@ -27,6 +27,10 @@ MenuSystem::~MenuSystem() {}
 
 bool    MenuSystem::init()
 {
+    // Select by default the first button
+    if (_entities.size() > 0)
+        setSelected(*EntityFactory::getBindedEntityManager(), 0);
+
     return (true);
 }
 
@@ -190,10 +194,6 @@ bool    MenuSystem::onEntityNewComponent(Entity* entity, sComponent* component)
         transform->pos.y = (windowHeight / 2.0f) - (size.y / 2.0f);
         transform->pos.z = -1.0f;
         transform->needUpdate = true;
-
-        // Select by default the first button
-        if (_entities.size() == 1)
-            setSelected(entity);
 
         return (true);
     }

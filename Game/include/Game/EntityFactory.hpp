@@ -60,6 +60,7 @@ public:
     static Entity*                                          createEntity(eArchetype type, const glm::vec3& pos);
     static Entity*                                          createEntity(const std::string& typeName);
     static void                                             bindEntityManager(EntityManager* em);
+    static EntityManager*                                   getBindedEntityManager();
 
     static Entity*                                          createEntityType(const std::string& typeName);
 

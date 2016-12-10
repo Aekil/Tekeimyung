@@ -165,6 +165,11 @@ void EntityFactory::bindEntityManager(EntityManager* em)
     _em = em;
 }
 
+EntityManager*  EntityFactory::getBindedEntityManager()
+{
+    return _em;
+}
+
 const std::vector<const char*>& EntityFactory::getTypesString()
 {
     return _typesString;
