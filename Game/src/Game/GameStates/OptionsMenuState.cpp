@@ -129,10 +129,25 @@ void                    OptionsMenuState::createToggleWindowModeButton()
 {
     eArchetype          buttonArchetype;
 
-    if (_toggleWindowModeButton != nullptr)
-        _world.getEntityManager()->destroyEntity(_toggleWindowModeButton);
+   /* if (_toggleWindowModeButton != nullptr)
+        _world.getEntityManager()->destroyEntity(_toggleWindowModeButton);*/
     buttonArchetype = (GameWindow::getInstance()->isFullscreen() ?
                        eArchetype::BUTTON_TOGGLE_WINDOWED :
                        eArchetype::BUTTON_TOGGLE_FULLSCREEN);
-    _toggleWindowModeButton = createButton(buttonArchetype, glm::vec2(0.0f, 80.0f));
+
+    // Create the button for the first time
+    if (!_toggleWindowModeButton)
+    {
+        _toggleWindowModeButton = createButton(buttonArchetype, glm::vec2(0.0f, 80.0f));
+    }
+    // Change the button render
+    else
+    {
+        Entity* newButton = EntityFactory::createEntity(buttonArchetype);
+        sRenderComponent* newButtonRender = newButton->getComponent<sRenderComponent>();
+        sRenderComponent* toggleWindowModeButtonRender = _toggleWindowModeButton->getComponent<sRenderComponent>();
+
+        toggleWindowModeButtonRender->update(newButtonRender);
+        _world.getEntityManager()->destroyEntity(newButton);
+    }
 }
