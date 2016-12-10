@@ -22,7 +22,6 @@ void    HowToPlayState::onEnter()
 bool    HowToPlayState::init()
 {
     _world.addSystem<RenderingSystem>(&_camera, nullptr, nullptr);
-    //_world.addSystem<MenuSystem>();
 
     EntityManager* em = _world.getEntityManager();
     addDebugWindow<EntityDebugWindow>(em, nullptr, glm::vec2(0, 80), glm::vec2(600, 350));
