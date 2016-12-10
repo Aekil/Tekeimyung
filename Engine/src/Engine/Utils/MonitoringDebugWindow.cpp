@@ -17,7 +17,7 @@ std::shared_ptr<MonitoringDebugWindow>   MonitoringDebugWindow::getInstance()
     {
         _monitoringDebugWindow = std::make_shared<MonitoringDebugWindow>();
     }
-    return _monitoringDebugWindow;
+    return (_monitoringDebugWindow);
 }
 
 void    MonitoringDebugWindow::build(float elapsedTime)

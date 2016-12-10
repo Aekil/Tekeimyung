@@ -5,6 +5,7 @@
 #include <Engine/Sound/SoundManager.hpp>
 
 #include <Game/Components.hh>
+#include <Game/Utils/EventSound.hpp>
 #include <Game/Utils/PlayStates.hpp>
 
 #include <Game/Systems/SpawnerSystem.hpp>
@@ -39,8 +40,13 @@ void    SpawnerSystem::update(EntityManager &em, float elapsedTime)
                 if (!caca && tmpTimeBeforeStart >= 5.5 && tmpTimeBeforeStart <= 6)
                 {
                     caca = true;
-                    static int idWaveStartEffect = SoundManager::getInstance()->registerSound("resources/sounds/countdown5.mp3", DEFAULT_SOUND);
-                    SoundManager::getInstance()->playSound(idWaveStartEffect);
+                    /*static int idWaveStartEffect = SoundManager::getInstance()->registerSound("resources/sounds/countdown5.mp3", DEFAULT_SOUND);
+                    SoundManager::getInstance()->playSound(idWaveStartEffect);*/
+
+                    if (EventSound::isEventLinkedToSound(eEventSound::COUNTDOWN_WAVE))
+                    {
+                        SoundManager::getInstance()->playSound(EventSound::getSoundIDFromEvent(eEventSound::COUNTDOWN_WAVE));
+                    }
                 }
 #endif
                 if (spawnerComponent->timeRec > spawnerComponent->data.secBeforeFirstSpawn)
@@ -140,8 +146,9 @@ Entity*    SpawnerSystem::createEntityFromSpawner(Map* map, const glm::vec3& pos
     (*map)[(uint16_t)pos.z].addEntity(entity->id);
 
 #if (ENABLE_SOUND)
-    static int idSoundSpawn = SoundManager::getInstance()->registerSound("resources/sounds/spawn.mp3", DEFAULT_SOUND);
-    SoundManager::getInstance()->playSound(idSoundSpawn);
+    /*static int idSoundSpawn = SoundManager::getInstance()->registerSound("resources/sounds/spawn.mp3", DEFAULT_SOUND);
+    SoundManager::getInstance()->playSound(idSoundSpawn);*/
+    
 #endif
     return (entity);
 }

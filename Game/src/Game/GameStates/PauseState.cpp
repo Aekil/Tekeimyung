@@ -4,6 +4,7 @@
 #include <Game/Systems/RenderingSystem.hpp>
 #include <Game/Systems/MenuSystem.hpp>
 #include <Game/EntityDebugWindow.hpp>
+#include <Game/SoundEditorWindow.hpp>
 #include <Game/EntityFactory.hpp>
 #include <Game/Components.hh>
 
@@ -32,6 +33,7 @@ bool    PauseState::init()
 
     EntityManager* em = _world.getEntityManager();
     addDebugWindow<EntityDebugWindow>(em, nullptr, glm::vec2(0, 80), glm::vec2(600, 350));
+    addDebugWindow<SoundEditorWindow>(glm::vec2(1200, 80), glm::vec2(450, 450));
 
     initCamera();
 

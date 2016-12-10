@@ -12,8 +12,6 @@
 
 #define ENABLE_COLOR            true
 
-#define FMT_MSG(format, ...)    (Helper::formatMessage(format, ## __VA_ARGS__))
-
 #define ADD_MONITORING_VAR      \
                                 private: \
                                     uint16_t        _monitoringKey;

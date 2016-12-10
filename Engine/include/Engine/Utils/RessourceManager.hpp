@@ -9,8 +9,9 @@
 #include <Engine/Graphics/Model.hpp>
 
 // Textures and models files extensions loaded in RessourceManager::loadResources
-#define TEXTURES_EXT "png", "jpg", "jpeg"
-#define MODELS_EXT "dae", "obj", "fbx"
+#define TEXTURES_EXT    "png", "jpg", "jpeg"
+#define MODELS_EXT      "dae", "obj", "fbx"
+#define SOUNDS_EXT      "mp3", "wav"
 
 class RessourceManager
 {
@@ -29,6 +30,8 @@ public:
 
     std::shared_ptr<Model>                          getModel(const std::string& fileName);
     const std::vector<const char*>&                 getModelsNames() const;
+
+    //const std::vector<const char*>&                 getSoundsNames() const;
 
     static RessourceManager*                        getInstance();
     static std::string                              getFileExtension(const std::string& fileName);
@@ -60,6 +63,10 @@ private:
     std::unordered_map<std::string, std::shared_ptr<Model>> _models;
     // Store models basename list
     std::vector<const char*>                                _modelsNames;
+
+    //std::unordered_map<std::string, 
+    // Store sounds basename list
+    //std::vector<const char*>                                _soundsNames;
 
     //Singleton instance
     static RessourceManager*                        _ressourceManager;

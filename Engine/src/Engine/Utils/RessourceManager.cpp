@@ -6,6 +6,7 @@
 
 #include <Engine/Utils/Exception.hpp>
 #include <Engine/Utils/Helper.hpp>
+#include <Engine/Sound/SoundManager.hpp>
 
 #include <Engine/Utils/RessourceManager.hpp>
 
@@ -20,8 +21,9 @@ void    RessourceManager::loadResources(const std::string& directory)
     DIR* dir;
     struct dirent* ent;
     RessourceManager* ressourceManager = RessourceManager::getInstance();
-    std::vector<std::string> texturesExtensions = {TEXTURES_EXT};
-    std::vector<std::string> modelsExtensions = {MODELS_EXT};
+    std::vector<std::string> texturesExtensions = { TEXTURES_EXT };
+    std::vector<std::string> modelsExtensions = { MODELS_EXT };
+    std::vector<std::string> soundsExtensions = { SOUNDS_EXT };
 
     dir = opendir(directory.c_str());
     if (!dir)
@@ -52,6 +54,13 @@ void    RessourceManager::loadResources(const std::string& directory)
             else if (std::find(modelsExtensions.cbegin(), modelsExtensions.cend(), extension) != modelsExtensions.cend())
             {
                 loadModel(basename, file);
+            }
+            else if (std::find(soundsExtensions.cbegin(), soundsExtensions.cend(), extension) != soundsExtensions.cend())
+            {
+                LOG_INFO("Sound found : %s", basename.c_str());
+                SoundManager::getInstance()->addSoundStrings(file, basename);
+                //_soundsNames.push_back(basename.c_str());
+                //loadSound(basename, file);
             }
         }
     }

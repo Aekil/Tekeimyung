@@ -36,4 +36,6 @@ private:
     std::pair <Keyboard::eKey, IInputEvent *>    _pair;
 
     Camera                              _camera;
+
+    bool                                            _isBackgroundSoundEnabled;
 END_GAMESTATE(PlayState)
