@@ -28,8 +28,8 @@ private:
 
     Camera                              _camera;
 
-    Entity*                             _confirmText;
-    Entity*                             _confirmPopup;
-    Entity*                             _yesButton;
-    Entity*                             _noButton;
+    Entity*                             _confirmText = nullptr;
+    Entity*                             _confirmPopup = nullptr;
+    Entity*                             _yesButton = nullptr;
+    Entity*                             _noButton = nullptr;
 END_GAMESTATE(ConfirmExitState)

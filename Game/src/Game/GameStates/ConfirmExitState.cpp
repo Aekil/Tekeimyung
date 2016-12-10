@@ -22,7 +22,8 @@ bool    ConfirmExitState::init()
 {
     initPreviousStatesRender();
 
-    _world.addSystem<RenderingSystem>(&_camera, nullptr, nullptr);
+    _world.addSystem<ParticleSystem>();
+    _world.addSystem<RenderingSystem>(&_camera, nullptr, _world.getSystem<ParticleSystem>()->getEmitters());
     _world.addSystem<MenuSystem>();
 
     EntityManager* em = _world.getEntityManager();
@@ -172,7 +173,7 @@ void    ConfirmExitState::handleButtons()
     sButtonComponent* yes = _yesButton->getComponent<sButtonComponent>();
     sButtonComponent* no = _noButton->getComponent<sButtonComponent>();
 
-    bool spacebarPressed = keyboard.getStateMap()[Keyboard::eKey::SPACE] == Keyboard::eKeyState::KEY_PRESSED;
+    bool spacebarPressed = keyboard.getStateMap()[Keyboard::eKey::ENTER] == Keyboard::eKeyState::KEY_PRESSED;
     bool mouseClicked = mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_1] == Mouse::eButtonState::CLICK_PRESSED;
 
     // Yes button

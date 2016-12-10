@@ -121,9 +121,9 @@ void                    OptionsMenuState::handleButtons()
     }
 }
 
-void                OptionsMenuState::createToggleWindowModeButton()
+void                    OptionsMenuState::createToggleWindowModeButton()
 {
-    eArchetype      buttonArchetype;
+    eArchetype          buttonArchetype;
 
     if (_toggleWindowModeButton != nullptr)
         _world.getEntityManager()->destroyEntity(_toggleWindowModeButton);
