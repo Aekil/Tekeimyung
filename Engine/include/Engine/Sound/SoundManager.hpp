@@ -54,10 +54,15 @@ public:
 
     const char*                             getSoundNameFromID(int id) const;
 
+    void                                    pause();
+    void                                    resume();
+
 private:
     static std::shared_ptr<SoundManager>    _soundManager;
 
     FMOD_RESULT                             _result;
     FMOD::System*                           _system;
+
     tSound                                  _sounds[NB_MAX_SOUNDS];
+    FMOD::Channel*                          _channels[NB_MAX_CHANNELS];
 };

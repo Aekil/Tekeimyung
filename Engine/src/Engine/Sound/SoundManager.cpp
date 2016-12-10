@@ -12,13 +12,17 @@ SoundManager::SoundManager() :
 _result(FMOD_OK),
 _system(nullptr)
 {
-    for (int i = 0; i < NB_MAX_SOUNDS; i++)
+    for (int i = 0; i < NB_MAX_SOUNDS; ++i)
     {
         _sounds[i].free = true;
         _sounds[i].id = i;
         _sounds[i].sound = nullptr;
         _sounds[i].channel = nullptr;
         _sounds[i].type = eSoundType::DEFAULT_SOUND;
+    }
+    for (int i = 0; i < NB_MAX_CHANNELS; ++i)
+    {
+        _channels[i] = nullptr;
     }
 }
 
@@ -138,8 +142,28 @@ void    SoundManager::playSound(uint32_t id)
     if (id < 0 || id >= NB_MAX_SOUNDS)
         return;
 
+    // Play sound
     _result = _system->playSound(_sounds[id].sound, 0, false, &_sounds[id].channel);
     errorCheck();
+
+    // Add channel to array
+    if (_sounds[id].channel == nullptr)
+    {
+        LOG_ERROR("Failed to play sound");
+        return;
+    }
+
+    int index = 0;
+    _result = _sounds[id].channel->getIndex(&index);
+    errorCheck();
+    if (index < NB_MAX_CHANNELS)
+    {
+        _channels[index] = _sounds[id].channel;
+    }
+    else
+    {
+        LOG_ERROR("Channel index out of range");
+    }
 }
 
 void    SoundManager::stopSound(uint32_t id)
@@ -160,7 +184,7 @@ bool    SoundManager::isSoundPlaying(uint32_t id)
         _sounds[id].channel == nullptr) // Not currently playing
         return (false);
 
-    _sounds[id].channel->isPlaying(&isPlaying);
+    _result = _sounds[id].channel->isPlaying(&isPlaying);
     errorCheck();
 
     return (isPlaying);
@@ -183,4 +207,28 @@ const char*   SoundManager::getSoundNameFromID(int id) const
         }
     }
     return (nullptr);
+}
+
+void    SoundManager::pause()
+{
+    for (int i = 0; i < NB_MAX_CHANNELS; ++i)
+    {
+        if (_channels[i] == nullptr)
+            continue;
+
+        _result = _channels[i]->setPaused(true);
+        errorCheck();
+    }
+}
+
+void    SoundManager::resume()
+{
+    for (int i = 0; i < NB_MAX_CHANNELS; ++i)
+    {
+        if (_channels[i] == nullptr)
+            continue;
+
+        _result = _channels[i]->setPaused(false);
+        errorCheck();
+    }
 }
