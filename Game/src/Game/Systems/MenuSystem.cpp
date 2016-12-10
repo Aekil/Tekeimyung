@@ -30,7 +30,7 @@ bool    MenuSystem::init()
     // Select by default the first button
     if (_entities.size() > 0)
         setSelected(*EntityFactory::getBindedEntityManager(), 0);
-    
+
     //  For future purposes, it is commented for now.
     //if (!GameWindow::getInstance()->isCursorVisible())
     //    GameWindow::getInstance()->setCursorVisible(true);
@@ -195,7 +195,6 @@ bool    MenuSystem::onEntityNewComponent(Entity* entity, sComponent* component)
 
         transform->pos.x = (windowWidth / 2.0f) - (size.x / 2.0f);
         transform->pos.y = (windowHeight / 2.0f) - (size.y / 2.0f);
-        transform->pos.z = -1.0f;
         transform->needUpdate = true;
 
         return (true);

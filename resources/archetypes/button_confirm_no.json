@@ -16,9 +16,9 @@
       },
       "sTransformComponent" : {
          "pos" : {
-            "x" : 1000,
+            "x" : 980,
             "y" : 468.5,
-            "z" : -1
+            "z" : 0
          },
          "rotation" : {
             "x" : 0,
