@@ -1,5 +1,7 @@
 #include <iostream>
+
 #include <Engine/Window/GameWindow.hpp>
+#include <Engine/Utils/LogDebugWindow.hpp>
 
 #include <Game/Systems/RenderingSystem.hpp>
 #include <Game/Systems/MenuSystem.hpp>
@@ -7,6 +9,10 @@
 #include <Game/SoundEditorWindow.hpp>
 #include <Game/EntityFactory.hpp>
 #include <Game/Components.hh>
+#include <Game/GameStates/ConfirmExitState.hpp>
+#include <Game/GameStates/HowToPlayState.hpp>
+#include <Game/GameStates/OptionsMenuState.hpp>
+
 
 #include <Game/GameStates/PauseState.hpp>
 
@@ -25,19 +31,24 @@ bool    PauseState::init()
     ASSERT(statesNb >= 1, "The pause State should not be the first state");
 
     auto playState = _gameStateManager->getStates()[statesNb - 1];
+
     _playStateWorld = &playState->getWorld();
     _playStateRendersystem = _playStateWorld->getSystem<RenderingSystem>();
 
-    _world.addSystem<RenderingSystem>(&_camera, nullptr, nullptr);
+    _world.addSystem<ParticleSystem>();
+    _world.addSystem<RenderingSystem>(&_camera, nullptr, _world.getSystem<ParticleSystem>()->getEmitters());
     _world.addSystem<MenuSystem>();
 
     EntityManager* em = _world.getEntityManager();
     addDebugWindow<EntityDebugWindow>(em, nullptr, glm::vec2(0, 80), glm::vec2(600, 350));
     addDebugWindow<SoundEditorWindow>(glm::vec2(1200, 80), glm::vec2(450, 450));
+    addDebugWindow<LogDebugWindow>(Logger::getInstance(), glm::vec2(0, 430), glm::vec2(300, 200));
 
     initCamera();
 
-    _resumeButton = createButton(eArchetype::BUTTON_RESUME, glm::vec2(0.0f, 80.0f));
+    _resumeButton = createButton(eArchetype::BUTTON_RESUME, glm::vec2(0.0f, 240.0f));
+    _howToPlayButton = createButton(eArchetype::BUTTON_HOW_TO_PLAY, glm::vec2(0.0f, 160.0f));
+    _optionsButton = createButton(eArchetype::BUTTON_OPTIONS, glm::vec2(0.0f, 80.0f));
     _quitButton = createButton(eArchetype::BUTTON_QUIT, glm::vec2(0.0f, 0.0f));
     return (true);
 }
@@ -50,13 +61,7 @@ bool    PauseState::update(float elapsedTime)
     if (_playStateRendersystem)
         _playStateRendersystem->update(*_playStateWorld->getEntityManager(), 0);
 
-
-    // Disable depth test to display 2D
-    glDisable(GL_DEPTH_TEST);
-
     bool success = GameState::update(elapsedTime);
-    // Enable depth test to display 3D
-    glEnable(GL_DEPTH_TEST);
 
     handleButtons();
 
@@ -97,22 +102,47 @@ Entity* PauseState::createButton(eArchetype type, const glm::vec2& pos)
 void    PauseState::handleButtons()
 {
     auto &&keyboard = GameWindow::getInstance()->getKeyboard();
+    auto &&mouse = GameWindow::getInstance()->getMouse();
 
     sButtonComponent* resume = _resumeButton->getComponent<sButtonComponent>();
+    sButtonComponent* howToPlay = _howToPlayButton->getComponent<sButtonComponent>();
+    sButtonComponent* options = _optionsButton->getComponent<sButtonComponent>();
     sButtonComponent* quit = _quitButton->getComponent<sButtonComponent>();
 
-    // Space bar pressed, handle buttons action
-    if (keyboard.getStateMap()[Keyboard::eKey::SPACE] == Keyboard::eKeyState::KEY_PRESSED)
+    ASSERT(resume != nullptr, "\"Resume Game\" button should have sButtonComponent");
+    ASSERT(howToPlay != nullptr, "\"How to Play\" button should have sButtonComponent");
+    ASSERT(options != nullptr, "\"Options\" button should have sButtonComponent");
+    ASSERT(quit != nullptr, "\"Quit Game\" button should have sButtonComponent");
+
+    //  When the space bar is pressed or the mouse has clicked, do something.
+    bool enterPressed = keyboard.getStateMap()[Keyboard::eKey::ENTER] == Keyboard::eKeyState::KEY_PRESSED;
+    bool mouseClicked = mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_1] == Mouse::eButtonState::CLICK_PRESSED;
+
+    //  "Resume Game" button
+    if ((enterPressed && resume->selected) ||
+        (mouseClicked && resume->hovered))
     {
-        // Resume button
-        if (resume->selected)
-        {
-            _gameStateManager->removeCurrentState();
-        }
-        // Quit button
-        else if (quit->selected)
-        {
-            _gameStateManager->clearStates();
-        }
+        _gameStateManager->removeCurrentState();
+    }
+
+    //  "How to Play" button
+    else if ((enterPressed && howToPlay->selected) ||
+        (mouseClicked && howToPlay->hovered))
+    {
+        _gameStateManager->addState<HowToPlayState>();
+    }
+
+    //  "Options" button
+    else if ((enterPressed && options->selected) ||
+        (mouseClicked && options->hovered))
+    {
+        _gameStateManager->addState<OptionsMenuState>();
+    }
+
+    //  "Quit Game" button
+    else if ((enterPressed && quit->selected) ||
+        (mouseClicked && quit->hovered))
+    {
+        _gameStateManager->addState<ConfirmExitState>();
     }
 }

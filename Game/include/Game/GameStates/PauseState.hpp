@@ -24,6 +24,8 @@ private:
 
     Camera                              _camera;
 
-    Entity*                             _resumeButton;
-    Entity*                             _quitButton;
+    Entity*                             _resumeButton = nullptr;
+    Entity*                             _howToPlayButton = nullptr;
+    Entity*                             _optionsButton = nullptr;
+    Entity*                             _quitButton = nullptr;
 END_GAMESTATE(PauseState)

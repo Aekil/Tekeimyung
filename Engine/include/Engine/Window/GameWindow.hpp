@@ -39,6 +39,9 @@ public:
     void                                setRunning(bool running);
     static void                         setInstance(std::shared_ptr<GameWindow> instance);
 
+    bool                                isCursorVisible() const;
+    void                                setCursorVisible(bool visible);
+
     bool                                isRunning() const;
     void                                display();
     void                                pollEvents();
@@ -49,6 +52,9 @@ public:
     void                                hasLostFocus(bool lostFocus);
 
     Timer&                              getTimer();
+
+    void                                handleClose(GLFWwindow* window);
+    void                                registerCloseHandler(void (*closeHandler)(void*), void* data = nullptr);
 
 private:
     static void                         closeCallback(GLFWwindow* window);
@@ -97,4 +103,7 @@ private:
 
     bool                                _lostFocus;
     Timer                               _timer;
+
+    void                                (*_closeHandler)(void*);
+    void*                               _closeHandlerData;
 };

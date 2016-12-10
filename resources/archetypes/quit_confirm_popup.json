@@ -1,0 +1,35 @@
+{
+   "components" : {
+      "sRenderComponent" : {
+         "animated" : false,
+         "animations" : [],
+         "color" : {
+            "a" : 1,
+            "b" : 0.24705882370471954,
+            "g" : 0.37647059559822083,
+            "r" : 0.5058823823928833
+         },
+         "model" : "resources/models/default.DAE",
+         "texture" : "",
+         "type" : "PLANE"
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 745,
+            "y" : 429.5,
+            "z" : 0
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "scale" : {
+            "x" : 43,
+            "y" : 15.800000190734863,
+            "z" : 1
+         }
+      }
+   },
+   "name" : "QUIT_CONFIRM_POPUP"
+}

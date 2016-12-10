@@ -7,6 +7,7 @@
 #include <imgui_impl_glfw_gl3.h>
 
 #include <Engine/Utils/Exception.hpp>
+#include <Engine/Utils/Logger.hpp>
 #include <Engine/Window/GameWindow.hpp>
 #include <Engine/Graphics/Renderer.hpp>
 
@@ -32,6 +33,9 @@ bool    RenderingSystem::init()
 
 void    RenderingSystem::renderEntity(sRenderComponent *render, Entity* entity, float elapsedTime)
 {
+    if (!render->_display)
+        return;
+
     sTransformComponent *transform = entity->getComponent<sTransformComponent>();
     auto&& model = getModel(render);
 
@@ -170,6 +174,9 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
     Timer timer;
     uint32_t nbEntities = 0;
 
+    if (_camera->getProjType() == Camera::eProj::ORTHOGRAPHIC_2D)
+        glDisable(GL_DEPTH_TEST);
+
     // Unfree camera rotation to display normal models
    _camera->freezeRotations(false);
 
@@ -227,6 +234,9 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
     glDepthMask(GL_TRUE);
     // Disable blending for opaque objects
     glDisable(GL_BLEND);
+
+    if (_camera->getProjType() == Camera::eProj::ORTHOGRAPHIC_2D)
+        glEnable(GL_DEPTH_TEST);
 
     MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, timer.getElapsedTime(), nbEntities);
 }

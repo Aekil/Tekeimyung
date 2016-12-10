@@ -26,7 +26,6 @@ ParticleSystem::~ParticleSystem() {}
 void    ParticleSystem::initEmitter(Entity* entity)
 {
     sParticleEmitterComponent *emitterComp = entity->getComponent<sParticleEmitterComponent>();
-    sRenderComponent *sprite = entity->getComponent<sRenderComponent>();
     sEmitter* emitter = new sEmitter();
 
     emitter->particles.resize(MAX_PARTICLES);
@@ -40,6 +39,7 @@ void    ParticleSystem::updateEmitter(EntityManager &em, Entity* entity, float e
 {
     sParticleEmitterComponent *emitterComp = entity->getComponent<sParticleEmitterComponent>();
     sTransformComponent *transform = entity->getComponent<sTransformComponent>();
+    sRenderComponent *render = entity->getComponent<sRenderComponent>();
     sEmitter* emitter = _emitters[entity->id];
 
     emitter->elapsedTime += elapsedTime;
@@ -84,7 +84,7 @@ void    ParticleSystem::updateEmitter(EntityManager &em, Entity* entity, float e
         }
     }
     // Create new particles each rate
-    else if (emitter->elapsedTime >= emitterComp->rate)
+    else if (emitter->elapsedTime >= emitterComp->rate && render->_display)
     {
         glm::mat4 emitterOrientation;
         emitterOrientation = glm::rotate(emitterOrientation, glm::radians(transform->rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));

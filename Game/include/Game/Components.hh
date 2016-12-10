@@ -42,6 +42,7 @@ START_COMPONENT(sRenderComponent)
         this->type = component->type;
         this->texture = component->texture;
         this->_animator = component->_animator;
+        this->_display = component->_display;
     }
 
     virtual void update(sComponent* component)
@@ -67,6 +68,7 @@ START_COMPONENT(sRenderComponent)
 
     // Model type
     Geometry::eType type;
+    bool                    _display = true;
 
     // texture for geometries
     std::string texture;
@@ -303,12 +305,20 @@ START_COMPONENT(sPlayerComponent)
         return (component);
     }
 
-    virtual void update(sPlayerComponent* component) {}
+    virtual void update(sPlayerComponent* component)
+    {
+        this->range = component->range;
+        this->rangeColor = component->rangeColor;
+    }
 
     virtual void update(sComponent* component)
     {
         update(static_cast<sPlayerComponent*>(component));
     }
+
+    uint16_t    range;
+    glm::ivec3   lastPos;
+    glm::vec4 rangeColor;
 END_COMPONENT(sPlayerComponent)
 
 
@@ -624,6 +634,7 @@ START_COMPONENT(sButtonComponent)
     virtual void update(sButtonComponent* component)
     {
         this->selected = component->selected;
+        this->hovered = component->hovered;
     }
 
     virtual void update(sComponent* component)
@@ -632,4 +643,23 @@ START_COMPONENT(sButtonComponent)
     }
 
     bool        selected = false;
+    bool        hovered = false;
 END_COMPONENT(sButtonComponent)
+
+
+START_COMPONENT(sTileComponent)
+    virtual sComponent* clone()
+    {
+        sTileComponent* component = new sTileComponent();
+        component->update(this);
+
+        return (component);
+    }
+
+    virtual void update(sTileComponent* component) {}
+
+    virtual void update(sComponent* component)
+    {
+        update(static_cast<sTileComponent*>(component));
+    }
+END_COMPONENT(sTileComponent)

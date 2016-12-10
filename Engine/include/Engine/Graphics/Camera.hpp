@@ -44,6 +44,7 @@ public:
     const glm::mat4&    getProj() const;
     float               getAspect() const;
     float               getFov() const;
+    eProj               getProjType() const;
 
     void                setFov(float fov);
     void                setAspect(float aspect);
@@ -96,6 +97,8 @@ private:
     */
     // Up vector
     glm::vec3           _up;
+
+    glm::vec3           _windowBufferSize;
 
     static Camera*      _instance;
 };

@@ -100,17 +100,43 @@ void    EntityDebugWindow::displayEntityDebug(Entity* entity)
         ImGui::PushStyleColor(ImGuiCol_Button, ImColor(0.27f, 0.51f, 0.70f, 1.0f));
         ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImColor(0.39f, 0.58f, 0.92f, 1.0f));
         ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImColor(0.49f, 0.68f, 0.92f, 1.0f));
+
+        // Add component to entity
         if (ImGui::Button("Add component"))
         {
             ImGui::OpenPopup("components");
         }
+
+        // Save entity template to json
+        // And apply changes to all entities of the same type in the scene
         ImGui::SameLine();
         if (ImGui::Button("Apply changes to template"))
         {
             saveEntityTemplate(entityName, entity);
             saveEntityTemplateToJson(entityName);
         }
+
+        // Clone the template and create a new entity type
+        ImGui::SameLine();
+        if (ImGui::Button("Clone template"))
+        {
+            ImGui::OpenPopup("clone template");
+        }
         ImGui::PopStyleColor(3);
+
+        // Clone template: specify new type name
+        if (ImGui::BeginPopup("clone template"))
+        {
+            static char newTypeName[64] = "";
+
+            ImGui::InputText("New type", newTypeName, 64);
+            if (ImGui::Button("Create"))
+            {
+                cloneTemplate(entity, newTypeName);
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::EndPopup();
+        }
 
         // Display new component that can be added
         if (ImGui::BeginPopup("components"))
@@ -243,6 +269,52 @@ void    EntityDebugWindow::saveEntityTemplate(const std::string& typeName, Entit
             EntityFactory::updateEntitiesComponents(entity, typeName, compFactory, component);
         }
     }
+}
+
+void    EntityDebugWindow::cloneTemplate(Entity* entity, const std::string& newTypeName)
+{
+    if (EntityFactory::entityTypeExists(newTypeName))
+    {
+        LOG_ERROR("Can't create entity type %s, it already exists", newTypeName.c_str());
+        return;
+    }
+
+    Entity* newEntity = EntityFactory::createEntityType(newTypeName);
+
+    // Save entity components
+    for (auto component: entity->getComponents())
+    {
+        std::string componentName = IComponentFactory::getComponentNameWithHash(component->id);
+        auto compFactory = IComponentFactory::getFactory(componentName);
+        ASSERT(compFactory != nullptr, "The factory should exist");
+
+        compFactory->save(newTypeName, component);
+
+        // Don't save sNameComponent
+        if (component->id != sNameComponent::identifier)
+        {
+            if (component->id == sTransformComponent::identifier)
+            {
+                sTransformComponent* transform = newEntity->getComponent<sTransformComponent>();
+
+                // Overwrite the new entity transform
+                if (transform)
+                {
+                    transform->update(component);
+                    continue;
+                }
+            }
+
+            // Add component to EntityFactory
+            EntityFactory::addComponent(newTypeName, componentName);
+
+            // Add component to new entity
+            newEntity->addComponent(component->clone());
+        }
+    }
+
+    // Save the cloned template to json
+    saveEntityTemplateToJson(newTypeName);
 }
 
 glm::vec3   EntityDebugWindow::getRandomPos()

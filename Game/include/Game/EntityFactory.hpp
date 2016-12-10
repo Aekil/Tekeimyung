@@ -23,8 +23,20 @@
     PROCESS(EMITTER_FIRE),\
     PROCESS(EMITTER_WATER),\
     PROCESS(FIRE_BALL),\
+    PROCESS(ICON_SELECTED), \
+    PROCESS(BUTTON_RETURN), \
     PROCESS(BUTTON_RESUME),\
     PROCESS(BUTTON_QUIT),\
+    PROCESS(BUTTON_TOGGLE_FULLSCREEN),\
+    PROCESS(BUTTON_TOGGLE_WINDOWED),\
+    PROCESS(BUTTON_HOW_TO_PLAY),\
+    PROCESS(BUTTON_OPTIONS),\
+    PROCESS(HOW_TO_PLAY_MENU),\
+    PROCESS(BACKGROUND),\
+    PROCESS(BUTTON_CONFIRM_YES),\
+    PROCESS(BUTTON_CONFIRM_NO),\
+    PROCESS(QUIT_CONFIRM_POPUP),\
+    PROCESS(QUIT_CONFIRM_TEXT),\
 
 #define GENERATE_ENUM(ENUM) ENUM
 #define GENERATE_STRING(STRING) #STRING
@@ -48,8 +60,9 @@ public:
     static Entity*                                          createEntity(eArchetype type, const glm::vec3& pos);
     static Entity*                                          createEntity(const std::string& typeName);
     static void                                             bindEntityManager(EntityManager* em);
+    static EntityManager*                                   getBindedEntityManager();
 
-    static void                                             createEntityType(const std::string& typeName);
+    static Entity*                                          createEntityType(const std::string& typeName);
 
     static const std::vector<const char*>&                  getTypesString();
     static bool                                             entityTypeExists(const std::string& type);
@@ -64,7 +77,7 @@ public:
     static void                                             initAnimations(Entity* entity);
     static void                                             reverseAnimations(Entity* entity);
 
-private:
+    static Entity*                                          cloneEntity(Entity* entity);
     static Entity*                                          cloneEntity(const std::string& typeName);
 
 private:

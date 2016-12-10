@@ -13,7 +13,7 @@ std::shared_ptr<GameWindow> GameWindow::_instance;
 GameWindow::GameWindow(GameStateManager* gameStateManager, const char *title) :
     _bufferWidth(0), _bufferHeight(0), _fullscreen(false),
     _title(title), _monitor(nullptr), _window(nullptr), _running(false), _gameStateManager(gameStateManager),
-    _lostFocus(false) {}
+    _lostFocus(false), _closeHandler(nullptr) {}
 
 GameWindow::~GameWindow() {}
 
@@ -104,6 +104,7 @@ void	GameWindow::registerEvents()
     glfwSetScrollCallback(_window, GameWindow::scrollCallback);
     glfwSetWindowFocusCallback(_window, GameWindow::focusCallback);
     glfwSetWindowPosCallback(_window, GameWindow::posCallback);
+    glfwSetWindowCloseCallback(_window, GameWindow::closeCallback);
 }
 
 void APIENTRY   GameWindow::debugOutput(GLenum source, GLenum type, GLenum id,
@@ -268,6 +269,8 @@ void    GameWindow::toggleFullscreen()
         refreshRate = vidmode->refreshRate;
         glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
         glfwSetWindowMonitor(_window, nullptr, 0, 0, _screenWidth, _screenHeight, refreshRate);
+        glfwGetFramebufferSize(_window, &_bufferWidth, &_bufferHeight);
+        setViewport(glm::ivec4(0.0f, 0.0f, _bufferWidth, _bufferHeight));
         LOG_INFO("Toggled windowed mode.");
     }
     else
@@ -277,6 +280,8 @@ void    GameWindow::toggleFullscreen()
         _screenHeight = vidmode->height;
         refreshRate = vidmode->refreshRate;
         glfwSetWindowMonitor(_window, _monitor, 0, 0, _screenWidth, _screenHeight, refreshRate);
+        glfwGetFramebufferSize(_window, &_bufferWidth, &_bufferHeight);
+        setViewport(glm::ivec4(0.0f, 0.0f, _bufferWidth, _bufferHeight));
         LOG_INFO("Toggled fullscreen mode.");
     }
 }
@@ -289,6 +294,19 @@ void    GameWindow::setRunning(bool running)
 void    GameWindow::setInstance(std::shared_ptr<GameWindow> instance)
 {
     _instance = instance;
+}
+
+bool    GameWindow::isCursorVisible() const
+{
+    return (glfwGetInputMode(_window, GLFW_CURSOR));
+}
+
+void        GameWindow::setCursorVisible(bool visible)
+{
+    int     visibleValue;
+
+    visibleValue = visible ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_HIDDEN;
+    glfwSetInputMode(_window, GLFW_CURSOR, visibleValue);
 }
 
 bool    GameWindow::isRunning() const
@@ -328,12 +346,10 @@ void    GameWindow::shutdown()
 void    GameWindow::closeCallback(GLFWwindow* window)
 {
     GameWindow*     gameWindow;
-
     gameWindow = reinterpret_cast<GameWindow*>(glfwGetWindowUserPointer(window));
     ASSERT(gameWindow != nullptr, "GameWindow should not be null.");
 
-    std::cout << "Callback has been called !" << std::endl;
-    gameWindow->setRunning(false);
+    gameWindow->handleClose(window);
 }
 
 /**
@@ -581,4 +597,20 @@ void    GameWindow::hasLostFocus(bool lostFocus)
 Timer&  GameWindow::getTimer()
 {
     return (_timer);
+}
+
+void    GameWindow::handleClose(GLFWwindow* window)
+{
+    if (_closeHandler)
+    {
+        glfwSetWindowShouldClose(window, false);
+        glfwRestoreWindow(window);
+        _closeHandler(_closeHandlerData);
+    }
+}
+
+void    GameWindow::registerCloseHandler(void (*closeHandler)(void*), void* data)
+{
+    _closeHandler = closeHandler;
+    _closeHandlerData = data;
 }

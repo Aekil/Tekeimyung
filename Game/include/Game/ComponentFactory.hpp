@@ -34,7 +34,8 @@
     PROCESS(sNameComponent),\
     PROCESS(sTransformComponent),\
     PROCESS(sResolutionComponent),\
-    PROCESS(sButtonComponent)\
+    PROCESS(sButtonComponent),\
+    PROCESS(sTileComponent)\
 
 #define GENERATE_PAIRS(COMPONENT) { #COMPONENT, new ComponentFactory<COMPONENT>() }
 
@@ -105,7 +106,7 @@ public:
     // In case it's not defined, the loaded component json will be saved
     virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType)
     {
-        LOG_WARN("%s::%s: : can't save to json because no saveToJson found", entityType.c_str(), componentType.c_str());
+        LOG_WARN("%s::%s: : can't save to json because no saveToJson found. The previously loaded json will be saved", entityType.c_str(), componentType.c_str());
         return _componentsJson[entityType];
     }
 
@@ -319,6 +320,9 @@ class ComponentFactory<sPlayerComponent> : public BaseComponentFactory<sPlayerCo
 {
 public:
     virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
+    virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
+
+    virtual bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity);
 };
 
 
@@ -416,6 +420,18 @@ public:
 
 template <>
 class ComponentFactory<sButtonComponent> : public BaseComponentFactory<sButtonComponent>
+{
+public:
+    virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
+};
+
+
+/*
+** sTileComponent
+*/
+
+template <>
+class ComponentFactory<sTileComponent> : public BaseComponentFactory<sTileComponent>
 {
 public:
     virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);

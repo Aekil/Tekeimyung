@@ -19,7 +19,7 @@ void    MovementSystem::update(EntityManager &em, float elapsedTime)
     Timer timer;
     uint32_t nbEntities = 0;
 
-    this->forEachEntity(em, [&](Entity* entity) {
+    forEachEntity(em, [&](Entity* entity) {
         sDirectionComponent *direction = entity->getComponent<sDirectionComponent>();
         sPositionComponent *position = entity->getComponent<sPositionComponent>();
         sTransformComponent *transform = entity->getComponent<sTransformComponent>();
