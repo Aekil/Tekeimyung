@@ -26,8 +26,8 @@ private:
 
     Camera          _camera;
 
-    Entity*         _toggleWindowModeButton;
-    Entity*         _returnButton;
+    Entity*         _toggleWindowModeButton = nullptr;
+    Entity*         _returnButton = nullptr;
 
     void            createToggleWindowModeButton();
 END_GAMESTATE(OptionsMenuState)
