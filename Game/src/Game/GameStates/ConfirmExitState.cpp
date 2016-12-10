@@ -141,7 +141,6 @@ void    ConfirmExitState::initPopup()
     // Center the popup in the window
     popupTransform->pos.x = (windowWidth / 2.0f) - (popupSize.x / 2.0f);
     popupTransform->pos.y = (windowHeight / 2.0f) - (popupSize.y / 2.0f);
-    popupTransform->pos.z = -1.0f;
     popupTransform->needUpdate = true;
 
 
@@ -173,19 +172,20 @@ void    ConfirmExitState::handleButtons()
     sButtonComponent* yes = _yesButton->getComponent<sButtonComponent>();
     sButtonComponent* no = _noButton->getComponent<sButtonComponent>();
 
-    bool spacebarPressed = keyboard.getStateMap()[Keyboard::eKey::ENTER] == Keyboard::eKeyState::KEY_PRESSED;
+    bool enterPressed = keyboard.getStateMap()[Keyboard::eKey::ENTER] == Keyboard::eKeyState::KEY_PRESSED;
     bool mouseClicked = mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_1] == Mouse::eButtonState::CLICK_PRESSED;
 
     // Yes button
     // Space bar pressed or mouse clicked
-    if ((spacebarPressed && yes->selected) ||
+    if ((enterPressed && yes->selected) ||
         (mouseClicked && yes->hovered))
     {
         _gameStateManager->clearStates();
     }
+
     // No button
     // Space bar pressed or mouse clicked
-    else if ((spacebarPressed && no->selected) ||
+    else if ((enterPressed && no->selected) ||
         (mouseClicked && no->hovered))
     {
         _gameStateManager->removeCurrentState();

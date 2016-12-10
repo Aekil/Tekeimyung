@@ -113,32 +113,32 @@ void    PauseState::handleButtons()
     ASSERT(quit != nullptr, "\"Quit Game\" button should have sButtonComponent");
 
     //  When the space bar is pressed or the mouse has clicked, do something.
-    bool spacebarPressed = keyboard.getStateMap()[Keyboard::eKey::ENTER] == Keyboard::eKeyState::KEY_PRESSED;
+    bool enterPressed = keyboard.getStateMap()[Keyboard::eKey::ENTER] == Keyboard::eKeyState::KEY_PRESSED;
     bool mouseClicked = mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_1] == Mouse::eButtonState::CLICK_PRESSED;
 
     //  "Resume Game" button
-    if ((spacebarPressed && resume->selected) ||
+    if ((enterPressed && resume->selected) ||
         (mouseClicked && resume->hovered))
     {
         _gameStateManager->removeCurrentState();
     }
 
     //  "How to Play" button
-    else if ((spacebarPressed && howToPlay->selected) ||
+    else if ((enterPressed && howToPlay->selected) ||
         (mouseClicked && howToPlay->hovered))
     {
         _gameStateManager->addState<HowToPlayState>();
     }
 
     //  "Options" button
-    else if ((spacebarPressed && options->selected) ||
+    else if ((enterPressed && options->selected) ||
         (mouseClicked && options->hovered))
     {
         _gameStateManager->addState<OptionsMenuState>();
     }
 
     //  "Quit Game" button
-    else if ((spacebarPressed && quit->selected) ||
+    else if ((enterPressed && quit->selected) ||
         (mouseClicked && quit->hovered))
     {
         _gameStateManager->addState<ConfirmExitState>();

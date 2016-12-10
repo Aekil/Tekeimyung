@@ -36,12 +36,13 @@
          "size" : {
             "finish" : 0,
             "finish_variance" : 0,
-            "start" : 0.6,
+            "start" : 0.60000002384185791,
             "start_variance" : 0
          },
          "spawn_nb" : 1,
          "speed" : 50,
-         "speed_variance" : 0
+         "speed_variance" : 0,
+         "texture" : ""
       },
       "sPositionComponent" : {
          "x" : 0,
@@ -57,19 +58,19 @@
             "g" : 1,
             "r" : 1
          },
+         "model" : "resources/models/default.DAE",
          "spriteSize" : {
             "x" : 0,
             "y" : 0
          },
-		 "model" : "resources/models/default.DAE",
          "texture" : "resources/sprites/buttons/icon_selected.png",
          "type" : "PLANE"
       },
       "sTransformComponent" : {
          "pos" : {
-            "x" : 793,
-            "y" : 562.5,
-            "z" : -1
+            "x" : 808,
+            "y" : 472.5,
+            "z" : 0
          },
          "rotation" : {
             "x" : 0,
