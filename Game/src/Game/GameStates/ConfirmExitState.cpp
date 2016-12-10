@@ -106,8 +106,8 @@ void    ConfirmExitState::initPopup()
 
     _confirmPopup = EntityFactory::createEntity(eArchetype::QUIT_CONFIRM_POPUP);
     _confirmText = EntityFactory::createEntity(eArchetype::QUIT_CONFIRM_TEXT);
-    _noButton = createButton(eArchetype::BUTTON_CONFIRM_NO, glm::vec2(60.0f, -10.0f));
-    _yesButton = createButton(eArchetype::BUTTON_CONFIRM_YES, glm::vec2(-60.0f, -10.0f));
+    _noButton = createButton(eArchetype::BUTTON_CONFIRM_NO, glm::vec2(0.0f, -70.0f));
+    _yesButton = createButton(eArchetype::BUTTON_CONFIRM_YES, glm::vec2(0.0f, 20.0f));
 
     // Text
     sRenderComponent* textRender = _confirmText->getComponent<sRenderComponent>();
@@ -135,7 +135,8 @@ void    ConfirmExitState::initPopup()
     popupTransform->scale.x = (textRender->_model->getSize().x * textTransform->scale.x + 50.0f) / SIZE_UNIT;
     popupTransform->scale.y = (textRender->_model->getSize().y * textTransform->scale.y +\
         yesRender->_model->getSize().y * yesTransform->scale.y +\
-        noRender->_model->getSize().y * noTransform->scale.y) / SIZE_UNIT;
+        noRender->_model->getSize().y * noTransform->scale.y +\
+        (std::abs(yesTransform->pos.y - noTransform->pos.y)))/ SIZE_UNIT;
     const glm::vec3& popupSize = popupRender->_model->getSize() * popupTransform->scale;
 
     // Center the popup in the window
