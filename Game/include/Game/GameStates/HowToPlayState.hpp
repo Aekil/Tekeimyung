@@ -14,8 +14,12 @@ START_GAMESTATE(HowToPlayState)
     virtual bool                        update(float elapsedTime);
 
     void                                initCamera();
-
     void                                initMenu();
+
+    Entity*                             createButton(eArchetype type, const glm::vec2& pos);
+    void                                handleButtons();
 private:
     Camera                              _camera;
+
+    Entity*                             _returnButton = nullptr;
 END_GAMESTATE(HowToPlayState)
