@@ -48,6 +48,12 @@ void    SoundEditorWindow::build(float elapsedTime)
     }*/
     //eventSoundData = EventSound::getEventSoundDataList();
 
+
+    if (ImGui::Button("Save changes"))
+    {
+        EventSound::saveEvents();
+    }
+
     ImGui::Text("Events :");
     ImGui::Separator();
     for (int i = 0; i < eventSoundData.size(); ++i)
@@ -82,7 +88,7 @@ void    SoundEditorWindow::build(float elapsedTime)
                     int id = SoundManager::getInstance()->registerSound(soundsStrings[j].path, eventSoundData[i].soundType);
                     if (id != -1)
                     {
-                        EventSound::linkEventSound(i, id, soundsStrings[j].name);
+                        EventSound::linkEventSound(i, id, soundsStrings[j]);
                         LOG_DEBUG("sound created : id = %d", id);
                     }
                     else

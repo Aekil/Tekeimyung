@@ -2,6 +2,8 @@
 
 #include <Engine/Window/GameWindow.hpp>
 #include <Engine/Utils/Logger.hpp>
+#include <Engine/Sound/SoundManager.hpp>
+#include <Game/Utils/EventSound.hpp>
 
 #include <Game/EntityFactory.hpp>
 #include <Game/Components.hh>
@@ -158,5 +160,10 @@ void    BuildSystem::buildItem(const glm::ivec3& tilePos)
 
         // Check no entity is on the tile
         (*_map)[(uint16_t)itemPos->z][(uint32_t)itemPos->value.y][(uint32_t)itemPos->value.x] = item->id;
+
+        // Play sound
+        #if (ENABLE_SOUND)
+            SoundManager::getInstance()->playSound(EventSound::getSoundIDFromEvent(eEventSound::BUILD));
+        #endif
     }
 }

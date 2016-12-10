@@ -99,7 +99,8 @@ int     SoundManager::registerSound(const std::string& name, eSoundType type)
     {
         // The sound type changed, reload it to optimize
         if (_sounds[i].name == name &&
-            _sounds[i].type != type)
+            _sounds[i].type != type &&
+            _sounds[i].type != eSoundType::NONE)
         {
             _sounds[i].sound->release();
             _sounds[i].sound = nullptr;

@@ -2,8 +2,13 @@
 
 #include <vector>
 #include <unordered_map>
+#include <utility>
+
+#include <Engine/Utils/RessourceManager.hpp>
 
 #include <Engine/Sound/SoundManager.hpp>
+
+#define EVENTS_CONFIG "resources/sound_events.json"
 
 #define EVENT_SOUND(PROCESS)\
     PROCESS(BACKGROUND, BACKGROUND_SOUND),\
@@ -24,6 +29,7 @@ typedef struct              sEventSound
     int                     soundID;
     eSoundType              soundType;
     std::string             soundName;
+    std::string             soundPath;
 }                           tEventSound;
 
 class EventSound {
@@ -39,9 +45,18 @@ public:
 
     static void                             setEventSoundID(int i, int id);
 
-    static void                             linkEventSound(int i, int id, const std::string& name);
+    static void                             linkEventSound(int i, int id, const RessourceManager::sSoundStrings& soundString);
 
     static bool                             isEventLinkedToSound(eEventSound event);
+
+    static void                             loadEvents();
+    static void                             saveEvents();
+
+    static tEventSound*                     getEventBySoundPath(const std::string& soundPath);
+
+
+private:
+    static tEventSound*                     getEventByName(const std::string& name);
 
 private:
     static std::vector<tEventSound>         _eventSoundDataList;

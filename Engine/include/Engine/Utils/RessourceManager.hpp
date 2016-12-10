@@ -16,7 +16,6 @@
 class RessourceManager
 {
 private:
-    private:
     struct sFile
     {
         std::string content;
@@ -24,6 +23,7 @@ private:
         std::string basename;
     };
 
+public:
     struct sSoundStrings
     {
         std::string     path;
