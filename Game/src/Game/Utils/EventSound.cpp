@@ -34,23 +34,34 @@ int EventSound::getSoundIDFromEvent(eEventSound event)
     return (-2); // not supposed to happen
 }
 
-void    EventSound::setEventSoundID(int i, int id)
+void    EventSound::linkEventSound(int i, int id, const RessourceManager::sSoundStrings& soundString)
 {
-    if (i < _eventSoundDataList.size())
+    // Out of range
+    if (i < 0 || i >= _eventSoundDataList.size())
     {
-        _eventSoundDataList[i].soundID = id;
+        LOG_WARN("EventSound::setEventSoundID() : incorrect index value \"%d\"", i);
     }
     else
     {
-        LOG_WARN("Event Sound class : setEventSoundID() : incorrect index value");
+        _eventSoundDataList[i].soundID = id;
+        _eventSoundDataList[i].soundName = soundString.name;
+        _eventSoundDataList[i].soundPath = soundString.path;
     }
 }
 
-void    EventSound::linkEventSound(int i, int id, const RessourceManager::sSoundStrings& soundString)
+void    EventSound::removeEventSound(int i)
 {
-    EventSound::setEventSoundID(i, id);
-    _eventSoundDataList[i].soundName = soundString.name;
-    _eventSoundDataList[i].soundPath = soundString.path;
+    // Out of range
+    if (i < 0 || i >= _eventSoundDataList.size())
+    {
+        LOG_WARN("EventSound::removeEventSound() : incorrect index value \"%d\"", i);
+    }
+    else
+    {
+        _eventSoundDataList[i].soundID = -1;
+        _eventSoundDataList[i].soundName = "";
+        _eventSoundDataList[i].soundPath = "";
+    }
 }
 
 bool    EventSound::isEventLinkedToSound(eEventSound event)

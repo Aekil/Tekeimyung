@@ -72,12 +72,23 @@ void    SoundEditorWindow::build(float elapsedTime)
             ImGui::SameLine();
             ImGui::Text(eventSoundData[i].soundName.c_str());
         }
+
         ImGui::SameLine();
         if (ImGui::Button("Link sound"))
         {
             ImGui::OpenPopup("Sounds");
         }
+
+        if (eventSoundData[i].soundID == -1)
+        {
+            ImGui::SameLine();
+            if (ImGui::Button("Remove sound"))
+            {
+                EventSound::removeEventSound(i);
+            }
+        }
         ImGui::PopStyleColor(3);
+
         if (ImGui::BeginPopup("Sounds"))
         {
             for (int j = 0; j < soundsStrings.size(); ++j)

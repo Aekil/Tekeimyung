@@ -135,6 +135,10 @@ int     SoundManager::registerSound(const std::string& name, eSoundType type)
 
 void    SoundManager::playSound(unsigned int id)
 {
+    // Out of range
+    if (id < 0 || id >= NB_MAX_SOUNDS)
+        return;
+
     if (_sounds[id].type == eSoundType::BACKGROUND_SOUND)
     {
         _result = _system->playSound(_sounds[id].sound, 0, false, &_channel1);

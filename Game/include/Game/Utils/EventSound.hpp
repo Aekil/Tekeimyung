@@ -43,9 +43,8 @@ public:
     static const std::vector<tEventSound>&  getEventSoundDataList();
     static int                              getSoundIDFromEvent(eEventSound event);
 
-    static void                             setEventSoundID(int i, int id);
-
     static void                             linkEventSound(int i, int id, const RessourceManager::sSoundStrings& soundString);
+    static void                             removeEventSound(int i);
 
     static bool                             isEventLinkedToSound(eEventSound event);
 
