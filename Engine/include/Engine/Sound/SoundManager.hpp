@@ -56,6 +56,7 @@ public:
 
     void                                    pause();
     void                                    resume();
+    void                                    setVolume(float volume);
 
 private:
     static std::shared_ptr<SoundManager>    _soundManager;

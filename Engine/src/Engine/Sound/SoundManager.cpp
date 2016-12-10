@@ -232,3 +232,15 @@ void    SoundManager::resume()
         errorCheck();
     }
 }
+
+void    SoundManager::setVolume(float volume)
+{
+    for (int i = 0; i < NB_MAX_CHANNELS; ++i)
+    {
+        if (_channels[i] == nullptr)
+            continue;
+
+        _result = _channels[i]->setVolume(volume);
+        errorCheck();
+    }
+}

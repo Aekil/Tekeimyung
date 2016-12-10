@@ -2,6 +2,7 @@
 
 #include <Engine/Window/GameWindow.hpp>
 #include <Engine/Utils/LogDebugWindow.hpp>
+#include <Engine/Sound/SoundManager.hpp>
 
 #include <Game/Systems/RenderingSystem.hpp>
 #include <Game/Systems/MenuSystem.hpp>
@@ -50,6 +51,8 @@ bool    PauseState::init()
     _howToPlayButton = createButton(eArchetype::BUTTON_HOW_TO_PLAY, glm::vec2(0.0f, 160.0f));
     _optionsButton = createButton(eArchetype::BUTTON_OPTIONS, glm::vec2(0.0f, 80.0f));
     _quitButton = createButton(eArchetype::BUTTON_QUIT, glm::vec2(0.0f, 0.0f));
+
+    SoundManager::getInstance()->setVolume(0.3f);
     return (true);
 }
 
@@ -68,6 +71,7 @@ bool    PauseState::update(float elapsedTime)
     // Unpause the game
     if (keyboard.getStateMap()[Keyboard::eKey::ESCAPE] == Keyboard::eKeyState::KEY_PRESSED)
     {
+        SoundManager::getInstance()->setVolume(1.0f);
         return (false);
     }
 
@@ -123,6 +127,7 @@ void    PauseState::handleButtons()
         (mouseClicked && resume->hovered))
     {
         _gameStateManager->removeCurrentState();
+        SoundManager::getInstance()->setVolume(1.0f);
     }
 
     //  "How to Play" button
