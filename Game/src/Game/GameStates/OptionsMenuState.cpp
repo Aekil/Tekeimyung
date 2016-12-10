@@ -98,26 +98,30 @@ Entity*                     OptionsMenuState::createButton(eArchetype type, cons
 void                    OptionsMenuState::handleButtons()
 {
     auto                &&keyboard = GameWindow::getInstance()->getKeyboard();
+    auto                &&mouse = GameWindow::getInstance()->getMouse();
+
     sButtonComponent*   toggleWindowMode = _toggleWindowModeButton->getComponent<sButtonComponent>();
     sButtonComponent*   returnButton = _returnButton->getComponent<sButtonComponent>();
 
     ASSERT(toggleWindowMode != nullptr, "\"Toggle window mode\" button should have a sButtonComponent.");
     ASSERT(returnButton != nullptr, "\"Return\" button should have a sButtonComponent.");
 
-    //  Space bar pressed, handle buttons action
-    if (keyboard.getStateMap()[Keyboard::eKey::ENTER] == Keyboard::eKeyState::KEY_PRESSED)
+    bool    spacebarPressed = keyboard.getStateMap()[Keyboard::eKey::ENTER] == Keyboard::eKeyState::KEY_PRESSED;
+    bool    mouseClicked = mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_1] == Mouse::eButtonState::CLICK_PRESSED;
+
+    //  "Toggle fullscreen / windowed mode" button
+    if ((spacebarPressed && toggleWindowMode->selected) ||
+        (mouseClicked && toggleWindowMode->hovered))
     {
-        //  Quit button
-        if (toggleWindowMode->selected)
-        {
-            GameWindow::getInstance()->toggleFullscreen();
-            createToggleWindowModeButton();
-        }
-        //  Resume button
-        else if (returnButton->selected)
-        {
-            _gameStateManager->removeCurrentState();
-        }
+        GameWindow::getInstance()->toggleFullscreen();
+        createToggleWindowModeButton();
+    }
+
+    //  "Return" button
+    else if ((spacebarPressed && returnButton->selected) ||
+        (mouseClicked && returnButton->hovered))
+    {
+        _gameStateManager->removeCurrentState();
     }
 }
 

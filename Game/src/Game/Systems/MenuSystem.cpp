@@ -30,7 +30,10 @@ bool    MenuSystem::init()
     // Select by default the first button
     if (_entities.size() > 0)
         setSelected(*EntityFactory::getBindedEntityManager(), 0);
-
+    
+    //  For future purposes, it is commented for now.
+    //if (!GameWindow::getInstance()->isCursorVisible())
+    //    GameWindow::getInstance()->setCursorVisible(true);
     return (true);
 }
 

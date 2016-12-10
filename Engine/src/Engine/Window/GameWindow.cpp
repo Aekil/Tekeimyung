@@ -292,6 +292,19 @@ void    GameWindow::setInstance(std::shared_ptr<GameWindow> instance)
     _instance = instance;
 }
 
+bool    GameWindow::isCursorVisible() const
+{
+    return (glfwGetInputMode(_window, GLFW_CURSOR));
+}
+
+void        GameWindow::setCursorVisible(bool visible)
+{
+    int     visibleValue;
+
+    visibleValue = visible ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_HIDDEN;
+    glfwSetInputMode(_window, GLFW_CURSOR, visibleValue);
+}
+
 bool    GameWindow::isRunning() const
 {
     //return (_running);

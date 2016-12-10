@@ -39,6 +39,9 @@ public:
     void                                setRunning(bool running);
     static void                         setInstance(std::shared_ptr<GameWindow> instance);
 
+    bool                                isCursorVisible() const;
+    void                                setCursorVisible(bool visible);
+
     bool                                isRunning() const;
     void                                display();
     void                                pollEvents();
