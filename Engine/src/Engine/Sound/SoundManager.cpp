@@ -156,6 +156,26 @@ void    SoundManager::playSound(uint32_t id)
     addChannel(_sounds[id].channel);
 }
 
+void    SoundManager::resumeSound(uint32_t id)
+{
+    if (id < 0 || id >= NB_MAX_SOUNDS || // Out of range
+        _sounds[id].channel == nullptr) // Not currently playing
+        return;
+
+    _result = _sounds[id].channel->setPaused(false);
+    errorCheck();
+}
+
+void    SoundManager::pauseSound(uint32_t id)
+{
+    if (id < 0 || id >= NB_MAX_SOUNDS || // Out of range
+        _sounds[id].channel == nullptr) // Not currently playing
+        return;
+
+    _result = _sounds[id].channel->setPaused(true);
+    errorCheck();
+}
+
 void    SoundManager::stopSound(uint32_t id)
 {
     if (id < 0 || id >= NB_MAX_SOUNDS || // Out of range
@@ -183,6 +203,45 @@ bool    SoundManager::isSoundPlaying(uint32_t id)
     errorCheck();
 
     return (isPlaying);
+}
+
+unsigned int        SoundManager::getSoundCurrentPosition(int id)
+{
+    tSound          sound;
+    unsigned int    currentPosition;
+
+    currentPosition = 0;
+    if (id < 0 || id >= NB_MAX_SOUNDS ||    // Out of range
+        _sounds[id].channel == nullptr)     // Not currently playing
+        return (0);
+
+    _result = _sounds[id].channel->getPosition(&currentPosition, FMOD_TIMEUNIT_MS);
+    errorCheck();
+
+    return (currentPosition);
+}
+
+unsigned int        SoundManager::getSoundLength(int id)
+{
+    tSound          sound;
+    unsigned int    soundLength;
+
+    soundLength = 0;
+    for (int i = 0; i < NB_MAX_SOUNDS; i++)
+    {
+        if (i == id)
+        {
+            if (!_sounds[i].free)
+            {
+                sound = _sounds[i];
+                _result = sound.sound->getLength(&soundLength, FMOD_TIMEUNIT_MS);
+                errorCheck();
+                return (soundLength);
+            }
+            else break;
+        }
+    }
+    return (soundLength);
 }
 
 const char*   SoundManager::getSoundNameFromID(int id) const

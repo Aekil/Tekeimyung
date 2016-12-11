@@ -663,3 +663,24 @@ START_COMPONENT(sTileComponent)
         update(static_cast<sTileComponent*>(component));
     }
 END_COMPONENT(sTileComponent)
+
+START_COMPONENT(sSoundComponent)
+virtual sComponent*     clone()
+{
+    sSoundComponent*    component = new sSoundComponent();
+    component->update(this);
+
+    return (component);
+}
+
+virtual void            update(sSoundComponent* component)
+{
+    
+}
+
+virtual void            update(sComponent* component)
+{
+    update(static_cast<sSoundComponent*>(component));
+}
+
+END_COMPONENT(sSoundComponent)
