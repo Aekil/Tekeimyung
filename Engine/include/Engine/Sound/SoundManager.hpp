@@ -24,6 +24,7 @@ typedef struct sSound
     uint32_t            id;
     std::string         name;
     bool                free;
+    bool                paused;
     eSoundType          type;
     FMOD::Sound*        sound;
     FMOD::Channel*      channel;
@@ -48,15 +49,23 @@ public:
     int                                     registerSound(const std::string& name, eSoundType type = eSoundType::NONE);
 
     void                                    playSound(uint32_t id);
+    void                                    resumeSound(uint32_t id);
+    void                                    pauseSound(uint32_t id);
     void                                    stopSound(uint32_t id);
 
     bool                                    isSoundPlaying(uint32_t id);
+    unsigned int                            getSoundCurrentPosition(int id);
+    unsigned int                            getSoundLength(int id);
 
     const char*                             getSoundNameFromID(int id) const;
 
     void                                    pause();
     void                                    resume();
     void                                    setVolume(float volume);
+
+private:
+    void                                    addChannel(FMOD::Channel* channel);
+    void                                    removeChannel(FMOD::Channel* channel);
 
 private:
     static std::shared_ptr<SoundManager>    _soundManager;

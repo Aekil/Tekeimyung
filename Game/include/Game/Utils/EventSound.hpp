@@ -53,9 +53,6 @@ public:
 
     static tEventSound*                     getEventBySoundPath(const std::string& soundPath);
     static tEventSound*                     getEventByEventType(const eEventSound& event);
-
-
-private:
     static tEventSound*                     getEventByName(const std::string& name);
 
 private:

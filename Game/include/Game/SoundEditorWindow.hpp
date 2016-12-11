@@ -18,11 +18,16 @@ public:
 
     //static std::shared_ptr<SoundEditorWindow>   getInstance();
 
-    virtual void                                build(float elapsedTime);
+    virtual void                build(float elapsedTime);
 
 
 private:
-    std::vector<tEventSound>                    _eventSoundData;
+    std::vector<tEventSound>    _eventSoundData;
+
+    static std::string          _selectedSoundEventName;
+
+    void                        buildSoundEventDetails(tEventSound* soundEvent, int soundEventIndex);
+    void                        displaySoundProgressLength(tEventSound* soundEvent);
     //static std::shared_ptr<SoundEditorWindow>   _soundEditorWindow;
 };
 
