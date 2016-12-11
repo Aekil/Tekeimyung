@@ -59,6 +59,10 @@ public:
     void                                    setVolume(float volume);
 
 private:
+    void                                    addChannel(FMOD::Channel* channel);
+    void                                    removeChannel(FMOD::Channel* channel);
+
+private:
     static std::shared_ptr<SoundManager>    _soundManager;
 
     FMOD_RESULT                             _result;

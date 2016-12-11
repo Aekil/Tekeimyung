@@ -153,17 +153,7 @@ void    SoundManager::playSound(uint32_t id)
         return;
     }
 
-    int index = 0;
-    _result = _sounds[id].channel->getIndex(&index);
-    errorCheck();
-    if (index < NB_MAX_CHANNELS)
-    {
-        _channels[index] = _sounds[id].channel;
-    }
-    else
-    {
-        LOG_ERROR("Channel index out of range");
-    }
+    addChannel(_sounds[id].channel);
 }
 
 void    SoundManager::stopSound(uint32_t id)
@@ -171,6 +161,9 @@ void    SoundManager::stopSound(uint32_t id)
     if (id < 0 || id >= NB_MAX_SOUNDS || // Out of range
         _sounds[id].channel == nullptr) // Not currently playing
         return;
+
+    removeChannel(_sounds[id].channel);
+    errorCheck();
 
     _result = _sounds[id].channel->stop();
     errorCheck();
@@ -244,5 +237,37 @@ void    SoundManager::setVolume(float volume)
 
         _result = _channels[i]->setVolume(volume);
         errorCheck();
+    }
+}
+
+void    SoundManager::addChannel(FMOD::Channel* channel)
+{
+    int index = 0;
+    _result = channel->getIndex(&index);
+    errorCheck();
+    if (index < NB_MAX_CHANNELS &&
+        index > 0)
+    {
+        _channels[index] = channel;
+    }
+    else
+    {
+        LOG_ERROR("SoundManager::addChannel: Channel index out of range");
+    }
+}
+
+void    SoundManager::removeChannel(FMOD::Channel* channel)
+{
+    int index = 0;
+    _result = channel->getIndex(&index);
+    errorCheck();
+    if (index < NB_MAX_CHANNELS &&
+        index > 0)
+    {
+        _channels[index] = nullptr;
+    }
+    else
+    {
+        LOG_ERROR("SoundManager::removeChannel, Channel index out of range");
     }
 }
