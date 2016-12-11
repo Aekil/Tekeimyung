@@ -30,6 +30,18 @@ typedef struct sSound
     FMOD::Channel*      channel;
 }                       tSound;
 
+typedef struct      sSoundInfos
+{
+    unsigned int    currentPosition;
+    unsigned int    soundLength;
+
+    unsigned int    currentMinutes;
+    unsigned int    currentSeconds;
+
+    unsigned int    lengthMinutes;
+    unsigned int    lengthSeconds;
+}                   tSoundInfos;
+
 class SoundManager
 {
 public:
@@ -62,6 +74,8 @@ public:
     void                                    pause();
     void                                    resume();
     void                                    setVolume(float volume);
+
+    tSoundInfos                             getSoundInfos(uint32_t soundID);
 
 private:
     void                                    addChannel(FMOD::Channel* channel);

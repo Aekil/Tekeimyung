@@ -1,3 +1,4 @@
+#include <cmath>
 #include <iostream>
 
 #include <Engine/Utils/Debug.hpp>
@@ -207,13 +208,12 @@ bool    SoundManager::isSoundPlaying(uint32_t id)
 
 unsigned int        SoundManager::getSoundCurrentPosition(int id)
 {
-    tSound          sound;
     unsigned int    currentPosition;
 
     currentPosition = 0;
     if (id < 0 || id >= NB_MAX_SOUNDS ||    // Out of range
         _sounds[id].channel == nullptr)     // Not currently playing
-        return (0);
+        return (currentPosition);
 
     _result = _sounds[id].channel->getPosition(&currentPosition, FMOD_TIMEUNIT_MS);
     errorCheck();
@@ -329,4 +329,26 @@ void    SoundManager::removeChannel(FMOD::Channel* channel)
     {
         LOG_ERROR("SoundManager::removeChannel, Channel index out of range");
     }
+}
+
+tSoundInfos         SoundManager::getSoundInfos(uint32_t soundID)
+{
+    tSoundInfos     soundInfos;
+    float           exponent, mantissa;
+    float           exponent2, mantissa2;
+
+    soundInfos.currentPosition = getSoundCurrentPosition(soundID);
+    soundInfos.soundLength = getSoundLength(soundID);
+
+    mantissa = std::modf(((float) soundInfos.currentPosition) / 1000.0f, &exponent);
+    mantissa2 = std::modf(exponent / 60.0f, &exponent2);
+    soundInfos.currentMinutes = (unsigned int) exponent2;
+    soundInfos.currentSeconds = (unsigned int) (mantissa2 * 60.0f);
+
+    mantissa = std::modf(((float) soundInfos.soundLength) / 1000.0f, &exponent);
+    mantissa2 = std::modf(exponent / 60.0f, &exponent2);
+    soundInfos.lengthMinutes = (unsigned int) exponent2;
+    soundInfos.lengthSeconds = (unsigned int) (mantissa2 * 60.0f);
+
+    return (soundInfos);
 }
