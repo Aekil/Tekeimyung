@@ -80,7 +80,7 @@ bool    SoundManager::errorCheck()
 {
     if (_result != FMOD_OK)
     {
-        LOG_ERROR("FMOD error! (%d) : %s", _result, FMOD_ErrorString(_result));
+        //LOG_ERROR("FMOD error! (%d) : %s", _result, FMOD_ErrorString(_result)); // hide bugs in logs
         //std::cerr << "FMOD error! (" << _result << ") " << FMOD_ErrorString(_result) << std::endl;
         return (false);
     }
@@ -127,6 +127,7 @@ int     SoundManager::registerSound(const std::string& name, eSoundType type)
             {
                 _result = _system->createSound(name.c_str(), FMOD_DEFAULT, 0, &_sounds[i].sound);
             }
+            LOG_INFO("Load sound : %s", name.c_str());
             errorCheck();
             return (_sounds[i].id);
         }

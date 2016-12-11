@@ -180,7 +180,7 @@ void        SoundEditorWindow::buildSoundEventDetails(tEventSound* soundEvent, i
             {
                 EventSound::removeEventSound(soundEventIndex);
             }
-            //displaySoundProgressLength(soundEvent); // Here, we display a cool progress bar.
+            displaySoundProgressLength(soundEvent); // Here, we display a cool progress bar.
             ImGui::Separator();
             if (SoundManager::getInstance()->isSoundPlaying(soundEvent->soundID))
             {
