@@ -149,7 +149,7 @@ void    SoundManager::playSound(uint32_t id)
     // Add channel to array
     if (_sounds[id].channel == nullptr)
     {
-        LOG_ERROR("Failed to play sound");
+        LOG_ERROR("Failed to play sound : channel handle is null");
         return;
     }
 

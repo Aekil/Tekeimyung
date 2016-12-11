@@ -10,7 +10,7 @@
 
 #define SOUNDS_DIRECTORY    "resources/sounds"
 
-#define NB_MAX_CHANNELS     32
+#define NB_MAX_CHANNELS     64
 #define NB_MAX_SOUNDS       64
 
 enum class eSoundType: char {
@@ -21,13 +21,13 @@ enum class eSoundType: char {
 
 typedef struct sSound
 {
-    uint32_t        id;
+    uint32_t            id;
     std::string         name;
     bool                free;
     eSoundType          type;
     FMOD::Sound*        sound;
     FMOD::Channel*      channel;
-}                   tSound;
+}                       tSound;
 
 class SoundManager
 {
