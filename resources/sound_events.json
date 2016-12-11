@@ -1,0 +1,25 @@
+{
+   "events" : [
+      {
+         "name" : "BACKGROUND",
+         "sound" : {
+            "name" : "abstract_background.wav",
+            "path" : "resources/sounds/abstract_background.wav"
+         }
+      },
+      {
+         "name" : "COUNTDOWN_WAVE",
+         "sound" : {
+            "name" : "countdown5.mp3",
+            "path" : "resources/sounds/countdown5.mp3"
+         }
+      },
+      {
+         "name" : "BUILD",
+         "sound" : {
+            "name" : "building.mp3",
+            "path" : "resources/sounds/building.mp3"
+         }
+      }
+   ]
+}

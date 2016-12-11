@@ -62,17 +62,6 @@ bool    PlayState::init()
     _pair = std::make_pair(Keyboard::eKey::F, new HandleFullscreenEvent());
 
     _backgroundMusic = EventSound::getEventByEventType(eEventSound::BACKGROUND);
-    // Play first animation of entities
-    /*for (auto entity: em->getEntities())
-    {
-        sRenderComponent* render = entity.second->getComponent<sRenderComponent>();
-        if (render && render->_animator.getAnimationsNb() > 0)
-        {
-            AnimationPtr currentAnimation = render->_animator.getAnimations()[0];
-            render->_animator.play(currentAnimation->getName());
-        }
-    }*/
-
 
     return (true);
 }
@@ -96,6 +85,7 @@ bool    PlayState::update(float elapsedTime)
 
     // Play background music
     #if (ENABLE_SOUND)
+        //_backgroundMusic = EventSound::getEventByEventType(eEventSound::BACKGROUND);
         if (_backgroundMusic->soundID && !SoundManager::getInstance()->isSoundPlaying(_backgroundMusic->soundID))
         {
             SoundManager::getInstance()->playSound(_backgroundMusic->soundID);
@@ -180,14 +170,6 @@ void    PlayState::initEntities()
     // Create towers
     PlayStates::createTile(_map, glm::vec3(7, 4, 1), eArchetype::TOWER_FIRE);
     PlayStates::createTile(_map, glm::vec3(7, 7, 1), eArchetype::TOWER_FIRE);
-
-    /*addDebugWindow<OverlayDebugWindow>();
-    addDebugWindow<EntityDebugWindow>(em, _map, glm::vec2(0, 80), glm::vec2(600, 350));
-    addDebugWindow<LogDebugWindow>(Logger::getInstance(), glm::vec2(0, 430), glm::vec2(300, 200));
-    addDebugWindow<MonitoringDebugWindow>(MonitoringDebugWindow::getInstance());
-
-    _pair = std::make_pair(Keyboard::eKey::F, new HandleFullscreenEvent());*/
-
 
     // Play first animation of entities
     for (auto entity: em->getEntities())

@@ -180,25 +180,25 @@ void        SoundEditorWindow::buildSoundEventDetails(tEventSound* soundEvent, i
             {
                 EventSound::removeEventSound(soundEventIndex);
             }
-            displaySoundProgressLength(soundEvent); // Here, we display a cool progress bar.
+            //displaySoundProgressLength(soundEvent); // Here, we display a cool progress bar.
             ImGui::Separator();
             if (SoundManager::getInstance()->isSoundPlaying(soundEvent->soundID))
             {
-                /*if (ImGui::Button("Pause"))
+                if (ImGui::Button("Pause"))
                 {
                     SoundManager::getInstance()->pauseSound(soundEvent->soundID);
                 }
-                ImGui::SameLine();*/
+                ImGui::SameLine();
                 if (ImGui::Button("Stop"))
                 {
-                    //SoundManager::getInstance()->stopSound(soundEvent->soundID);
+                    SoundManager::getInstance()->stopSound(soundEvent->soundID);
                 }
             }
             else
             {
                 if (ImGui::Button("Play"))
                 {
-                    //SoundManager::getInstance()->playSound(soundEvent->soundID);
+                    SoundManager::getInstance()->playSound(soundEvent->soundID);
                 }
             }
         }
