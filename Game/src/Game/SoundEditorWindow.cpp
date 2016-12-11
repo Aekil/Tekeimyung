@@ -184,21 +184,21 @@ void        SoundEditorWindow::buildSoundEventDetails(tEventSound* soundEvent, i
             ImGui::Separator();
             if (SoundManager::getInstance()->isSoundPlaying(soundEvent->soundID))
             {
-                /*if (ImGui::Button("Pause"))
+                if (ImGui::Button("Pause"))
                 {
                     SoundManager::getInstance()->pauseSound(soundEvent->soundID);
                 }
-                ImGui::SameLine();*/
+                ImGui::SameLine();
                 if (ImGui::Button("Stop"))
                 {
-                    //SoundManager::getInstance()->stopSound(soundEvent->soundID);
+                    SoundManager::getInstance()->stopSound(soundEvent->soundID);
                 }
             }
             else
             {
                 if (ImGui::Button("Play"))
                 {
-                    //SoundManager::getInstance()->playSound(soundEvent->soundID);
+                    SoundManager::getInstance()->playSound(soundEvent->soundID);
                 }
             }
         }
@@ -229,22 +229,19 @@ void        SoundEditorWindow::buildSoundEventDetails(tEventSound* soundEvent, i
 
 void                SoundEditorWindow::displaySoundProgressLength(tEventSound* soundEvent)
 {
-    unsigned int    currentSoundPosition = SoundManager::getInstance()->getSoundCurrentPosition(soundEvent->soundID);
-    unsigned int    soundLength = SoundManager::getInstance()->getSoundLength(soundEvent->soundID);
+    tSoundInfos     soundInfos = SoundManager::getInstance()->getSoundInfos(soundEvent->soundID);
     char            buf[32];
-    static float    progress = 0.0f, progress_dir = 1.0f;
-    float           progress_saturated;
+    static float    progress;
+    float           fraction;
 
-    if (currentSoundPosition >= soundLength)
-        progress = 0.0f;
-    else
-        progress += ((float) currentSoundPosition / (float) soundLength);
-    //LOG_INFO("progress : %f", progress);
+    progress = 0.0f;
+    fraction = (float) soundInfos.currentPosition / (float) soundInfos.soundLength;
+    if (SoundManager::getInstance()->isSoundPlaying(soundEvent->soundID))
+        progress += fraction;
+    sprintf(buf, "%u:%u", soundInfos.currentMinutes, soundInfos.currentSeconds);
 
-    //if (progress >= +1.1f) { progress = +1.1f; progress_dir *= -1.0f; }
-
-    progress_saturated = (progress < 0.0f) ? 0.0f : (progress > 1.0f) ? 1.0f : progress;
-
-    sprintf(buf, "%u/%u", (unsigned int) progress_saturated, soundLength);
-    ImGui::ProgressBar(progress, ImVec2(0.0f, 0.0f), buf);
+    //  The first argument of the ProgressBar must be included between 0.0f and 1.0f
+    ImGui::ProgressBar(fraction, ImVec2(0.0f, 0.0f), buf);
+    ImGui::SameLine();
+    ImGui::Text("%u:%u", soundInfos.lengthMinutes, soundInfos.lengthSeconds);
 }
