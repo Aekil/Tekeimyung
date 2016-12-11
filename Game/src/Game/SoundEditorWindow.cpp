@@ -100,7 +100,6 @@ void    SoundEditorWindow::build(float elapsedTime)
                     if (id != -1)
                     {
                         EventSound::linkEventSound(i, id, soundsStrings[j]);
-                        LOG_DEBUG("sound created : id = %d", id);
                     }
                     else
                     {

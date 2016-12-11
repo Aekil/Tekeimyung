@@ -102,12 +102,6 @@ bool    PlayState::update(float elapsedTime)
         }
     #endif
 
-    // Play sound
-    #if (ENABLE_SOUND)
-        if (mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_1] == Mouse::eButtonState::CLICK_PRESSED)
-            SoundManager::getInstance()->playSound(EventSound::getSoundIDFromEvent(eEventSound::BUILD));
-    #endif
-
     return (GameState::update(elapsedTime));
 }
 
