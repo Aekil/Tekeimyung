@@ -43,6 +43,8 @@ void    EventSound::linkEventSound(int i, int id, const RessourceManager::sSound
     }
     else
     {
+        if (_eventSoundDataList[i].soundID != -1)
+            SoundManager::getInstance()->stopSound(_eventSoundDataList[i].soundID);
         _eventSoundDataList[i].soundID = id;
         _eventSoundDataList[i].soundName = soundString.name;
         _eventSoundDataList[i].soundPath = soundString.path;

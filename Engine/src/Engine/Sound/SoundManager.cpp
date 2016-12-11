@@ -174,6 +174,8 @@ void    SoundManager::stopSound(uint32_t id)
 
     _result = _sounds[id].channel->stop();
     errorCheck();
+
+    _sounds[id].channel = nullptr;
 }
 
 bool    SoundManager::isSoundPlaying(uint32_t id)
