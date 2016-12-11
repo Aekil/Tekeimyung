@@ -593,16 +593,12 @@ START_COMPONENT(sTransformComponent)
 
     void updateTransform()
     {
-        glm::mat4 orientation;
-        orientation = glm::rotate(orientation, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
-        orientation = glm::rotate(orientation, glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-        orientation = glm::rotate(orientation, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+        glm::quat newRotate(glm::vec3(glm::radians(rotation.x), glm::radians(rotation.y), glm::radians(rotation.z)));
 
         needUpdate = false;
-        glm::mat4 transformMatrix(1.0f);
-        transformMatrix = glm::translate(transformMatrix, glm::vec3(pos.x, pos.y, pos.z)) * orientation;
-        transformMatrix = glm::scale(transformMatrix, scale);
-        transform = transformMatrix;
+        glm::mat4 newTranslate = glm::translate(glm::mat4(1.0), glm::vec3(pos.x, pos.y, pos.z));
+        glm::mat4 newScale = glm::scale(glm::mat4(1.0), scale);
+        transform = newTranslate * glm::mat4_cast(newRotate) * newScale;
     }
 
     const glm::mat4& getTransform()

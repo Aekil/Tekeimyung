@@ -9,7 +9,7 @@
 #include <Engine/Window/Keyboard.hpp>
 #include <Engine/Window/GameWindow.hpp>
 #include <Engine/Utils/RessourceManager.hpp>
-#include <Engine/Graphics/Camera.hpp>
+#include <Engine/Graphics/Renderer.hpp>
 #include <Game/EntityFactory.hpp>
 
 #include <Game/ComponentFactory.hpp>
@@ -1267,12 +1267,17 @@ bool    ComponentFactory<sTransformComponent>::updateEditor(const std::string& e
     *savedComponent = component;
     bool changed = false;
 
+    glm::vec3 savedRot = component->rotation;
+    component->rotation = glm::vec3(0.0f);
+    component->updateTransform();
+
     if (ComponentFactory<sTransformComponent>::updateTransforms(component->pos,
                                                             component->scale,
-                                                            component->rotation,
+                                                            savedRot,
                                                             component->transform,
-                                                            ImGuizmo::LOCAL))
+                                                            ImGuizmo::WORLD))
     {
+        component->rotation = savedRot;
         component->updateTransform();
     }
 
@@ -1282,7 +1287,11 @@ bool    ComponentFactory<sTransformComponent>::updateEditor(const std::string& e
 bool    ComponentFactory<sTransformComponent>::updateTransforms(glm::vec3& pos, glm::vec3& scale, glm::vec3& rotation, glm::mat4& transform, ImGuizmo::MODE mode)
 {
     auto &&keyboard = GameWindow::getInstance()->getKeyboard();
-    //Camera* camera = Camera::getInstance();
+    Camera* camera = Renderer::getInstance()->getCurrentCamera();
+
+    if (!camera)
+        return (false);
+
     static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::TRANSLATE);
     bool changed = false;
 
@@ -1294,17 +1303,17 @@ bool    ComponentFactory<sTransformComponent>::updateTransforms(glm::vec3& pos, 
     ImGui::SameLine();
     if (ImGui::RadioButton("Scale", mCurrentGizmoOperation == ImGuizmo::SCALE) || keyboard.isPressed(Keyboard::eKey::E))
         mCurrentGizmoOperation = ImGuizmo::SCALE;
-    //ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transform), glm::value_ptr(pos), glm::value_ptr(rotation), glm::value_ptr(scale));
+
     changed |= ImGui::InputFloat3("Translate", glm::value_ptr(pos), 3);
     changed |= ImGui::InputFloat3("Rotation", glm::value_ptr(rotation), 3);
     changed |= ImGui::InputFloat3("Scale", glm::value_ptr(scale), 3);
 
-    /*ImGuizmo::RecomposeMatrixFromComponents(glm::value_ptr(pos), glm::value_ptr(rotation), glm::value_ptr(scale), glm::value_ptr(transform));
+    ImGuizmo::RecomposeMatrixFromComponents(glm::value_ptr(pos), glm::value_ptr(rotation), glm::value_ptr(scale), glm::value_ptr(transform));
 
     ImGuizmo::Manipulate(glm::value_ptr(camera->getView()), glm::value_ptr(camera->getProj()), mCurrentGizmoOperation, mode, glm::value_ptr(transform), nullptr, nullptr);
-    ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transform), glm::value_ptr(pos), glm::value_ptr(rotation), glm::value_ptr(scale));*/
+    ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transform), glm::value_ptr(pos), glm::value_ptr(rotation), glm::value_ptr(scale));
 
-    return (changed);
+    return (true);
 }
 
 
