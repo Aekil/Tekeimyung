@@ -70,7 +70,7 @@ bool    PlayState::update(float elapsedTime)
 {
     auto& gameWindow = GameWindow::getInstance();
     auto &&keyboard = GameWindow::getInstance()->getKeyboard();
-    auto                &&mouse = GameWindow::getInstance()->getMouse();
+    auto &&mouse = GameWindow::getInstance()->getMouse();
 
     if (keyboard.getStateMap()[_pair.first] == Keyboard::eKeyState::KEY_PRESSED)
         _pair.second->execute();
@@ -85,8 +85,7 @@ bool    PlayState::update(float elapsedTime)
 
     // Play background music
     #if (ENABLE_SOUND)
-        //_backgroundMusic = EventSound::getEventByEventType(eEventSound::BACKGROUND);
-        if (_backgroundMusic->soundID && !SoundManager::getInstance()->isSoundPlaying(_backgroundMusic->soundID))
+        if (_backgroundMusic->soundID != -1 && !SoundManager::getInstance()->isSoundPlaying(_backgroundMusic->soundID))
         {
             SoundManager::getInstance()->playSound(_backgroundMusic->soundID);
         }

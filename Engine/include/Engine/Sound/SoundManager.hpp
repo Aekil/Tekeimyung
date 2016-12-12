@@ -21,7 +21,7 @@ enum class eSoundType: char {
 
 typedef struct sSound
 {
-    uint32_t            id;
+    int                 id;
     std::string         name;
     bool                free;
     bool                paused;
@@ -57,16 +57,16 @@ public:
     bool                                    errorCheck();
     //std::string                             getErrorString();
 
-    void                                    freeSound(uint32_t id);
+    void                                    freeSound(int id);
     int                                     registerSound(const std::string& name, eSoundType type = eSoundType::NONE);
 
-    void                                    playSound(uint32_t id);
-    void                                    resumeSound(uint32_t id);
-    void                                    pauseSound(uint32_t id);
-    void                                    stopSound(uint32_t id);
+    void                                    playSound(int id);
+    void                                    resumeSound(int id);
+    void                                    pauseSound(int id);
+    void                                    stopSound(int id);
 
-    bool                                    isSoundPlaying(uint32_t id);
-    bool                                    isSoundPaused(uint32_t id);
+    bool                                    isSoundPlaying(int id);
+    bool                                    isSoundPaused(int id);
 
     unsigned int                            getSoundCurrentPosition(int id);
     unsigned int                            getSoundLength(int id);
