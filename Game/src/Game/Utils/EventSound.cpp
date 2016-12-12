@@ -1,3 +1,7 @@
+/**
+* @Author   Julien Chardon
+*/
+
 #include <Engine/Utils/Logger.hpp>
 #include <Engine/Utils/RessourceManager.hpp>
 #include <Engine/Utils/Exception.hpp>

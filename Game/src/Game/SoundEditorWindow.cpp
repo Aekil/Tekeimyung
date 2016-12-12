@@ -1,3 +1,7 @@
+/**
+* @Author   Julien Chardon
+*/
+
 #include <imgui.h>
 
 #include <Engine/Utils/Helper.hpp>

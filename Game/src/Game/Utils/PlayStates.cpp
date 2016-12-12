@@ -1,3 +1,7 @@
+/**
+* @Author   Julien Chardon
+*/
+
 #include <Game/Components.hh>
 
 #include <Game/Utils/PlayStates.hpp>

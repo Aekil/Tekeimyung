@@ -1,3 +1,7 @@
+/**
+* @Author   Julien Chardon
+*/
+
 #pragma once
 
 #include <ECS/System.hpp>

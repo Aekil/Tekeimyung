@@ -1,3 +1,4 @@
+#include <iostream>
 #include <imgui.h>
 
 #include <Engine/Utils/Logger.hpp>
@@ -11,21 +12,33 @@ Engine::~Engine() {}
 
 bool    Engine::init()
 {
-    _window = std::make_shared<GameWindow>(&_gameStateManager);
-    if (!_window->initialize())
-        return (false);
-
     _logger = Logger::getInstance();
     if (!_logger->initialize())
+    {
+        std::cerr << "Engine: Failed to initialize logger" << std::endl;
         return (false);
+    }
+
+    _window = std::make_shared<GameWindow>(&_gameStateManager);
+    if (!_window->initialize())
+    {
+        LOG_ERROR("Engine: Failed to initialize window");
+        return (false);
+    }
 
     _soundManager = SoundManager::getInstance();
     if (!_soundManager->initialize())
+    {
+        LOG_ERROR("Engine: Failed to initialize sound manager");
         return (false);
+    }
 
     _renderer = Renderer::getInstance();
     if (!_renderer->initialize())
+    {
+        LOG_ERROR("Engine: Failed to initialize renderer");
         return (false);
+    }
 
     GameWindow::setInstance(_window);
     GameWindow::getInstance()->toggleFullscreen();
@@ -55,6 +68,7 @@ bool    Engine::run()
 
             if (!_gameStateManager.hasStates())
             {
+                LOG_WARN("Game: No game states in the game state manager");
                 return (true);
             }
 

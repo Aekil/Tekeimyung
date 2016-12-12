@@ -1,3 +1,7 @@
+/**
+* @Author   Julien Chardon
+*/
+
 #include <cmath>
 #include <iostream>
 
@@ -48,15 +52,6 @@ bool    SoundManager::initialize()
     if (!errorCheck())
         return (false);
 
-    //RessourceManager::getInstance()->loadResources(SOUNDS_DIRECTORY);
-
-//#if (ENGINE_DEBUG) // let similar message in release ?
-    //for (int i = 0; i < _soundsStrings.size(); ++i)
-    //{
-    //    LOG_INFO("Sound found : path = %s"/* | basename = %s"*/, _soundsStrings[i].name.c_str()/*, _soundsStrings[i].name.c_str()*/);
-    //}
-//#endif
-
     return (true);
 }
 
@@ -80,7 +75,8 @@ bool    SoundManager::errorCheck()
 {
     if (_result != FMOD_OK)
     {
-        //LOG_ERROR("FMOD error! (%d) : %s", _result, FMOD_ErrorString(_result)); // hide bugs in logs
+        //if (_result != 30 )//&& _result != 3)
+            LOG_ERROR("FMOD error! (%d) : %s", _result, FMOD_ErrorString(_result));
         //std::cerr << "FMOD error! (" << _result << ") " << FMOD_ErrorString(_result) << std::endl;
         return (false);
     }
@@ -134,8 +130,8 @@ int     SoundManager::registerSound(const std::string& name, eSoundType type)
         else if (_sounds[i].name == name)
             return (_sounds[i].id);
     }
-    LOG_INFO("No place available to register more sounds"); // log : info / warn ?
-    return (-1); // no place available to register more sounds
+    LOG_WARN("No place available to register more sounds");
+    return (-1);
 }
 
 void    SoundManager::playSound(int id)

@@ -27,7 +27,8 @@ bool    GameWindow::initialize()
     // Initializing GLFW.
     if (glfwInit() == GLFW_FALSE)
     {
-        std::cerr << "Could not initialize GLFW properly." << std::endl;
+        LOG_ERROR("Could not initialize GLFW properly.");
+        //std::cerr << "Could not initialize GLFW properly." << std::endl;
         return (false);
     }
 
@@ -35,7 +36,8 @@ bool    GameWindow::initialize()
     _monitor = glfwGetPrimaryMonitor();
     if (_monitor == nullptr)
     {
-        std::cerr << "Could not retrieve the primary monitor properly." << std::endl;
+        LOG_ERROR("Could not retrieve the primary monitor properly.");
+        //std::cerr << "Could not retrieve the primary monitor properly." << std::endl;
         glfwTerminate();
         return (false);
     }
@@ -64,7 +66,8 @@ bool    GameWindow::initialize()
     _window = glfwCreateWindow(_screenWidth, _screenHeight, _title.c_str(), monitor, nullptr);
     if (_window == nullptr)
     {
-        std::cerr << "Could not initialize the window properly." << std::endl;
+        LOG_ERROR("Could not initialize the window properly.");
+        //std::cerr << "Could not initialize the window properly." << std::endl;
         glfwTerminate();
         return (false);
     }
@@ -76,7 +79,8 @@ bool    GameWindow::initialize()
     // Initializing Glew.
     glewExperimental = GL_TRUE;
     if (glewInit() != GLEW_OK) {
-        std::cerr << "Failed to initialize glew properly." << std::endl;
+        LOG_ERROR("Failed to initialize glew properly.");
+        //std::cerr << "Failed to initialize glew properly." << std::endl;
         glfwTerminate();
         return (false);
     }

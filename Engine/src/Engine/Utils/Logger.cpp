@@ -93,7 +93,7 @@ void    Logger::log(Logger::eLogLevel level, const std::string& message)
             " - " << getLevelToString(level) <<
             "]\t" << message << std::endl;
     }
-
+    
     _log.append("%s\n", message.c_str());
 }
 

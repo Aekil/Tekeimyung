@@ -35,6 +35,7 @@ public:
         WARN,
         ERROR
     };
+
 public:
     explicit    Logger();
     virtual     ~Logger() {}
@@ -45,8 +46,8 @@ public:
     static std::shared_ptr<Logger>  getInstance();
     std::ofstream&                  getStream();
 
-    std::string              getLevelToString(Logger::eLogLevel level);
-    std::string              getDateToString();
+    std::string             getLevelToString(Logger::eLogLevel level);
+    std::string             getDateToString();
 
     void log(Logger::eLogLevel level, const std::string& message);
 

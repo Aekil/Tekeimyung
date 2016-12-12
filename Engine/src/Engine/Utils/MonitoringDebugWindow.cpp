@@ -1,3 +1,7 @@
+/**
+* @Author   Julien Chardon
+*/
+
 #include <Engine/Utils/MonitoringDebugWindow.hpp>
 
 

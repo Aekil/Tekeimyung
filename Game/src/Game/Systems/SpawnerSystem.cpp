@@ -1,3 +1,7 @@
+/**
+* @Author   Julien Chardon
+*/
+
 #include <glm/gtx/string_cast.hpp>
 
 #include <Engine/Utils/Debug.hpp>

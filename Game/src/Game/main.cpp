@@ -31,7 +31,7 @@ int     main()
 
         // Load entities after engine initialization to have logs
         EntityFactory::loadDirectory(ARCHETYPES_LOCATION);
-        // Load textures and models
+        // Load textures, models & sounds
         RessourceManager::getInstance()->loadResources("resources");
         EventSound::loadEvents();
         GameWindow::getInstance()->registerCloseHandler(windowCloseHandler, &engine);
