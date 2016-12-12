@@ -5,6 +5,7 @@
 
 #include <Engine/Utils/Debug.hpp>
 #include <Engine/Utils/Logger.hpp>
+#include <Engine/Sound/SoundManager.hpp>
 
 #include <Engine/Window/GameWindow.hpp>
 
@@ -298,7 +299,7 @@ void    GameWindow::setInstance(std::shared_ptr<GameWindow> instance)
 
 bool    GameWindow::isCursorVisible() const
 {
-    return (glfwGetInputMode(_window, GLFW_CURSOR));
+    return (glfwGetInputMode(_window, GLFW_CURSOR) == GLFW_CURSOR_NORMAL);
 }
 
 void        GameWindow::setCursorVisible(bool visible)
@@ -366,11 +367,13 @@ void    GameWindow::focusCallback(GLFWwindow* window, int focused)
     // The window gained the focus
     if (focused)
     {
+        SoundManager::getInstance()->resume();
         gameWindow->hasLostFocus(false);
     }
     // The window lost focus
     else
     {
+        SoundManager::getInstance()->pause();
         gameWindow->hasLostFocus(true);
     }
 }

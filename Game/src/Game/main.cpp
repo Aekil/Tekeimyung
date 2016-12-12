@@ -9,6 +9,7 @@
 #include <Game/EntityFactory.hpp>
 #include <Game/GameStates/PlayState.hpp>
 #include <Game/GameStates/ConfirmExitState.hpp>
+#include <Game/Utils/EventSound.hpp>
 
 void    windowCloseHandler(void* data)
 {
@@ -31,6 +32,7 @@ int     main()
         EntityFactory::loadDirectory(ARCHETYPES_LOCATION);
         // Load textures and models
         RessourceManager::getInstance()->loadResources("resources");
+        EventSound::loadEvents();
         GameWindow::getInstance()->registerCloseHandler(windowCloseHandler, &engine);
 
         if (!gameStateManager.addState<PlayState>())

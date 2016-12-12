@@ -28,6 +28,7 @@
 #include <Game/Systems/BuildSystem.hpp>
 #include <Game/Components.hh>
 #include <Game/EntityDebugWindow.hpp>
+#include <Game/SoundEditorWindow.hpp>
 #include <Game/EntityFactory.hpp>
 #include <Game/Utils/PlayStates.hpp>
 #include <Game/GameStates/PauseState.hpp>
@@ -56,25 +57,11 @@ bool    PlayState::init()
     addDebugWindow<EntityDebugWindow>(em, _map, glm::vec2(0, 80), glm::vec2(600, 350));
     addDebugWindow<LogDebugWindow>(Logger::getInstance(), glm::vec2(0, 430), glm::vec2(300, 200));
     addDebugWindow<MonitoringDebugWindow>(MonitoringDebugWindow::getInstance());
-
-    // Play sound
-    /*static int idSoundBkgdMusic = SoundManager::getInstance()->registerSound("resources/sounds/Kalimba.mp3", BACKGROUND_SOUND);
-    SoundManager::getInstance()->playSound(idSoundBkgdMusic);*/
+    addDebugWindow<SoundEditorWindow>(glm::vec2(1200, 80), glm::vec2(450, 450));
 
     _pair = std::make_pair(Keyboard::eKey::F, new HandleFullscreenEvent());
 
-
-    // Play first animation of entities
-    for (auto entity: em->getEntities())
-    {
-        sRenderComponent* render = entity.second->getComponent<sRenderComponent>();
-        if (render && render->_animator.getAnimationsNb() > 0)
-        {
-            AnimationPtr currentAnimation = render->_animator.getAnimations()[0];
-            render->_animator.play(currentAnimation->getName());
-        }
-    }
-
+    _backgroundMusic = EventSound::getEventByEventType(eEventSound::BACKGROUND);
 
     return (true);
 }
@@ -83,6 +70,7 @@ bool    PlayState::update(float elapsedTime)
 {
     auto& gameWindow = GameWindow::getInstance();
     auto &&keyboard = GameWindow::getInstance()->getKeyboard();
+    auto                &&mouse = GameWindow::getInstance()->getMouse();
 
     if (keyboard.getStateMap()[_pair.first] == Keyboard::eKeyState::KEY_PRESSED)
         _pair.second->execute();
@@ -94,6 +82,15 @@ bool    PlayState::update(float elapsedTime)
     }
 
     updateCameraInputs(elapsedTime);
+
+    // Play background music
+    #if (ENABLE_SOUND)
+        //_backgroundMusic = EventSound::getEventByEventType(eEventSound::BACKGROUND);
+        if (_backgroundMusic->soundID && !SoundManager::getInstance()->isSoundPlaying(_backgroundMusic->soundID))
+        {
+            SoundManager::getInstance()->playSound(_backgroundMusic->soundID);
+        }
+    #endif
 
     return (GameState::update(elapsedTime));
 }
@@ -151,7 +148,7 @@ void    PlayState::initEntities()
     SpawnerSystem::setSecBeforeEachSpawn(*em, spawnerEntityID, 2);
     SpawnerSystem::setSecBeforeEachSpawn(*em, spawnerEntityID, 5);
 
-    static uint32_t spawnerEntityID2 = SpawnerSystem::createSpawner(_map, glm::vec3(0, 8.0f, 1), eArchetype::SPAWNER);
+    /*static uint32_t spawnerEntityID2 = SpawnerSystem::createSpawner(_map, glm::vec3(0, 8.0f, 1), eArchetype::SPAWNER);
     tSpawnerData spawnerData = { 5, 5, 2, 5 };
     SpawnerSystem::setAllFields(*em, spawnerEntityID2, spawnerData); // method 2
 
@@ -160,7 +157,7 @@ void    PlayState::initEntities()
     SpawnerSystem::setSecBeforeEachSpawn(*em, spawnerEntityID3, 3); // method 1 (partial)
 
     static uint32_t spawnerEntityID4 = SpawnerSystem::createSpawner(_map, glm::vec3(0, 2.0f, 1), eArchetype::SPAWNER);
-    SpawnerSystem::setAllFields(*em, spawnerEntityID4, *SpawnerSystem::getStructData(3, 1, 5, 2)); // method 3 : how to delete the tSpawnerData* in this use ?
+    SpawnerSystem::setAllFields(*em, spawnerEntityID4, *SpawnerSystem::getStructData(3, 1, 5, 2));*/ // method 3 : how to delete the tSpawnerData* in this use ?
 
     /*static uint32_t spawnerEntityID = SpawnerSystem::createSpawner(_map, glm::vec3(0, 8.0f, 1), eArchetype::SPAWNER);
     tSpawnerData spawnerData = { 5, 3, 2, 3 };
@@ -173,6 +170,17 @@ void    PlayState::initEntities()
     // Create towers
     PlayStates::createTile(_map, glm::vec3(7, 4, 1), eArchetype::TOWER_FIRE);
     PlayStates::createTile(_map, glm::vec3(7, 7, 1), eArchetype::TOWER_FIRE);
+
+    // Play first animation of entities
+    for (auto entity: em->getEntities())
+    {
+        sRenderComponent* render = entity.second->getComponent<sRenderComponent>();
+        if (render && render->_animator.getAnimationsNb() > 0)
+        {
+            AnimationPtr currentAnimation = render->_animator.getAnimations()[0];
+            render->_animator.play(currentAnimation->getName());
+        }
+    }
 }
 
 void    PlayState::addSystems()

@@ -239,7 +239,7 @@ uint32_t FindRotation(float AnimationTime, const aiNodeAnim* pNodeAnim)
         }
     }
 
-    ASSERT(0, "qsdposkdqopsdqposdk");
+    ASSERT(0, "qsdposkdqopsdqposdk"); // wtf
 }
 
 void calcInterpolatedRotation(glm::quat &out, float AnimationTime, const aiNodeAnim* pNodeAnim)
@@ -254,10 +254,10 @@ void calcInterpolatedRotation(glm::quat &out, float AnimationTime, const aiNodeA
 
     uint32_t RotationIndex = FindRotation(AnimationTime, pNodeAnim);
     uint32_t NextRotationIndex = (RotationIndex + 1);
-    ASSERT(NextRotationIndex < pNodeAnim->mNumRotationKeys, "lolqsdqds");
+    ASSERT(NextRotationIndex < pNodeAnim->mNumRotationKeys, "lolqsdqds"); // wtf
     float DeltaTime = pNodeAnim->mRotationKeys[NextRotationIndex].mTime - pNodeAnim->mRotationKeys[RotationIndex].mTime;
     float Factor = (AnimationTime - (float)pNodeAnim->mRotationKeys[RotationIndex].mTime) / DeltaTime;
-    ASSERT(Factor >= 0.0f && Factor <= 1.0f, "lol");
+    ASSERT(Factor >= 0.0f && Factor <= 1.0f, "lol"); // wtf
     const aiQuaternion& StartRotationQ = pNodeAnim->mRotationKeys[RotationIndex].mValue;
     const aiQuaternion& EndRotationQ = pNodeAnim->mRotationKeys[NextRotationIndex].mValue;
     aiQuaternion::Interpolate(rotation, StartRotationQ, EndRotationQ, Factor);

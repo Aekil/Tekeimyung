@@ -227,7 +227,7 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
 
 
     renderColliders(em);
-
+    
     renderParticles(em, elapsedTime);
 
     // Enable depth buffer for opaque objects
@@ -238,6 +238,7 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
     if (_camera->getProjType() == Camera::eProj::ORTHOGRAPHIC_2D)
         glEnable(GL_DEPTH_TEST);
 
+    //ImGui::ShowTestWindow();
     MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, timer.getElapsedTime(), nbEntities);
 }
 

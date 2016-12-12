@@ -10,6 +10,8 @@
 #include <glm/gtc/quaternion.hpp>
 #include <glm/vec3.hpp>
 
+#define FMT_MSG(format, ...)    (Helper::formatMessage(format, ## __VA_ARGS__))
+
 class Helper
 {
 public:

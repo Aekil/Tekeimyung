@@ -6,6 +6,7 @@
 
 #include <Engine/Utils/Exception.hpp>
 #include <Engine/Utils/Helper.hpp>
+#include <Engine/Sound/SoundManager.hpp>
 
 #include <Engine/Utils/RessourceManager.hpp>
 
@@ -20,8 +21,9 @@ void    RessourceManager::loadResources(const std::string& directory)
     DIR* dir;
     struct dirent* ent;
     RessourceManager* ressourceManager = RessourceManager::getInstance();
-    std::vector<std::string> texturesExtensions = {TEXTURES_EXT};
-    std::vector<std::string> modelsExtensions = {MODELS_EXT};
+    std::vector<std::string> texturesExtensions = { TEXTURES_EXT };
+    std::vector<std::string> modelsExtensions = { MODELS_EXT };
+    std::vector<std::string> soundsExtensions = { SOUNDS_EXT };
 
     dir = opendir(directory.c_str());
     if (!dir)
@@ -52,6 +54,10 @@ void    RessourceManager::loadResources(const std::string& directory)
             else if (std::find(modelsExtensions.cbegin(), modelsExtensions.cend(), extension) != modelsExtensions.cend())
             {
                 loadModel(basename, file);
+            }
+            else if (std::find(soundsExtensions.cbegin(), soundsExtensions.cend(), extension) != soundsExtensions.cend())
+            {
+                loadSound(basename, file);
             }
         }
     }
@@ -255,6 +261,11 @@ const std::vector<const char*>& RessourceManager::getModelsNames() const
     return (_modelsNames);
 }
 
+const std::vector<RessourceManager::sSoundStrings>&  RessourceManager::getSoundsStrings() const
+{
+    return (_soundsStrings);
+}
+
 std::shared_ptr<Model>  RessourceManager::loadModel(const std::string basename, const std::string& fileName)
 {
     _models[basename] = std::make_shared<Model>();
@@ -264,4 +275,16 @@ std::shared_ptr<Model>  RessourceManager::loadModel(const std::string basename, 
     _modelsNames.push_back(_models.find(basename)->first.c_str());
 
     return (_models[basename]);
+}
+
+void    RessourceManager::loadSound(const std::string basename, const std::string& fileName)
+{
+    // Add sound string to Ressource Manager
+    sSoundStrings soundString;
+    soundString.path = fileName;
+    soundString.name = basename;
+    _soundsStrings.push_back(soundString);
+
+    // Load sound in Sound Manager
+    SoundManager::getInstance()->registerSound(fileName);
 }

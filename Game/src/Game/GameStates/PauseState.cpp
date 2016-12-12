@@ -2,10 +2,12 @@
 
 #include <Engine/Window/GameWindow.hpp>
 #include <Engine/Utils/LogDebugWindow.hpp>
+#include <Engine/Sound/SoundManager.hpp>
 
 #include <Game/Systems/RenderingSystem.hpp>
 #include <Game/Systems/MenuSystem.hpp>
 #include <Game/EntityDebugWindow.hpp>
+#include <Game/SoundEditorWindow.hpp>
 #include <Game/EntityFactory.hpp>
 #include <Game/Components.hh>
 #include <Game/GameStates/ConfirmExitState.hpp>
@@ -40,6 +42,7 @@ bool    PauseState::init()
 
     EntityManager* em = _world.getEntityManager();
     addDebugWindow<EntityDebugWindow>(em, nullptr, glm::vec2(0, 80), glm::vec2(600, 350));
+    addDebugWindow<SoundEditorWindow>(glm::vec2(1200, 80), glm::vec2(450, 450));
     addDebugWindow<LogDebugWindow>(Logger::getInstance(), glm::vec2(0, 430), glm::vec2(300, 200));
 
     initCamera();
@@ -48,6 +51,8 @@ bool    PauseState::init()
     _howToPlayButton = createButton(eArchetype::BUTTON_HOW_TO_PLAY, glm::vec2(0.0f, 160.0f));
     _optionsButton = createButton(eArchetype::BUTTON_OPTIONS, glm::vec2(0.0f, 80.0f));
     _quitButton = createButton(eArchetype::BUTTON_QUIT, glm::vec2(0.0f, 0.0f));
+
+    SoundManager::getInstance()->setVolume(0.3f);
     return (true);
 }
 
@@ -66,6 +71,7 @@ bool    PauseState::update(float elapsedTime)
     // Unpause the game
     if (keyboard.getStateMap()[Keyboard::eKey::ESCAPE] == Keyboard::eKeyState::KEY_PRESSED)
     {
+        SoundManager::getInstance()->setVolume(1.0f);
         return (false);
     }
 
@@ -121,6 +127,7 @@ void    PauseState::handleButtons()
         (mouseClicked && resume->hovered))
     {
         _gameStateManager->removeCurrentState();
+        SoundManager::getInstance()->setVolume(1.0f);
     }
 
     //  "How to Play" button
