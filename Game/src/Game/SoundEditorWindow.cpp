@@ -182,7 +182,8 @@ void        SoundEditorWindow::buildSoundEventDetails(tEventSound* soundEvent, i
             }
             displaySoundProgressLength(soundEvent); // Here, we display a cool progress bar.
             ImGui::Separator();
-            if (SoundManager::getInstance()->isSoundPlaying(soundEvent->soundID))
+            if (!SoundManager::getInstance()->isSoundPaused(soundEvent->soundID) &&
+                SoundManager::getInstance()->isSoundPlaying(soundEvent->soundID))
             {
                 if (ImGui::Button("Pause"))
                 {
@@ -198,11 +199,14 @@ void        SoundEditorWindow::buildSoundEventDetails(tEventSound* soundEvent, i
             {
                 if (ImGui::Button("Play"))
                 {
-                    SoundManager::getInstance()->playSound(soundEvent->soundID);
+                    if (!SoundManager::getInstance()->isSoundPlaying(soundEvent->soundID))
+                        SoundManager::getInstance()->playSound(soundEvent->soundID);
+                    else
+                        SoundManager::getInstance()->resumeSound(soundEvent->soundID);
                 }
             }
         }
-        
+
         //  Building the pop-up that lists all the sounds available.
         if (ImGui::BeginPopup("Sounds"))
         {
@@ -211,7 +215,7 @@ void        SoundEditorWindow::buildSoundEventDetails(tEventSound* soundEvent, i
                 if (ImGui::Button(soundsStrings[index].name.c_str()))
                 {
                     int soundID = SoundManager::getInstance()->registerSound(soundsStrings[index].path, soundEvent->soundType);
-                    
+
                     if (soundID != -1)
                     {
                         EventSound::linkEventSound(soundEventIndex, soundID, soundsStrings[index]);

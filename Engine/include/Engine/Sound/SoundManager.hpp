@@ -66,6 +66,8 @@ public:
     void                                    stopSound(uint32_t id);
 
     bool                                    isSoundPlaying(uint32_t id);
+    bool                                    isSoundPaused(uint32_t id);
+
     unsigned int                            getSoundCurrentPosition(int id);
     unsigned int                            getSoundLength(int id);
 

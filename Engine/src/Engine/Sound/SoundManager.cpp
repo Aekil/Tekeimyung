@@ -207,6 +207,20 @@ bool    SoundManager::isSoundPlaying(uint32_t id)
     return (isPlaying);
 }
 
+bool    SoundManager::isSoundPaused(uint32_t id)
+{
+    bool isPaused = false;
+
+    if (id < 0 || id >= NB_MAX_SOUNDS || // Out of range
+        _sounds[id].channel == nullptr) // Not currently playing
+        return (false);
+
+    _result = _sounds[id].channel->getPaused(&isPaused);
+    errorCheck();
+
+    return (isPaused);
+}
+
 unsigned int        SoundManager::getSoundCurrentPosition(int id)
 {
     unsigned int    currentPosition;
