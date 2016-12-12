@@ -5,6 +5,7 @@
 #include <Engine/Utils/Exception.hpp>
 #include <Engine/Utils/RessourceManager.hpp>
 #include <Engine/Core/Engine.hpp>
+#include <Engine/Utils/Logger.hpp>
 
 #include <Game/EntityFactory.hpp>
 #include <Game/GameStates/PlayState.hpp>
@@ -42,7 +43,7 @@ int     main()
     }
     catch(const Exception& e)
     {
-        std::cerr << e.what() << std::endl;
+        LOG_ERROR("ERROR: %s", e.what());
     }
 
     engine.stop();
