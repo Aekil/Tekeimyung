@@ -87,7 +87,7 @@ bool    SoundManager::errorCheck()
     return (true);
 }
 
-void    SoundManager::freeSound(uint32_t id)
+void    SoundManager::freeSound(int id)
 {
     if (_sounds[id].free == false)
     {
@@ -138,7 +138,7 @@ int     SoundManager::registerSound(const std::string& name, eSoundType type)
     return (-1); // no place available to register more sounds
 }
 
-void    SoundManager::playSound(uint32_t id)
+void    SoundManager::playSound(int id)
 {
     // Out of range
     if (id < 0 || id >= NB_MAX_SOUNDS)
@@ -158,7 +158,7 @@ void    SoundManager::playSound(uint32_t id)
     addChannel(_sounds[id].channel);
 }
 
-void    SoundManager::resumeSound(uint32_t id)
+void    SoundManager::resumeSound(int id)
 {
     if (id < 0 || id >= NB_MAX_SOUNDS || // Out of range
         _sounds[id].channel == nullptr) // Not currently playing
@@ -168,7 +168,7 @@ void    SoundManager::resumeSound(uint32_t id)
     errorCheck();
 }
 
-void    SoundManager::pauseSound(uint32_t id)
+void    SoundManager::pauseSound(int id)
 {
     if (id < 0 || id >= NB_MAX_SOUNDS || // Out of range
         _sounds[id].channel == nullptr) // Not currently playing
@@ -178,7 +178,7 @@ void    SoundManager::pauseSound(uint32_t id)
     errorCheck();
 }
 
-void    SoundManager::stopSound(uint32_t id)
+void    SoundManager::stopSound(int id)
 {
     if (id < 0 || id >= NB_MAX_SOUNDS || // Out of range
         _sounds[id].channel == nullptr) // Not currently playing
@@ -193,7 +193,7 @@ void    SoundManager::stopSound(uint32_t id)
     _sounds[id].channel = nullptr;
 }
 
-bool    SoundManager::isSoundPlaying(uint32_t id)
+bool    SoundManager::isSoundPlaying(int id)
 {
     bool isPlaying = false;
 
@@ -207,7 +207,7 @@ bool    SoundManager::isSoundPlaying(uint32_t id)
     return (isPlaying);
 }
 
-bool    SoundManager::isSoundPaused(uint32_t id)
+bool    SoundManager::isSoundPaused(int id)
 {
     bool isPaused = false;
 
