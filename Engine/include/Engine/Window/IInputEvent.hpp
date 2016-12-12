@@ -1,3 +1,7 @@
+/**
+* @Author   Mathieu Chassara
+*/
+
 #pragma once
 
 class   IInputEvent

@@ -1,3 +1,7 @@
+/**
+* @Author   Mathieu Chassara
+*/
+
 #include <iostream>
 
 #include <Engine/Utils/Debug.hpp>

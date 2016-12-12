@@ -1,3 +1,7 @@
+/**
+* @Author   Mathieu Chassara
+*/
+
 #include <imgui.h>
 
 #include <Engine/Utils/OverlayDebugWindow.hpp>
