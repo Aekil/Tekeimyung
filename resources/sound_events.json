@@ -3,22 +3,22 @@
       {
          "name" : "BACKGROUND",
          "sound" : {
-            "name" : "abstract_background.wav",
-            "path" : "resources/sounds/abstract_background.wav"
+            "name" : "background_music_epic.mp3",
+            "path" : "resources/sounds/musics/background_music_epic.mp3"
          }
       },
       {
          "name" : "COUNTDOWN_WAVE",
          "sound" : {
-            "name" : "countdown5.mp3",
-            "path" : "resources/sounds/countdown5.mp3"
+            "name" : "countdown_wave.mp3",
+            "path" : "resources/sounds/sfx/countdown_wave.mp3"
          }
       },
       {
          "name" : "BUILD",
          "sound" : {
             "name" : "building.mp3",
-            "path" : "resources/sounds/building.mp3"
+            "path" : "resources/sounds/sfx/building.mp3"
          }
       }
    ]
