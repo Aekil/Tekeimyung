@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #include <iostream>
 
 #include <Engine/Window/GameWindow.hpp>

@@ -1,3 +1,7 @@
+/**
+* @Author   Simon Ambroise
+*/
+
 #include <cmath>
 #include <algorithm>
 

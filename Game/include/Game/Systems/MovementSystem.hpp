@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #pragma once
 
 #include <ECS/System.hpp>
@@ -16,6 +20,6 @@ public:
 
 private:
     Map*            _map;
-    
+
     ADD_MONITORING_VAR
 END_SYSTEM(MovementSystem)

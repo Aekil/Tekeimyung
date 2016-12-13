@@ -1,3 +1,8 @@
+/**
+* @Author   Guillaume Labey
+* @Author   Mathieu Chassara
+*/
+
 message(STATUS "Current CMake version is: ${CMAKE_VERSION}")
 
 cmake_minimum_required(VERSION 3.0)

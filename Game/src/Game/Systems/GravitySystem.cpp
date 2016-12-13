@@ -1,3 +1,7 @@
+/**
+* @Author   Simon Ambroise
+*/
+
 #include <Game/Components.hh>
 
 #include <Game/Systems/GravitySystem.hpp>

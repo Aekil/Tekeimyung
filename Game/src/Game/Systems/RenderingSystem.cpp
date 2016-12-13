@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #include <iostream>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -227,7 +231,7 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
 
 
     renderColliders(em);
-    
+
     renderParticles(em, elapsedTime);
 
     // Enable depth buffer for opaque objects

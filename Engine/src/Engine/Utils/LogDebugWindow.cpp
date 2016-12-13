@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #include <imgui.h>
 
 #include <Engine/Utils/LogDebugWindow.hpp>

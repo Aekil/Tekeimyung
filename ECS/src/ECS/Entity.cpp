@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #include <ECS/EntityManager.hpp>
 
 #include <ECS/Entity.hpp>

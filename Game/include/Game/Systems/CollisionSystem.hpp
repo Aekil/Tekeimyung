@@ -1,3 +1,7 @@
+/**
+* @Author   Simon Ambroise
+*/
+
 #pragma once
 
 #include <ECS/System.hpp>
@@ -19,6 +23,6 @@ private:
 
 private:
     Map*            _map;
-    
+
     ADD_MONITORING_VAR
 END_SYSTEM(CollisionSystem)

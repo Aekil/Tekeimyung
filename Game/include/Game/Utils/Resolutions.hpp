@@ -1,3 +1,7 @@
+/**
+* @Author   Simon Ambroise
+*/
+
 #pragma once
 
 #include <map>
@@ -11,7 +15,7 @@ public:
     ~Resolutions() { };
 
     std::function<void(int)> getResolutionByName(std::string);
-    
+
     static std::shared_ptr<Resolutions> getInstance();
     static void onCollisionEnterPlayer(int entityId);
     static void onCollisionExitPlayer(int entityId);

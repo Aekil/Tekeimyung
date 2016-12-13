@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #include <Engine/Core/GameStateManager.hpp>
 
 GameStateManager::GameStateManager() {}

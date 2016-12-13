@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #include <algorithm>
 #include <sstream>
 #include <imgui.h>

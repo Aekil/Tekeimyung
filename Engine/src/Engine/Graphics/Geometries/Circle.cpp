@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #include <Engine/Graphics/Geometries/Circle.hpp>
 
 Circle::Circle(Circle::sInfo& info): Geometry(Geometry::eType::CIRCLE)

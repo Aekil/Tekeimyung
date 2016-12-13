@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #include <algorithm>
 
 #include <glm/gtx/string_cast.hpp>

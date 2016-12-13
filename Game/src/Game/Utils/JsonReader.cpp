@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #include <Game/Utils/JsonReader.hpp>
 
 JsonReader::JsonReader() {}

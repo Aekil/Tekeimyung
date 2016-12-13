@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #include <Engine/Graphics/Animation.hpp>
 
 Animation::Animation(const std::string& name): _name(name), _loop(true), _isPlaying(false) {}

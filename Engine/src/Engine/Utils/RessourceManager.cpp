@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #include <Engine/Utils/Logger.hpp>
 #include <dirent.h>
 #include <fstream>

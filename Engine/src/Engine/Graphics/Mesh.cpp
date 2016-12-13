@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #include <cstring>
 #include <glm/vec3.hpp>
 #include <glm/vec2.hpp>

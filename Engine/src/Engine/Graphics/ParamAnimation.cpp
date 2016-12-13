@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #include <Engine/Graphics/ParamAnimation.hpp>
 
 std::vector<const char*>  IParamAnimation::_easingTypesString = { EASING_TYPES(GENERATE_EASING_STRING) };

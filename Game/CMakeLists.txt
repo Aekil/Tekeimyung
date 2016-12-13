@@ -1,3 +1,8 @@
+/**
+* @Author   Guillaume Labey
+* @Author   Mathieu Chassara
+*/
+
 cmake_minimum_required(VERSION 3.0)
 set(EXECUTABLE_NAME "game")
 project(${EXECUTABLE_NAME})

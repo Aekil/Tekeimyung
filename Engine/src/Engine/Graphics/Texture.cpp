@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #define STB_IMAGE_IMPLEMENTATION
 
 #include <iostream>

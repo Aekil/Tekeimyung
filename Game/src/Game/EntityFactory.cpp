@@ -1,8 +1,12 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #include <algorithm>
 #include <iostream>
 
 #include <Game/ComponentFactory.hpp>
-#include <dirent.h> // This include have to be called after "ComponentFactory.hpp"
+#include <dirent.h> // This include has to be called after "ComponentFactory.hpp"
 
 #include <Engine/Utils/Debug.hpp>
 #include <Engine/Utils/Logger.hpp>

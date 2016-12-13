@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #include <cstdlib>
 #include <ctime>
 #include <algorithm>

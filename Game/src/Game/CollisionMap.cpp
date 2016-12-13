@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #include <cstring>
 
 #include <Engine/Utils/Debug.hpp>

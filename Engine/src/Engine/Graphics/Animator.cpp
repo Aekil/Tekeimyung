@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #include <Engine/Utils/Logger.hpp>
 
 #include <Engine/Graphics/Animator.hpp>

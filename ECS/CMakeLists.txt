@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 cmake_minimum_required(VERSION 3.0)
 set(EXECUTABLE_NAME "ECS")
 project(${EXECUTABLE_NAME})

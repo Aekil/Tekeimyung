@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #include <Engine/Utils/Debug.hpp>
 
 #include <Engine/Graphics/Geometries/Geometry.hpp>

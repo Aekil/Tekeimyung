@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #include <Engine/Utils/RessourceManager.hpp>
 
 #include <Engine/Graphics/Material.hpp>

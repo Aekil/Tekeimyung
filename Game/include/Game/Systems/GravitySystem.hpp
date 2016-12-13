@@ -1,3 +1,7 @@
+/**
+* @Author   Simon Ambroise
+*/
+
 #pragma once
 
 #include <ECS/System.hpp>

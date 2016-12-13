@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #include <Game/Utils/JsonValue.hpp>
 
 JsonValue::JsonValue() {}

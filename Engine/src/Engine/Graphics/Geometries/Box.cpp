@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #include <Engine/Graphics/Geometries/Box.hpp>
 
 Box::Box(Box::sInfo& info): Geometry(Geometry::eType::BOX)

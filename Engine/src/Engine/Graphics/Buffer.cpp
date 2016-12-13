@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #include <GL/glew.h>
 
 #include <Engine/Graphics/Buffer.hpp>

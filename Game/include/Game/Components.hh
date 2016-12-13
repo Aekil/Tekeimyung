@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #pragma once
 
 #include <memory>
@@ -671,7 +675,7 @@ virtual sComponent*     clone()
 
 virtual void            update(sSoundComponent* component)
 {
-    
+
 }
 
 virtual void            update(sComponent* component)

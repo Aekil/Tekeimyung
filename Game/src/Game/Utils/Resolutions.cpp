@@ -1,3 +1,7 @@
+/**
+* @Author   Simon Ambroise
+*/
+
 #include <Engine/Utils/Logger.hpp>
 
 #include <Game/Utils/Resolutions.hpp>

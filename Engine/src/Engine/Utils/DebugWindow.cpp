@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #include <iostream>
 
 #include <Engine/Utils/Debug.hpp>
