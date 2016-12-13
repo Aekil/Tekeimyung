@@ -1277,18 +1277,19 @@ bool    ComponentFactory<sTransformComponent>::updateEditor(const std::string& e
 
     if (ComponentFactory<sTransformComponent>::updateTransforms(component->pos,
                                                             component->scale,
+                                                            component->rotation,
                                                             savedRot,
                                                             component->transform,
                                                             ImGuizmo::WORLD))
     {
-        component->rotation = savedRot;
+        component->rotation += savedRot;
         component->updateTransform();
     }
 
     return (false);
 }
 
-bool    ComponentFactory<sTransformComponent>::updateTransforms(glm::vec3& pos, glm::vec3& scale, glm::vec3& rotation, glm::mat4& transform, ImGuizmo::MODE mode)
+bool    ComponentFactory<sTransformComponent>::updateTransforms(glm::vec3& pos, glm::vec3& scale, glm::vec3& rotation, glm::vec3& savedRotation, glm::mat4& transform, ImGuizmo::MODE mode)
 {
     auto &&keyboard = GameWindow::getInstance()->getKeyboard();
     Camera* camera = Renderer::getInstance()->getCurrentCamera();
@@ -1309,7 +1310,7 @@ bool    ComponentFactory<sTransformComponent>::updateTransforms(glm::vec3& pos, 
         mCurrentGizmoOperation = ImGuizmo::SCALE;
 
     changed |= ImGui::InputFloat3("Translate", glm::value_ptr(pos), 3);
-    changed |= ImGui::InputFloat3("Rotation", glm::value_ptr(rotation), 3);
+    changed |= ImGui::InputFloat3("Rotation", glm::value_ptr(savedRotation), 3);
     changed |= ImGui::InputFloat3("Scale", glm::value_ptr(scale), 3);
 
     ImGuizmo::RecomposeMatrixFromComponents(glm::value_ptr(pos), glm::value_ptr(rotation), glm::value_ptr(scale), glm::value_ptr(transform));

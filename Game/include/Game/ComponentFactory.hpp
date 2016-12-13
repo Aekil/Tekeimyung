@@ -414,7 +414,7 @@ public:
 
     // Update transforms with gizmos
     // Used for multiple components: sTransformComponent, sBoxColliderComponent
-    static bool     updateTransforms(glm::vec3& pos, glm::vec3& scale, glm::vec3& rotation, glm::mat4& transform, ImGuizmo::MODE mode);
+    static bool     updateTransforms(glm::vec3& pos, glm::vec3& scale, glm::vec3& rotation, glm::vec3& savedRotation, glm::mat4& transform, ImGuizmo::MODE mode);
 };
 
 
