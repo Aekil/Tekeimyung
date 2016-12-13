@@ -12,7 +12,7 @@
 
 #include <Engine/Sound/SoundManager.hpp>
 
-#define EVENTS_CONFIG "resources/sound_events.json"
+#define EVENTS_CONFIG "resources/sounds/sound_events.json"
 
 #define EVENT_SOUND(PROCESS)\
     PROCESS(BACKGROUND, BACKGROUND_SOUND),\

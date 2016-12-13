@@ -3,8 +3,8 @@
       {
          "name" : "BACKGROUND",
          "sound" : {
-            "name" : "background_music_epic.mp3",
-            "path" : "resources/sounds/musics/background_music_epic.mp3"
+            "name" : "background_epic_music.mp3",
+            "path" : "resources/sounds/musics/background_epic_music.mp3"
          }
       },
       {
