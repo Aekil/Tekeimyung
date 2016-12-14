@@ -37,11 +37,14 @@ bool    RenderingSystem::init()
 
 void    RenderingSystem::renderEntity(sRenderComponent *render, Entity* entity, float elapsedTime)
 {
-    if (!render->_display)
+    if (!render || !render->_display)
         return;
 
     sTransformComponent *transform = entity->getComponent<sTransformComponent>();
     auto&& model = getModel(render);
+
+    if (!model)
+        return;
 
     // Update animation
     if (render->_animator.isPlaying())
@@ -139,6 +142,9 @@ void    RenderingSystem::renderParticles(EntityManager& em, float elapsedTime)
 
         sRenderComponent *render = entity->getComponent<sRenderComponent>();
         auto&& model = getModel(render);
+
+        if (!model)
+            continue;
 
         // Update animation
         if (render->_animator.isPlaying())
@@ -254,6 +260,9 @@ bool    RenderingSystem::isTransparent(sRenderComponent *render) const
 
 std::shared_ptr<Model>  RenderingSystem::getModel(sRenderComponent *render)
 {
+    if (!render)
+        return (nullptr);
+
     // The entity does not exist in the render system
     if (!render->_model)
     {
