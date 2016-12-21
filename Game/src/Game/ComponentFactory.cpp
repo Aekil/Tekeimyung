@@ -1348,3 +1348,18 @@ sComponent* ComponentFactory<sTileComponent>::loadFromJson(const std::string& en
 
     return (component);
 }
+
+/*
+** sScriptComponent
+*/
+
+sComponent* ComponentFactory<sScriptComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
+{
+    sScriptComponent*  component;
+
+    component = new sScriptComponent();
+
+    //component->scriptClass = json.getString("script", "");
+    
+    return component;
+}

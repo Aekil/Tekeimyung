@@ -440,3 +440,15 @@ class ComponentFactory<sTileComponent> : public BaseComponentFactory<sTileCompon
 public:
     virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
 };
+
+
+/*
+** sScriptComponent
+*/
+
+template <>
+class ComponentFactory<sScriptComponent> : public BaseComponentFactory<sScriptComponent>
+{
+public:
+    virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
+};

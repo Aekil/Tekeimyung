@@ -26,6 +26,7 @@
 #include <Engine/Graphics/Animator.hpp>
 #include <Engine/Utils/RessourceManager.hpp>
 #include <Engine/Utils/Timer.hpp>
+#include <Engine/Core/BasicClass.hpp>
 
 
 START_COMPONENT(sRenderComponent)
@@ -684,3 +685,26 @@ virtual void            update(sComponent* component)
 }
 
 END_COMPONENT(sSoundComponent)
+
+START_COMPONENT(sScriptComponent)
+virtual sComponent*     clone()
+{
+    sScriptComponent*    component = new sScriptComponent();
+    component->update(this);
+
+    return (component);
+}
+
+virtual void            update(sScriptComponent* component)
+{
+
+}
+
+virtual void            update(sComponent* component)
+{
+    update(static_cast<sScriptComponent*>(component));
+}
+
+BasicClass* scriptClass;
+
+END_COMPONENT(sScriptComponent)
