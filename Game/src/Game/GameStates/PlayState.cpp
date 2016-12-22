@@ -125,7 +125,6 @@ void    PlayState::initEntities()
 
     // Create character
     Entity* player = PlayStates::createTile(_map, glm::vec3(9, 5, 1), eArchetype::PLAYER);
-    PlayStates::createTile(_map, glm::vec3(9, 7, 1), (eArchetype)65);
 
     // Initialize base map
     for (int y = 0; y < 15; y++) {
