@@ -19,19 +19,37 @@ ScriptSystem::ScriptSystem()
 
 ScriptSystem::~ScriptSystem() {}
 
-void    ScriptSystem::update(EntityManager &em, float elapsedTime)
+void    ScriptSystem::firstStart(EntityManager &em)
 {
-    Timer timer;
-    uint32_t nbEntities = 0;
-
-    forEachEntity(em, [&](Entity *entity)
+    this->forEachEntity(em, [&](Entity* entity)
     {
         auto entityClass = entity->getComponent<sScriptComponent>()->scriptClass;
 
-        entityClass->Update();
-       
-        ++nbEntities;
+        entityClass->Start();
     });
+}
+
+void    ScriptSystem::update(EntityManager &em, float elapsedTime)
+{
+    static bool isInitialized = false;
+    Timer timer;
+    uint32_t nbEntities = 0;
+       
+    if (!isInitialized)
+    {
+        this->firstStart(em);
+        isInitialized = true;
+    }
+    else 
+    {
+        forEachEntity(em, [&](Entity *entity)
+        {
+            auto entityClass = entity->getComponent<sScriptComponent>()->scriptClass;
+
+            entityClass->Update(elapsedTime);
+            ++nbEntities;
+        });
+    }
 
     MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, timer.getElapsedTime(), nbEntities);
 }

@@ -17,6 +17,9 @@ public:
     ScriptSystem();
     virtual     ~ScriptSystem();
     virtual void update(EntityManager &em, float elapsedTime);
+
+private:
+    void    ScriptSystem::firstStart(EntityManager &em);
     
     ADD_MONITORING_VAR
 END_SYSTEM(ScriptSystem)

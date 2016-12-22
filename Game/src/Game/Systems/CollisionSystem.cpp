@@ -8,6 +8,7 @@
 #include <Engine/Window/GameWindow.hpp>
 #include <Engine/Physics/Collisions.hpp>
 #include <Engine/Graphics/Geometries/Geometry.hpp>
+#include <Engine/Utils/Logger.hpp>
 
 #include <Game/Components.hh>
 #include <Game/EntityFactory.hpp>
@@ -36,7 +37,7 @@ void    CollisionSystem::update(EntityManager &em, float elapsedTime)
 
         this->forEachEntity(em, [&](Entity* entityB)
         {
-            if (entityB->getComponent<sBoxColliderComponent>() == nullptr && entityB->getComponent<sSphereColliderComponent>() == nullptr) return;
+            if (entity->getComponent<sBoxColliderComponent>() == nullptr && entityB->getComponent<sSphereColliderComponent>() == nullptr) return;
 
             sPositionComponent* positionB = entityB->getComponent<sPositionComponent>();
             if (entity->id != entityB->id)

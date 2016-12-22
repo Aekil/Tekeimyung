@@ -39,7 +39,8 @@
     PROCESS(sTransformComponent),\
     PROCESS(sResolutionComponent),\
     PROCESS(sButtonComponent),\
-    PROCESS(sTileComponent)\
+    PROCESS(sTileComponent),\
+    PROCESS(sScriptComponent)\
 
 #define GENERATE_PAIRS(COMPONENT) { #COMPONENT, new ComponentFactory<COMPONENT>() }
 

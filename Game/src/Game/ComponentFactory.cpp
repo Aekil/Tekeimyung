@@ -14,6 +14,8 @@
 #include <Engine/Window/GameWindow.hpp>
 #include <Engine/Utils/RessourceManager.hpp>
 #include <Engine/Graphics/Renderer.hpp>
+#include <Engine/Core/ScriptFactory.hpp>
+
 #include <Game/EntityFactory.hpp>
 
 #include <Game/ComponentFactory.hpp>
@@ -867,8 +869,6 @@ sComponent* ComponentFactory<sResolutionComponent>::loadFromJson(const std::stri
 
     component->collidingState= eCollisionState::NO_COLLISION;
     component->entityId = -1;
-    component->onCollisionEnter = Resolutions::getInstance()->getResolutionByName(json.getString("onCollisionEnter", ""));
-    component->onCollisionExit = Resolutions::getInstance()->getResolutionByName(json.getString("onCollisionExit", ""));
 
     return (component);
 }
@@ -1338,6 +1338,7 @@ sComponent* ComponentFactory<sButtonComponent>::loadFromJson(const std::string& 
 
 /*
 ** sTileComponent
+
 */
 
 sComponent* ComponentFactory<sTileComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
@@ -1359,7 +1360,7 @@ sComponent* ComponentFactory<sScriptComponent>::loadFromJson(const std::string& 
 
     component = new sScriptComponent();
 
-    //component->scriptClass = json.getString("script", "");
+    component->scriptClass = ScriptFactory::create(json.getString("class", ""));
     
     return component;
 }

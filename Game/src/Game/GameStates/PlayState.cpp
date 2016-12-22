@@ -30,6 +30,7 @@
 #include <Game/Systems/ProjectileSystem.hpp>
 #include <Game/Systems/SpawnerSystem.hpp>
 #include <Game/Systems/BuildSystem.hpp>
+#include <Game/Systems/ScriptSystem.hpp>
 #include <Game/Components.hh>
 #include <Game/EntityDebugWindow.hpp>
 #include <Game/SoundEditorWindow.hpp>
@@ -124,6 +125,7 @@ void    PlayState::initEntities()
 
     // Create character
     Entity* player = PlayStates::createTile(_map, glm::vec3(9, 5, 1), eArchetype::PLAYER);
+    PlayStates::createTile(_map, glm::vec3(9, 7, 1), (eArchetype)65);
 
     // Initialize base map
     for (int y = 0; y < 15; y++) {
@@ -201,6 +203,7 @@ void    PlayState::addSystems()
     _world.addSystem<CollisionSystem>(_map);
     _world.addSystem<ResolutionSystem>();
     _world.addSystem<ParticleSystem>();
+    _world.addSystem<ScriptSystem>();
     _world.addSystem<RenderingSystem>(&_camera, _map, _world.getSystem<ParticleSystem>()->getEmitters());
 }
 

@@ -26,7 +26,7 @@
 #include <Engine/Graphics/Animator.hpp>
 #include <Engine/Utils/RessourceManager.hpp>
 #include <Engine/Utils/Timer.hpp>
-#include <Engine/Core/BasicClass.hpp>
+#include <Engine/Core/BaseScript.hpp>
 
 
 START_COMPONENT(sRenderComponent)
@@ -552,20 +552,12 @@ START_COMPONENT(sResolutionComponent)
     {
         this->entityId = component->entityId;
         this->collidingState = component->collidingState;
-        this->onCollisionEnter = component->onCollisionEnter;
-        this->onCollisionExit = component->onCollisionExit;
     }
 
     virtual void update(sComponent* component)
     {
         update(static_cast<sResolutionComponent*>(component));
     }
-
-    //Callback for enter collision
-    std::function<void(int entityId)> onCollisionEnter;
-
-    //Callback for exit collision
-    std::function<void(int entityId)> onCollisionExit;
 
     //Entity id with which is colliding
     int entityId;
@@ -697,7 +689,7 @@ virtual sComponent*     clone()
 
 virtual void            update(sScriptComponent* component)
 {
-
+    this->scriptClass = component->scriptClass;
 }
 
 virtual void            update(sComponent* component)
@@ -705,6 +697,6 @@ virtual void            update(sComponent* component)
     update(static_cast<sScriptComponent*>(component));
 }
 
-BasicClass* scriptClass;
+BaseScript* scriptClass;
 
 END_COMPONENT(sScriptComponent)
