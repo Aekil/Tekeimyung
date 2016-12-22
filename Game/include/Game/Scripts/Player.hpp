@@ -22,7 +22,6 @@ private:
 public:
     virtual void Start();
     virtual void Update(float dt);
-    virtual void OnCollisionEnter(int entityId);
 };
 
 REGISTER_SCRIPT(Player, "Player");

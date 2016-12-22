@@ -220,6 +220,13 @@ Entity* EntityFactory::cloneEntity(const std::string& typeName)
 
     clone->addComponent<sNameComponent>(typeName);
 
+    if (clone->getComponent<sScriptComponent>() != nullptr)
+    {
+        auto scriptComponent = clone->getComponent<sScriptComponent>();
+
+        scriptComponent->scriptClass->SetEntity(clone);
+    }
+
     initAnimations(clone);
 
     return (clone);

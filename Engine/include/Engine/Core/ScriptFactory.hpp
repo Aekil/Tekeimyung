@@ -5,11 +5,12 @@
 class ScriptFactory
 {
 public:
+    // creates an object from a string
     static BaseScript* create(const std::string& id)
     {
-        // creates an object from a string
         const Creators_t::const_iterator iter = static_creators().find(id);
-        return iter == static_creators().end() ? 0 : (*iter->second)(); // if found, execute the creator function pointer
+
+        return (iter == static_creators().end() ? nullptr : (*iter->second)()); // if found, execute the creator function pointer
     }
 
     typedef BaseScript* Creator_t(); // function pointer to create Object
@@ -18,7 +19,8 @@ public:
     static Creators_t& static_creators()
     {
         static Creators_t s_creators;
-        return s_creators;
+
+        return (s_creators);
     } // static instance of map
 
     template<class T = int> class Register
@@ -26,12 +28,12 @@ public:
     public:
         static BaseScript* create()
         {
-            return new T();
+            return (new T());
         };
 
         static Creator_t* init_creator(const std::string& id)
         {
-            return static_creators()[id] = create;
+            return (static_creators()[id] = create);
         }
 
         static Creator_t* creator;

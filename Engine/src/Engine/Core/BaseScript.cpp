@@ -7,3 +7,8 @@
 BaseScript::BaseScript(/*Entity* entity*/)/* : entity(entity)*/
 {
 }
+
+void BaseScript::SetEntity(Entity* entity)
+{
+    this->entity = entity;
+}

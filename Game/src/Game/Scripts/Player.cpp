@@ -2,6 +2,8 @@
 ** Author : Simon AMBROISE
 */
 
+#include <Game/Components.hh>
+
 #include <Game/Scripts/Player.hpp>
 
 void Player::Death()
@@ -21,7 +23,6 @@ void Player::Update(float dt)
 
     if (this->m_health > 0)
     {
-        LOG_DEBUG("I'm alive");
         this->m_health -= 1;
     }
     else
@@ -32,9 +33,4 @@ void Player::Update(float dt)
             deadOnce = 1;
         }
     }
-}
-
-void Player::OnCollisionEnter(int entityId)
-{
-    LOG_DEBUG("Collision %d", entityId);
 }

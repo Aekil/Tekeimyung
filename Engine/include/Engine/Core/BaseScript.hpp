@@ -16,4 +16,14 @@ public:
 
     virtual void OnCollisionEnter(int entityId) {};
     virtual void OnCollisionExit(int entityId) {};
+
+    void SetEntity(Entity* entity);
+protected:
+    Entity* entity;
+    
+    template<typename componentType>
+    componentType* getComponent() const
+    {
+        return this->entity->getComponent<componentType>();
+    }
 };
