@@ -7,11 +7,11 @@
 #include <Engine/Window/GameWindow.hpp>
 #include <Engine/Utils/LogDebugWindow.hpp>
 
-#include <Game/Systems/RenderingSystem.hpp>
-#include <Game/Systems/MenuSystem.hpp>
-#include <Game/EntityDebugWindow.hpp>
-#include <Game/EntityFactory.hpp>
-#include <Game/Components.hh>
+#include <Engine/Systems/RenderingSystem.hpp>
+#include <Engine/Systems/MenuSystem.hpp>
+#include <Engine/EntityDebugWindow.hpp>
+#include <Engine/EntityFactory.hpp>
+#include <Engine/Components.hh>
 
 #include <Game/GameStates/HowToPlayState.hpp>
 

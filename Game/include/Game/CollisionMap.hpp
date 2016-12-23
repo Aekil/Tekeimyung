@@ -8,7 +8,7 @@
 #include <cstddef>
 
 #include <Game/Map.hpp>
-#include <Game/Components.hh>
+#include <Engine/Components.hh>
 
 enum class eColType: char
 {

@@ -18,23 +18,23 @@
 #include <Engine/Graphics/Animation.hpp>
 #include <Engine/Physics/Collisions.hpp>
 
-#include <Game/Systems/RenderingSystem.hpp>
-#include <Game/Systems/ResolutionSystem.hpp>
-#include <Game/Systems/MovementSystem.hpp>
-#include <Game/Systems/GravitySystem.hpp>
-#include <Game/Systems/CollisionSystem.hpp>
-#include <Game/Systems/AISystem.hpp>
-#include <Game/Systems/ParticleSystem.hpp>
-#include <Game/Systems/InputSystem.hpp>
-#include <Game/Systems/TowerAISystem.hpp>
-#include <Game/Systems/ProjectileSystem.hpp>
-#include <Game/Systems/SpawnerSystem.hpp>
-#include <Game/Systems/BuildSystem.hpp>
-#include <Game/Systems/ScriptSystem.hpp>
-#include <Game/Components.hh>
-#include <Game/EntityDebugWindow.hpp>
-#include <Game/SoundEditorWindow.hpp>
-#include <Game/EntityFactory.hpp>
+#include <Engine/Systems/RenderingSystem.hpp>
+#include <Engine/Systems/ResolutionSystem.hpp>
+#include <Engine/Systems/MovementSystem.hpp>
+#include <Engine/Systems/GravitySystem.hpp>
+#include <Engine/Systems/CollisionSystem.hpp>
+#include <Engine/Systems/AISystem.hpp>
+#include <Engine/Systems/ParticleSystem.hpp>
+#include <Engine/Systems/InputSystem.hpp>
+#include <Engine/Systems/TowerAISystem.hpp>
+#include <Engine/Systems/ProjectileSystem.hpp>
+#include <Engine/Systems/SpawnerSystem.hpp>
+#include <Engine/Systems/BuildSystem.hpp>
+#include <Engine/Systems/ScriptSystem.hpp>
+#include <Engine/Components.hh>
+#include <Engine/EntityDebugWindow.hpp>
+#include <Engine/SoundEditorWindow.hpp>
+#include <Engine/EntityFactory.hpp>
 #include <Game/Utils/PlayStates.hpp>
 #include <Game/GameStates/PauseState.hpp>
 
@@ -125,6 +125,7 @@ void    PlayState::initEntities()
 
     // Create character
     Entity* player = PlayStates::createTile(_map, glm::vec3(9, 5, 1), eArchetype::PLAYER);
+    PlayStates::createTile(_map, glm::vec3(9, 7, 1), (eArchetype)65);
 
     // Initialize base map
     for (int y = 0; y < 15; y++) {

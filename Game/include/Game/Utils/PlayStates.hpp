@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <Game/EntityFactory.hpp>
+#include <Engine/EntityFactory.hpp>
 #include <Game/Map.hpp>
 
 class PlayStates

@@ -10,6 +10,7 @@ file(GLOB_RECURSE source_files src/*)
 file(GLOB_RECURSE include_files include/*)
 file(GLOB_RECURSE imgui_source_files ${CMAKE_SOURCE_DIR}/external/imgui/*.cpp*)
 file(GLOB_RECURSE imGuizmo_source_files ${CMAKE_SOURCE_DIR}/external/imGuizmo/*.cpp*)
+file(GLOB_RECURSE jsoncpp_source_files ${CMAKE_SOURCE_DIR}/external/jsoncpp/*.cpp)
 
 #file(GLOB_RECURSE fmod_source_files ${CMAKE_SOURCE_DIR}/external/fmod/lib/*.cs*)
 #file(GLOB_RECURSE fmt_source_files ${CMAKE_SOURCE_DIR}/external/fmt/*.cc*)
@@ -21,6 +22,10 @@ source_group_files(${source_files})
 # Group header files into the Visual Studio tree structure
 message(STATUS "Grouping header files in the tree structure... (from ${CMAKE_CURRENT_SOURCE_DIR})")
 source_group_files(${include_files})
+
+# Group JsonCpp source files into the Visual Studio tree structure
+message(STATUS "Grouping JsonCpp source files in the tree structure... (from ${CMAKE_CURRENT_SOURCE_DIR})")
+source_group_files(${jsoncpp_source_files})
 
 # Group ImGui source files into the Visual Studio tree structure
 message(STATUS "Grouping ImGui source files in the tree structure... (from ${CMAKE_CURRENT_SOURCE_DIR})")
@@ -84,6 +89,7 @@ include_directories(${CMAKE_SOURCE_DIR}/external/glm/)
 include_directories(${CMAKE_SOURCE_DIR}/external/stb_image/)
 include_directories(${CMAKE_SOURCE_DIR}/external/imgui/)
 include_directories(${CMAKE_SOURCE_DIR}/external/imGuizmo/)
+include_directories(${CMAKE_SOURCE_DIR}/external/jsoncpp)
 
 # Include dirent only for windows
 # Linux have his own header

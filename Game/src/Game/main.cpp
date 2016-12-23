@@ -11,10 +11,10 @@
 #include <Engine/Core/Engine.hpp>
 #include <Engine/Utils/Logger.hpp>
 
-#include <Game/EntityFactory.hpp>
+#include <Engine/EntityFactory.hpp>
 #include <Game/GameStates/PlayState.hpp>
 #include <Game/GameStates/ConfirmExitState.hpp>
-#include <Game/Utils/EventSound.hpp>
+#include <Engine/Utils/EventSound.hpp>
 
 void    windowCloseHandler(void* data)
 {

@@ -4,11 +4,18 @@
 
 #include <Engine/Core/BaseScript.hpp>
 
-BaseScript::BaseScript(/*Entity* entity*/)/* : entity(entity)*/
+BaseScript::BaseScript()
 {
 }
 
 void BaseScript::SetEntity(Entity* entity)
 {
     this->entity = entity;
+}
+
+void BaseScript::Destroy()
+{
+    auto em = EntityFactory::getBindedEntityManager();
+
+    em->destroyEntityRegister(this->entity);
 }

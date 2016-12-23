@@ -11,7 +11,7 @@
 #include <Engine/Graphics/Renderer.hpp>
 #include <Engine/Physics/Collisions.hpp>
 
-#include <Game/Components.hh>
+#include <Engine/Components.hh>
 
 #include <Game/Map.hpp>
 

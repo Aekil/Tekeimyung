@@ -6,6 +6,8 @@
 
 #include <ECS/Entity.hpp>
 
+#include <Engine/EntityFactory.hpp>
+
 class BaseScript
 {
 public:
@@ -26,4 +28,6 @@ protected:
     {
         return this->entity->getComponent<componentType>();
     }
+
+    virtual void Destroy();
 };

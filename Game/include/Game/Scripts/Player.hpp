@@ -22,6 +22,7 @@ private:
 public:
     virtual void Start();
     virtual void Update(float dt);
+
 };
 
 REGISTER_SCRIPT(Player, "Player");

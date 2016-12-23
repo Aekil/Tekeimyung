@@ -9,7 +9,7 @@
 
 #include    <Engine/Core/GameState.hpp>
 
-#include    <Game/EntityFactory.hpp>
+#include    <Engine/EntityFactory.hpp>
 
 START_GAMESTATE(OptionsMenuState)
  public:

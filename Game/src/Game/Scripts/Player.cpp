@@ -2,7 +2,7 @@
 ** Author : Simon AMBROISE
 */
 
-#include <Game/Components.hh>
+#include <Engine/Components.hh>
 
 #include <Game/Scripts/Player.hpp>
 
@@ -19,18 +19,11 @@ void Player::Start()
 
 void Player::Update(float dt)
 {
-    static int deadOnce = 0;
-
+    sPositionComponent* position = this->getComponent<sPositionComponent>();
+    
+    //LOG_DEBUG("%f, %f, %f", position->value.x, position->value.y, position->z);
     if (this->m_health > 0)
-    {
         this->m_health -= 1;
-    }
-    else
-    {
-        if (deadOnce == 0)
-        {
-            this->Death();
-            deadOnce = 1;
-        }
-    }
+    //else
+        //this->Destroy();
 }

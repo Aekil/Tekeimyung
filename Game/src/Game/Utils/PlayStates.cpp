@@ -2,7 +2,7 @@
 * @Author   Julien Chardon
 */
 
-#include <Game/Components.hh>
+#include <Engine/Components.hh>
 
 #include <Game/Utils/PlayStates.hpp>
 
@@ -14,7 +14,18 @@ Entity*    PlayStates::createTile(Map* map, const glm::vec3& pos, eArchetype typ
 {
     Entity* tile;
 
-    tile = EntityFactory::createEntity(type, pos);
+    if ((int)type == 65) {
+        tile = EntityFactory::createEntity(eArchetype::PLAYER, pos);
+
+        auto input = tile->getComponent<sInputComponent>();
+        input->moveDown = Keyboard::eKey::KP_5;
+        input->moveUp = Keyboard::eKey::KP_8;
+        input->moveLeft = Keyboard::eKey::KP_4;
+        input->moveRight = Keyboard::eKey::KP_6;
+    }
+    else {
+        tile = EntityFactory::createEntity(type, pos);
+    }
 
     (*map)[(uint16_t)pos.z][(uint32_t)pos.y][(uint32_t)pos.x] = tile->id;
 

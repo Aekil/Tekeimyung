@@ -8,7 +8,6 @@ project(${EXECUTABLE_NAME})
 # All source files using glob
 file(GLOB_RECURSE source_files src/*)
 file(GLOB_RECURSE include_files include/*)
-file(GLOB_RECURSE jsoncpp_source_files ${CMAKE_SOURCE_DIR}/external/jsoncpp/*.cpp)
 
 # Group source files into the Visual Studio tree structure
 message(STATUS "Grouping source files in the tree structure... (from ${CMAKE_CURRENT_SOURCE_DIR})")
@@ -17,10 +16,6 @@ source_group_files(${source_files})
 # Group header files into the Visual Studio tree structure
 message(STATUS "Grouping header files in the tree structure... (from ${CMAKE_CURRENT_SOURCE_DIR})")
 source_group_files(${include_files})
-
-# Group JsonCpp source files into the Visual Studio tree structure
-message(STATUS "Grouping JsonCpp source files in the tree structure... (from ${CMAKE_CURRENT_SOURCE_DIR})")
-source_group_files(${jsoncpp_source_files})
 
 # add Engine includes with ENGINE_INCLUDE_DIRS
 include_directories(${ENGINE_INCLUDE_DIRS})
@@ -35,7 +30,6 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_directories(${CMAKE_SOURCE_DIR}/external/glm)
 include_directories(${CMAKE_SOURCE_DIR}/external/imgui/)
 include_directories(${CMAKE_SOURCE_DIR}/external/imGuizmo/)
-include_directories(${CMAKE_SOURCE_DIR}/external/jsoncpp)
 
 # Include dirent only for windows
 # Linux have his own header
@@ -49,7 +43,7 @@ ENDIF()
 add_definitions(-DGLEW_STATIC)
 
 # Create executable
-add_executable(${EXECUTABLE_NAME} ${source_files} ${jsoncpp_source_files} ${include_files})
+add_executable(${EXECUTABLE_NAME} ${source_files} ${include_files})
 
 
 # Link libraries with executable

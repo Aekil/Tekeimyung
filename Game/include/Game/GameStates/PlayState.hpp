@@ -15,9 +15,9 @@
 #include <Engine/Core/GameState.hpp>
 #include <Engine/Graphics/Camera.hpp>
 
-#include <Game/EntityFactory.hpp>
+#include <Engine/EntityFactory.hpp>
 #include <Game/Map.hpp>
-#include <Game/Utils/EventSound.hpp>
+#include <Engine/Utils/EventSound.hpp>
 
 START_GAMESTATE(PlayState)
  public:
