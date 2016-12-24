@@ -16,6 +16,7 @@ public:
     int m_health;
 private:
     void Death();
+    void Movement(float dt);
 
 public:
     virtual void Start();

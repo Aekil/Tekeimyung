@@ -10,6 +10,10 @@
 
 #include <Engine/Utils/Logger.hpp>
 
+#include <Engine/Window/GameWindow.hpp>
+
+#define KB_P(x)         this->keyboard.isPressed(x) 
+
 class BaseScript
 {
 public:
@@ -25,7 +29,8 @@ public:
 
 protected:
     Entity* entity;
-    
+    Keyboard& keyboard = GameWindow::getInstance()->getKeyboard();
+
     template<typename componentType>
     componentType* getComponent() const
     {
@@ -35,4 +40,6 @@ protected:
     virtual void Instantiate(std::string, glm::vec3 pos);
 
     virtual void Destroy();
+
 };
+
