@@ -22,7 +22,7 @@ void BaseScript::Destroy()
     em->destroyEntityRegister(this->entity);
 }
 
-void BaseScript::Instantiate(glm::vec3 pos)
+void BaseScript::Instantiate(std::string type, glm::vec3 pos)
 {
-    EntityFactory::createEntity(eArchetype::BLOCK_GREEN, pos);
+    EntityFactory::createEntity(type, pos);
 }

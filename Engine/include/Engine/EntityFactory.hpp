@@ -18,6 +18,7 @@
 // string: "PLAYER", "TILE1", "TILE2"
 // enum: PLAYER, TILE1, TILE2
 #define ENTITIES_TYPES(PROCESS)\
+    PROCESS(EMPTY_OBJECT),\
     PROCESS(PLAYER),\
     PROCESS(ENEMY),\
     PROCESS(BLOCK_GREEN),\
@@ -41,6 +42,7 @@
     PROCESS(BUTTON_CONFIRM_NO),\
     PROCESS(QUIT_CONFIRM_POPUP),\
     PROCESS(QUIT_CONFIRM_TEXT),\
+    PROCESS(GAME_MANAGER),\
 
 #define GENERATE_ENUM(ENUM) ENUM
 #define GENERATE_STRING(STRING) #STRING
@@ -63,6 +65,7 @@ public:
     static Entity*                                          createEntity(eArchetype type);
     static Entity*                                          createEntity(eArchetype type, const glm::vec3& pos);
     static Entity*                                          createEntity(const std::string& typeName);
+    static Entity*                                          createEntity(const std::string& typeName, const glm::vec3& pos);
     static void                                             bindEntityManager(EntityManager* em);
     static EntityManager*                                   getBindedEntityManager();
 

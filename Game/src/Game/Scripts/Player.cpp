@@ -15,7 +15,6 @@ void Player::Start()
 {
     this->m_health = 150;
     LOG_DEBUG("BORN");
-    this->Instantiate(glm::vec3(100, 100, 100));
 }
 
 void Player::Update(float dt)
@@ -28,6 +27,6 @@ void Player::Update(float dt)
     //LOG_DEBUG("%f, %f, %f", position->value.x, position->value.y, position->z);
     if (this->m_health > 0)
         this->m_health -= 1;
-    //else
-        //this->Destroy();
+    else
+        this->Destroy();
 }

@@ -141,6 +141,17 @@ Entity* EntityFactory::createEntity(eArchetype type, const glm::vec3& pos)
     return (entity);
 }
 
+Entity* EntityFactory::createEntity(const std::string& typeName, const glm::vec3& pos)
+{
+    Entity *entity = cloneEntity(typeName);
+
+    sTransformComponent* transform = entity->getComponent<sTransformComponent>();
+
+    transform->pos = pos;
+
+    return (entity);
+}
+
 Entity* EntityFactory::createEntity(const std::string& typeName)
 {
     return (cloneEntity(typeName));

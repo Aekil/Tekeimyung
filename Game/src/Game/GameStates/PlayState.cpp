@@ -20,16 +20,9 @@
 
 #include <Engine/Systems/RenderingSystem.hpp>
 #include <Engine/Systems/ResolutionSystem.hpp>
-//#include <Engine/Systems/MovementSystem.hpp>
 #include <Engine/Systems/GravitySystem.hpp>
 #include <Engine/Systems/CollisionSystem.hpp>
-//#include <Engine/Systems/AISystem.hpp>
 #include <Engine/Systems/ParticleSystem.hpp>
-//#include <Engine/Systems/InputSystem.hpp>
-//#include <Engine/Systems/TowerAISystem.hpp>
-//#include <Engine/Systems/ProjectileSystem.hpp>
-//#include <Engine/Systems/SpawnerSystem.hpp>
-//#include <Engine/Systems/BuildSystem.hpp>
 #include <Engine/Systems/ScriptSystem.hpp>
 #include <Engine/Components.hh>
 #include <Engine/EntityDebugWindow.hpp>
@@ -127,8 +120,10 @@ void    PlayState::initEntities()
     Entity* player = PlayStates::createTile(_map, glm::vec3(9, 5, 1), eArchetype::PLAYER);
     PlayStates::createTile(_map, glm::vec3(9, 7, 1), (eArchetype)65);
 
+    PlayStates::createTile(_map, glm::vec3(0, 0, 0), eArchetype::GAME_MANAGER);
+
     // Initialize base map
-    for (int y = 0; y < 15; y++) {
+    /*for (int y = 0; y < 15; y++) {
         for (int x = 0; x < 20; x++) {
             PlayStates::createTile(_map, glm::vec3(x, y, 0), eArchetype::BLOCK_GREEN);
         }
@@ -144,7 +139,7 @@ void    PlayState::initEntities()
         for (int x = 0; x < 20; x++) {
             PlayStates::createTile(_map, glm::vec3(x, y, 1), eArchetype::BLOCK_BROWN);
         }
-    }
+    }*/
 
     // Create spawner
     //static uint32_t spawnerEntityID = SpawnerSystem::createSpawner(_map, glm::vec3(0.5, 5.5f, 0.5), eArchetype::SPAWNER);
@@ -173,8 +168,8 @@ void    PlayState::initEntities()
     SpawnerSystem::setAllFields(*em, spawnerEntityID2, spawnerData2);*/
 
     // Create towers
-    PlayStates::createTile(_map, glm::vec3(7, 4, 1), eArchetype::TOWER_FIRE);
-    PlayStates::createTile(_map, glm::vec3(7, 7, 1), eArchetype::TOWER_FIRE);
+    //PlayStates::createTile(_map, glm::vec3(7, 4, 1), eArchetype::TOWER_FIRE);
+    //PlayStates::createTile(_map, glm::vec3(7, 7, 1), eArchetype::TOWER_FIRE);
 
     // Play first animation of entities
     for (auto entity: em->getEntities())

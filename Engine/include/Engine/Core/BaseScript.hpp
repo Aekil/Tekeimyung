@@ -8,6 +8,8 @@
 
 #include <ECS/Entity.hpp>
 
+#include <Engine/Utils/Logger.hpp>
+
 class BaseScript
 {
 public:
@@ -30,7 +32,7 @@ protected:
         return this->entity->getComponent<componentType>();
     }
 
-    virtual void Instantiate(glm::vec3 pos);
+    virtual void Instantiate(std::string, glm::vec3 pos);
 
     virtual void Destroy();
 };

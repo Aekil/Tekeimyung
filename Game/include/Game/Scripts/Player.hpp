@@ -7,8 +7,6 @@
 #include <Engine/Core/BaseScript.hpp>
 #include <Engine/Core/ScriptFactory.hpp>
 
-#include <Engine/Utils/Logger.hpp>
-
 class Player : public BaseScript
 {
 public:
