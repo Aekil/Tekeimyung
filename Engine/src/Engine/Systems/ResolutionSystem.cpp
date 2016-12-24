@@ -28,14 +28,14 @@ void ResolutionSystem::update(EntityManager &em, float elapsedTime)
 
         if (resolutionComponent->collidingState == eCollisionState::ENTERING_COLLISION)
         {
-            //if (scriptComponent != nullptr)
-            //    scriptComponent->scriptClass->OnCollisionEnter(resolutionComponent->entityId);
+            if (scriptComponent != nullptr)
+                scriptComponent->scriptInstance->OnCollisionEnter(resolutionComponent->entityId);
             resolutionComponent->collidingState = eCollisionState::IS_COLLIDING;
         }
         else if (resolutionComponent->collidingState == eCollisionState::EXIT_COLLISION)
         {
-            //if (scriptComponent != nullptr)
-            //    scriptComponent->scriptClass->OnCollisionExit(resolutionComponent->entityId);
+            if (scriptComponent != nullptr)
+                scriptComponent->scriptInstance->OnCollisionExit(resolutionComponent->entityId);
             resolutionComponent->collidingState = eCollisionState::NO_COLLISION;
         }
         ++nbEntities;

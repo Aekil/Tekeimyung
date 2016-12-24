@@ -20,16 +20,16 @@
 
 #include <Engine/Systems/RenderingSystem.hpp>
 #include <Engine/Systems/ResolutionSystem.hpp>
-#include <Engine/Systems/MovementSystem.hpp>
+//#include <Engine/Systems/MovementSystem.hpp>
 #include <Engine/Systems/GravitySystem.hpp>
 #include <Engine/Systems/CollisionSystem.hpp>
-#include <Engine/Systems/AISystem.hpp>
+//#include <Engine/Systems/AISystem.hpp>
 #include <Engine/Systems/ParticleSystem.hpp>
-#include <Engine/Systems/InputSystem.hpp>
-#include <Engine/Systems/TowerAISystem.hpp>
-#include <Engine/Systems/ProjectileSystem.hpp>
-#include <Engine/Systems/SpawnerSystem.hpp>
-#include <Engine/Systems/BuildSystem.hpp>
+//#include <Engine/Systems/InputSystem.hpp>
+//#include <Engine/Systems/TowerAISystem.hpp>
+//#include <Engine/Systems/ProjectileSystem.hpp>
+//#include <Engine/Systems/SpawnerSystem.hpp>
+//#include <Engine/Systems/BuildSystem.hpp>
 #include <Engine/Systems/ScriptSystem.hpp>
 #include <Engine/Components.hh>
 #include <Engine/EntityDebugWindow.hpp>
@@ -59,7 +59,7 @@ bool    PlayState::init()
     initEntities();
 
     addDebugWindow<OverlayDebugWindow>();
-    addDebugWindow<EntityDebugWindow>(em, _map, glm::vec2(0, 80), glm::vec2(600, 350));
+    addDebugWindow<EntityDebugWindow>(em, glm::vec2(0, 80), glm::vec2(600, 350));
     addDebugWindow<LogDebugWindow>(Logger::getInstance(), glm::vec2(0, 430), glm::vec2(300, 200));
     addDebugWindow<MonitoringDebugWindow>(MonitoringDebugWindow::getInstance());
     addDebugWindow<SoundEditorWindow>(glm::vec2(1200, 80), glm::vec2(450, 450));
@@ -147,11 +147,11 @@ void    PlayState::initEntities()
     }
 
     // Create spawner
-    static uint32_t spawnerEntityID = SpawnerSystem::createSpawner(_map, glm::vec3(0.5, 5.5f, 0.5), eArchetype::SPAWNER);
-    SpawnerSystem::setNbEntities(*em, spawnerEntityID, 5);
-    SpawnerSystem::setSecBeforeFirstSpawn(*em, spawnerEntityID, 7); // method 1
-    SpawnerSystem::setSecBeforeEachSpawn(*em, spawnerEntityID, 2);
-    SpawnerSystem::setSecBeforeEachSpawn(*em, spawnerEntityID, 5);
+    //static uint32_t spawnerEntityID = SpawnerSystem::createSpawner(_map, glm::vec3(0.5, 5.5f, 0.5), eArchetype::SPAWNER);
+    //SpawnerSystem::setNbEntities(*em, spawnerEntityID, 5);
+    //SpawnerSystem::setSecBeforeFirstSpawn(*em, spawnerEntityID, 7); // method 1
+    //SpawnerSystem::setSecBeforeEachSpawn(*em, spawnerEntityID, 2);
+    //SpawnerSystem::setSecBeforeEachSpawn(*em, spawnerEntityID, 5);
 
     /*static uint32_t spawnerEntityID2 = SpawnerSystem::createSpawner(_map, glm::vec3(0, 8.0f, 1), eArchetype::SPAWNER);
     tSpawnerData spawnerData = { 5, 5, 2, 5 };
@@ -192,19 +192,11 @@ void    PlayState::addSystems()
 {
     EntityManager* em = _world.getEntityManager();
 
-    _world.addSystem<SpawnerSystem>(_map);
-    _world.addSystem<InputSystem>();
-    _world.addSystem<TowerAISystem>(_map);
-    _world.addSystem<AISystem>();
-    _world.addSystem<ProjectileSystem>();
-    _world.addSystem<BuildSystem>(em, _map);
-
-    _world.addSystem<MovementSystem>(_map);
-    _world.addSystem<CollisionSystem>(_map);
+    _world.addSystem<ScriptSystem>();
+    _world.addSystem<CollisionSystem>();
     _world.addSystem<ResolutionSystem>();
     _world.addSystem<ParticleSystem>();
-    _world.addSystem<ScriptSystem>();
-    _world.addSystem<RenderingSystem>(&_camera, _map, _world.getSystem<ParticleSystem>()->getEmitters());
+    _world.addSystem<RenderingSystem>(&_camera, _world.getSystem<ParticleSystem>()->getEmitters());
 }
 
 

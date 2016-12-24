@@ -26,8 +26,8 @@
 #include <Engine/Graphics/Animator.hpp>
 #include <Engine/Utils/RessourceManager.hpp>
 #include <Engine/Utils/Timer.hpp>
-#include <Engine/Core/BaseScript.hpp>
 
+#include <Engine/Core/BaseScript.hpp>
 
 START_COMPONENT(sRenderComponent)
 virtual sComponent* clone()
@@ -689,7 +689,7 @@ virtual sComponent*     clone()
 
 virtual void            update(sScriptComponent* component)
 {
-    //this->scriptClass = component->scriptClass;
+    this->scriptName = component->scriptName;
 }
 
 virtual void            update(sComponent* component)
@@ -697,5 +697,7 @@ virtual void            update(sComponent* component)
     update(static_cast<sScriptComponent*>(component));
 }
 
-//BaseScript* scriptClass;
+BaseScript* scriptInstance;
+std::string scriptName;
+
 END_COMPONENT(sScriptComponent)

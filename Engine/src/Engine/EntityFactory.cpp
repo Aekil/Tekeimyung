@@ -134,6 +134,7 @@ Entity* EntityFactory::createEntity(eArchetype type, const glm::vec3& pos)
 
         sTransformComponent* transformEntity = entity->getComponent<sTransformComponent>();
         //transformEntity->pos = Map::mapToGraphPosition(posEntity->value, posEntity->z);
+        transformEntity->pos = pos;
         transformEntity->needUpdate = true;
     }
 
@@ -218,13 +219,6 @@ Entity* EntityFactory::cloneEntity(const std::string& typeName)
     }
 
     clone->addComponent<sNameComponent>(typeName);
-
-    if (clone->getComponent<sScriptComponent>() != nullptr)
-    {
-        auto scriptComponent = clone->getComponent<sScriptComponent>();
-
-        //scriptComponent->scriptClass->SetEntity(clone);
-    }
 
     initAnimations(clone);
 

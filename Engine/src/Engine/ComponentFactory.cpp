@@ -1359,6 +1359,7 @@ sComponent* ComponentFactory<sScriptComponent>::loadFromJson(const std::string& 
     component = new sScriptComponent();
 
     //component->scriptClass = ScriptFactory::create(json.getString("class", ""));
+    component->scriptName = json.getString("class", "");
     
     return component;
 }

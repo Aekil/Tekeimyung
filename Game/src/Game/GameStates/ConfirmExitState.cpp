@@ -27,11 +27,11 @@ bool    ConfirmExitState::init()
     initPreviousStatesRender();
 
     _world.addSystem<ParticleSystem>();
-    _world.addSystem<RenderingSystem>(&_camera, nullptr, _world.getSystem<ParticleSystem>()->getEmitters());
+    _world.addSystem<RenderingSystem>(&_camera, _world.getSystem<ParticleSystem>()->getEmitters());
     _world.addSystem<MenuSystem>();
 
     EntityManager* em = _world.getEntityManager();
-    addDebugWindow<EntityDebugWindow>(em, nullptr, glm::vec2(0, 80), glm::vec2(600, 350));
+    addDebugWindow<EntityDebugWindow>(em, glm::vec2(0, 80), glm::vec2(600, 350));
 
     initCamera();
     initPopup();

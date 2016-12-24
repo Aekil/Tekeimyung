@@ -45,7 +45,7 @@ bool    Engine::init()
     }
 
     GameWindow::setInstance(_window);
-    GameWindow::getInstance()->toggleFullscreen();
+    //GameWindow::getInstance()->toggleFullscreen();
     return (true);
 }
 

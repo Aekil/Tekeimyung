@@ -10,6 +10,8 @@
 
 #include <Engine/Systems/ScriptSystem.hpp>
 
+#include <Engine/Core/ScriptFactory.hpp>
+
 ScriptSystem::ScriptSystem()
 {
     this->addDependency<sScriptComponent>();
@@ -19,13 +21,16 @@ ScriptSystem::ScriptSystem()
 
 ScriptSystem::~ScriptSystem() {}
 
-void    ScriptSystem::firstStart(EntityManager &em)
+void    ScriptSystem::initialize(EntityManager &em)
 {
     this->forEachEntity(em, [&](Entity* entity)
     {
-        //auto entityClass = entity->getComponent<sScriptComponent>()->scriptClass;
+        auto scriptComponent = entity->getComponent<sScriptComponent>();
 
-        //entityClass->Start();
+        scriptComponent->scriptInstance = ScriptFactory::create(scriptComponent->scriptName);
+        scriptComponent->scriptInstance->SetEntity(entity);
+
+        scriptComponent->scriptInstance->Start();
     });
 }
 
@@ -37,16 +42,16 @@ void    ScriptSystem::update(EntityManager &em, float elapsedTime)
        
     if (!isInitialized)
     {
-        this->firstStart(em);
+        this->initialize(em);
         isInitialized = true;
     }
     else 
     {
         forEachEntity(em, [&](Entity *entity)
         {
-            //auto entityClass = entity->getComponent<sScriptComponent>()->scriptClass;
+            auto entityClass = entity->getComponent<sScriptComponent>()->scriptInstance;
 
-            //entityClass->Update(elapsedTime);
+            entityClass->Update(elapsedTime);
             ++nbEntities;
         });
     }

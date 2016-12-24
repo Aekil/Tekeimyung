@@ -98,7 +98,7 @@ IF (WIN32)
 ENDIF()
 
 # Create executable
-add_library(${EXECUTABLE_NAME} STATIC ${source_files} ${imgui_source_files} ${include_files} ${imGuizmo_source_files})
+add_library(${EXECUTABLE_NAME} STATIC ${source_files} ${imgui_source_files} ${include_files} ${imGuizmo_source_files} ${jsoncpp_source_files})
 
 #Disable ImGui C4244 warnings on Windows
 IF (WIN32)

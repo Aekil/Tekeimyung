@@ -4,9 +4,9 @@
 
 #pragma once
 
-#include <ECS/Entity.hpp>
+#include <glm/vec3.hpp>
 
-#include <Engine/EntityFactory.hpp>
+#include <ECS/Entity.hpp>
 
 class BaseScript
 {
@@ -20,6 +20,7 @@ public:
     virtual void OnCollisionExit(int entityId) {};
 
     void SetEntity(Entity* entity);
+
 protected:
     Entity* entity;
     
@@ -28,6 +29,8 @@ protected:
     {
         return this->entity->getComponent<componentType>();
     }
+
+    virtual void Instantiate(glm::vec3 pos);
 
     virtual void Destroy();
 };
