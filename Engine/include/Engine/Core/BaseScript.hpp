@@ -25,6 +25,9 @@ public:
     virtual void OnCollisionEnter(int entityId) {};
     virtual void OnCollisionExit(int entityId) {};
 
+    virtual void OnHoverEnter() {};
+    virtual void OnHoverExit() {};
+
     void SetEntity(Entity* entity);
 
 protected:

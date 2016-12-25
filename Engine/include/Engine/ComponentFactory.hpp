@@ -21,18 +21,12 @@
 #define COMPONENTS_TYPES(PROCESS)\
     PROCESS(sRenderComponent),\
     PROCESS(sPositionComponent),\
-    PROCESS(sInputComponent),\
     PROCESS(sDirectionComponent),\
     PROCESS(sBoxColliderComponent),\
     PROCESS(sSphereColliderComponent),\
     PROCESS(sGravityComponent),\
     PROCESS(sTypeComponent),\
-    PROCESS(sAIComponent),\
-    PROCESS(sPlayerComponent),\
     PROCESS(sParticleEmitterComponent),\
-    PROCESS(sTowerAIComponent),\
-    PROCESS(sProjectileComponent),\
-    PROCESS(sSpawnerComponent),\
     PROCESS(sNameComponent),\
     PROCESS(sTransformComponent),\
     PROCESS(sResolutionComponent),\
@@ -209,20 +203,6 @@ public:
     virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
 };
 
-
-/*
-** sInputComponent
-*/
-
-template <>
-class ComponentFactory<sInputComponent>: public BaseComponentFactory<sInputComponent>
-{
-public:
-    virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
-    virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
-};
-
-
 /*
 ** sDirectionComponent
 */
@@ -302,33 +282,6 @@ public:
     virtual std::string entityTypeToString(eEntityType entityType);
 };
 
-
-/*
-** sAIComponent
-*/
-
-template <>
-class ComponentFactory<sAIComponent>: public BaseComponentFactory<sAIComponent>
-{
-public:
-    virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
-};
-
-/*
-** sPlayerComponent
-*/
-
-template <>
-class ComponentFactory<sPlayerComponent> : public BaseComponentFactory<sPlayerComponent>
-{
-public:
-    virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
-    virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
-
-    virtual bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity);
-};
-
-
 /*
 ** sParticleEmitterComponent
 */
@@ -342,49 +295,6 @@ public:
 
     virtual bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity);
 };
-
-
-/*
-**  sTowerAIComponent
-*/
-
-template <>
-class ComponentFactory<sTowerAIComponent> : public BaseComponentFactory<sTowerAIComponent>
-{
-public:
-    virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
-    virtual JsonValue&  saveToJson(const std::string& entityType, const std::string& componentType);
-
-    virtual bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity);
-};
-
-
-/*
-** sProjectileComponent
-*/
-
-template <>
-class ComponentFactory<sProjectileComponent> : public BaseComponentFactory<sProjectileComponent>
-{
-public:
-    virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
-    virtual JsonValue&  saveToJson(const std::string& entityType, const std::string& componentType);
-
-    virtual bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity);
-};
-
-
-/*
-** sSpawnerComponent
-*/
-
-template <>
-class ComponentFactory<sSpawnerComponent> : public BaseComponentFactory<sSpawnerComponent>
-{
-public:
-    virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
-};
-
 
 /*
 ** sNameComponent

@@ -48,9 +48,6 @@
          "y" : 0,
          "z" : 0
       },
-      "sProjectileComponent" : {
-         "guided" : true
-      },
       "sRenderComponent" : {
          "animated" : false,
          "animation" : {

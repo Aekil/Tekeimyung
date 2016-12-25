@@ -106,34 +106,6 @@ glm::vec2 value;
 float   z;
 END_COMPONENT(sPositionComponent)
 
-START_COMPONENT(sInputComponent)
-virtual sComponent* clone()
-{
-    sInputComponent* component = new sInputComponent();
-    component->update(this);
-
-    return (component);
-}
-
-virtual void update(sInputComponent* component)
-{
-    this->moveLeft = component->moveLeft;
-    this->moveRight = component->moveRight;
-    this->moveUp = component->moveUp;
-    this->moveDown = component->moveDown;
-}
-
-virtual void update(sComponent* component)
-{
-    update(static_cast<sInputComponent*>(component));
-}
-
-Keyboard::eKey          moveLeft;
-Keyboard::eKey          moveRight;
-Keyboard::eKey          moveUp;
-Keyboard::eKey          moveDown;
-END_COMPONENT(sInputComponent)
-
 START_COMPONENT(sDirectionComponent)
 sDirectionComponent(const glm::vec2& dir, float speed = 1.0f) : value(dir), moved(false), speed(speed), sComponent(sDirectionComponent::identifier) {}
 
@@ -284,49 +256,6 @@ virtual void update(sComponent* component)
 eEntityType type;
 END_COMPONENT(sTypeComponent)
 
-START_COMPONENT(sAIComponent)
-virtual sComponent* clone()
-{
-    sAIComponent* component = new sAIComponent();
-    component->update(this);
-
-    return (component);
-}
-
-virtual void update(sAIComponent* component) {}
-
-virtual void update(sComponent* component)
-{
-    update(static_cast<sAIComponent*>(component));
-}
-END_COMPONENT(sAIComponent)
-
-START_COMPONENT(sPlayerComponent)
-virtual sComponent* clone()
-{
-    sPlayerComponent* component = new sPlayerComponent();
-    component->update(this);
-
-    return (component);
-}
-
-virtual void update(sPlayerComponent* component)
-{
-    this->range = component->range;
-    this->rangeColor = component->rangeColor;
-}
-
-virtual void update(sComponent* component)
-{
-    update(static_cast<sPlayerComponent*>(component));
-}
-
-uint16_t    range;
-glm::ivec3   lastPos;
-glm::vec4 rangeColor;
-END_COMPONENT(sPlayerComponent)
-
-
 START_COMPONENT(sParticleEmitterComponent)
 virtual sComponent* clone()
 {
@@ -426,110 +355,6 @@ virtual void update(sComponent* component)
 
 std::string value;
 END_COMPONENT(sNameComponent)
-
-START_COMPONENT(sTowerAIComponent)
-virtual sComponent* clone()
-{
-    sTowerAIComponent*  component = new sTowerAIComponent();
-    component->update(this);
-
-    return (component);
-}
-
-virtual void    update(sTowerAIComponent* component)
-{
-    this->radius = component->radius;
-    this->fireRate = component->fireRate;
-    this->projectileSpeed = component->projectileSpeed;
-}
-
-virtual void    update(sComponent* component)
-{
-    update(static_cast<sTowerAIComponent*>(component));
-}
-
-float   radius;
-float   projectileSpeed;
-
-float   fireRate;
-float   lastShotTime = 0.0f;
-
-uint32_t    targetId;
-END_COMPONENT(sTowerAIComponent)
-
-START_COMPONENT(sProjectileComponent)
-virtual sComponent* clone()
-{
-    sProjectileComponent*  component = new sProjectileComponent();
-    component->update(this);
-
-    return (component);
-}
-
-virtual void    update(sProjectileComponent* component)
-{
-    this->shooterId = component->shooterId;
-    this->guided = component->guided;
-    this->rangeMax = component->rangeMax;
-    this->targetId = component->targetId;
-}
-
-virtual void    update(sComponent* component)
-{
-    update(static_cast<sProjectileComponent*>(component));
-}
-
-uint32_t    shooterId;
-
-bool        guided;
-float       rangeMax;
-uint32_t    targetId;
-END_COMPONENT(sProjectileComponent)
-
-/*typedef struct  sEntSpawnData
-{
-    float       secBeforeSpawn;
-    eArchetype  type;
-}               tEntSpawnData;*/
-
-typedef struct  sSpawnerData
-{
-    int         nbEntities;
-    float       secBeforeFirstSpawn;
-    float       secBeforeEachSpawn;
-    float       secBeforeLastSpawn;
-}               tSpawnerData;
-
-START_COMPONENT(sSpawnerComponent)
-virtual sComponent* clone()
-{
-    sSpawnerComponent* component = new sSpawnerComponent();
-    component->update(this);
-
-    return (component);
-}
-
-virtual void update(sSpawnerComponent* component)
-{
-    this->spawnPos = component->spawnPos;
-    this->firstWaitFinished = component->firstWaitFinished;
-    this->data.nbEntities = component->data.nbEntities;
-    this->data.secBeforeFirstSpawn = component->data.secBeforeFirstSpawn;
-    this->data.secBeforeEachSpawn = component->data.secBeforeEachSpawn;
-    this->data.secBeforeLastSpawn = component->data.secBeforeLastSpawn;
-    this->timeRec = component->timeRec;
-}
-
-virtual void update(sComponent* component)
-{
-    update(static_cast<sSpawnerComponent*>(component));
-}
-
-glm::vec3       spawnPos;
-bool            firstWaitFinished;
-tSpawnerData    data;
-float           timeRec;
-END_COMPONENT(sSpawnerComponent)
 
 enum class eCollisionState : int
 {

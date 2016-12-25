@@ -47,8 +47,7 @@ void    CollisionSystem::update(EntityManager &em, float elapsedTime)
                 if (this->isColliding(entity, entityB))
                 {
                     if (!entityB->getComponent<sSphereColliderComponent>()->isTrigger)
-                        direction->value *= -1;
-                        //position->value -= direction->value * elapsedTime;
+                        position->value -= direction->value * elapsedTime;
 
                     if (resolution->collidingState == eCollisionState::NO_COLLISION)
                     {

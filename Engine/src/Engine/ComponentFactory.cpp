@@ -654,40 +654,6 @@ JsonValue&    ComponentFactory<sPositionComponent>::saveToJson(const std::string
     return (json);
 }
 
-
-/*
-** sInputComponent
-*/
-
-sComponent* ComponentFactory<sInputComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
-{
-    Keyboard keyboard;
-    auto &&keyMap = keyboard.getStringMap();
-    sInputComponent* component = new sInputComponent();
-
-    component->moveLeft = keyMap[json.getString("left", "Q")];
-    component->moveRight = keyMap[json.getString("right", "D")];
-    component->moveUp = keyMap[json.getString("up", "Z")];
-    component->moveDown = keyMap[json.getString("down", "S")];
-
-    return (component);
-}
-
-JsonValue&    ComponentFactory<sInputComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
-{
-    JsonValue& json = _componentsJson[entityType];
-    sInputComponent* component = static_cast<sInputComponent*>(_components[entityType]);
-    Keyboard keyboard;
-
-    json.setString("left", keyboard.keyToString(component->moveLeft));
-    json.setString("right", keyboard.keyToString(component->moveRight));
-    json.setString("up", keyboard.keyToString(component->moveUp));
-    json.setString("down", keyboard.keyToString(component->moveDown));
-
-    return (json);
-}
-
-
 /*
 ** sDirectionComponent
 */
@@ -933,59 +899,6 @@ sComponent* ComponentFactory<sTypeComponent>::loadFromJson(const std::string& en
 
 
 /*
-** sAIComponent
-*/
-
-sComponent* ComponentFactory<sAIComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
-{
-    sAIComponent* component = new sAIComponent();
-
-    return (component);
-}
-
-
-/*
-** sPlayerComponent
-*/
-
-sComponent* ComponentFactory<sPlayerComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
-{
-    sPlayerComponent* component = new sPlayerComponent();
-
-    component->range = json.getUInt("range", 2);
-    component->rangeColor = json.getColor4f("range_color", glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
-
-    return (component);
-}
-
-JsonValue&    ComponentFactory<sPlayerComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
-{
-    JsonValue& json = _componentsJson[entityType];
-    sPlayerComponent* component = static_cast<sPlayerComponent*>(_components[entityType]);
-
-
-    json.setUInt("range", component->range);
-    json.setColor4f("range_color", component->rangeColor);
-
-    return (json);
-}
-
-bool    ComponentFactory<sPlayerComponent>::updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity)
-{
-    sPlayerComponent* component = static_cast<sPlayerComponent*>(entityComponent ? entityComponent : _components[entityType]);
-    *savedComponent = component;
-    bool changed = false;
-
-    int range = component->range;
-    changed |= ImGui::InputInt("range", &range, 1, 10);
-    changed |= ImGui::ColorEdit4("range color", glm::value_ptr(component->rangeColor));
-
-    component->range = range;
-    return (changed);
-}
-
-
-/*
 ** sParticleEmitterComponent
 */
 
@@ -1097,126 +1010,6 @@ bool    ComponentFactory<sParticleEmitterComponent>::updateEditor(const std::str
     return (changed);
 }
 
-
-/*
-** sTowerAIComponent
-*/
-
-sComponent* ComponentFactory<sTowerAIComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
-{
-    sTowerAIComponent*  component;
-
-    component = new sTowerAIComponent();
-    component->radius = json.getFloat("radius", 1.0f);
-    component->fireRate = json.getFloat("fire_rate", 1.0f);
-    component->projectileSpeed = json.getFloat("projectile_speed", 1.0f);
-
-    return (component);
-}
-
-JsonValue&  ComponentFactory<sTowerAIComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
-{
-    JsonValue&  json = _componentsJson[entityType];
-    sTowerAIComponent*  component;
-
-    component = static_cast<sTowerAIComponent*>(_components[entityType]);
-    json.setFloat("radius", component->radius);
-    json.setFloat("fire_rate", component->fireRate);
-    json.setFloat("projectile_speed", component->projectileSpeed);
-    return (json);
-}
-
-bool    ComponentFactory<sTowerAIComponent>::updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity)
-{
-    sTowerAIComponent*  component;
-    bool    changed;
-
-    component = static_cast<sTowerAIComponent*>(entityComponent ? entityComponent : _components[entityType]);
-    *savedComponent = component;
-    changed = false;
-    changed |= ImGui::SliderFloat("Radius", &component->radius, 0.0f, 10.0f);
-    changed |= ImGui::SliderFloat("Fire rate", &component->fireRate, 0.0f, 10.0f);
-    changed |= ImGui::SliderFloat("Projectile speed", &component->projectileSpeed, 0.0f, 10.0f);
-
-    return (changed);
-}
-
-
-/*
-** sProjectileComponent
-*/
-
-sComponent* ComponentFactory<sProjectileComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
-{
-    sProjectileComponent*   component;
-
-    component = new sProjectileComponent();
-    component->shooterId = 0;
-    component->guided = json.getBool("guided", false);
-    component->rangeMax = json.getFloat("rangeMax", 5);
-    component->targetId = 0;
-    return (component);
-}
-
-JsonValue&  ComponentFactory<sProjectileComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
-{
-    JsonValue&              json = _componentsJson[entityType];
-    sProjectileComponent*   component;
-
-    component = static_cast<sProjectileComponent*>(_components[entityType]);
-    json.setBool("guided", component->guided);
-    return (json);
-}
-
-bool        ComponentFactory<sProjectileComponent>::updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity)
-{
-    sProjectileComponent*   component;
-    bool                    changed;
-    std::stringstream       converter;
-    std::string             buffer;
-
-    component = static_cast<sProjectileComponent*>(entityComponent ? entityComponent : _components[entityType]);
-    *savedComponent = component;
-    changed = false;
-    converter << component->shooterId;
-    converter >> buffer;
-    ImGui::TextDisabled("Shooter ID: %s", buffer.c_str());
-    if (component->guided == true) ImGui::Separator();
-    changed |= ImGui::Checkbox("Make projectile guided !", &component->guided);
-    if (component->guided == true)
-    {
-        converter << component->targetId;
-        converter >> buffer;
-        ImGui::TextDisabled("Target ID: %s", buffer.c_str());
-    }
-    // Add IMGUI implementation for RangeMax
-
-    return (changed);
-}
-
-
-/*
-** sSpawnerComponent
-*/
-
-sComponent* ComponentFactory<sSpawnerComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
-{
-    sSpawnerComponent*   component;
-
-    component = new sSpawnerComponent();
-
-    //component->spawnPos = json.getVec3f("spawnPos", glm::vec3(0, 0, 0));
-    component->firstWaitFinished = json.getBool("firstWaitFinished", false);
-    component->data.nbEntities = json.getInt("nSpawn", 5);
-    component->data.secBeforeFirstSpawn = json.getFloat("secBeforeFirstSpawn", 3);
-    component->data.secBeforeEachSpawn = json.getFloat("secBeforeEachSpawn", 2);
-    component->data.secBeforeLastSpawn = json.getFloat("secBeforeLastSpawn", 4);
-    component->timeRec = 0;
-
-    return (component);
-}
-
-
 /*
 ** sNameComponent
 */
@@ -1319,7 +1112,6 @@ bool    ComponentFactory<sTransformComponent>::updateTransforms(glm::vec3& pos, 
     return (true);
 }
 
-
 /*
 ** sButtonComponent
 */
@@ -1333,10 +1125,8 @@ sComponent* ComponentFactory<sButtonComponent>::loadFromJson(const std::string& 
     return (component);
 }
 
-
 /*
 ** sTileComponent
-
 */
 
 sComponent* ComponentFactory<sTileComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
@@ -1358,7 +1148,6 @@ sComponent* ComponentFactory<sScriptComponent>::loadFromJson(const std::string& 
 
     component = new sScriptComponent();
 
-    //component->scriptClass = ScriptFactory::create(json.getString("class", ""));
     component->scriptName = json.getString("class", "");
     
     return component;

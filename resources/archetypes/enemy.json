@@ -1,6 +1,5 @@
 {
    "components" : {
-      "sAIComponent" : {},
       "sDirectionComponent" : {
          "speed" : 1,
          "x" : 1,

@@ -8,21 +8,6 @@
       "sScriptComponent" : {
           "class" : "Player"
       },
-      "sInputComponent" : {
-         "down" : "K",
-         "left" : "J",
-         "right" : "L",
-         "up" : "I"
-      },
-      "sPlayerComponent" : {
-         "range" : 2,
-         "range_color" : {
-            "a" : 1,
-            "b" : 1,
-            "g" : 0.79607844352722168,
-            "r" : 1
-         }
-      },
       "sPositionComponent" : {
          "x" : 9,
          "y" : 5,

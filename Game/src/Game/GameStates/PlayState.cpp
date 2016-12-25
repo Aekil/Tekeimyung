@@ -24,6 +24,7 @@
 #include <Engine/Systems/CollisionSystem.hpp>
 #include <Engine/Systems/ParticleSystem.hpp>
 #include <Engine/Systems/ScriptSystem.hpp>
+#include <Engine/Systems/MouseSystem.hpp>
 #include <Engine/Components.hh>
 #include <Engine/EntityDebugWindow.hpp>
 #include <Engine/SoundEditorWindow.hpp>
@@ -118,7 +119,6 @@ void    PlayState::initEntities()
 
     // Create character
     Entity* player = PlayStates::createTile(_map, glm::vec3(9, 5, 1), eArchetype::PLAYER);
-    PlayStates::createTile(_map, glm::vec3(9, 7, 1), (eArchetype)65);
 
     PlayStates::createTile(_map, glm::vec3(0, 0, 0), eArchetype::GAME_MANAGER);
 
@@ -188,6 +188,7 @@ void    PlayState::addSystems()
     EntityManager* em = _world.getEntityManager();
 
     _world.addSystem<ScriptSystem>();
+    _world.addSystem<MouseSystem>();
     _world.addSystem<CollisionSystem>();
     _world.addSystem<ResolutionSystem>();
     _world.addSystem<ParticleSystem>();

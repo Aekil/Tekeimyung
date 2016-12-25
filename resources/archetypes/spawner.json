@@ -5,13 +5,6 @@
                 "x": 0,
                 "y": 0,
                 "z": 0
-            },
-      "sSpawnerComponent": {
-        "firstWaitFinished": false,
-        "nbEntities": 5,
-        "secBeforeFirstSpawn": 3,
-        "secBeforeEachSpawn": 2,
-        "secBeforeLastSpawn": 5
-      }
+            }
         }
 }

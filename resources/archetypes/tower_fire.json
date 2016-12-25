@@ -9,11 +9,6 @@
             "sRenderComponent": {
                 "model": "resources/models/towers/tower_fire.DAE"
             },
-			"sTowerAIComponent": {
-				"radius": 4.2,
-				"fire_rate": 1,
-				"projectile_speed": 4.2
-			},
             "sTypeComponent": {
                 "type": "TILE_NOT_WALKABLE"
             }

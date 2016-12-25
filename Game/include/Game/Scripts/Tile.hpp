@@ -1,5 +1,5 @@
 /*
-** Author : Simon AMBROISE
+** @Author : Simon AMBROISE
 */
 
 #pragma once
@@ -7,16 +7,11 @@
 #include <Engine/Core/BaseScript.hpp>
 #include <Engine/Core/ScriptFactory.hpp>
 
-class Player : public BaseScript
+class Tile : public BaseScript
 {
 public:
-    Player() {};
-    ~Player() {};
-
-    int m_health;
-private:
-    void Death();
-    void Movement(float dt);
+    Tile() {};
+    ~Tile() {};
 
 public:
     virtual void Start();
@@ -26,4 +21,4 @@ public:
     virtual void OnHoverExit();
 };
 
-REGISTER_SCRIPT(Player, "Player");
+REGISTER_SCRIPT(Tile, "Tile");

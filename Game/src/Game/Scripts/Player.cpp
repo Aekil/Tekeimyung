@@ -32,6 +32,7 @@ void Player::Movement(float elapsedTime)
 {
     sTransformComponent* transform = this->getComponent<sTransformComponent>();
     sDirectionComponent* direction = this->getComponent<sDirectionComponent>();
+    direction->value *= -1;
 
     if (KB_P(Keyboard::eKey::J))
     {
@@ -61,4 +62,19 @@ void Player::Movement(float elapsedTime)
         transform->pos += glm::vec3(direction->value.x, 0, direction->value.y);
         transform->needUpdate = true;
     }
+}
+
+void Player::OnHoverEnter()
+{
+    auto renderComponent = this->getComponent<sRenderComponent>();
+
+    renderComponent->color = glm::vec4(1.0f, 1.0f, 0.0f, 1.0f);
+    //LOG_DEBUG("coucou toi je suis sur toi");
+}
+
+void Player::OnHoverExit()
+{
+    auto renderComponent = this->getComponent<sRenderComponent>();
+
+    renderComponent->color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 }
