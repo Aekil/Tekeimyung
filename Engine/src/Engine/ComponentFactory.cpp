@@ -18,6 +18,8 @@
 #include <Engine/EntityFactory.hpp>
 #include <Engine/ComponentFactory.hpp>
 
+#include <vector>
+
 std::unordered_map<std::string, IComponentFactory*>  IComponentFactory::_componentsTypes = { COMPONENTS_TYPES(GENERATE_PAIRS) };
 std::unordered_map<uint32_t, std::string>  IComponentFactory::_componentsTypesHashs = { COMPONENTS_TYPES(GENERATE_PAIRS_HASHS) };
 
@@ -1148,7 +1150,18 @@ sComponent* ComponentFactory<sScriptComponent>::loadFromJson(const std::string& 
 
     component = new sScriptComponent();
 
-    component->scriptName = json.getString("class", "");
-    
+    auto classes = json.get()["class"];
+
+    if (classes.size() > 0 && classes.type() != Json::ValueType::arrayValue)
+    {
+        LOG_ERROR("%s::sScriptComponent loadFromJson error: class is not an array", entityType.c_str());
+        return (component);
+    }
+
+    for (const auto& animation : classes)
+    {
+        component->scriptNames.push_back(animation.asString());
+    }
+
     return component;
 }

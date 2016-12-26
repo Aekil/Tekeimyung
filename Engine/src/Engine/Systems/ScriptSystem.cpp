@@ -27,10 +27,14 @@ void    ScriptSystem::initialize(EntityManager &em)
     {
         auto scriptComponent = entity->getComponent<sScriptComponent>();
 
-        scriptComponent->scriptInstance = ScriptFactory::create(scriptComponent->scriptName);
-        scriptComponent->scriptInstance->SetEntity(entity);
+        for (auto&& scriptName : scriptComponent->scriptNames)
+        {
+            auto scriptInstance = ScriptFactory::create(scriptName);
+            scriptInstance->SetEntity(entity);
 
-        scriptComponent->scriptInstance->Start();
+            scriptInstance->Start();
+            scriptComponent->scriptInstances.push_back(scriptInstance);
+        }
     });
 }
 
@@ -49,9 +53,11 @@ void    ScriptSystem::update(EntityManager &em, float elapsedTime)
     {
         forEachEntity(em, [&](Entity *entity)
         {
-            auto entityClass = entity->getComponent<sScriptComponent>()->scriptInstance;
+            for (auto&& script : entity->getComponent<sScriptComponent>()->scriptInstances)
+            {
+                script->Update(elapsedTime);
+            }
 
-            entityClass->Update(elapsedTime);
             ++nbEntities;
         });
     }

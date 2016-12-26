@@ -6,7 +6,7 @@
 
 JsonValue::JsonValue() {}
 
-JsonValue::JsonValue(const Json::Value& json): _json(json) {}
+JsonValue::JsonValue(const Json::Value& json) : _json(json) {}
 
 JsonValue::JsonValue(const JsonValue& other)
 {
@@ -56,12 +56,11 @@ std::string JsonValue::getString(const std::string& index, const std::string& de
     return _json.get(index, defaultValue).asString();
 }
 
-
 glm::vec3   JsonValue::getColor3f(const std::string& index, const glm::vec3& defaultValue) const
 {
     JsonValue color = get(index, {});
 
-    return { color.getFloat("r", defaultValue.x), color.getFloat("g", defaultValue.y),
+    return{ color.getFloat("r", defaultValue.x), color.getFloat("g", defaultValue.y),
         color.getFloat("b", defaultValue.z) };
 }
 
@@ -69,7 +68,7 @@ glm::vec4   JsonValue::getColor4f(const std::string& index, const glm::vec4& def
 {
     JsonValue color = get(index, {});
 
-    return { color.getFloat("r", defaultValue.x), color.getFloat("g", defaultValue.y),
+    return{ color.getFloat("r", defaultValue.x), color.getFloat("g", defaultValue.y),
         color.getFloat("b", defaultValue.z), color.getFloat("a", defaultValue.w) };
 }
 
@@ -78,14 +77,14 @@ glm::vec2   JsonValue::getVec2f(const std::string& index, const glm::vec2& defau
 {
     JsonValue vec = get(index, {});
 
-    return { vec.getFloat("x", defaultValue.x), vec.getFloat("y", defaultValue.y) };
+    return{ vec.getFloat("x", defaultValue.x), vec.getFloat("y", defaultValue.y) };
 }
 
 glm::vec3   JsonValue::getVec3f(const std::string& index, const glm::vec3& defaultValue) const
 {
     JsonValue vec = get(index, {});
 
-    return { vec.getFloat("x", defaultValue.x), vec.getFloat("y", defaultValue.y),
+    return{ vec.getFloat("x", defaultValue.x), vec.getFloat("y", defaultValue.y),
     vec.getFloat("z", defaultValue.y) };
 }
 
@@ -93,7 +92,7 @@ glm::vec4   JsonValue::getVec4f(const std::string& index, const glm::vec4& defau
 {
     JsonValue vec = get(index, {});
 
-    return { vec.getFloat("x", defaultValue.x), vec.getFloat("y", defaultValue.y),
+    return{ vec.getFloat("x", defaultValue.x), vec.getFloat("y", defaultValue.y),
     vec.getFloat("z", defaultValue.y), vec.getFloat("w", defaultValue.y) };
 }
 
@@ -101,14 +100,14 @@ glm::uvec2  JsonValue::getUVec2f(const std::string& index, const glm::uvec2& def
 {
     JsonValue vec = get(index, {});
 
-    return { vec.getUInt("x", defaultValue.x), vec.getUInt("y", defaultValue.y) };
+    return{ vec.getUInt("x", defaultValue.x), vec.getUInt("y", defaultValue.y) };
 }
 
 glm::uvec3  JsonValue::getUVec3f(const std::string& index, const glm::uvec3& defaultValue) const
 {
     JsonValue vec = get(index, {});
 
-    return { vec.getUInt("x", defaultValue.x), vec.getUInt("y", defaultValue.y),
+    return{ vec.getUInt("x", defaultValue.x), vec.getUInt("y", defaultValue.y),
     vec.getUInt("z", defaultValue.y) };
 }
 
@@ -116,7 +115,7 @@ glm::uvec4  JsonValue::getUVec4f(const std::string& index, const glm::uvec4& def
 {
     JsonValue vec = get(index, {});
 
-    return { vec.getUInt("x", defaultValue.x), vec.getUInt("y", defaultValue.y),
+    return{ vec.getUInt("x", defaultValue.x), vec.getUInt("y", defaultValue.y),
     vec.getUInt("z", defaultValue.y), vec.getUInt("w", defaultValue.y) };
 }
 
@@ -124,14 +123,14 @@ glm::vec2   JsonValue::getVec2f(const std::string& index, const std::array<const
 {
     JsonValue vec = get(index, {});
 
-    return { vec.getFloat(keys[0], defaultValue.x), vec.getFloat(keys[1], defaultValue.y) };
+    return{ vec.getFloat(keys[0], defaultValue.x), vec.getFloat(keys[1], defaultValue.y) };
 }
 
 glm::vec3   JsonValue::getVec3f(const std::string& index, const std::array<const char*, 3>& keys, const glm::vec3& defaultValue) const
 {
     JsonValue vec = get(index, {});
 
-    return { vec.getFloat(keys[0], defaultValue.x), vec.getFloat(keys[1], defaultValue.y),
+    return{ vec.getFloat(keys[0], defaultValue.x), vec.getFloat(keys[1], defaultValue.y),
     vec.getFloat(keys[2], defaultValue.z) };
 }
 
@@ -139,7 +138,7 @@ glm::vec4   JsonValue::getVec4f(const std::string& index, const std::array<const
 {
     JsonValue vec = get(index, {});
 
-    return { vec.getFloat(keys[0], defaultValue.x), vec.getFloat(keys[1], defaultValue.y),
+    return{ vec.getFloat(keys[0], defaultValue.x), vec.getFloat(keys[1], defaultValue.y),
     vec.getFloat(keys[2], defaultValue.z), vec.getFloat(keys[3], defaultValue.w) };
 }
 

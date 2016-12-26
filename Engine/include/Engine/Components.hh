@@ -514,7 +514,7 @@ virtual sComponent*     clone()
 
 virtual void            update(sScriptComponent* component)
 {
-    this->scriptName = component->scriptName;
+    this->scriptNames = component->scriptNames;
 }
 
 virtual void            update(sComponent* component)
@@ -522,7 +522,7 @@ virtual void            update(sComponent* component)
     update(static_cast<sScriptComponent*>(component));
 }
 
-BaseScript* scriptInstance;
-std::string scriptName;
+std::vector<BaseScript*> scriptInstances;
+std::vector<std::string> scriptNames;
 
 END_COMPONENT(sScriptComponent)

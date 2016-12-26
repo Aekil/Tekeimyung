@@ -6,7 +6,9 @@
          "y" : 0
       },
       "sScriptComponent" : {
-          "class" : "Player"
+          "class" : [
+               "Player"
+          ]
       },
       "sPositionComponent" : {
          "x" : 9,
