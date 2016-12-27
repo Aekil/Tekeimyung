@@ -19,5 +19,11 @@ void GameManager::Start()
 
 void GameManager::Update(float dt)
 {
+    auto &&mouse = GameWindow::getInstance()->getMouse();
 
+    // Build item if the mouse is pressed 
+    if (mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_1] == Mouse::eButtonState::CLICK_PRESSED)
+    {
+        LOG_DEBUG("Coucou je click");
+    }
 }

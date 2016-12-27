@@ -1163,5 +1163,7 @@ sComponent* ComponentFactory<sScriptComponent>::loadFromJson(const std::string& 
         component->scriptNames.push_back(animation.asString());
     }
 
+    component->isInitialized = false;
+
     return component;
 }

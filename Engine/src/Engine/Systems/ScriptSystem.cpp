@@ -27,40 +27,37 @@ void    ScriptSystem::initialize(EntityManager &em)
     {
         auto scriptComponent = entity->getComponent<sScriptComponent>();
 
-        for (auto&& scriptName : scriptComponent->scriptNames)
+        if (!scriptComponent->isInitialized)
         {
-            auto scriptInstance = ScriptFactory::create(scriptName);
-            scriptInstance->SetEntity(entity);
+            for (auto&& scriptName : scriptComponent->scriptNames)
+            {
+                auto scriptInstance = ScriptFactory::create(scriptName);
+                scriptInstance->SetEntity(entity);
 
-            scriptInstance->Start();
-            scriptComponent->scriptInstances.push_back(scriptInstance);
+                scriptInstance->Start();
+                scriptComponent->scriptInstances.push_back(scriptInstance);
+            }
+
+            scriptComponent->isInitialized = true;
         }
     });
 }
 
 void    ScriptSystem::update(EntityManager &em, float elapsedTime)
 {
-    static bool isInitialized = false;
     Timer timer;
     uint32_t nbEntities = 0;
-       
-    if (!isInitialized)
-    {
-        this->initialize(em);
-        isInitialized = true;
-    }
-    else 
-    {
-        forEachEntity(em, [&](Entity *entity)
-        {
-            for (auto&& script : entity->getComponent<sScriptComponent>()->scriptInstances)
-            {
-                script->Update(elapsedTime);
-            }
 
-            ++nbEntities;
-        });
-    }
+    this->initialize(em);
+    forEachEntity(em, [&](Entity *entity)
+    {
+        for (auto&& script : entity->getComponent<sScriptComponent>()->scriptInstances)
+        {
+            script->Update(elapsedTime);
+        }
+
+        ++nbEntities;
+    });
 
     MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, timer.getElapsedTime(), nbEntities);
 }

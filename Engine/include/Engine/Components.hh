@@ -515,6 +515,7 @@ virtual sComponent*     clone()
 virtual void            update(sScriptComponent* component)
 {
     this->scriptNames = component->scriptNames;
+    this->isInitialized = component->isInitialized;
 }
 
 virtual void            update(sComponent* component)
@@ -524,5 +525,6 @@ virtual void            update(sComponent* component)
 
 std::vector<BaseScript*> scriptInstances;
 std::vector<std::string> scriptNames;
+bool isInitialized;
 
 END_COMPONENT(sScriptComponent)

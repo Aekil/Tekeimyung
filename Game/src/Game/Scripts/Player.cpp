@@ -14,6 +14,7 @@ void Player::Death()
 void Player::Start()
 {
     this->m_health = 150;
+
     LOG_DEBUG("BORN");
 }
 
