@@ -22,7 +22,14 @@ void BaseScript::Destroy()
     em->destroyEntityRegister(this->entity);
 }
 
-void BaseScript::Instantiate(std::string type, glm::vec3 pos)
+void BaseScript::Destroy(Entity* entity)
 {
-    EntityFactory::createEntity(type, pos);
+    auto em = EntityFactory::getBindedEntityManager();
+
+    em->destroyEntityRegister(entity);
+}
+
+Entity* BaseScript::Instantiate(std::string type, glm::vec3 pos)
+{
+    return EntityFactory::createEntity(type, pos);
 }

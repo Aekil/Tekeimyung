@@ -20,6 +20,9 @@ public:
 
     virtual void OnHoverEnter();
     virtual void OnHoverExit();
+
+private:
+    Entity* preview = nullptr;
 };
 
 REGISTER_SCRIPT(Tile, "Tile");

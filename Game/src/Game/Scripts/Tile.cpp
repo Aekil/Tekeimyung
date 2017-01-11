@@ -23,6 +23,9 @@ void Tile::Update(float dt)
 
 void Tile::OnHoverEnter()
 {
+    auto position = this->getComponent<sTransformComponent>()->pos;
+    this->preview = this->Instantiate("TOWER_FIRE", glm::vec3(position.x, 25.0f, position.z));
+
     auto renderer = this->getComponent<sRenderComponent>();
 
     renderer->color = glm::vec4(0.5f, 0.5f, 0.5f, 1.0f);
@@ -31,6 +34,12 @@ void Tile::OnHoverEnter()
 
 void Tile::OnHoverExit()
 {
+    if (this->preview != nullptr)
+    {
+        this->Destroy(this->preview);
+        this->preview = nullptr;
+    }
+
     auto renderer = this->getComponent<sRenderComponent>();
 
     renderer->color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
