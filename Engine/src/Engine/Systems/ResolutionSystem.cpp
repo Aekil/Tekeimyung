@@ -32,7 +32,7 @@ void ResolutionSystem::update(EntityManager &em, float elapsedTime)
             {
                 for (auto&& script : scriptComponent->scriptInstances)
                 {
-                    script->OnCollisionEnter(resolutionComponent->entityId);
+                    script->OnCollisionEnter(em.getEntity(resolutionComponent->entityId));
                 }
             }
             resolutionComponent->collidingState = eCollisionState::IS_COLLIDING;
@@ -43,7 +43,7 @@ void ResolutionSystem::update(EntityManager &em, float elapsedTime)
             {
                 for (auto&& script : scriptComponent->scriptInstances) 
                 {
-                    script->OnCollisionExit(resolutionComponent->entityId);
+                    script->OnCollisionExit(em.getEntity(resolutionComponent->entityId));
                 }
             }
             resolutionComponent->collidingState = eCollisionState::NO_COLLISION;

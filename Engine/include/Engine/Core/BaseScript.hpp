@@ -22,8 +22,8 @@ public:
     virtual void Start() = 0;
     virtual void Update(float dt) = 0;
 
-    virtual void OnCollisionEnter(int entityId) {};
-    virtual void OnCollisionExit(int entityId) {};
+    virtual void OnCollisionEnter(Entity* entity) {};
+    virtual void OnCollisionExit(Entity* entity) {};
 
     virtual void OnHoverEnter() {};
     virtual void OnHoverExit() {};

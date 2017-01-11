@@ -17,8 +17,7 @@
 
 CollisionSystem::CollisionSystem()
 {
-    this->addDependency<sPositionComponent>();
-    this->addDependency<sDirectionComponent>();
+    this->addDependency<sSphereColliderComponent>();
 
     _monitoringKey = MonitoringDebugWindow::getInstance()->registerSystem(COLLISION_SYSTEM_NAME);
 }
@@ -32,9 +31,6 @@ void    CollisionSystem::update(EntityManager &em, float elapsedTime)
     {
         if (entity->getComponent<sBoxColliderComponent>() == nullptr && entity->getComponent<sSphereColliderComponent>() == nullptr) return;
 
-        //sDirectionComponent* direction = entity->getComponent<sDirectionComponent>();
-        //sPositionComponent* position = entity->getComponent<sPositionComponent>();
-
         this->forEachEntity(em, [&](Entity* entityB)
         {
             if (entityB->getComponent<sBoxColliderComponent>() == nullptr && entityB->getComponent<sSphereColliderComponent>() == nullptr) return;
@@ -47,9 +43,8 @@ void    CollisionSystem::update(EntityManager &em, float elapsedTime)
 
                 if (this->isColliding(entity, entityB))
                 {
-                    if (!entityB->getComponent<sSphereColliderComponent>()->isTrigger)
-                        LOG_DEBUG("NOT TRIGGER");
-                    //position->value -= direction->value * elapsedTime;
+                    //if (!entityB->getComponent<sSphereColliderComponent>()->isTrigger)
+                    //    LOG_DEBUG("NOT TRIGGER");
 
                     if (resolution->collidingState == eCollisionState::NO_COLLISION)
                     {
