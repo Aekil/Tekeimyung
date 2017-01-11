@@ -23,6 +23,8 @@ public:
 
 private:
     Entity* preview = nullptr;
+    std::vector<std::string> buildableItems;
+    int currentIdx = 0;
 };
 
 REGISTER_SCRIPT(Tile, "Tile");
