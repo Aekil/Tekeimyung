@@ -32,22 +32,24 @@ void    CollisionSystem::update(EntityManager &em, float elapsedTime)
     {
         if (entity->getComponent<sBoxColliderComponent>() == nullptr && entity->getComponent<sSphereColliderComponent>() == nullptr) return;
 
-        sDirectionComponent* direction = entity->getComponent<sDirectionComponent>();
-        sPositionComponent* position = entity->getComponent<sPositionComponent>();
+        //sDirectionComponent* direction = entity->getComponent<sDirectionComponent>();
+        //sPositionComponent* position = entity->getComponent<sPositionComponent>();
 
         this->forEachEntity(em, [&](Entity* entityB)
         {
-            if (entity->getComponent<sBoxColliderComponent>() == nullptr && entityB->getComponent<sSphereColliderComponent>() == nullptr) return;
+            if (entityB->getComponent<sBoxColliderComponent>() == nullptr && entityB->getComponent<sSphereColliderComponent>() == nullptr) return;
 
-            sPositionComponent* positionB = entityB->getComponent<sPositionComponent>();
             if (entity->id != entityB->id)
             {
                 sResolutionComponent* resolution = entity->getComponent<sResolutionComponent>();
 
+                if (resolution == nullptr) return;
+
                 if (this->isColliding(entity, entityB))
                 {
                     if (!entityB->getComponent<sSphereColliderComponent>()->isTrigger)
-                        position->value -= direction->value * elapsedTime;
+                        LOG_DEBUG("NOT TRIGGER");
+                    //position->value -= direction->value * elapsedTime;
 
                     if (resolution->collidingState == eCollisionState::NO_COLLISION)
                     {
@@ -62,6 +64,7 @@ void    CollisionSystem::update(EntityManager &em, float elapsedTime)
                 }
             }
         });
+
         ++nbEntities;
     });
 

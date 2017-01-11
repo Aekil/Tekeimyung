@@ -18,6 +18,6 @@ public:
 
 private:
     bool            isColliding(Entity *firstEntity, Entity *secondEntity);
-
+    
     ADD_MONITORING_VAR
 END_SYSTEM(CollisionSystem)

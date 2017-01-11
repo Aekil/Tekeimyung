@@ -29,10 +29,10 @@ public:
     virtual void OnHoverExit() {};
 
     void SetEntity(Entity* entity);
-
 protected:
     Entity* entity;
     Keyboard& keyboard = GameWindow::getInstance()->getKeyboard();
+    Mouse& mouse = GameWindow::getInstance()->getMouse();
 
     template<typename componentType>
     componentType* getComponent() const

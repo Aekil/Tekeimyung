@@ -8,6 +8,8 @@
 
 void Player::Death()
 {
+    this->Destroy();
+
     LOG_DEBUG("I'm dead now");
 }
 
@@ -20,7 +22,6 @@ void Player::Start()
 
 void Player::Update(float dt)
 {
-    //LOG_DEBUG("%f, %f, %f", position->value.x, position->value.y, position->z);
     //if (this->m_health > 0)
     //    this->m_health -= 1;
     //else
@@ -69,8 +70,7 @@ void Player::OnHoverEnter()
 {
     auto renderComponent = this->getComponent<sRenderComponent>();
 
-    renderComponent->color = glm::vec4(1.0f, 1.0f, 0.0f, 1.0f);
-    //LOG_DEBUG("coucou toi je suis sur toi");
+    renderComponent->color = glm::vec4(1.0f, 1.0f, 0.0f, 0.5f);
 }
 
 void Player::OnHoverExit()

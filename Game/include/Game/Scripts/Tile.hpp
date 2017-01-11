@@ -13,6 +13,7 @@ public:
     Tile() {};
     ~Tile() {};
 
+    bool onHover = false;
 public:
     virtual void Start();
     virtual void Update(float dt);

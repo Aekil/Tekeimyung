@@ -52,9 +52,7 @@ void    ScriptSystem::update(EntityManager &em, float elapsedTime)
     forEachEntity(em, [&](Entity *entity)
     {
         for (auto&& script : entity->getComponent<sScriptComponent>()->scriptInstances)
-        {
             script->Update(elapsedTime);
-        }
 
         ++nbEntities;
     });

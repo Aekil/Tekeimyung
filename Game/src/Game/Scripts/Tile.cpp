@@ -13,7 +13,12 @@ void Tile::Start()
 
 void Tile::Update(float dt)
 {
+    if (this->onHover && this->mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_1] == Mouse::eButtonState::CLICK_PRESSED)
+    {
+        auto position = this->getComponent<sTransformComponent>()->pos;
 
+        this->Instantiate("TOWER_FIRE", glm::vec3(position.x, 25.0f, position.z));
+    }
 }
 
 void Tile::OnHoverEnter()
@@ -21,6 +26,7 @@ void Tile::OnHoverEnter()
     auto renderer = this->getComponent<sRenderComponent>();
 
     renderer->color = glm::vec4(0.5f, 0.5f, 0.5f, 1.0f);
+    this->onHover = true;
 }
 
 void Tile::OnHoverExit()
@@ -28,4 +34,5 @@ void Tile::OnHoverExit()
     auto renderer = this->getComponent<sRenderComponent>();
 
     renderer->color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+    this->onHover = false;
 }
