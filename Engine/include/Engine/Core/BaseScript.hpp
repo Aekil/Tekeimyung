@@ -40,7 +40,7 @@ protected:
         return this->entity->getComponent<componentType>();
     }
 
-    virtual void Instantiate(std::string, glm::vec3 pos);
+    virtual void Instantiate(std::string, glm::vec3 pos = glm::vec3(0,0,0));
 
     virtual void Destroy();
 

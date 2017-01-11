@@ -96,7 +96,7 @@ void EntityFactory::loadDirectory(const std::string& archetypesDir)
 
 bool    EntityFactory::entityTypeExists(const std::string& type)
 {
-    for (auto &&entityType: _typesString)
+    for (auto &&entityType : _typesString)
     {
         if (entityType == type)
             return (true);
@@ -124,19 +124,9 @@ Entity* EntityFactory::createEntity(eArchetype type, const glm::vec3& pos)
 {
     Entity* entity = createEntity(type);
 
-    sPositionComponent* posEntity = entity->getComponent<sPositionComponent>();
-
-    if (posEntity)
-    {
-        posEntity->value.x = pos.x;
-        posEntity->value.y = pos.y;
-        posEntity->z = pos.z;
-
-        sTransformComponent* transformEntity = entity->getComponent<sTransformComponent>();
-        //transformEntity->pos = Map::mapToGraphPosition(posEntity->value, posEntity->z);
-        transformEntity->pos = pos;
-        transformEntity->needUpdate = true;
-    }
+    sTransformComponent* transformEntity = entity->getComponent<sTransformComponent>();
+    transformEntity->pos = pos;
+    transformEntity->needUpdate = true;
 
     return (entity);
 }
@@ -223,7 +213,7 @@ Entity* EntityFactory::cloneEntity(const std::string& typeName)
     if (entityComponents == _entities.end())
         EXCEPT(InvalidParametersException, "The entity type %s does not exist", typeName.c_str());
 
-    for (auto &&component: entityComponents->second)
+    for (auto &&component : entityComponents->second)
     {
         sComponent* component_ = IComponentFactory::createComponent(typeName, component);
         clone->addComponent(component_);
@@ -245,9 +235,9 @@ void    EntityFactory::initAnimations(Entity* entity)
 
     sTransformComponent* transform = entity->getComponent<sTransformComponent>();
 
-    for (auto animation: render->_animator.getAnimations())
+    for (auto animation : render->_animator.getAnimations())
     {
-        for (auto paramAnimation: animation->getParamsAnimations())
+        for (auto paramAnimation : animation->getParamsAnimations())
         {
             if (transform && paramAnimation->getName() == "position")
                 std::static_pointer_cast<ParamAnimation<glm::vec3>>(paramAnimation)->setParam(&transform->pos);
@@ -276,7 +266,7 @@ void    EntityFactory::reverseAnimations(Entity* entity)
 
 void    EntityFactory::updateEntitiesComponents(Entity* from, const std::string& entityName, IComponentFactory* compFactory, sComponent* component)
 {
-    for (auto &&entity_: _em->getEntities())
+    for (auto &&entity_ : _em->getEntities())
     {
         Entity* entity = entity_.second;
         sNameComponent* name = entity->getComponent<sNameComponent>();

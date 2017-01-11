@@ -7,7 +7,7 @@
                 "z": 0
             },
             "sRenderComponent": {
-                "model": "resources/models/towers/tower_fire.DAE"
+                "model": "resources/models/buildings/tower_fire.DAE"
             },
             "sTypeComponent": {
                 "type": "TILE_NOT_WALKABLE"

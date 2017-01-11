@@ -115,31 +115,13 @@ void    PlayState::initEntities()
     EntityManager* em = _world.getEntityManager();
 
     // Create particles emitter
-    PlayStates::createParticlesEmittor(glm::vec3(12, 5, 1), eArchetype::EMITTER_WATER);
+    PlayStates::createTile(eArchetype::EMITTER_WATER, glm::vec3(12, 5, 1));
 
     // Create character
-    Entity* player = PlayStates::createTile(_map, glm::vec3(9, 5, 1), eArchetype::PLAYER);
+    Entity* player = PlayStates::createTile(eArchetype::PLAYER, glm::vec3(65, 6.25, 33));
 
-    PlayStates::createTile(_map, glm::vec3(0, 0, 0), eArchetype::GAME_MANAGER);
-
-    // Initialize base map
-    /*for (int y = 0; y < 15; y++) {
-        for (int x = 0; x < 20; x++) {
-            PlayStates::createTile(_map, glm::vec3(x, y, 0), eArchetype::BLOCK_GREEN);
-        }
-    }
-
-    for (int y = 0; y < 4; y++) {
-        for (int x = 0; x < 20; x++) {
-            PlayStates::createTile(_map, glm::vec3(x, y, 1), eArchetype::BLOCK_BROWN);
-        }
-    }
-
-    for (int y = 8; y < 15; y++) {
-        for (int x = 0; x < 20; x++) {
-            PlayStates::createTile(_map, glm::vec3(x, y, 1), eArchetype::BLOCK_BROWN);
-        }
-    }*/
+    PlayStates::createTile(eArchetype::GAME_MANAGER, glm::vec3(0, 0, 0));
+    PlayStates::createTile(eArchetype::CASTLE);
 
     // Create spawner
     //static uint32_t spawnerEntityID = SpawnerSystem::createSpawner(_map, glm::vec3(0.5, 5.5f, 0.5), eArchetype::SPAWNER);

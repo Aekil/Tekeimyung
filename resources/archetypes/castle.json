@@ -1,0 +1,28 @@
+{
+    "name": "CASTLE",
+    "components": {
+            "sTransformComponent" : {
+                "pos" : {
+                    "x" : 200.0,
+                    "y" : 12.5,
+                    "z" : -25.0
+                },
+                "rotation" : {
+                    "x" : 0,
+                    "y" : 0,
+                    "z" : 0
+                },
+                "scale" : {
+                    "x" : 1.0,
+                    "y" : 1.0,
+                    "z" : 1.0
+                }
+            },
+            "sRenderComponent": {
+                "model": "resources/models/buildings/geometric_castle.DAE"
+            },
+            "sTypeComponent": {
+                "type": "TILE_NOT_WALKABLE"
+            }
+        }
+}

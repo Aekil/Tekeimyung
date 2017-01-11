@@ -10,22 +10,20 @@
 PlayStates::PlayStates()
 {}
 
-Entity*    PlayStates::createTile(Map* map, const glm::vec3& pos, eArchetype type)
+Entity*    PlayStates::createTile(eArchetype type, const glm::vec3& pos)
 {
     Entity* tile;
 
     tile = EntityFactory::createEntity(type, pos);
 
-    //(*map)[(uint16_t)pos.z][(uint32_t)pos.y][(uint32_t)pos.x] = tile->id;
-
     return (tile);
 }
 
-Entity* PlayStates::createParticlesEmittor(const glm::vec3& pos, eArchetype type)
+Entity*    PlayStates::createTile(eArchetype type)
 {
-    Entity* ps;
+    Entity* tile;
 
-    ps = EntityFactory::createEntity(type, pos);
+    tile = EntityFactory::createEntity(type);
 
-    return (ps);
+    return (tile);
 }
