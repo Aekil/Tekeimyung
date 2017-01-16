@@ -5,6 +5,9 @@
          "y" : 8,
          "z" : 1
       },
+      "sScriptComponent" : {
+          "class" : [ "Tile" ]
+      },
       "sRenderComponent" : {
          "animated" : false,
          "animations" : [],

@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include <Engine/Core/BaseScript.hpp>
 #include <Engine/Core/ScriptFactory.hpp>
 
 class Tile : public BaseScript

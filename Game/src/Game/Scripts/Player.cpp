@@ -30,6 +30,15 @@ void Player::Update(float dt)
     this->Movement(dt);
 }
 
+void Player::TakeDamage(int damage)
+{
+    LOG_DEBUG("PLAYER TAKING DAMAGE");
+    this->m_health -= damage;
+
+    if (this->m_health <= 0)
+        this->Death();
+}
+
 void Player::Movement(float elapsedTime)
 {
     sTransformComponent* transform = this->getComponent<sTransformComponent>();

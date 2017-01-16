@@ -24,6 +24,8 @@ public:
 
     virtual void OnHoverEnter();
     virtual void OnHoverExit();
+
+    void TakeDamage(int);
 };
 
 REGISTER_SCRIPT(Player, "Player");

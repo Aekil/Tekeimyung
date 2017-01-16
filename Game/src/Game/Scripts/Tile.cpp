@@ -9,7 +9,9 @@
 void Tile::Start()
 {
     buildableItems.push_back("TOWER_FIRE");
-    buildableItems.push_back("CASTLE");
+    buildableItems.push_back("TRAP_NEEDLE");
+    buildableItems.push_back("TRAP_CUTTER");
+    buildableItems.push_back("TRAP_FIRE");
 }
 
 void Tile::Update(float dt)
@@ -18,7 +20,7 @@ void Tile::Update(float dt)
     {
         auto position = this->getComponent<sTransformComponent>()->pos;
 
-        this->Instantiate(this->buildableItems[this->currentIdx], glm::vec3(position.x, 25.0f, position.z));
+        this->Instantiate(this->buildableItems[this->currentIdx], glm::vec3(position.x, position.y + 12.5f, position.z));
     }
 
     if (this->mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_2] == Mouse::eButtonState::CLICK_PRESSED)
@@ -33,7 +35,7 @@ void Tile::Update(float dt)
 void Tile::OnHoverEnter()
 {
     auto position = this->getComponent<sTransformComponent>()->pos;
-    this->preview = this->Instantiate(this->buildableItems[this->currentIdx], glm::vec3(position.x, 25.0f, position.z));
+    this->preview = this->Instantiate(this->buildableItems[this->currentIdx], glm::vec3(position.x, position.y + 12.5f, position.z));
 
     auto renderer = this->getComponent<sRenderComponent>();
 
