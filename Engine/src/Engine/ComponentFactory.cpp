@@ -1158,9 +1158,9 @@ sComponent* ComponentFactory<sScriptComponent>::loadFromJson(const std::string& 
         return (component);
     }
 
-    for (const auto& animation : classes)
+    for (const auto& scriptClass : classes)
     {
-        component->scriptNames.push_back(animation.asString());
+        component->scriptNames.push_back(scriptClass.asString());
     }
 
     component->isInitialized = false;
