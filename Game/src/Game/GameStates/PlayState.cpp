@@ -120,6 +120,8 @@ void    PlayState::initEntities()
     // Create character
     Entity* player = PlayStates::createTile(eArchetype::PLAYER, glm::vec3(65, 6.25, 33));
 
+    Entity* enemy = PlayStates::createTile(eArchetype::ENEMY, glm::vec3(65, 18.75, 66));
+
     PlayStates::createTile(eArchetype::GAME_MANAGER, glm::vec3(0, 0, 0));
     PlayStates::createTile(eArchetype::CASTLE);
 

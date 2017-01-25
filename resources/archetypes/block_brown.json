@@ -1,12 +1,22 @@
 {
    "components" : {
+      "sBoxColliderComponent" : {
+         "isTrigger" : false,
+         "pos" : {
+            "x" : -13,
+            "y" : -0.5,
+            "z" : -13
+         },
+         "size" : {
+            "x" : 2.5999999046325684,
+            "y" : 1.3500000238418579,
+            "z" : 2.5999999046325684
+         }
+      },
       "sPositionComponent" : {
          "x" : 10,
          "y" : 8,
          "z" : 1
-      },
-      "sScriptComponent" : {
-          "class" : [ "Tile" ]
       },
       "sRenderComponent" : {
          "animated" : false,
@@ -21,12 +31,15 @@
          "texture" : "",
          "type" : "MESH"
       },
+      "sScriptComponent" : {
+         "class" : [ "Tile" ]
+      },
       "sTileComponent" : null,
       "sTransformComponent" : {
          "pos" : {
             "x" : 250,
-            "y" : 12.5,
-            "z" : 200
+            "y" : 0,
+            "z" : 450
          },
          "rotation" : {
             "x" : 0,
