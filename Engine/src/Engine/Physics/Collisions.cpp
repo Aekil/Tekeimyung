@@ -28,15 +28,43 @@ bool    Collisions::pointVSAABB(glm::vec3 point, glm::vec3 boxPosition, glm::vec
         (point.z >= boxPosition.z && point.z <= boxPosition.z + boxSize.z);
 }
 
+double SquaredDistPointAABB(const glm::vec3& p, const glm::vec3& min, const glm::vec3& max)
+{
+    auto check = [&](
+        const double pn,
+        const double bmin,
+        const double bmax) -> double
+    {
+        double out = 0;
+        double v = pn;
+
+        if (v < bmin)
+        {
+            double val = (bmin - v);
+            out += val * val;
+        }
+
+        if (v > bmax)
+        {
+            double val = (v - bmax);
+            out += val * val;
+        }
+
+        return out;
+    };
+
+    double sq = 0.0;
+
+    sq += check(p.x, min.x, max.x);
+    sq += check(p.y, min.y, max.y);
+    sq += check(p.z, min.z, max.z);
+
+    return sq;
+}
+
 bool    Collisions::sphereVSAABB(glm::vec3 spherePosition, float sphereRadius, glm::vec3 boxPosition, glm::vec3 boxSize)
 {
-    float x = std::max(boxPosition.x, std::min(spherePosition.x, boxPosition.x + boxSize.x));
-    float y = std::max(boxPosition.y, std::min(spherePosition.y, boxPosition.y + boxSize.y));
-    float z = std::max(boxPosition.z, std::min(spherePosition.z, boxPosition.z + boxSize.z));
+    double squaredDistance = SquaredDistPointAABB(spherePosition, boxPosition, boxPosition + boxSize);
 
-    float distance = sqrt((x - spherePosition.x) * (x - spherePosition.x) +
-        (y - spherePosition.y) * (y - spherePosition.y) +
-        (z - spherePosition.z) * (z - spherePosition.z));
-
-    return (distance < sphereRadius);
+    return squaredDistance <= (sphereRadius * sphereRadius);
 }

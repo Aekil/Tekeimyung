@@ -10,7 +10,7 @@
 #include <fmod_common.h>
 #include <fmod_errors.h>
 
-#define ENABLE_SOUND        true
+#define ENABLE_SOUND        false
 
 #define SOUNDS_DIRECTORY    "resources/sounds"
 

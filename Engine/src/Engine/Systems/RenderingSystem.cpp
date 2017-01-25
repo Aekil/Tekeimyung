@@ -254,7 +254,6 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
 
 bool    RenderingSystem::isTransparent(sRenderComponent *render) const
 {
-
     return (render->type == Geometry::eType::PLANE);
 }
 

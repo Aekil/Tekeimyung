@@ -44,6 +44,5 @@ protected:
 
     virtual void Destroy();
     virtual void Destroy(Entity*);
-
 };
 

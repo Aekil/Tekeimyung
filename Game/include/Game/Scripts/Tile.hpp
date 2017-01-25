@@ -20,10 +20,12 @@ public:
     virtual void OnHoverEnter();
     virtual void OnHoverExit();
 
+    void SetBuildable(bool);
 private:
     Entity* preview = nullptr;
     std::vector<std::string> buildableItems;
     int currentIdx = 0;
+    bool m_buildable = false;
 };
 
 REGISTER_SCRIPT(Tile, "Tile");

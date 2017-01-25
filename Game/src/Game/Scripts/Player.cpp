@@ -3,6 +3,8 @@
 */
 
 #include <Engine/Components.hh>
+#include <Engine/Physics/Collisions.hpp>
+#include <Engine/EntityFactory.hpp>
 
 #include <Game/Scripts/Player.hpp>
 
@@ -27,7 +29,56 @@ void Player::Update(float dt)
     //else
     //    this->Destroy();
 
+    this->CheckBuildableZone();
     this->Movement(dt);
+}
+
+void Player::CheckBuildableZone()
+{
+    auto em = EntityFactory::getBindedEntityManager();
+    auto transform = this->getComponent<sTransformComponent>()->pos;
+
+    for (auto &entity : em->getEntities())
+    {
+        if (entity.second->getComponent<sBoxColliderComponent>() != nullptr)
+        {
+            auto pos = entity.second->getComponent<sTransformComponent>()->pos;
+            auto box = entity.second->getComponent<sBoxColliderComponent>();
+            auto render = entity.second->getComponent<sRenderComponent>();
+
+            render->color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+
+            if (entity.second->getComponent<sScriptComponent>() != nullptr)
+            {
+                auto scriptComponent = entity.second->getComponent<sScriptComponent>();
+
+                if (std::find(scriptComponent->scriptNames.cbegin(), scriptComponent->scriptNames.cend(), "Tile") != scriptComponent->scriptNames.cend())
+                {
+                    auto index = std::find(scriptComponent->scriptNames.cbegin(), scriptComponent->scriptNames.cend(), "Tile") - scriptComponent->scriptNames.begin();
+
+                    Tile* tile = (Tile*)scriptComponent->scriptInstances[index];
+                    tile->SetBuildable(false);
+                }
+            }
+
+            if (Collisions::sphereVSAABB(transform, 5.7 * SIZE_UNIT, box->pos + pos, glm::vec3(box->size.x * SIZE_UNIT, box->size.y * SIZE_UNIT, box->size.z * SIZE_UNIT)))
+            {
+                if (entity.second->getComponent<sScriptComponent>() != nullptr)
+                {
+                    auto scriptComponent = entity.second->getComponent<sScriptComponent>();
+
+                    if (std::find(scriptComponent->scriptNames.cbegin(), scriptComponent->scriptNames.cend(), "Tile") != scriptComponent->scriptNames.cend())
+                    {
+                        auto index = std::find(scriptComponent->scriptNames.cbegin(), scriptComponent->scriptNames.cend(), "Tile") - scriptComponent->scriptNames.begin();
+
+                        Tile* tile = (Tile*)scriptComponent->scriptInstances[index];
+                        tile->SetBuildable(true);
+                    }
+                }
+                render->color = glm::vec4(1.0f, 0.0f, 1.0f, 1.0f);
+            }
+        }
+    }
 }
 
 void Player::TakeDamage(int damage)
