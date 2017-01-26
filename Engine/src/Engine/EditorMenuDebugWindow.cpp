@@ -6,6 +6,7 @@
 
 #include <Engine/EntityFactory.hpp>
 #include <Engine/EditorMenuDebugWindow.hpp>
+#include <Engine/Utils/LevelLoader.hpp>
 
 
 EditorMenuDebugWindow::EditorMenuDebugWindow(EntityManager* em, const glm::vec2& pos, const glm::vec2& size):
@@ -23,56 +24,105 @@ void    EditorMenuDebugWindow::build(float elapsedTime)
     // Set Window params
     ImGui::SetWindowPos(ImVec2(_pos.x, _pos.y), ImGuiSetCond_Always);
 
-    bool load = false;
-    bool save = false;
-    bool saveAs = false;
+    bool loadLevel = false;
+    bool saveLevel = false;
+    bool saveLevelAs = false;
 
     if (ImGui::BeginMenuBar())
     {
         if (ImGui::BeginMenu("Levels"))
         {
+            if (ImGui::MenuItem("New"))
+            {
+                _tmpLoadLevel = "";
+                _currentLevel = "";
+                _em->destroyAllEntities();
+            }
             if (ImGui::MenuItem("Load"))
             {
-
+                _tmpLoadLevel = "";
+                loadLevel = true;
             }
             else if (ImGui::MenuItem("Save"))
             {
-                save = true;
+                saveLevel = true;
             }
             else if (ImGui::MenuItem("Save as"))
             {
-                saveAs = true;
+                saveLevelAs = true;
             }
             ImGui::EndMenu();
         }
         ImGui::EndMenuBar();
     }
 
-    if (saveAs || (save && _currentLevel.size() == 0))
+    if (loadLevel)
+    {
+        ImGui::OpenPopup("Load level");
+    }
+    else if (saveLevelAs || (saveLevel && _currentLevel.size() == 0))
     {
         ImGui::OpenPopup("Save level as...");
     }
-    else if (save)
+    else if (saveLevel)
     {
-        ImGui::OpenPopup("Save level");
+        LevelLoader::getInstance()->save(_currentLevel, _em->getEntities());
     }
 
     if (ImGui::BeginPopup("Save level as..."))
     {
-        static char levelName[64] = "";
-        ImGui::InputText("Level name", levelName, 64);
-        if (ImGui::Button("Save"))
-        {
-            _currentLevel = levelName;
-            _levelLoader.save(_currentLevel, _em->getEntities());
-            ImGui::CloseCurrentPopup();
-        }
+        displaySaveAsPopup();
         ImGui::EndPopup();
     }
-    else if (ImGui::BeginPopup("Save level"))
+    else if (ImGui::BeginPopup("Load level"))
     {
-        _levelLoader.save(_currentLevel, _em->getEntities());
+        displayLoadPopup();
+        ImGui::EndPopup();
     }
 
     ImGui::End();
+}
+
+void    EditorMenuDebugWindow::displaySaveAsPopup()
+{
+    static char levelName[64] = "";
+    ImGui::InputText("Level name", levelName, 64);
+    if (ImGui::Button("Save"))
+    {
+        _currentLevel = levelName;
+        LevelLoader::getInstance()->save(_currentLevel, _em->getEntities());
+        LevelLoader::getInstance()->getLevels().push_back(_currentLevel);
+        ImGui::CloseCurrentPopup();
+    }
+}
+
+void    EditorMenuDebugWindow::displayLoadPopup()
+{
+    ImGui::BeginChild("Load level", ImVec2(150, 100), true);
+    for (const auto& level: LevelLoader::getInstance()->getLevels())
+    {
+        if (ImGui::Selectable(level.c_str(), _tmpLoadLevel == level))
+        {
+            _tmpLoadLevel = level;
+        }
+    }
+    ImGui::EndChild();
+
+    // No level selected
+    if (_tmpLoadLevel.size() == 0)
+    {
+        // Grey style unselected
+        ImGui::PushStyleColor(ImGuiCol_Button, ImColor(0.75f, 0.75f, 0.75f, 1.0f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImColor(0.75f, 0.75f, 0.75f, 1.0f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImColor(0.75f, 0.75f, 0.75f, 1.0f));
+
+        ImGui::Button("Load");
+        ImGui::PopStyleColor(3);
+    }
+    else if (ImGui::Button("Load"))
+    {
+        _em->destroyAllEntities();
+        LevelLoader::getInstance()->load(_tmpLoadLevel, _em);
+        ImGui::CloseCurrentPopup();
+    }
 }

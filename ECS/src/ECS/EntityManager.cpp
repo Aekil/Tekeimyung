@@ -53,6 +53,18 @@ void    EntityManager::destroyEntities()
     _entitiesToDestroy.clear();
 }
 
+void    EntityManager::destroyAllEntities()
+{
+    auto it = _entities.begin();
+    for (it; it != _entities.end();)
+    {
+        Entity* entity = it->second;
+        ++it;
+        destroyEntity(entity);
+    }
+    _entitiesToDestroy.clear();
+}
+
 std::unordered_map<uint32_t, Entity*>& EntityManager::getEntities()
 {
     return (_entities);

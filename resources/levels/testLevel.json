@@ -59,7 +59,8 @@
             "sTypeComponent" : {
                "type" : "CHARACTER"
             }
-         }
+         },
+         "name" : "PLAYER"
       },
       {
          "components" : {
@@ -109,7 +110,8 @@
             "sTypeComponent" : {
                "type" : "CHARACTER"
             }
-         }
+         },
+         "name" : "ENEMY"
       },
       {
          "components" : {
@@ -156,7 +158,8 @@
             "sTypeComponent" : {
                "type" : "TILE_WALKABLE"
             }
-         }
+         },
+         "name" : "BLOCK_GREEN"
       },
       {
          "components" : {
@@ -203,7 +206,8 @@
             "sTypeComponent" : {
                "type" : "TILE_WALKABLE"
             }
-         }
+         },
+         "name" : "BLOCK_BROWN"
       }
    ],
    "name" : "testLevel"

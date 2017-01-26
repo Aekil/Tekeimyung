@@ -7,7 +7,6 @@
 #include <ECS/EntityManager.hpp>
 
 #include <Engine/Utils/DebugWindow.hpp>
-#include <Engine/Utils/LevelLoader.hpp>
 
 class EditorMenuDebugWindow: public DebugWindow
 {
@@ -17,8 +16,12 @@ public:
 
     virtual void        build(float elapsedTime);
 
+    void                displaySaveAsPopup();
+    void                displayLoadPopup();
+
 private:
-    LevelLoader         _levelLoader;
     EntityManager*      _em;
     std::string         _currentLevel;
+
+    std::string         _tmpLoadLevel;
 };

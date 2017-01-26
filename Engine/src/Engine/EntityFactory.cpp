@@ -32,7 +32,6 @@ void EntityFactory::loadDirectory(const std::string& archetypesDir)
 {
     DIR* dir;
     struct dirent* ent;
-    RessourceManager* ressourceManager = RessourceManager::getInstance();
 
     dir = opendir(archetypesDir.c_str());
     if (!dir)
@@ -44,13 +43,12 @@ void EntityFactory::loadDirectory(const std::string& archetypesDir)
         {
             // Get entity configuration file
             std::string path = std::string(archetypesDir).append("/").append(ent->d_name);
-            std::string entityConf = ressourceManager->getFile(path);
 
             // Parse the configuration file with jsoncpp
             JsonReader jsonReader;
             JsonValue parsed;
             std::string typeName;
-            if (!jsonReader.parse(entityConf, parsed))
+            if (!jsonReader.parse(path, parsed))
                 EXCEPT(IOException, "Cannot parse archetype \"%s\"", path.c_str());
 
             typeName = parsed.getString("name", "");

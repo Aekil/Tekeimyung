@@ -22,6 +22,7 @@ public:
     void                                            destroyEntity(Entity* entity);
     void                                            destroyEntityRegister(Entity* entity);
     void                                            destroyEntities();
+    void                                            destroyAllEntities();
 
     std::unordered_map<uint32_t, Entity*>&          getEntities();
     Entity*                                         getEntity(uint32_t id) const;

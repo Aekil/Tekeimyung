@@ -6,16 +6,17 @@
 
 #include <iostream>
 
-#include <Engine/Utils/Exception.hpp>
-#include <Engine/Utils/RessourceManager.hpp>
 #include <Engine/Core/Engine.hpp>
-#include <Engine/Utils/Logger.hpp>
-
-#include <Engine/EntityFactory.hpp>
-#include <Game/GameStates/PlayState.hpp>
 #include <Engine/EditorState.hpp>
-#include <Game/GameStates/ConfirmExitState.hpp>
+#include <Engine/EntityFactory.hpp>
+#include <Engine/Utils/Exception.hpp>
 #include <Engine/Utils/EventSound.hpp>
+#include <Engine/Utils/LevelLoader.hpp>
+#include <Engine/Utils/Logger.hpp>
+#include <Engine/Utils/RessourceManager.hpp>
+
+#include <Game/GameStates/PlayState.hpp>
+#include <Game/GameStates/ConfirmExitState.hpp>
 
 void    windowCloseHandler(void* data)
 {
@@ -38,6 +39,8 @@ int     main()
         EntityFactory::loadDirectory(ARCHETYPES_LOCATION);
         // Load textures, models & sounds
         RessourceManager::getInstance()->loadResources("resources");
+        // Load levels
+        LevelLoader::getInstance()->loadDirectory(LEVELS_DIRECTORY);
         EventSound::loadEvents();
         GameWindow::getInstance()->registerCloseHandler(windowCloseHandler, &engine);
 
