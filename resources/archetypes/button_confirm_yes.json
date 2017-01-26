@@ -1,5 +1,8 @@
 {
    "components" : {
+      "sNameComponent" : {
+         "name" : "BUTTON_CONFIRM_YES"
+      },
       "sButtonComponent" : null,
       "sRenderComponent" : {
          "animated" : false,

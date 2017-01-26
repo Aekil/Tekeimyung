@@ -83,6 +83,12 @@ void    EntitiesTemplateDebugWindow::build(float elapsedTime)
             }
             ImGui::EndPopup();
         }
+
+        // Clone template: specify new type name
+        if (ImGui::Button("Save"))
+        {
+            EntityFactory::saveEntityTemplateToJson(_selectedEntityTemplate);
+        }
     }
 
 

@@ -1,5 +1,8 @@
 {
    "components" : {
+      "sNameComponent" : {
+         "name" : "EMPTY_OBJECT"
+      },
       "sPositionComponent" : {
          "x" : 100,
          "y" : 100,

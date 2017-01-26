@@ -53,7 +53,9 @@ public:
 
     // Json load/save
     virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json) = 0;
-    virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType) = 0;
+    // The component to save can be pass to saveToJson, else it will save the entity template component in _components[entityType]
+    // The destination json can also be pass to saveToJson, else it will save the entity template component json in _componentsJson[entityType]
+    virtual JsonValue& saveToJson(const std::string& entityType, const sComponent* savedComponent = nullptr, JsonValue* toJson = nullptr) = 0;
     virtual void save(const std::string& entityType, sComponent* component) = 0;
     virtual void remove(const std::string& entityType) = 0;
 
@@ -90,7 +92,15 @@ template <typename T>
 class BaseComponentFactory: public IComponentFactory
 {
 public:
-    BaseComponentFactory() {}
+    BaseComponentFactory()
+    {
+        #define GET_COMPONENT_NAME(component)   \
+            {                                   \
+                _name = #component;             \
+            }
+        GET_COMPONENT_NAME(T)
+        #undef GET_COMPONENT_NAME
+    }
     virtual ~BaseComponentFactory() {}
 
     // loadFromJson has to be overloaded in BaseComponentFactory child classes
@@ -101,9 +111,9 @@ public:
 
     // A component can't be saved without this overload
     // In case it's not defined, the loaded component json will be saved
-    virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType)
+    virtual JsonValue& saveToJson(const std::string& entityType, const sComponent* savedComponent = nullptr, JsonValue* toJson = nullptr)
     {
-        LOG_WARN("%s::%s: : can't save to json because no saveToJson found. The previously loaded json will be saved", entityType.c_str(), componentType.c_str());
+        LOG_WARN("%s::%s: : can't save to json because no saveToJson found. The previously loaded json will be saved", entityType.c_str(), _name.c_str());
         return _componentsJson[entityType];
     }
 
@@ -151,6 +161,10 @@ protected:
     // Store component JSON retrieved from loadFromJson function
     // so we can return the default json if saveToJson is not implemented
     std::unordered_map<std::string, JsonValue>    _componentsJson;
+
+private:
+    // Component name
+    std::string                                     _name;
 };
 
 
@@ -174,7 +188,7 @@ class ComponentFactory<sRenderComponent>: public BaseComponentFactory<sRenderCom
 {
 public:
     virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
-    virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
+    virtual JsonValue& saveToJson(const std::string& entityType, const sComponent* savedComponent = nullptr, JsonValue* toJson = nullptr);
 
 private:
     void            loadTranslateParamAnimation(std::shared_ptr<ParamAnimation<glm::vec3>> paramAnimation, JsonValue& json);
@@ -200,7 +214,7 @@ class ComponentFactory<sPositionComponent>: public BaseComponentFactory<sPositio
 {
 public:
     virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
-    virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
+    virtual JsonValue& saveToJson(const std::string& entityType, const sComponent* savedComponent = nullptr, JsonValue* toJson = nullptr);
 };
 
 /*
@@ -212,7 +226,7 @@ class ComponentFactory<sDirectionComponent>: public BaseComponentFactory<sDirect
 {
 public:
     virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
-    virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
+    virtual JsonValue& saveToJson(const std::string& entityType, const sComponent* savedComponent = nullptr, JsonValue* toJson = nullptr);
 };
 
 
@@ -225,7 +239,7 @@ class ComponentFactory<sBoxColliderComponent>: public BaseComponentFactory<sBoxC
 {
 public:
     virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
-    virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
+    virtual JsonValue& saveToJson(const std::string& entityType, const sComponent* savedComponent = nullptr, JsonValue* toJson = nullptr);
 
     virtual bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity);
 };
@@ -240,7 +254,7 @@ class ComponentFactory<sSphereColliderComponent>: public BaseComponentFactory<sS
 {
 public:
     virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
-    virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
+    virtual JsonValue& saveToJson(const std::string& entityType, const sComponent* savedComponent = nullptr, JsonValue* toJson = nullptr);
 
     virtual bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity);
 };
@@ -264,7 +278,7 @@ class ComponentFactory<sGravityComponent>: public BaseComponentFactory<sGravityC
 {
 public:
     virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
-    virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
+    virtual JsonValue& saveToJson(const std::string& entityType, const sComponent* savedComponent = nullptr, JsonValue* toJson = nullptr);
 };
 
 
@@ -277,7 +291,7 @@ class ComponentFactory<sTypeComponent>: public BaseComponentFactory<sTypeCompone
 {
 public:
     virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
-    virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
+    virtual JsonValue& saveToJson(const std::string& entityType, const sComponent* savedComponent = nullptr, JsonValue* toJson = nullptr);
     virtual eEntityType stringToEntityType(const std::string& entityTypeStr);
     virtual std::string entityTypeToString(eEntityType entityType);
 };
@@ -291,7 +305,7 @@ class ComponentFactory<sParticleEmitterComponent>: public BaseComponentFactory<s
 {
 public:
     virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
-    virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
+    virtual JsonValue& saveToJson(const std::string& entityType, const sComponent* savedComponent = nullptr, JsonValue* toJson = nullptr);
 
     virtual bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity);
 };
@@ -305,6 +319,7 @@ class ComponentFactory<sNameComponent> : public BaseComponentFactory<sNameCompon
 {
 public:
     virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
+    virtual JsonValue& saveToJson(const std::string& entityType, const sComponent* savedComponent = nullptr, JsonValue* toJson = nullptr);
 };
 
 
@@ -317,7 +332,7 @@ class ComponentFactory<sTransformComponent> : public BaseComponentFactory<sTrans
 {
 public:
     virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
-    virtual JsonValue&  saveToJson(const std::string& entityType, const std::string& componentType);
+    virtual JsonValue&  saveToJson(const std::string& entityType, const sComponent* savedComponent = nullptr, JsonValue* toJson = nullptr);
 
     virtual bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity);
 

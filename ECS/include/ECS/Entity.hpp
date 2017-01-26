@@ -38,6 +38,7 @@ public:
 
     sComponent*                     getComponent(size_t componentHashCode) const;
     std::vector<sComponent*>&       getComponents();
+    const std::vector<sComponent*>& getComponents() const;
 
     void                            removeComponent(sComponent* component);
 

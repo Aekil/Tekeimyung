@@ -1,5 +1,8 @@
 {
    "components" : {
+      "sNameComponent" : {
+         "name" : "QUIT_CONFIRM_TEXT"
+      },
       "sRenderComponent" : {
          "animated" : false,
          "animations" : [],

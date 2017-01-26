@@ -1,5 +1,8 @@
 {
    "components" : {
+      "sNameComponent" : {
+         "name" : "ICON_SELECTED"
+      },
       "sParticleEmitterComponent" : {
          "angle" : 160,
          "angle_variance" : 0,

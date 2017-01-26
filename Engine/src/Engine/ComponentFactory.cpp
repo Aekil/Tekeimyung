@@ -199,11 +199,11 @@ void    ComponentFactory<sRenderComponent>::loadColorParamAnimation(std::shared_
     }
 }
 
-JsonValue&    ComponentFactory<sRenderComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
+JsonValue&    ComponentFactory<sRenderComponent>::saveToJson(const std::string& entityType, const sComponent* savedComponent, JsonValue* toJson)
 {
-    JsonValue& json = _componentsJson[entityType];
+    JsonValue& json = toJson ? *toJson : _componentsJson[entityType];
     std::vector<JsonValue> animations;
-    sRenderComponent* component = static_cast<sRenderComponent*>(_components[entityType]);
+    const sRenderComponent* component = static_cast<const sRenderComponent*>(savedComponent ? savedComponent : _components[entityType]);
 
 
     json.setBool("animated", component->animated);
@@ -644,10 +644,10 @@ sComponent* ComponentFactory<sPositionComponent>::loadFromJson(const std::string
     return (component);
 }
 
-JsonValue&    ComponentFactory<sPositionComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
+JsonValue&    ComponentFactory<sPositionComponent>::saveToJson(const std::string& entityType, const sComponent* savedComponent, JsonValue* toJson)
 {
-    JsonValue& json = _componentsJson[entityType];
-    sPositionComponent* component = static_cast<sPositionComponent*>(_components[entityType]);
+    JsonValue& json = toJson ? *toJson : _componentsJson[entityType];
+    const sPositionComponent* component = static_cast<const sPositionComponent*>(savedComponent ? savedComponent : _components[entityType]);
 
     json.setFloat("x", component->value.x);
     json.setFloat("y", component->value.y);
@@ -671,10 +671,10 @@ sComponent* ComponentFactory<sDirectionComponent>::loadFromJson(const std::strin
     return (component);
 }
 
-JsonValue&    ComponentFactory<sDirectionComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
+JsonValue&    ComponentFactory<sDirectionComponent>::saveToJson(const std::string& entityType, const sComponent* savedComponent, JsonValue* toJson)
 {
-    JsonValue& json = _componentsJson[entityType];
-    sDirectionComponent* component = static_cast<sDirectionComponent*>(_components[entityType]);
+    JsonValue& json = toJson ? *toJson : _componentsJson[entityType];
+    const sDirectionComponent* component = static_cast<const sDirectionComponent*>(savedComponent ? savedComponent : _components[entityType]);
 
     json.setFloat("x", component->value.x);
     json.setFloat("y", component->value.y);
@@ -699,10 +699,10 @@ sComponent* ComponentFactory<sBoxColliderComponent>::loadFromJson(const std::str
     return (component);
 }
 
-JsonValue&    ComponentFactory<sBoxColliderComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
+JsonValue&    ComponentFactory<sBoxColliderComponent>::saveToJson(const std::string& entityType, const sComponent* savedComponent, JsonValue* toJson)
 {
-    JsonValue& json = _componentsJson[entityType];
-    sBoxColliderComponent* component = static_cast<sBoxColliderComponent*>(_components[entityType]);
+    JsonValue& json = toJson ? *toJson : _componentsJson[entityType];
+    const sBoxColliderComponent* component = static_cast<const sBoxColliderComponent*>(savedComponent ? savedComponent : _components[entityType]);
 
     json.setVec3f("pos", component->pos);
     json.setVec3f("size", component->size);
@@ -751,10 +751,10 @@ sComponent* ComponentFactory<sSphereColliderComponent>::loadFromJson(const std::
     return (component);
 }
 
-JsonValue&    ComponentFactory<sSphereColliderComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
+JsonValue&    ComponentFactory<sSphereColliderComponent>::saveToJson(const std::string& entityType, const sComponent* savedComponent, JsonValue* toJson)
 {
-    JsonValue& json = _componentsJson[entityType];
-    sSphereColliderComponent* component = static_cast<sSphereColliderComponent*>(_components[entityType]);
+    JsonValue& json = toJson ? *toJson : _componentsJson[entityType];
+    const sSphereColliderComponent* component = static_cast<const sSphereColliderComponent*>(savedComponent ? savedComponent : _components[entityType]);
 
     json.setVec3f("pos", component->pos);
     json.setFloat("radius", component->radius);
@@ -815,10 +815,10 @@ sComponent* ComponentFactory<sGravityComponent>::loadFromJson(const std::string&
     return (component);
 }
 
-JsonValue&    ComponentFactory<sGravityComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
+JsonValue&    ComponentFactory<sGravityComponent>::saveToJson(const std::string& entityType, const sComponent* savedComponent, JsonValue* toJson)
 {
-    JsonValue& json = _componentsJson[entityType];
-    sGravityComponent* component = static_cast<sGravityComponent*>(_components[entityType]);
+    JsonValue& json = toJson ? *toJson : _componentsJson[entityType];
+    const sGravityComponent* component = static_cast<const sGravityComponent*>(savedComponent ? savedComponent : _components[entityType]);
 
     json.setFloat("x", component->value.x);
     json.setFloat("y", component->value.y);
@@ -880,10 +880,10 @@ std::string ComponentFactory<sTypeComponent>::entityTypeToString(eEntityType ent
 }
 
 
-JsonValue&    ComponentFactory<sTypeComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
+JsonValue&    ComponentFactory<sTypeComponent>::saveToJson(const std::string& entityType, const sComponent* savedComponent, JsonValue* toJson)
 {
-    JsonValue& json = _componentsJson[entityType];
-    sTypeComponent* component = static_cast<sTypeComponent*>(_components[entityType]);
+    JsonValue& json = toJson ? *toJson : _componentsJson[entityType];
+    const sTypeComponent* component = static_cast<const sTypeComponent*>(savedComponent ? savedComponent : _components[entityType]);
 
     json.setString("type", entityTypeToString(component->type));
 
@@ -951,12 +951,12 @@ sComponent* ComponentFactory<sParticleEmitterComponent>::loadFromJson(const std:
     return (component);
 }
 
-JsonValue&    ComponentFactory<sParticleEmitterComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
+JsonValue&    ComponentFactory<sParticleEmitterComponent>::saveToJson(const std::string& entityType, const sComponent* savedComponent, JsonValue* toJson)
 {
     JsonValue color;
     JsonValue size;
-    JsonValue& json = _componentsJson[entityType];
-    sParticleEmitterComponent* component = static_cast<sParticleEmitterComponent*>(_components[entityType]);
+    JsonValue& json = toJson ? *toJson : _componentsJson[entityType];
+    const sParticleEmitterComponent* component = static_cast<const sParticleEmitterComponent*>(savedComponent ? savedComponent : _components[entityType]);
 
     // Write colors
     color.setColor4f("start", component->colorStart);
@@ -1027,6 +1027,16 @@ sComponent* ComponentFactory<sNameComponent>::loadFromJson(const std::string& en
     return (component);
 }
 
+JsonValue&    ComponentFactory<sNameComponent>::saveToJson(const std::string& entityType, const sComponent* savedComponent, JsonValue* toJson)
+{
+    JsonValue& json = toJson ? *toJson : _componentsJson[entityType];
+    const sNameComponent* component = static_cast<const sNameComponent*>(savedComponent ? savedComponent : _components[entityType]);
+
+    json.setString("name", component->value);
+
+    return (json);
+}
+
 
 /*
 ** sTransformComponent
@@ -1045,10 +1055,10 @@ sComponent* ComponentFactory<sTransformComponent>::loadFromJson(const std::strin
     return (component);
 }
 
-JsonValue&    ComponentFactory<sTransformComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
+JsonValue&    ComponentFactory<sTransformComponent>::saveToJson(const std::string& entityType, const sComponent* savedComponent, JsonValue* toJson)
 {
-    JsonValue& json = _componentsJson[entityType];
-    sTransformComponent* component = static_cast<sTransformComponent*>(_components[entityType]);
+    JsonValue& json = toJson ? *toJson : _componentsJson[entityType];
+    const sTransformComponent* component = static_cast<const sTransformComponent*>(savedComponent ? savedComponent : _components[entityType]);
 
 
     json.setVec3f("scale", component->scale);

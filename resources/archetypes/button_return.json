@@ -1,5 +1,8 @@
 {
    "components" : {
+      "sNameComponent" : {
+         "name" : "BUTTON_RETURN"
+      },
       "sButtonComponent" : null,
       "sRenderComponent" : {
          "animated" : false,

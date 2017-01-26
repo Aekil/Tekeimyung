@@ -1,5 +1,8 @@
 {
    "components" : {
+      "sNameComponent" : {
+         "name" : "BUTTON_QUIT"
+      },
       "sButtonComponent" : null,
       "sRenderComponent" : {
          "animated" : false,

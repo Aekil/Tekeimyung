@@ -1,5 +1,8 @@
 {
    "components" : {
+      "sNameComponent" : {
+         "name" : "EMITTER_FIRE"
+      },
       "sParticleEmitterComponent" : {
          "texture" : "resources/sprites/particles/particle_circle.png",
          "angle" : 0,

@@ -40,6 +40,11 @@ std::vector<sComponent*>&   Entity::getComponents()
     return _components;
 }
 
+const std::vector<sComponent*>&   Entity::getComponents() const
+{
+    return _components;
+}
+
 void    Entity::removeComponent(sComponent* component)
 {
     for (auto it = _components.begin(); it != _components.end(); ++it)

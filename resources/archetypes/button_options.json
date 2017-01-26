@@ -1,5 +1,8 @@
 {
    "components" : {
+      "sNameComponent" : {
+         "name" : "BUTTON_OPTIONS"
+      },
       "sButtonComponent" : null,
       "sRenderComponent" : {
          "animated" : false,

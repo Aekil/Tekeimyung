@@ -1,5 +1,8 @@
 {
    "components" : {
+      "sNameComponent" : {
+         "name" : "BUTTON_TOGGLE_WINDOWED"
+      },
       "sButtonComponent" : null,
       "sRenderComponent" : {
          "animated" : false,

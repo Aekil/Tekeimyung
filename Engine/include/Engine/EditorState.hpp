@@ -18,6 +18,7 @@ START_GAMESTATE(EditorState)
     virtual bool                        update(float elapsedTime);
 
     void                                initCamera();
+
 private:
     Camera                              _camera;
 END_GAMESTATE(EditorState)

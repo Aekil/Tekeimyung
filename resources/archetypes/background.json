@@ -1,5 +1,8 @@
 {
    "components" : {
+      "sNameComponent" : {
+         "name" : "BACKGROUND"
+      },
       "sRenderComponent" : {
          "animated" : false,
          "animations" : [],

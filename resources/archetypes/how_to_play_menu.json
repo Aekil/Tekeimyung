@@ -1,5 +1,8 @@
 {
    "components" : {
+      "sNameComponent" : {
+         "name" : "HOW_TO_PLAY_MENU"
+      },
       "sRenderComponent" : {
          "animated" : false,
          "animations" : [],

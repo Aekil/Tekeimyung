@@ -1,9 +1,15 @@
 {
    "components" : {
+      "sNameComponent" : {
+         "name" : "ENEMY"
+      },
       "sDirectionComponent" : {
          "speed" : 1,
          "x" : 1,
          "y" : 0
+      },
+      "sNameComponent" : {
+         "name" : "ENEMY"
       },
       "sPositionComponent" : {
          "x" : 19.989999771118164,
@@ -11,12 +17,17 @@
          "z" : 1.5
       },
       "sRenderComponent" : {
+         "animated" : false,
+         "animations" : [],
          "color" : {
             "a" : 1,
             "b" : 0.78431373834609985,
             "g" : 0.31372550129890442,
             "r" : 1
-         }
+         },
+         "model" : "resources/models/default.DAE",
+         "texture" : "",
+         "type" : "MESH"
       },
       "sTransformComponent" : {
          "pos" : {

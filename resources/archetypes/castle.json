@@ -1,6 +1,9 @@
 {
     "name": "CASTLE",
     "components": {
+      "sNameComponent" : {
+         "name" : "CASTLE"
+      },
             "sScriptComponent" : {
                 "class" : [
                     "Castle"

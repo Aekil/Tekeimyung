@@ -76,6 +76,9 @@ void EntityFactory::loadDirectory(const std::string& archetypesDir)
                 _entities[typeName].push_back(componentName);
             }
 
+            if (std::find(_entities[typeName].begin(), _entities[typeName].end(), "sNameComponent") == _entities[typeName].end())
+                EXCEPT(InvalidParametersException, "Failed to read entity archetype \"%s\": missing sNameComponent", typeName.c_str());
+
             // Add sTransformation component if not found
             if (std::find(_entities[typeName].begin(), _entities[typeName].end(), "sTransformComponent") == _entities[typeName].end())
             {
@@ -217,8 +220,6 @@ Entity* EntityFactory::cloneEntity(const std::string& typeName)
         clone->addComponent(component_);
     }
 
-    clone->addComponent<sNameComponent>(typeName);
-
     initAnimations(clone);
 
     return (clone);
@@ -325,14 +326,14 @@ void    EntityFactory::saveEntityTemplateToJson(const std::string& typeName)
     json.setString("name", typeName);
     for (auto &&component: entitycomponents)
     {
-        JsonValue& componentJson = IComponentFactory::getFactory(component)->saveToJson(typeName, component);
+        JsonValue& componentJson = IComponentFactory::getFactory(component)->saveToJson(typeName);
         components.setValue(component, componentJson);
     }
     json.setValue("components", components);
 
     jsonWriter.write(EntityFactory::getFile(typeName), json);
 
-    LOG_INFO("Entity %s saved", typeName.c_str());
+    LOG_INFO("Entity template %s saved", typeName.c_str());
 }
 
 void    EntityFactory::saveEntityTemplate(const std::string& typeName, Entity* entity)
@@ -375,7 +376,7 @@ void    EntityFactory::saveEntityTemplate(const std::string& typeName, Entity* e
             compFactory->save(typeName, component);
 
             // The component does not exist in entityFactory
-            if (componentName != "sNameComponent" && std::find(components.begin(), components.end(), componentName) == components.end())
+            if (std::find(components.begin(), components.end(), componentName) == components.end())
             {
                 // Add component to EntityFactory
                 EntityFactory::addComponent(typeName, componentName);

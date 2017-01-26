@@ -1,5 +1,8 @@
 {
    "components" : {
+      "sNameComponent" : {
+         "name" : "TRAP_NEEDLE"
+      },
       "sRenderComponent" : {
          "animated" : true,
          "animations" : [

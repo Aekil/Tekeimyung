@@ -6,8 +6,6 @@
 
 #include <Engine/EntityFactory.hpp>
 #include <Engine/LevelEntitiesDebugWindow.hpp>
-#include <Engine/Utils/Helper.hpp>
-
 
 uint32_t    LevelEntitiesDebugWindow::_selectedEntityId = 0;
 
@@ -97,7 +95,6 @@ void    LevelEntitiesDebugWindow::displayEntityDebug(Entity* entity)
         if (ImGui::Button("Apply changes to template"))
         {
             EntityFactory::saveEntityTemplate(entityName, entity);
-            EntityFactory::saveEntityTemplateToJson(entityName);
         }
 
         ImGui::PopStyleColor(3);

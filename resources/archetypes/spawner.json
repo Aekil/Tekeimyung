@@ -1,6 +1,9 @@
 {
     "name": "SPAWNER",
     "components": {
+      "sNameComponent" : {
+         "name" : "SPAWNER"
+      },
             "sPositionComponent": {
                 "x": 0,
                 "y": 0,

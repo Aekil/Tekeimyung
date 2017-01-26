@@ -1,5 +1,8 @@
 {
    "components" : {
+      "sNameComponent" : {
+         "name" : "BUTTON_HOW_TO_PLAY"
+      },
       "sButtonComponent" : null,
       "sRenderComponent" : {
          "animated" : false,

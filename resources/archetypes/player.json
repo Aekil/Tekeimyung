@@ -1,14 +1,12 @@
 {
    "components" : {
+      "sNameComponent" : {
+         "name" : "PLAYER"
+      },
       "sDirectionComponent" : {
          "speed" : 1,
          "x" : 0,
          "y" : 0
-      },
-      "sScriptComponent" : {
-          "class" : [
-               "Player"
-          ]
       },
       "sPositionComponent" : {
          "x" : 9,
@@ -29,7 +27,9 @@
          "texture" : "",
          "type" : "MESH"
       },
-      "sResolutionComponent" : {
+      "sResolutionComponent" : {},
+      "sScriptComponent" : {
+         "class" : [ "Player" ]
       },
       "sSphereColliderComponent" : {
          "isTrigger" : false,
@@ -38,7 +38,7 @@
             "y" : 15,
             "z" : 0
          },
-         "radius" : 1.8
+         "radius" : 1.7999999523162842
       },
       "sTransformComponent" : {
          "pos" : {
