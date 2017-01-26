@@ -26,7 +26,7 @@
 #include <Engine/Systems/ScriptSystem.hpp>
 #include <Engine/Systems/MouseSystem.hpp>
 #include <Engine/Components.hh>
-#include <Engine/EntityDebugWindow.hpp>
+#include <Engine/LevelEntitiesDebugWindow.hpp>
 #include <Engine/SoundEditorWindow.hpp>
 #include <Engine/EntityFactory.hpp>
 #include <Game/Utils/PlayStates.hpp>
@@ -53,7 +53,7 @@ bool    PlayState::init()
     initEntities();
 
     addDebugWindow<OverlayDebugWindow>();
-    addDebugWindow<EntityDebugWindow>(em, glm::vec2(0, 80), glm::vec2(600, 350));
+    addDebugWindow<LevelEntitiesDebugWindow>(em, glm::vec2(0, 80), glm::vec2(600, 350));
     addDebugWindow<LogDebugWindow>(Logger::getInstance(), glm::vec2(0, 430), glm::vec2(300, 200));
     addDebugWindow<MonitoringDebugWindow>(MonitoringDebugWindow::getInstance());
     addDebugWindow<SoundEditorWindow>(glm::vec2(1200, 80), glm::vec2(450, 450));

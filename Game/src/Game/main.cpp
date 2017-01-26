@@ -13,6 +13,7 @@
 
 #include <Engine/EntityFactory.hpp>
 #include <Game/GameStates/PlayState.hpp>
+#include <Engine/EditorState.hpp>
 #include <Game/GameStates/ConfirmExitState.hpp>
 #include <Engine/Utils/EventSound.hpp>
 
@@ -40,7 +41,7 @@ int     main()
         EventSound::loadEvents();
         GameWindow::getInstance()->registerCloseHandler(windowCloseHandler, &engine);
 
-        if (!gameStateManager.addState<PlayState>())
+        if (!gameStateManager.addState<EditorState>())
             return (1);
         else if (!engine.run())
             return (1);

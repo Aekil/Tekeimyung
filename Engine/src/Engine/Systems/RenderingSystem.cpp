@@ -15,7 +15,7 @@
 #include <Engine/Window/GameWindow.hpp>
 #include <Engine/Graphics/Renderer.hpp>
 
-#include <Engine/EntityDebugWindow.hpp>
+#include <Engine/LevelEntitiesDebugWindow.hpp>
 
 #include <Engine/Systems/RenderingSystem.hpp>
 
@@ -122,7 +122,7 @@ void    RenderingSystem::renderColliders(EntityManager& em)
         }
     }
 
-    renderCollider(em.getEntity(EntityDebugWindow::getSelectedEntityId()));
+    renderCollider(em.getEntity(LevelEntitiesDebugWindow::getSelectedEntityId()));
 }
 
 void    RenderingSystem::renderParticles(EntityManager& em, float elapsedTime)

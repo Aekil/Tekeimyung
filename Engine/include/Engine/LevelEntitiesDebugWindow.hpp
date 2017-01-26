@@ -1,0 +1,28 @@
+/**
+* @Author   Guillaume Labey
+*/
+
+#pragma once
+
+#include <ECS/EntityManager.hpp>
+
+#include <Engine/Utils/DebugWindow.hpp>
+
+class LevelEntitiesDebugWindow: public DebugWindow
+{
+public:
+    LevelEntitiesDebugWindow(EntityManager* em, const glm::vec2& pos, const glm::vec2& size);
+    virtual ~LevelEntitiesDebugWindow();
+
+    virtual void        build(float elapsedTime);
+
+    static uint32_t     getSelectedEntityId();
+
+private:
+    void                displayEntityDebug(Entity* entity);
+
+private:
+    EntityManager*      _em;
+
+    static uint32_t     _selectedEntityId;
+};

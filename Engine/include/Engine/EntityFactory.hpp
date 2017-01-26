@@ -73,7 +73,7 @@ public:
     static void                                             bindEntityManager(EntityManager* em);
     static EntityManager*                                   getBindedEntityManager();
 
-    static Entity*                                          createEntityType(const std::string& typeName);
+    static void                                             createEntityType(const std::string& typeName);
 
     static const std::vector<const char*>&                  getTypesString();
     static bool                                             entityTypeExists(const std::string& type);
@@ -90,6 +90,9 @@ public:
 
     static Entity*                                          cloneEntity(Entity* entity);
     static Entity*                                          cloneEntity(const std::string& typeName);
+
+    static void                                             saveEntityTemplateToJson(const std::string& typeName);
+    static void                                             saveEntityTemplate(const std::string& typeName, Entity* entity);
 
 private:
     // Store entities components names (ComponentFactory has components)

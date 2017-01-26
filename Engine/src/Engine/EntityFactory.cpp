@@ -15,6 +15,7 @@
 #include <Engine/Utils/RessourceManager.hpp>
 
 #include <Engine/Utils/JsonReader.hpp>
+#include <Engine/Utils/JsonWriter.hpp>
 
 #include <Engine/EntityFactory.hpp>
 
@@ -147,7 +148,7 @@ Entity* EntityFactory::createEntity(const std::string& typeName)
     return (cloneEntity(typeName));
 }
 
-Entity* EntityFactory::createEntityType(const std::string& typeName)
+void EntityFactory::createEntityType(const std::string& typeName)
 {
     // Add entity to factory
     std::string filePath = ARCHETYPES_LOCATION + std::string("/") + Helper::lowerCaseString(typeName) + ".json";
@@ -160,9 +161,6 @@ Entity* EntityFactory::createEntityType(const std::string& typeName)
 
     // Create file
     RessourceManager::getInstance()->createFile(filePath, "{\"name\": \"" + typeName + "\"}");
-
-    // Create entity instance to edit
-    return (createEntity(typeName));
 }
 
 void EntityFactory::bindEntityManager(EntityManager* em)
@@ -313,6 +311,78 @@ void    EntityFactory::updateEntitiesComponents(Entity* from, const std::string&
                     render->_animator.play(currentAnimation->getName());
                 }
             }
+        }
+    }
+}
+
+void    EntityFactory::saveEntityTemplateToJson(const std::string& typeName)
+{
+    JsonWriter jsonWriter;
+    JsonValue json;
+    JsonValue components;
+    auto&& entitycomponents = EntityFactory::getComponents(typeName);
+
+    json.setString("name", typeName);
+    for (auto &&component: entitycomponents)
+    {
+        JsonValue& componentJson = IComponentFactory::getFactory(component)->saveToJson(typeName, component);
+        components.setValue(component, componentJson);
+    }
+    json.setValue("components", components);
+
+    jsonWriter.write(EntityFactory::getFile(typeName), json);
+
+    LOG_INFO("Entity %s saved", typeName.c_str());
+}
+
+void    EntityFactory::saveEntityTemplate(const std::string& typeName, Entity* entity)
+{
+    {
+        auto &&components = EntityFactory::getComponents(typeName);
+        // Remove deleted components from factories
+        for (auto it = components.begin(); it != components.end();)
+        {
+            auto component = *it;
+            std::size_t componentHash = IComponentFactory::getComponentHashWithName(component);
+            auto compFactory = IComponentFactory::getFactory(component);
+            ASSERT(compFactory != nullptr, "The factory should exist");
+
+            // The component has been removed, delete it from EntityFactory and ComponentFactory
+            if (!entity->hasComponent(componentHash))
+            {
+                ++it;
+                EntityFactory::removeComponent(typeName, component);
+                compFactory->remove(typeName);
+            }
+            else
+                ++it;
+        }
+    }
+
+    {
+        auto &&components = EntityFactory::getComponents(typeName);
+
+        // Reverse animations
+        EntityFactory::reverseAnimations(entity);
+
+        // Save entity components
+        for (auto component: entity->getComponents())
+        {
+            std::string componentName = IComponentFactory::getComponentNameWithHash(component->id);
+            auto compFactory = IComponentFactory::getFactory(componentName);
+            ASSERT(compFactory != nullptr, "The factory should exist");
+
+            compFactory->save(typeName, component);
+
+            // The component does not exist in entityFactory
+            if (componentName != "sNameComponent" && std::find(components.begin(), components.end(), componentName) == components.end())
+            {
+                // Add component to EntityFactory
+                EntityFactory::addComponent(typeName, componentName);
+            }
+
+            // Update other entities component
+            EntityFactory::updateEntitiesComponents(entity, typeName, compFactory, component);
         }
     }
 }

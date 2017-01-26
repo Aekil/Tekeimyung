@@ -7,7 +7,7 @@
 
 #include    <Engine/Systems/RenderingSystem.hpp>
 #include    <Engine/Systems/MenuSystem.hpp>
-#include    <Engine/EntityDebugWindow.hpp>
+#include    <Engine/LevelEntitiesDebugWindow.hpp>
 #include    <Engine/Components.hh>
 
 #include    <Game/GameStates/OptionsMenuState.hpp>
@@ -35,7 +35,7 @@ bool            OptionsMenuState::init()
     _world.addSystem<MenuSystem>();
 
     EntityManager* em = _world.getEntityManager();
-    addDebugWindow<EntityDebugWindow>(em, glm::vec2(0, 80), glm::vec2(600, 350));
+    addDebugWindow<LevelEntitiesDebugWindow>(em, glm::vec2(0, 80), glm::vec2(600, 350));
 
     initCamera();
 
