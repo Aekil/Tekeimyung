@@ -5,6 +5,7 @@
 #pragma once
 
 #include <Engine/Core/GameState.hpp>
+#include <Engine/Graphics/Camera.hpp>
 
 #include <ECS/System.hpp>
 #include <ECS/World.hpp>

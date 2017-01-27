@@ -7,9 +7,15 @@
 #include <imgui_impl_glfw_gl3.h>
 #include <ImGuizmo.h>
 
-#include <Engine/Utils/Exception.hpp>
+#include <Engine/EditorMenuDebugWindow.hpp>
+#include <Engine/EntitiesTemplateDebugWindow.hpp>
+#include <Engine/LevelEntitiesDebugWindow.hpp>
+#include <Engine/SoundEditorWindow.hpp>
+#include <Engine/Utils/LogDebugWindow.hpp>
+#include <Engine/Utils/OverlayDebugWindow.hpp>
 #include <Engine/Utils/MonitoringDebugWindow.hpp>
-#include <Engine/Window/GameWindow.hpp>
+#include <Engine/Utils/Exception.hpp>
+#include <Engine/EditorState.hpp>
 
 #include <Engine/Core/GameState.hpp>
 
@@ -71,4 +77,23 @@ uint32_t    GameState::getId() const
 World&  GameState::getWorld()
 {
     return (_world);
+}
+
+void    GameState::initDebugWindows()
+{
+    EntityManager* em = _world.getEntityManager();
+    addDebugWindow<LevelEntitiesDebugWindow>(em, glm::vec2(0, 80), glm::vec2(600, 350));
+    addDebugWindow<LogDebugWindow>(Logger::getInstance(), glm::vec2(0, 430), glm::vec2(300, 200));
+    addDebugWindow<SoundEditorWindow>(glm::vec2(1200, 80), glm::vec2(450, 450));
+    addDebugWindow<EntitiesTemplateDebugWindow>(em, glm::vec2(600, 80), glm::vec2(300, 200));
+    addDebugWindow<MonitoringDebugWindow>(MonitoringDebugWindow::getInstance());
+
+    if (_id == EditorState::identifier)
+    {
+        addDebugWindow<EditorMenuDebugWindow>(em, glm::vec2(0, 0), glm::vec2(0, 0));
+    }
+    else
+    {
+        addDebugWindow<OverlayDebugWindow>(glm::vec2(10, 10), glm::vec2(0, 0));
+    }
 }

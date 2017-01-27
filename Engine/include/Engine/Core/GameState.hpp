@@ -17,6 +17,8 @@ class GameStateManager;
 
 class GameState
 {
+friend class GameStateManager;
+
 public:
     GameState(GameStateManager* gameStateManager, uint32_t id);
     virtual ~GameState();
@@ -44,6 +46,9 @@ public:
     }
 
     World&                          getWorld();
+
+private:
+    void                            initDebugWindows();
 
 protected:
     World                   _world;
