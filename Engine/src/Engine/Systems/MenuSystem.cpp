@@ -17,7 +17,6 @@
 MenuSystem::MenuSystem()
 {
     addDependency<sRenderComponent>();
-    addDependency<sButtonComponent>();
     addDependency<sUiComponent>();
     addDependency<sTransformComponent>();
 
@@ -50,6 +49,7 @@ void    MenuSystem::update(EntityManager& em, float elapsedTime)
 
     _buttonHovered = false;
 
+    uint32_t buttonsIdx = 0;
     for (uint32_t i = 0; i < nbEntities; ++i) {
         Entity* entity = em.getEntity(_entities[i]);
 
@@ -58,14 +58,7 @@ void    MenuSystem::update(EntityManager& em, float elapsedTime)
         handleAlignment(em, entity, i);
         if (button)
         {
-            // No button is selected, set the current button as selected
-            if (_currentSelected == -1)
-            {
-                _currentSelected = i;
-                setSelected(*EntityFactory::getBindedEntityManager(), i);
-            }
-
-            handleButtonMouseHover(em, entity, i, cursorPos);
+            handleButtonMouseHover(em, entity, buttonsIdx++, cursorPos);
         }
     }
 
@@ -81,6 +74,17 @@ void    MenuSystem::update(EntityManager& em, float elapsedTime)
     handleButtonsKeys(em);
 
     MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, timer.getElapsedTime(), nbEntities);
+}
+
+void    MenuSystem::onWindowResize(EntityManager &em)
+{
+    uint32_t    nbEntities = (uint32_t)_entities.size();
+
+    for (uint32_t i = 0; i < nbEntities; ++i) {
+        Entity* entity = em.getEntity(_entities[i]);
+
+        handleAlignment(em, entity, i, true);
+    }
 }
 
 void    MenuSystem::handleButtonMouseHover(EntityManager& em, Entity* entity, uint32_t entityIdx, const glm::vec2& cursorPos)
@@ -108,27 +112,27 @@ void    MenuSystem::handleButtonsKeys(EntityManager &em)
     bool        upPressed = keyboard.getStateMap()[Keyboard::eKey::UP] == Keyboard::eKeyState::KEY_PRESSED;
     bool        downPressed = keyboard.getStateMap()[Keyboard::eKey::DOWN] == Keyboard::eKeyState::KEY_PRESSED;
 
-    if (_entities.size() > 0 && _currentSelected != -1)
+    if (_buttons.size() > 0 && _currentSelected != -1)
     {
         if (upPressed)
         {
             removeSelected(em, _currentSelected);
             _currentSelected -= 1;
             if (_currentSelected < 0)
-                _currentSelected = (int)_entities.size() - 1;
+                _currentSelected = (int)_buttons.size() - 1;
             setSelected(em, _currentSelected);
         }
         else if (downPressed)
         {
             removeSelected(em, _currentSelected);
             _currentSelected += 1;
-            _currentSelected = _currentSelected % _entities.size();
+            _currentSelected = _currentSelected % _buttons.size();
             setSelected(em, _currentSelected);
         }
 
     }
     // No button is currently selected, select default 0 when a key is pressed
-    else if (_entities.size() > 0 && _currentSelected == -1)
+    else if (_buttons.size() > 0 && _currentSelected == -1)
     {
         if (upPressed || downPressed)
         {
@@ -139,11 +143,11 @@ void    MenuSystem::handleButtonsKeys(EntityManager &em)
     }
 }
 
-void    MenuSystem::handleAlignment(EntityManager& em, Entity* entity, uint32_t entityIdx)
+void    MenuSystem::handleAlignment(EntityManager& em, Entity* entity, uint32_t entityIdx, bool forceUpdate)
 {
     sUiComponent* ui = entity->getComponent<sUiComponent>();
 
-    if (ui->needUpdate)
+    if (ui && (ui->needUpdate || forceUpdate))
     {
         sRenderComponent* render = entity->getComponent<sRenderComponent>();
         sTransformComponent* transform = entity->getComponent<sTransformComponent>();
@@ -204,10 +208,10 @@ void    MenuSystem::handleAlignment(EntityManager& em, Entity* entity, uint32_t 
 void    MenuSystem::setSelected(EntityManager &em, int buttonIdx, bool hovered)
 {
     // Out of range
-    if (buttonIdx < 0 || buttonIdx >= _entities.size())
+    if (buttonIdx < 0 || buttonIdx >= _buttons.size())
         return;
 
-    Entity* entity = em.getEntity(_entities[buttonIdx]);
+    Entity* entity = em.getEntity(_buttons[buttonIdx]);
     setSelected(entity, hovered);
 }
 
@@ -241,10 +245,10 @@ void    MenuSystem::setSelected(Entity* entity, bool hovered)
 void    MenuSystem::removeSelected(EntityManager &em, int buttonIdx)
 {
     // Out of range
-    if (buttonIdx < 0 || buttonIdx >= _entities.size())
+    if (buttonIdx < 0 || buttonIdx >= _buttons.size())
         return;
 
-    Entity* entity = em.getEntity(_entities[_currentSelected]);
+    Entity* entity = em.getEntity(_buttons[_currentSelected]);
 
     // The entity does not exist
     if (!entity)
@@ -267,4 +271,52 @@ void    MenuSystem::setupSelectedIcon()
 {
     _iconSelected = EntityFactory::createEntity(eArchetype::ICON_SELECTED);
     _iconRender = _iconSelected->getComponent<sRenderComponent>();
+    _iconRender->_display = false;
+}
+
+bool    MenuSystem::onEntityNewComponent(Entity* entity, sComponent* component)
+{
+    System::onEntityNewComponent(entity, component);
+
+    if (component->id == sButtonComponent::identifier)
+    {
+        // The entity is not already in the buttons entities vector
+        if (std::find(_buttons.cbegin(), _buttons.cend(), entity->id) == _buttons.cend())
+        {
+            _buttons.push_back(entity->id);
+        }
+        return (true);
+    }
+    return (false);
+}
+
+bool    MenuSystem::onEntityRemovedComponent(Entity* entity, sComponent* component)
+{
+    System::onEntityRemovedComponent(entity, component);
+
+    if (component->id == sButtonComponent::identifier)
+    {
+        // The entity is in the button entities vector
+        auto foundEntity = std::find(_buttons.cbegin(), _buttons.cend(), entity->id);
+        if (foundEntity != _buttons.cend())
+        {
+            _buttons.erase(foundEntity);
+            return (true);
+        }
+    }
+    return (false);
+}
+
+bool    MenuSystem::onEntityDeleted(Entity* entity)
+{
+    System::onEntityDeleted(entity);
+
+    auto foundEntity = std::find(_buttons.cbegin(), _buttons.cend(), entity->id);
+    // The entity is in the system list
+    if (foundEntity != _buttons.cend())
+    {
+        _buttons.erase(foundEntity);
+        return (true);
+    }
+    return (false);
 }

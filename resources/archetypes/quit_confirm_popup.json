@@ -19,7 +19,7 @@
       "sTransformComponent" : {
          "pos" : {
             "x" : 745,
-            "y" : 429.5,
+            "y" : 384.5,
             "z" : 0
          },
          "rotation" : {
@@ -29,10 +29,11 @@
          },
          "scale" : {
             "x" : 43,
-            "y" : 15.800000190734863,
+            "y" : 24.799999237060547,
             "z" : 1
          }
-      }
+      },
+      "sUiComponent" : null
    },
    "name" : "QUIT_CONFIRM_POPUP"
 }

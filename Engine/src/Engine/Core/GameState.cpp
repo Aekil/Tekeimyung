@@ -20,7 +20,7 @@ GameState::~GameState() {}
 
 bool    GameState::initSystems()
 {
-    for (auto system: _world.getSystems())
+    for (auto& system: _world.getSystems())
     {
         if (!system->init())
         {

@@ -21,7 +21,6 @@ START_GAMESTATE(ConfirmExitState)
 
     void                                initCamera();
     void                                initPreviousStatesRender();
-    void                                initPopup();
 
     Entity*                             createButton(eArchetype type, const glm::vec2& pos);
     void                                handleButtons();
@@ -32,8 +31,6 @@ private:
 
     Camera                              _camera;
 
-    Entity*                             _confirmText = nullptr;
-    Entity*                             _confirmPopup = nullptr;
     Entity*                             _yesButton = nullptr;
     Entity*                             _noButton = nullptr;
 END_GAMESTATE(ConfirmExitState)

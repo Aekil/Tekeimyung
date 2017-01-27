@@ -30,7 +30,11 @@ bool    ConfirmExitState::init()
     _world.addSystem<MenuSystem>();
 
     initCamera();
-    initPopup();
+
+    EntityFactory::createEntity(eArchetype::QUIT_CONFIRM_POPUP);
+    EntityFactory::createEntity(eArchetype::QUIT_CONFIRM_TEXT);
+    _noButton = EntityFactory::createEntity(eArchetype::BUTTON_CONFIRM_NO);
+    _yesButton = EntityFactory::createEntity(eArchetype::BUTTON_CONFIRM_YES);
 
     return (true);
 }
@@ -97,72 +101,6 @@ void    ConfirmExitState::initPreviousStatesRender()
         _previousStatesSystems.push_back(playStateRendersystem);
         _previousStatesWorlds.push_back(playStateWorld);
     }
-}
-
-void    ConfirmExitState::initPopup()
-{
-    float windowWidth = (float)GameWindow::getInstance()->getBufferWidth();
-    float windowHeight = (float)GameWindow::getInstance()->getBufferHeight();
-
-    _confirmPopup = EntityFactory::createEntity(eArchetype::QUIT_CONFIRM_POPUP);
-    _confirmText = EntityFactory::createEntity(eArchetype::QUIT_CONFIRM_TEXT);
-    _noButton = createButton(eArchetype::BUTTON_CONFIRM_NO, glm::vec2(0.0f, -70.0f));
-    _yesButton = createButton(eArchetype::BUTTON_CONFIRM_YES, glm::vec2(0.0f, 20.0f));
-
-    // Text
-    sRenderComponent* textRender = _confirmText->getComponent<sRenderComponent>();
-    sTransformComponent* textTransform = _confirmText->getComponent<sTransformComponent>();
-    if (!textRender->_model)
-        textRender->initModel();
-    // Popup
-    sRenderComponent* popupRender = _confirmPopup->getComponent<sRenderComponent>();
-    if (!popupRender->_model)
-        popupRender->initModel();
-
-    // Yes
-    sRenderComponent* yesRender = _yesButton->getComponent<sRenderComponent>();
-    sTransformComponent* yesTransform = _yesButton->getComponent<sTransformComponent>();
-    if (!yesRender->_model)
-        yesRender->initModel();
-    // No
-    sRenderComponent* noRender = _noButton->getComponent<sRenderComponent>();
-    sTransformComponent* noTransform = _noButton->getComponent<sTransformComponent>();
-    if (!noRender->_model)
-        noRender->initModel();
-
-    /* Init popup */
-    sTransformComponent* popupTransform = _confirmPopup->getComponent<sTransformComponent>();
-    popupTransform->scale.x = (textRender->_model->getSize().x * textTransform->scale.x + 50.0f) / SIZE_UNIT;
-    popupTransform->scale.y = (textRender->_model->getSize().y * textTransform->scale.y +\
-        yesRender->_model->getSize().y * yesTransform->scale.y +\
-        noRender->_model->getSize().y * noTransform->scale.y +\
-        (std::abs(yesTransform->pos.y - noTransform->pos.y)))/ SIZE_UNIT;
-    const glm::vec3& popupSize = popupRender->_model->getSize() * popupTransform->scale;
-
-    // Center the popup in the window
-    popupTransform->pos.x = (windowWidth / 2.0f) - (popupSize.x / 2.0f);
-    popupTransform->pos.y = (windowHeight / 2.0f) - (popupSize.y / 2.0f);
-    popupTransform->needUpdate = true;
-
-
-    /* Init popup text */
-    const glm::vec3& textSize = textRender->_model->getSize() * textTransform->scale;
-    // Center the text in the popup
-    textTransform->pos = popupTransform->pos;
-    textTransform->pos.y += popupSize.y - textSize.y - 5.0f;
-    textTransform->pos.x += (popupSize.x - textSize.x) / 2.0f;
-    textTransform->needUpdate = true;
-}
-
-Entity* ConfirmExitState::createButton(eArchetype type, const glm::vec2& pos)
-{
-    Entity* button = EntityFactory::createEntity(type);
-
-    sTransformComponent* transform = button->getComponent<sTransformComponent>();
-    transform->pos += glm::vec3(pos, 0.0f);
-    transform->needUpdate = true;
-
-    return (button);
 }
 
 void    ConfirmExitState::handleButtons()

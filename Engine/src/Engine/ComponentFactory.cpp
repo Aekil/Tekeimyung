@@ -1216,8 +1216,8 @@ bool    ComponentFactory<sUiComponent>::updateEditor(const std::string& entityTy
     *savedComponent = component;
     bool changed = false;
 
-    changed |= ImGui::SliderFloat("horizontal offset", &component->offset.x, -100.0f, 100.0f);
-    changed |= ImGui::SliderFloat("vertical offset", &component->offset.y, -100.0f, 100.0f);
+    changed |= ImGui::InputFloat("horizontal offset", &component->offset.x, 1.0f, ImGuiInputTextFlags_AllowTabInput);
+    changed |= ImGui::InputFloat("vertical offset", &component->offset.y, 1.0f, ImGuiInputTextFlags_AllowTabInput);
 
     if (changed)
     {
