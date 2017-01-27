@@ -63,6 +63,13 @@ void initModel()
         _model = GeometryFactory::create(type, texture);
 }
 
+std::shared_ptr<Model> getModel()
+{
+    if (!_model)
+        initModel();
+    return _model;
+}
+
 std::string modelFile;
 glm::vec4 color;
 bool animated;

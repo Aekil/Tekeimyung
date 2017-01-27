@@ -107,6 +107,23 @@ bool    EntityFactory::entityTypeExists(const std::string& type)
     return (false);
 }
 
+Entity* EntityFactory::createOrGetEntity(eArchetype type)
+{
+    std::string typeName = _typesString[(int)type];
+    for (auto &&entity_ : _em->getEntities())
+    {
+        Entity* entity = entity_.second;
+        sNameComponent* name = entity->getComponent<sNameComponent>();
+
+        if (name->value == typeName)
+        {
+            return (entity);
+        }
+    }
+
+    return (createEntity(type));
+}
+
 Entity* EntityFactory::createEntity(eArchetype type)
 {
     if ((int)type > (int)_typesString.size() - 1)

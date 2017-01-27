@@ -21,9 +21,9 @@ public:
 
     void                                onWindowResize(EntityManager &em);
 
-    virtual bool                            onEntityNewComponent(Entity* entity, sComponent* component);
-    virtual bool                            onEntityRemovedComponent(Entity* entity, sComponent* component);
-    virtual bool                            onEntityDeleted(Entity* entity);
+    virtual bool                        onEntityNewComponent(Entity* entity, sComponent* component);
+    virtual bool                        onEntityRemovedComponent(Entity* entity, sComponent* component);
+    virtual bool                        onEntityDeleted(Entity* entity);
 
 private:
     void                                removeSelected(Entity* entity);
@@ -44,6 +44,7 @@ private:
 
     int                                 _currentSelected;
     bool                                _buttonHovered;
+    bool                                _recreateIcon = false;
 
     Entity*                             _iconSelected = nullptr;
     sRenderComponent*                   _iconRender = nullptr;

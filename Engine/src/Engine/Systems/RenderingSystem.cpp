@@ -269,13 +269,7 @@ std::shared_ptr<Model>  RenderingSystem::getModel(sRenderComponent *render)
     if (!render)
         return (nullptr);
 
-    // The entity does not exist in the render system
-    if (!render->_model)
-    {
-        render->initModel();
-    }
-
-    return (render->_model);
+    return (render->getModel());
 }
 
 bool    RenderingSystem::onEntityNewComponent(Entity* entity, sComponent* component)

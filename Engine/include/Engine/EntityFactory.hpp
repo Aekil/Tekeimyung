@@ -66,10 +66,14 @@ public:
     EntityFactory();
     ~EntityFactory();
     static void                                             loadDirectory(const std::string& archetypesDir);
+
+    static Entity*                                          createOrGetEntity(eArchetype type);
+
     static Entity*                                          createEntity(eArchetype type);
     static Entity*                                          createEntity(eArchetype type, const glm::vec3& pos);
     static Entity*                                          createEntity(const std::string& typeName);
     static Entity*                                          createEntity(const std::string& typeName, const glm::vec3& pos);
+
     static void                                             bindEntityManager(EntityManager* em);
     static EntityManager*                                   getBindedEntityManager();
 

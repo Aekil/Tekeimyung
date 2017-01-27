@@ -49,6 +49,14 @@ void    MenuSystem::update(EntityManager& em, float elapsedTime)
 
     _buttonHovered = false;
 
+
+    // Recreate icon if needed
+    if (_recreateIcon)
+    {
+        setupSelectedIcon();
+        _recreateIcon = false;
+    }
+
     uint32_t buttonsIdx = 0;
     for (uint32_t i = 0; i < nbEntities; ++i) {
         Entity* entity = em.getEntity(_entities[i]);
@@ -89,7 +97,7 @@ void    MenuSystem::handleButtonMouseHover(EntityManager& em, Entity* entity, ui
 {
     sRenderComponent*       render = entity->getComponent<sRenderComponent>();
     sTransformComponent*    transform = entity->getComponent<sTransformComponent>();
-    const glm::vec3&        size = render->_model->getSize() * transform->scale;
+    const glm::vec3&        size = render->getModel()->getSize() * transform->scale;
 
     // Check the mouse is in the button (2D AABB collision)
     if (cursorPos.x >= transform->pos.x &&
@@ -150,11 +158,7 @@ void    MenuSystem::handleAlignment(EntityManager& em, Entity* entity, uint32_t 
         sRenderComponent* render = entity->getComponent<sRenderComponent>();
         sTransformComponent* transform = entity->getComponent<sTransformComponent>();
 
-        // Init the model to retrieve the size
-        if (!render->_model)
-            render->initModel();
-
-        const glm::vec3& size = render->_model->getSize() * transform->scale;
+        const glm::vec3& size = render->getModel()->getSize() * transform->scale;
         float windowWidth = (float) GameWindow::getInstance()->getBufferWidth();
         float windowHeight = (float) GameWindow::getInstance()->getBufferHeight();
 
@@ -229,12 +233,17 @@ void    MenuSystem::setSelected(Entity* entity, bool hovered)
     if (button->selected)
         return;
 
-    //  Move the "selected" icon next to the selected button.
+    //  Calculate icon selected new position.
     sTransformComponent*    iconTransform = _iconSelected->getComponent<sTransformComponent>();
+    sRenderComponent*       iconRender = _iconSelected->getComponent<sRenderComponent>();
     sTransformComponent*    buttonTransform = entity->getComponent<sTransformComponent>();
+    sRenderComponent*       buttonRender = entity->getComponent<sRenderComponent>();
+
+    const glm::vec3& buttonSize = buttonRender->getModel()->getSize() * buttonTransform->scale;
+    const glm::vec3& iconSize = iconRender->getModel()->getSize() * iconTransform->scale;
 
     iconTransform->pos.x = buttonTransform->pos.x - 42.0f;
-    iconTransform->pos.y = buttonTransform->pos.y + 4.0f;
+    iconTransform->pos.y = buttonTransform->pos.y + (buttonSize.y / 2.0f) - (iconSize.y / 2.0f) + 10.0f;
     iconTransform->needUpdate = true;
 
     button->selected = true;
@@ -267,7 +276,7 @@ void    MenuSystem::removeSelected(EntityManager &em, int buttonIdx)
 
 void    MenuSystem::setupSelectedIcon()
 {
-    _iconSelected = EntityFactory::createEntity(eArchetype::ICON_SELECTED);
+    _iconSelected = EntityFactory::createOrGetEntity(eArchetype::ICON_SELECTED);
     _iconRender = _iconSelected->getComponent<sRenderComponent>();
     _iconRender->_display = false;
 }
@@ -308,6 +317,12 @@ bool    MenuSystem::onEntityRemovedComponent(Entity* entity, sComponent* compone
 bool    MenuSystem::onEntityDeleted(Entity* entity)
 {
     System::onEntityDeleted(entity);
+
+    // We don't recreate the icon now because it could be in a destroy loop
+    if (entity == _iconSelected)
+    {
+        _recreateIcon = true;
+    }
 
     auto foundEntity = std::find(_buttons.cbegin(), _buttons.cend(), entity->id);
     // The entity is in the system list

@@ -2,6 +2,99 @@
    "entities" : [
       {
          "components" : {
+            "sNameComponent" : {
+               "name" : "ICON_SELECTED"
+            },
+            "sParticleEmitterComponent" : {
+               "angle" : 160,
+               "angle_variance" : 0,
+               "color" : {
+                  "finish" : {
+                     "a" : 0,
+                     "b" : 1,
+                     "g" : 1,
+                     "r" : 1
+                  },
+                  "finish_variance" : {
+                     "a" : 0,
+                     "b" : 0,
+                     "g" : 0,
+                     "r" : 0
+                  },
+                  "start" : {
+                     "a" : 1,
+                     "b" : 1,
+                     "g" : 1,
+                     "r" : 1
+                  },
+                  "start_variance" : {
+                     "a" : 0,
+                     "b" : 0,
+                     "g" : 0,
+                     "r" : 0
+                  }
+               },
+               "emitter_life" : 0,
+               "life" : 42,
+               "life_variance" : 15,
+               "rate" : 0,
+               "size" : {
+                  "finish" : 0,
+                  "finish_variance" : 0,
+                  "start" : 0.60000002384185791,
+                  "start_variance" : 0
+               },
+               "spawn_nb" : 1,
+               "speed" : 50,
+               "speed_variance" : 0,
+               "texture" : ""
+            },
+            "sPositionComponent" : {
+               "x" : 0,
+               "y" : 0,
+               "z" : 0
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 1
+               },
+               "model" : "resources/models/default.DAE",
+               "texture" : "resources/sprites/buttons/icon_selected.png",
+               "type" : "PLANE"
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 791.20001220703125,
+                  "y" : 482.5,
+                  "z" : 0
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 6,
+                  "y" : 6,
+                  "z" : 6
+               }
+            },
+            "sUiComponent" : {
+               "offset" : {
+                  "x" : 0,
+                  "y" : 0
+               }
+            }
+         },
+         "name" : "ICON_SELECTED"
+      },
+      {
+         "components" : {
             "sDirectionComponent" : {
                "speed" : 1,
                "x" : 0,
@@ -64,54 +157,51 @@
       },
       {
          "components" : {
-            "sDirectionComponent" : {
-               "speed" : 1,
-               "x" : 1,
-               "y" : 0
-            },
             "sNameComponent" : {
-               "name" : "ENEMY"
+               "name" : "BLOCK_BROWN"
             },
             "sPositionComponent" : {
-               "x" : 19.989999771118164,
-               "y" : 6,
-               "z" : 1.5
+               "x" : 10,
+               "y" : 8,
+               "z" : 1
             },
             "sRenderComponent" : {
                "animated" : false,
                "animations" : [],
                "color" : {
                   "a" : 1,
-                  "b" : 0.78431373834609985,
-                  "g" : 0.31372550129890442,
+                  "b" : 1,
+                  "g" : 1,
                   "r" : 1
                },
-               "model" : "resources/models/default.DAE",
+               "model" : "resources/models/blocks/block_brown.DAE",
                "texture" : "",
                "type" : "MESH"
             },
+            "sScriptComponent" : null,
+            "sTileComponent" : null,
             "sTransformComponent" : {
                "pos" : {
-                  "x" : 499.75,
-                  "y" : 18.75,
-                  "z" : 150
+                  "x" : 250,
+                  "y" : 12.5,
+                  "z" : 200
                },
                "rotation" : {
                   "x" : 0,
-                  "y" : -30,
+                  "y" : 0,
                   "z" : 0
                },
                "scale" : {
-                  "x" : 0.59999990463256836,
-                  "y" : 0.80000013113021851,
-                  "z" : 0.80000132322311401
+                  "x" : 1,
+                  "y" : 1,
+                  "z" : 1
                }
             },
             "sTypeComponent" : {
-               "type" : "CHARACTER"
+               "type" : "TILE_WALKABLE"
             }
          },
-         "name" : "ENEMY"
+         "name" : "BLOCK_BROWN"
       },
       {
          "components" : {
@@ -163,95 +253,54 @@
       },
       {
          "components" : {
+            "sDirectionComponent" : {
+               "speed" : 1,
+               "x" : 1,
+               "y" : 0
+            },
             "sNameComponent" : {
-               "name" : "BLOCK_BROWN"
+               "name" : "ENEMY"
             },
             "sPositionComponent" : {
-               "x" : 10,
-               "y" : 8,
-               "z" : 1
+               "x" : 19.989999771118164,
+               "y" : 6,
+               "z" : 1.5
             },
             "sRenderComponent" : {
                "animated" : false,
                "animations" : [],
                "color" : {
                   "a" : 1,
-                  "b" : 1,
-                  "g" : 1,
-                  "r" : 1
-               },
-               "model" : "resources/models/blocks/block_brown.DAE",
-               "texture" : "",
-               "type" : "MESH"
-            },
-            "sScriptComponent" : null,
-            "sTileComponent" : null,
-            "sTransformComponent" : {
-               "pos" : {
-                  "x" : 250,
-                  "y" : 12.5,
-                  "z" : 200
-               },
-               "rotation" : {
-                  "x" : 0,
-                  "y" : 0,
-                  "z" : 0
-               },
-               "scale" : {
-                  "x" : 1,
-                  "y" : 1,
-                  "z" : 1
-               }
-            },
-            "sTypeComponent" : {
-               "type" : "TILE_WALKABLE"
-            }
-         },
-         "name" : "BLOCK_BROWN"
-      },
-      {
-         "components" : {
-            "sNameComponent" : {
-               "name" : "HOW_TO_PLAY_MENU"
-            },
-            "sRenderComponent" : {
-               "animated" : false,
-               "animations" : [],
-               "color" : {
-                  "a" : 1,
-                  "b" : 1,
-                  "g" : 1,
+                  "b" : 0.78431373834609985,
+                  "g" : 0.31372550129890442,
                   "r" : 1
                },
                "model" : "resources/models/default.DAE",
-               "texture" : "resources/sprites/buttons/howtoplay.png",
-               "type" : "PLANE"
+               "texture" : "",
+               "type" : "MESH"
             },
             "sTransformComponent" : {
                "pos" : {
-                  "x" : 400,
-                  "y" : 150,
-                  "z" : -1
+                  "x" : 499.75,
+                  "y" : 18.75,
+                  "z" : 150
                },
                "rotation" : {
                   "x" : 0,
-                  "y" : 0,
+                  "y" : -30,
                   "z" : 0
                },
                "scale" : {
-                  "x" : 50,
-                  "y" : 30,
-                  "z" : 0.0010000000474974513
+                  "x" : 0.59999990463256836,
+                  "y" : 0.80000013113021851,
+                  "z" : 0.80000132322311401
                }
             },
-            "sUiComponent" : {
-               "offset" : {
-                  "x" : 0,
-                  "y" : 0
-               }
+            "sTypeComponent" : {
+               "type" : "CHARACTER"
             }
          },
-         "name" : "HOW_TO_PLAY_MENU"
+         "name" : "ENEMY"
       }
    ],
    "name" : "testLevel"
