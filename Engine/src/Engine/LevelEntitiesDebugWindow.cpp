@@ -64,6 +64,7 @@ void    LevelEntitiesDebugWindow::build(float elapsedTime)
     }
 
     displayEntityDebug(selectedEntity);
+
     ImGui::End();
 }
 

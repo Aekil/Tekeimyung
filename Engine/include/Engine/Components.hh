@@ -440,6 +440,48 @@ bool        needUpdate = true;
 END_COMPONENT(sTransformComponent)
 
 
+enum class eHorizontalAlignment: uint8_t
+{
+    LEFT = 0,
+    MIDDLE = 1,
+    RIGHT = 2
+};
+
+enum class eVerticalAlignment: uint8_t
+{
+    TOP = 0,
+    MIDDLE = 1,
+    BOTTOM = 2
+};
+
+START_COMPONENT(sUiComponent)
+virtual sComponent* clone()
+{
+    sUiComponent* component = new sUiComponent();
+    component->update(this);
+
+    return (component);
+}
+
+virtual void update(sUiComponent* component)
+{
+    this->horizontalAlignment = component->horizontalAlignment;
+    this->verticalAlignment = component->verticalAlignment;
+    this->offset = component->offset;
+    this->needUpdate = component->needUpdate;
+}
+
+virtual void update(sComponent* component)
+{
+    update(static_cast<sUiComponent*>(component));
+}
+
+eHorizontalAlignment    horizontalAlignment = eHorizontalAlignment::MIDDLE;
+eVerticalAlignment      verticalAlignment = eVerticalAlignment::MIDDLE;
+glm::vec2               offset{0.0f, 0.0f}; // Percentage offset
+bool                    needUpdate = true;
+END_COMPONENT(sUiComponent)
+
 START_COMPONENT(sButtonComponent)
 virtual sComponent* clone()
 {

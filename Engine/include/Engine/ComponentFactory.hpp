@@ -32,7 +32,8 @@
     PROCESS(sResolutionComponent),\
     PROCESS(sButtonComponent),\
     PROCESS(sTileComponent),\
-    PROCESS(sScriptComponent)\
+    PROCESS(sScriptComponent),\
+    PROCESS(sUiComponent)
 
 #define GENERATE_PAIRS(COMPONENT) { #COMPONENT, new ComponentFactory<COMPONENT>() }
 
@@ -375,4 +376,19 @@ class ComponentFactory<sScriptComponent> : public BaseComponentFactory<sScriptCo
 {
 public:
     virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
+};
+
+
+/*
+** sUiComponent
+*/
+
+template <>
+class ComponentFactory<sUiComponent> : public BaseComponentFactory<sUiComponent>
+{
+public:
+    virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
+    virtual JsonValue&  saveToJson(const std::string& entityType, const sComponent* savedComponent = nullptr, JsonValue* toJson = nullptr);
+
+    virtual bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity);
 };

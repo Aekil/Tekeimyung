@@ -17,12 +17,14 @@ public:
 
     virtual bool                        init();
     virtual void                        update(EntityManager &em, float elapsedTime);
-    virtual bool                        onEntityNewComponent(Entity* entity, sComponent* component);
 
 private:
     void                                removeSelected(Entity* entity);
     void                                setupSelectedIcon();
-    void                                handleMouseHover(EntityManager &em);
+
+    void                                handleButtonMouseHover(EntityManager& em, Entity* entity, uint32_t entityIdx, const glm::vec2& cursorPos);
+    void                                handleButtonsKeys(EntityManager& em);
+    void                                handleAlignment(EntityManager& em, Entity* entity, uint32_t entityIdx);
 
     void                                setSelected(EntityManager &em, int buttonIdx, bool hovered = false);
     void                                setSelected(Entity* entity, bool hovered = false);

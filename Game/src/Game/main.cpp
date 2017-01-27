@@ -21,8 +21,14 @@
 void    windowCloseHandler(void* data)
 {
     Engine* engine = static_cast<Engine*>(data);
+    auto& gameStateManager = engine->getGameStateManager();
 
-    engine->getGameStateManager().addState<ConfirmExitState>();
+    // Only add ConfirmExitState if not already in the states
+    if (gameStateManager.getCurrentState() &&
+        gameStateManager.getCurrentState()->getId() != ConfirmExitState::identifier)
+    {
+        gameStateManager.addState<ConfirmExitState>();
+    }
 }
 
 int     main()

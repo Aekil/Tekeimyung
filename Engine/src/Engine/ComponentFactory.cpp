@@ -1124,6 +1124,7 @@ bool    ComponentFactory<sTransformComponent>::updateTransforms(glm::vec3& pos, 
     return (true);
 }
 
+
 /*
 ** sButtonComponent
 */
@@ -1137,6 +1138,7 @@ sComponent* ComponentFactory<sButtonComponent>::loadFromJson(const std::string& 
     return (component);
 }
 
+
 /*
 ** sTileComponent
 */
@@ -1149,6 +1151,7 @@ sComponent* ComponentFactory<sTileComponent>::loadFromJson(const std::string& en
 
     return (component);
 }
+
 
 /*
 ** sScriptComponent
@@ -1176,4 +1179,50 @@ sComponent* ComponentFactory<sScriptComponent>::loadFromJson(const std::string& 
     component->isInitialized = false;
 
     return component;
+}
+
+
+/*
+** sUiComponent
+*/
+
+sComponent* ComponentFactory<sUiComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
+{
+    sUiComponent*  component;
+
+    component = new sUiComponent();
+
+    component->offset = json.getVec2f("offset", { 0.0f, 0.0f });
+
+    return component;
+}
+
+JsonValue&    ComponentFactory<sUiComponent>::saveToJson(const std::string& entityType, const sComponent* savedComponent, JsonValue* toJson)
+{
+    JsonValue& json = toJson ? *toJson : _componentsJson[entityType];
+    std::vector<JsonValue> animations;
+    const sUiComponent* component = static_cast<const sUiComponent*>(savedComponent ? savedComponent : _components[entityType]);
+
+
+    json.setVec2f("offset", component->offset);
+    //json.setString("type", Geometry::getGeometryTypeString(component->type));
+
+    return (json);
+}
+
+bool    ComponentFactory<sUiComponent>::updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity)
+{
+    sUiComponent* component = static_cast<sUiComponent*>(entityComponent ? entityComponent : _components[entityType]);
+    *savedComponent = component;
+    bool changed = false;
+
+    changed |= ImGui::SliderFloat("horizontal offset", &component->offset.x, -100.0f, 100.0f);
+    changed |= ImGui::SliderFloat("vertical offset", &component->offset.y, -100.0f, 100.0f);
+
+    if (changed)
+    {
+        component->needUpdate = true;
+    }
+
+    return (changed);
 }

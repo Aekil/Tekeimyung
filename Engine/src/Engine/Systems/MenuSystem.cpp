@@ -18,11 +18,12 @@ MenuSystem::MenuSystem()
 {
     addDependency<sRenderComponent>();
     addDependency<sButtonComponent>();
+    addDependency<sUiComponent>();
     addDependency<sTransformComponent>();
 
     _monitoringKey = MonitoringDebugWindow::getInstance()->registerSystem(MENU_SYSTEM_NAME);
 
-    _currentSelected = 0;
+    _currentSelected = -1;
     setupSelectedIcon();
     _buttonHovered = false;
 }
@@ -31,26 +32,81 @@ MenuSystem::~MenuSystem() {}
 
 bool    MenuSystem::init()
 {
-    // Select by default the first button
-    if (_entities.size() > 0)
-        setSelected(*EntityFactory::getBindedEntityManager(), 0);
-
     //  For future purposes, it is commented for now.
     //if (!GameWindow::getInstance()->isCursorVisible())
     //    GameWindow::getInstance()->setCursorVisible(true);
     return (true);
 }
 
-void    MenuSystem::update(EntityManager &em, float elapsedTime)
+void    MenuSystem::update(EntityManager& em, float elapsedTime)
 {
     Timer       timer;
-    uint32_t    nbEntities = 0;
-    auto        &&keyboard = GameWindow::getInstance()->getKeyboard();
+    uint32_t    nbEntities = (uint32_t)_entities.size();
 
+    float       windowHeight = (float)GameWindow::getInstance()->getBufferHeight();
+    auto&&      cursor = GameWindow::getInstance()->getMouse().getCursor();
+    glm::vec2   cursorPos = glm::vec2(cursor.getX(), windowHeight - cursor.getY());
+    bool buttonHovered = _buttonHovered;
+
+    _buttonHovered = false;
+
+    for (uint32_t i = 0; i < nbEntities; ++i) {
+        Entity* entity = em.getEntity(_entities[i]);
+
+        sButtonComponent*       button = entity->getComponent<sButtonComponent>();
+
+        handleAlignment(em, entity, i);
+        if (button)
+        {
+            // No button is selected, set the current button as selected
+            if (_currentSelected == -1)
+            {
+                _currentSelected = i;
+                setSelected(*EntityFactory::getBindedEntityManager(), i);
+            }
+
+            handleButtonMouseHover(em, entity, i, cursorPos);
+        }
+    }
+
+    // Remove button selection if a button was hovered by the mouse
+    // But now is not hovered
+    if (buttonHovered && !_buttonHovered)
+    {
+        // Remove selection
+        removeSelected(em, _currentSelected);
+        _currentSelected = -1;
+    }
+
+    handleButtonsKeys(em);
+
+    MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, timer.getElapsedTime(), nbEntities);
+}
+
+void    MenuSystem::handleButtonMouseHover(EntityManager& em, Entity* entity, uint32_t entityIdx, const glm::vec2& cursorPos)
+{
+    sRenderComponent*       render = entity->getComponent<sRenderComponent>();
+    sTransformComponent*    transform = entity->getComponent<sTransformComponent>();
+    const glm::vec3&        size = render->_model->getSize() * transform->scale;
+
+    // Check the mouse is in the button (2D AABB collision)
+    if (cursorPos.x >= transform->pos.x &&
+        cursorPos.x <= transform->pos.x + size.x &&
+        cursorPos.y >= transform->pos.y &&
+        cursorPos.y <= transform->pos.y + size.y)
+    {
+        removeSelected(em, _currentSelected);
+        _currentSelected = entityIdx;
+        setSelected(em, _currentSelected, true);
+        _buttonHovered = true;
+    }
+}
+
+void    MenuSystem::handleButtonsKeys(EntityManager &em)
+{
+    auto        &&keyboard = GameWindow::getInstance()->getKeyboard();
     bool        upPressed = keyboard.getStateMap()[Keyboard::eKey::UP] == Keyboard::eKeyState::KEY_PRESSED;
     bool        downPressed = keyboard.getStateMap()[Keyboard::eKey::DOWN] == Keyboard::eKeyState::KEY_PRESSED;
-
-    handleMouseHover(em);
 
     if (_entities.size() > 0 && _currentSelected != -1)
     {
@@ -81,48 +137,68 @@ void    MenuSystem::update(EntityManager &em, float elapsedTime)
         }
 
     }
-
-    MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, timer.getElapsedTime(), nbEntities);
 }
 
-void    MenuSystem::handleMouseHover(EntityManager &em)
+void    MenuSystem::handleAlignment(EntityManager& em, Entity* entity, uint32_t entityIdx)
 {
-    float       windowHeight = (float)GameWindow::getInstance()->getBufferHeight();
-    auto        &&cursor = GameWindow::getInstance()->getMouse().getCursor();
-    uint32_t    nbEntities = (uint32_t)_entities.size();
+    sUiComponent* ui = entity->getComponent<sUiComponent>();
 
-    glm::vec2   cursorPos = glm::vec2(cursor.getX(), windowHeight - cursor.getY());
+    if (ui->needUpdate)
+    {
+        sRenderComponent* render = entity->getComponent<sRenderComponent>();
+        sTransformComponent* transform = entity->getComponent<sTransformComponent>();
 
-    for (uint32_t i = 0; i < nbEntities; ++i) {
-        Entity* entity = em.getEntity(_entities[i]);
+        // Init the model to retrieve the size
+        if (!render->_model)
+            render->initModel();
 
-        sRenderComponent*       render = entity->getComponent<sRenderComponent>();
-        sTransformComponent*    transform = entity->getComponent<sTransformComponent>();
-        const glm::vec3&        size = render->_model->getSize() * transform->scale;
+        const glm::vec3& size = render->_model->getSize() * transform->scale;
+        float windowWidth = (float) GameWindow::getInstance()->getBufferWidth();
+        float windowHeight = (float) GameWindow::getInstance()->getBufferHeight();
 
-        // Check the mouse is in the button (2D AABB collision)
-        if (cursorPos.x >= transform->pos.x &&
-            cursorPos.x <= transform->pos.x + size.x &&
-            cursorPos.y >= transform->pos.y &&
-            cursorPos.y <= transform->pos.y + size.y)
+        // Horizontal alignments
+        if (ui->horizontalAlignment == eHorizontalAlignment::LEFT)
         {
-            removeSelected(em, _currentSelected);
-            _currentSelected = i;
-            setSelected(em, _currentSelected, true);
-            _buttonHovered = true;
-            return;
+            transform->pos.x = 0;
+        }
+        else if (ui->horizontalAlignment == eHorizontalAlignment::MIDDLE)
+        {
+            transform->pos.x = (windowWidth / 2.0f) - (size.x / 2.0f);
+        }
+        else if (ui->horizontalAlignment == eHorizontalAlignment::RIGHT)
+        {
+            transform->pos.x = windowWidth - size.x;
+        }
+
+        // Vertical alignments
+        if (ui->verticalAlignment == eVerticalAlignment::TOP)
+        {
+            transform->pos.y = 0;
+        }
+        else if (ui->verticalAlignment == eVerticalAlignment::MIDDLE)
+        {
+            transform->pos.y = (windowHeight / 2.0f) - (size.y / 2.0f);
+        }
+        else if (ui->verticalAlignment == eVerticalAlignment::BOTTOM)
+        {
+            transform->pos.y = windowHeight - size.y;
+        }
+
+        // Offsets
+        transform->pos.x += windowWidth * ui->offset.x / 100.0f;
+        transform->pos.y += windowHeight * ui->offset.y / 100.0f;
+        transform->needUpdate = true;
+
+        // Calculate new cursor position
+        if (entityIdx == _currentSelected)
+        {
+            sButtonComponent* button = entity->getComponent<sButtonComponent>();
+            button->selected = false; // Force to recalculate cursor position
+            setSelected(entity);
         }
     }
 
-    // Remove button selection if the button was hovered by the mouse
-    // But now is not hovered
-    if (_buttonHovered)
-    {
-        // Remove selection
-        _buttonHovered = false;
-        removeSelected(em, _currentSelected);
-        _currentSelected = -1;
-    }
+    ui->needUpdate = false;
 }
 
 void    MenuSystem::setSelected(EntityManager &em, int buttonIdx, bool hovered)
@@ -131,7 +207,7 @@ void    MenuSystem::setSelected(EntityManager &em, int buttonIdx, bool hovered)
     if (buttonIdx < 0 || buttonIdx >= _entities.size())
         return;
 
-    Entity* entity = em.getEntity(_entities[_currentSelected]);
+    Entity* entity = em.getEntity(_entities[buttonIdx]);
     setSelected(entity, hovered);
 }
 
@@ -185,32 +261,6 @@ void    MenuSystem::removeSelected(EntityManager &em, int buttonIdx)
         return;
 
     button->selected = false;
-}
-
-bool    MenuSystem::onEntityNewComponent(Entity* entity, sComponent* component)
-{
-    // An entity has been added to the system
-    // Init the button position
-    if (System::onEntityNewComponent(entity, component))
-    {
-        sRenderComponent* render = entity->getComponent<sRenderComponent>();
-        sTransformComponent* transform = entity->getComponent<sTransformComponent>();
-
-        // Init the model to retrieve the size
-        if (!render->_model)
-            render->initModel();
-
-        const glm::vec3& size = render->_model->getSize() * transform->scale;
-        float windowWidth = (float) GameWindow::getInstance()->getBufferWidth();
-        float windowHeight = (float) GameWindow::getInstance()->getBufferHeight();
-
-        transform->pos.x = (windowWidth / 2.0f) - (size.x / 2.0f);
-        transform->pos.y = (windowHeight / 2.0f) - (size.y / 2.0f);
-        transform->needUpdate = true;
-
-        return (true);
-    }
-    return (false);
 }
 
 void    MenuSystem::setupSelectedIcon()
