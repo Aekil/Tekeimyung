@@ -17,7 +17,6 @@ START_GAMESTATE(PauseState)
     virtual bool                        init();
     virtual bool                        update(float elapsedTime);
 
-    Entity*                             createButton(eArchetype type, const glm::vec2& pos);
     void                                handleButtons();
 
 private:

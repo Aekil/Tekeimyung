@@ -7,6 +7,7 @@
 #include <imgui.h>
 #include <imgui_impl_glfw_gl3.h>
 
+#include <Engine/Graphics/Renderer.hpp>
 #include <Engine/Sound/SoundManager.hpp>
 #include <Engine/Systems/MenuSystem.hpp>
 #include <Engine/Utils/Debug.hpp>
@@ -640,6 +641,8 @@ void    GameWindow::handleResize(int width, int height)
             menuSystem->onWindowResize(*gameState->getWorld().getEntityManager());
         }
     }
+
+    Renderer::getInstance()->onWindowResize();
 }
 
 void    GameWindow::handleClose(GLFWwindow* window)

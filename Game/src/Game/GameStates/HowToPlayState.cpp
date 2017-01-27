@@ -24,7 +24,9 @@ bool    HowToPlayState::init()
     _world.addSystem<RenderingSystem>(&_camera, _world.getSystem<ParticleSystem>()->getEmitters());
     _world.addSystem<MenuSystem>();
 
-    initMenu();
+    EntityFactory::createEntity(eArchetype::BACKGROUND);
+    EntityFactory::createEntity(eArchetype::HOW_TO_PLAY_MENU);
+    _returnButton = EntityFactory::createEntity(eArchetype::BUTTON_RETURN);
 
     return (true);
 }
@@ -43,63 +45,6 @@ bool    HowToPlayState::update(float elapsedTime)
     }
 
     return (success);
-}
-
-void    HowToPlayState::initMenu()
-{
-    Entity* background = EntityFactory::createEntity(eArchetype::BACKGROUND);
-    Entity* menu = EntityFactory::createEntity(eArchetype::HOW_TO_PLAY_MENU);
-
-    sRenderComponent* menuRender = menu->getComponent<sRenderComponent>();
-    sTransformComponent* menuTransform = menu->getComponent<sTransformComponent>();
-
-    // Menu content
-    if (menuRender)
-    {
-        // Init the model to retrieve the size
-        if (!menuRender->_model)
-            menuRender->initModel();
-
-        const glm::vec3& size = menuRender->_model->getSize() * menuTransform->scale;
-        float windowWidth = (float)GameWindow::getInstance()->getBufferWidth();
-        float windowHeight = (float)GameWindow::getInstance()->getBufferHeight();
-
-        menuTransform->pos.x = (windowWidth / 2.0f) - (size.x / 2.0f);
-        menuTransform->pos.y = (windowHeight / 2.0f) - (size.y / 2.0f);
-        menuTransform->pos.z = -1.0f;
-        menuTransform->needUpdate = true;
-    }
-
-    sRenderComponent* backgroundRender = background->getComponent<sRenderComponent>();
-    sTransformComponent* backgroundTransform = background->getComponent<sTransformComponent>();
-
-    // Background
-    if (backgroundRender)
-    {
-        // Init the model to retrieve the size
-        if (!backgroundRender->_model)
-            backgroundRender->initModel();
-
-        float windowWidth = (float)GameWindow::getInstance()->getBufferWidth();
-        float windowHeight = (float)GameWindow::getInstance()->getBufferHeight();
-
-        backgroundTransform->scale.x = windowWidth / SIZE_UNIT;
-        backgroundTransform->scale.y = windowHeight / SIZE_UNIT;
-        backgroundTransform->needUpdate = true;
-    }
-
-    _returnButton = createButton(eArchetype::BUTTON_RETURN, glm::vec2(0, -421.0f));
-}
-
-Entity* HowToPlayState::createButton(eArchetype type, const glm::vec2& pos)
-{
-    Entity* button = EntityFactory::createEntity(type);
-
-    sTransformComponent* transform = button->getComponent<sTransformComponent>();
-    transform->pos += glm::vec3(pos, 0.0f);
-    transform->needUpdate = true;
-
-    return (button);
 }
 
 void    HowToPlayState::handleButtons()

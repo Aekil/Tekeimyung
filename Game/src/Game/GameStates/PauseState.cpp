@@ -38,10 +38,10 @@ bool    PauseState::init()
     _world.addSystem<RenderingSystem>(&_camera, _world.getSystem<ParticleSystem>()->getEmitters());
     _world.addSystem<MenuSystem>();
 
-    _resumeButton = createButton(eArchetype::BUTTON_RESUME, glm::vec2(0.0f, 240.0f));
-    _howToPlayButton = createButton(eArchetype::BUTTON_HOW_TO_PLAY, glm::vec2(0.0f, 160.0f));
-    _optionsButton = createButton(eArchetype::BUTTON_OPTIONS, glm::vec2(0.0f, 80.0f));
-    _quitButton = createButton(eArchetype::BUTTON_QUIT, glm::vec2(0.0f, 0.0f));
+    _resumeButton = EntityFactory::createEntity(eArchetype::BUTTON_RESUME);
+    _howToPlayButton = EntityFactory::createEntity(eArchetype::BUTTON_HOW_TO_PLAY);
+    _optionsButton = EntityFactory::createEntity(eArchetype::BUTTON_OPTIONS);
+    _quitButton = EntityFactory::createEntity(eArchetype::BUTTON_QUIT);
 
     SoundManager::getInstance()->setVolume(0.3f);
     return (true);
@@ -67,17 +67,6 @@ bool    PauseState::update(float elapsedTime)
     }
 
     return (success);
-}
-
-Entity* PauseState::createButton(eArchetype type, const glm::vec2& pos)
-{
-    Entity* button = EntityFactory::createEntity(type);
-
-    sTransformComponent* transform = button->getComponent<sTransformComponent>();
-    transform->pos += glm::vec3(pos, 0.0f);
-    transform->needUpdate = true;
-
-    return (button);
 }
 
 void    PauseState::handleButtons()

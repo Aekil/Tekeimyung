@@ -32,6 +32,12 @@
             "y" : 101.69999694824219,
             "z" : 1
          }
+      },
+      "sUiComponent" : {
+         "offset" : {
+            "x" : 0,
+            "y" : 0
+         }
       }
    },
    "name" : "BACKGROUND"

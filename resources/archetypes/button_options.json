@@ -1,9 +1,9 @@
 {
    "components" : {
+      "sButtonComponent" : null,
       "sNameComponent" : {
          "name" : "BUTTON_OPTIONS"
       },
-      "sButtonComponent" : null,
       "sRenderComponent" : {
          "animated" : false,
          "animations" : [],
@@ -19,8 +19,8 @@
       },
       "sTransformComponent" : {
          "pos" : {
-            "x" : 955,
-            "y" : 603.5,
+            "x" : 835,
+            "y" : 386.97000122070313,
             "z" : -1
          },
          "rotation" : {
@@ -32,6 +32,12 @@
             "x" : 25,
             "y" : 6,
             "z" : 6
+         }
+      },
+      "sUiComponent" : {
+         "offset" : {
+            "x" : 0,
+            "y" : -9
          }
       }
    },

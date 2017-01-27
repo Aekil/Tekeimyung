@@ -50,7 +50,7 @@ int     main()
         EventSound::loadEvents();
         GameWindow::getInstance()->registerCloseHandler(windowCloseHandler, &engine);
 
-        if (!gameStateManager.addState<EditorState>())
+        if (!gameStateManager.addState<PlayState>())
             return (1);
         else if (!engine.run())
             return (1);

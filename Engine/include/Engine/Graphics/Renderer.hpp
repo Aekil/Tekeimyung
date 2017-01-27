@@ -20,6 +20,7 @@ public:
     static std::shared_ptr<Renderer>    getInstance();
 
     bool                                initialize();
+    void                                onWindowResize();
 
     void                                render(Camera* camera, std::shared_ptr<Model> model,
                                             const glm::vec4& modelColor, const glm::mat4& modelTransform);

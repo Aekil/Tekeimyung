@@ -31,7 +31,7 @@ bool            OptionsMenuState::init()
     _world.addSystem<MenuSystem>();
 
     createToggleWindowModeButton();
-    _returnButton = createButton(eArchetype::BUTTON_RETURN, glm::vec2(0.0f, 0.0f));
+    _returnButton = EntityFactory::createEntity(eArchetype::BUTTON_RETURN);
     return (true);
 }
 
@@ -55,19 +55,6 @@ bool        OptionsMenuState::update(float elapsedTime)
     }
 
     return (success);
-}
-
-Entity*                     OptionsMenuState::createButton(eArchetype type, const glm::vec2& pos)
-{
-    Entity*                 button;
-    sTransformComponent*    transform;
-
-    button = EntityFactory::createEntity(type);
-    transform = button->getComponent<sTransformComponent>();
-    transform->pos += glm::vec3(pos, 0.0f);
-    transform->needUpdate = true;
-
-    return (button);
 }
 
 void                    OptionsMenuState::handleButtons()
@@ -113,7 +100,7 @@ void                    OptionsMenuState::createToggleWindowModeButton()
     // Create the button for the first time
     if (!_toggleWindowModeButton)
     {
-        _toggleWindowModeButton = createButton(buttonArchetype, glm::vec2(0.0f, 80.0f));
+        _toggleWindowModeButton = EntityFactory::createEntity(buttonArchetype);
     }
     // Change the button render
     else

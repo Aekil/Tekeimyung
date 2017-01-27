@@ -46,17 +46,7 @@ bool    Renderer::initialize()
         return (false);
     }
 
-    auto gameWindow = GameWindow::getInstance();
-
-    // Set camera screen
-    Camera::sScreen screen;
-    screen.right = (float)gameWindow->getBufferWidth();
-    screen.left = 0;
-    screen.top = (float)gameWindow->getBufferHeight();
-    screen.bottom = 0;
-    _UICamera.setScreen(screen);
-    _UICamera.setProjType(Camera::eProj::ORTHOGRAPHIC_2D);
-    _UICamera.update(_shaderProgram, 0);
+    onWindowResize();
 
     // Enable blend for transparency
 /*    glEnable(GL_BLEND);
@@ -70,6 +60,21 @@ bool    Renderer::initialize()
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
     return (true);
+}
+
+void    Renderer::onWindowResize()
+{
+    auto gameWindow = GameWindow::getInstance();
+
+    // Set camera screen
+    Camera::sScreen screen;
+    screen.right = (float)gameWindow->getBufferWidth();
+    screen.left = 0;
+    screen.top = (float)gameWindow->getBufferHeight();
+    screen.bottom = 0;
+    _UICamera.setScreen(screen);
+    _UICamera.setProjType(Camera::eProj::ORTHOGRAPHIC_2D);
+    _UICamera.update(_shaderProgram, 0);
 }
 
 void    Renderer::render(Camera* camera, std::shared_ptr<Model> model,
