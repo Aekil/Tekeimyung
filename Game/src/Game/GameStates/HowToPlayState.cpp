@@ -27,7 +27,6 @@ bool    HowToPlayState::init()
     _world.addSystem<RenderingSystem>(&_camera, _world.getSystem<ParticleSystem>()->getEmitters());
     _world.addSystem<MenuSystem>();
 
-    initCamera();
     initMenu();
 
     return (true);
@@ -47,20 +46,6 @@ bool    HowToPlayState::update(float elapsedTime)
     }
 
     return (success);
-}
-
-void    HowToPlayState::initCamera()
-{
-    auto gameWindow = GameWindow::getInstance();
-
-    // Set camera screen
-    Camera::sScreen screen;
-    screen.right = (float)gameWindow->getBufferWidth();
-    screen.left = 0;
-    screen.top = (float)gameWindow->getBufferHeight();
-    screen.bottom = 0;
-    _camera.setScreen(screen);
-    _camera.setProjType(Camera::eProj::ORTHOGRAPHIC_2D);
 }
 
 void    HowToPlayState::initMenu()

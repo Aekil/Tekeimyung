@@ -19,8 +19,6 @@ START_GAMESTATE(OptionsMenuState)
      virtual bool   init();
      virtual bool   update(float elapsedTime);
 
-     void           initCamera();
-
      Entity*        createButton(eArchetype type, const glm::vec2& pos);
      void           handleButtons();
 

@@ -143,6 +143,7 @@ void    RenderingSystem::renderParticles(EntityManager& em, float elapsedTime)
         if (entity == nullptr)
             continue;
 
+        bool isUi = entity->hasComponent<sUiComponent>();
         sRenderComponent *render = entity->getComponent<sRenderComponent>();
         auto&& model = getModel(render);
 
@@ -172,7 +173,10 @@ void    RenderingSystem::renderParticles(EntityManager& em, float elapsedTime)
             transformMatrix = glm::scale(transformMatrix, particle.size);
 
             // Draw sprite
-            Renderer::getInstance()->render(_camera, model, particle.color, transformMatrix);
+            if (isUi)
+                Renderer::getInstance()->renderUI(model, particle.color, transformMatrix);
+            else
+                Renderer::getInstance()->render(_camera, model, particle.color, transformMatrix);
         }
 
         _camera->freezeRotations(false);

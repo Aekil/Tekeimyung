@@ -41,8 +41,6 @@ bool    PauseState::init()
     _world.addSystem<RenderingSystem>(&_camera, _world.getSystem<ParticleSystem>()->getEmitters());
     _world.addSystem<MenuSystem>();
 
-    initCamera();
-
     _resumeButton = createButton(eArchetype::BUTTON_RESUME, glm::vec2(0.0f, 240.0f));
     _howToPlayButton = createButton(eArchetype::BUTTON_HOW_TO_PLAY, glm::vec2(0.0f, 160.0f));
     _optionsButton = createButton(eArchetype::BUTTON_OPTIONS, glm::vec2(0.0f, 80.0f));
@@ -72,20 +70,6 @@ bool    PauseState::update(float elapsedTime)
     }
 
     return (success);
-}
-
-void    PauseState::initCamera()
-{
-    auto gameWindow = GameWindow::getInstance();
-
-    // Set camera screen
-    Camera::sScreen screen;
-    screen.right = (float)gameWindow->getBufferWidth();
-    screen.left = 0;
-    screen.top = (float)gameWindow->getBufferHeight();
-    screen.bottom = 0;
-    _camera.setScreen(screen);
-    _camera.setProjType(Camera::eProj::ORTHOGRAPHIC_2D);
 }
 
 Entity* PauseState::createButton(eArchetype type, const glm::vec2& pos)

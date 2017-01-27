@@ -29,8 +29,6 @@ bool    ConfirmExitState::init()
     _world.addSystem<RenderingSystem>(&_camera, _world.getSystem<ParticleSystem>()->getEmitters());
     _world.addSystem<MenuSystem>();
 
-    initCamera();
-
     EntityFactory::createEntity(eArchetype::QUIT_CONFIRM_POPUP);
     EntityFactory::createEntity(eArchetype::QUIT_CONFIRM_TEXT);
     _noButton = EntityFactory::createEntity(eArchetype::BUTTON_CONFIRM_NO);
@@ -60,20 +58,6 @@ bool    ConfirmExitState::update(float elapsedTime)
     }
 
     return (success);
-}
-
-void    ConfirmExitState::initCamera()
-{
-    auto gameWindow = GameWindow::getInstance();
-
-    // Set camera screen
-    Camera::sScreen screen;
-    screen.right = (float)gameWindow->getBufferWidth();
-    screen.left = 0;
-    screen.top = (float)gameWindow->getBufferHeight();
-    screen.bottom = 0;
-    _camera.setScreen(screen);
-    _camera.setProjType(Camera::eProj::ORTHOGRAPHIC_2D);
 }
 
 void    ConfirmExitState::initPreviousStatesRender()

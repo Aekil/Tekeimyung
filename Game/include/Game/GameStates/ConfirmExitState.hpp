@@ -19,7 +19,6 @@ START_GAMESTATE(ConfirmExitState)
     virtual bool                        init();
     virtual bool                        update(float elapsedTime);
 
-    void                                initCamera();
     void                                initPreviousStatesRender();
 
     Entity*                             createButton(eArchetype type, const glm::vec2& pos);

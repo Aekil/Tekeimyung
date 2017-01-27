@@ -33,8 +33,6 @@ bool            OptionsMenuState::init()
     _world.addSystem<RenderingSystem>(&_camera, _world.getSystem<ParticleSystem>()->getEmitters());
     _world.addSystem<MenuSystem>();
 
-    initCamera();
-
     createToggleWindowModeButton();
     _returnButton = createButton(eArchetype::BUTTON_RETURN, glm::vec2(0.0f, 0.0f));
     return (true);
@@ -60,21 +58,6 @@ bool        OptionsMenuState::update(float elapsedTime)
     }
 
     return (success);
-}
-
-void        OptionsMenuState::initCamera()
-{
-    auto    gameWindow = GameWindow::getInstance();
-
-    // Set camera screen
-    Camera::sScreen screen;
-
-    screen.right = (float) gameWindow->getBufferWidth();
-    screen.left = 0;
-    screen.top = (float) gameWindow->getBufferHeight();
-    screen.bottom = 0;
-    _camera.setScreen(screen);
-    _camera.setProjType(Camera::eProj::ORTHOGRAPHIC_2D);
 }
 
 Entity*                     OptionsMenuState::createButton(eArchetype type, const glm::vec2& pos)
