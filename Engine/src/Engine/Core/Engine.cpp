@@ -29,6 +29,7 @@ bool    Engine::init()
         LOG_ERROR("Engine: Failed to initialize window");
         return (false);
     }
+    GameWindow::setInstance(_window);
 
     _soundManager = SoundManager::getInstance();
     if (!_soundManager->initialize())
@@ -44,7 +45,6 @@ bool    Engine::init()
         return (false);
     }
 
-    GameWindow::setInstance(_window);
     //GameWindow::getInstance()->toggleFullscreen();
     return (true);
 }

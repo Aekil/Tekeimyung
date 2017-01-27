@@ -53,10 +53,8 @@ void    MenuSystem::update(EntityManager& em, float elapsedTime)
     for (uint32_t i = 0; i < nbEntities; ++i) {
         Entity* entity = em.getEntity(_entities[i]);
 
-        sButtonComponent*       button = entity->getComponent<sButtonComponent>();
-
         handleAlignment(em, entity, i);
-        if (button)
+        if (entity->hasComponent<sButtonComponent>())
         {
             handleButtonMouseHover(em, entity, buttonsIdx++, cursorPos);
         }

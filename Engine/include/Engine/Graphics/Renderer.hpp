@@ -23,6 +23,7 @@ public:
 
     void                                render(Camera* camera, std::shared_ptr<Model> model,
                                             const glm::vec4& modelColor, const glm::mat4& modelTransform);
+    void                                renderUI(std::shared_ptr<Model> model, const glm::vec4& modelColor, const glm::mat4& modelTransform);
 
     ShaderProgram&                      getShaderProgram();
     Camera*                             getCurrentCamera();
@@ -39,4 +40,5 @@ private:
     UniformBuffer                       _cameraUbo;
 
     Camera*                             _currentCamera;
+    Camera                              _UICamera;
 };

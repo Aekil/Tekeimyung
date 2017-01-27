@@ -5,6 +5,7 @@
 #include <iostream>
 
 #include <Engine/Utils/Exception.hpp>
+#include <Engine/Window/GameWindow.hpp>
 
 #include <Engine/Graphics/Renderer.hpp>
 
@@ -45,6 +46,17 @@ bool    Renderer::initialize()
         return (false);
     }
 
+    auto gameWindow = GameWindow::getInstance();
+
+    // Set camera screen
+    Camera::sScreen screen;
+    screen.right = (float)gameWindow->getBufferWidth();
+    screen.left = 0;
+    screen.top = (float)gameWindow->getBufferHeight();
+    screen.bottom = 0;
+    _UICamera.setScreen(screen);
+    _UICamera.setProjType(Camera::eProj::ORTHOGRAPHIC_2D);
+    _UICamera.update(_shaderProgram, 0);
 
     // Enable blend for transparency
 /*    glEnable(GL_BLEND);
@@ -67,6 +79,16 @@ void    Renderer::render(Camera* camera, std::shared_ptr<Model> model,
     model->draw(_shaderProgram, modelColor, modelTransform);
 
     _currentCamera = camera;
+}
+
+// TODO: draw all UI after models
+// Curently the UI is drawn at the same time as the transparent entities if the model is a plane
+void    Renderer::renderUI(std::shared_ptr<Model> model, const glm::vec4& modelColor, const glm::mat4& modelTransform)
+{
+    if (_currentCamera != &_UICamera)
+        _UICamera.updateUboData(_cameraUbo, true);
+    model->draw(_shaderProgram, modelColor, modelTransform);
+    _currentCamera = &_UICamera;
 }
 
 ShaderProgram&  Renderer::getShaderProgram()

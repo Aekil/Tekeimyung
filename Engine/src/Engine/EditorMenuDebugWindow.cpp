@@ -122,7 +122,8 @@ void    EditorMenuDebugWindow::displayLoadPopup()
     else if (ImGui::Button("Load"))
     {
         _em->destroyAllEntities();
-        LevelLoader::getInstance()->load(_tmpLoadLevel, _em);
+        _currentLevel = _tmpLoadLevel;
+        LevelLoader::getInstance()->load(_currentLevel, _em);
         ImGui::CloseCurrentPopup();
     }
 }

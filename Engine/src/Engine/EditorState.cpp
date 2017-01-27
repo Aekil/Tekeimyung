@@ -20,6 +20,7 @@ void    EditorState::onEnter()
 
 bool    EditorState::init()
 {
+    _world.addSystem<MenuSystem>();
     _world.addSystem<ParticleSystem>();
     _world.addSystem<RenderingSystem>(&_camera, _world.getSystem<ParticleSystem>()->getEmitters());
 

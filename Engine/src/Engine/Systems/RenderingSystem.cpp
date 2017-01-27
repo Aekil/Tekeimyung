@@ -56,7 +56,10 @@ void    RenderingSystem::renderEntity(sRenderComponent *render, Entity* entity, 
     }
 
     // Draw model
-    Renderer::getInstance()->render(_camera, model, render->color, transform->getTransform());
+    if (entity->hasComponent<sUiComponent>())
+        Renderer::getInstance()->renderUI(model, render->color, transform->getTransform());
+    else
+        Renderer::getInstance()->render(_camera, model, render->color, transform->getTransform());
 }
 
 void    RenderingSystem::renderCollider(Entity* entity)
@@ -213,6 +216,9 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
     // because we don't want a transparent object to hide an other transparent object
     glDepthMask(GL_FALSE);
 
+
+    renderColliders(em);
+
     // Display transparent entities
     {
         auto it = _transparentEntities.begin();
@@ -235,9 +241,6 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
         }
     }
 
-
-    renderColliders(em);
-
     renderParticles(em, elapsedTime);
 
     // Enable depth buffer for opaque objects
@@ -254,7 +257,6 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
 
 bool    RenderingSystem::isTransparent(sRenderComponent *render) const
 {
-
     return (render->type == Geometry::eType::PLANE);
 }
 
