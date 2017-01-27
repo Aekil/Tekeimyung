@@ -16,6 +16,7 @@
 #include <Engine/Utils/MonitoringDebugWindow.hpp>
 #include <Engine/Utils/Exception.hpp>
 #include <Engine/EditorState.hpp>
+#include <Engine/EntityFactory.hpp>
 
 #include <Engine/Core/GameState.hpp>
 
@@ -96,4 +97,9 @@ void    GameState::initDebugWindows()
     {
         addDebugWindow<OverlayDebugWindow>(glm::vec2(10, 10), glm::vec2(0, 0));
     }
+}
+
+void    GameState::bindEntityManager()
+{
+    EntityFactory::bindEntityManager(_world.getEntityManager());
 }

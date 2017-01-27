@@ -22,6 +22,7 @@ public:
     bool                                        addState()
     {
         std::shared_ptr<T> gameState = std::make_shared<T>(this);
+        gameState->bindEntityManager();
         gameState->onEnter();
         if (!gameState->init() || !gameState->initSystems())
         {

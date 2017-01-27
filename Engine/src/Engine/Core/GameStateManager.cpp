@@ -14,7 +14,10 @@ void    GameStateManager::removeCurrentState()
     {
         _states.pop_back();
         if (hasStates())
+        {
+            _states.back()->bindEntityManager();
             _states.back()->onEnter();
+        }
     }
 }
 

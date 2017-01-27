@@ -13,10 +13,7 @@
 
 EditorState::~EditorState() {}
 
-void    EditorState::onEnter()
-{
-     EntityFactory::bindEntityManager(_world.getEntityManager());
-}
+void    EditorState::onEnter() {}
 
 bool    EditorState::init()
 {

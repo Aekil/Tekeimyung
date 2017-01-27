@@ -16,10 +16,7 @@
 
 HowToPlayState::~HowToPlayState() {}
 
-void    HowToPlayState::onEnter()
-{
-     EntityFactory::bindEntityManager(_world.getEntityManager());
-}
+void    HowToPlayState::onEnter() {}
 
 bool    HowToPlayState::init()
 {

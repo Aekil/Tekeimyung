@@ -13,10 +13,7 @@
 
 OptionsMenuState::~OptionsMenuState() {}
 
-void            OptionsMenuState::onEnter()
-{
-    EntityFactory::bindEntityManager(_world.getEntityManager());
-}
+void            OptionsMenuState::onEnter() {}
 
 bool            OptionsMenuState::init()
 {

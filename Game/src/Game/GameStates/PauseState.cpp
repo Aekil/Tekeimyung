@@ -21,10 +21,7 @@
 
 PauseState::~PauseState() {}
 
-void    PauseState::onEnter()
-{
-     EntityFactory::bindEntityManager(_world.getEntityManager());
-}
+void    PauseState::onEnter() {}
 
 bool    PauseState::init()
 {

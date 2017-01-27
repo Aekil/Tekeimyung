@@ -49,6 +49,7 @@ public:
 
 private:
     void                            initDebugWindows();
+    void                            bindEntityManager();
 
 protected:
     World                   _world;

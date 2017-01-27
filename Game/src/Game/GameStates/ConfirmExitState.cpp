@@ -16,10 +16,7 @@
 
 ConfirmExitState::~ConfirmExitState() {}
 
-void    ConfirmExitState::onEnter()
-{
-     EntityFactory::bindEntityManager(_world.getEntityManager());
-}
+void    ConfirmExitState::onEnter() {}
 
 bool    ConfirmExitState::init()
 {

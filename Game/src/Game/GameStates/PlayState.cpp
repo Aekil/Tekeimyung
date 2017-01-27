@@ -32,10 +32,7 @@
 
 PlayState::~PlayState() {}
 
-void    PlayState::onEnter()
-{
-    EntityFactory::bindEntityManager(_world.getEntityManager());
-}
+void    PlayState::onEnter() {}
 
 bool    PlayState::init()
 {
