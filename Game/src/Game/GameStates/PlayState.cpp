@@ -7,9 +7,6 @@
 #include <glm/glm.hpp>
 
 #include <Engine/Utils/Exception.hpp>
-#include <Engine/Utils/OverlayDebugWindow.hpp>
-#include <Engine/Utils/LogDebugWindow.hpp>
-#include <Engine/Utils/MonitoringDebugWindow.hpp>
 #include <Engine/Window/Keyboard.hpp>
 #include <Engine/Window/HandleFullscreenEvent.hpp>
 #include <Engine/Window/GameWindow.hpp>
@@ -26,8 +23,6 @@
 #include <Engine/Systems/ScriptSystem.hpp>
 #include <Engine/Systems/MouseSystem.hpp>
 #include <Engine/Components.hh>
-#include <Engine/LevelEntitiesDebugWindow.hpp>
-#include <Engine/SoundEditorWindow.hpp>
 #include <Engine/EntityFactory.hpp>
 #include <Game/Utils/PlayStates.hpp>
 #include <Game/GameStates/PauseState.hpp>
@@ -51,12 +46,6 @@ bool    PlayState::init()
     initCamera();
     addSystems();
     initEntities();
-
-    addDebugWindow<OverlayDebugWindow>();
-    addDebugWindow<LevelEntitiesDebugWindow>(em, glm::vec2(0, 80), glm::vec2(600, 350));
-    addDebugWindow<LogDebugWindow>(Logger::getInstance(), glm::vec2(0, 430), glm::vec2(300, 200));
-    addDebugWindow<MonitoringDebugWindow>(MonitoringDebugWindow::getInstance());
-    addDebugWindow<SoundEditorWindow>(glm::vec2(1200, 80), glm::vec2(450, 450));
 
     _pair = std::make_pair(Keyboard::eKey::F, new HandleFullscreenEvent());
 

@@ -3,16 +3,11 @@
 */
 
 #include <Engine/Window/GameWindow.hpp>
-#include <Engine/Utils/LogDebugWindow.hpp>
 #include <Engine/Sound/SoundManager.hpp>
 
 #include <Engine/Systems/RenderingSystem.hpp>
 #include <Engine/Systems/MenuSystem.hpp>
-#include <Engine/LevelEntitiesDebugWindow.hpp>
-#include <Engine/EntitiesTemplateDebugWindow.hpp>
-#include <Engine/SoundEditorWindow.hpp>
 #include <Engine/EntityFactory.hpp>
-#include <Engine/EditorMenuDebugWindow.hpp>
 #include <Engine/EditorState.hpp>
 
 
@@ -27,13 +22,6 @@ bool    EditorState::init()
 {
     _world.addSystem<ParticleSystem>();
     _world.addSystem<RenderingSystem>(&_camera, _world.getSystem<ParticleSystem>()->getEmitters());
-
-    EntityManager* em = _world.getEntityManager();
-    addDebugWindow<EditorMenuDebugWindow>(em, glm::vec2(0, 0), glm::vec2(0, 0));
-    addDebugWindow<LevelEntitiesDebugWindow>(em, glm::vec2(0, 80), glm::vec2(600, 350));
-    addDebugWindow<EntitiesTemplateDebugWindow>(em, glm::vec2(600, 80), glm::vec2(300, 200));
-    addDebugWindow<SoundEditorWindow>(glm::vec2(1200, 80), glm::vec2(450, 450));
-    addDebugWindow<LogDebugWindow>(Logger::getInstance(), glm::vec2(0, 430), glm::vec2(300, 200));
 
     initCamera();
 
