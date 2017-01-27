@@ -336,6 +336,7 @@ void    EntityFactory::saveEntityTemplateToJson(const std::string& typeName)
     JsonWriter jsonWriter;
     JsonValue json;
     JsonValue components;
+    std::string savedFile = EntityFactory::getFile(typeName);
     auto&& entitycomponents = EntityFactory::getComponents(typeName);
 
     json.setString("name", typeName);
@@ -346,9 +347,9 @@ void    EntityFactory::saveEntityTemplateToJson(const std::string& typeName)
     }
     json.setValue("components", components);
 
-    jsonWriter.write(EntityFactory::getFile(typeName), json);
+    jsonWriter.write(savedFile, json);
 
-    LOG_INFO("Entity template %s saved", typeName.c_str());
+    LOG_INFO("Entity template %s saved to %s", typeName.c_str(), savedFile.c_str());
 }
 
 void    EntityFactory::saveEntityTemplate(const std::string& typeName, Entity* entity)
@@ -401,4 +402,6 @@ void    EntityFactory::saveEntityTemplate(const std::string& typeName, Entity* e
             EntityFactory::updateEntitiesComponents(entity, typeName, compFactory, component);
         }
     }
+
+    LOG_INFO("Entity template %s overwritten by entity", typeName.c_str());
 }
