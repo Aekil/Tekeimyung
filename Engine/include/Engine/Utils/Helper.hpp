@@ -16,6 +16,66 @@
 
 #define FMT_MSG(format, ...)    (Helper::formatMessage(format, ## __VA_ARGS__))
 
+
+class Foo {
+public:
+ class monEnum {
+    enum Test{
+        VALUE0 = 0,
+        VALUE1 = 1
+    };
+};
+};
+
+
+template <typename T>
+struct EnumManager
+{};
+
+
+#define GENERATE_STRING(STRING) #STRING,
+#define GENERATE_ENUM(ENUM) ENUM,
+
+#define GENERATE_CONDITION_STRING(ENUM)     \
+    if (enum_ == TmpEnum::ENUM)             \
+        return #ENUM;
+
+#define GENERATE_CONDITION_ENUM(ENUM)       \
+    if (enumString == #ENUM)                \
+        return TmpEnum::ENUM;
+
+#define REGISTER_ENUM_MANAGER(ENUM_NAME, ENUM_TYPE, ENUM_LIST)                              \
+template <>                                                                                 \
+struct EnumManager<ENUM_NAME>                                                               \
+{                                                                                           \
+    static constexpr const char* enumStrings[] = {ENUM_LIST(GENERATE_STRING)};              \
+    static constexpr uint32_t enumLength = sizeof(enumStrings) / sizeof(enumStrings[0]);    \
+                                                                                            \
+    static const char* enumToString(ENUM_NAME enum_)                                        \
+    {                                                                                       \
+          using TmpEnum = ENUM_NAME;                                                        \
+                                                                                            \
+          ENUM_LIST(GENERATE_CONDITION_STRING);                                             \
+                                                                                            \
+          return ("");                                                                      \
+    }                                                                                       \
+                                                                                            \
+    static ENUM_NAME stringToEnum(const std::string& enumString)                            \
+    {                                                                                       \
+          using TmpEnum = ENUM_NAME;                                                        \
+                                                                                            \
+          ENUM_LIST(GENERATE_CONDITION_ENUM);                                               \
+                                                                                            \
+          return (ENUM_NAME());                                                             \
+    }                                                                                       \
+};
+
+#define REGISTER_ENUM(ENUM_NAME, ENUM_TYPE, ENUM_LIST)                                      \
+enum class ENUM_NAME: ENUM_TYPE                                                             \
+{                                                                                           \
+    ENUM_LIST(GENERATE_ENUM)                                                                \
+};                                                                                          \
+
 class Helper
 {
 public:

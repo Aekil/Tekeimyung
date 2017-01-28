@@ -105,7 +105,7 @@ sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& 
     component->texture = json.getString("texture", "");
 
     std::string geometryName = json.getString("type", "MESH");
-    component->type = Geometry::getGeometryType(geometryName);
+    component->type = EnumManager<Geometry::eType>::stringToEnum(geometryName);
 
     // Load animations
     auto animations = json.get()["animations"];
@@ -171,7 +171,7 @@ void    ComponentFactory<sRenderComponent>::loadTranslateParamAnimation(std::sha
 
         key.time = keyFrameJson.getFloat("time", 1.0f);
         key.value = keyFrameJson.getVec3f("value", glm::vec3(0.0f, 0.0f, 0.0f));
-        key.easing = IParamAnimation::getEasingTypeFromString(easingType);
+        key.easing = EnumManager<IParamAnimation::eEasing>::stringToEnum(easingType);
         paramAnimation->addKeyFrame(key);
     }
 }
@@ -193,7 +193,7 @@ void    ComponentFactory<sRenderComponent>::loadColorParamAnimation(std::shared_
 
         key.time = keyFrameJson.getFloat("time", 1.0f);
         key.value = keyFrameJson.getVec4f("value", glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
-        key.easing = IParamAnimation::getEasingTypeFromString(easingType);
+        key.easing = EnumManager<IParamAnimation::eEasing>::stringToEnum(easingType);
 
         paramAnimation->addKeyFrame(key);
     }
@@ -209,7 +209,7 @@ JsonValue&    ComponentFactory<sRenderComponent>::saveToJson(const std::string& 
     json.setBool("animated", component->animated);
     json.setString("model", component->modelFile);
     json.setColor4f("color", component->color);
-    json.setString("type", Geometry::getGeometryTypeString(component->type));
+    json.setString("type", EnumManager<Geometry::eType>::enumToString(component->type));
     json.setString("texture", component->texture);
 
     // Save animations
@@ -254,7 +254,7 @@ void    ComponentFactory<sRenderComponent>::saveTranslateParamAnimation(std::sha
 
         keyFrameJson.setVec3f("value", keyFrame.value);
         keyFrameJson.setFloat("time", keyFrame.time);
-        keyFrameJson.setString("easing", IParamAnimation::getEasingStringFromType(keyFrame.easing));
+        keyFrameJson.setString("easing", EnumManager<IParamAnimation::eEasing>::enumToString(keyFrame.easing));
         keyFrames.push_back(keyFrameJson);
     }
 
@@ -274,7 +274,7 @@ void    ComponentFactory<sRenderComponent>::saveColorParamAnimation(std::shared_
 
         keyFrameJson.setVec4f("value", keyFrame.value);
         keyFrameJson.setFloat("time", keyFrame.time);
-        keyFrameJson.setString("easing", IParamAnimation::getEasingStringFromType(keyFrame.easing));
+        keyFrameJson.setString("easing", EnumManager<IParamAnimation::eEasing>::enumToString(keyFrame.easing));
         keyFrames.push_back(keyFrameJson);
     }
 
@@ -291,14 +291,7 @@ bool    ComponentFactory<sRenderComponent>::updateEditor(const std::string& enti
     bool modelChanged = false;
 
     changed |= ImGui::ColorEdit4("color", glm::value_ptr(component->color));
-
-    static std::vector<const char*>& typesString = const_cast<std::vector<const char*>&>(Geometry::getTypesString());
-    int selectedType = static_cast<int>(std::find(typesString.cbegin(), typesString.cend(), Geometry::getGeometryTypeString(component->type)) - typesString.begin());
-    const char** typesList = typesString.data();
-
-    typeChanged = ImGui::ListBox("Model type", &selectedType, typesList, (int)Geometry::getTypesString().size(), 4);
-    if (typeChanged)
-        component->type = Geometry::getGeometryType(typesString[selectedType]);
+    typeChanged |= updateComboEnum<Geometry::eType>("Model type", component->type);
 
     // Plan
     if (component->type == Geometry::eType::PLANE)
@@ -500,9 +493,6 @@ bool    ComponentFactory<sRenderComponent>::updateParamsAnimationsEditor(Animati
 
 bool    ComponentFactory<sRenderComponent>::updateAnimationParamTranslate(Entity* entity, std::shared_ptr<IParamAnimation> paramAnimation_, uint32_t& frameNb)
 {
-    static auto easingTypesString = const_cast<std::vector<const char*>&>(ParamAnimation<glm::vec4>::getEasingTypesString());
-    const char** easingTypesList = easingTypesString.data();
-
     auto paramAnimation = std::static_pointer_cast<ParamAnimation<glm::vec3>>(paramAnimation_);
 
     // add animation param key frame
@@ -547,13 +537,8 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationParamTranslate(Entity
             if (ImGui::InputFloat("time", &keyFrame.time, 1))
                 sortKeyFrames = true;
 
-            // Easing type listBox
-            ParamAnimation<glm::vec3>::getEasingStringFromType(keyFrame.easing);
-            int selectedType = static_cast<int>(std::find(easingTypesString.cbegin(), easingTypesString.cend(), ParamAnimation<glm::vec3>::getEasingStringFromType(keyFrame.easing)) - easingTypesString.begin());
-            if (ImGui::ListBox("Easing", &selectedType, easingTypesList, (int)easingTypesString.size(), 4))
-            {
-                keyFrame.easing = ParamAnimation<glm::vec3>::getEasingTypeFromString(easingTypesString[selectedType]);
-            }
+            // Easing type Combo box
+            updateComboEnum<IParamAnimation::eEasing>("Easing", keyFrame.easing);
         }
 
         ImGui::PopID();
@@ -568,9 +553,6 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationParamTranslate(Entity
 
 bool    ComponentFactory<sRenderComponent>::updateAnimationParamColor(std::shared_ptr<IParamAnimation> paramAnimation_, uint32_t& frameNb)
 {
-    static auto easingTypesString = const_cast<std::vector<const char*>&>(ParamAnimation<glm::vec4>::getEasingTypesString());
-    const char** easingTypesList = easingTypesString.data();
-
     auto paramAnimation = std::static_pointer_cast<ParamAnimation<glm::vec4>>(paramAnimation_);
 
     // add animation param key frame
@@ -610,12 +592,7 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationParamColor(std::share
                 sortKeyFrames = true;
 
             // Easing type listBox
-            ParamAnimation<glm::vec4>::getEasingStringFromType(keyFrame.easing);
-            int selectedType = static_cast<int>(std::find(easingTypesString.cbegin(), easingTypesString.cend(), ParamAnimation<glm::vec4>::getEasingStringFromType(keyFrame.easing)) - easingTypesString.begin());
-            if (ImGui::ListBox("Easing", &selectedType, easingTypesList, (int)easingTypesString.size(), 4))
-            {
-                keyFrame.easing = ParamAnimation<glm::vec4>::getEasingTypeFromString(easingTypesString[selectedType]);
-            }
+            updateComboEnum<IParamAnimation::eEasing>("Easing", keyFrame.easing);
         }
 
         ImGui::PopID();
@@ -1193,6 +1170,8 @@ sComponent* ComponentFactory<sUiComponent>::loadFromJson(const std::string& enti
     component = new sUiComponent();
 
     component->offset = json.getVec2f("offset", { 0.0f, 0.0f });
+    component->horizontalAlignment = EnumManager<eHorizontalAlignment>::stringToEnum(json.getString("horizontal_alignment", "MIDDLE"));
+    component->verticalAlignment = EnumManager<eVerticalAlignment>::stringToEnum(json.getString("vertical_alignment", "MIDDLE"));
 
     return component;
 }
@@ -1205,7 +1184,8 @@ JsonValue&    ComponentFactory<sUiComponent>::saveToJson(const std::string& enti
 
 
     json.setVec2f("offset", component->offset);
-    //json.setString("type", Geometry::getGeometryTypeString(component->type));
+    json.setString("horizontal_alignment", EnumManager<eHorizontalAlignment>::enumToString(component->horizontalAlignment));
+    json.setString("vertical_alignment", EnumManager<eVerticalAlignment>::enumToString(component->verticalAlignment));
 
     return (json);
 }
@@ -1216,6 +1196,8 @@ bool    ComponentFactory<sUiComponent>::updateEditor(const std::string& entityTy
     *savedComponent = component;
     bool changed = false;
 
+    changed |= updateComboEnum<eHorizontalAlignment>("Horizontal alignment", component->horizontalAlignment);
+    changed |= updateComboEnum<eVerticalAlignment>("Vertical alignment", component->verticalAlignment);
     changed |= ImGui::InputFloat("horizontal offset", &component->offset.x, 1.0f, ImGuiInputTextFlags_AllowTabInput);
     changed |= ImGui::InputFloat("vertical offset", &component->offset.y, 1.0f, ImGuiInputTextFlags_AllowTabInput);
 
@@ -1225,4 +1207,28 @@ bool    ComponentFactory<sUiComponent>::updateEditor(const std::string& entityTy
     }
 
     return (changed);
+}
+
+eVerticalAlignment ComponentFactory<sUiComponent>::stringToverticalAlignment(const std::string& verticalAlignmentStr)
+{
+    if (verticalAlignmentStr == "TOP")
+        return eVerticalAlignment::TOP;
+    else if (verticalAlignmentStr == "MIDDLE")
+        return eVerticalAlignment::MIDDLE;
+    else if (verticalAlignmentStr == "BOTTOM")
+        return eVerticalAlignment::BOTTOM;
+
+    return (eVerticalAlignment::MIDDLE);
+}
+
+std::string ComponentFactory<sUiComponent>::verticalAlignmentToString(eVerticalAlignment verticalAlignment)
+{
+    if (verticalAlignment == eVerticalAlignment::TOP)
+        return ("TOP");
+    else if (verticalAlignment == eVerticalAlignment::MIDDLE)
+        return ("MIDDLE");
+    else if (verticalAlignment == eVerticalAlignment::BOTTOM)
+        return ("BOTTOM");
+
+    return ("");
 }

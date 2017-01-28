@@ -35,7 +35,6 @@ int     main()
 {
     Engine engine;
     auto &&gameStateManager = engine.getGameStateManager();
-
     try
     {
         if (!engine.init())

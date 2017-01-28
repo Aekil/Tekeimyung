@@ -76,6 +76,19 @@ public:
     virtual void                                                    addComponent(const std::string& entityType, sComponent* component) = 0;
     virtual void                                                    saveComponentJson(const std::string& entityType, const JsonValue& json) = 0;
     virtual bool                                                    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity) = 0;
+
+    template<typename T>
+    bool updateComboEnum(const char* name, T& enum_)
+    {
+        int enumInt = (int)enum_;
+
+        if (ImGui::Combo(name, &enumInt, EnumManager<T>::enumStrings, EnumManager<T>::enumLength))
+        {
+            enum_ = (T)enumInt;
+            return (true);
+        }
+        return (false);
+    }
 private:
     // Store Components types
     static std::unordered_map<std::string, IComponentFactory*>      _componentsTypes;
@@ -291,6 +304,7 @@ public:
     char* getTypeName() override final { return "sTypeComponent"; }
     sComponent* loadFromJson(const std::string& entityType, const JsonValue& json) override final;
     JsonValue& saveToJson(const std::string& entityType, const sComponent* savedComponent = nullptr, JsonValue* toJson = nullptr) override final;
+
     eEntityType stringToEntityType(const std::string& entityTypeStr);
     std::string entityTypeToString(eEntityType entityType);
 };
@@ -396,4 +410,7 @@ public:
     virtual JsonValue&  saveToJson(const std::string& entityType, const sComponent* savedComponent = nullptr, JsonValue* toJson = nullptr) override final;
 
     virtual bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity) override final;
+
+    eVerticalAlignment stringToverticalAlignment(const std::string& verticalAlignmentStr);
+    std::string verticalAlignmentToString(eVerticalAlignment verticalAlignment);
 };

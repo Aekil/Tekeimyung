@@ -179,7 +179,7 @@ void    MenuSystem::handleAlignment(EntityManager& em, Entity* entity, uint32_t 
         // Vertical alignments
         if (ui->verticalAlignment == eVerticalAlignment::TOP)
         {
-            transform->pos.y = 0;
+            transform->pos.y = windowHeight - size.y;
         }
         else if (ui->verticalAlignment == eVerticalAlignment::MIDDLE)
         {
@@ -187,7 +187,7 @@ void    MenuSystem::handleAlignment(EntityManager& em, Entity* entity, uint32_t 
         }
         else if (ui->verticalAlignment == eVerticalAlignment::BOTTOM)
         {
-            transform->pos.y = windowHeight - size.y;
+            transform->pos.y = 0;
         }
 
         // Offsets

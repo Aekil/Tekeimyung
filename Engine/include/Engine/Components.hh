@@ -24,6 +24,7 @@
 #include <Engine/Graphics/Geometries/Box.hpp>
 #include <Engine/Graphics/Geometries/Sphere.hpp>
 #include <Engine/Graphics/Animator.hpp>
+#include <Engine/Utils/Helper.hpp>
 #include <Engine/Utils/RessourceManager.hpp>
 #include <Engine/Utils/Timer.hpp>
 
@@ -447,19 +448,21 @@ bool        needUpdate = true;
 END_COMPONENT(sTransformComponent)
 
 
-enum class eHorizontalAlignment: uint8_t
-{
-    LEFT = 0,
-    MIDDLE = 1,
-    RIGHT = 2
-};
+#define HORIZONTAL_ALIGNMENT(PROCESS)       \
+    PROCESS(LEFT)                           \
+    PROCESS(MIDDLE)                         \
+    PROCESS(RIGHT)
 
-enum class eVerticalAlignment: uint8_t
-{
-    TOP = 0,
-    MIDDLE = 1,
-    BOTTOM = 2
-};
+REGISTER_ENUM(eHorizontalAlignment, uint8_t, HORIZONTAL_ALIGNMENT);
+REGISTER_ENUM_MANAGER(eHorizontalAlignment, uint8_t, HORIZONTAL_ALIGNMENT);
+
+#define VERTICAL_ALIGNMENT(PROCESS)         \
+    PROCESS(TOP)                            \
+    PROCESS(MIDDLE)                         \
+    PROCESS(BOTTOM)
+
+REGISTER_ENUM(eVerticalAlignment, uint8_t, VERTICAL_ALIGNMENT);
+REGISTER_ENUM_MANAGER(eVerticalAlignment, uint8_t, VERTICAL_ALIGNMENT);
 
 START_COMPONENT(sUiComponent)
 virtual sComponent* clone()
