@@ -61,10 +61,9 @@ bool    PauseState::update(float elapsedTime)
 
     bool success = GameState::update(elapsedTime);
 
-    handleButtons();
-
     // Unpause the game
-    if (keyboard.getStateMap()[Keyboard::eKey::ESCAPE] == Keyboard::eKeyState::KEY_PRESSED)
+    if (!handleButtons() ||
+        keyboard.getStateMap()[Keyboard::eKey::ESCAPE] == Keyboard::eKeyState::KEY_PRESSED)
     {
         SoundManager::getInstance()->setVolume(1.0f);
         return (false);
@@ -73,7 +72,7 @@ bool    PauseState::update(float elapsedTime)
     return (success);
 }
 
-void    PauseState::handleButtons()
+bool    PauseState::handleButtons()
 {
     auto &&keyboard = GameWindow::getInstance()->getKeyboard();
     auto &&mouse = GameWindow::getInstance()->getMouse();
@@ -96,8 +95,7 @@ void    PauseState::handleButtons()
     if ((enterPressed && resume->selected) ||
         (mouseClicked && resume->hovered))
     {
-        _gameStateManager->removeCurrentState();
-        SoundManager::getInstance()->setVolume(1.0f);
+        return (false);
     }
 
     //  "How to Play" button
@@ -120,4 +118,6 @@ void    PauseState::handleButtons()
     {
         _gameStateManager->addState<ConfirmExitState>();
     }
+
+    return (true);
 }

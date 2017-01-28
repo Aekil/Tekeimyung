@@ -37,10 +37,9 @@ bool    HowToPlayState::update(float elapsedTime)
     auto &&keyboard = GameWindow::getInstance()->getKeyboard();
     bool success = GameState::update(elapsedTime);
 
-    handleButtons();
-
     // Quit the state
-    if (keyboard.getStateMap()[Keyboard::eKey::ESCAPE] == Keyboard::eKeyState::KEY_PRESSED)
+    if (!handleButtons() ||
+        keyboard.getStateMap()[Keyboard::eKey::ESCAPE] == Keyboard::eKeyState::KEY_PRESSED)
     {
         return (false);
     }
@@ -48,7 +47,7 @@ bool    HowToPlayState::update(float elapsedTime)
     return (success);
 }
 
-void    HowToPlayState::handleButtons()
+bool    HowToPlayState::handleButtons()
 {
     auto &&keyboard = GameWindow::getInstance()->getKeyboard();
     auto &&mouse = GameWindow::getInstance()->getMouse();
@@ -62,6 +61,8 @@ void    HowToPlayState::handleButtons()
     if ((spacebarPressed && returnButton->selected) ||
         (mouseClicked && returnButton->hovered))
     {
-        _gameStateManager->removeCurrentState();
+        return (false);
     }
+
+    return (true);
 }

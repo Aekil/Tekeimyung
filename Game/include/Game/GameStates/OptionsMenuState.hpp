@@ -20,7 +20,7 @@ START_GAMESTATE(OptionsMenuState, "Options")
     bool            init() override final;
     bool            update(float elapsedTime) override final;
 
-    void           handleButtons();
+    bool            handleButtons();
 
 private:
     System*         _playstateRenderSystem;

@@ -49,19 +49,17 @@ bool        OptionsMenuState::update(float elapsedTime)
 
     bool    success = GameState::update(elapsedTime);
 
-    handleButtons();
-
-    // Unpause the game
-    if (keyboard.getStateMap()[Keyboard::eKey::ESCAPE] == Keyboard::eKeyState::KEY_PRESSED)
+    // Quit the state
+    if (!handleButtons() ||
+        keyboard.getStateMap()[Keyboard::eKey::ESCAPE] == Keyboard::eKeyState::KEY_PRESSED)
     {
-        _gameStateManager->removeCurrentState();
         return (false);
     }
 
     return (success);
 }
 
-void                    OptionsMenuState::handleButtons()
+bool                    OptionsMenuState::handleButtons()
 {
     auto                &&keyboard = GameWindow::getInstance()->getKeyboard();
     auto                &&mouse = GameWindow::getInstance()->getMouse();
@@ -87,8 +85,10 @@ void                    OptionsMenuState::handleButtons()
     else if ((spacebarPressed && returnButton->selected) ||
         (mouseClicked && returnButton->hovered))
     {
-        _gameStateManager->removeCurrentState();
+        return (false);
     }
+
+    return (true);
 }
 
 void                    OptionsMenuState::createToggleWindowModeButton()

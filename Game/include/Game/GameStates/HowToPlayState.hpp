@@ -18,7 +18,7 @@ START_GAMESTATE(HowToPlayState, "HowToPlay")
     bool                                init() override final;
     bool                                update(float elapsedTime) override final;
 
-    void                                handleButtons();
+    bool                                handleButtons();
 private:
     Camera                              _camera;
 

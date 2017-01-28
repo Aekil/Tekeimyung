@@ -199,7 +199,6 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
 
     _camera->update(Renderer::getInstance()->getShaderProgram(), elapsedTime);
 
-    // Iterate over particle emitters
     forEachEntity(em, [&](Entity *entity) {
         // Don't display particle systems
         if (!entity->getComponent<sParticleEmitterComponent>())

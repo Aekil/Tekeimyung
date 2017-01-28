@@ -47,10 +47,9 @@ bool    ConfirmExitState::update(float elapsedTime)
 
     bool success = GameState::update(elapsedTime);
 
-    handleButtons();
-
-    // Unpause the game
-    if (keyboard.getStateMap()[Keyboard::eKey::ESCAPE] == Keyboard::eKeyState::KEY_PRESSED)
+    // Quit the state
+    if (!handleButtons() ||
+        keyboard.getStateMap()[Keyboard::eKey::ESCAPE] == Keyboard::eKeyState::KEY_PRESSED)
     {
         return (false);
     }
@@ -85,7 +84,7 @@ void    ConfirmExitState::initPreviousStatesRender()
     }
 }
 
-void    ConfirmExitState::handleButtons()
+bool    ConfirmExitState::handleButtons()
 {
     auto &&keyboard = GameWindow::getInstance()->getKeyboard();
     auto &&mouse = GameWindow::getInstance()->getMouse();
@@ -109,6 +108,8 @@ void    ConfirmExitState::handleButtons()
     else if ((enterPressed && no->selected) ||
         (mouseClicked && no->hovered))
     {
-        _gameStateManager->removeCurrentState();
+        return (false);
     }
+
+    return (true);
 }

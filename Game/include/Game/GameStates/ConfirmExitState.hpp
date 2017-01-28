@@ -23,7 +23,7 @@ START_GAMESTATE(ConfirmExitState, "ConfirmExit")
     void                                initPreviousStatesRender();
 
     Entity*                             createButton(eArchetype type, const glm::vec2& pos);
-    void                                handleButtons();
+    bool                                handleButtons();
 
 private:
     std::vector<System*>                _previousStatesSystems;

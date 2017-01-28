@@ -30,6 +30,7 @@ public:
     virtual bool            initSystems();
     virtual bool            update(float elapsedTime);
 
+    void                            bindEntityManager();
 
     uint32_t                getId() const;
 
@@ -50,7 +51,6 @@ public:
 
 private:
     void                            initDebugWindows();
-    void                            bindEntityManager();
     void                            loadLevel();
 
 protected:

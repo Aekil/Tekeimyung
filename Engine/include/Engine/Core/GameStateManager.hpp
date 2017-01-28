@@ -36,6 +36,14 @@ public:
         #endif
 
         gameState->onEnter();
+
+        // Bind the entity manager of current state
+        // in case the new GameState was add in GameState::update and update is not finished
+        // (The EntityManager of the new GameState could conflict with the current GameState)
+        if (hasStates())
+        {
+            getCurrentState()->bindEntityManager();
+        }
         _states.push_back(gameState);
 
         return (true);

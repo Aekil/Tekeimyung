@@ -18,7 +18,7 @@ START_GAMESTATE(PauseState, "Pause")
     bool                                init() override final;
     bool                                update(float elapsedTime) override final;
 
-    void                                handleButtons();
+    bool                                handleButtons();
 
 private:
     System*                             _playStateRendersystem;
