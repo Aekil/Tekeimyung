@@ -13,7 +13,14 @@
 
 OptionsMenuState::~OptionsMenuState() {}
 
-void            OptionsMenuState::onEnter() {}
+void    OptionsMenuState::onEnter() {}
+
+void    OptionsMenuState::setupSystems()
+{
+    _world.addSystem<ParticleSystem>();
+    _world.addSystem<RenderingSystem>(&_camera, _world.getSystem<ParticleSystem>()->getEmitters());
+    _world.addSystem<MenuSystem>();
+}
 
 bool            OptionsMenuState::init()
 {
@@ -26,12 +33,9 @@ bool            OptionsMenuState::init()
     _playstateWorld = &playState->getWorld();
     _playstateRenderSystem = _playstateWorld->getSystem<RenderingSystem>();
 
-    _world.addSystem<ParticleSystem>();
-    _world.addSystem<RenderingSystem>(&_camera, _world.getSystem<ParticleSystem>()->getEmitters());
-    _world.addSystem<MenuSystem>();
-
     createToggleWindowModeButton();
-    _returnButton = EntityFactory::createEntity(eArchetype::BUTTON_RETURN);
+    _returnButton = EntityFactory::createOrGetEntity(eArchetype::BUTTON_RETURN);
+
     return (true);
 }
 
@@ -100,7 +104,7 @@ void                    OptionsMenuState::createToggleWindowModeButton()
     // Create the button for the first time
     if (!_toggleWindowModeButton)
     {
-        _toggleWindowModeButton = EntityFactory::createEntity(buttonArchetype);
+        _toggleWindowModeButton = EntityFactory::createOrGetEntity(buttonArchetype);
     }
     // Change the button render
     else

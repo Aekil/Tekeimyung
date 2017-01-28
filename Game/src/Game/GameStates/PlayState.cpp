@@ -34,6 +34,16 @@ PlayState::~PlayState() {}
 
 void    PlayState::onEnter() {}
 
+void    PlayState::setupSystems()
+{
+    _world.addSystem<ScriptSystem>();
+    _world.addSystem<MouseSystem>();
+    _world.addSystem<CollisionSystem>();
+    _world.addSystem<ResolutionSystem>();
+    _world.addSystem<ParticleSystem>();
+    _world.addSystem<RenderingSystem>(&_camera, _world.getSystem<ParticleSystem>()->getEmitters());
+}
+
 bool    PlayState::init()
 {
     EntityManager* em = _world.getEntityManager();
@@ -41,7 +51,6 @@ bool    PlayState::init()
     _map = new Map(*em, 20, 15, 4);
 
     initCamera();
-    addSystems();
     initEntities();
 
     _pair = std::make_pair(Keyboard::eKey::F, new HandleFullscreenEvent());
@@ -150,20 +159,6 @@ void    PlayState::initEntities()
         }
     }
 }
-
-void    PlayState::addSystems()
-{
-    EntityManager* em = _world.getEntityManager();
-
-    _world.addSystem<ScriptSystem>();
-    _world.addSystem<MouseSystem>();
-    _world.addSystem<CollisionSystem>();
-    _world.addSystem<ResolutionSystem>();
-    _world.addSystem<ParticleSystem>();
-    _world.addSystem<RenderingSystem>(&_camera, _world.getSystem<ParticleSystem>()->getEmitters());
-}
-
-
 
 void    PlayState::updateCameraInputs(float elapsedTime)
 {

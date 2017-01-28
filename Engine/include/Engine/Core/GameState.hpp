@@ -20,12 +20,13 @@ class GameState
 friend class GameStateManager;
 
 public:
-    GameState(GameStateManager* gameStateManager, uint32_t id);
+    GameState(GameStateManager* gameStateManager, uint32_t id, const std::string& levelFile = "");
     virtual ~GameState();
 
     virtual bool            init() = 0;
     virtual void            onEnter() {}
 
+    virtual void            setupSystems() = 0;
     virtual bool            initSystems();
     virtual bool            update(float elapsedTime);
 
@@ -50,12 +51,14 @@ public:
 private:
     void                            initDebugWindows();
     void                            bindEntityManager();
+    void                            loadLevel();
 
 protected:
     World                   _world;
     std::vector<std::shared_ptr<DebugWindow>> _debugWindows;
 
     GameStateManager*       _gameStateManager;
+    std::string             _levelFile;
 
     uint32_t                _id;
 };
@@ -65,13 +68,13 @@ template<typename GameStateType>
 class BaseGameState: public GameState
 {
     public:\
-    BaseGameState(GameStateManager* gameStateManager): GameState(gameStateManager, GameStateType::identifier) {}
+    BaseGameState(GameStateManager* gameStateManager, const std::string& levelFile = ""): GameState(gameStateManager, GameStateType::identifier, levelFile) {}
 };
 
-#define START_GAMESTATE(name) \
+#define START_GAMESTATE(name, ...) \
     class name : public BaseGameState<name> { \
         public:\
-        name(GameStateManager* gameStateManager): BaseGameState(gameStateManager) {}\
+        name(GameStateManager* gameStateManager): BaseGameState(gameStateManager, __VA_ARGS__) {}\
         static constexpr unsigned int identifier = #name##_crc32;
 
 #define END_GAMESTATE(name) \

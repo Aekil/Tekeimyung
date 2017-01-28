@@ -9,13 +9,14 @@
 #include <ECS/System.hpp>
 #include <ECS/World.hpp>
 
-START_GAMESTATE(HowToPlayState)
+START_GAMESTATE(HowToPlayState, "HowToPlay")
  public:
-    virtual ~HowToPlayState();
+    ~HowToPlayState();
 
-    virtual void                        onEnter();
-    virtual bool                        init();
-    virtual bool                        update(float elapsedTime);
+    void                                onEnter() override final;
+    void                                setupSystems() override final;
+    bool                                init() override final;
+    bool                                update(float elapsedTime) override final;
 
     void                                handleButtons();
 private:

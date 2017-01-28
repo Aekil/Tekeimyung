@@ -1,0 +1,288 @@
+{
+   "entities" : [
+      {
+         "components" : {
+            "sNameComponent" : {
+               "name" : "ICON_SELECTED"
+            },
+            "sParticleEmitterComponent" : {
+               "angle" : 160,
+               "angle_variance" : 0,
+               "color" : {
+                  "finish" : {
+                     "a" : 0,
+                     "b" : 1,
+                     "g" : 1,
+                     "r" : 1
+                  },
+                  "finish_variance" : {
+                     "a" : 0,
+                     "b" : 0,
+                     "g" : 0,
+                     "r" : 0
+                  },
+                  "start" : {
+                     "a" : 1,
+                     "b" : 1,
+                     "g" : 1,
+                     "r" : 1
+                  },
+                  "start_variance" : {
+                     "a" : 0,
+                     "b" : 0,
+                     "g" : 0,
+                     "r" : 0
+                  }
+               },
+               "emitter_life" : 0,
+               "life" : 42,
+               "life_variance" : 15,
+               "rate" : 0,
+               "size" : {
+                  "finish" : 0,
+                  "finish_variance" : 0,
+                  "start" : 0.60000002384185791,
+                  "start_variance" : 0
+               },
+               "spawn_nb" : 1,
+               "speed" : 50,
+               "speed_variance" : 0,
+               "texture" : ""
+            },
+            "sPositionComponent" : {
+               "x" : 0,
+               "y" : 0,
+               "z" : 0
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 1
+               },
+               "model" : "resources/models/default.DAE",
+               "texture" : "resources/sprites/buttons/icon_selected.png",
+               "type" : "PLANE"
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 791.20001220703125,
+                  "y" : 482.5,
+                  "z" : 0
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 6,
+                  "y" : 6,
+                  "z" : 6
+               }
+            },
+            "sUiComponent" : {
+               "horizontal_alignment" : "MIDDLE",
+               "offset" : {
+                  "x" : 0,
+                  "y" : 0
+               },
+               "vertical_alignment" : "MIDDLE"
+            }
+         },
+         "name" : "ICON_SELECTED"
+      },
+      {
+         "components" : {
+            "sButtonComponent" : null,
+            "sNameComponent" : {
+               "name" : "BUTTON_RESUME"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 1
+               },
+               "model" : "resources/models/default.DAE",
+               "texture" : "resources/sprites/buttons/button_resume.png",
+               "type" : "PLANE"
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 760,
+                  "y" : 570.030029296875,
+                  "z" : -1
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 40,
+                  "y" : 6,
+                  "z" : 6
+               }
+            },
+            "sUiComponent" : {
+               "horizontal_alignment" : "MIDDLE",
+               "offset" : {
+                  "x" : 0,
+                  "y" : 9
+               },
+               "vertical_alignment" : "MIDDLE"
+            }
+         },
+         "name" : "BUTTON_RESUME"
+      },
+      {
+         "components" : {
+            "sButtonComponent" : null,
+            "sNameComponent" : {
+               "name" : "BUTTON_HOW_TO_PLAY"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 1
+               },
+               "model" : "resources/models/default.DAE",
+               "texture" : "resources/sprites/buttons/button_how_to_play.png",
+               "type" : "PLANE"
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 760,
+                  "y" : 478.5,
+                  "z" : -1
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 40,
+                  "y" : 6,
+                  "z" : 6
+               }
+            },
+            "sUiComponent" : {
+               "horizontal_alignment" : "MIDDLE",
+               "offset" : {
+                  "x" : 0,
+                  "y" : 0
+               },
+               "vertical_alignment" : "MIDDLE"
+            }
+         },
+         "name" : "BUTTON_HOW_TO_PLAY"
+      },
+      {
+         "components" : {
+            "sButtonComponent" : null,
+            "sNameComponent" : {
+               "name" : "BUTTON_OPTIONS"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 1
+               },
+               "model" : "resources/models/default.DAE",
+               "texture" : "resources/sprites/buttons/button_options.png",
+               "type" : "PLANE"
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 835,
+                  "y" : 386.97000122070313,
+                  "z" : -1
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 25,
+                  "y" : 6,
+                  "z" : 6
+               }
+            },
+            "sUiComponent" : {
+               "horizontal_alignment" : "MIDDLE",
+               "offset" : {
+                  "x" : 0,
+                  "y" : -9
+               },
+               "vertical_alignment" : "MIDDLE"
+            }
+         },
+         "name" : "BUTTON_OPTIONS"
+      },
+      {
+         "components" : {
+            "sButtonComponent" : null,
+            "sNameComponent" : {
+               "name" : "BUTTON_QUIT"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 1
+               },
+               "model" : "resources/models/default.DAE",
+               "texture" : "resources/sprites/buttons/button_quit.png",
+               "type" : "PLANE"
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 810,
+                  "y" : 295.44000244140625,
+                  "z" : -1
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 30,
+                  "y" : 6,
+                  "z" : 6
+               }
+            },
+            "sUiComponent" : {
+               "horizontal_alignment" : "MIDDLE",
+               "offset" : {
+                  "x" : 0,
+                  "y" : -18
+               },
+               "vertical_alignment" : "MIDDLE"
+            }
+         },
+         "name" : "BUTTON_QUIT"
+      }
+   ],
+   "name" : "Pause"
+}

@@ -85,223 +85,202 @@
                }
             },
             "sUiComponent" : {
+               "horizontal_alignment" : "MIDDLE",
                "offset" : {
                   "x" : 0,
                   "y" : 0
-               }
+               },
+               "vertical_alignment" : "MIDDLE"
             }
          },
          "name" : "ICON_SELECTED"
       },
       {
          "components" : {
-            "sDirectionComponent" : {
-               "speed" : 1,
-               "x" : 0,
-               "y" : 0
-            },
             "sNameComponent" : {
-               "name" : "PLAYER"
-            },
-            "sPositionComponent" : {
-               "x" : 9,
-               "y" : 5,
-               "z" : 1
+               "name" : "QUIT_CONFIRM_POPUP"
             },
             "sRenderComponent" : {
                "animated" : false,
                "animations" : [],
                "color" : {
                   "a" : 1,
-                  "b" : 0.98333263397216797,
-                  "g" : 0.98333263397216797,
-                  "r" : 1
-               },
-               "model" : "resources/models/characters/character.DAE",
-               "texture" : "",
-               "type" : "MESH"
-            },
-            "sResolutionComponent" : null,
-            "sScriptComponent" : null,
-            "sSphereColliderComponent" : {
-               "isTrigger" : false,
-               "pos" : {
-                  "x" : 0,
-                  "y" : 15,
-                  "z" : 0
-               },
-               "radius" : 1.7999999523162842
-            },
-            "sTransformComponent" : {
-               "pos" : {
-                  "x" : 225.00003051757813,
-                  "y" : 12.500007629394531,
-                  "z" : 125.00090789794922
-               },
-               "rotation" : {
-                  "x" : 0,
-                  "y" : -84.007659912109375,
-                  "z" : 0
-               },
-               "scale" : {
-                  "x" : 1.0416662693023682,
-                  "y" : 1.0416662693023682,
-                  "z" : 1.0416662693023682
-               }
-            },
-            "sTypeComponent" : {
-               "type" : "CHARACTER"
-            }
-         },
-         "name" : "PLAYER"
-      },
-      {
-         "components" : {
-            "sNameComponent" : {
-               "name" : "BLOCK_BROWN"
-            },
-            "sPositionComponent" : {
-               "x" : 10,
-               "y" : 8,
-               "z" : 1
-            },
-            "sRenderComponent" : {
-               "animated" : false,
-               "animations" : [],
-               "color" : {
-                  "a" : 1,
-                  "b" : 1,
-                  "g" : 1,
-                  "r" : 1
-               },
-               "model" : "resources/models/blocks/block_brown.DAE",
-               "texture" : "",
-               "type" : "MESH"
-            },
-            "sScriptComponent" : null,
-            "sTileComponent" : null,
-            "sTransformComponent" : {
-               "pos" : {
-                  "x" : 250,
-                  "y" : 12.5,
-                  "z" : 200
-               },
-               "rotation" : {
-                  "x" : 0,
-                  "y" : 0,
-                  "z" : 0
-               },
-               "scale" : {
-                  "x" : 1,
-                  "y" : 1,
-                  "z" : 1
-               }
-            },
-            "sTypeComponent" : {
-               "type" : "TILE_WALKABLE"
-            }
-         },
-         "name" : "BLOCK_BROWN"
-      },
-      {
-         "components" : {
-            "sNameComponent" : {
-               "name" : "BLOCK_GREEN"
-            },
-            "sPositionComponent" : {
-               "x" : 2,
-               "y" : 3,
-               "z" : 0
-            },
-            "sRenderComponent" : {
-               "animated" : false,
-               "animations" : [],
-               "color" : {
-                  "a" : 1,
-                  "b" : 1,
-                  "g" : 1,
-                  "r" : 1
-               },
-               "model" : "resources/models/blocks/block_green.DAE",
-               "texture" : "",
-               "type" : "MESH"
-            },
-            "sScriptComponent" : null,
-            "sTileComponent" : null,
-            "sTransformComponent" : {
-               "pos" : {
-                  "x" : 50,
-                  "y" : 0,
-                  "z" : 75
-               },
-               "rotation" : {
-                  "x" : 0,
-                  "y" : 0,
-                  "z" : 0
-               },
-               "scale" : {
-                  "x" : 1,
-                  "y" : 1,
-                  "z" : 1
-               }
-            },
-            "sTypeComponent" : {
-               "type" : "TILE_WALKABLE"
-            }
-         },
-         "name" : "BLOCK_GREEN"
-      },
-      {
-         "components" : {
-            "sDirectionComponent" : {
-               "speed" : 1,
-               "x" : 1,
-               "y" : 0
-            },
-            "sNameComponent" : {
-               "name" : "ENEMY"
-            },
-            "sPositionComponent" : {
-               "x" : 19.989999771118164,
-               "y" : 6,
-               "z" : 1.5
-            },
-            "sRenderComponent" : {
-               "animated" : false,
-               "animations" : [],
-               "color" : {
-                  "a" : 1,
-                  "b" : 0.78431373834609985,
-                  "g" : 0.31372550129890442,
-                  "r" : 1
+                  "b" : 0.24705882370471954,
+                  "g" : 0.37647059559822083,
+                  "r" : 0.5058823823928833
                },
                "model" : "resources/models/default.DAE",
                "texture" : "",
-               "type" : "MESH"
+               "type" : "PLANE"
             },
             "sTransformComponent" : {
                "pos" : {
-                  "x" : 499.75,
-                  "y" : 18.75,
-                  "z" : 150
+                  "x" : 745,
+                  "y" : 384.5,
+                  "z" : 0
                },
                "rotation" : {
                   "x" : 0,
-                  "y" : -30,
+                  "y" : 0,
                   "z" : 0
                },
                "scale" : {
-                  "x" : 0.59999990463256836,
-                  "y" : 0.80000013113021851,
-                  "z" : 0.80000132322311401
+                  "x" : 43,
+                  "y" : 24.799999237060547,
+                  "z" : 1
                }
             },
-            "sTypeComponent" : {
-               "type" : "CHARACTER"
+            "sUiComponent" : {
+               "horizontal_alignment" : "MIDDLE",
+               "offset" : {
+                  "x" : 0,
+                  "y" : 0
+               },
+               "vertical_alignment" : "MIDDLE"
             }
          },
-         "name" : "ENEMY"
+         "name" : "QUIT_CONFIRM_POPUP"
+      },
+      {
+         "components" : {
+            "sNameComponent" : {
+               "name" : "QUIT_CONFIRM_TEXT"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 1
+               },
+               "model" : "resources/models/default.DAE",
+               "texture" : "resources/sprites/buttons/quit_confirmation_message.png",
+               "type" : "PLANE"
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 770,
+                  "y" : 581.030029296875,
+                  "z" : 0
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 38,
+                  "y" : 3.7999999523162842,
+                  "z" : 1
+               }
+            },
+            "sUiComponent" : {
+               "horizontal_alignment" : "MIDDLE",
+               "offset" : {
+                  "x" : 0,
+                  "y" : 9
+               },
+               "vertical_alignment" : "MIDDLE"
+            }
+         },
+         "name" : "QUIT_CONFIRM_TEXT"
+      },
+      {
+         "components" : {
+            "sButtonComponent" : null,
+            "sNameComponent" : {
+               "name" : "BUTTON_CONFIRM_NO"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 1
+               },
+               "model" : "resources/models/default.DAE",
+               "texture" : "resources/sprites/buttons/button_no.png",
+               "type" : "PLANE"
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 996.79998779296875,
+                  "y" : 478.5,
+                  "z" : 0
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 8,
+                  "y" : 6,
+                  "z" : 6
+               }
+            },
+            "sUiComponent" : {
+               "horizontal_alignment" : "MIDDLE",
+               "offset" : {
+                  "x" : 4,
+                  "y" : 0
+               },
+               "vertical_alignment" : "MIDDLE"
+            }
+         },
+         "name" : "BUTTON_CONFIRM_NO"
+      },
+      {
+         "components" : {
+            "sButtonComponent" : null,
+            "sNameComponent" : {
+               "name" : "BUTTON_CONFIRM_YES"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 1
+               },
+               "model" : "resources/models/default.DAE",
+               "texture" : "resources/sprites/buttons/button_yes.png",
+               "type" : "PLANE"
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 833.20001220703125,
+                  "y" : 478.5,
+                  "z" : 0
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 10,
+                  "y" : 6,
+                  "z" : 1
+               }
+            },
+            "sUiComponent" : {
+               "horizontal_alignment" : "MIDDLE",
+               "offset" : {
+                  "x" : -4,
+                  "y" : 0
+               },
+               "vertical_alignment" : "MIDDLE"
+            }
+         },
+         "name" : "BUTTON_CONFIRM_YES"
       }
    ],
-   "name" : "testLevel"
+   "name" : "ConfirmExit"
 }

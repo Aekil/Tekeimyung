@@ -9,6 +9,7 @@
 #include <unordered_map>
 #include <ECS/Entity.hpp>
 #include <ECS/EntityManager.hpp>
+#include <Engine/Utils/JsonValue.hpp>
 
 #define LEVELS_DIRECTORY    "resources/levels/"
 

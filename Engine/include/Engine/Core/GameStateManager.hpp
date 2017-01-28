@@ -23,7 +23,8 @@ public:
     {
         std::shared_ptr<T> gameState = std::make_shared<T>(this);
         gameState->bindEntityManager();
-        gameState->onEnter();
+        gameState->setupSystems();
+        gameState->loadLevel();
         if (!gameState->init() || !gameState->initSystems())
         {
             return (false);
@@ -34,6 +35,7 @@ public:
             gameState->initDebugWindows();
         #endif
 
+        gameState->onEnter();
         _states.push_back(gameState);
 
         return (true);

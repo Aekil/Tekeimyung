@@ -11,6 +11,7 @@
 #include <Engine/EntitiesTemplateDebugWindow.hpp>
 #include <Engine/LevelEntitiesDebugWindow.hpp>
 #include <Engine/SoundEditorWindow.hpp>
+#include <Engine/Utils/LevelLoader.hpp>
 #include <Engine/Utils/LogDebugWindow.hpp>
 #include <Engine/Utils/OverlayDebugWindow.hpp>
 #include <Engine/Utils/MonitoringDebugWindow.hpp>
@@ -20,8 +21,8 @@
 
 #include <Engine/Core/GameState.hpp>
 
-GameState::GameState(GameStateManager* gameStateManager, uint32_t id):
-                    _gameStateManager(gameStateManager), _id(id) {}
+GameState::GameState(GameStateManager* gameStateManager, uint32_t id, const std::string& levelFile):
+                    _gameStateManager(gameStateManager), _id(id), _levelFile(levelFile) {}
 
 GameState::~GameState() {}
 
@@ -102,4 +103,13 @@ void    GameState::initDebugWindows()
 void    GameState::bindEntityManager()
 {
     EntityFactory::bindEntityManager(_world.getEntityManager());
+}
+
+void    GameState::loadLevel()
+{
+    // Load level
+    if (_levelFile.size() > 0)
+    {
+        LevelLoader::getInstance()->load(_levelFile, _world.getEntityManager());
+    }
 }

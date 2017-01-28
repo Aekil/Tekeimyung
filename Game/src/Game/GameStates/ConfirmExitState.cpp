@@ -18,18 +18,19 @@ ConfirmExitState::~ConfirmExitState() {}
 
 void    ConfirmExitState::onEnter() {}
 
+void    ConfirmExitState::setupSystems()
+{
+    _world.addSystem<ParticleSystem>();
+    _world.addSystem<RenderingSystem>(&_camera, _world.getSystem<ParticleSystem>()->getEmitters());
+    _world.addSystem<MenuSystem>();
+}
+
 bool    ConfirmExitState::init()
 {
     initPreviousStatesRender();
 
-    _world.addSystem<ParticleSystem>();
-    _world.addSystem<RenderingSystem>(&_camera, _world.getSystem<ParticleSystem>()->getEmitters());
-    _world.addSystem<MenuSystem>();
-
-    EntityFactory::createEntity(eArchetype::QUIT_CONFIRM_POPUP);
-    EntityFactory::createEntity(eArchetype::QUIT_CONFIRM_TEXT);
-    _noButton = EntityFactory::createEntity(eArchetype::BUTTON_CONFIRM_NO);
-    _yesButton = EntityFactory::createEntity(eArchetype::BUTTON_CONFIRM_YES);
+    _noButton = EntityFactory::createOrGetEntity(eArchetype::BUTTON_CONFIRM_NO);
+    _yesButton = EntityFactory::createOrGetEntity(eArchetype::BUTTON_CONFIRM_YES);
 
     return (true);
 }

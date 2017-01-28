@@ -23,6 +23,13 @@ PauseState::~PauseState() {}
 
 void    PauseState::onEnter() {}
 
+void    PauseState::setupSystems()
+{
+    _world.addSystem<ParticleSystem>();
+    _world.addSystem<RenderingSystem>(&_camera, _world.getSystem<ParticleSystem>()->getEmitters());
+    _world.addSystem<MenuSystem>();
+}
+
 bool    PauseState::init()
 {
     uint32_t statesNb = (uint32_t)_gameStateManager->getStates().size();
@@ -34,16 +41,13 @@ bool    PauseState::init()
     _playStateWorld = &playState->getWorld();
     _playStateRendersystem = _playStateWorld->getSystem<RenderingSystem>();
 
-    _world.addSystem<ParticleSystem>();
-    _world.addSystem<RenderingSystem>(&_camera, _world.getSystem<ParticleSystem>()->getEmitters());
-    _world.addSystem<MenuSystem>();
-
-    _resumeButton = EntityFactory::createEntity(eArchetype::BUTTON_RESUME);
-    _howToPlayButton = EntityFactory::createEntity(eArchetype::BUTTON_HOW_TO_PLAY);
-    _optionsButton = EntityFactory::createEntity(eArchetype::BUTTON_OPTIONS);
-    _quitButton = EntityFactory::createEntity(eArchetype::BUTTON_QUIT);
+    _resumeButton = EntityFactory::createOrGetEntity(eArchetype::BUTTON_RESUME);
+    _howToPlayButton = EntityFactory::createOrGetEntity(eArchetype::BUTTON_HOW_TO_PLAY);
+    _optionsButton = EntityFactory::createOrGetEntity(eArchetype::BUTTON_OPTIONS);
+    _quitButton = EntityFactory::createOrGetEntity(eArchetype::BUTTON_QUIT);
 
     SoundManager::getInstance()->setVolume(0.3f);
+
     return (true);
 }
 

@@ -23,7 +23,6 @@ MenuSystem::MenuSystem()
     _monitoringKey = MonitoringDebugWindow::getInstance()->registerSystem(MENU_SYSTEM_NAME);
 
     _currentSelected = -1;
-    setupSelectedIcon();
     _buttonHovered = false;
 }
 
@@ -287,6 +286,11 @@ bool    MenuSystem::onEntityNewComponent(Entity* entity, sComponent* component)
 
     if (component->id == sButtonComponent::identifier)
     {
+        if (!_iconRender)
+        {
+            setupSelectedIcon();
+        }
+
         // The entity is not already in the buttons entities vector
         if (std::find(_buttons.cbegin(), _buttons.cend(), entity->id) == _buttons.cend())
         {

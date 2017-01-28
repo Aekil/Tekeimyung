@@ -18,15 +18,16 @@ HowToPlayState::~HowToPlayState() {}
 
 void    HowToPlayState::onEnter() {}
 
-bool    HowToPlayState::init()
+void    HowToPlayState::setupSystems()
 {
     _world.addSystem<ParticleSystem>();
     _world.addSystem<RenderingSystem>(&_camera, _world.getSystem<ParticleSystem>()->getEmitters());
     _world.addSystem<MenuSystem>();
+}
 
-    EntityFactory::createEntity(eArchetype::BACKGROUND);
-    EntityFactory::createEntity(eArchetype::HOW_TO_PLAY_MENU);
-    _returnButton = EntityFactory::createEntity(eArchetype::BUTTON_RETURN);
+bool    HowToPlayState::init()
+{
+    _returnButton = EntityFactory::createOrGetEntity(eArchetype::BUTTON_RETURN);
 
     return (true);
 }

@@ -15,14 +15,15 @@ EditorState::~EditorState() {}
 
 void    EditorState::onEnter() {}
 
-bool    EditorState::init()
+void    EditorState::setupSystems()
 {
     _world.addSystem<MenuSystem>();
     _world.addSystem<ParticleSystem>();
     _world.addSystem<RenderingSystem>(&_camera, _world.getSystem<ParticleSystem>()->getEmitters());
+}
 
-    initCamera();
-
+bool    EditorState::init()
+{
     SoundManager::getInstance()->setVolume(0.3f);
     return (true);
 }
