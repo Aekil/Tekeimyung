@@ -49,6 +49,9 @@ public:
 
     World&                          getWorld();
 
+protected:
+    void                            renderPreviousStates(const std::vector<uint32_t>& filterIds = {});
+
 private:
     void                            initDebugWindows();
     void                            loadLevel();

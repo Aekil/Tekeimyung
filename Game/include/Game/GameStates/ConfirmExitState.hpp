@@ -20,15 +20,10 @@ START_GAMESTATE(ConfirmExitState, "ConfirmExit")
     bool                                init() override final;
     bool                                update(float elapsedTime) override final;
 
-    void                                initPreviousStatesRender();
-
     Entity*                             createButton(eArchetype type, const glm::vec2& pos);
     bool                                handleButtons();
 
 private:
-    std::vector<System*>                _previousStatesSystems;
-    std::vector<World*>                 _previousStatesWorlds;
-
     Camera                              _camera;
 
     Entity*                             _yesButton = nullptr;

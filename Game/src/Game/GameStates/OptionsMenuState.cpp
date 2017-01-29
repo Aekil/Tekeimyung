@@ -10,6 +10,7 @@
 #include    <Engine/Components.hh>
 
 #include    <Game/GameStates/OptionsMenuState.hpp>
+#include    <Game/GameStates/PlayState.hpp>
 
 OptionsMenuState::~OptionsMenuState() {}
 
@@ -24,15 +25,6 @@ void    OptionsMenuState::setupSystems()
 
 bool            OptionsMenuState::init()
 {
-    uint32_t    statesNb = (uint32_t) _gameStateManager->getStates().size();
-
-    ASSERT(statesNb >= 2, "The Options menu state should not be the second state.");
-
-    auto        playState = _gameStateManager->getStates()[statesNb - 2];
-
-    _playstateWorld = &playState->getWorld();
-    _playstateRenderSystem = _playstateWorld->getSystem<RenderingSystem>();
-
     createToggleWindowModeButton();
     _returnButton = EntityFactory::createOrGetEntity(eArchetype::BUTTON_RETURN);
 
@@ -43,9 +35,8 @@ bool        OptionsMenuState::update(float elapsedTime)
 {
     auto    &&keyboard = GameWindow::getInstance()->getKeyboard();
 
-    // Display the play game state
-    if (_playstateRenderSystem)
-        _playstateRenderSystem->update(*_playstateWorld->getEntityManager(), 0);
+    // Display the previous states
+    renderPreviousStates({PlayState::identifier});
 
     bool    success = GameState::update(elapsedTime);
 

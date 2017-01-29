@@ -11,6 +11,7 @@
 #include <Engine/EntitiesTemplateDebugWindow.hpp>
 #include <Engine/LevelEntitiesDebugWindow.hpp>
 #include <Engine/SoundEditorWindow.hpp>
+#include <Engine/Systems/RenderingSystem.hpp>
 #include <Engine/Utils/LevelLoader.hpp>
 #include <Engine/Utils/LogDebugWindow.hpp>
 #include <Engine/Utils/OverlayDebugWindow.hpp>
@@ -95,6 +96,40 @@ void    GameState::initDebugWindows()
         addDebugWindow<MonitoringDebugWindow>(MonitoringDebugWindow::getInstance());
     }
     //addDebugWindow<OverlayDebugWindow>(glm::vec2(10, 10), glm::vec2(0, 0));
+}
+
+void    GameState::renderPreviousStates(const std::vector<uint32_t>& filterIds)
+{
+    uint32_t gameStateIdx = 0;
+    uint32_t statesNb = (uint32_t)_gameStateManager->getStates().size();
+
+    // Find GameState index in states vector
+    for (gameStateIdx; gameStateIdx < statesNb; ++gameStateIdx)
+    {
+        if (_gameStateManager->getStates()[gameStateIdx].get() == this)
+        {
+            break;
+        }
+    }
+    ASSERT(gameStateIdx != statesNb, "The GameState should be in states vector");
+
+    if (gameStateIdx == 0)
+    {
+        return;
+    }
+
+    for (uint32_t i = 0; i < gameStateIdx; ++i)
+    {
+        auto state = _gameStateManager->getStates()[i];
+        World& stateWorld = state->getWorld();
+        System* stateRenderSystem = stateWorld.getSystem<RenderingSystem>();
+
+        if (stateRenderSystem &&
+            (filterIds.size() == 0 || std::find(filterIds.begin(), filterIds.end(), state->getId()) != filterIds.end()))
+        {
+            stateRenderSystem->update(*stateWorld.getEntityManager(), 0);
+        }
+    }
 }
 
 void    GameState::bindEntityManager()

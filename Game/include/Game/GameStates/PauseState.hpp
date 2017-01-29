@@ -21,9 +21,6 @@ START_GAMESTATE(PauseState, "Pause")
     bool                                handleButtons();
 
 private:
-    System*                             _playStateRendersystem;
-    World*                              _playStateWorld;
-
     Camera                              _camera;
 
     Entity*                             _resumeButton = nullptr;

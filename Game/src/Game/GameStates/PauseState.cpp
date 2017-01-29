@@ -17,6 +17,7 @@
 
 
 #include <Game/GameStates/PauseState.hpp>
+#include <Game/GameStates/PlayState.hpp>
 
 
 PauseState::~PauseState() {}
@@ -32,15 +33,6 @@ void    PauseState::setupSystems()
 
 bool    PauseState::init()
 {
-    uint32_t statesNb = (uint32_t)_gameStateManager->getStates().size();
-
-    ASSERT(statesNb >= 1, "The pause State should not be the first state");
-
-    auto playState = _gameStateManager->getStates()[statesNb - 1];
-
-    _playStateWorld = &playState->getWorld();
-    _playStateRendersystem = _playStateWorld->getSystem<RenderingSystem>();
-
     _resumeButton = EntityFactory::createOrGetEntity(eArchetype::BUTTON_RESUME);
     _howToPlayButton = EntityFactory::createOrGetEntity(eArchetype::BUTTON_HOW_TO_PLAY);
     _optionsButton = EntityFactory::createOrGetEntity(eArchetype::BUTTON_OPTIONS);
@@ -55,9 +47,8 @@ bool    PauseState::update(float elapsedTime)
 {
     auto &&keyboard = GameWindow::getInstance()->getKeyboard();
 
-    // Display the play game state
-    if (_playStateRendersystem)
-        _playStateRendersystem->update(*_playStateWorld->getEntityManager(), 0);
+    // Display the previous states
+    renderPreviousStates({PlayState::identifier});
 
     bool success = GameState::update(elapsedTime);
 

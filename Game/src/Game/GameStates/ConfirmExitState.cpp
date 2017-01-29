@@ -27,8 +27,6 @@ void    ConfirmExitState::setupSystems()
 
 bool    ConfirmExitState::init()
 {
-    initPreviousStatesRender();
-
     _noButton = EntityFactory::createOrGetEntity(eArchetype::BUTTON_CONFIRM_NO);
     _yesButton = EntityFactory::createOrGetEntity(eArchetype::BUTTON_CONFIRM_YES);
 
@@ -40,10 +38,7 @@ bool    ConfirmExitState::update(float elapsedTime)
     auto &&keyboard = GameWindow::getInstance()->getKeyboard();
 
     // Display the previous states
-    for (int i = (int)_previousStatesSystems.size() - 1; i >= 0; --i)
-    {
-        _previousStatesSystems[i]->update(*_previousStatesWorlds[i]->getEntityManager(), 0);
-    }
+    renderPreviousStates();
 
     bool success = GameState::update(elapsedTime);
 
@@ -55,33 +50,6 @@ bool    ConfirmExitState::update(float elapsedTime)
     }
 
     return (success);
-}
-
-void    ConfirmExitState::initPreviousStatesRender()
-{
-    uint32_t statesNb = (uint32_t)_gameStateManager->getStates().size();
-
-    ASSERT(statesNb >= 1, "The ConfirmExitState should not be the first state");
-
-    auto previousState = _gameStateManager->getStates()[statesNb - 1];
-    World* previousStateWorld = &previousState->getWorld();
-    System* previousStateRendersystem = previousStateWorld->getSystem<RenderingSystem>();
-
-    _previousStatesSystems.push_back(previousStateRendersystem);
-    _previousStatesWorlds.push_back(previousStateWorld);
-
-    // Add playState render
-    if (previousState->getId() == PauseState::identifier)
-    {
-        ASSERT(statesNb >= 2, "The Pause State should not be the first state");
-
-        auto playState = _gameStateManager->getStates()[statesNb - 2];
-        World* playStateWorld = &playState->getWorld();
-        System* playStateRendersystem = playStateWorld->getSystem<RenderingSystem>();
-
-        _previousStatesSystems.push_back(playStateRendersystem);
-        _previousStatesWorlds.push_back(playStateWorld);
-    }
 }
 
 bool    ConfirmExitState::handleButtons()
