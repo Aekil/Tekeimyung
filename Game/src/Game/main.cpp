@@ -14,6 +14,7 @@
 #include <Engine/Utils/LevelLoader.hpp>
 #include <Engine/Utils/Logger.hpp>
 #include <Engine/Utils/RessourceManager.hpp>
+#include <Engine/Utils/Debug.hpp>
 
 #include <Game/GameStates/ConfirmExitState.hpp>
 #include <Game/GameStates/HowToPlayState.hpp>
@@ -59,7 +60,14 @@ int     main()
         EventSound::loadEvents();
         GameWindow::getInstance()->registerCloseHandler(windowCloseHandler, &engine);
 
-        if (!gameStateManager.addState<EditorState>())
+        std::shared_ptr<GameState> state = nullptr;
+        #if defined(ENGINE_DEBUG) && ENGINE_DEBUG == true
+            state = std::make_shared<EditorState>(&gameStateManager);
+        #else
+            state = std::make_shared<PlayState>(&gameStateManager);
+        #endif
+
+        if (!gameStateManager.addState(state))
             return (1);
         else if (!engine.run())
             return (1);

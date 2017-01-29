@@ -75,6 +75,7 @@ void    Renderer::onWindowResize()
     _UICamera.setScreen(screen);
     _UICamera.setProjType(Camera::eProj::ORTHOGRAPHIC_2D);
     _UICamera.update(_shaderProgram, 0);
+    _UICamera.updateUboData(_cameraUbo, true);
 }
 
 void    Renderer::render(Camera* camera, std::shared_ptr<Model> model,
