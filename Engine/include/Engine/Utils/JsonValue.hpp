@@ -35,6 +35,7 @@ class JsonValue
     unsigned int                        getUInt(const std::string& index, unsigned int defaultValue) const;
     float                               getFloat(const std::string& index, float defaultValue) const;
     std::string                         getString(const std::string& index, const std::string& defaultValue) const;
+    std::vector<std::string>            getStringVec(const std::string& index, const std::vector<std::string>& defaultValue) const;
 
     // Get colors
     glm::vec3                           getColor3f(const std::string& index, const glm::vec3& defaultValue) const;

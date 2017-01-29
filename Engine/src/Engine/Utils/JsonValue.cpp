@@ -2,6 +2,7 @@
 * @Author   Guillaume Labey
 */
 
+#include <Engine/Utils/Logger.hpp>
 #include <Engine/Utils/JsonValue.hpp>
 
 JsonValue::JsonValue() {}
@@ -54,6 +55,24 @@ float   JsonValue::getFloat(const std::string& index, float defaultValue) const
 std::string JsonValue::getString(const std::string& index, const std::string& defaultValue) const
 {
     return _json.get(index, defaultValue).asString();
+}
+
+std::vector<std::string>    JsonValue::getStringVec(const std::string& index, const std::vector<std::string>& defaultValue) const
+{
+    auto& stringVecJson = _json[index];
+    if (stringVecJson.size() > 0 && stringVecJson.type() != Json::ValueType::arrayValue)
+    {
+        LOG_WARN("JsonValue::getStringVec error: field %s is not an array", index.c_str());
+        return (defaultValue);
+    }
+
+    std::vector<std::string> stringVec;
+    for (const auto& string_ : stringVecJson)
+    {
+        stringVec.push_back(string_.asString());
+    }
+
+    return (stringVec);
 }
 
 glm::vec3   JsonValue::getColor3f(const std::string& index, const glm::vec3& defaultValue) const

@@ -1196,22 +1196,20 @@ sComponent* ComponentFactory<sScriptComponent>::loadFromJson(const std::string& 
 
     component = new sScriptComponent();
 
-    auto classes = json.get()["class"];
-
-    if (classes.size() > 0 && classes.type() != Json::ValueType::arrayValue)
-    {
-        LOG_ERROR("%s::sScriptComponent loadFromJson error: class is not an array", entityType.c_str());
-        return (component);
-    }
-
-    for (const auto& scriptClass : classes)
-    {
-        component->scriptNames.push_back(scriptClass.asString());
-    }
-
+    component->scriptNames = json.getStringVec("class", {});
     component->isInitialized = false;
 
     return component;
+}
+
+JsonValue&    ComponentFactory<sScriptComponent>::saveToJson(const std::string& entityType, const sComponent* savedComponent, JsonValue* toJson)
+{
+    JsonValue& json = toJson ? *toJson : _componentsJson[entityType];
+    const sScriptComponent* component = static_cast<const sScriptComponent*>(savedComponent ? savedComponent : _components[entityType]);
+
+    json.setStringVec("class", component->scriptNames);
+
+    return (json);
 }
 
 
