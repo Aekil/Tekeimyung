@@ -96,7 +96,11 @@ void    GameState::initDebugWindows()
 {
     EntityManager* em = _world.getEntityManager();
 
-    addDebugWindow<EditorMenuDebugWindow>(_gameStateManager, em, glm::vec2(0, 0), glm::vec2(0, 0));
+    #if defined(ENGINE_DEBUG) && ENGINE_DEBUG == true
+        addDebugWindow<EditorMenuDebugWindow>(_gameStateManager, em, glm::vec2(0, 0), glm::vec2(0, 0));
+        addDebugWindow<OverlayDebugWindow>(glm::vec2(10, 10), glm::vec2(0, 0));
+    #endif
+
     if (_id == EditorState::identifier)
     {
         addDebugWindow<LevelEntitiesDebugWindow>(em, glm::vec2(0, 80), glm::vec2(600, 350));
@@ -111,7 +115,6 @@ void    GameState::initDebugWindows()
             addDebugWindow<LogDebugWindow>(Logger::getInstance(), glm::vec2(0, 430), glm::vec2(300, 200));
         #endif
     }
-    //addDebugWindow<OverlayDebugWindow>(glm::vec2(10, 10), glm::vec2(0, 0));
 }
 
 void    GameState::renderPreviousStates(const std::vector<uint32_t>& filterIds)

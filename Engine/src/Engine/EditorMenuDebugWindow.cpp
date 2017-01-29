@@ -11,7 +11,7 @@
 
 
 EditorMenuDebugWindow::EditorMenuDebugWindow(GameStateManager* gameStateManager, EntityManager* em, const glm::vec2& pos, const glm::vec2& size):
-                                    _em(em), _gameStateManager(gameStateManager), DebugWindow("", pos, size) {}
+                                    _em(em), _gameStateManager(gameStateManager), DebugWindow("Editor Menu", pos, size) {}
 
 EditorMenuDebugWindow::~EditorMenuDebugWindow() {}
 

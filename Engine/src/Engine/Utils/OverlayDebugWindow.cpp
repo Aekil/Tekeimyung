@@ -5,9 +5,10 @@
 #include <imgui.h>
 
 #include <Engine/Utils/OverlayDebugWindow.hpp>
+#include <Engine/Window/GameWindow.hpp>
 
 OverlayDebugWindow::OverlayDebugWindow(const glm::vec2& pos, const glm::vec2& size):
-                                    DebugWindow("", pos, size) {}
+                                    DebugWindow("Overlay", pos, size) {}
 
 OverlayDebugWindow::~OverlayDebugWindow() {}
 
@@ -20,7 +21,11 @@ void    OverlayDebugWindow::build(float elapsedTime)
         return;
     }
 
+
     ImGui::SetWindowSize(ImVec2(_size.x, _size.y), ImGuiSetCond_Always);
+
+    ImVec2 windowSize = ImGui::GetWindowSize();
+    _pos.x = GameWindow::getInstance()->getBufferWidth() / 2.0f - windowSize.x / 2.0f;
     ImGui::SetWindowPos(ImVec2(_pos.x, _pos.y), ImGuiSetCond_Always);
 
     ImGui::Text("Average: %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
