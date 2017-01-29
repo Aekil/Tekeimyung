@@ -242,6 +242,21 @@ Entity* EntityFactory::cloneEntity(const std::string& typeName)
     return (clone);
 }
 
+void    EntityFactory::copyEntityManager(EntityManager* dst, EntityManager* src)
+{
+    auto& entities = src->getEntities();
+    for (auto& entity: entities)
+    {
+        Entity* cloneEntity = dst->createEntity();
+        auto& components = entity.second->getComponents();
+        for (auto& component : components)
+        {
+            sComponent* cloneComponent = component->clone();
+            cloneEntity->addComponent(cloneComponent);
+        }
+    }
+}
+
 void    EntityFactory::initAnimations(Entity* entity)
 {
     sRenderComponent* render = entity->getComponent<sRenderComponent>();

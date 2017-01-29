@@ -7,6 +7,7 @@
 #include <memory>
 #include <vector>
 
+#include <ECS/EntityManager.hpp>
 #include <Engine/Core/GameState.hpp>
 #include <Engine/Utils/Debug.hpp>
 
@@ -19,11 +20,18 @@ public:
     virtual ~GameStateManager();
 
     template<typename T>
-    bool                                        addState(T gameState)
+    bool                                        addState(T gameState, EntityManager* em = nullptr)
     {
         gameState->bindEntityManager();
         gameState->setupSystems();
         gameState->loadLevel();
+
+        // Copy all entities from EntityManager into the gameState
+        if (em)
+        {
+            gameState->cloneEntityManager(em);
+        }
+
         if (!gameState->init() || !gameState->initSystems())
         {
             return (false);
@@ -49,14 +57,27 @@ public:
     }
 
     template<typename T>
-    bool                                        addState()
+    bool                                        addState(EntityManager* em = nullptr)
     {
         std::shared_ptr<T> gameState = std::make_shared<T>(this);
+        return (addState(gameState, em));
+    }
+
+    template<typename T>
+    bool                                        replaceState(T gameState)
+    {
+        removeCurrentState();
         return (addState(gameState));
     }
 
+    template<typename T>
+    bool                                        replaceState()
+    {
+        std::shared_ptr<T> gameState = std::make_shared<T>(this);
+        return (replaceState(gameState));
+    }
+
     void                                        removeCurrentState();
-    void                                        removeBackState();
 
     std::shared_ptr<GameState>                  getCurrentState() const;
     bool                                        hasStates() const;

@@ -492,7 +492,17 @@ glm::vec2               offset{0.0f, 0.0f}; // Percentage offset
 bool                    needUpdate = true;
 END_COMPONENT(sUiComponent)
 
+
+#define BUTTON_ACTION(PROCESS)              \
+    PROCESS(NONE)                           \
+    PROCESS(REMOVE_CURRENT_LEVEL)           \
+    PROCESS(REPLACE_CURRENT_LEVEL)          \
+    PROCESS(ADD_LEVEL)
+
+
 START_COMPONENT(sButtonComponent)
+REGISTER_ENUM(eAction, uint8_t, BUTTON_ACTION);
+
 virtual sComponent* clone()
 {
     sButtonComponent* component = new sButtonComponent();
@@ -505,6 +515,8 @@ virtual void update(sButtonComponent* component)
 {
     this->selected = component->selected;
     this->hovered = component->hovered;
+    this->action = component->action;
+    this->actionLevel = component->actionLevel;
 }
 
 virtual void update(sComponent* component)
@@ -514,7 +526,10 @@ virtual void update(sComponent* component)
 
 bool        selected = false;
 bool        hovered = false;
+eAction     action = eAction::NONE;
+std::string actionLevel;
 END_COMPONENT(sButtonComponent)
+REGISTER_ENUM_MANAGER(sButtonComponent::eAction, uint8_t, BUTTON_ACTION);
 
 
 START_COMPONENT(sTileComponent)

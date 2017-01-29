@@ -89,8 +89,9 @@ public:
     static void                                             initAnimations(Entity* entity);
     static void                                             reverseAnimations(Entity* entity);
 
-    static Entity*                                          cloneEntity(Entity* entity);
     static Entity*                                          cloneEntity(const std::string& typeName);
+
+    static void                                             copyEntityManager(EntityManager* dst, EntityManager* src);
 
     static void                                             saveEntityTemplateToJson(const std::string& typeName);
     static void                                             saveEntityTemplate(const std::string& typeName, Entity* entity);

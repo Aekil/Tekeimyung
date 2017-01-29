@@ -8,13 +8,14 @@
 
 #include <Engine/Window/GameWindow.hpp>
 #include <Engine/Utils/Logger.hpp>
+#include <Engine/Utils/LevelLoader.hpp>
 
 #include <Engine/Components.hh>
 #include <Engine/EntityFactory.hpp>
 
 #include <Engine/Systems/ButtonSystem.hpp>
 
-ButtonSystem::ButtonSystem()
+ButtonSystem::ButtonSystem(GameStateManager* gameStateManager): _gameStateManager(gameStateManager)
 {
     addDependency<sRenderComponent>();
     addDependency<sButtonComponent>();
@@ -65,6 +66,7 @@ void    ButtonSystem::update(EntityManager& em, float elapsedTime)
     }
 
     handleButtonsKeys(em);
+    handleButtonsActions(em);
 
     MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, timer.getElapsedTime(), nbEntities);
 }
@@ -122,6 +124,44 @@ void    ButtonSystem::handleButtonsKeys(EntityManager &em)
             setSelected(em, _currentSelected);
         }
 
+    }
+}
+
+void    ButtonSystem::handleButtonsActions(EntityManager& em)
+{
+    if (_currentSelected == -1)
+        return;
+
+    Entity* entity = em.getEntity(_entities[_currentSelected]);
+    if (!entity)
+        return;
+
+    auto    &&keyboard = GameWindow::getInstance()->getKeyboard();
+    auto    &&mouse = GameWindow::getInstance()->getMouse();
+    bool    spacebarPressed = keyboard.getStateMap()[Keyboard::eKey::ENTER] == Keyboard::eKeyState::KEY_PRESSED;
+    bool    mouseClicked = mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_1] == Mouse::eButtonState::CLICK_PRESSED;
+
+    // Launch button action
+    sButtonComponent* button = entity->getComponent<sButtonComponent>();
+    if ((spacebarPressed && button->selected) ||
+        (mouseClicked && button->hovered))
+    {
+        if (button->action == sButtonComponent::eAction::ADD_LEVEL &&
+            button->actionLevel.size() > 0)
+        {
+            std::shared_ptr<GameState> gameState = LevelLoader::getInstance()->createLevelState(button->actionLevel, _gameStateManager);
+            _gameStateManager->addState(gameState);
+        }
+        else if (button->action == sButtonComponent::eAction::REPLACE_CURRENT_LEVEL &&
+            button->actionLevel.size() > 0)
+        {
+            std::shared_ptr<GameState> gameState = LevelLoader::getInstance()->createLevelState(button->actionLevel, _gameStateManager);
+            _gameStateManager->replaceState(gameState);
+        }
+        else if (button->action == sButtonComponent::eAction::REMOVE_CURRENT_LEVEL)
+        {
+            _gameStateManager->removeCurrentState();
+        }
     }
 }
 

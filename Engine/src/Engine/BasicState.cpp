@@ -24,6 +24,6 @@ void    BasicState::setupSystems()
     _world.addSystem<ResolutionSystem>();
     _world.addSystem<ParticleSystem>();
     _world.addSystem<UISystem>();
-    _world.addSystem<ButtonSystem>();
+    _world.addSystem<ButtonSystem>(_gameStateManager);
     _world.addSystem<RenderingSystem>(nullptr, _world.getSystem<ParticleSystem>()->getEmitters());
 }

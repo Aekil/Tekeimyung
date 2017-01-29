@@ -98,7 +98,6 @@ void    EditorMenuDebugWindow::displayLevelsMenu()
 void    EditorMenuDebugWindow::displayPlayStopMenu()
 {
     auto& currentState = _gameStateManager->getCurrentState();
-    auto& loadedStates = LevelLoader::getInstance()->getLoadedStates();
 
     // EditorState should be the first state
     if (_gameStateManager->getStates()[0]->getId() != EditorState::identifier)
@@ -113,24 +112,12 @@ void    EditorMenuDebugWindow::displayPlayStopMenu()
         {
             if (ImGui::MenuItem("Play"))
             {
-                bool stateRegistered = false;
-                for (auto& state: loadedStates)
+                if (_currentLevel.size() > 0)
                 {
-                    if (state->getLevelFile() == _currentLevel &&
-                        _currentLevel.size() > 0)
-                    {
-                        stateRegistered = true;
-                        std::shared_ptr<GameState> gameState = state->create(_gameStateManager);
-                        _gameStateManager->addState(gameState);
-                        break;
-                    }
-                }
-
-                if (!stateRegistered && _currentLevel.size() > 0)
-                {
-                    std::shared_ptr<GameState> gameState = std::make_shared<BasicState>(_gameStateManager);
-                    gameState->setLevelFile(_currentLevel);
-                    _gameStateManager->addState(gameState);
+                    std::shared_ptr<GameState> gameState = LevelLoader::getInstance()->createLevelState(_currentLevel, _gameStateManager);
+                    // Remove the level file because the gameState will copy the EntityManager instead of loading the level
+                    gameState->setLevelFile("");
+                    _gameStateManager->addState(gameState, _em);
                 }
             }
         }
@@ -143,7 +130,7 @@ void    EditorMenuDebugWindow::displayPlayStopMenu()
                 uint32_t statesNb = (uint32_t)_gameStateManager->getStates().size();
                 for (statesNb; statesNb > 1; --statesNb)
                 {
-                    _gameStateManager->removeBackState();
+                    _gameStateManager->getStates().pop_back();
                 }
             }
         }
@@ -163,7 +150,7 @@ void    EditorMenuDebugWindow::displaySaveAsPopup()
     {
         _currentLevel = levelName;
         LevelLoader::getInstance()->save(_currentLevel, _em->getEntities());
-        LevelLoader::getInstance()->getLevels().push_back(_currentLevel);
+        LevelLoader::getInstance()->addLevel(_currentLevel);
         ImGui::CloseCurrentPopup();
     }
 }
@@ -173,7 +160,7 @@ void    EditorMenuDebugWindow::displayLoadPopup()
     ImGui::BeginChild("Load level", ImVec2(150, 100), true);
     for (const auto& level: LevelLoader::getInstance()->getLevels())
     {
-        if (ImGui::Selectable(level.c_str(), _tmpLoadLevel == level))
+        if (ImGui::Selectable(level, _tmpLoadLevel == level))
         {
             _tmpLoadLevel = level;
         }

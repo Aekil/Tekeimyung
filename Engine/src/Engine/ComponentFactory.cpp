@@ -12,6 +12,7 @@
 
 #include <Engine/Window/Keyboard.hpp>
 #include <Engine/Window/GameWindow.hpp>
+#include <Engine/Utils/LevelLoader.hpp>
 #include <Engine/Utils/RessourceManager.hpp>
 #include <Engine/Graphics/Renderer.hpp>
 #include <Engine/Core/ScriptFactory.hpp>
@@ -88,6 +89,30 @@ std::size_t IComponentFactory::getComponentHashWithName(const std::string& name)
 const std::unordered_map<uint32_t, std::string>& IComponentFactory::getComponentsTypesHashs()
 {
     return (_componentsTypesHashs);
+}
+
+bool    IComponentFactory::updateComboString(const char* name, std::vector<const char*>& stringList, std::string& stringValue)
+{
+    // Get index of string in the vector
+    int stringIdx = -1;
+    uint32_t i = 0;
+    for (const auto& str: stringList)
+    {
+        if (str == stringValue)
+        {
+            stringIdx = i;
+            break;
+        }
+        ++i;
+    }
+
+    // Display combo and set new value
+    if (ImGui::Combo(name, &stringIdx, stringList.data(), (uint32_t)stringList.size()))
+    {
+        stringValue = stringList[stringIdx];
+        return (true);
+    }
+    return (false);
 }
 
 /*
@@ -1108,11 +1133,42 @@ bool    ComponentFactory<sTransformComponent>::updateTransforms(glm::vec3& pos, 
 
 sComponent* ComponentFactory<sButtonComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
 {
-    sButtonComponent*   component;
+    sButtonComponent*  component;
 
     component = new sButtonComponent();
 
-    return (component);
+    component->action = EnumManager<sButtonComponent::eAction>::stringToEnum(json.getString("action", "NONE"));
+    component->actionLevel = json.getString("action_level", "");
+
+    return component;
+}
+
+JsonValue&    ComponentFactory<sButtonComponent>::saveToJson(const std::string& entityType, const sComponent* savedComponent, JsonValue* toJson)
+{
+    JsonValue& json = toJson ? *toJson : _componentsJson[entityType];
+    const sButtonComponent* component = static_cast<const sButtonComponent*>(savedComponent ? savedComponent : _components[entityType]);
+
+    json.setString("action", EnumManager<sButtonComponent::eAction>::enumToString(component->action));
+    json.setString("action_level", component->actionLevel);
+
+    return (json);
+}
+
+bool    ComponentFactory<sButtonComponent>::updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity)
+{
+    sButtonComponent* component = static_cast<sButtonComponent*>(entityComponent ? entityComponent : _components[entityType]);
+    *savedComponent = component;
+    bool changed = false;
+
+    changed |= updateComboEnum<sButtonComponent::eAction>("Action", component->action);
+
+    if (component->action == sButtonComponent::eAction::ADD_LEVEL ||
+        component->action == sButtonComponent::eAction::REPLACE_CURRENT_LEVEL)
+    {
+        updateComboString("Level", LevelLoader::getInstance()->getLevels(), component->actionLevel);
+    }
+
+    return (changed);
 }
 
 
@@ -1179,7 +1235,6 @@ sComponent* ComponentFactory<sUiComponent>::loadFromJson(const std::string& enti
 JsonValue&    ComponentFactory<sUiComponent>::saveToJson(const std::string& entityType, const sComponent* savedComponent, JsonValue* toJson)
 {
     JsonValue& json = toJson ? *toJson : _componentsJson[entityType];
-    std::vector<JsonValue> animations;
     const sUiComponent* component = static_cast<const sUiComponent*>(savedComponent ? savedComponent : _components[entityType]);
 
 
@@ -1207,28 +1262,4 @@ bool    ComponentFactory<sUiComponent>::updateEditor(const std::string& entityTy
     }
 
     return (changed);
-}
-
-eVerticalAlignment ComponentFactory<sUiComponent>::stringToverticalAlignment(const std::string& verticalAlignmentStr)
-{
-    if (verticalAlignmentStr == "TOP")
-        return eVerticalAlignment::TOP;
-    else if (verticalAlignmentStr == "MIDDLE")
-        return eVerticalAlignment::MIDDLE;
-    else if (verticalAlignmentStr == "BOTTOM")
-        return eVerticalAlignment::BOTTOM;
-
-    return (eVerticalAlignment::MIDDLE);
-}
-
-std::string ComponentFactory<sUiComponent>::verticalAlignmentToString(eVerticalAlignment verticalAlignment)
-{
-    if (verticalAlignment == eVerticalAlignment::TOP)
-        return ("TOP");
-    else if (verticalAlignment == eVerticalAlignment::MIDDLE)
-        return ("MIDDLE");
-    else if (verticalAlignment == eVerticalAlignment::BOTTOM)
-        return ("BOTTOM");
-
-    return ("");
 }

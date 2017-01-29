@@ -6,6 +6,7 @@
 
 #include <ECS/System.hpp>
 
+#include <Engine/Core/GameStateManager.hpp>
 #include <Engine/Utils/MonitoringDebugWindow.hpp>
 #include <Engine/Components.hh>
 
@@ -13,7 +14,7 @@
 
 START_SYSTEM(ButtonSystem)
 public:
-    ButtonSystem();
+    ButtonSystem(GameStateManager* gameStateManager);
     virtual ~ButtonSystem();
 
     virtual bool                        init();
@@ -25,6 +26,7 @@ private:
 
     void                                handleButtonMouseHover(EntityManager& em, Entity* entity, uint32_t entityIdx, const glm::vec2& cursorPos);
     void                                handleButtonsKeys(EntityManager& em);
+    void                                handleButtonsActions(EntityManager& em);
 
     void                                setSelected(EntityManager &em, int buttonIdx, bool hovered = false);
     void                                setSelected(Entity* entity, bool hovered = false);
@@ -33,6 +35,8 @@ private:
 
 private:
     ADD_MONITORING_VAR
+
+    GameStateManager*                   _gameStateManager;
 
     int                                 _currentSelected;
     bool                                _buttonHovered;

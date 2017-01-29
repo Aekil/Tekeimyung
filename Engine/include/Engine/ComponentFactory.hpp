@@ -89,6 +89,9 @@ public:
         }
         return (false);
     }
+
+    bool updateComboString(const char* name, std::vector<const char*>& stringList, std::string& stringValue);
+
 private:
     // Store Components types
     static std::unordered_map<std::string, IComponentFactory*>      _componentsTypes;
@@ -346,11 +349,11 @@ template <>
 class ComponentFactory<sTransformComponent> final: public BaseComponentFactory<sTransformComponent>
 {
 public:
-    virtual char* getTypeName() override final { return "sTransformComponent"; }
+    char* getTypeName() override final { return "sTransformComponent"; }
     sComponent* loadFromJson(const std::string& entityType, const JsonValue& json) override final;
-    virtual JsonValue&  saveToJson(const std::string& entityType, const sComponent* savedComponent = nullptr, JsonValue* toJson = nullptr) override final;
+    JsonValue&  saveToJson(const std::string& entityType, const sComponent* savedComponent = nullptr, JsonValue* toJson = nullptr) override final;
 
-    virtual bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity) override final;
+    bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity) override final;
 
     // Update transforms with gizmos
     // Used for multiple components: sTransformComponent, sBoxColliderComponent
@@ -366,8 +369,11 @@ template <>
 class ComponentFactory<sButtonComponent> final: public BaseComponentFactory<sButtonComponent>
 {
 public:
-    virtual char* getTypeName() override final { return "sButtonComponent"; }
+    char* getTypeName() override final { return "sButtonComponent"; }
     sComponent* loadFromJson(const std::string& entityType, const JsonValue& json) override final;
+    JsonValue&  saveToJson(const std::string& entityType, const sComponent* savedComponent = nullptr, JsonValue* toJson = nullptr) override final;
+
+    bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity) override final;
 };
 
 
@@ -379,7 +385,7 @@ template <>
 class ComponentFactory<sTileComponent> final: public BaseComponentFactory<sTileComponent>
 {
 public:
-    virtual char* getTypeName() override final { return "sTileComponent"; }
+    char* getTypeName() override final { return "sTileComponent"; }
     sComponent* loadFromJson(const std::string& entityType, const JsonValue& json) override final;
 };
 
@@ -392,7 +398,7 @@ template <>
 class ComponentFactory<sScriptComponent> final: public BaseComponentFactory<sScriptComponent>
 {
 public:
-    virtual char* getTypeName() override final { return "sScriptComponent"; }
+    char* getTypeName() override final { return "sScriptComponent"; }
     sComponent* loadFromJson(const std::string& entityType, const JsonValue& json) override final;
 };
 
@@ -405,12 +411,9 @@ template <>
 class ComponentFactory<sUiComponent> final: public BaseComponentFactory<sUiComponent>
 {
 public:
-    virtual char* getTypeName() override final { return "sUiComponent"; }
+    char* getTypeName() override final { return "sUiComponent"; }
     sComponent* loadFromJson(const std::string& entityType, const JsonValue& json) override final;
-    virtual JsonValue&  saveToJson(const std::string& entityType, const sComponent* savedComponent = nullptr, JsonValue* toJson = nullptr) override final;
+    JsonValue&  saveToJson(const std::string& entityType, const sComponent* savedComponent = nullptr, JsonValue* toJson = nullptr) override final;
 
-    virtual bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity) override final;
-
-    eVerticalAlignment stringToverticalAlignment(const std::string& verticalAlignmentStr);
-    std::string verticalAlignmentToString(eVerticalAlignment verticalAlignment);
+    bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity) override final;
 };

@@ -21,14 +21,6 @@ void    GameStateManager::removeCurrentState()
     }
 }
 
-void    GameStateManager::removeBackState()
-{
-    if (hasStates())
-    {
-        _states.pop_back();
-    }
-}
-
 std::shared_ptr<GameState> GameStateManager::getCurrentState() const
 {
     if (hasStates())

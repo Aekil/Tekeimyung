@@ -6,6 +6,7 @@
 #include <Engine/ComponentFactory.hpp>
 #include <dirent.h> // This include has to be called after "ComponentFactory.hpp"
 
+#include <Engine/BasicState.hpp>
 #include <Engine/Utils/Exception.hpp>
 #include <Engine/Utils/JsonWriter.hpp>
 #include <Engine/Utils/JsonReader.hpp>
@@ -16,7 +17,13 @@ std::unique_ptr<LevelLoader>    LevelLoader::_instance = nullptr;
 
 LevelLoader::LevelLoader() {}
 
-LevelLoader::~LevelLoader() {}
+LevelLoader::~LevelLoader()
+{
+    for (auto level: _levels)
+    {
+        delete[] level;
+    }
+}
 
 LevelLoader*    LevelLoader::getInstance()
 {
@@ -27,19 +34,21 @@ LevelLoader*    LevelLoader::getInstance()
     return (_instance.get());
 }
 
-const std::vector<std::string>& LevelLoader::getLevels() const
+const std::vector<const char*>& LevelLoader::getLevels() const
 {
     return (_levels);
 }
 
-std::vector<std::string>& LevelLoader::getLevels()
+std::vector<const char*>& LevelLoader::getLevels()
 {
     return (_levels);
 }
 
-const std::vector<std::unique_ptr<GameStateFactory> >& LevelLoader::getLoadedStates()
+void    LevelLoader::addLevel(const std::string& level)
 {
-    return (_loadedStates);
+    char *str = new char [level.size() + 1];
+    strcpy_s(str, level.size() + 1, level.c_str());
+    _levels.push_back(str);
 }
 
 void    LevelLoader::save(const std::string& levelName, const std::unordered_map<uint32_t, Entity*>& entities)
@@ -113,6 +122,26 @@ void    LevelLoader::load(const std::string& levelName, EntityManager* em)
     }
 }
 
+std::shared_ptr<GameState>  LevelLoader::createLevelState(const std::string& levelName, GameStateManager* gameStateManager)
+{
+    if (levelName.size() == 0)
+    {
+        return (nullptr);
+    }
+
+    for (auto& state: _loadedStates)
+    {
+        if (state->getLevelFile() == levelName)
+        {
+            return (state->create(gameStateManager));
+        }
+    }
+
+    std::shared_ptr<GameState> gameState = std::make_shared<BasicState>(gameStateManager);
+    gameState->setLevelFile(levelName);
+    return (gameState);
+}
+
 void LevelLoader::addComponentToEntity(Entity* entity, const std::string& entityTypeName, const JsonValue& componentJson, const std::string& componentName)
 {
     auto componentFactory = IComponentFactory::getFactory(componentName);
@@ -138,7 +167,7 @@ void    LevelLoader::loadDirectory(const std::string& directory)
             size_t extensionFind = fileName.find_last_of(".");
 
             // Add the level without the .json
-            _levels.push_back(fileName.substr(0, extensionFind));
+            addLevel(fileName.substr(0, extensionFind));
         }
     }
 

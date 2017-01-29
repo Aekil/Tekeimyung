@@ -87,6 +87,11 @@ void    GameState::setLevelFile(const std::string& levelFile)
     _levelFile = levelFile;
 }
 
+void    GameState::cloneEntityManager(EntityManager* em)
+{
+    EntityFactory::copyEntityManager(_world.getEntityManager(), em);
+}
+
 void    GameState::initDebugWindows()
 {
     EntityManager* em = _world.getEntityManager();
@@ -99,6 +104,12 @@ void    GameState::initDebugWindows()
         addDebugWindow<SoundEditorWindow>(glm::vec2(1200, 80), glm::vec2(450, 450));
         addDebugWindow<EntitiesTemplateDebugWindow>(em, glm::vec2(600, 80), glm::vec2(300, 200));
         addDebugWindow<MonitoringDebugWindow>(MonitoringDebugWindow::getInstance());
+    }
+    else
+    {
+        #if defined(ENGINE_DEBUG) && ENGINE_DEBUG == true
+            addDebugWindow<LogDebugWindow>(Logger::getInstance(), glm::vec2(0, 430), glm::vec2(300, 200));
+        #endif
     }
     //addDebugWindow<OverlayDebugWindow>(glm::vec2(10, 10), glm::vec2(0, 0));
 }
