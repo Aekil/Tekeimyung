@@ -17,12 +17,4 @@ START_GAMESTATE(PauseState, "Pause")
     void                                setupSystems() override final;
     bool                                init() override final;
     bool                                update(float elapsedTime) override final;
-
-    bool                                handleButtons();
-
-private:
-    Entity*                             _resumeButton = nullptr;
-    Entity*                             _howToPlayButton = nullptr;
-    Entity*                             _optionsButton = nullptr;
-    Entity*                             _quitButton = nullptr;
 END_GAMESTATE(PauseState)

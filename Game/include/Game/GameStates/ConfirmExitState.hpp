@@ -25,5 +25,4 @@ START_GAMESTATE(ConfirmExitState, "ConfirmExit")
 
 private:
     Entity*                             _yesButton = nullptr;
-    Entity*                             _noButton = nullptr;
 END_GAMESTATE(ConfirmExitState)

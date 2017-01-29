@@ -94,7 +94,10 @@
       },
       {
          "components" : {
-            "sButtonComponent" : null,
+            "sButtonComponent" : {
+               "action" : "REMOVE_CURRENT_LEVEL",
+               "action_level" : ""
+            },
             "sNameComponent" : {
                "name" : "BUTTON_CONFIRM_NO"
             },
@@ -141,7 +144,10 @@
       },
       {
          "components" : {
-            "sButtonComponent" : null,
+            "sButtonComponent" : {
+               "action" : "NONE",
+               "action_level" : ""
+            },
             "sNameComponent" : {
                "name" : "BUTTON_CONFIRM_YES"
             },

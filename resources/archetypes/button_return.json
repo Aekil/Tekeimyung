@@ -1,6 +1,9 @@
 {
    "components" : {
-      "sButtonComponent" : null,
+      "sButtonComponent" : {
+         "action" : "REMOVE_CURRENT_LEVEL",
+         "action_level" : ""
+      },
       "sNameComponent" : {
          "name" : "BUTTON_RETURN"
       },
@@ -20,8 +23,8 @@
       "sTransformComponent" : {
          "pos" : {
             "x" : 835,
-            "y" : 203.91000366210938,
-            "z" : -1
+            "y" : 386.97000122070313,
+            "z" : 0
          },
          "rotation" : {
             "x" : 0,
@@ -35,10 +38,12 @@
          }
       },
       "sUiComponent" : {
+         "horizontal_alignment" : "MIDDLE",
          "offset" : {
             "x" : 0,
-            "y" : -27
-         }
+            "y" : -9
+         },
+         "vertical_alignment" : "MIDDLE"
       }
    },
    "name" : "BUTTON_RETURN"

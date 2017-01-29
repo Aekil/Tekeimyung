@@ -22,7 +22,7 @@
                "pos" : {
                   "x" : 0,
                   "y" : 0,
-                  "z" : -1
+                  "z" : 0
                },
                "rotation" : {
                   "x" : 0,
@@ -68,7 +68,7 @@
                "pos" : {
                   "x" : 460,
                   "y" : 183.5,
-                  "z" : -1
+                  "z" : 0
                },
                "rotation" : {
                   "x" : 0,
@@ -94,7 +94,10 @@
       },
       {
          "components" : {
-            "sButtonComponent" : null,
+            "sButtonComponent" : {
+               "action" : "REMOVE_CURRENT_LEVEL",
+               "action_level" : ""
+            },
             "sNameComponent" : {
                "name" : "BUTTON_RETURN"
             },
@@ -115,7 +118,7 @@
                "pos" : {
                   "x" : 835,
                   "y" : 203.91000366210938,
-                  "z" : -1
+                  "z" : 0
                },
                "rotation" : {
                   "x" : 0,

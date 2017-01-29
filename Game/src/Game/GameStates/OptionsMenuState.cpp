@@ -28,8 +28,6 @@ void    OptionsMenuState::setupSystems()
 bool            OptionsMenuState::init()
 {
     createToggleWindowModeButton();
-    _returnButton = EntityFactory::createOrGetEntity(eArchetype::BUTTON_RETURN);
-
     return (true);
 }
 
@@ -58,10 +56,8 @@ bool                    OptionsMenuState::handleButtons()
     auto                &&mouse = GameWindow::getInstance()->getMouse();
 
     sButtonComponent*   toggleWindowMode = _toggleWindowModeButton->getComponent<sButtonComponent>();
-    sButtonComponent*   returnButton = _returnButton->getComponent<sButtonComponent>();
 
     ASSERT(toggleWindowMode != nullptr, "\"Toggle window mode\" button should have a sButtonComponent.");
-    ASSERT(returnButton != nullptr, "\"Return\" button should have a sButtonComponent.");
 
     bool    spacebarPressed = keyboard.getStateMap()[Keyboard::eKey::ENTER] == Keyboard::eKeyState::KEY_PRESSED;
     bool    mouseClicked = mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_1] == Mouse::eButtonState::CLICK_PRESSED;
@@ -72,13 +68,6 @@ bool                    OptionsMenuState::handleButtons()
     {
         GameWindow::getInstance()->toggleFullscreen();
         createToggleWindowModeButton();
-    }
-
-    //  "Return" button
-    else if ((spacebarPressed && returnButton->selected) ||
-        (mouseClicked && returnButton->hovered))
-    {
-        return (false);
     }
 
     return (true);

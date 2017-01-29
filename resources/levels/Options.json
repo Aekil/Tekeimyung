@@ -2,7 +2,10 @@
    "entities" : [
       {
          "components" : {
-            "sButtonComponent" : null,
+            "sButtonComponent" : {
+               "action" : "NONE",
+               "action_level" : ""
+            },
             "sNameComponent" : {
                "name" : "BUTTON_TOGGLE_FULLSCREEN"
             },
@@ -23,7 +26,7 @@
                "pos" : {
                   "x" : 660,
                   "y" : 478.5,
-                  "z" : -1
+                  "z" : 0
                },
                "rotation" : {
                   "x" : 0,
@@ -49,7 +52,10 @@
       },
       {
          "components" : {
-            "sButtonComponent" : null,
+            "sButtonComponent" : {
+               "action" : "REMOVE_CURRENT_LEVEL",
+               "action_level" : ""
+            },
             "sNameComponent" : {
                "name" : "BUTTON_RETURN"
             },
@@ -70,7 +76,7 @@
                "pos" : {
                   "x" : 835,
                   "y" : 386.97000122070313,
-                  "z" : -1
+                  "z" : 0
                },
                "rotation" : {
                   "x" : 0,

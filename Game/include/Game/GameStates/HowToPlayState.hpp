@@ -17,8 +17,4 @@ START_GAMESTATE(HowToPlayState, "HowToPlay")
     void                                setupSystems() override final;
     bool                                init() override final;
     bool                                update(float elapsedTime) override final;
-
-    bool                                handleButtons();
-private:
-    Entity*                             _returnButton = nullptr;
 END_GAMESTATE(HowToPlayState)

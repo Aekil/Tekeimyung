@@ -29,7 +29,6 @@ void    ConfirmExitState::setupSystems()
 
 bool    ConfirmExitState::init()
 {
-    _noButton = EntityFactory::createOrGetEntity(eArchetype::BUTTON_CONFIRM_NO);
     _yesButton = EntityFactory::createOrGetEntity(eArchetype::BUTTON_CONFIRM_YES);
 
     return (true);
@@ -60,7 +59,6 @@ bool    ConfirmExitState::handleButtons()
     auto &&mouse = GameWindow::getInstance()->getMouse();
 
     sButtonComponent* yes = _yesButton->getComponent<sButtonComponent>();
-    sButtonComponent* no = _noButton->getComponent<sButtonComponent>();
 
     bool enterPressed = keyboard.getStateMap()[Keyboard::eKey::ENTER] == Keyboard::eKeyState::KEY_PRESSED;
     bool mouseClicked = mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_1] == Mouse::eButtonState::CLICK_PRESSED;
@@ -71,14 +69,6 @@ bool    ConfirmExitState::handleButtons()
         (mouseClicked && yes->hovered))
     {
         _gameStateManager->clearStates();
-    }
-
-    // No button
-    // Space bar pressed or mouse clicked
-    else if ((enterPressed && no->selected) ||
-        (mouseClicked && no->hovered))
-    {
-        return (false);
     }
 
     return (true);

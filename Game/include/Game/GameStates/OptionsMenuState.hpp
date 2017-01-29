@@ -24,7 +24,6 @@ START_GAMESTATE(OptionsMenuState, "Options")
 
 private:
     Entity*         _toggleWindowModeButton = nullptr;
-    Entity*         _returnButton = nullptr;
 
     void            createToggleWindowModeButton();
 END_GAMESTATE(OptionsMenuState)
