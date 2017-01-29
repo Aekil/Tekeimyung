@@ -112,13 +112,10 @@ void    EditorMenuDebugWindow::displayPlayStopMenu()
         {
             if (ImGui::MenuItem("Play"))
             {
-                if (_currentLevel.size() > 0)
-                {
-                    std::shared_ptr<GameState> gameState = LevelLoader::getInstance()->createLevelState(_currentLevel, _gameStateManager);
-                    // Remove the level file because the gameState will copy the EntityManager instead of loading the level
-                    gameState->setLevelFile("");
-                    _gameStateManager->addState(gameState, _em);
-                }
+                std::shared_ptr<GameState> gameState = LevelLoader::getInstance()->createLevelState(_currentLevel, _gameStateManager);
+                // Remove the level file because the gameState will copy the EntityManager instead of loading the level
+                gameState->setLevelFile("");
+                _gameStateManager->addState(gameState, _em);
             }
         }
         // Stop current level

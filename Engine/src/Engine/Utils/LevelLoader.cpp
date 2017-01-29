@@ -126,7 +126,7 @@ std::shared_ptr<GameState>  LevelLoader::createLevelState(const std::string& lev
 {
     if (levelName.size() == 0)
     {
-        return (nullptr);
+        return (std::make_shared<BasicState>(gameStateManager));
     }
 
     for (auto& state: _loadedStates)
