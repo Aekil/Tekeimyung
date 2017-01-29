@@ -6,7 +6,8 @@
 #include    <Engine/Window/GameWindow.hpp>
 
 #include    <Engine/Systems/RenderingSystem.hpp>
-#include    <Engine/Systems/MenuSystem.hpp>
+#include    <Engine/Systems/UISystem.hpp>
+#include    <Engine/Systems/ButtonSystem.hpp>
 #include    <Engine/Components.hh>
 
 #include    <Game/GameStates/OptionsMenuState.hpp>
@@ -19,8 +20,9 @@ void    OptionsMenuState::onEnter() {}
 void    OptionsMenuState::setupSystems()
 {
     _world.addSystem<ParticleSystem>();
-    _world.addSystem<RenderingSystem>(&_camera, _world.getSystem<ParticleSystem>()->getEmitters());
-    _world.addSystem<MenuSystem>();
+    _world.addSystem<UISystem>();
+    _world.addSystem<ButtonSystem>();
+    _world.addSystem<RenderingSystem>(nullptr, _world.getSystem<ParticleSystem>()->getEmitters());
 }
 
 bool            OptionsMenuState::init()

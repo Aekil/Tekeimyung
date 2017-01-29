@@ -26,6 +26,9 @@ RenderingSystem::RenderingSystem(Camera* camera, std::unordered_map<uint32_t, sE
     addDependency<sRenderComponent>();
 
     _monitoringKey = MonitoringDebugWindow::getInstance()->registerSystem(RENDERING_SYSTEM_NAME);
+
+    if (!_camera)
+        _camera = &_defaultCamera;
 }
 
 RenderingSystem::~RenderingSystem() {}

@@ -20,7 +20,5 @@ START_GAMESTATE(HowToPlayState, "HowToPlay")
 
     bool                                handleButtons();
 private:
-    Camera                              _camera;
-
     Entity*                             _returnButton = nullptr;
 END_GAMESTATE(HowToPlayState)

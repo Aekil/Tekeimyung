@@ -23,8 +23,6 @@ START_GAMESTATE(OptionsMenuState, "Options")
     bool            handleButtons();
 
 private:
-    Camera          _camera;
-
     Entity*         _toggleWindowModeButton = nullptr;
     Entity*         _returnButton = nullptr;
 

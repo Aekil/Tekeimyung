@@ -21,6 +21,7 @@
 #include <Engine/Systems/CollisionSystem.hpp>
 #include <Engine/Systems/ParticleSystem.hpp>
 #include <Engine/Systems/ScriptSystem.hpp>
+#include <Engine/Systems/UISystem.hpp>
 #include <Engine/Systems/MouseSystem.hpp>
 #include <Engine/Components.hh>
 #include <Engine/EntityFactory.hpp>
@@ -41,6 +42,7 @@ void    PlayState::setupSystems()
     _world.addSystem<CollisionSystem>();
     _world.addSystem<ResolutionSystem>();
     _world.addSystem<ParticleSystem>();
+    _world.addSystem<UISystem>();
     _world.addSystem<RenderingSystem>(&_camera, _world.getSystem<ParticleSystem>()->getEmitters());
 }
 

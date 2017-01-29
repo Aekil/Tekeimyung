@@ -46,6 +46,7 @@ private:
     ADD_MONITORING_VAR
 
     Camera*                                     _camera;
+    Camera                                      _defaultCamera;
 
     std::unordered_map<uint32_t, Entity*>       _transparentEntities;
 

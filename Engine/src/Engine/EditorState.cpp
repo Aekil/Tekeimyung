@@ -6,7 +6,7 @@
 #include <Engine/Sound/SoundManager.hpp>
 
 #include <Engine/Systems/RenderingSystem.hpp>
-#include <Engine/Systems/MenuSystem.hpp>
+#include <Engine/Systems/UISystem.hpp>
 #include <Engine/EntityFactory.hpp>
 #include <Engine/EditorState.hpp>
 
@@ -18,6 +18,7 @@ void    EditorState::onEnter() {}
 void    EditorState::setupSystems()
 {
     _world.addSystem<ParticleSystem>();
+    _world.addSystem<UISystem>();
     _world.addSystem<RenderingSystem>(&_camera, _world.getSystem<ParticleSystem>()->getEmitters());
 }
 

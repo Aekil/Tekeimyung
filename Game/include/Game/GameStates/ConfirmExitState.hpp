@@ -24,8 +24,6 @@ START_GAMESTATE(ConfirmExitState, "ConfirmExit")
     bool                                handleButtons();
 
 private:
-    Camera                              _camera;
-
     Entity*                             _yesButton = nullptr;
     Entity*                             _noButton = nullptr;
 END_GAMESTATE(ConfirmExitState)
