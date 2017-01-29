@@ -25,5 +25,28 @@ void    BasicState::setupSystems()
     _world.addSystem<ParticleSystem>();
     _world.addSystem<UISystem>();
     _world.addSystem<ButtonSystem>(_gameStateManager);
-    _world.addSystem<RenderingSystem>(nullptr, _world.getSystem<ParticleSystem>()->getEmitters());
+    _world.addSystem<RenderingSystem>(&_camera, _world.getSystem<ParticleSystem>()->getEmitters());
+}
+
+bool    BasicState::init()
+{
+    initCamera();
+    return (true);
+}
+
+void    BasicState::initCamera()
+{
+    _camera.translate(glm::vec3(350.0f, 250.0f, 300.0f));
+    _camera.setDir(glm::vec3(-30.0f));
+
+    // Set camera screen
+    float size = 500.0f;
+    Camera::sScreen screen;
+    screen.right = size * _camera.getAspect();
+    screen.left = -screen.right;
+    screen.top = size;
+    screen.bottom = -screen.top;
+    _camera.setScreen(screen);
+    _camera.setProjType(Camera::eProj::ORTHOGRAPHIC_3D);
+    _camera.setZoom(0.5f);
 }

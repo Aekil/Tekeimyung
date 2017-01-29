@@ -11,7 +11,7 @@
 class DebugWindow
 {
 public:
-    DebugWindow(const std::string& tile = "", const glm::vec2& pos = { 0, 0}, const glm::vec2& size = { 100, 100});
+    DebugWindow(const std::string& tile = "", const glm::vec2& pos = {0, 0}, const glm::vec2& size = {100, 100});
     virtual     ~DebugWindow();
 
     virtual void        build(float elapsedTime) = 0;
