@@ -112,10 +112,7 @@ void    EditorMenuDebugWindow::displayPlayStopMenu()
         {
             if (ImGui::MenuItem("Play"))
             {
-                std::shared_ptr<GameState> gameState = LevelLoader::getInstance()->createLevelState(_currentLevel, _gameStateManager);
-                // Remove the level file because the gameState will copy the EntityManager instead of loading the level
-                gameState->setLevelFile("");
-                _gameStateManager->addState(gameState, _em);
+                play();
             }
         }
         // Stop current level
@@ -173,9 +170,23 @@ void    EditorMenuDebugWindow::displayLoadPopup()
     }
     else if (ImGui::Button("Load"))
     {
-        _em->destroyAllEntities();
-        _currentLevel = _tmpLoadLevel;
-        LevelLoader::getInstance()->load(_currentLevel, _em);
+        loadLevel(_tmpLoadLevel);
         ImGui::CloseCurrentPopup();
     }
+}
+
+void    EditorMenuDebugWindow::loadLevel(const std::string& levelName)
+{
+    _em->destroyAllEntities();
+    _currentLevel = levelName;
+    _tmpLoadLevel = "";
+    LevelLoader::getInstance()->load(_currentLevel, _em);
+}
+
+void    EditorMenuDebugWindow::play()
+{
+    std::shared_ptr<GameState> gameState = LevelLoader::getInstance()->createLevelState(_currentLevel, _gameStateManager);
+    // Remove the level file because the gameState will copy the EntityManager instead of loading the level
+    gameState->setLevelFile("");
+    _gameStateManager->addState(gameState, _em);
 }

@@ -25,6 +25,9 @@ public:
     void                displaySaveAsPopup();
     void                displayLoadPopup();
 
+    void                loadLevel(const std::string& levelName);
+    void                play();
+
     GENERATE_ID(EditorMenuDebugWindow);
 
 private:

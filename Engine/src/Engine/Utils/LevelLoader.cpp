@@ -44,11 +44,16 @@ std::vector<const char*>& LevelLoader::getLevels()
     return (_levels);
 }
 
-void    LevelLoader::addLevel(const std::string& level)
+void    LevelLoader::addLevel(const std::string& levelName)
 {
-    char *str = new char [level.size() + 1];
-    strcpy_s(str, level.size() + 1, level.c_str());
+    char *str = new char [levelName.size() + 1];
+    strcpy_s(str, levelName.size() + 1, levelName.c_str());
     _levels.push_back(str);
+}
+
+bool    LevelLoader::hasLevel(const std::string& levelName)
+{
+    return (std::find(_levels.cbegin(), _levels.cend(), levelName) != _levels.cend());
 }
 
 void    LevelLoader::save(const std::string& levelName, const std::unordered_map<uint32_t, Entity*>& entities)

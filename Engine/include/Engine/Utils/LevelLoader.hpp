@@ -28,7 +28,8 @@ class LevelLoader
 
     const std::vector<const char*>&     getLevels() const;
     std::vector<const char*>&           getLevels();
-    void                                addLevel(const std::string& level);
+    void                                addLevel(const std::string& levelName);
+    bool                                hasLevel(const std::string& levelName);
 
     void                                save(const std::string& levelName, const std::unordered_map<uint32_t, Entity*>& entities);
     void                                load(const std::string& levelName, EntityManager* em);
