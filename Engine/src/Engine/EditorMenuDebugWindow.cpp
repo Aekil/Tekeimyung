@@ -120,14 +120,18 @@ void    EditorMenuDebugWindow::displayPlayStopMenu()
                         _currentLevel.size() > 0)
                     {
                         stateRegistered = true;
-                         std::shared_ptr<GameState> gameState = state->create(_gameStateManager);
+                        std::shared_ptr<GameState> gameState = state->create(_gameStateManager);
                         _gameStateManager->addState(gameState);
                         break;
                     }
                 }
 
-                if (!stateRegistered)
-                    displayStateNotRegistered();
+                if (!stateRegistered && _currentLevel.size() > 0)
+                {
+                    std::shared_ptr<GameState> gameState = std::make_shared<BasicState>(_gameStateManager);
+                    gameState->setLevelFile(_currentLevel);
+                    _gameStateManager->addState(gameState);
+                }
             }
         }
         // Stop current level

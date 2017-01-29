@@ -82,6 +82,11 @@ World&  GameState::getWorld()
     return (_world);
 }
 
+void    GameState::setLevelFile(const std::string& levelFile)
+{
+    _levelFile = levelFile;
+}
+
 void    GameState::initDebugWindows()
 {
     EntityManager* em = _world.getEntityManager();
@@ -142,6 +147,7 @@ void    GameState::loadLevel()
     // Load level
     if (_levelFile.size() > 0)
     {
+        LOG_INFO("Loading level \"%s\"", _levelFile.c_str());
         LevelLoader::getInstance()->load(_levelFile, _world.getEntityManager());
     }
 }

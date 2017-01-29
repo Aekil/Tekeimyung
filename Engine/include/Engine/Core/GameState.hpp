@@ -48,6 +48,7 @@ public:
     }
 
     World&                          getWorld();
+    void                            setLevelFile(const std::string& levelFile);
 
 protected:
     void                            renderPreviousStates(const std::vector<uint32_t>& filterIds = {});
