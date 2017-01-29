@@ -25,6 +25,8 @@ public:
     void                displaySaveAsPopup();
     void                displayLoadPopup();
 
+    GENERATE_ID(EditorMenuDebugWindow);
+
 private:
     EntityManager*      _em;
 

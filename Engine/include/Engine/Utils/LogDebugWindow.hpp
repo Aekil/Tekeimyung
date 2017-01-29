@@ -17,6 +17,8 @@ public:
 
     virtual void        build(float elapsedTime);
 
+    GENERATE_ID(LogDebugWindow);
+
 private:
     std::shared_ptr<Logger> _logger;
     uint32_t                _lastLogSize;

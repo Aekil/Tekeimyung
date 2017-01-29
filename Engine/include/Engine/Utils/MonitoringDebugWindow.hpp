@@ -46,6 +46,8 @@ public:
     uint16_t                                        registerSystem(std::string name);
     void                                            updateSystem(uint16_t key, float timeSec, uint32_t nbEntities);
 
+    GENERATE_ID(MonitoringDebugWindow);
+
 private:
     float                                           calcTimeAverage(std::vector<float> timeLogs);
     void                                            updateTimeLogsSystem(tMonitoring& system, bool *resetCheckSec);

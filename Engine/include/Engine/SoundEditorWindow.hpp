@@ -24,6 +24,7 @@ public:
 
     virtual void                build(float elapsedTime);
 
+    GENERATE_ID(SoundEditorWindow);
 
 private:
     std::vector<tEventSound>    _eventSoundData;

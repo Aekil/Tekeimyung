@@ -47,6 +47,22 @@ public:
         _debugWindows.push_back(newDebugWindow);
     }
 
+    template<typename T>
+    std::shared_ptr<T>              getDebugWindow()
+    {
+        uint32_t id = T::identifier;
+
+        for (auto& debugWindow: _debugWindows)
+        {
+            if (debugWindow->getId() == id)
+            {
+                return (std::static_pointer_cast<T>(debugWindow));
+            }
+        }
+
+        return (nullptr);
+    }
+
     World&                          getWorld();
     void                            setLevelFile(const std::string& levelFile);
     void                            cloneEntityManager(EntityManager* em);

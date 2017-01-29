@@ -18,6 +18,8 @@ public:
 
     static uint32_t     getSelectedEntityId();
 
+    GENERATE_ID(LevelEntitiesDebugWindow);
+
 private:
     void                displayEntityDebug(Entity* entity);
 

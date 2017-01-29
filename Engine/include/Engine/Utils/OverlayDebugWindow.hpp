@@ -13,4 +13,6 @@ public:
     virtual ~OverlayDebugWindow();
 
     virtual void        build(float elapsedTime);
+
+    GENERATE_ID(OverlayDebugWindow);
 };

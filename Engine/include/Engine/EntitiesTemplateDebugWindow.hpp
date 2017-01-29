@@ -16,6 +16,8 @@ public:
 
     virtual void        build(float elapsedTime);
 
+    GENERATE_ID(EntitiesTemplateDebugWindow);
+
 private:
     void                cloneTemplate(const std::string& cloneTypeName, const std::string& newTypeName);
 

@@ -6,6 +6,7 @@
 
 #include <string>
 #include <glm/vec2.hpp>
+#include <ECS/crc32.hh>
 
 class DebugWindow
 {
@@ -21,6 +22,8 @@ public:
     bool                isDisplayed() const;
     void                setDisplayed(bool displayed);
 
+    virtual uint32_t    getId() const = 0;
+
 protected:
     void                setDisableButtonStyle();
     void                removeDisableButtonStyle();
@@ -31,3 +34,11 @@ protected:
     glm::vec2           _size;
     bool                _displayed;
 };
+
+
+#define GENERATE_ID(name)                                                       \
+static constexpr unsigned int identifier = #name##_crc32;                       \
+uint32_t            getId() const override final                                \
+{                                                                               \
+    return (name::identifier);                                                  \
+}
