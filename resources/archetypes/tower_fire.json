@@ -1,6 +1,9 @@
 {
     "name": "TOWER_FIRE",
     "components": {
+      "sNameComponent" : {
+         "name" : "TOWER_FIRE"
+      },
             "sPositionComponent": {
                 "x": 0,
                 "y": 0,

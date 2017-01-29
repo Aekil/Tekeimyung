@@ -1,5 +1,8 @@
 {
    "components" : {
+      "sNameComponent" : {
+         "name" : "TRAP_CUTTER"
+      },
       "sRenderComponent" : {
          "animated" : true,
          "animations" : [

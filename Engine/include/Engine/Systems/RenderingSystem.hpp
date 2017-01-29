@@ -26,14 +26,15 @@ public:
 
     virtual void update(EntityManager& em, float elapsedTime);
     virtual bool                            init();
-    void                                    renderEntity(sRenderComponent *render, Entity* entity, float elapsedTime);
-    void                                    renderCollider(Entity* entity);
-    void                                    renderColliders(EntityManager& em);
-    void                                    renderParticles(EntityManager& em, float elapsedTime);
 
     virtual bool                            onEntityNewComponent(Entity* entity, sComponent* component);
     virtual bool                            onEntityRemovedComponent(Entity* entity, sComponent* component);
     virtual bool                            onEntityDeleted(Entity* entity);
+
+    void                                    renderEntity(sRenderComponent *render, Entity* entity, float elapsedTime);
+    void                                    renderCollider(Entity* entity);
+    void                                    renderColliders(EntityManager& em);
+    void                                    renderParticles(EntityManager& em, float elapsedTime);
 
 private:
     bool                                    isTransparent(sRenderComponent *render) const;
@@ -45,6 +46,7 @@ private:
     ADD_MONITORING_VAR
 
     Camera*                                     _camera;
+    Camera                                      _defaultCamera;
 
     std::unordered_map<uint32_t, Entity*>       _transparentEntities;
 

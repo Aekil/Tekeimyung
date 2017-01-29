@@ -1,5 +1,8 @@
 {
    "components" : {
+      "sNameComponent" : {
+         "name" : "BLOCK_GREEN"
+      },
       "sPositionComponent" : {
          "x" : 2,
          "y" : 3,

@@ -18,38 +18,35 @@
 // string: "PLAYER", "TILE1", "TILE2"
 // enum: PLAYER, TILE1, TILE2
 #define ENTITIES_TYPES(PROCESS)\
-    PROCESS(EMPTY_OBJECT),\
-    PROCESS(PLAYER),\
-    PROCESS(ENEMY),\
-    PROCESS(BLOCK_GREEN),\
-    PROCESS(BLOCK_BROWN),\
-    PROCESS(SPAWNER),\
-    PROCESS(TOWER_FIRE),\
-    PROCESS(EMITTER_FIRE),\
-    PROCESS(EMITTER_WATER),\
-    PROCESS(FIRE_BALL),\
-    PROCESS(ICON_SELECTED), \
-    PROCESS(BUTTON_RETURN), \
-    PROCESS(BUTTON_RESUME),\
-    PROCESS(BUTTON_QUIT),\
-    PROCESS(BUTTON_TOGGLE_FULLSCREEN),\
-    PROCESS(BUTTON_TOGGLE_WINDOWED),\
-    PROCESS(BUTTON_HOW_TO_PLAY),\
-    PROCESS(BUTTON_OPTIONS),\
-    PROCESS(HOW_TO_PLAY_MENU),\
-    PROCESS(BACKGROUND),\
-    PROCESS(BUTTON_CONFIRM_YES),\
-    PROCESS(BUTTON_CONFIRM_NO),\
-    PROCESS(QUIT_CONFIRM_POPUP),\
-    PROCESS(QUIT_CONFIRM_TEXT),\
-    PROCESS(GAME_MANAGER),\
-    PROCESS(CASTLE),\
-    PROCESS(TRAP_NEEDLE),\
-    PROCESS(TRAP_CUTTER),\
-    PROCESS(TRAP_FIRE),\
-
-#define GENERATE_ENUM(ENUM) ENUM
-#define GENERATE_STRING(STRING) #STRING
+    PROCESS(EMPTY_OBJECT)\
+    PROCESS(PLAYER)\
+    PROCESS(ENEMY)\
+    PROCESS(BLOCK_GREEN)\
+    PROCESS(BLOCK_BROWN)\
+    PROCESS(SPAWNER)\
+    PROCESS(TOWER_FIRE)\
+    PROCESS(EMITTER_FIRE)\
+    PROCESS(EMITTER_WATER)\
+    PROCESS(FIRE_BALL)\
+    PROCESS(ICON_SELECTED)\
+    PROCESS(BUTTON_RETURN)\
+    PROCESS(BUTTON_RESUME)\
+    PROCESS(BUTTON_QUIT)\
+    PROCESS(BUTTON_TOGGLE_FULLSCREEN)\
+    PROCESS(BUTTON_TOGGLE_WINDOWED)\
+    PROCESS(BUTTON_HOW_TO_PLAY)\
+    PROCESS(BUTTON_OPTIONS)\
+    PROCESS(HOW_TO_PLAY_MENU)\
+    PROCESS(BACKGROUND)\
+    PROCESS(BUTTON_CONFIRM_YES)\
+    PROCESS(BUTTON_CONFIRM_NO)\
+    PROCESS(QUIT_CONFIRM_POPUP)\
+    PROCESS(QUIT_CONFIRM_TEXT)\
+    PROCESS(GAME_MANAGER)\
+    PROCESS(CASTLE)\
+    PROCESS(TRAP_NEEDLE)\
+    PROCESS(TRAP_CUTTER)\
+    PROCESS(TRAP_FIRE)
 
 #define ARCHETYPES_LOCATION "resources/archetypes"
 
@@ -66,14 +63,18 @@ public:
     EntityFactory();
     ~EntityFactory();
     static void                                             loadDirectory(const std::string& archetypesDir);
+
+    static Entity*                                          createOrGetEntity(eArchetype type);
+
     static Entity*                                          createEntity(eArchetype type);
     static Entity*                                          createEntity(eArchetype type, const glm::vec3& pos);
     static Entity*                                          createEntity(const std::string& typeName);
     static Entity*                                          createEntity(const std::string& typeName, const glm::vec3& pos);
+
     static void                                             bindEntityManager(EntityManager* em);
     static EntityManager*                                   getBindedEntityManager();
 
-    static Entity*                                          createEntityType(const std::string& typeName);
+    static void                                             createEntityType(const std::string& typeName);
 
     static const std::vector<const char*>&                  getTypesString();
     static bool                                             entityTypeExists(const std::string& type);
@@ -88,8 +89,12 @@ public:
     static void                                             initAnimations(Entity* entity);
     static void                                             reverseAnimations(Entity* entity);
 
-    static Entity*                                          cloneEntity(Entity* entity);
     static Entity*                                          cloneEntity(const std::string& typeName);
+
+    static void                                             copyEntityManager(EntityManager* dst, EntityManager* src);
+
+    static void                                             saveEntityTemplateToJson(const std::string& typeName);
+    static void                                             saveEntityTemplate(const std::string& typeName, Entity* entity);
 
 private:
     // Store entities components names (ComponentFactory has components)

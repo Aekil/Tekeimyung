@@ -7,9 +7,11 @@
 #include <imgui.h>
 #include <imgui_impl_glfw_gl3.h>
 
+#include <Engine/Graphics/Renderer.hpp>
+#include <Engine/Sound/SoundManager.hpp>
+#include <Engine/Systems/UISystem.hpp>
 #include <Engine/Utils/Debug.hpp>
 #include <Engine/Utils/Logger.hpp>
-#include <Engine/Sound/SoundManager.hpp>
 
 #include <Engine/Window/GameWindow.hpp>
 
@@ -95,7 +97,7 @@ bool    GameWindow::initialize()
     setViewport(glm::ivec4(0.0f, 0.0f, _bufferWidth, _bufferHeight));
     setRunning(true);
 
-    #if defined(ENGINE_DEBUG)
+    #if defined(ENGINE_DEBUG) && ENGINE_DEBUG == true
         initDebugOutput();
     #endif
 
@@ -114,6 +116,7 @@ void	GameWindow::registerEvents()
     glfwSetWindowFocusCallback(_window, GameWindow::focusCallback);
     glfwSetWindowPosCallback(_window, GameWindow::posCallback);
     glfwSetWindowCloseCallback(_window, GameWindow::closeCallback);
+    glfwSetWindowSizeCallback(_window, GameWindow::sizeCallback);
 }
 
 void APIENTRY   GameWindow::debugOutput(GLenum source, GLenum type, GLenum id,
@@ -279,7 +282,7 @@ void    GameWindow::toggleFullscreen()
         glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
         glfwSetWindowMonitor(_window, nullptr, 0, 0, _screenWidth, _screenHeight, refreshRate);
         glfwGetFramebufferSize(_window, &_bufferWidth, &_bufferHeight);
-        setViewport(glm::ivec4(0.0f, 0.0f, _bufferWidth, _bufferHeight));
+        handleResize(_bufferWidth, _bufferHeight);
         LOG_INFO("Toggled windowed mode.");
     }
     else
@@ -290,7 +293,7 @@ void    GameWindow::toggleFullscreen()
         refreshRate = vidmode->refreshRate;
         glfwSetWindowMonitor(_window, _monitor, 0, 0, _screenWidth, _screenHeight, refreshRate);
         glfwGetFramebufferSize(_window, &_bufferWidth, &_bufferHeight);
-        setViewport(glm::ivec4(0.0f, 0.0f, _bufferWidth, _bufferHeight));
+        handleResize(_bufferWidth, _bufferHeight);
         LOG_INFO("Toggled fullscreen mode.");
     }
 }
@@ -360,6 +363,19 @@ void    GameWindow::closeCallback(GLFWwindow* window)
 
     gameWindow->handleClose(window);
 }
+
+/**
+    Callback function used to handle the resize of the window
+*/
+void    GameWindow::sizeCallback(GLFWwindow* window, int width, int height)
+{
+    GameWindow*     gameWindow;
+    gameWindow = reinterpret_cast<GameWindow*>(glfwGetWindowUserPointer(window));
+    ASSERT(gameWindow != nullptr, "GameWindow should not be null.");
+
+    gameWindow->handleResize(width, height);
+}
+
 
 /**
     Callback function used to handle the auto pause of the game
@@ -608,6 +624,25 @@ void    GameWindow::hasLostFocus(bool lostFocus)
 Timer&  GameWindow::getTimer()
 {
     return (_timer);
+}
+
+void    GameWindow::handleResize(int width, int height)
+{
+    _bufferWidth = width;
+    _bufferHeight = height;
+    setViewport(glm::ivec4(0.0f, 0.0f, _bufferWidth, _bufferHeight));
+
+    // Handle window resize for menu systems
+    for (auto& gameState: _gameStateManager->getStates())
+    {
+        UISystem* uiSystem = gameState->getWorld().getSystem<UISystem>();
+        if (uiSystem)
+        {
+            uiSystem->onWindowResize(*gameState->getWorld().getEntityManager());
+        }
+    }
+
+    Renderer::getInstance()->onWindowResize();
 }
 
 void    GameWindow::handleClose(GLFWwindow* window)

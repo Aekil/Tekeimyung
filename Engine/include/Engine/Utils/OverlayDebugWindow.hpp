@@ -9,7 +9,7 @@
 class OverlayDebugWindow: public DebugWindow
 {
 public:
-    OverlayDebugWindow();
+    OverlayDebugWindow(const glm::vec2& pos, const glm::vec2& size);
     virtual ~OverlayDebugWindow();
 
     virtual void        build(float elapsedTime);

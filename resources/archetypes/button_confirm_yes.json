@@ -1,6 +1,9 @@
 {
    "components" : {
       "sButtonComponent" : null,
+      "sNameComponent" : {
+         "name" : "BUTTON_CONFIRM_YES"
+      },
       "sRenderComponent" : {
          "animated" : false,
          "animations" : [],
@@ -16,8 +19,8 @@
       },
       "sTransformComponent" : {
          "pos" : {
-            "x" : 850,
-            "y" : 468.5,
+            "x" : 833.20001220703125,
+            "y" : 478.5,
             "z" : 0
          },
          "rotation" : {
@@ -29,6 +32,12 @@
             "x" : 10,
             "y" : 6,
             "z" : 1
+         }
+      },
+      "sUiComponent" : {
+         "offset" : {
+            "x" : -4,
+            "y" : 0
          }
       }
    },

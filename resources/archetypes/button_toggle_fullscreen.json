@@ -1,6 +1,9 @@
 {
    "components" : {
       "sButtonComponent" : null,
+      "sNameComponent" : {
+         "name" : "BUTTON_TOGGLE_FULLSCREEN"
+      },
       "sRenderComponent" : {
          "animated" : false,
          "animations" : [],
@@ -16,8 +19,8 @@
       },
       "sTransformComponent" : {
          "pos" : {
-            "x" : 860,
-            "y" : 558.5,
+            "x" : 660,
+            "y" : 478.5,
             "z" : -1
          },
          "rotation" : {
@@ -29,6 +32,12 @@
             "x" : 60,
             "y" : 6,
             "z" : 6
+         }
+      },
+      "sUiComponent" : {
+         "offset" : {
+            "x" : 0,
+            "y" : 0
          }
       }
    },

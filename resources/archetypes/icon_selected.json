@@ -1,5 +1,8 @@
 {
    "components" : {
+      "sNameComponent" : {
+         "name" : "ICON_SELECTED"
+      },
       "sParticleEmitterComponent" : {
          "angle" : 160,
          "angle_variance" : 0,
@@ -68,8 +71,8 @@
       },
       "sTransformComponent" : {
          "pos" : {
-            "x" : 808,
-            "y" : 472.5,
+            "x" : 791.20001220703125,
+            "y" : 482.5,
             "z" : 0
          },
          "rotation" : {
@@ -78,9 +81,15 @@
             "z" : 0
          },
          "scale" : {
-            "x" : 4,
-            "y" : 4,
-            "z" : 4
+            "x" : 6,
+            "y" : 6,
+            "z" : 6
+         }
+      },
+      "sUiComponent" : {
+         "offset" : {
+            "x" : 0,
+            "y" : 0
          }
       }
    },

@@ -1,6 +1,9 @@
 {
    "components" : {
       "sButtonComponent" : null,
+      "sNameComponent" : {
+         "name" : "BUTTON_RESUME"
+      },
       "sRenderComponent" : {
          "animated" : false,
          "animations" : [],
@@ -16,8 +19,8 @@
       },
       "sTransformComponent" : {
          "pos" : {
-            "x" : 860,
-            "y" : 718.5,
+            "x" : 760,
+            "y" : 570.030029296875,
             "z" : -1
          },
          "rotation" : {
@@ -29,6 +32,12 @@
             "x" : 40,
             "y" : 6,
             "z" : 6
+         }
+      },
+      "sUiComponent" : {
+         "offset" : {
+            "x" : 0,
+            "y" : 9
          }
       }
    },

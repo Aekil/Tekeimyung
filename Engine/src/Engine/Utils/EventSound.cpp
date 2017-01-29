@@ -91,8 +91,7 @@ void    EventSound::loadEvents()
     {
         JsonReader jsonReader;
         JsonValue json;
-        const std::string& eventsFileContent = RessourceManager::getInstance()->getFile(EVENTS_CONFIG);
-        if (!jsonReader.parse(eventsFileContent, json))
+        if (!jsonReader.parse(EVENTS_CONFIG, json))
             EXCEPT(IOException, "Cannot parse event file \"%s\"", EVENTS_CONFIG);
 
         auto events = json.get()["events"];

@@ -32,7 +32,8 @@
     PROCESS(sResolutionComponent),\
     PROCESS(sButtonComponent),\
     PROCESS(sTileComponent),\
-    PROCESS(sScriptComponent)\
+    PROCESS(sScriptComponent),\
+    PROCESS(sUiComponent)
 
 #define GENERATE_PAIRS(COMPONENT) { #COMPONENT, new ComponentFactory<COMPONENT>() }
 
@@ -53,7 +54,9 @@ public:
 
     // Json load/save
     virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json) = 0;
-    virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType) = 0;
+    // The component to save can be pass to saveToJson, else it will save the entity template component in _components[entityType]
+    // The destination json can also be pass to saveToJson, else it will save the entity template component json in _componentsJson[entityType]
+    virtual JsonValue& saveToJson(const std::string& entityType, const sComponent* savedComponent = nullptr, JsonValue* toJson = nullptr) = 0;
     virtual void save(const std::string& entityType, sComponent* component) = 0;
     virtual void remove(const std::string& entityType) = 0;
 
@@ -73,6 +76,22 @@ public:
     virtual void                                                    addComponent(const std::string& entityType, sComponent* component) = 0;
     virtual void                                                    saveComponentJson(const std::string& entityType, const JsonValue& json) = 0;
     virtual bool                                                    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity) = 0;
+
+    template<typename T>
+    bool updateComboEnum(const char* name, T& enum_)
+    {
+        int enumInt = (int)enum_;
+
+        if (ImGui::Combo(name, &enumInt, EnumManager<T>::enumStrings, EnumManager<T>::enumLength))
+        {
+            enum_ = (T)enumInt;
+            return (true);
+        }
+        return (false);
+    }
+
+    bool updateComboString(const char* name, std::vector<const char*>& stringList, std::string& stringValue);
+
 private:
     // Store Components types
     static std::unordered_map<std::string, IComponentFactory*>      _componentsTypes;
@@ -91,6 +110,7 @@ class BaseComponentFactory: public IComponentFactory
 {
 public:
     BaseComponentFactory() {}
+
     virtual ~BaseComponentFactory() {}
 
     // loadFromJson has to be overloaded in BaseComponentFactory child classes
@@ -101,32 +121,32 @@ public:
 
     // A component can't be saved without this overload
     // In case it's not defined, the loaded component json will be saved
-    virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType)
+    virtual JsonValue& saveToJson(const std::string& entityType, const sComponent* savedComponent = nullptr, JsonValue* toJson = nullptr)
     {
-        LOG_WARN("%s::%s: : can't save to json because no saveToJson found. The previously loaded json will be saved", entityType.c_str(), componentType.c_str());
+        LOG_WARN("%s::%s: : can't save to json because no saveToJson found. The previously loaded json will be saved", entityType.c_str(), getTypeName());
         return _componentsJson[entityType];
     }
 
-    virtual void save(const std::string& entityType, sComponent* component)
+    void save(const std::string& entityType, sComponent* component)  override final
     {
         delete _components[entityType];
         _components[entityType] = component->clone();
     }
 
-    virtual void remove(const std::string& entityType)
+    void remove(const std::string& entityType)  override final
     {
         _components.erase(entityType);
     }
 
     // Add entity in component entities map
-    virtual void addComponent(const std::string& entityType, sComponent* component)
+    void addComponent(const std::string& entityType, sComponent* component)  override final
     {
         _components[entityType] = component;
     }
 
     // Save component json in case saveToJson is not overloaded and
     // we need to return the default json
-    virtual void    saveComponentJson(const std::string& entityType, const JsonValue& json)
+    void    saveComponentJson(const std::string& entityType, const JsonValue& json) override final
     {
         _componentsJson[entityType] = json;
     }
@@ -139,7 +159,8 @@ public:
     }
 
 private:
-    virtual sComponent*         clone(const std::string& entityType)
+    virtual char* getTypeName() = 0;
+    sComponent*         clone(const std::string& entityType)
     {
         return _components[entityType]->clone();
     }
@@ -170,11 +191,12 @@ public:
 */
 
 template <>
-class ComponentFactory<sRenderComponent>: public BaseComponentFactory<sRenderComponent>
+class ComponentFactory<sRenderComponent> final: public BaseComponentFactory<sRenderComponent>
 {
 public:
-    virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
-    virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
+    char* getTypeName() override final { return "sRenderComponent"; }
+    sComponent* loadFromJson(const std::string& entityType, const JsonValue& json) override final;
+    JsonValue& saveToJson(const std::string& entityType, const sComponent* savedComponent = nullptr, JsonValue* toJson = nullptr) override final;
 
 private:
     void            loadTranslateParamAnimation(std::shared_ptr<ParamAnimation<glm::vec3>> paramAnimation, JsonValue& json);
@@ -183,7 +205,7 @@ private:
     void            saveTranslateParamAnimation(std::shared_ptr<IParamAnimation> paramAnimation_, JsonValue& json);
     void            saveColorParamAnimation(std::shared_ptr<IParamAnimation> paramAnimation_, JsonValue& json);
 
-    virtual bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity);
+    bool            updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity) override final;
     bool            updateAnimationsEditor(sRenderComponent* component, Entity* entity);
     bool            updateParamsAnimationsEditor(AnimationPtr playedAnimation, Entity* entity);
     bool            updateAnimationParamTranslate(Entity* entity, std::shared_ptr<IParamAnimation> paramAnimation_, uint32_t& frameNb);
@@ -196,11 +218,12 @@ private:
 */
 
 template <>
-class ComponentFactory<sPositionComponent>: public BaseComponentFactory<sPositionComponent>
+class ComponentFactory<sPositionComponent> final: public BaseComponentFactory<sPositionComponent>
 {
 public:
-    virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
-    virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
+    char* getTypeName() override final { return "sPositionComponent"; }
+    sComponent* loadFromJson(const std::string& entityType, const JsonValue& json) override final;
+    JsonValue& saveToJson(const std::string& entityType, const sComponent* savedComponent = nullptr, JsonValue* toJson = nullptr) override final;
 };
 
 /*
@@ -208,11 +231,12 @@ public:
 */
 
 template <>
-class ComponentFactory<sDirectionComponent>: public BaseComponentFactory<sDirectionComponent>
+class ComponentFactory<sDirectionComponent> final: public BaseComponentFactory<sDirectionComponent>
 {
 public:
-    virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
-    virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
+    char* getTypeName() override final { return "sDirectionComponent"; }
+    sComponent* loadFromJson(const std::string& entityType, const JsonValue& json) override final;
+    JsonValue& saveToJson(const std::string& entityType, const sComponent* savedComponent = nullptr, JsonValue* toJson = nullptr) override final;
 };
 
 
@@ -221,13 +245,14 @@ public:
 */
 
 template <>
-class ComponentFactory<sBoxColliderComponent>: public BaseComponentFactory<sBoxColliderComponent>
+class ComponentFactory<sBoxColliderComponent> final: public BaseComponentFactory<sBoxColliderComponent>
 {
 public:
-    virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
-    virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
+    char* getTypeName() override final { return "sBoxColliderComponent"; }
+    sComponent* loadFromJson(const std::string& entityType, const JsonValue& json) override final;
+    JsonValue& saveToJson(const std::string& entityType, const sComponent* savedComponent = nullptr, JsonValue* toJson = nullptr) override final;
 
-    virtual bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity);
+    bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity) override final;
 };
 
 
@@ -236,23 +261,25 @@ public:
 */
 
 template <>
-class ComponentFactory<sSphereColliderComponent>: public BaseComponentFactory<sSphereColliderComponent>
+class ComponentFactory<sSphereColliderComponent> final: public BaseComponentFactory<sSphereColliderComponent>
 {
 public:
-    virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
-    virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
+    char* getTypeName() override final { return "sSphereColliderComponent"; }
+    sComponent* loadFromJson(const std::string& entityType, const JsonValue& json) override final;
+    JsonValue& saveToJson(const std::string& entityType, const sComponent* savedComponent = nullptr, JsonValue* toJson = nullptr) override final;
 
-    virtual bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity);
+    bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity) override final;
 };
 
 /*
 ** sResolutionComponent
 */
 template <>
-class ComponentFactory<sResolutionComponent> : public BaseComponentFactory<sResolutionComponent>
+class ComponentFactory<sResolutionComponent> final: public BaseComponentFactory<sResolutionComponent>
 {
 public:
-    virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
+    char* getTypeName() override final { return "sResolutionComponent"; }
+    sComponent* loadFromJson(const std::string& entityType, const JsonValue& json) override final;
 };
 
 /*
@@ -260,11 +287,12 @@ public:
 */
 
 template <>
-class ComponentFactory<sGravityComponent>: public BaseComponentFactory<sGravityComponent>
+class ComponentFactory<sGravityComponent> final: public BaseComponentFactory<sGravityComponent>
 {
 public:
-    virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
-    virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
+    char* getTypeName() override final { return "sGravityComponent"; }
+    sComponent* loadFromJson(const std::string& entityType, const JsonValue& json) override final;
+    JsonValue& saveToJson(const std::string& entityType, const sComponent* savedComponent = nullptr, JsonValue* toJson = nullptr) override final;
 };
 
 
@@ -273,13 +301,15 @@ public:
 */
 
 template <>
-class ComponentFactory<sTypeComponent>: public BaseComponentFactory<sTypeComponent>
+class ComponentFactory<sTypeComponent> final: public BaseComponentFactory<sTypeComponent>
 {
 public:
-    virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
-    virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
-    virtual eEntityType stringToEntityType(const std::string& entityTypeStr);
-    virtual std::string entityTypeToString(eEntityType entityType);
+    char* getTypeName() override final { return "sTypeComponent"; }
+    sComponent* loadFromJson(const std::string& entityType, const JsonValue& json) override final;
+    JsonValue& saveToJson(const std::string& entityType, const sComponent* savedComponent = nullptr, JsonValue* toJson = nullptr) override final;
+
+    eEntityType stringToEntityType(const std::string& entityTypeStr);
+    std::string entityTypeToString(eEntityType entityType);
 };
 
 /*
@@ -287,13 +317,14 @@ public:
 */
 
 template <>
-class ComponentFactory<sParticleEmitterComponent>: public BaseComponentFactory<sParticleEmitterComponent>
+class ComponentFactory<sParticleEmitterComponent> final: public BaseComponentFactory<sParticleEmitterComponent>
 {
 public:
-    virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
-    virtual JsonValue& saveToJson(const std::string& entityType, const std::string& componentType);
+    char* getTypeName() override final { return "sParticleEmitterComponent"; }
+    sComponent* loadFromJson(const std::string& entityType, const JsonValue& json) override final;
+    JsonValue& saveToJson(const std::string& entityType, const sComponent* savedComponent = nullptr, JsonValue* toJson = nullptr) override final;
 
-    virtual bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity);
+    bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity) override final;
 };
 
 /*
@@ -301,10 +332,12 @@ public:
 */
 
 template <>
-class ComponentFactory<sNameComponent> : public BaseComponentFactory<sNameComponent>
+class ComponentFactory<sNameComponent> final: public BaseComponentFactory<sNameComponent>
 {
 public:
-    virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
+    char* getTypeName() override final { return "sNameComponent"; }
+    sComponent* loadFromJson(const std::string& entityType, const JsonValue& json) override final;
+    JsonValue& saveToJson(const std::string& entityType, const sComponent* savedComponent = nullptr, JsonValue* toJson = nullptr) override final;
 };
 
 
@@ -313,13 +346,14 @@ public:
 */
 
 template <>
-class ComponentFactory<sTransformComponent> : public BaseComponentFactory<sTransformComponent>
+class ComponentFactory<sTransformComponent> final: public BaseComponentFactory<sTransformComponent>
 {
 public:
-    virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
-    virtual JsonValue&  saveToJson(const std::string& entityType, const std::string& componentType);
+    char* getTypeName() override final { return "sTransformComponent"; }
+    sComponent* loadFromJson(const std::string& entityType, const JsonValue& json) override final;
+    JsonValue&  saveToJson(const std::string& entityType, const sComponent* savedComponent = nullptr, JsonValue* toJson = nullptr) override final;
 
-    virtual bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity);
+    bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity) override final;
 
     // Update transforms with gizmos
     // Used for multiple components: sTransformComponent, sBoxColliderComponent
@@ -332,10 +366,14 @@ public:
 */
 
 template <>
-class ComponentFactory<sButtonComponent> : public BaseComponentFactory<sButtonComponent>
+class ComponentFactory<sButtonComponent> final: public BaseComponentFactory<sButtonComponent>
 {
 public:
-    virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
+    char* getTypeName() override final { return "sButtonComponent"; }
+    sComponent* loadFromJson(const std::string& entityType, const JsonValue& json) override final;
+    JsonValue&  saveToJson(const std::string& entityType, const sComponent* savedComponent = nullptr, JsonValue* toJson = nullptr) override final;
+
+    bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity) override final;
 };
 
 
@@ -344,10 +382,11 @@ public:
 */
 
 template <>
-class ComponentFactory<sTileComponent> : public BaseComponentFactory<sTileComponent>
+class ComponentFactory<sTileComponent> final: public BaseComponentFactory<sTileComponent>
 {
 public:
-    virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
+    char* getTypeName() override final { return "sTileComponent"; }
+    sComponent* loadFromJson(const std::string& entityType, const JsonValue& json) override final;
 };
 
 
@@ -356,8 +395,25 @@ public:
 */
 
 template <>
-class ComponentFactory<sScriptComponent> : public BaseComponentFactory<sScriptComponent>
+class ComponentFactory<sScriptComponent> final: public BaseComponentFactory<sScriptComponent>
 {
 public:
-    virtual sComponent* loadFromJson(const std::string& entityType, const JsonValue& json);
+    char* getTypeName() override final { return "sScriptComponent"; }
+    sComponent* loadFromJson(const std::string& entityType, const JsonValue& json) override final;
+};
+
+
+/*
+** sUiComponent
+*/
+
+template <>
+class ComponentFactory<sUiComponent> final: public BaseComponentFactory<sUiComponent>
+{
+public:
+    char* getTypeName() override final { return "sUiComponent"; }
+    sComponent* loadFromJson(const std::string& entityType, const JsonValue& json) override final;
+    JsonValue&  saveToJson(const std::string& entityType, const sComponent* savedComponent = nullptr, JsonValue* toJson = nullptr) override final;
+
+    bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity) override final;
 };

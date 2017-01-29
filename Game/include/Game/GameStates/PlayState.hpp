@@ -21,15 +21,15 @@
 
 START_GAMESTATE(PlayState)
  public:
-    virtual ~PlayState();
+    ~PlayState();
 
-    virtual void                        onEnter();
-    virtual bool                        init();
-    virtual bool                        update(float elapsedTime);
+    void                                onEnter();
+    void                                setupSystems() override final;
+    bool                                init();
+    bool                                update(float elapsedTime);
 
     void                                initCamera();
     void                                initEntities();
-    void                                addSystems();
 
 private:
     void                                updateCameraInputs(float elapsedTime);

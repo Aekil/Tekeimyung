@@ -1,5 +1,8 @@
 {
    "components" : {
+      "sNameComponent" : {
+         "name" : "GAME_MANAGER"
+      },
       "sPositionComponent" : {
          "x" : 100,
          "y" : 100,

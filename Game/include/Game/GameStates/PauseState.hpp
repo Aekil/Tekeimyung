@@ -9,27 +9,12 @@
 #include <ECS/System.hpp>
 #include <ECS/World.hpp>
 
-START_GAMESTATE(PauseState)
+START_GAMESTATE(PauseState, "Pause")
  public:
-    virtual ~PauseState();
+    ~PauseState();
 
-    virtual void                        onEnter();
-    virtual bool                        init();
-    virtual bool                        update(float elapsedTime);
-
-    void                                initCamera();
-
-    Entity*                             createButton(eArchetype type, const glm::vec2& pos);
-    void                                handleButtons();
-
-private:
-    System*                             _playStateRendersystem;
-    World*                              _playStateWorld;
-
-    Camera                              _camera;
-
-    Entity*                             _resumeButton = nullptr;
-    Entity*                             _howToPlayButton = nullptr;
-    Entity*                             _optionsButton = nullptr;
-    Entity*                             _quitButton = nullptr;
+    void                                onEnter() override final;
+    void                                setupSystems() override final;
+    bool                                init() override final;
+    bool                                update(float elapsedTime) override final;
 END_GAMESTATE(PauseState)

@@ -1,6 +1,9 @@
 {
    "components" : {
       "sButtonComponent" : null,
+      "sNameComponent" : {
+         "name" : "BUTTON_TOGGLE_WINDOWED"
+      },
       "sRenderComponent" : {
          "animated" : false,
          "animations" : [],
@@ -11,13 +14,13 @@
             "r" : 1
          },
          "model" : "resources/models/default.DAE",
-         "texture" : "resources/sprites/buttons/button_toggle_windowed.png",
+         "texture" : "resources/sprites/buttons/button_toggle_fullscreen.png",
          "type" : "PLANE"
       },
       "sTransformComponent" : {
          "pos" : {
-            "x" : 860,
-            "y" : 558.5,
+            "x" : 660,
+            "y" : 478.5,
             "z" : -1
          },
          "rotation" : {
@@ -29,6 +32,12 @@
             "x" : 60,
             "y" : 6,
             "z" : 6
+         }
+      },
+      "sUiComponent" : {
+         "offset" : {
+            "x" : 0,
+            "y" : 0
          }
       }
    },

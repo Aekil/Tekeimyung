@@ -1,6 +1,9 @@
 {
    "components" : {
       "sButtonComponent" : null,
+      "sNameComponent" : {
+         "name" : "BUTTON_HOW_TO_PLAY"
+      },
       "sRenderComponent" : {
          "animated" : false,
          "animations" : [],
@@ -16,8 +19,8 @@
       },
       "sTransformComponent" : {
          "pos" : {
-            "x" : 955,
-            "y" : 583.5,
+            "x" : 760,
+            "y" : 478.5,
             "z" : -1
          },
          "rotation" : {
@@ -29,6 +32,12 @@
             "x" : 40,
             "y" : 6,
             "z" : 6
+         }
+      },
+      "sUiComponent" : {
+         "offset" : {
+            "x" : 0,
+            "y" : 0
          }
       }
    },

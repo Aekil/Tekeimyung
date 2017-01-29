@@ -15,7 +15,7 @@
 #include <Engine/Window/GameWindow.hpp>
 #include <Engine/Graphics/Renderer.hpp>
 
-#include <Engine/EntityDebugWindow.hpp>
+#include <Engine/LevelEntitiesDebugWindow.hpp>
 
 #include <Engine/Systems/RenderingSystem.hpp>
 
@@ -26,6 +26,9 @@ RenderingSystem::RenderingSystem(Camera* camera, std::unordered_map<uint32_t, sE
     addDependency<sRenderComponent>();
 
     _monitoringKey = MonitoringDebugWindow::getInstance()->registerSystem(RENDERING_SYSTEM_NAME);
+
+    if (!_camera)
+        _camera = &_defaultCamera;
 }
 
 RenderingSystem::~RenderingSystem() {}
@@ -56,7 +59,10 @@ void    RenderingSystem::renderEntity(sRenderComponent *render, Entity* entity, 
     }
 
     // Draw model
-    Renderer::getInstance()->render(_camera, model, render->color, transform->getTransform());
+    if (entity->hasComponent<sUiComponent>())
+        Renderer::getInstance()->renderUI(model, render->color, transform->getTransform());
+    else
+        Renderer::getInstance()->render(_camera, model, render->color, transform->getTransform());
 }
 
 void    RenderingSystem::renderCollider(Entity* entity)
@@ -122,7 +128,7 @@ void    RenderingSystem::renderColliders(EntityManager& em)
         }
     }
 
-    renderCollider(em.getEntity(EntityDebugWindow::getSelectedEntityId()));
+    renderCollider(em.getEntity(LevelEntitiesDebugWindow::getSelectedEntityId()));
 }
 
 void    RenderingSystem::renderParticles(EntityManager& em, float elapsedTime)
@@ -140,6 +146,7 @@ void    RenderingSystem::renderParticles(EntityManager& em, float elapsedTime)
         if (entity == nullptr)
             continue;
 
+        bool isUi = entity->hasComponent<sUiComponent>();
         sRenderComponent *render = entity->getComponent<sRenderComponent>();
         auto&& model = getModel(render);
 
@@ -169,7 +176,10 @@ void    RenderingSystem::renderParticles(EntityManager& em, float elapsedTime)
             transformMatrix = glm::scale(transformMatrix, particle.size);
 
             // Draw sprite
-            Renderer::getInstance()->render(_camera, model, particle.color, transformMatrix);
+            if (isUi)
+                Renderer::getInstance()->renderUI(model, particle.color, transformMatrix);
+            else
+                Renderer::getInstance()->render(_camera, model, particle.color, transformMatrix);
         }
 
         _camera->freezeRotations(false);
@@ -192,7 +202,6 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
 
     _camera->update(Renderer::getInstance()->getShaderProgram(), elapsedTime);
 
-    // Iterate over particle emitters
     forEachEntity(em, [&](Entity *entity) {
         // Don't display particle systems
         if (!entity->getComponent<sParticleEmitterComponent>())
@@ -212,6 +221,9 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
     // Disable write to the depth buffer so that the depth of transparent objects is not written
     // because we don't want a transparent object to hide an other transparent object
     glDepthMask(GL_FALSE);
+
+
+    renderColliders(em);
 
     // Display transparent entities
     {
@@ -234,9 +246,6 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
             }
         }
     }
-
-
-    renderColliders(em);
 
     renderParticles(em, elapsedTime);
 
@@ -262,13 +271,7 @@ std::shared_ptr<Model>  RenderingSystem::getModel(sRenderComponent *render)
     if (!render)
         return (nullptr);
 
-    // The entity does not exist in the render system
-    if (!render->_model)
-    {
-        render->initModel();
-    }
-
-    return (render->_model);
+    return (render->getModel());
 }
 
 bool    RenderingSystem::onEntityNewComponent(Entity* entity, sComponent* component)

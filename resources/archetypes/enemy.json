@@ -1,5 +1,8 @@
 {
    "components" : {
+      "sNameComponent" : {
+         "name" : "ENEMY"
+      },
       "sDirectionComponent" : {
          "speed" : 1,
          "x" : 1,

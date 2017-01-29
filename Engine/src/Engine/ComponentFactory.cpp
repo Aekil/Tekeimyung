@@ -12,6 +12,7 @@
 
 #include <Engine/Window/Keyboard.hpp>
 #include <Engine/Window/GameWindow.hpp>
+#include <Engine/Utils/LevelLoader.hpp>
 #include <Engine/Utils/RessourceManager.hpp>
 #include <Engine/Graphics/Renderer.hpp>
 #include <Engine/Core/ScriptFactory.hpp>
@@ -90,6 +91,30 @@ const std::unordered_map<uint32_t, std::string>& IComponentFactory::getComponent
     return (_componentsTypesHashs);
 }
 
+bool    IComponentFactory::updateComboString(const char* name, std::vector<const char*>& stringList, std::string& stringValue)
+{
+    // Get index of string in the vector
+    int stringIdx = -1;
+    uint32_t i = 0;
+    for (const auto& str: stringList)
+    {
+        if (str == stringValue)
+        {
+            stringIdx = i;
+            break;
+        }
+        ++i;
+    }
+
+    // Display combo and set new value
+    if (ImGui::Combo(name, &stringIdx, stringList.data(), (uint32_t)stringList.size()))
+    {
+        stringValue = stringList[stringIdx];
+        return (true);
+    }
+    return (false);
+}
+
 /*
 ** sRenderComponent
 */
@@ -105,7 +130,7 @@ sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& 
     component->texture = json.getString("texture", "");
 
     std::string geometryName = json.getString("type", "MESH");
-    component->type = Geometry::getGeometryType(geometryName);
+    component->type = EnumManager<Geometry::eType>::stringToEnum(geometryName);
 
     // Load animations
     auto animations = json.get()["animations"];
@@ -171,7 +196,7 @@ void    ComponentFactory<sRenderComponent>::loadTranslateParamAnimation(std::sha
 
         key.time = keyFrameJson.getFloat("time", 1.0f);
         key.value = keyFrameJson.getVec3f("value", glm::vec3(0.0f, 0.0f, 0.0f));
-        key.easing = IParamAnimation::getEasingTypeFromString(easingType);
+        key.easing = EnumManager<IParamAnimation::eEasing>::stringToEnum(easingType);
         paramAnimation->addKeyFrame(key);
     }
 }
@@ -193,23 +218,23 @@ void    ComponentFactory<sRenderComponent>::loadColorParamAnimation(std::shared_
 
         key.time = keyFrameJson.getFloat("time", 1.0f);
         key.value = keyFrameJson.getVec4f("value", glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
-        key.easing = IParamAnimation::getEasingTypeFromString(easingType);
+        key.easing = EnumManager<IParamAnimation::eEasing>::stringToEnum(easingType);
 
         paramAnimation->addKeyFrame(key);
     }
 }
 
-JsonValue&    ComponentFactory<sRenderComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
+JsonValue&    ComponentFactory<sRenderComponent>::saveToJson(const std::string& entityType, const sComponent* savedComponent, JsonValue* toJson)
 {
-    JsonValue& json = _componentsJson[entityType];
+    JsonValue& json = toJson ? *toJson : _componentsJson[entityType];
     std::vector<JsonValue> animations;
-    sRenderComponent* component = static_cast<sRenderComponent*>(_components[entityType]);
+    const sRenderComponent* component = static_cast<const sRenderComponent*>(savedComponent ? savedComponent : _components[entityType]);
 
 
     json.setBool("animated", component->animated);
     json.setString("model", component->modelFile);
     json.setColor4f("color", component->color);
-    json.setString("type", Geometry::getGeometryTypeString(component->type));
+    json.setString("type", EnumManager<Geometry::eType>::enumToString(component->type));
     json.setString("texture", component->texture);
 
     // Save animations
@@ -254,7 +279,7 @@ void    ComponentFactory<sRenderComponent>::saveTranslateParamAnimation(std::sha
 
         keyFrameJson.setVec3f("value", keyFrame.value);
         keyFrameJson.setFloat("time", keyFrame.time);
-        keyFrameJson.setString("easing", IParamAnimation::getEasingStringFromType(keyFrame.easing));
+        keyFrameJson.setString("easing", EnumManager<IParamAnimation::eEasing>::enumToString(keyFrame.easing));
         keyFrames.push_back(keyFrameJson);
     }
 
@@ -274,7 +299,7 @@ void    ComponentFactory<sRenderComponent>::saveColorParamAnimation(std::shared_
 
         keyFrameJson.setVec4f("value", keyFrame.value);
         keyFrameJson.setFloat("time", keyFrame.time);
-        keyFrameJson.setString("easing", IParamAnimation::getEasingStringFromType(keyFrame.easing));
+        keyFrameJson.setString("easing", EnumManager<IParamAnimation::eEasing>::enumToString(keyFrame.easing));
         keyFrames.push_back(keyFrameJson);
     }
 
@@ -291,14 +316,7 @@ bool    ComponentFactory<sRenderComponent>::updateEditor(const std::string& enti
     bool modelChanged = false;
 
     changed |= ImGui::ColorEdit4("color", glm::value_ptr(component->color));
-
-    static std::vector<const char*>& typesString = const_cast<std::vector<const char*>&>(Geometry::getTypesString());
-    int selectedType = static_cast<int>(std::find(typesString.cbegin(), typesString.cend(), Geometry::getGeometryTypeString(component->type)) - typesString.begin());
-    const char** typesList = typesString.data();
-
-    typeChanged = ImGui::ListBox("Model type", &selectedType, typesList, (int)Geometry::getTypesString().size(), 4);
-    if (typeChanged)
-        component->type = Geometry::getGeometryType(typesString[selectedType]);
+    typeChanged |= updateComboEnum<Geometry::eType>("Model type", component->type);
 
     // Plan
     if (component->type == Geometry::eType::PLANE)
@@ -500,9 +518,6 @@ bool    ComponentFactory<sRenderComponent>::updateParamsAnimationsEditor(Animati
 
 bool    ComponentFactory<sRenderComponent>::updateAnimationParamTranslate(Entity* entity, std::shared_ptr<IParamAnimation> paramAnimation_, uint32_t& frameNb)
 {
-    static auto easingTypesString = const_cast<std::vector<const char*>&>(ParamAnimation<glm::vec4>::getEasingTypesString());
-    const char** easingTypesList = easingTypesString.data();
-
     auto paramAnimation = std::static_pointer_cast<ParamAnimation<glm::vec3>>(paramAnimation_);
 
     // add animation param key frame
@@ -547,13 +562,8 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationParamTranslate(Entity
             if (ImGui::InputFloat("time", &keyFrame.time, 1))
                 sortKeyFrames = true;
 
-            // Easing type listBox
-            ParamAnimation<glm::vec3>::getEasingStringFromType(keyFrame.easing);
-            int selectedType = static_cast<int>(std::find(easingTypesString.cbegin(), easingTypesString.cend(), ParamAnimation<glm::vec3>::getEasingStringFromType(keyFrame.easing)) - easingTypesString.begin());
-            if (ImGui::ListBox("Easing", &selectedType, easingTypesList, (int)easingTypesString.size(), 4))
-            {
-                keyFrame.easing = ParamAnimation<glm::vec3>::getEasingTypeFromString(easingTypesString[selectedType]);
-            }
+            // Easing type Combo box
+            updateComboEnum<IParamAnimation::eEasing>("Easing", keyFrame.easing);
         }
 
         ImGui::PopID();
@@ -568,9 +578,6 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationParamTranslate(Entity
 
 bool    ComponentFactory<sRenderComponent>::updateAnimationParamColor(std::shared_ptr<IParamAnimation> paramAnimation_, uint32_t& frameNb)
 {
-    static auto easingTypesString = const_cast<std::vector<const char*>&>(ParamAnimation<glm::vec4>::getEasingTypesString());
-    const char** easingTypesList = easingTypesString.data();
-
     auto paramAnimation = std::static_pointer_cast<ParamAnimation<glm::vec4>>(paramAnimation_);
 
     // add animation param key frame
@@ -610,12 +617,7 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationParamColor(std::share
                 sortKeyFrames = true;
 
             // Easing type listBox
-            ParamAnimation<glm::vec4>::getEasingStringFromType(keyFrame.easing);
-            int selectedType = static_cast<int>(std::find(easingTypesString.cbegin(), easingTypesString.cend(), ParamAnimation<glm::vec4>::getEasingStringFromType(keyFrame.easing)) - easingTypesString.begin());
-            if (ImGui::ListBox("Easing", &selectedType, easingTypesList, (int)easingTypesString.size(), 4))
-            {
-                keyFrame.easing = ParamAnimation<glm::vec4>::getEasingTypeFromString(easingTypesString[selectedType]);
-            }
+            updateComboEnum<IParamAnimation::eEasing>("Easing", keyFrame.easing);
         }
 
         ImGui::PopID();
@@ -644,10 +646,10 @@ sComponent* ComponentFactory<sPositionComponent>::loadFromJson(const std::string
     return (component);
 }
 
-JsonValue&    ComponentFactory<sPositionComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
+JsonValue&    ComponentFactory<sPositionComponent>::saveToJson(const std::string& entityType, const sComponent* savedComponent, JsonValue* toJson)
 {
-    JsonValue& json = _componentsJson[entityType];
-    sPositionComponent* component = static_cast<sPositionComponent*>(_components[entityType]);
+    JsonValue& json = toJson ? *toJson : _componentsJson[entityType];
+    const sPositionComponent* component = static_cast<const sPositionComponent*>(savedComponent ? savedComponent : _components[entityType]);
 
     json.setFloat("x", component->value.x);
     json.setFloat("y", component->value.y);
@@ -671,10 +673,10 @@ sComponent* ComponentFactory<sDirectionComponent>::loadFromJson(const std::strin
     return (component);
 }
 
-JsonValue&    ComponentFactory<sDirectionComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
+JsonValue&    ComponentFactory<sDirectionComponent>::saveToJson(const std::string& entityType, const sComponent* savedComponent, JsonValue* toJson)
 {
-    JsonValue& json = _componentsJson[entityType];
-    sDirectionComponent* component = static_cast<sDirectionComponent*>(_components[entityType]);
+    JsonValue& json = toJson ? *toJson : _componentsJson[entityType];
+    const sDirectionComponent* component = static_cast<const sDirectionComponent*>(savedComponent ? savedComponent : _components[entityType]);
 
     json.setFloat("x", component->value.x);
     json.setFloat("y", component->value.y);
@@ -699,10 +701,10 @@ sComponent* ComponentFactory<sBoxColliderComponent>::loadFromJson(const std::str
     return (component);
 }
 
-JsonValue&    ComponentFactory<sBoxColliderComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
+JsonValue&    ComponentFactory<sBoxColliderComponent>::saveToJson(const std::string& entityType, const sComponent* savedComponent, JsonValue* toJson)
 {
-    JsonValue& json = _componentsJson[entityType];
-    sBoxColliderComponent* component = static_cast<sBoxColliderComponent*>(_components[entityType]);
+    JsonValue& json = toJson ? *toJson : _componentsJson[entityType];
+    const sBoxColliderComponent* component = static_cast<const sBoxColliderComponent*>(savedComponent ? savedComponent : _components[entityType]);
 
     json.setVec3f("pos", component->pos);
     json.setVec3f("size", component->size);
@@ -751,10 +753,10 @@ sComponent* ComponentFactory<sSphereColliderComponent>::loadFromJson(const std::
     return (component);
 }
 
-JsonValue&    ComponentFactory<sSphereColliderComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
+JsonValue&    ComponentFactory<sSphereColliderComponent>::saveToJson(const std::string& entityType, const sComponent* savedComponent, JsonValue* toJson)
 {
-    JsonValue& json = _componentsJson[entityType];
-    sSphereColliderComponent* component = static_cast<sSphereColliderComponent*>(_components[entityType]);
+    JsonValue& json = toJson ? *toJson : _componentsJson[entityType];
+    const sSphereColliderComponent* component = static_cast<const sSphereColliderComponent*>(savedComponent ? savedComponent : _components[entityType]);
 
     json.setVec3f("pos", component->pos);
     json.setFloat("radius", component->radius);
@@ -815,10 +817,10 @@ sComponent* ComponentFactory<sGravityComponent>::loadFromJson(const std::string&
     return (component);
 }
 
-JsonValue&    ComponentFactory<sGravityComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
+JsonValue&    ComponentFactory<sGravityComponent>::saveToJson(const std::string& entityType, const sComponent* savedComponent, JsonValue* toJson)
 {
-    JsonValue& json = _componentsJson[entityType];
-    sGravityComponent* component = static_cast<sGravityComponent*>(_components[entityType]);
+    JsonValue& json = toJson ? *toJson : _componentsJson[entityType];
+    const sGravityComponent* component = static_cast<const sGravityComponent*>(savedComponent ? savedComponent : _components[entityType]);
 
     json.setFloat("x", component->value.x);
     json.setFloat("y", component->value.y);
@@ -880,10 +882,10 @@ std::string ComponentFactory<sTypeComponent>::entityTypeToString(eEntityType ent
 }
 
 
-JsonValue&    ComponentFactory<sTypeComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
+JsonValue&    ComponentFactory<sTypeComponent>::saveToJson(const std::string& entityType, const sComponent* savedComponent, JsonValue* toJson)
 {
-    JsonValue& json = _componentsJson[entityType];
-    sTypeComponent* component = static_cast<sTypeComponent*>(_components[entityType]);
+    JsonValue& json = toJson ? *toJson : _componentsJson[entityType];
+    const sTypeComponent* component = static_cast<const sTypeComponent*>(savedComponent ? savedComponent : _components[entityType]);
 
     json.setString("type", entityTypeToString(component->type));
 
@@ -951,12 +953,12 @@ sComponent* ComponentFactory<sParticleEmitterComponent>::loadFromJson(const std:
     return (component);
 }
 
-JsonValue&    ComponentFactory<sParticleEmitterComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
+JsonValue&    ComponentFactory<sParticleEmitterComponent>::saveToJson(const std::string& entityType, const sComponent* savedComponent, JsonValue* toJson)
 {
     JsonValue color;
     JsonValue size;
-    JsonValue& json = _componentsJson[entityType];
-    sParticleEmitterComponent* component = static_cast<sParticleEmitterComponent*>(_components[entityType]);
+    JsonValue& json = toJson ? *toJson : _componentsJson[entityType];
+    const sParticleEmitterComponent* component = static_cast<const sParticleEmitterComponent*>(savedComponent ? savedComponent : _components[entityType]);
 
     // Write colors
     color.setColor4f("start", component->colorStart);
@@ -1027,6 +1029,16 @@ sComponent* ComponentFactory<sNameComponent>::loadFromJson(const std::string& en
     return (component);
 }
 
+JsonValue&    ComponentFactory<sNameComponent>::saveToJson(const std::string& entityType, const sComponent* savedComponent, JsonValue* toJson)
+{
+    JsonValue& json = toJson ? *toJson : _componentsJson[entityType];
+    const sNameComponent* component = static_cast<const sNameComponent*>(savedComponent ? savedComponent : _components[entityType]);
+
+    json.setString("name", component->value);
+
+    return (json);
+}
+
 
 /*
 ** sTransformComponent
@@ -1045,10 +1057,10 @@ sComponent* ComponentFactory<sTransformComponent>::loadFromJson(const std::strin
     return (component);
 }
 
-JsonValue&    ComponentFactory<sTransformComponent>::saveToJson(const std::string& entityType, const std::string& componentType)
+JsonValue&    ComponentFactory<sTransformComponent>::saveToJson(const std::string& entityType, const sComponent* savedComponent, JsonValue* toJson)
 {
-    JsonValue& json = _componentsJson[entityType];
-    sTransformComponent* component = static_cast<sTransformComponent*>(_components[entityType]);
+    JsonValue& json = toJson ? *toJson : _componentsJson[entityType];
+    const sTransformComponent* component = static_cast<const sTransformComponent*>(savedComponent ? savedComponent : _components[entityType]);
 
 
     json.setVec3f("scale", component->scale);
@@ -1114,18 +1126,51 @@ bool    ComponentFactory<sTransformComponent>::updateTransforms(glm::vec3& pos, 
     return (true);
 }
 
+
 /*
 ** sButtonComponent
 */
 
 sComponent* ComponentFactory<sButtonComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
 {
-    sButtonComponent*   component;
+    sButtonComponent*  component;
 
     component = new sButtonComponent();
 
-    return (component);
+    component->action = EnumManager<sButtonComponent::eAction>::stringToEnum(json.getString("action", "NONE"));
+    component->actionLevel = json.getString("action_level", "");
+
+    return component;
 }
+
+JsonValue&    ComponentFactory<sButtonComponent>::saveToJson(const std::string& entityType, const sComponent* savedComponent, JsonValue* toJson)
+{
+    JsonValue& json = toJson ? *toJson : _componentsJson[entityType];
+    const sButtonComponent* component = static_cast<const sButtonComponent*>(savedComponent ? savedComponent : _components[entityType]);
+
+    json.setString("action", EnumManager<sButtonComponent::eAction>::enumToString(component->action));
+    json.setString("action_level", component->actionLevel);
+
+    return (json);
+}
+
+bool    ComponentFactory<sButtonComponent>::updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity)
+{
+    sButtonComponent* component = static_cast<sButtonComponent*>(entityComponent ? entityComponent : _components[entityType]);
+    *savedComponent = component;
+    bool changed = false;
+
+    changed |= updateComboEnum<sButtonComponent::eAction>("Action", component->action);
+
+    if (component->action == sButtonComponent::eAction::ADD_LEVEL ||
+        component->action == sButtonComponent::eAction::REPLACE_CURRENT_LEVEL)
+    {
+        updateComboString("Level", LevelLoader::getInstance()->getLevels(), component->actionLevel);
+    }
+
+    return (changed);
+}
+
 
 /*
 ** sTileComponent
@@ -1139,6 +1184,7 @@ sComponent* ComponentFactory<sTileComponent>::loadFromJson(const std::string& en
 
     return (component);
 }
+
 
 /*
 ** sScriptComponent
@@ -1166,4 +1212,54 @@ sComponent* ComponentFactory<sScriptComponent>::loadFromJson(const std::string& 
     component->isInitialized = false;
 
     return component;
+}
+
+
+/*
+** sUiComponent
+*/
+
+sComponent* ComponentFactory<sUiComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
+{
+    sUiComponent*  component;
+
+    component = new sUiComponent();
+
+    component->offset = json.getVec2f("offset", { 0.0f, 0.0f });
+    component->horizontalAlignment = EnumManager<eHorizontalAlignment>::stringToEnum(json.getString("horizontal_alignment", "MIDDLE"));
+    component->verticalAlignment = EnumManager<eVerticalAlignment>::stringToEnum(json.getString("vertical_alignment", "MIDDLE"));
+
+    return component;
+}
+
+JsonValue&    ComponentFactory<sUiComponent>::saveToJson(const std::string& entityType, const sComponent* savedComponent, JsonValue* toJson)
+{
+    JsonValue& json = toJson ? *toJson : _componentsJson[entityType];
+    const sUiComponent* component = static_cast<const sUiComponent*>(savedComponent ? savedComponent : _components[entityType]);
+
+
+    json.setVec2f("offset", component->offset);
+    json.setString("horizontal_alignment", EnumManager<eHorizontalAlignment>::enumToString(component->horizontalAlignment));
+    json.setString("vertical_alignment", EnumManager<eVerticalAlignment>::enumToString(component->verticalAlignment));
+
+    return (json);
+}
+
+bool    ComponentFactory<sUiComponent>::updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity)
+{
+    sUiComponent* component = static_cast<sUiComponent*>(entityComponent ? entityComponent : _components[entityType]);
+    *savedComponent = component;
+    bool changed = false;
+
+    changed |= updateComboEnum<eHorizontalAlignment>("Horizontal alignment", component->horizontalAlignment);
+    changed |= updateComboEnum<eVerticalAlignment>("Vertical alignment", component->verticalAlignment);
+    changed |= ImGui::InputFloat("horizontal offset", &component->offset.x, 1.0f, ImGuiInputTextFlags_AllowTabInput);
+    changed |= ImGui::InputFloat("vertical offset", &component->offset.y, 1.0f, ImGuiInputTextFlags_AllowTabInput);
+
+    if (changed)
+    {
+        component->needUpdate = true;
+    }
+
+    return (changed);
 }

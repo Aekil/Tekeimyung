@@ -24,6 +24,7 @@
 #include <Engine/Graphics/Geometries/Box.hpp>
 #include <Engine/Graphics/Geometries/Sphere.hpp>
 #include <Engine/Graphics/Animator.hpp>
+#include <Engine/Utils/Helper.hpp>
 #include <Engine/Utils/RessourceManager.hpp>
 #include <Engine/Utils/Timer.hpp>
 
@@ -61,6 +62,13 @@ void initModel()
         _model = RessourceManager::getInstance()->getModel(modelFile);
     else
         _model = GeometryFactory::create(type, texture);
+}
+
+std::shared_ptr<Model> getModel()
+{
+    if (!_model)
+        initModel();
+    return _model;
 }
 
 std::string modelFile;
@@ -440,7 +448,61 @@ bool        needUpdate = true;
 END_COMPONENT(sTransformComponent)
 
 
+#define HORIZONTAL_ALIGNMENT(PROCESS)       \
+    PROCESS(LEFT)                           \
+    PROCESS(MIDDLE)                         \
+    PROCESS(RIGHT)
+
+REGISTER_ENUM(eHorizontalAlignment, uint8_t, HORIZONTAL_ALIGNMENT);
+REGISTER_ENUM_MANAGER(eHorizontalAlignment, uint8_t, HORIZONTAL_ALIGNMENT);
+
+#define VERTICAL_ALIGNMENT(PROCESS)         \
+    PROCESS(TOP)                            \
+    PROCESS(MIDDLE)                         \
+    PROCESS(BOTTOM)
+
+REGISTER_ENUM(eVerticalAlignment, uint8_t, VERTICAL_ALIGNMENT);
+REGISTER_ENUM_MANAGER(eVerticalAlignment, uint8_t, VERTICAL_ALIGNMENT);
+
+START_COMPONENT(sUiComponent)
+virtual sComponent* clone()
+{
+    sUiComponent* component = new sUiComponent();
+    component->update(this);
+
+    return (component);
+}
+
+virtual void update(sUiComponent* component)
+{
+    this->horizontalAlignment = component->horizontalAlignment;
+    this->verticalAlignment = component->verticalAlignment;
+    this->offset = component->offset;
+    this->needUpdate = component->needUpdate;
+}
+
+virtual void update(sComponent* component)
+{
+    update(static_cast<sUiComponent*>(component));
+}
+
+eHorizontalAlignment    horizontalAlignment = eHorizontalAlignment::MIDDLE;
+eVerticalAlignment      verticalAlignment = eVerticalAlignment::MIDDLE;
+glm::vec2               offset{0.0f, 0.0f}; // Percentage offset
+bool                    needUpdate = true;
+END_COMPONENT(sUiComponent)
+
+
+#define BUTTON_ACTION(PROCESS)              \
+    PROCESS(NONE)                           \
+    PROCESS(REMOVE_CURRENT_LEVEL)           \
+    PROCESS(REPLACE_CURRENT_LEVEL)          \
+    PROCESS(ADD_LEVEL)
+
+
 START_COMPONENT(sButtonComponent)
+REGISTER_ENUM(eAction, uint8_t, BUTTON_ACTION);
+
 virtual sComponent* clone()
 {
     sButtonComponent* component = new sButtonComponent();
@@ -453,6 +515,8 @@ virtual void update(sButtonComponent* component)
 {
     this->selected = component->selected;
     this->hovered = component->hovered;
+    this->action = component->action;
+    this->actionLevel = component->actionLevel;
 }
 
 virtual void update(sComponent* component)
@@ -462,7 +526,10 @@ virtual void update(sComponent* component)
 
 bool        selected = false;
 bool        hovered = false;
+eAction     action = eAction::NONE;
+std::string actionLevel;
 END_COMPONENT(sButtonComponent)
+REGISTER_ENUM_MANAGER(sButtonComponent::eAction, uint8_t, BUTTON_ACTION);
 
 
 START_COMPONENT(sTileComponent)
