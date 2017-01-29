@@ -19,7 +19,7 @@
 #include <Game/Map.hpp>
 #include <Engine/Utils/EventSound.hpp>
 
-START_GAMESTATE(PlayState)
+START_GAMESTATE(PlayState, "Game")
  public:
     ~PlayState();
 
