@@ -17,7 +17,6 @@ void    EditorState::onEnter() {}
 
 void    EditorState::setupSystems()
 {
-    _world.addSystem<MenuSystem>();
     _world.addSystem<ParticleSystem>();
     _world.addSystem<RenderingSystem>(&_camera, _world.getSystem<ParticleSystem>()->getEmitters());
 }
@@ -25,6 +24,7 @@ void    EditorState::setupSystems()
 bool    EditorState::init()
 {
     SoundManager::getInstance()->setVolume(0.3f);
+    initCamera();
     return (true);
 }
 

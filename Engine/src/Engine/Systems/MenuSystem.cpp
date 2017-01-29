@@ -24,6 +24,7 @@ MenuSystem::MenuSystem()
 
     _currentSelected = -1;
     _buttonHovered = false;
+    setupSelectedIcon();
 }
 
 MenuSystem::~MenuSystem() {}
@@ -286,11 +287,6 @@ bool    MenuSystem::onEntityNewComponent(Entity* entity, sComponent* component)
 
     if (component->id == sButtonComponent::identifier)
     {
-        if (!_iconRender)
-        {
-            setupSelectedIcon();
-        }
-
         // The entity is not already in the buttons entities vector
         if (std::find(_buttons.cbegin(), _buttons.cend(), entity->id) == _buttons.cend())
         {

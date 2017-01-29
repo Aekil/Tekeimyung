@@ -22,6 +22,10 @@ public:
     void                setDisplayed(bool displayed);
 
 protected:
+    void                setDisableButtonStyle();
+    void                removeDisableButtonStyle();
+
+protected:
     std::string         _title;
     glm::vec2           _pos;
     glm::vec2           _size;

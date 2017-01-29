@@ -84,6 +84,15 @@ void    LevelEntitiesDebugWindow::displayEntityDebug(Entity* entity)
         ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImColor(0.39f, 0.58f, 0.92f, 1.0f));
         ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImColor(0.49f, 0.68f, 0.92f, 1.0f));
 
+        // Delete the entity
+        if (ImGui::Button("Delete"))
+        {
+            ImGui::PopStyleColor(3);
+            ImGui::EndGroup();
+            _em->destroyEntity(entity);
+            return;
+        }
+
         // Add component to entity
         if (ImGui::Button("Add component"))
         {

@@ -115,6 +115,8 @@ Entity* EntityFactory::createOrGetEntity(eArchetype type)
         Entity* entity = entity_.second;
         sNameComponent* name = entity->getComponent<sNameComponent>();
 
+        ASSERT(name != nullptr, "The entity should have a sNameComponent");
+
         if (name->value == typeName)
         {
             return (entity);

@@ -15,8 +15,11 @@
 #include <Engine/Utils/Logger.hpp>
 #include <Engine/Utils/RessourceManager.hpp>
 
-#include <Game/GameStates/PlayState.hpp>
 #include <Game/GameStates/ConfirmExitState.hpp>
+#include <Game/GameStates/HowToPlayState.hpp>
+#include <Game/GameStates/OptionsMenuState.hpp>
+#include <Game/GameStates/PauseState.hpp>
+#include <Game/GameStates/PlayState.hpp>
 
 void    windowCloseHandler(void* data)
 {
@@ -44,12 +47,19 @@ int     main()
         EntityFactory::loadDirectory(ARCHETYPES_LOCATION);
         // Load textures, models & sounds
         RessourceManager::getInstance()->loadResources("resources");
+
         // Load levels
         LevelLoader::getInstance()->loadDirectory(LEVELS_DIRECTORY);
+        REGISTER_GAMESTATE(ConfirmExitState);
+        REGISTER_GAMESTATE(HowToPlayState);
+        REGISTER_GAMESTATE(OptionsMenuState);
+        REGISTER_GAMESTATE(PauseState);
+        REGISTER_GAMESTATE(PlayState);
+
         EventSound::loadEvents();
         GameWindow::getInstance()->registerCloseHandler(windowCloseHandler, &engine);
 
-        if (!gameStateManager.addState<PlayState>())
+        if (!gameStateManager.addState<EditorState>())
             return (1);
         else if (!engine.run())
             return (1);

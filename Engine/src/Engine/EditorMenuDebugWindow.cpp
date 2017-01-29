@@ -4,13 +4,14 @@
 
 #include <imgui.h>
 
+#include <Engine/EditorState.hpp>
 #include <Engine/EntityFactory.hpp>
 #include <Engine/EditorMenuDebugWindow.hpp>
 #include <Engine/Utils/LevelLoader.hpp>
 
 
-EditorMenuDebugWindow::EditorMenuDebugWindow(EntityManager* em, const glm::vec2& pos, const glm::vec2& size):
-                                    _em(em), DebugWindow("", pos, size) {}
+EditorMenuDebugWindow::EditorMenuDebugWindow(GameStateManager* gameStateManager, EntityManager* em, const glm::vec2& pos, const glm::vec2& size):
+                                    _em(em), _gameStateManager(gameStateManager), DebugWindow("", pos, size) {}
 
 EditorMenuDebugWindow::~EditorMenuDebugWindow() {}
 
@@ -24,36 +25,48 @@ void    EditorMenuDebugWindow::build(float elapsedTime)
     // Set Window params
     ImGui::SetWindowPos(ImVec2(_pos.x, _pos.y), ImGuiSetCond_Always);
 
+    if (ImGui::BeginMenuBar())
+    {
+        displayLevelsMenu();
+        displayPlayStopMenu();
+        ImGui::EndMenuBar();
+    }
+
+
+    ImGui::End();
+}
+
+void    EditorMenuDebugWindow::displayLevelsMenu()
+{
     bool loadLevel = false;
     bool saveLevel = false;
     bool saveLevelAs = false;
+    auto& currentState = _gameStateManager->getCurrentState();
 
-    if (ImGui::BeginMenuBar())
+    // Enable menu if we are in play mode, we can't load or save the level
+    if (ImGui::BeginMenu("Levels", currentState->getId() == EditorState::identifier))
     {
-        if (ImGui::BeginMenu("Levels"))
+        if (ImGui::MenuItem("New"))
         {
-            if (ImGui::MenuItem("New"))
-            {
-                _tmpLoadLevel = "";
-                _currentLevel = "";
-                _em->destroyAllEntities();
-            }
-            if (ImGui::MenuItem("Load"))
-            {
-                _tmpLoadLevel = "";
-                loadLevel = true;
-            }
-            else if (ImGui::MenuItem("Save"))
-            {
-                saveLevel = true;
-            }
-            else if (ImGui::MenuItem("Save as"))
-            {
-                saveLevelAs = true;
-            }
-            ImGui::EndMenu();
+            _tmpLoadLevel = "";
+            _currentLevel = "";
+            _em->destroyAllEntities();
         }
-        ImGui::EndMenuBar();
+        if (ImGui::MenuItem("Load"))
+        {
+            _tmpLoadLevel = "";
+            loadLevel = true;
+        }
+        ImGui::Separator();
+        if (ImGui::MenuItem("Save"))
+        {
+            saveLevel = true;
+        }
+        else if (ImGui::MenuItem("Save as"))
+        {
+            saveLevelAs = true;
+        }
+        ImGui::EndMenu();
     }
 
     if (loadLevel)
@@ -80,7 +93,62 @@ void    EditorMenuDebugWindow::build(float elapsedTime)
         ImGui::EndPopup();
     }
 
-    ImGui::End();
+}
+
+void    EditorMenuDebugWindow::displayPlayStopMenu()
+{
+    auto& currentState = _gameStateManager->getCurrentState();
+    auto& loadedStates = LevelLoader::getInstance()->getLoadedStates();
+
+    // EditorState should be the first state
+    if (_gameStateManager->getStates()[0]->getId() != EditorState::identifier)
+    {
+        return;
+    }
+
+    if (ImGui::BeginMenu("Game"))
+    {
+        // Play current level
+        if (currentState->getId() == EditorState::identifier)
+        {
+            if (ImGui::MenuItem("Play"))
+            {
+                bool stateRegistered = false;
+                for (auto& state: loadedStates)
+                {
+                    if (state->getLevelFile() == _currentLevel &&
+                        _currentLevel.size() > 0)
+                    {
+                        stateRegistered = true;
+                         std::shared_ptr<GameState> gameState = state->create(_gameStateManager);
+                        _gameStateManager->addState(gameState);
+                        break;
+                    }
+                }
+
+                if (!stateRegistered)
+                    displayStateNotRegistered();
+            }
+        }
+        // Stop current level
+        else
+        {
+            if (ImGui::MenuItem("Stop"))
+            {
+                // Remove all states except from the first one (EditorState)
+                uint32_t statesNb = (uint32_t)_gameStateManager->getStates().size();
+                for (statesNb; statesNb > 1; --statesNb)
+                {
+                    _gameStateManager->removeBackState();
+                }
+            }
+        }
+        ImGui::EndMenu();
+    }
+}
+
+void    EditorMenuDebugWindow::displayStateNotRegistered()
+{
 }
 
 void    EditorMenuDebugWindow::displaySaveAsPopup()
@@ -111,13 +179,9 @@ void    EditorMenuDebugWindow::displayLoadPopup()
     // No level selected
     if (_tmpLoadLevel.size() == 0)
     {
-        // Grey style unselected
-        ImGui::PushStyleColor(ImGuiCol_Button, ImColor(0.75f, 0.75f, 0.75f, 1.0f));
-        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImColor(0.75f, 0.75f, 0.75f, 1.0f));
-        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImColor(0.75f, 0.75f, 0.75f, 1.0f));
-
+        setDisableButtonStyle();
         ImGui::Button("Load");
-        ImGui::PopStyleColor(3);
+        removeDisableButtonStyle();
     }
     else if (ImGui::Button("Load"))
     {

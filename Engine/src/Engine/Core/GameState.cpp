@@ -84,20 +84,17 @@ World&  GameState::getWorld()
 void    GameState::initDebugWindows()
 {
     EntityManager* em = _world.getEntityManager();
-    addDebugWindow<LevelEntitiesDebugWindow>(em, glm::vec2(0, 80), glm::vec2(600, 350));
-    addDebugWindow<LogDebugWindow>(Logger::getInstance(), glm::vec2(0, 430), glm::vec2(300, 200));
-    addDebugWindow<SoundEditorWindow>(glm::vec2(1200, 80), glm::vec2(450, 450));
-    addDebugWindow<EntitiesTemplateDebugWindow>(em, glm::vec2(600, 80), glm::vec2(300, 200));
-    addDebugWindow<MonitoringDebugWindow>(MonitoringDebugWindow::getInstance());
 
+    addDebugWindow<EditorMenuDebugWindow>(_gameStateManager, em, glm::vec2(0, 0), glm::vec2(0, 0));
     if (_id == EditorState::identifier)
     {
-        addDebugWindow<EditorMenuDebugWindow>(em, glm::vec2(0, 0), glm::vec2(0, 0));
+        addDebugWindow<LevelEntitiesDebugWindow>(em, glm::vec2(0, 80), glm::vec2(600, 350));
+        addDebugWindow<LogDebugWindow>(Logger::getInstance(), glm::vec2(0, 430), glm::vec2(300, 200));
+        addDebugWindow<SoundEditorWindow>(glm::vec2(1200, 80), glm::vec2(450, 450));
+        addDebugWindow<EntitiesTemplateDebugWindow>(em, glm::vec2(600, 80), glm::vec2(300, 200));
+        addDebugWindow<MonitoringDebugWindow>(MonitoringDebugWindow::getInstance());
     }
-    else
-    {
-        addDebugWindow<OverlayDebugWindow>(glm::vec2(10, 10), glm::vec2(0, 0));
-    }
+    //addDebugWindow<OverlayDebugWindow>(glm::vec2(10, 10), glm::vec2(0, 0));
 }
 
 void    GameState::bindEntityManager()

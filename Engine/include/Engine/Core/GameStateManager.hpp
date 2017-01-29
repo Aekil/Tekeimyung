@@ -19,9 +19,8 @@ public:
     virtual ~GameStateManager();
 
     template<typename T>
-    bool                                        addState()
+    bool                                        addState(T gameState)
     {
-        std::shared_ptr<T> gameState = std::make_shared<T>(this);
         gameState->bindEntityManager();
         gameState->setupSystems();
         gameState->loadLevel();
@@ -49,7 +48,16 @@ public:
         return (true);
     }
 
+    template<typename T>
+    bool                                        addState()
+    {
+        std::shared_ptr<T> gameState = std::make_shared<T>(this);
+        return (addState(gameState));
+    }
+
     void                                        removeCurrentState();
+    void                                        removeBackState();
+
     std::shared_ptr<GameState>                  getCurrentState() const;
     bool                                        hasStates() const;
 

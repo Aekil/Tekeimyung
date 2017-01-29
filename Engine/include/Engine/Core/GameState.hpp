@@ -64,18 +64,47 @@ protected:
 };
 
 
+struct GameStateFactory
+{
+    virtual std::shared_ptr<GameState> create(GameStateManager* gameStateManager) = 0;
+    virtual std::string getLevelFile() = 0;
+};
+
 template<typename GameStateType>
 class BaseGameState: public GameState
 {
-    public:\
-    BaseGameState(GameStateManager* gameStateManager, const std::string& levelFile = ""): GameState(gameStateManager, GameStateType::identifier, levelFile) {}
+    public:
+        BaseGameState(GameStateManager* gameStateManager, const std::string& levelFile = ""): GameState(gameStateManager, GameStateType::identifier, levelFile) {}
 };
 
-#define START_GAMESTATE(name, ...) \
-    class name : public BaseGameState<name> { \
-        public:\
-        name(GameStateManager* gameStateManager): BaseGameState(gameStateManager, __VA_ARGS__) {}\
-        static constexpr unsigned int identifier = #name##_crc32;
+template <typename... Args>
+static std::string  getString(Args... args)
+{
+    return std::string(args...);
+}
 
-#define END_GAMESTATE(name) \
+#define START_GAMESTATE(name, ...)                                                                      \
+    class name : public BaseGameState<name> {                                                           \
+        public:                                                                                         \
+            name(GameStateManager* gameStateManager): BaseGameState(gameStateManager, __VA_ARGS__) {}   \
+            static constexpr unsigned int identifier = #name##_crc32;                                   \
+            static std::string getLevelFile()                                                           \
+            {                                                                                           \
+                return (getString(__VA_ARGS__));                                                        \
+            }
+
+#define END_GAMESTATE(name)                                                                     \
+    };                                                                                          \
+    struct name##Factory: public GameStateFactory                                               \
+    {                                                                                           \
+        std::shared_ptr<GameState> create(GameStateManager* gameStateManager) override final    \
+        {                                                                                       \
+            return std::make_shared<name>(gameStateManager);                                    \
+        }                                                                                       \
+                                                                                                \
+        std::string getLevelFile() override final                                               \
+        {                                                                                       \
+            return (name::getLevelFile());                                                      \
+        }                                                                                       \
+        static constexpr unsigned int identifier = name::identifier;                            \
     };

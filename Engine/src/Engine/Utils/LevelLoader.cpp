@@ -37,6 +37,11 @@ std::vector<std::string>& LevelLoader::getLevels()
     return (_levels);
 }
 
+const std::vector<std::unique_ptr<GameStateFactory> >& LevelLoader::getLoadedStates()
+{
+    return (_loadedStates);
+}
+
 void    LevelLoader::save(const std::string& levelName, const std::unordered_map<uint32_t, Entity*>& entities)
 {
     JsonWriter jsonWriter;

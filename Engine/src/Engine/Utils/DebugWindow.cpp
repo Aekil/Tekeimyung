@@ -2,10 +2,9 @@
 * @Author   Guillaume Labey
 */
 
-#include <iostream>
+#include <imgui.h>
 
 #include <Engine/Utils/Debug.hpp>
-
 #include <Engine/Utils/DebugWindow.hpp>
 
 DebugWindow::DebugWindow(const std::string& tile, const glm::vec2& pos, const glm::vec2& size):
@@ -31,4 +30,17 @@ bool    DebugWindow::isDisplayed() const
 void    DebugWindow::setDisplayed(bool displayed)
 {
     _displayed = displayed;
+}
+
+void    DebugWindow::setDisableButtonStyle()
+{
+    // Grey style unselected
+    ImGui::PushStyleColor(ImGuiCol_Button, ImColor(0.75f, 0.75f, 0.75f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImColor(0.75f, 0.75f, 0.75f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImColor(0.75f, 0.75f, 0.75f, 1.0f));
+}
+
+void    DebugWindow::removeDisableButtonStyle()
+{
+    ImGui::PopStyleColor(3);
 }
