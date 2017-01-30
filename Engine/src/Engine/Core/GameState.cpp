@@ -99,22 +99,16 @@ void    GameState::initDebugWindows()
     #if defined(ENGINE_DEBUG) && ENGINE_DEBUG == true
         addDebugWindow<EditorMenuDebugWindow>(_gameStateManager, em, glm::vec2(0, 0), glm::vec2(0, 0));
         addDebugWindow<OverlayDebugWindow>(glm::vec2(10, 10), glm::vec2(0, 0));
-    #endif
-
-    if (_id == EditorState::identifier)
-    {
         addDebugWindow<LevelEntitiesDebugWindow>(em, glm::vec2(0, 80), glm::vec2(600, 350));
-        addDebugWindow<LogDebugWindow>(Logger::getInstance(), glm::vec2(0, 430), glm::vec2(300, 200));
-        addDebugWindow<SoundEditorWindow>(glm::vec2(1200, 80), glm::vec2(450, 450));
         addDebugWindow<EntitiesTemplateDebugWindow>(em, glm::vec2(600, 80), glm::vec2(300, 200));
         addDebugWindow<MonitoringDebugWindow>(MonitoringDebugWindow::getInstance());
-    }
-    else
-    {
-        #if defined(ENGINE_DEBUG) && ENGINE_DEBUG == true
-            addDebugWindow<LogDebugWindow>(Logger::getInstance(), glm::vec2(0, 430), glm::vec2(300, 200));
-        #endif
-    }
+        addDebugWindow<LogDebugWindow>(Logger::getInstance(), glm::vec2(0, 430), glm::vec2(300, 200));
+        addDebugWindow<SoundEditorWindow>(glm::vec2(1200, 80), glm::vec2(450, 450));
+    #endif
+
+    #if defined(ENGINE_DEBUG) && ENGINE_DEBUG == true
+        addDebugWindow<LogDebugWindow>(Logger::getInstance(), glm::vec2(0, 430), glm::vec2(300, 200));
+    #endif
 }
 
 void    GameState::renderPreviousStates(const std::vector<uint32_t>& filterIds)
