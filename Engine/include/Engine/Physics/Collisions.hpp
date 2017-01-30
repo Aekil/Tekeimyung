@@ -18,6 +18,8 @@ public:
     static bool         pointVSAABB(glm::vec3 point, glm::vec3 boxPosition, glm::vec3 boxSize);
 
     static bool         sphereVSAABB(glm::vec3 spherePosition, float sphereRadius, glm::vec3 boxPosition, glm::vec3 boxSize);
+
+    static float        rayVSAABB(const glm::vec3& rayPos, const glm::vec3& rayDir, const glm::vec3& boxMin, const glm::vec3& boxMax);
 private:
 
 };

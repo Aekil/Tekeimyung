@@ -9,6 +9,7 @@
 #include <unordered_map>
 #include <ECS/Entity.hpp>
 #include <ECS/EntityManager.hpp>
+#include <Engine/EditorState.hpp>
 #include <Engine/Utils/Debug.hpp>
 #include <Engine/Utils/JsonValue.hpp>
 #include <Engine/Core/GameState.hpp>
@@ -17,6 +18,7 @@
 
 #define REGISTER_GAMESTATE(NAME)                                    \
     LevelLoader::getInstance()->addLoadedState<NAME##Factory>();
+
 
 class LevelLoader
 {
