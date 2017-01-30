@@ -25,7 +25,6 @@
 #include <Engine/Systems/MouseSystem.hpp>
 #include <Engine/Components.hh>
 #include <Engine/EntityFactory.hpp>
-#include <Game/Utils/PlayStates.hpp>
 #include <Game/GameStates/PauseState.hpp>
 
 #include <Game/GameStates/PlayState.hpp>
@@ -112,15 +111,15 @@ void    PlayState::initEntities()
     EntityManager* em = _world.getEntityManager();
 
     // Create particles emitter
-    PlayStates::createTile(eArchetype::EMITTER_WATER, glm::vec3(12, 5, 1));
+    EntityFactory::createEntity(eArchetype::EMITTER_WATER, glm::vec3(12, 5, 1));
 
     // Create character
-    Entity* player = PlayStates::createTile(eArchetype::PLAYER, glm::vec3(65, 6.25, 33));
+    Entity* player = EntityFactory::createEntity(eArchetype::PLAYER, glm::vec3(65, 16.25, 33));
 
-    Entity* enemy = PlayStates::createTile(eArchetype::ENEMY, glm::vec3(65, 18.75, 66));
+    Entity* enemy = EntityFactory::createEntity(eArchetype::ENEMY, glm::vec3(65, 18.75, 66));
 
-    PlayStates::createTile(eArchetype::GAME_MANAGER, glm::vec3(0, 0, 0));
-    PlayStates::createTile(eArchetype::CASTLE);
+    EntityFactory::createEntity(eArchetype::GAME_MANAGER, glm::vec3(0, 0, 0));
+    EntityFactory::createEntity(eArchetype::CASTLE);
 
     // Create spawner
     //static uint32_t spawnerEntityID = SpawnerSystem::createSpawner(_map, glm::vec3(0.5, 5.5f, 0.5), eArchetype::SPAWNER);
@@ -149,8 +148,8 @@ void    PlayState::initEntities()
     SpawnerSystem::setAllFields(*em, spawnerEntityID2, spawnerData2);*/
 
     // Create towers
-    //PlayStates::createTile(_map, glm::vec3(7, 4, 1), eArchetype::TOWER_FIRE);
-    //PlayStates::createTile(_map, glm::vec3(7, 7, 1), eArchetype::TOWER_FIRE);
+    //EntityFactory::createEntity(_map, glm::vec3(7, 4, 1), eArchetype::TOWER_FIRE);
+    //EntityFactory::createEntity(_map, glm::vec3(7, 7, 1), eArchetype::TOWER_FIRE);
 
     // Play first animation of entities
     for (auto entity: em->getEntities())
