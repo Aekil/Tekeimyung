@@ -128,6 +128,7 @@ sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& 
     component->modelFile = json.getString("model", "resources/models/default.DAE");
     component->color = json.getColor4f("color", { 1.0f, 1.0f, 1.0f, 1.0f });
     component->texture = json.getString("texture", "");
+    component->ignoreRaycast = json.getBool("ignore_raycast", false);
 
     std::string geometryName = json.getString("type", "MESH");
     component->type = EnumManager<Geometry::eType>::stringToEnum(geometryName);
@@ -236,6 +237,7 @@ JsonValue&    ComponentFactory<sRenderComponent>::saveToJson(const std::string& 
     json.setColor4f("color", component->color);
     json.setString("type", EnumManager<Geometry::eType>::enumToString(component->type));
     json.setString("texture", component->texture);
+    json.setBool("ignore_raycast", component->ignoreRaycast);
 
     // Save animations
     for (const auto& animation: component->_animator.getAnimations())
@@ -316,6 +318,7 @@ bool    ComponentFactory<sRenderComponent>::updateEditor(const std::string& enti
     bool modelChanged = false;
 
     changed |= ImGui::ColorEdit4("color", glm::value_ptr(component->color));
+    changed |= ImGui::Checkbox("Ignore mouse raycast", &component->ignoreRaycast);
     typeChanged |= updateComboEnum<Geometry::eType>("Model type", component->type);
 
     // Plan

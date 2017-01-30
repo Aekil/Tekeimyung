@@ -49,6 +49,7 @@ virtual void update(sRenderComponent* component)
     this->texture = component->texture;
     this->_animator = component->_animator;
     this->_display = component->_display;
+    this->ignoreRaycast = component->ignoreRaycast;
 }
 
 virtual void update(sComponent* component)
@@ -82,6 +83,7 @@ Animator                _animator;
 // Model type
 Geometry::eType type;
 bool                    _display = true;
+bool                    ignoreRaycast = false;
 
 // texture for geometries
 std::string texture;

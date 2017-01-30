@@ -38,6 +38,8 @@ void Tile::OnHoverEnter()
     {
         auto position = this->getComponent<sTransformComponent>()->pos;
         this->preview = this->Instantiate(this->buildableItems[this->currentIdx], glm::vec3(position.x, position.y + 12.5f, position.z));
+        auto previewRenderer = this->preview->getComponent<sRenderComponent>();
+        previewRenderer->ignoreRaycast = true;
     }
 
     auto renderer = this->getComponent<sRenderComponent>();

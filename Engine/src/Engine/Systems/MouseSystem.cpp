@@ -58,7 +58,7 @@ void MouseSystem::hoverEntity(EntityManager& em)
         sTransformComponent* transform = entity->getComponent<sTransformComponent>();
 
         // We can't select entity that is not displayed or has model not initialized
-        if (!render || !render->_model)
+        if (!render || !render->_model || render->ignoreRaycast)
             continue;
 
         // Model box collider position
