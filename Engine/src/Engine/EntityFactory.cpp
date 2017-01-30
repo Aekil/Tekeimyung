@@ -306,42 +306,51 @@ void    EntityFactory::updateEntitiesComponents(Entity* from, const std::string&
         {
             sComponent* entityComponent = entity->getComponent(component->id);
 
-            // Reverse animations if we are overwriting them
-            if (component->id == sRenderComponent::identifier)
+            // Add component to entity
+            if (!entityComponent)
             {
-                reverseAnimations(entity);
+                entity->addComponent(component->clone());
             }
-
-
-            // Don't save positionComponent
-            if (entityComponent && entityComponent->id != sPositionComponent::identifier)
+            // Update component
+            else
             {
-                // Only the scale have to be copied
-                if (entityComponent->id == sTransformComponent::identifier)
+                // Reverse animations if we are overwriting them
+                if (component->id == sRenderComponent::identifier)
                 {
-                    sTransformComponent* transform = static_cast<sTransformComponent*>(component);
-                    sTransformComponent* entityTransform = static_cast<sTransformComponent*>(entityComponent);
-
-                    entityTransform->scale = transform->scale;
-                    entityTransform->needUpdate = true;
+                    reverseAnimations(entity);
                 }
-                else
+
+
+                // Don't save positionComponent
+                if (entityComponent->id != sPositionComponent::identifier)
                 {
-                    entityComponent->update(component);
+                    // Only the scale have to be copied
+                    if (entityComponent->id == sTransformComponent::identifier)
+                    {
+                        sTransformComponent* transform = static_cast<sTransformComponent*>(component);
+                        sTransformComponent* entityTransform = static_cast<sTransformComponent*>(entityComponent);
+
+                        entityTransform->scale = transform->scale;
+                        entityTransform->needUpdate = true;
+                    }
+                    else
+                    {
+                        entityComponent->update(component);
+                    }
                 }
-            }
 
-            if (component->id == sRenderComponent::identifier)
-            {
-
-                initAnimations(entity);
-
-                sRenderComponent* render = static_cast<sRenderComponent*>(entityComponent);
-
-                if (render && render->_animator.getAnimationsNb() > 0)
+                if (component->id == sRenderComponent::identifier)
                 {
-                    AnimationPtr currentAnimation = render->_animator.getAnimations()[0];
-                    render->_animator.play(currentAnimation->getName());
+
+                    initAnimations(entity);
+
+                    sRenderComponent* render = static_cast<sRenderComponent*>(entityComponent);
+
+                    if (render && render->_animator.getAnimationsNb() > 0)
+                    {
+                        AnimationPtr currentAnimation = render->_animator.getAnimations()[0];
+                        render->_animator.play(currentAnimation->getName());
+                    }
                 }
             }
         }
@@ -372,7 +381,7 @@ void    EntityFactory::saveEntityTemplateToJson(const std::string& typeName)
 void    EntityFactory::saveEntityTemplate(const std::string& typeName, Entity* entity)
 {
     {
-        auto &&components = EntityFactory::getComponents(typeName);
+        auto& components = EntityFactory::getComponents(typeName);
         // Remove deleted components from factories
         for (auto it = components.begin(); it != components.end();)
         {
@@ -394,7 +403,7 @@ void    EntityFactory::saveEntityTemplate(const std::string& typeName, Entity* e
     }
 
     {
-        auto &&components = EntityFactory::getComponents(typeName);
+        auto& components = EntityFactory::getComponents(typeName);
 
         // Reverse animations
         EntityFactory::reverseAnimations(entity);
@@ -417,6 +426,32 @@ void    EntityFactory::saveEntityTemplate(const std::string& typeName, Entity* e
 
             // Update other entities component
             EntityFactory::updateEntitiesComponents(entity, typeName, compFactory, component);
+        }
+    }
+
+    {
+        // Remove entities components if entity does not has the component
+        for (auto &&entityIt : _em->getEntities())
+        {
+            Entity* entity_ = entityIt.second;
+            sNameComponent* name = entity_->getComponent<sNameComponent>();
+
+            if (name->value == typeName && entity_ != entity)
+            {
+                auto& components = entity_->getComponents();
+                auto& it = components.begin();
+                for (it; it != components.end();)
+                {
+                    sComponent* component = *it;
+                    if (!entity->hasComponent(component->id))
+                    {
+                        delete component;
+                        it = components.erase(it);
+                    }
+                    else
+                        ++it;
+                }
+            }
         }
     }
 
