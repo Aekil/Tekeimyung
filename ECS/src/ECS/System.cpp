@@ -33,6 +33,11 @@ uint32_t    System::getId() const
     return (_id);
 }
 
+uint32_t    System::getEntitiesNb() const
+{
+    return ((uint32_t)_entities.size());
+}
+
 bool    System::hasDependency(sComponent* component) const
 {
     for (auto componentHash : _components)

@@ -15,8 +15,6 @@
 ScriptSystem::ScriptSystem()
 {
     this->addDependency<sScriptComponent>();
-
-    _monitoringKey = MonitoringDebugWindow::getInstance()->registerSystem(SCRIPT_SYSTEM_NAME);
 }
 
 ScriptSystem::~ScriptSystem() {}
@@ -45,17 +43,10 @@ void    ScriptSystem::initialize(EntityManager &em)
 
 void    ScriptSystem::update(EntityManager &em, float elapsedTime)
 {
-    Timer timer;
-    uint32_t nbEntities = 0;
-
     this->initialize(em);
     forEachEntity(em, [&](Entity *entity)
     {
         for (auto&& script : entity->getComponent<sScriptComponent>()->scriptInstances)
             script->Update(elapsedTime);
-
-        ++nbEntities;
     });
-
-    MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, timer.getElapsedTime(), nbEntities);
 }

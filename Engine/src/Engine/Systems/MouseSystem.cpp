@@ -9,19 +9,11 @@
 #include <Engine/Window/GameWindow.hpp>
 #include <Engine/Graphics/Renderer.hpp>
 
-MouseSystem::MouseSystem()
-{
-    _monitoringKey = MonitoringDebugWindow::getInstance()->registerSystem(MOUSE_SYSTEM_NAME);
-}
+MouseSystem::MouseSystem() {}
 
 void MouseSystem::update(EntityManager &em, float elapsedTime)
 {
-    Timer   timer;
-    uint32_t nbEntities = 0;
-
     this->hoverEntity(em);
-
-    MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, timer.getElapsedTime(), nbEntities);
 }
 
 void MouseSystem::hoverEntity(EntityManager& em)

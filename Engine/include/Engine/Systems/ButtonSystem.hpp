@@ -7,10 +7,7 @@
 #include <ECS/System.hpp>
 
 #include <Engine/Core/GameStateManager.hpp>
-#include <Engine/Utils/MonitoringDebugWindow.hpp>
 #include <Engine/Components.hh>
-
-#define BUTTON_SYSTEM_NAME "Button system"
 
 START_SYSTEM(ButtonSystem)
 public:
@@ -34,8 +31,6 @@ private:
 
 
 private:
-    ADD_MONITORING_VAR
-
     GameStateManager*                   _gameStateManager;
 
     int                                 _currentSelected;

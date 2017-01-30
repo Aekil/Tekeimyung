@@ -21,8 +21,6 @@ ButtonSystem::ButtonSystem(GameStateManager* gameStateManager): _gameStateManage
     addDependency<sButtonComponent>();
     addDependency<sTransformComponent>();
 
-    _monitoringKey = MonitoringDebugWindow::getInstance()->registerSystem(BUTTON_SYSTEM_NAME);
-
     _currentSelected = -1;
     _buttonHovered = false;
     setupSelectedIcon();
@@ -40,7 +38,6 @@ bool    ButtonSystem::init()
 
 void    ButtonSystem::update(EntityManager& em, float elapsedTime)
 {
-    Timer       timer;
     uint32_t    nbEntities = (uint32_t)_entities.size();
 
     float       windowHeight = (float)GameWindow::getInstance()->getBufferHeight();
@@ -67,8 +64,6 @@ void    ButtonSystem::update(EntityManager& em, float elapsedTime)
 
     handleButtonsKeys(em);
     handleButtonsActions(em);
-
-    MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, timer.getElapsedTime(), nbEntities);
 }
 
 void    ButtonSystem::handleButtonMouseHover(EntityManager& em, Entity* entity, uint32_t entityIdx, const glm::vec2& cursorPos)

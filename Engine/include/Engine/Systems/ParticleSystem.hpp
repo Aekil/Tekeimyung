@@ -9,13 +9,10 @@
 
 #include <ECS/System.hpp>
 
-#include <Engine/Utils/MonitoringDebugWindow.hpp>
 #include <Engine/Graphics/Model.hpp>
 #include <Engine/Graphics/Geometries/Geometry.hpp>
 
 #include <Engine/Components.hh>
-
-#define PARTICLE_SYSTEM_NAME "Particle system"
 
 #define MAX_PARTICLES   5000
 
@@ -62,6 +59,4 @@ private:
 
 private:
     std::unordered_map<uint32_t, sEmitter*>     _emitters;
-
-    ADD_MONITORING_VAR
 END_SYSTEM(ParticleSystem)

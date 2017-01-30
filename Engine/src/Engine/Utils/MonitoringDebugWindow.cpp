@@ -2,6 +2,7 @@
 * @Author   Julien Chardon
 */
 
+#include <Engine/Utils/Logger.hpp>
 #include <Engine/Utils/MonitoringDebugWindow.hpp>
 
 
@@ -50,20 +51,18 @@ void    MonitoringDebugWindow::build(float elapsedTime)
     ImGui::End();
 }
 
-uint16_t    MonitoringDebugWindow::registerSystem(std::string name)
+void    MonitoringDebugWindow::updateSystem(uint16_t key, float timeSec, uint32_t nbEntities, const char* name)
 {
-    static uint16_t keyID = 0;
+    // Initialize datas
+    if (!_systemsRegistered[key].dirty)
+    {
+        _systemsRegistered[key].dirty = 1;
+        _systemsRegistered[key].name = name;
+        _systemsRegistered[key].timeSec = 0;
+        _systemsRegistered[key].avgTimeSec = 0;
+        _systemsRegistered[key].oldAvg = 0;
+    }
 
-    _systemsRegistered[keyID].name = name;
-    _systemsRegistered[keyID].timeSec = 0;
-    _systemsRegistered[keyID].avgTimeSec = 0;
-    _systemsRegistered[keyID].oldAvg = 0;
-
-    return (keyID++);
-}
-
-void    MonitoringDebugWindow::updateSystem(uint16_t key, float timeSec, uint32_t nbEntities)
-{
     _systemsRegistered[key].timeSec = timeSec;
     _systemsRegistered[key].nbEntities = nbEntities;
 }
@@ -126,12 +125,12 @@ void    MonitoringDebugWindow::displaySystem(tMonitoring& system)
 #if (ENABLE_COLOR) // display with colors
     {
         ImColor color = getDisplayColor(system);
-        ImGui::TextColored(color, FMT_MSG("%-20s | %4d  : %+3c  %.2f ms   (%.3f)", system.name.c_str(), (int)system.nbEntities, (system.oldAvg < system.avgTimeSec) ? '+' : '-',
+        ImGui::TextColored(color, FMT_MSG("%-20s | %4d  : %+3c  %.2f ms   (%.3f)", system.name, (int)system.nbEntities, (system.oldAvg < system.avgTimeSec) ? '+' : '-',
             SEC_TO_MS(system.avgTimeSec), SEC_TO_MS(system.avgTimeSec)).c_str());
     }
 #else // display all in white
     {
-        ImGui::Text(FMT_MSG("%-20s : %+3c  %.2f ms   (%.3f)", system.name.c_str(), (system.oldAvg < system.avgTimeSec) ? '+' : '-',
+        ImGui::Text(FMT_MSG("%-20s : %+3c  %.2f ms   (%.3f)", system.name, (system.oldAvg < system.avgTimeSec) ? '+' : '-',
             SEC_TO_MS(system.avgTimeSec), SEC_TO_MS(system.avgTimeSec)).c_str()); // not always uptodate compared to colored display
     }
 #endif

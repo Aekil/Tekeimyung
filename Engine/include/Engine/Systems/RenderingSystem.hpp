@@ -9,15 +9,12 @@
 
 #include <ECS/System.hpp>
 
-#include <Engine/Utils/MonitoringDebugWindow.hpp>
 #include <Engine/Graphics/ShaderProgram.hpp>
 #include <Engine/Graphics/Model.hpp>
 #include <Engine/Graphics/Camera.hpp>
 
 #include <Engine/Components.hh>
 #include <Engine/Systems/ParticleSystem.hpp>
-
-#define RENDERING_SYSTEM_NAME "Rendering system"
 
 START_SYSTEM(RenderingSystem)
 public:
@@ -42,8 +39,6 @@ private:
 
 private:
     std::unordered_map<uint32_t, sEmitter*>*    _particleEmitters;
-
-    ADD_MONITORING_VAR
 
     Camera*                                     _camera;
     Camera                                      _defaultCamera;

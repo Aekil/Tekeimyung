@@ -25,8 +25,6 @@ RenderingSystem::RenderingSystem(Camera* camera, std::unordered_map<uint32_t, sE
 {
     addDependency<sRenderComponent>();
 
-    _monitoringKey = MonitoringDebugWindow::getInstance()->registerSystem(RENDERING_SYSTEM_NAME);
-
     if (!_camera)
         _camera = &_defaultCamera;
 }
@@ -191,9 +189,6 @@ void    RenderingSystem::renderParticles(EntityManager& em, float elapsedTime)
 
 void    RenderingSystem::update(EntityManager& em, float elapsedTime)
 {
-    Timer timer;
-    uint32_t nbEntities = 0;
-
     if (_camera->getProjType() == Camera::eProj::ORTHOGRAPHIC_2D)
         glDisable(GL_DEPTH_TEST);
 
@@ -213,7 +208,6 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
             else
                 _transparentEntities[entity->id] = entity;
         }
-        ++nbEntities;
     });
 
     // Enable blend to blend transparent ojects and particles
@@ -256,9 +250,6 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
 
     if (_camera->getProjType() == Camera::eProj::ORTHOGRAPHIC_2D)
         glEnable(GL_DEPTH_TEST);
-
-    //ImGui::ShowTestWindow();
-    MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, timer.getElapsedTime(), nbEntities);
 }
 
 bool    RenderingSystem::isTransparent(sRenderComponent *render) const

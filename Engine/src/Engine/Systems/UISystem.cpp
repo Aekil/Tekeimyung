@@ -19,21 +19,15 @@ UISystem::UISystem()
     addDependency<sRenderComponent>();
     addDependency<sUiComponent>();
     addDependency<sTransformComponent>();
-
-    _monitoringKey = MonitoringDebugWindow::getInstance()->registerSystem(UI_SYSTEM_NAME);
 }
 
 UISystem::~UISystem() {}
 
 void    UISystem::update(EntityManager& em, float elapsedTime)
 {
-    Timer       timer;
-
     forEachEntity(em, [&](Entity *entity) {
         handleAlignment(em, entity);
     });
-
-    MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, timer.getElapsedTime(), (uint32_t)_entities.size());
 }
 
 void    UISystem::onWindowResize(EntityManager &em)

@@ -16,21 +16,18 @@
 
 #define ENABLE_COLOR            true
 
-#define ADD_MONITORING_VAR      \
-                                private: \
-                                    uint16_t        _monitoringKey;
-
 #define ABS(x)                  ((x) < 0 ? -(x) : (x))
 #define TIME_DIFF_RATIO         (0.03)
 
 typedef struct sMonitoring
 {
-    std::string         name;
+    const char*         name;
     float               timeSec;
     float               avgTimeSec;
     float               oldAvg;
     uint32_t            nbEntities;
     std::vector<float>  timeLogs;
+    uint8_t             dirty = 0; // This flag let us know if the data is initialized
 }                       tMonitoring;
 
 class MonitoringDebugWindow : public DebugWindow
@@ -43,8 +40,7 @@ public:
 
     virtual void                                    build(float elapsedTime);
 
-    uint16_t                                        registerSystem(std::string name);
-    void                                            updateSystem(uint16_t key, float timeSec, uint32_t nbEntities);
+    void                                            updateSystem(uint16_t key, float timeSec, uint32_t nbEntities, const char* name);
 
     GENERATE_ID(MonitoringDebugWindow);
 

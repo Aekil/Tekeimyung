@@ -8,8 +8,6 @@
 
 #include <Engine/Utils/MonitoringDebugWindow.hpp>
 
-#define SCRIPT_SYSTEM_NAME "Script system"
-
 START_SYSTEM(ScriptSystem)
 public:
     ScriptSystem();
@@ -18,6 +16,4 @@ public:
 
 private:
     void    ScriptSystem::initialize(EntityManager &em);
-    
-    ADD_MONITORING_VAR
 END_SYSTEM(ScriptSystem)

@@ -18,15 +18,10 @@
 CollisionSystem::CollisionSystem()
 {
     this->addDependency<sSphereColliderComponent>();
-
-    _monitoringKey = MonitoringDebugWindow::getInstance()->registerSystem(COLLISION_SYSTEM_NAME);
 }
 
 void    CollisionSystem::update(EntityManager &em, float elapsedTime)
 {
-    Timer   timer;
-    uint32_t nbEntities = 0;
-
     this->forEachEntity(em, [&](Entity* entity)
     {
         if (entity->getComponent<sBoxColliderComponent>() == nullptr && entity->getComponent<sSphereColliderComponent>() == nullptr) return;
@@ -59,11 +54,7 @@ void    CollisionSystem::update(EntityManager &em, float elapsedTime)
                 }
             }
         });
-
-        ++nbEntities;
     });
-
-    MonitoringDebugWindow::getInstance()->updateSystem(_monitoringKey, timer.getElapsedTime(), nbEntities);
 }
 
 bool    CollisionSystem::isColliding(Entity *firstEntity, Entity *secondEntity)

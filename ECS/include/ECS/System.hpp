@@ -28,6 +28,7 @@ public:
     }
 
     uint32_t                            getId() const;
+    uint32_t                            getEntitiesNb() const;
 
     bool                                hasDependency(sComponent* component) const;
     bool                                entityMatchDependencies(Entity* entity) const;
@@ -35,6 +36,8 @@ public:
     virtual bool                        onEntityNewComponent(Entity* entity, sComponent* component);
     virtual bool                        onEntityRemovedComponent(Entity* entity, sComponent* component);
     virtual bool                        onEntityDeleted(Entity* entity);
+
+    virtual const char*                 getName() const = 0;
 
 protected:
     // Store components hashs
@@ -53,10 +56,14 @@ class BaseSystem: public System
     BaseSystem(): System(SystemType::identifier) {}
 };
 
-#define START_SYSTEM(name) \
-    class name : public BaseSystem<name> { \
-        public:\
-        static constexpr unsigned int identifier = #name##_crc32;
+#define START_SYSTEM(name)                                          \
+    class name : public BaseSystem<name> {                          \
+        public:                                                     \
+        static constexpr unsigned int identifier = #name##_crc32;   \
+        const char* getName() const override final                  \
+        {                                                           \
+            return (#name);                                         \
+        }
 
 #define END_SYSTEM(name) \
     };

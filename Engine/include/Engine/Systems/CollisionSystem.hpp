@@ -6,10 +6,6 @@
 
 #include <ECS/System.hpp>
 
-#include <Engine/Utils/MonitoringDebugWindow.hpp>
-
-#define COLLISION_SYSTEM_NAME "Collision system"
-
 START_SYSTEM(CollisionSystem)
 public:
     CollisionSystem();
@@ -18,6 +14,4 @@ public:
 
 private:
     bool            isColliding(Entity *firstEntity, Entity *secondEntity);
-    
-    ADD_MONITORING_VAR
 END_SYSTEM(CollisionSystem)
