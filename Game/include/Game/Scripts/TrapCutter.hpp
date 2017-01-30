@@ -16,4 +16,4 @@ public:
     virtual void Update(float dt);
 };
 
-REGISTER_SCRIPT(TrapCutter, "TrapCutter");
+REGISTER_SCRIPT(TrapCutter);

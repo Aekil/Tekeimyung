@@ -18,4 +18,4 @@ private:
     int health = 500;
 };
 
-REGISTER_SCRIPT(Castle, "Castle");
+REGISTER_SCRIPT(Castle);

@@ -40,4 +40,4 @@ public:
     virtual void Update(float dt);
 };
 
-REGISTER_SCRIPT(GameManager, "GameManager");
+REGISTER_SCRIPT(GameManager);

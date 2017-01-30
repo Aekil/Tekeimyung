@@ -35,4 +35,4 @@ public:
     void TakeDamage(int);
 };
 
-REGISTER_SCRIPT(Player, "Player");
+REGISTER_SCRIPT(Player);

@@ -40,4 +40,4 @@ public:
     };
 };
 
-#define REGISTER_SCRIPT(T, STR) template<> ScriptFactory::Creator_t* ScriptFactory::Register<T>::creator = ScriptFactory::Register<T>::init_creator(STR)
+#define REGISTER_SCRIPT(T) template<> ScriptFactory::Creator_t* ScriptFactory::Register<T>::creator = ScriptFactory::Register<T>::init_creator(#T)

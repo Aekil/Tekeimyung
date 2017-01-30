@@ -28,4 +28,4 @@ private:
     bool m_buildable = false;
 };
 
-REGISTER_SCRIPT(Tile, "Tile");
+REGISTER_SCRIPT(Tile);

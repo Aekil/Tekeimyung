@@ -16,4 +16,4 @@ public:
     virtual void Update(float dt);
 };
 
-REGISTER_SCRIPT(Spawner, "Spawner");
+REGISTER_SCRIPT(Spawner);
