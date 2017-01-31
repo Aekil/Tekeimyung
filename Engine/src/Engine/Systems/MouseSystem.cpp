@@ -5,7 +5,7 @@
 #include <Engine/Systems/MouseSystem.hpp>
 
 #include <Engine/Components.hh>
-#include <Engine/Physics/Collisions.hpp>
+#include <Engine/Physics/Physics.hpp>
 #include <Engine/Window/GameWindow.hpp>
 #include <Engine/Graphics/Renderer.hpp>
 
@@ -40,37 +40,8 @@ void MouseSystem::hoverEntity(EntityManager& em)
     glm::vec3 rayDir = farPoint - nearPoint;
 
     Entity* selectedEntity = nullptr;
-    float selectedEntityDist = 0.0f;
 
-    for (auto it : em.getEntities())
-    {
-        Entity* entity = it.second;
-
-        sRenderComponent* render = entity->getComponent<sRenderComponent>();
-        sTransformComponent* transform = entity->getComponent<sTransformComponent>();
-
-        // We can't select entity that is not displayed or has model not initialized
-        if (!render || !render->_model || render->ignoreRaycast)
-            continue;
-
-        // Model box collider position
-        glm::vec3 boxMin = glm::vec3(render->_model->getMin().x, render->_model->getMin().y, render->_model->getMin().z);
-        glm::vec3 boxMax = glm::vec3(render->_model->getMax().x, render->_model->getMax().y, render->_model->getMax().z);
-
-        boxMin *= transform->scale;
-        boxMax *= transform->scale;
-
-        // Convert box collider to world position
-        boxMin += transform->pos;
-        boxMax += transform->pos;
-
-        float distance = Collisions::rayVSAABB(nearPoint, rayDir, boxMin, boxMax);
-        if (distance != 0 && (selectedEntity == nullptr || distance <= selectedEntityDist))
-        {
-            selectedEntityDist = distance;
-            selectedEntity = entity;
-        }
-    }
+    Physics::raycast(nearPoint, rayDir, &selectedEntity);
 
     if (selectedEntity != nullptr)
     {
