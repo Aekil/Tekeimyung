@@ -31,13 +31,22 @@ public:
             return (new T());
         };
 
-        static Creator_t* init_creator(const std::string& id)
+        static Creator_t* init_creator(const char* id)
         {
+            getScriptsNames().push_back(id);
             return (static_creators()[id] = create);
         }
 
         static Creator_t* creator;
     };
+
+    static std::vector<const char*>& getScriptsNames()
+    {
+        static std::vector<const char*> creatorsNames;
+
+        return creatorsNames;
+    }
+
 };
 
 #define REGISTER_SCRIPT(T) template<> ScriptFactory::Creator_t* ScriptFactory::Register<T>::creator = ScriptFactory::Register<T>::init_creator(#T)

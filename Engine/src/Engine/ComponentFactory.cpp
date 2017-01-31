@@ -1215,6 +1215,67 @@ JsonValue&    ComponentFactory<sScriptComponent>::saveToJson(const std::string& 
     return (json);
 }
 
+bool    ComponentFactory<sScriptComponent>::updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity)
+{
+    sScriptComponent* component = static_cast<sScriptComponent*>(entityComponent ? entityComponent : _components[entityType]);
+    *savedComponent = component;
+    bool changed = false;
+
+    ImGui::Text("\n");
+    ImGui::Text("Scripts");
+    ImGui::SameLine();
+
+    // Add new script button
+    if (ImGui::Button("New"))
+    {
+        ImGui::OpenPopup("scripts");
+    }
+
+    // Display new scripts that can be added
+    if (ImGui::BeginPopup("scripts"))
+    {
+        for (auto script: ScriptFactory::getScriptsNames())
+        {
+            // Entity does not have this script
+            if (std::find(component->scriptNames.cbegin(), component->scriptNames.cend(), script) == component->scriptNames.cend())
+            {
+                // Script button pressed, add it to the entity
+                if (ImGui::Button(script))
+                {
+                    component->scriptNames.push_back(script);
+                }
+            }
+        }
+        ImGui::EndPopup();
+    }
+
+    // Scripts list
+    ImGui::BeginChild("Scripts", ImVec2(0, 100), true);
+    for (auto& script: component->scriptNames)
+    {
+        if (ImGui::Selectable(script.c_str(), component->selectedScript == script))
+        {
+            component->selectedScript = script;
+        }
+    }
+    ImGui::EndChild();
+
+    if (component->selectedScript.size() == 0)
+        return (changed);
+
+    ImGui::Text("\n");
+    ImGui::Text("%s script options\n", component->selectedScript.c_str());
+
+    // Delete script
+    if (ImGui::Button("Delete"))
+    {
+        auto& eraseIt = std::remove(component->scriptNames.begin(), component->scriptNames.end(), component->selectedScript);
+        component->scriptNames.erase(eraseIt);
+        return (true);
+    }
+
+    return (changed);
+}
 
 /*
 ** sUiComponent

@@ -596,4 +596,5 @@ std::vector<BaseScript*> scriptInstances;
 std::vector<std::string> scriptNames;
 bool isInitialized;
 
+std::string selectedScript; // Only used for editor
 END_COMPONENT(sScriptComponent)
