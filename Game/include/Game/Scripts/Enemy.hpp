@@ -6,7 +6,9 @@
 
 #include <Engine/Core/ScriptFactory.hpp>
 
-class Enemy : public BaseScript
+#include <Game/Scripts/Health.hpp>
+
+class Enemy : public BaseScript, public Health
 {
 public:
     Enemy() {};
@@ -14,6 +16,7 @@ public:
 public:
     virtual void Start();
     virtual void Update(float dt);
+    virtual void Death();
 };
 
 REGISTER_SCRIPT(Enemy);

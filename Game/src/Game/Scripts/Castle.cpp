@@ -4,13 +4,11 @@
 
 void Castle::Start()
 {
-    
+    this->health = 500;
 }
 
 void Castle::Update(float dt)
 {
-    if (this->health <= 0)
-        this->Destroy();
 }
 
 void Castle::OnCollisionEnter(Entity* entity)
@@ -18,6 +16,12 @@ void Castle::OnCollisionEnter(Entity* entity)
     if (entity->getComponent<sNameComponent>()->value == "PLAYER")
     {
         LOG_DEBUG("Damage done");
-        this->health -= 25;
+        this->TakeDamage(25);
     }
+}
+
+void Castle::Death()
+{
+    this->Destroy();
+    LOG_DEBUG("GAME OVER");
 }

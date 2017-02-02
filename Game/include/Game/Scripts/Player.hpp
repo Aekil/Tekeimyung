@@ -7,6 +7,8 @@
 #include <Engine/Core/BaseScript.hpp>
 #include <Engine/Core/ScriptFactory.hpp>
 
+#include <Game/Scripts/Health.hpp>
+
 class Tile
 {
 public:
@@ -14,15 +16,13 @@ public:
     void SetBuildable(bool);
 };
 
-class Player : public BaseScript
+class Player : public BaseScript, public Health
 {
 public:
     Player() {};
     ~Player() {};
 
-    int m_health;
 private:
-    void Death();
     void Movement(float dt);
     void CheckBuildableZone();
 public:
@@ -32,7 +32,9 @@ public:
     virtual void OnHoverEnter();
     virtual void OnHoverExit();
 
-    void TakeDamage(int);
+    virtual void Death();
+
+    virtual void OnCollisionEnter(Entity* entity);
 };
 
 REGISTER_SCRIPT(Player);

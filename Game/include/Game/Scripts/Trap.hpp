@@ -4,13 +4,6 @@
 
 #pragma once
 
-class Player
-{
-public:
-    Player();
-    void TakeDamage(int);
-};
-
 #include <Engine/Core/ScriptFactory.hpp>
 
 class Trap : public BaseScript

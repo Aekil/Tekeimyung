@@ -3,7 +3,9 @@
 #include <Engine/Core/BaseScript.hpp>
 #include <Engine/Core/ScriptFactory.hpp>
 
-class Castle : public BaseScript
+#include <Game/Scripts/Health.hpp>
+
+class Castle : public BaseScript, public Health
 {
 public:
     Castle() {};
@@ -13,9 +15,7 @@ public:
     virtual void Start();
     virtual void Update(float dt);
     virtual void OnCollisionEnter(Entity* entity);
-
-private:
-    int health = 500;
+    virtual void Death();
 };
 
 REGISTER_SCRIPT(Castle);

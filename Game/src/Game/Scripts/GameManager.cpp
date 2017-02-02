@@ -4,7 +4,10 @@ void GameManager::Start()
 {
     for (int z = 0; z < this->mapSize; z++) {
         for (int x = 0; x < this->mapSize; x++) {
-            this->Instantiate("BLOCK_BROWN", glm::vec3(x * 25, 0, z * 25));
+            if (this->firstLayerPattern[x][z] == 1)
+                this->Instantiate("SPAWNER", glm::vec3(x * 25, 0, z * 25));
+            else
+                this->Instantiate("BLOCK_BROWN", glm::vec3(x * 25, 0, z * 25));
         }
     }
 

@@ -17,18 +17,12 @@ void Player::Death()
 
 void Player::Start()
 {
-    this->m_health = 150;
-
+    this->health = 200;
     LOG_DEBUG("BORN");
 }
 
 void Player::Update(float dt)
 {
-    //if (this->m_health > 0)
-    //    this->m_health -= 1;
-    //else
-    //    this->Destroy();
-
     this->CheckBuildableZone();
     this->Movement(dt);
 }
@@ -81,15 +75,6 @@ void Player::CheckBuildableZone()
     }
 }
 
-void Player::TakeDamage(int damage)
-{
-    LOG_DEBUG("PLAYER TAKING DAMAGE");
-    this->m_health -= damage;
-
-    if (this->m_health <= 0)
-        this->Death();
-}
-
 void Player::Movement(float elapsedTime)
 {
     sTransformComponent* transform = this->getComponent<sTransformComponent>();
@@ -138,4 +123,12 @@ void Player::OnHoverExit()
     auto renderComponent = this->getComponent<sRenderComponent>();
 
     renderComponent->color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+}
+
+void Player::OnCollisionEnter(Entity* entity)
+{
+    if (entity->getComponent<sNameComponent>()->value == "TRAP_NEEDLE")
+    {
+        this->TakeDamage(25);
+    }
 }

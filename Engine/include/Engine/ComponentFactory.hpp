@@ -82,7 +82,7 @@ public:
     {
         int enumInt = (int)enum_;
 
-        if (ImGui::Combo(name, &enumInt, EnumManager<T>::enumStrings, EnumManager<T>::enumLength))
+        if (ImGui::Combo(name, &enumInt, (const char*)EnumManager<T>::enumStrings, (int)EnumManager<T>::enumLength))
         {
             enum_ = (T)enumInt;
             return (true);
