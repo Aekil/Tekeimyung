@@ -13,11 +13,6 @@
                "Enemy"
           ]
       },
-      "sPositionComponent" : {
-         "x" : 19.989999771118164,
-         "y" : 6,
-         "z" : 1.5
-      },
       "sRenderComponent" : {
          "animated" : false,
          "animations" : [

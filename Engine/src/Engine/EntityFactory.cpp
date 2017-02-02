@@ -320,25 +320,6 @@ void    EntityFactory::updateEntitiesComponents(Entity* from, const std::string&
                     reverseAnimations(entity);
                 }
 
-
-                // Don't save positionComponent
-                if (entityComponent->id != sPositionComponent::identifier)
-                {
-                    // Only the scale have to be copied
-                    if (entityComponent->id == sTransformComponent::identifier)
-                    {
-                        sTransformComponent* transform = static_cast<sTransformComponent*>(component);
-                        sTransformComponent* entityTransform = static_cast<sTransformComponent*>(entityComponent);
-
-                        entityTransform->scale = transform->scale;
-                        entityTransform->needUpdate = true;
-                    }
-                    else
-                    {
-                        entityComponent->update(component);
-                    }
-                }
-
                 if (component->id == sRenderComponent::identifier)
                 {
 

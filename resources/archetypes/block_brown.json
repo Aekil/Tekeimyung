@@ -16,11 +16,6 @@
             "z" : 2.5999999046325684
          }
       },
-      "sPositionComponent" : {
-         "x" : 10,
-         "y" : 8,
-         "z" : 1
-      },
       "sRenderComponent" : {
          "animated" : false,
          "animations" : [],
@@ -37,7 +32,6 @@
       "sScriptComponent" : {
          "class" : [ "Tile" ]
       },
-      "sTileComponent" : null,
       "sTransformComponent" : {
          "pos" : {
             "x" : 250,

@@ -17,7 +17,6 @@
 ParticleSystem::ParticleSystem()
 {
     addDependency<sParticleEmitterComponent>();
-    addDependency<sPositionComponent>();
     addDependency<sRenderComponent>();
 }
 

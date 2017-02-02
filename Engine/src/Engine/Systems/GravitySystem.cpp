@@ -9,7 +9,6 @@
 GravitySystem::GravitySystem()
 {
     this->addDependency<sGravityComponent>();
-    this->addDependency<sPositionComponent>();
     this->addDependency<sDirectionComponent>();
 }
 

@@ -47,11 +47,6 @@
          "speed_variance" : 17.204000473022461,
          "texture" : "resources/sprites/particles/particle_circle.png"
       },
-      "sPositionComponent" : {
-         "x" : 12,
-         "y" : 5,
-         "z" : 1
-      },
       "sRenderComponent" : {
          "animated" : false,
          "animations" : [

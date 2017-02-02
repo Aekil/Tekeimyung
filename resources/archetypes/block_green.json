@@ -3,11 +3,6 @@
       "sNameComponent" : {
          "name" : "BLOCK_GREEN"
       },
-      "sPositionComponent" : {
-         "x" : 2,
-         "y" : 3,
-         "z" : 0
-      },
       "sScriptComponent" : {
           "class" : [ "Tile" ]
       },
@@ -24,7 +19,6 @@
          "texture" : "",
          "type" : "MESH"
       },
-      "sTileComponent" : null,
       "sTransformComponent" : {
          "pos" : {
             "x" : 50,

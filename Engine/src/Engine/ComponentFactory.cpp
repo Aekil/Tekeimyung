@@ -633,34 +633,6 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationParamColor(std::share
     return (false);
 }
 
-
-/*
-** sPositionComponent
-*/
-
-sComponent* ComponentFactory<sPositionComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
-{
-    sPositionComponent* component = new sPositionComponent();
-
-    component->value.x = json.getFloat("x", 0.0f);
-    component->value.y = json.getFloat("y", 0.0f);
-    component->z = json.getFloat("z", 0.0f);
-
-    return (component);
-}
-
-JsonValue&    ComponentFactory<sPositionComponent>::saveToJson(const std::string& entityType, const sComponent* savedComponent, JsonValue* toJson)
-{
-    JsonValue& json = toJson ? *toJson : _componentsJson[entityType];
-    const sPositionComponent* component = static_cast<const sPositionComponent*>(savedComponent ? savedComponent : _components[entityType]);
-
-    json.setFloat("x", component->value.x);
-    json.setFloat("y", component->value.y);
-    json.setFloat("z", component->z);
-
-    return (json);
-}
-
 /*
 ** sDirectionComponent
 */
@@ -1173,21 +1145,6 @@ bool    ComponentFactory<sButtonComponent>::updateEditor(const std::string& enti
 
     return (changed);
 }
-
-
-/*
-** sTileComponent
-*/
-
-sComponent* ComponentFactory<sTileComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
-{
-    sTileComponent*   component;
-
-    component = new sTileComponent();
-
-    return (component);
-}
-
 
 /*
 ** sScriptComponent

@@ -89,33 +89,6 @@ bool                    ignoreRaycast = false;
 std::string texture;
 END_COMPONENT(sRenderComponent)
 
-START_COMPONENT(sPositionComponent)
-virtual sComponent* clone()
-{
-    sPositionComponent* component = new sPositionComponent();
-    component->update(this);
-
-    return (component);
-}
-
-virtual void update(sPositionComponent* component)
-{
-    this->value = component->value;
-    this->z = component->z;
-}
-
-virtual void update(sComponent* component)
-{
-    update(static_cast<sPositionComponent*>(component));
-}
-
-//  X and Y coordinates
-glm::vec2 value;
-
-//  Z coordinates (aka layer)
-float   z;
-END_COMPONENT(sPositionComponent)
-
 START_COMPONENT(sDirectionComponent)
 sDirectionComponent(const glm::vec2& dir, float speed = 1.0f) : value(dir), moved(false), speed(speed), sComponent(sDirectionComponent::identifier) {}
 
@@ -532,24 +505,6 @@ eAction     action = eAction::NONE;
 std::string actionLevel;
 END_COMPONENT(sButtonComponent)
 REGISTER_ENUM_MANAGER(sButtonComponent::eAction, uint8_t, BUTTON_ACTION);
-
-
-START_COMPONENT(sTileComponent)
-virtual sComponent* clone()
-{
-    sTileComponent* component = new sTileComponent();
-    component->update(this);
-
-    return (component);
-}
-
-virtual void update(sTileComponent* component) {}
-
-virtual void update(sComponent* component)
-{
-    update(static_cast<sTileComponent*>(component));
-}
-END_COMPONENT(sTileComponent)
 
 START_COMPONENT(sSoundComponent)
 virtual sComponent*     clone()

@@ -47,11 +47,6 @@
          "speed_variance" : 0,
          "texture" : ""
       },
-      "sPositionComponent" : {
-         "x" : 0,
-         "y" : 0,
-         "z" : 0
-      },
       "sRenderComponent" : {
          "animated" : false,
          "animations" : [],

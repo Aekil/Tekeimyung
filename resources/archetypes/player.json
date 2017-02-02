@@ -8,11 +8,6 @@
       "sNameComponent" : {
          "name" : "PLAYER"
       },
-      "sPositionComponent" : {
-         "x" : 9,
-         "y" : 5,
-         "z" : 1
-      },
       "sRenderComponent" : {
          "animated" : false,
          "animations" : [],

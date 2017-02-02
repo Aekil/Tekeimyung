@@ -47,11 +47,6 @@
          "speed" : 119.35500335693359,
          "speed_variance" : 150.53800964355469
       },
-      "sPositionComponent" : {
-         "x" : 0,
-         "y" : 0,
-         "z" : 0
-      },
       "sTypeComponent" : {
          "type" : "OBJECT"
       }

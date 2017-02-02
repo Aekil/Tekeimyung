@@ -46,11 +46,6 @@
          "speed" : 100,
          "speed_variance" : 0
       },
-      "sPositionComponent" : {
-         "x" : 0,
-         "y" : 0,
-         "z" : 0
-      },
       "sRenderComponent" : {
          "animated" : false,
          "animation" : {

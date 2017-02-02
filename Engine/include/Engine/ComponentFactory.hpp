@@ -17,10 +17,9 @@
 #include <Engine/Utils/JsonValue.hpp>
 
 // Generate map initializer lists
-// ex: { "sRenderComponent", sRenderComponent }, { "sPositionComponent", sPositionComponent }
+// ex: { "sRenderComponent", sRenderComponent }
 #define COMPONENTS_TYPES(PROCESS)\
     PROCESS(sRenderComponent),\
-    PROCESS(sPositionComponent),\
     PROCESS(sDirectionComponent),\
     PROCESS(sBoxColliderComponent),\
     PROCESS(sSphereColliderComponent),\
@@ -31,7 +30,6 @@
     PROCESS(sTransformComponent),\
     PROCESS(sResolutionComponent),\
     PROCESS(sButtonComponent),\
-    PROCESS(sTileComponent),\
     PROCESS(sScriptComponent),\
     PROCESS(sUiComponent)
 
@@ -71,7 +69,7 @@ public:
     static const std::unordered_map<uint32_t, std::string>&         getComponentsTypesHashs();
 
     // ComponentFactory overloaded classes methods
-    // Ex: ComponentFactory<sPositionComponent>, ComponentFactory<sInputComponent>
+    // Ex: ComponentFactory<sInputComponent>
     virtual sComponent*                                             clone(const std::string& entityType) = 0;
     virtual void                                                    addComponent(const std::string& entityType, sComponent* component) = 0;
     virtual void                                                    saveComponentJson(const std::string& entityType, const JsonValue& json) = 0;
@@ -210,20 +208,6 @@ private:
     bool            updateParamsAnimationsEditor(AnimationPtr playedAnimation, Entity* entity);
     bool            updateAnimationParamTranslate(Entity* entity, std::shared_ptr<IParamAnimation> paramAnimation_, uint32_t& frameNb);
     bool            updateAnimationParamColor(std::shared_ptr<IParamAnimation> paramAnimation_, uint32_t& frameNb);
-};
-
-
-/*
-** sPositionComponent
-*/
-
-template <>
-class ComponentFactory<sPositionComponent> final: public BaseComponentFactory<sPositionComponent>
-{
-public:
-    char* getTypeName() override final { return "sPositionComponent"; }
-    sComponent* loadFromJson(const std::string& entityType, const JsonValue& json) override final;
-    JsonValue& saveToJson(const std::string& entityType, const sComponent* savedComponent = nullptr, JsonValue* toJson = nullptr) override final;
 };
 
 /*
@@ -375,20 +359,6 @@ public:
 
     bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity) override final;
 };
-
-
-/*
-** sTileComponent
-*/
-
-template <>
-class ComponentFactory<sTileComponent> final: public BaseComponentFactory<sTileComponent>
-{
-public:
-    char* getTypeName() override final { return "sTileComponent"; }
-    sComponent* loadFromJson(const std::string& entityType, const JsonValue& json) override final;
-};
-
 
 /*
 ** sScriptComponent

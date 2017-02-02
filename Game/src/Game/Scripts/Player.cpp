@@ -18,6 +18,8 @@ void Player::Death()
 void Player::Start()
 {
     this->health = 200;
+    this->buildableRadius = 5.7f;
+
     LOG_DEBUG("BORN");
 }
 
@@ -55,7 +57,7 @@ void Player::CheckBuildableZone()
                 }
             }
 
-            if (Collisions::sphereVSAABB(transform, 5.7 * SIZE_UNIT, box->pos + pos, glm::vec3(box->size.x * SIZE_UNIT, box->size.y * SIZE_UNIT, box->size.z * SIZE_UNIT)))
+            if (Collisions::sphereVSAABB(transform, this->buildableRadius * SIZE_UNIT, box->pos + pos, glm::vec3(box->size.x * SIZE_UNIT, box->size.y * SIZE_UNIT, box->size.z * SIZE_UNIT)))
             {
                 if (entity.second->getComponent<sScriptComponent>() != nullptr)
                 {

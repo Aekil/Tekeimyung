@@ -3,15 +3,9 @@
       "sNameComponent" : {
          "name" : "GAME_MANAGER"
       },
-      "sPositionComponent" : {
-         "x" : 100,
-         "y" : 100,
-         "z" : 100
-      },
       "sScriptComponent" : {
         "class" : [ "GameManager" ]
       },
-      "sTileComponent" : null,
       "sTransformComponent" : {
          "pos" : {
             "x" : 100,

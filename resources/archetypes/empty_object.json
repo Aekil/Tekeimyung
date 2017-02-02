@@ -3,12 +3,6 @@
       "sNameComponent" : {
          "name" : "EMPTY_OBJECT"
       },
-      "sPositionComponent" : {
-         "x" : 100,
-         "y" : 100,
-         "z" : 100
-      },
-      "sTileComponent" : null,
       "sTransformComponent" : {
          "pos" : {
             "x" : 100,

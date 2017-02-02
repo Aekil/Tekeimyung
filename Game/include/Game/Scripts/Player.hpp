@@ -25,6 +25,9 @@ public:
 private:
     void Movement(float dt);
     void CheckBuildableZone();
+
+    float buildableRadius;
+
 public:
     virtual void Start();
     virtual void Update(float dt);

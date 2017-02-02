@@ -77,7 +77,7 @@ void    Map::LayerReference::orderEntities(EntityManager& em)
     }
 
     _map->_entities[_layerIdx].sort([&](uint32_t a, uint32_t b) {
-        Entity* entityA = em.getEntity(a);
+        /*Entity* entityA = em.getEntity(a);
         Entity* entityB = em.getEntity(b);
         sPositionComponent* positionA;
         sPositionComponent* positionB;
@@ -91,7 +91,8 @@ void    Map::LayerReference::orderEntities(EntityManager& em)
 
         float posA = (std::floor(positionA->value.y) * _map->_width) + std::floor(positionA->value.x) + (std::pow(std::modf(positionA->value.x, &dirty), 2) + std::pow(std::modf(positionA->value.y, &dirty), 2)) / 2.0f;
         float posB = (std::floor(positionB->value.y) * _map->_width) + std::floor(positionB->value.x) + (std::pow(std::modf(positionB->value.x, &dirty), 2) + std::pow(std::modf(positionB->value.y, &dirty), 2)) / 2.0f;
-        return posA < posB;
+        return posA < posB;*/
+        return true;
     });
 }
 
@@ -207,10 +208,6 @@ Entity* Map::getSelectedEntity(EntityManager* em, bool onlyTiles)
     for (auto it : em->getEntities())
     {
         Entity* entity = it.second;
-
-        // Ignore entity for raycasting calculation
-        if (onlyTiles && !entity->getComponent<sTileComponent>())
-            continue;
 
         sRenderComponent* render = entity->getComponent<sRenderComponent>();
         sTransformComponent* transform = entity->getComponent<sTransformComponent>();
