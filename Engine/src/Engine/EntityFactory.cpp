@@ -314,10 +314,18 @@ void    EntityFactory::updateEntitiesComponents(Entity* from, const std::string&
             // Update component
             else
             {
-                // Reverse animations if we are overwriting them
-                if (component->id == sRenderComponent::identifier)
+                // Only the scale have to be copied
+                if (component->id == sTransformComponent::identifier)
                 {
-                    reverseAnimations(entity);
+                    sTransformComponent* transform = static_cast<sTransformComponent*>(component);
+                    sTransformComponent* entityTransform = static_cast<sTransformComponent*>(entityComponent);
+
+                    entityTransform->scale = transform->scale;
+                    entityTransform->needUpdate = true;
+                }
+                else
+                {
+                    entityComponent->update(component);
                 }
 
                 if (component->id == sRenderComponent::identifier)
