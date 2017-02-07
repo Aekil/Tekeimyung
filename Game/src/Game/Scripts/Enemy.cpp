@@ -18,7 +18,7 @@ void Enemy::Update(float dt)
 {
     auto pos = &(this->getComponent<sTransformComponent>()->pos);
 
-    pos->z -= 10 * dt;
+    pos->z -= 20.0f * dt;
 }
 
 void Enemy::Death()

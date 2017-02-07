@@ -64,6 +64,15 @@
             "z" : 0.80000132322311401
          }
       },
+      "sSphereColliderComponent" : {
+         "isTrigger" : false,
+         "pos" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 6.250
+         },
+         "radius" : 0.725
+      },
       "sTypeComponent" : {
          "type" : "CHARACTER"
       }

@@ -1,0 +1,41 @@
+{
+   "components" : {
+      "sNameComponent" : {
+         "name" : "BRIDGE"
+      },
+      "sRenderComponent" : {
+         "animated" : false,
+         "animations" : [],
+         "color" : {
+            "a" : 1,
+            "b" : 1,
+            "g" : 1,
+            "r" : 1
+         },
+         "model" : "resources/models/blocks/bridge.DAE",
+         "texture" : "",
+         "type" : "MESH"
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 50,
+            "y" : 0,
+            "z" : 75
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "scale" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         }
+      },
+      "sTypeComponent" : {
+         "type" : "TILE_WALKABLE"
+      }
+   },
+   "name" : "BRIDGE"
+}

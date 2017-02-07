@@ -13,10 +13,11 @@ void Castle::Update(float dt)
 
 void Castle::OnCollisionEnter(Entity* entity)
 {
-    if (entity->getComponent<sNameComponent>()->value == "PLAYER")
+    if (entity->getComponent<sNameComponent>()->value == "ENEMY")
     {
         LOG_DEBUG("Damage done");
         this->TakeDamage(25);
+        this->Destroy(entity);
     }
 }
 

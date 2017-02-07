@@ -12,6 +12,7 @@ void Tile::Start()
     buildableItems.push_back("TRAP_NEEDLE");
     buildableItems.push_back("TRAP_CUTTER");
     buildableItems.push_back("TRAP_FIRE");
+    buildableItems.push_back("BRIDGE");
 }
 
 void Tile::Update(float dt)
