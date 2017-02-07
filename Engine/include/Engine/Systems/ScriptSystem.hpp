@@ -15,5 +15,5 @@ public:
     virtual void update(EntityManager &em, float elapsedTime);
 
 private:
-    void    ScriptSystem::initialize(EntityManager &em);
+    void    ScriptSystem::initializeScript(Entity* entity, sScriptComponent* scriptComponent);
 END_SYSTEM(ScriptSystem)

@@ -36,17 +36,17 @@ void Player::CheckBuildableZone()
 
     for (auto &entity : em->getEntities())
     {
-        if (entity.second->getComponent<sBoxColliderComponent>() != nullptr)
+        auto box = entity.second->getComponent<sBoxColliderComponent>();
+        if (box != nullptr)
         {
             auto pos = entity.second->getComponent<sTransformComponent>()->pos;
-            auto box = entity.second->getComponent<sBoxColliderComponent>();
             auto render = entity.second->getComponent<sRenderComponent>();
+            auto scriptComponent = entity.second->getComponent<sScriptComponent>();
 
             render->color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 
-            if (entity.second->getComponent<sScriptComponent>() != nullptr)
+            if (scriptComponent != nullptr)
             {
-                auto scriptComponent = entity.second->getComponent<sScriptComponent>();
 
                 if (std::find(scriptComponent->scriptNames.cbegin(), scriptComponent->scriptNames.cend(), "Tile") != scriptComponent->scriptNames.cend())
                 {

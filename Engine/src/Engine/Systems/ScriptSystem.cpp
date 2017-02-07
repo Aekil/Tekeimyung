@@ -19,34 +19,31 @@ ScriptSystem::ScriptSystem()
 
 ScriptSystem::~ScriptSystem() {}
 
-void    ScriptSystem::initialize(EntityManager &em)
+void    ScriptSystem::initializeScript(Entity* entity, sScriptComponent* scriptComponent)
 {
-    this->forEachEntity(em, [&](Entity* entity)
+    if (!scriptComponent->isInitialized)
     {
-        auto scriptComponent = entity->getComponent<sScriptComponent>();
-
-        if (!scriptComponent->isInitialized)
+        for (auto&& scriptName : scriptComponent->scriptNames)
         {
-            for (auto&& scriptName : scriptComponent->scriptNames)
-            {
-                auto scriptInstance = ScriptFactory::create(scriptName);
-                scriptInstance->SetEntity(entity);
+            auto scriptInstance = ScriptFactory::create(scriptName);
+            scriptInstance->SetEntity(entity);
 
-                scriptInstance->Start();
-                scriptComponent->scriptInstances.push_back(scriptInstance);
-            }
-
-            scriptComponent->isInitialized = true;
+            scriptInstance->Start();
+            scriptComponent->scriptInstances.push_back(scriptInstance);
         }
-    });
+
+        scriptComponent->isInitialized = true;
+    }
 }
 
 void    ScriptSystem::update(EntityManager &em, float elapsedTime)
 {
-    this->initialize(em);
     forEachEntity(em, [&](Entity *entity)
     {
-        for (auto&& script : entity->getComponent<sScriptComponent>()->scriptInstances)
+        sScriptComponent* scriptComponent = entity->getComponent<sScriptComponent>();
+
+        this->initializeScript(entity, scriptComponent);
+        for (auto&& script : scriptComponent->scriptInstances)
             script->Update(elapsedTime);
     });
 }
