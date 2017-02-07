@@ -15,6 +15,7 @@ public:
     ~Physics();
 
     static bool raycast(const glm::vec3& rayOrigin, const glm::vec3& rayDir, Entity** hitEntity);
+    static bool raycastAll(const glm::vec3& rayOrigin, const glm::vec3& rayDir, std::vector<Entity*> hitEntities);
 private:
 
 };
