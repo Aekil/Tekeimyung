@@ -262,8 +262,6 @@ virtual void update(sParticleEmitterComponent* component)
 
     this->colorStart = component->colorStart;
     this->colorFinish = component->colorFinish;
-    this->colorStartVariance = component->colorStartVariance;
-    this->colorFinishVariance = component->colorFinishVariance;
 
     this->sizeStart = component->sizeStart;
     this->sizeFinish = component->sizeFinish;
@@ -302,8 +300,6 @@ float speedVariance;
 // Particles color
 glm::vec4 colorStart;
 glm::vec4 colorFinish;
-glm::vec4 colorStartVariance;
-glm::vec4 colorFinishVariance;
 
 // Particles size
 float sizeStart;

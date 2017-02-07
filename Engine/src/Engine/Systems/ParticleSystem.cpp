@@ -14,7 +14,7 @@
 
 #include <Engine/Systems/ParticleSystem.hpp>
 
-ParticleSystem::ParticleSystem()
+ParticleSystem::ParticleSystem(bool editorMode): _editorMode(editorMode)
 {
     addDependency<sParticleEmitterComponent>();
     addDependency<sRenderComponent>();
@@ -78,8 +78,15 @@ void    ParticleSystem::updateEmitter(EntityManager &em, Entity* entity, float e
         // Wait for particles deletion and remove emitter
         if (emitter->particlesNb == 0)
         {
-            removeEmitter(entity->id);
-            em.destroyEntityRegister(entity);
+            // We don't want to destroy the emitter in editor mode
+            // We just reset the life of the emitter
+            if (_editorMode)  {
+                emitter->life = 0;
+            }
+            else {
+                removeEmitter(entity->id);
+                em.destroyEntityRegister(entity);
+            }
         }
     }
     // Create new particles each rate

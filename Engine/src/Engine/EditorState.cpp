@@ -17,7 +17,7 @@ void    EditorState::onEnter() {}
 
 void    EditorState::setupSystems()
 {
-    _world.addSystem<ParticleSystem>();
+    _world.addSystem<ParticleSystem>(true);
     _world.addSystem<UISystem>();
     _world.addSystem<RenderingSystem>(&_camera, _world.getSystem<ParticleSystem>()->getEmitters());
 }

@@ -892,7 +892,7 @@ sComponent* ComponentFactory<sParticleEmitterComponent>::loadFromJson(const std:
     component->emitterLife = json.getFloat("emitter_life", 0.0f);
     component->life = json.getUInt("life", 80);
     component->lifeVariance = json.getUInt("life_variance", 0);
-    component->angle = json.getFloat("angle", 30.0f);
+    component->angle = json.getFloat("angle", 50.0f);
     component->angleVariance = json.getFloat("angle_variance", 0.0f);
     component->speed = json.getFloat("speed", 30.0f);
     component->speedVariance =  json.getFloat("speed_variance", 0.0f);
@@ -900,9 +900,7 @@ sComponent* ComponentFactory<sParticleEmitterComponent>::loadFromJson(const std:
     if (color.size() > 0)
     {
         component->colorStart = color.getColor4f("start", { 1.0f, 1.0f, 1.0f, 1.0f });
-        component->colorStartVariance = color.getColor4f("start_variance", { 1.0f, 1.0f, 1.0f, 1.0f });
         component->colorFinish = color.getColor4f("finish", { 1.0f, 1.0f, 1.0f, 1.0f });
-        component->colorFinishVariance = color.getColor4f("finish_variance", { 1.0f, 1.0f, 1.0f, 1.0f });
     }
     else
     {
@@ -921,6 +919,8 @@ sComponent* ComponentFactory<sParticleEmitterComponent>::loadFromJson(const std:
     {
         component->sizeStart = 1.0f;
         component->sizeFinish = 0.0f;
+        component->sizeStartVariance = 0.0f;
+        component->sizeFinishVariance = 0.0f;
     }
 
     component->texture = json.getString("texture", "");
@@ -937,9 +937,7 @@ JsonValue&    ComponentFactory<sParticleEmitterComponent>::saveToJson(const std:
 
     // Write colors
     color.setColor4f("start", component->colorStart);
-    color.setColor4f("start_variance", component->colorStartVariance);
     color.setColor4f("finish", component->colorFinish);
-    color.setColor4f("finish_variance", component->colorFinishVariance);
     json.setValue("color", color);
 
     // Write size

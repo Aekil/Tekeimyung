@@ -46,7 +46,7 @@ struct sEmitter
 
 START_SYSTEM(ParticleSystem)
 public:
-    ParticleSystem();
+    ParticleSystem(bool editorMode = false);
     virtual ~ParticleSystem();
 
     virtual void    update(EntityManager &em, float elapsedTime);
@@ -59,4 +59,5 @@ private:
 
 private:
     std::unordered_map<uint32_t, sEmitter*>     _emitters;
+    bool            _editorMode;
 END_SYSTEM(ParticleSystem)
