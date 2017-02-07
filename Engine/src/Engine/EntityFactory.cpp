@@ -67,7 +67,7 @@ void EntityFactory::loadDirectory(const std::string& archetypesDir)
 
                 // The macro COMPONENTS_TYPES did not create the type
                 if (!IComponentFactory::componentTypeExists(it.key().asString()))
-                    EXCEPT(InvalidParametersException, "Failed to read entity archetype: Component type \"%s\" does not exist", componentName.c_str());
+                    EXCEPT(InvalidParametersException, "Failed to read entity archetype \"%s\": Component type \"%s\" does not exist", typeName.c_str(), componentName.c_str());
 
                 LOG_INFO("Add %s component %s", typeName.c_str(), componentName.c_str());
                 IComponentFactory::initComponent(typeName, componentName, JsonValue(*it));

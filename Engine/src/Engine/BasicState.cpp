@@ -4,7 +4,6 @@
 
 #include <Engine/Systems/ButtonSystem.hpp>
 #include <Engine/Systems/CollisionSystem.hpp>
-#include <Engine/Systems/GravitySystem.hpp>
 #include <Engine/Systems/ParticleSystem.hpp>
 #include <Engine/Systems/RenderingSystem.hpp>
 #include <Engine/Systems/ResolutionSystem.hpp>

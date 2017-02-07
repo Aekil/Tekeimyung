@@ -634,28 +634,26 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationParamColor(std::share
 }
 
 /*
-** sDirectionComponent
+** sRigidBodyComponent
 */
 
-sComponent* ComponentFactory<sDirectionComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
+sComponent* ComponentFactory<sRigidBodyComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
 {
-    sDirectionComponent* component = new sDirectionComponent();
+    sRigidBodyComponent* component = new sRigidBodyComponent();
 
-    component->value.x = json.getFloat("x", 0.0f);
-    component->value.y = json.getFloat("y", 0.0f);
-    component->speed =  json.getFloat("speed", 1.0f);
+    component->gravity = json.getVec3f("gravity", {0.0f, 0.0f, 0.0f});
+    component->velocity = json.getVec3f("velocity", {0.0f, 0.0f, 0.0f});
 
     return (component);
 }
 
-JsonValue&    ComponentFactory<sDirectionComponent>::saveToJson(const std::string& entityType, const sComponent* savedComponent, JsonValue* toJson)
+JsonValue&    ComponentFactory<sRigidBodyComponent>::saveToJson(const std::string& entityType, const sComponent* savedComponent, JsonValue* toJson)
 {
     JsonValue& json = toJson ? *toJson : _componentsJson[entityType];
-    const sDirectionComponent* component = static_cast<const sDirectionComponent*>(savedComponent ? savedComponent : _components[entityType]);
+    const sRigidBodyComponent* component = static_cast<const sRigidBodyComponent*>(savedComponent ? savedComponent : _components[entityType]);
 
-    json.setFloat("x", component->value.x);
-    json.setFloat("y", component->value.y);
-    json.setFloat("speed", component->speed);
+    json.setVec3f("gravity", component->gravity);
+    json.setVec3f("velocity", component->velocity);
 
     return (json);
 }
@@ -777,31 +775,6 @@ bool    ComponentFactory<sSphereColliderComponent>::updateEditor(const std::stri
     return (changed);
 }
 
-
-/*
-** sGravityComponent
-*/
-
-sComponent* ComponentFactory<sGravityComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
-{
-    sGravityComponent* component = new sGravityComponent();
-
-    component->value.x = json.getFloat("x", 0.0f);
-    component->value.y = json.getFloat("y", 0.0f);
-
-    return (component);
-}
-
-JsonValue&    ComponentFactory<sGravityComponent>::saveToJson(const std::string& entityType, const sComponent* savedComponent, JsonValue* toJson)
-{
-    JsonValue& json = toJson ? *toJson : _componentsJson[entityType];
-    const sGravityComponent* component = static_cast<const sGravityComponent*>(savedComponent ? savedComponent : _components[entityType]);
-
-    json.setFloat("x", component->value.x);
-    json.setFloat("y", component->value.y);
-
-    return (json);
-}
 
 /*
 ** sResolutionComponent

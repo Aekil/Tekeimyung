@@ -80,8 +80,7 @@ void Player::CheckBuildableZone()
 void Player::Movement(float elapsedTime)
 {
     sTransformComponent* transform = this->getComponent<sTransformComponent>();
-    sDirectionComponent* direction = this->getComponent<sDirectionComponent>();
-    direction->value *= -1;
+    _direction *= -1;
 
     if (KB_P(Keyboard::eKey::J))
     {
@@ -98,17 +97,17 @@ void Player::Movement(float elapsedTime)
     if (KB_P(Keyboard::eKey::I))
     {
         float angle = glm::radians(-transform->rotation.y + 90.0f);
-        direction->value.x += glm::cos(angle);
-        direction->value.y += glm::sin(angle);
-        transform->pos += glm::vec3(direction->value.x, 0, direction->value.y);
+        _direction.x += glm::cos(angle);
+        _direction.y += glm::sin(angle);
+        transform->pos += glm::vec3(_direction.x, 0, _direction.y);
         transform->needUpdate = true;
     }
     else if (KB_P(Keyboard::eKey::K))
     {
         float angle = glm::radians(-transform->rotation.y + 90.0f);
-        direction->value.x -= glm::cos(angle);
-        direction->value.y -= glm::sin(angle);
-        transform->pos += glm::vec3(direction->value.x, 0, direction->value.y);
+        _direction.x -= glm::cos(angle);
+        _direction.y -= glm::sin(angle);
+        transform->pos += glm::vec3(_direction.x, 0, _direction.y);
         transform->needUpdate = true;
     }
 }

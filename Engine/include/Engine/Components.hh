@@ -89,35 +89,31 @@ bool                    ignoreRaycast = false;
 std::string texture;
 END_COMPONENT(sRenderComponent)
 
-START_COMPONENT(sDirectionComponent)
-sDirectionComponent(const glm::vec2& dir, float speed = 1.0f) : value(dir), moved(false), speed(speed), sComponent(sDirectionComponent::identifier) {}
 
+START_COMPONENT(sRigidBodyComponent)
 virtual sComponent* clone()
 {
-    sDirectionComponent* component = new sDirectionComponent();
+    sRigidBodyComponent* component = new sRigidBodyComponent();
     component->update(this);
 
     return (component);
 }
 
-virtual void update(sDirectionComponent* component)
+virtual void update(sRigidBodyComponent* component)
 {
-    this->value = component->value;
-    this->orientation = component->orientation;
-    this->speed = component->speed;
-    this->moved = component->moved;
+    this->gravity = component->gravity;
+    this->velocity = component->velocity;
 }
 
 virtual void update(sComponent* component)
 {
-    update(static_cast<sDirectionComponent*>(component));
+    update(static_cast<sRigidBodyComponent*>(component));
 }
 
-glm::vec2 value;
-glm::vec3 orientation;
-float speed = 1.0f;
-bool moved = false;
-END_COMPONENT(sDirectionComponent)
+glm::vec3 gravity;
+glm::vec3 velocity;
+END_COMPONENT(sRigidBodyComponent)
+
 
 START_COMPONENT(sBoxColliderComponent)
 virtual sComponent* clone()
@@ -185,27 +181,6 @@ std::shared_ptr<Sphere> sphere;
 bool display = true;
 END_COMPONENT(sSphereColliderComponent)
 
-START_COMPONENT(sGravityComponent)
-virtual sComponent* clone()
-{
-    sGravityComponent* component = new sGravityComponent();
-    component->update(this);
-
-    return (component);
-}
-
-virtual void update(sGravityComponent* component)
-{
-    this->value = component->value;
-}
-
-virtual void update(sComponent* component)
-{
-    update(static_cast<sGravityComponent*>(component));
-}
-
-glm::vec2 value;
-END_COMPONENT(sGravityComponent)
 
 enum class eEntityType
 {

@@ -3,11 +3,6 @@
       "sNameComponent" : {
          "name" : "ENEMY"
       },
-      "sDirectionComponent" : {
-         "speed" : 1,
-         "x" : 1,
-         "y" : 0
-      },
       "sScriptComponent" : {
           "class" : [
                "Enemy"
