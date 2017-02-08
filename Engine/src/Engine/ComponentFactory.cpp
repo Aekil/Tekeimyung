@@ -469,6 +469,7 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationsEditor(sRenderCompon
                 else
                     playedAnimation->addParamAnimation(std::make_shared<ParamAnimation<glm::vec3> >(param, nullptr));
                 EntityFactory::initAnimations(entity);
+                playedAnimation->isPlaying(true);
             }
         }
         ImGui::EndPopup();

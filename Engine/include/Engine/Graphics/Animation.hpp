@@ -32,6 +32,7 @@ public:
     void                    isLoop(bool isLoop);
 
     bool                    isPlaying() const;
+    void                    isPlaying(bool isPlaying);
 
     std::vector<IParamAnimationPtr >&  getParamsAnimations();
     const std::vector<IParamAnimationPtr >&  getParamsAnimations() const;

@@ -101,6 +101,11 @@ bool    Animation::isPlaying() const
     return (_isPlaying);
 }
 
+void    Animation::isPlaying(bool isPlaying)
+{
+    _isPlaying = isPlaying;
+}
+
 std::vector<IParamAnimationPtr >& Animation::getParamsAnimations()
 {
     return (_paramsAnimations);
