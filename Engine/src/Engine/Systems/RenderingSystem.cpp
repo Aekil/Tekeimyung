@@ -226,7 +226,7 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
         {
             // Get fresh entity pointer to handle deletion
             Entity* entity = em.getEntity(it->first);
-            if (!entity)
+            if (!entity || entity->hasComponent<sParticleEmitterComponent>())
             {
                 uint32_t id = it->first;
                 ++it;

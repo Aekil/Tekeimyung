@@ -510,7 +510,6 @@ virtual sComponent*     clone()
 virtual void            update(sScriptComponent* component)
 {
     this->scriptNames = component->scriptNames;
-    this->isInitialized = component->isInitialized;
 }
 
 virtual void            update(sComponent* component)
@@ -518,9 +517,39 @@ virtual void            update(sComponent* component)
     update(static_cast<sScriptComponent*>(component));
 }
 
+BaseScript*             getScript(const std::string& name)
+{
+    uint32_t i = 0;
+    for (const auto& scriptName: scriptNames)
+    {
+        if (scriptName == name)
+        {
+            BaseScript* script = scriptInstances[i];
+            // If the user need the script before it's initialized, auto initialized it
+            if (!script->isInitialized)
+            {
+                script->Start();
+                script->isInitialized = true;
+            }
+            return scriptInstances[i];
+        }
+        i++;
+    }
+
+    return nullptr;
+}
+
+template <typename T>
+T*             getScript(const std::string& name)
+{
+    BaseScript* script = getScript(name);
+    if (script)
+        return static_cast<T*>(script);
+    return nullptr;
+}
+
 std::vector<BaseScript*> scriptInstances;
 std::vector<std::string> scriptNames;
-bool isInitialized;
 
 std::string selectedScript; // Only used for editor
 END_COMPONENT(sScriptComponent)

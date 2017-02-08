@@ -1136,7 +1136,6 @@ sComponent* ComponentFactory<sScriptComponent>::loadFromJson(const std::string& 
     component = new sScriptComponent();
 
     component->scriptNames = json.getStringVec("class", {});
-    component->isInitialized = false;
 
     return component;
 }

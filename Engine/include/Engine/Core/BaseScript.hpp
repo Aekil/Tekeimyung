@@ -12,7 +12,7 @@
 
 #include <Engine/Window/GameWindow.hpp>
 
-#define KB_P(x)         this->keyboard.isPressed(x) 
+#define KB_P(x)         this->keyboard.isPressed(x)
 
 class BaseScript
 {
@@ -29,6 +29,9 @@ public:
     virtual void OnHoverExit() {};
 
     void SetEntity(Entity* entity);
+
+public:
+    bool isInitialized;
 protected:
     Entity* entity;
     Keyboard& keyboard = GameWindow::getInstance()->getKeyboard();

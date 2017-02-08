@@ -1,14 +1,46 @@
 {
-    "name": "TOWER_FIRE",
-    "components": {
+   "components" : {
       "sNameComponent" : {
          "name" : "TOWER_FIRE"
       },
-            "sRenderComponent": {
-                "model": "resources/models/buildings/tower_fire.DAE"
-            },
-            "sTypeComponent": {
-                "type": "TILE_NOT_WALKABLE"
-            }
-        }
+      "sRenderComponent" : {
+         "animated" : false,
+         "animations" : [],
+         "color" : {
+            "a" : 1,
+            "b" : 1,
+            "g" : 1,
+            "r" : 1
+         },
+         "ignore_raycast" : false,
+         "model" : "resources/models/buildings/tower_fire.DAE",
+         "texture" : "",
+         "type" : "MESH"
+      },
+      "sResolutionComponent" : null,
+      "sScriptComponent" : {
+         "class" : [ "Tower" ]
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 200,
+            "y" : 12.5,
+            "z" : 275
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "scale" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         }
+      },
+      "sTypeComponent" : {
+         "type" : "TILE_NOT_WALKABLE"
+      }
+   },
+   "name" : "TOWER_FIRE"
 }

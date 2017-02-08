@@ -4,8 +4,7 @@
          "name" : "FIRE_BALL"
       },
       "sParticleEmitterComponent" : {
-         "texture" : "resources/sprites/particles/particle_circle.png",
-         "angle" : 0,
+         "angle" : 40.645000457763672,
          "angle_variance" : 0,
          "color" : {
             "finish" : {
@@ -14,37 +13,27 @@
                "g" : 0.63999998569488525,
                "r" : 1
             },
-            "finish_variance" : {
-               "a" : 0,
-               "b" : 0,
-               "g" : 0,
-               "r" : 0
-            },
             "start" : {
                "a" : 0.60000002384185791,
                "b" : 0,
                "g" : 0.30000001192092896,
                "r" : 1
-            },
-            "start_variance" : {
-               "a" : 0,
-               "b" : 0,
-               "g" : 0,
-               "r" : 0
             }
          },
-         "life" : 1,
+         "emitter_life" : 0,
+         "life" : 76,
          "life_variance" : 1,
          "rate" : 0,
          "size" : {
-            "finish" : 0.2,
+            "finish" : 0,
             "finish_variance" : 0,
-            "start" : 1,
+            "start" : 1.0480000972747803,
             "start_variance" : 0
          },
          "spawn_nb" : 1,
-         "speed" : 100,
-         "speed_variance" : 0
+         "speed" : 34.409000396728516,
+         "speed_variance" : 0,
+         "texture" : "resources/sprites/particles/particle_circle.png"
       },
       "sRenderComponent" : {
          "animated" : false,
@@ -58,16 +47,63 @@
                "y" : 0
             }
          },
+         "animations" : [],
          "color" : {
+            "a" : 1,
             "b" : 1,
             "g" : 1,
             "r" : 1
          },
+         "ignore_raycast" : false,
+         "model" : "resources/models/default.DAE",
          "spriteSize" : {
             "x" : 0,
             "y" : 0
          },
-         "texture" : "resources/sprites/particles/particle_circle.png"
+         "texture" : "resources/sprites/particles/particle_circle.png",
+         "type" : "PLANE"
+      },
+      "sResolutionComponent" : null,
+      "sRigidBodyComponent" : {
+         "gravity" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "velocity" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         }
+      },
+      "sScriptComponent" : {
+         "class" : [ "Projectile" ]
+      },
+      "sSphereColliderComponent" : {
+         "isTrigger" : false,
+         "pos" : {
+            "x" : 5,
+            "y" : 10,
+            "z" : -3
+         },
+         "radius" : 0.10000000149011612
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 272.25946044921875,
+            "y" : 165.36351013183594,
+            "z" : 200
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "scale" : {
+            "x" : 1.5000001192092896,
+            "y" : 1.5000002384185791,
+            "z" : 1.5000001192092896
+         }
       },
       "sTypeComponent" : {
          "type" : "OBJECT"
