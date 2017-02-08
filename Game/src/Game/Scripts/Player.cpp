@@ -47,7 +47,6 @@ void Player::CheckBuildableZone()
 
             if (scriptComponent != nullptr)
             {
-
                 if (std::find(scriptComponent->scriptNames.cbegin(), scriptComponent->scriptNames.cend(), "Tile") != scriptComponent->scriptNames.cend())
                 {
                     auto index = std::find(scriptComponent->scriptNames.cbegin(), scriptComponent->scriptNames.cend(), "Tile") - scriptComponent->scriptNames.begin();

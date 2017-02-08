@@ -810,9 +810,6 @@ sComponent* ComponentFactory<sResolutionComponent>::loadFromJson(const std::stri
 {
     sResolutionComponent* component = new sResolutionComponent();
 
-    component->collidingState= eCollisionState::NO_COLLISION;
-    component->entityId = -1;
-
     return (component);
 }
 

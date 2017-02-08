@@ -22,27 +22,31 @@ void ResolutionSystem::update(EntityManager &em, float elapsedTime)
         sResolutionComponent* resolutionComponent = entity->getComponent<sResolutionComponent>();
         sScriptComponent* scriptComponent = entity->getComponent<sScriptComponent>();
 
-        if (resolutionComponent->collidingState == eCollisionState::ENTERING_COLLISION)
+        for (std::map<int, eCollisionState>::iterator it = resolutionComponent->resolutions.begin(); it != resolutionComponent->resolutions.end(); ++it)
         {
-            if (scriptComponent != nullptr)
+            if (it->second == eCollisionState::ENTERING_COLLISION)
             {
-                for (auto&& script : scriptComponent->scriptInstances)
+                if (scriptComponent != nullptr)
                 {
-                    script->OnCollisionEnter(em.getEntity(resolutionComponent->entityId));
+                    for (auto&& script : scriptComponent->scriptInstances)
+                    {
+                        script->OnCollisionEnter(em.getEntity(it->first));
+                    }
                 }
+                resolutionComponent->resolutions[it->first] = eCollisionState::IS_COLLIDING;
             }
-            resolutionComponent->collidingState = eCollisionState::IS_COLLIDING;
-        }
-        else if (resolutionComponent->collidingState == eCollisionState::EXIT_COLLISION)
-        {
-            if (scriptComponent != nullptr)
+            else if (it->second == eCollisionState::EXIT_COLLISION)
             {
-                for (auto&& script : scriptComponent->scriptInstances)
+                if (scriptComponent != nullptr)
                 {
-                    script->OnCollisionExit(em.getEntity(resolutionComponent->entityId));
+                    for (auto&& script : scriptComponent->scriptInstances)
+                    {
+                        script->OnCollisionExit(em.getEntity(it->first));
+                    }
                 }
+                resolutionComponent->resolutions[it->first] = eCollisionState::NO_COLLISION;
             }
-            resolutionComponent->collidingState = eCollisionState::NO_COLLISION;
         }
+        
     });
 }
