@@ -254,6 +254,8 @@ void    EntityFactory::copyEntityManager(EntityManager* dst, EntityManager* src)
             sComponent* cloneComponent = component->clone();
             cloneEntity->addComponent(cloneComponent);
         }
+
+        initAnimations(cloneEntity);
     }
 }
 

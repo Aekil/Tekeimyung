@@ -20,8 +20,6 @@ public:
     void                displayLevelsMenu();
     void                displayPlayStopMenu();
 
-    void                displayStateNotRegistered();
-
     void                displaySaveAsPopup();
     void                displayLoadPopup();
 
