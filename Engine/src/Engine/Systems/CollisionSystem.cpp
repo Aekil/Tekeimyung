@@ -41,16 +41,15 @@ void    CollisionSystem::update(EntityManager &em, float elapsedTime)
                     //if (!entityB->getComponent<sSphereColliderComponent>()->isTrigger)
                     //    LOG_DEBUG("NOT TRIGGER");
 
-                    if (resolution->collidingState == eCollisionState::NO_COLLISION)
+                    if (resolution->resolutions.find(entityB->id) == resolution->resolutions.end() || resolution->resolutions[entityB->id] == eCollisionState::NO_COLLISION)
                     {
-                        resolution->collidingState = eCollisionState::ENTERING_COLLISION;
-                        resolution->entityId = entityB->id;
+                        resolution->resolutions[entityB->id] = eCollisionState::ENTERING_COLLISION;
                     }
                 }
                 else
                 {
-                    if (resolution->collidingState == eCollisionState::IS_COLLIDING)
-                        resolution->collidingState = eCollisionState::EXIT_COLLISION;
+                    if (resolution->resolutions[entityB->id] == eCollisionState::IS_COLLIDING)
+                        resolution->resolutions[entityB->id] = eCollisionState::EXIT_COLLISION;
                 }
             }
         });

@@ -5,6 +5,7 @@
 #pragma once
 
 #include <memory>
+#include <map>
 #include <vector>
 #include <string>
 #include <cstdint>
@@ -358,8 +359,7 @@ virtual sComponent* clone()
 
 virtual void update(sResolutionComponent* component)
 {
-    this->entityId = component->entityId;
-    this->collidingState = component->collidingState;
+    this->resolutions = component->resolutions;
 }
 
 virtual void update(sComponent* component)
@@ -367,11 +367,7 @@ virtual void update(sComponent* component)
     update(static_cast<sResolutionComponent*>(component));
 }
 
-//Entity id with which is colliding
-int entityId;
-
-//Boolean if we need to resolve collisions or not
-eCollisionState collidingState;
+std::map<int, eCollisionState> resolutions;
 END_COMPONENT(sResolutionComponent)
 
 START_COMPONENT(sTransformComponent)
