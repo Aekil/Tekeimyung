@@ -447,6 +447,14 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationsEditor(sRenderCompon
         component->_animator.play(playedAnimation->getName(), playedAnimation->isLoop());
     }
 
+    ImGui::SameLine();
+    if (ImGui::Button("Reset"))
+    {
+        playedAnimation->reset();
+        playedAnimation->update(0);
+        playedAnimation->isPlaying(playedAnimation->isLoop() == true);
+    }
+
     bool loop = playedAnimation->isLoop();
     if (ImGui::Checkbox("Loop (preview, not saved)", &loop))
     {
@@ -469,7 +477,6 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationsEditor(sRenderCompon
                 else
                     playedAnimation->addParamAnimation(std::make_shared<ParamAnimation<glm::vec3> >(param, nullptr));
                 EntityFactory::initAnimations(entity);
-                playedAnimation->isPlaying(true);
             }
         }
         ImGui::EndPopup();

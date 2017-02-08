@@ -22,6 +22,7 @@ Animation::~Animation() {}
 
 void    Animation::addParamAnimation(IParamAnimationPtr paramAnimation)
 {
+    isPlaying(true);
     paramAnimation->reset();
     _paramsAnimations.push_back(paramAnimation);
 }
