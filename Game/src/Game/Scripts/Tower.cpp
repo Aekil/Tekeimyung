@@ -13,7 +13,7 @@
 void Tower::Start()
 {
     _targetId = 0;
-    _fireRate = 2.0f;
+    _fireRate = 2.5f;
     _lastShotTime = _fireRate;
     _towerTransform = entity->getComponent<sTransformComponent>();
     _range = 22.0f;
