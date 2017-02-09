@@ -513,7 +513,7 @@ virtual void            update(sComponent* component)
     update(static_cast<sScriptComponent*>(component));
 }
 
-BaseScript*             getScript(const std::string& name)
+BaseScript*             getScript(const char* name)
 {
     uint32_t i = 0;
     for (const auto& scriptName: scriptNames)
@@ -536,7 +536,7 @@ BaseScript*             getScript(const std::string& name)
 }
 
 template <typename T>
-T*             getScript(const std::string& name)
+T*             getScript(const char* name)
 {
     BaseScript* script = getScript(name);
     if (script)

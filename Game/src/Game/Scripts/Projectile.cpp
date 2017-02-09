@@ -29,6 +29,7 @@ void Projectile::Update(float dt)
     {
         LOG_INFO("No target");
         _targetId = 0;
+        em->destroyEntityRegister(this->entity);
     }
     else
     {
