@@ -13,7 +13,7 @@ Physics::Physics()
 Physics::~Physics()
 {}
 
-bool    Physics::raycast(const glm::vec3& rayOrigin, const glm::vec3& rayDir, Entity** hitEntity)
+bool    Physics::raycast(const Ray& ray, Entity** hitEntity)
 {
     float nearestHitDist = 0.0f;
     Entity* nearestEntity = nullptr;
@@ -41,7 +41,7 @@ bool    Physics::raycast(const glm::vec3& rayOrigin, const glm::vec3& rayDir, En
         boxMin += transform->pos;
         boxMax += transform->pos;
 
-        float distance = Collisions::rayVSAABB(rayOrigin, rayDir, boxMin, boxMax);
+        float distance = Collisions::rayVSAABB(ray, boxMin, boxMax);
         if (distance != 0 && (nearestEntity == nullptr || distance <= nearestHitDist))
         {
             nearestHitDist = distance;
@@ -53,7 +53,7 @@ bool    Physics::raycast(const glm::vec3& rayOrigin, const glm::vec3& rayDir, En
     return (nearestEntity != nullptr);
 }
 
-bool    Physics::raycastAll(const glm::vec3& rayOrigin, const glm::vec3& rayDir, std::vector<Entity*> hitEntities)
+bool    Physics::raycastAll(const Ray& ray, std::vector<Entity*> hitEntities)
 {
     EntityManager* em = EntityFactory::getBindedEntityManager();
     for (auto it : em->getEntities())
@@ -78,7 +78,7 @@ bool    Physics::raycastAll(const glm::vec3& rayOrigin, const glm::vec3& rayDir,
         boxMin += transform->pos;
         boxMax += transform->pos;
 
-        float distance = Collisions::rayVSAABB(rayOrigin, rayDir, boxMin, boxMax);
+        float distance = Collisions::rayVSAABB(ray, boxMin, boxMax);
         if (distance != 0)
         {
             hitEntities.push_back(entity);
@@ -86,4 +86,16 @@ bool    Physics::raycastAll(const glm::vec3& rayOrigin, const glm::vec3& rayDir,
     }
 
     return (hitEntities.size() > 0);
+}
+
+bool    Physics::raycastPlane(const Ray& ray, const glm::vec3& planeNormal, const glm::vec3& planePos, float& hitDistance)
+{
+    float denom = glm::dot(planeNormal, ray.direction);
+    if (abs(denom) > 0.0001f)
+    {
+        glm::vec3 point = planePos - ray.origin;
+        hitDistance = glm::dot(point, planeNormal) / denom;
+        return hitDistance >= 0;
+    }
+    return false;
 }

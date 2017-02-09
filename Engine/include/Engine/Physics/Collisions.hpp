@@ -7,6 +7,8 @@
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 
+#include <Engine/Graphics/Ray.hpp>
+
 class Collisions
 {
 public:
@@ -19,7 +21,7 @@ public:
 
     static bool         sphereVSAABB(const glm::vec3& spherePosition, float sphereRadius, const glm::vec3& boxPosition, const glm::vec3& boxSize);
 
-    static float        rayVSAABB(const glm::vec3& rayPos, const glm::vec3& rayDir, const glm::vec3& boxMin, const glm::vec3& boxMax);
+    static float        rayVSAABB(const Ray& ray, const glm::vec3& boxMin, const glm::vec3& boxMax);
 private:
 
 };

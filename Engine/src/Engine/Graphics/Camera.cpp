@@ -226,6 +226,22 @@ void    Camera::freezeRotations(bool freeze)
     _needUpdateUbo = true;
 }
 
+Ray     Camera::screenPosToRay(float posX, float posY)
+{
+    auto gameWindow = GameWindow::getInstance();
+
+    glm::vec3 nearScreen(posX, gameWindow->getBufferHeight() - posY, 0.0f);
+    glm::vec3 farScreen(posX, gameWindow->getBufferHeight() - posY, 1.0f);
+
+    // Unproject 2D points to get 3D points
+    // Get 3D point on near plane
+    glm::vec3 nearPoint = glm::unProject(nearScreen, getView(), getProj(), gameWindow->getViewport());
+    // Get 3D point on far plane
+    glm::vec3 farPoint = glm::unProject(farScreen, getView(), getProj(), gameWindow->getViewport());
+
+    return Ray(nearPoint, farPoint - nearPoint);
+}
+
 void    Camera::setInstance(Camera* instance)
 {
     _instance = instance;

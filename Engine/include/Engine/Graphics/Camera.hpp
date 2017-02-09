@@ -8,8 +8,9 @@
 #include <glm/vec4.hpp>
 #include <glm/mat4x4.hpp>
 
-#include <Engine/Graphics/UniformBuffer.hpp>
+#include <Engine/Graphics/Ray.hpp>
 #include <Engine/Graphics/ShaderProgram.hpp>
+#include <Engine/Graphics/UniformBuffer.hpp>
 
 class Camera
 {
@@ -69,6 +70,8 @@ public:
     void                update(const ShaderProgram& shaderProgram, float elapsedTime);
     void                updateUboData(UniformBuffer& ubo, bool forceUpdate = false);
     void                freezeRotations(bool freeze);
+
+    Ray                 screenPosToRay(float posX, float posY);
 
     static void         setInstance(Camera* instance);
     static Camera*      getInstance();

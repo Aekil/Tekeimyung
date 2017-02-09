@@ -2,9 +2,14 @@
 ** Author : Simon AMBROISE
 */
 
+#include <cmath>
+
 #include <Engine/Components.hh>
-#include <Engine/Physics/Collisions.hpp>
 #include <Engine/EntityFactory.hpp>
+#include <Engine/Graphics/Camera.hpp>
+#include <Engine/Graphics/Renderer.hpp>
+#include <Engine/Physics/Collisions.hpp>
+#include <Engine/Physics/Physics.hpp>
 
 #include <Game/Scripts/Tile.hpp>
 #include <Game/Scripts/Player.hpp>
@@ -20,6 +25,7 @@ void Player::Start()
 {
     this->health = 200;
     this->buildableRadius = 5.7f;
+    this->_transform = this->getComponent<sTransformComponent>();
 
     LOG_DEBUG("BORN");
 }
@@ -62,36 +68,44 @@ void Player::CheckBuildableZone()
 
 void Player::Movement(float elapsedTime)
 {
-    sTransformComponent* transform = this->getComponent<sTransformComponent>();
-    _direction *= -1;
+    Cursor& cursor = GameWindow::getInstance()->getMouse().getCursor();
+    Camera* camera = Renderer::getInstance()->getCurrentCamera();
 
-    if (KB_P(Keyboard::eKey::J))
+    if (!camera)
+        return;
+
+
+    Ray ray = camera->screenPosToRay((float)cursor.getX(), (float)cursor.getY());
+    float hitDistance;
+
+    if (Physics::raycastPlane(ray, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, hitDistance))
     {
-        transform->rotation.y += 180.0f * elapsedTime;
-        transform->rotation.y = std::fmod(transform->rotation.y, 360.0f);
-        transform->needUpdate = true;
+        glm::vec3 target = ray.getPoint(hitDistance);
+        glm::vec3 dir = glm::normalize(target - _transform->pos);
+        float rotation = glm::degrees(std::atan2(dir.x, dir.z));
+        _transform->rotation.y = rotation;
+        _transform->needUpdate = true;
     }
-    else if (KB_P(Keyboard::eKey::L))
+
+    if (KB_P(Keyboard::eKey::K))
     {
-        transform->rotation.y -= 180.0f * elapsedTime;
-        transform->rotation.y = std::fmod(transform->rotation.y, 360.0f);
-        transform->needUpdate = true;
+        _transform->pos += glm::vec3(1.0f, 0.0f, 1.0f);
+        _transform->needUpdate = true;
     }
     if (KB_P(Keyboard::eKey::I))
     {
-        float angle = glm::radians(-transform->rotation.y + 90.0f);
-        _direction.x += glm::cos(angle);
-        _direction.y += glm::sin(angle);
-        transform->pos += glm::vec3(_direction.x, 0, _direction.y);
-        transform->needUpdate = true;
+        _transform->pos += glm::vec3(-1.0f, 0.0f, -1.0f);
+        _transform->needUpdate = true;
     }
-    else if (KB_P(Keyboard::eKey::K))
+    if (KB_P(Keyboard::eKey::J))
     {
-        float angle = glm::radians(-transform->rotation.y + 90.0f);
-        _direction.x -= glm::cos(angle);
-        _direction.y -= glm::sin(angle);
-        transform->pos += glm::vec3(_direction.x, 0, _direction.y);
-        transform->needUpdate = true;
+        _transform->pos += glm::vec3(-1.0f, 0.0f, 1.0f);
+        _transform->needUpdate = true;
+    }
+    if (KB_P(Keyboard::eKey::L))
+    {
+        _transform->pos += glm::vec3(1.0f, 0.0f, -1.0f);
+        _transform->needUpdate = true;
     }
 }
 

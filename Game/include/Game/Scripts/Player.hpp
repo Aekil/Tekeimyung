@@ -34,6 +34,7 @@ public:
 
 private:
     glm::vec2 _direction;
+    sTransformComponent* _transform;
 };
 
 REGISTER_SCRIPT(Player);

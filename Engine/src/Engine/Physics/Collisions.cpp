@@ -70,22 +70,22 @@ bool    Collisions::sphereVSAABB(const glm::vec3& spherePosition, float sphereRa
     return squaredDistance <= (sphereRadius * sphereRadius);
 }
 
-float Collisions::rayVSAABB(const glm::vec3& rayPos, const glm::vec3& rayDir, const glm::vec3& boxMin, const glm::vec3& boxMax)
+float Collisions::rayVSAABB(const Ray& ray, const glm::vec3& boxMin, const glm::vec3& boxMax)
 {
     float tNear = FLT_MIN;
     float tFar = FLT_MAX;
 
     // X planes
     {
-        if (rayDir.x == 0) // Ray parallel to the plane
+        if (ray.direction.x == 0) // Ray parallel to the plane
         {
-            if (rayPos.x < boxMin.x || rayPos.x > boxMax.x) // Ray not beteween the two planes
+            if (ray.origin.x < boxMin.x || ray.origin.x > boxMax.x) // Ray not beteween the two planes
             {
                 return (0);
             }
         }
-        float t1 = (boxMin.x - rayPos.x) / rayDir.x;
-        float t2 = (boxMax.x - rayPos.x) / rayDir.x;
+        float t1 = (boxMin.x - ray.origin.x) / ray.direction.x;
+        float t2 = (boxMax.x - ray.origin.x) / ray.direction.x;
         if (t1 > t2)
         {
             float tmp = t1;
@@ -104,15 +104,15 @@ float Collisions::rayVSAABB(const glm::vec3& rayPos, const glm::vec3& rayDir, co
     }
     // Y planes
     {
-        if (rayDir.y == 0) // Ray parallel to the plane
+        if (ray.direction.y == 0) // Ray parallel to the plane
         {
-            if (rayPos.y < boxMin.y || rayPos.y > boxMax.y) // Ray not beteween the two planes
+            if (ray.origin.y < boxMin.y || ray.origin.y > boxMax.y) // Ray not beteween the two planes
             {
                 return (0);
             }
         }
-        float t1 = (boxMin.y - rayPos.y) / rayDir.y;
-        float t2 = (boxMax.y - rayPos.y) / rayDir.y;
+        float t1 = (boxMin.y - ray.origin.y) / ray.direction.y;
+        float t2 = (boxMax.y - ray.origin.y) / ray.direction.y;
         if (t1 > t2)
         {
             float tmp = t1;
@@ -131,15 +131,15 @@ float Collisions::rayVSAABB(const glm::vec3& rayPos, const glm::vec3& rayDir, co
     }
     // Z planes
     {
-        if (rayDir.z == 0) // Ray parallel to the plane
+        if (ray.direction.z == 0) // Ray parallel to the plane
         {
-            if (rayPos.z < boxMin.z || rayPos.z > boxMax.z) // Ray not beteween the two planes
+            if (ray.origin.z < boxMin.z || ray.origin.z > boxMax.z) // Ray not beteween the two planes
             {
                 return (0);
             }
         }
-        float t1 = (boxMin.z - rayPos.z) / rayDir.z;
-        float t2 = (boxMax.z - rayPos.z) / rayDir.z;
+        float t1 = (boxMin.z - ray.origin.z) / ray.direction.z;
+        float t2 = (boxMax.z - ray.origin.z) / ray.direction.z;
         if (t1 > t2)
         {
             float tmp = t1;
