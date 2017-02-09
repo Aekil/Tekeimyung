@@ -115,13 +115,17 @@ void    EntitiesTemplateDebugWindow::cloneTemplate(const std::string& cloneTypeN
 
         // Add cloned component to component factory
         sComponent* newComponent = compFactory->clone(cloneTypeName);
+
+        if (componentName == "sNameComponent")
+        {
+            sNameComponent* name = static_cast<sNameComponent*>(newComponent);
+            name->value = newTypeName;
+        }
+
         compFactory->save(newTypeName, newComponent);
 
-        if (componentName != "sNameComponent")
-        {
-            // Add component to EntityFactory
-            EntityFactory::addComponent(newTypeName, componentName);
-        }
+        // Add component to EntityFactory
+        EntityFactory::addComponent(newTypeName, componentName);
     }
 
     // Save the cloned template to json
