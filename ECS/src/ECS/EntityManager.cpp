@@ -86,3 +86,8 @@ void    EntityManager::notifyEntityRemovedComponent(Entity* entity, sComponent* 
 {
     _world.notifyEntityRemovedComponent(entity, component);
 }
+
+void    EntityManager::notifyEntityCreated(Entity* entity)
+{
+    _world.notifyEntityCreated(entity);
+}

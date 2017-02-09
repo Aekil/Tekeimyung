@@ -82,7 +82,7 @@ void    RenderingSystem::renderCollider(Entity* entity)
             boxCollider->box = std::make_shared<Box>(boxInfo);
         }
 
-        glm::mat4 boxTransform = transform->transform;
+        glm::mat4 boxTransform = transform->getTransform();
         boxTransform = glm::translate(boxTransform, boxCollider->pos);
         boxTransform = glm::scale(boxTransform, boxCollider->size);
 
@@ -97,7 +97,7 @@ void    RenderingSystem::renderCollider(Entity* entity)
             sphereCollider->sphere = std::make_shared<Sphere>(sphereInfo);
         }
 
-        glm::mat4 sphereTransform = transform->transform;
+        glm::mat4 sphereTransform = transform->getTransform();
         sphereTransform = glm::translate(sphereTransform, sphereCollider->pos);
         sphereTransform = glm::scale(sphereTransform, glm::vec3(sphereCollider->radius));
 
@@ -265,26 +265,6 @@ std::shared_ptr<Model>  RenderingSystem::getModel(sRenderComponent *render)
     return (render->getModel());
 }
 
-bool    RenderingSystem::onEntityNewComponent(Entity* entity, sComponent* component)
-{
-    System::onEntityNewComponent(entity, component);
-
-    // The entity match RenderingSystem dependencies
-    // and the new component is a collider
-    if (entityMatchDependencies(entity) &&
-        (entity->hasComponent<sBoxColliderComponent>() ||
-        entity->hasComponent<sSphereColliderComponent>()))
-    {
-        // The entity is not already in the collidable entities vector
-        if (std::find(_collidableEntities.cbegin(), _collidableEntities.cend(), entity->id) == _collidableEntities.cend())
-        {
-            _collidableEntities.push_back(entity->id);
-        }
-        return (true);
-    }
-    return (false);
-}
-
 bool    RenderingSystem::onEntityRemovedComponent(Entity* entity, sComponent* component)
 {
     System::onEntityRemovedComponent(entity, component);
@@ -300,6 +280,24 @@ bool    RenderingSystem::onEntityRemovedComponent(Entity* entity, sComponent* co
             _collidableEntities.erase(foundEntity);
             return (true);
         }
+    }
+    return (false);
+}
+
+bool    RenderingSystem::onEntityCreated(Entity* entity)
+{
+    // The entity match RenderingSystem dependencies
+    // and the new component is a collider
+    if (entityMatchDependencies(entity) &&
+        (entity->hasComponent<sBoxColliderComponent>() ||
+        entity->hasComponent<sSphereColliderComponent>()))
+    {
+        // The entity is not already in the collidable entities vector
+        if (std::find(_collidableEntities.cbegin(), _collidableEntities.cend(), entity->id) == _collidableEntities.cend())
+        {
+            _collidableEntities.push_back(entity->id);
+        }
+        return (true);
     }
     return (false);
 }

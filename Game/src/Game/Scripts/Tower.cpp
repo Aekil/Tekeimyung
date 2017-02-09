@@ -69,24 +69,17 @@ bool Tower::isInRange(Entity* entity)
 void Tower::shootTarget(Entity* target)
 {
     Entity*                 fireball;
-    sTransformComponent*  targetTransform;
-    sTransformComponent*    fireballTransform;
-    sRigidBodyComponent*    fireballRigidBody;
     sScriptComponent*       fireballScripts;
     Projectile*             projectileScript;
 
     fireball = Instantiate("FIRE_BALL");
-    // Get components
-    targetTransform = target->getComponent<sTransformComponent>();
-    fireballTransform = fireball->getComponent<sTransformComponent>();
-    fireballRigidBody = fireball->getComponent<sRigidBodyComponent>();
     fireballScripts = fireball->getComponent<sScriptComponent>();
     projectileScript = fireballScripts->getScript<Projectile>("Projectile");
 
-    fireballTransform->pos = _towerTransform->pos;
-    fireballRigidBody->velocity = glm::normalize(targetTransform->pos - fireballTransform->pos) * 80.0f;
+    projectileScript->_projectileTransform->pos = _towerTransform->pos;
+    projectileScript->_projectileTransform->needUpdate = true;
     projectileScript->_targetId = target->id;
+    projectileScript->followTarget(target);
 
-    fireballTransform->needUpdate = true;
     _lastShotTime = 0.0f;
 }

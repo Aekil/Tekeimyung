@@ -37,6 +37,14 @@ void    World::notifyEntityRemovedComponent(Entity* entity, sComponent* componen
     }
 }
 
+void    World::notifyEntityCreated(Entity* entity)
+{
+    for (auto& system_: _systems)
+    {
+        system_->onEntityCreated(entity);
+    }
+}
+
 void    World::notifyEntityDeleted(Entity* entity)
 {
     for (auto& system_: _systems)

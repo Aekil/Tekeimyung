@@ -131,6 +131,7 @@ void    LevelLoader::load(const std::string& levelName, EntityManager* em)
 
         // Init animation
         EntityFactory::initAnimations(entity);
+        em->notifyEntityCreated(entity);
     }
 }
 

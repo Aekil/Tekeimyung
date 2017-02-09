@@ -24,8 +24,8 @@ public:
     virtual void update(EntityManager& em, float elapsedTime);
     virtual bool                            init();
 
-    virtual bool                            onEntityNewComponent(Entity* entity, sComponent* component);
     virtual bool                            onEntityRemovedComponent(Entity* entity, sComponent* component);
+    virtual bool                            onEntityCreated(Entity* entity);
     virtual bool                            onEntityDeleted(Entity* entity);
 
     void                                    renderEntity(sRenderComponent *render, Entity* entity, float elapsedTime);

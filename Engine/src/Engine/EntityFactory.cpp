@@ -238,6 +238,7 @@ Entity* EntityFactory::cloneEntity(const std::string& typeName)
     }
 
     initAnimations(clone);
+    _em->notifyEntityCreated(clone);
 
     return (clone);
 }
@@ -256,6 +257,7 @@ void    EntityFactory::copyEntityManager(EntityManager* dst, EntityManager* src)
         }
 
         initAnimations(cloneEntity);
+        _em->notifyEntityCreated(cloneEntity);
     }
 }
 

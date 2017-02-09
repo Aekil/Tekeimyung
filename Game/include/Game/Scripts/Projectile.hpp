@@ -21,9 +21,14 @@ public:
     void OnCollisionEnter(Entity* entity) override final;
 
 private:
+    void followTarget(Entity* target);
+
+private:
     uint32_t _targetId;
 
     sTransformComponent* _projectileTransform;
+    sSphereColliderComponent* _projectileCollider;
+    sRigidBodyComponent* _projectileRigidBody;
 };
 
 REGISTER_SCRIPT(Projectile);
