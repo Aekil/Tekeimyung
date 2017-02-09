@@ -12,6 +12,7 @@ void Tile::Start()
     buildableItems.push_back("TRAP_NEEDLE");
     buildableItems.push_back("TRAP_CUTTER");
     buildableItems.push_back("TRAP_FIRE");
+    _render = this->getComponent<sRenderComponent>();
 }
 
 void Tile::Update(float dt)
@@ -50,9 +51,7 @@ void Tile::OnHoverEnter()
         displayPreview();
     }
 
-    auto renderer = this->getComponent<sRenderComponent>();
-
-    renderer->color = glm::vec4(0.5f, 0.5f, 0.5f, 1.0f);
+    _render->color = glm::vec4(0.5f, 0.5f, 0.5f, 1.0f);
     this->onHover = true;
 }
 
@@ -63,9 +62,7 @@ void Tile::OnHoverExit()
         destroyPreview();
     }
 
-    auto renderer = this->getComponent<sRenderComponent>();
-
-    renderer->color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+    _render->color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
     this->onHover = false;
 }
 

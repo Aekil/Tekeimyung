@@ -32,6 +32,8 @@ private:
     std::vector<std::string> buildableItems;
     int currentIdx = 0;
     bool m_buildable = false;
+
+    sRenderComponent* _render;
 };
 
 REGISTER_SCRIPT(Tile);

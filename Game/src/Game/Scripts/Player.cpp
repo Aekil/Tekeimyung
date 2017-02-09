@@ -26,7 +26,7 @@ void Player::Start()
     this->health = 200;
     this->buildableRadius = 5.7f;
     this->_transform = this->getComponent<sTransformComponent>();
-    _buildEnabled = false;
+    _buildEnabled = true;
 
     LOG_DEBUG("BORN");
 }
@@ -56,24 +56,23 @@ void Player::CheckBuildableZone()
             auto render = entity.second->getComponent<sRenderComponent>();
             auto scriptComponent = entity.second->getComponent<sScriptComponent>();
 
+            if (!scriptComponent)
+                continue;
+
             Tile* tile = scriptComponent->getScript<Tile>("Tile");
-            if (tile)
-            {
-                tile->SetBuildable(false);
-            }
+            if (!tile)
+                continue;
 
             render->color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+            tile->SetBuildable(false);
+
+            if (!_buildEnabled)
+                continue;
 
             if (Collisions::sphereVSAABB(_transform->pos, this->buildableRadius * SIZE_UNIT, box->pos + pos, glm::vec3(box->size.x * SIZE_UNIT, box->size.y * SIZE_UNIT, box->size.z * SIZE_UNIT)))
             {
-                if (_buildEnabled)
-                {
-                    if (tile)
-                    {
-                        tile->SetBuildable(true);
-                    }
-                    render->color = glm::vec4(1.0f, 0.0f, 1.0f, 1.0f);
-                }
+                tile->SetBuildable(true);
+                render->color = glm::vec4(1.0f, 0.0f, 1.0f, 1.0f);
             }
         }
     }
