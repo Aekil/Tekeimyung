@@ -14,7 +14,7 @@ Collisions::Collisions()
 Collisions::~Collisions()
 {}
 
-bool    Collisions::sphereVSsphere(glm::vec3 pos1, float radius1, glm::vec3 pos2, float radius2)
+bool    Collisions::sphereVSsphere(const glm::vec3& pos1, float radius1, const glm::vec3& pos2, float radius2)
 {
     float distance = pow((pos1.x - pos2.x), 2) + pow((pos1.y - pos2.y), 2) + pow((pos1.z - pos2.z), 2);
 
@@ -22,7 +22,7 @@ bool    Collisions::sphereVSsphere(glm::vec3 pos1, float radius1, glm::vec3 pos2
     return (distance <= sumRadius);
 }
 
-bool    Collisions::pointVSAABB(glm::vec3 point, glm::vec3 boxPosition, glm::vec3 boxSize)
+bool    Collisions::pointVSAABB(const glm::vec3& point, const glm::vec3& boxPosition, const glm::vec3& boxSize)
 {
     return  (point.x >= boxPosition.x && point.x <= boxPosition.x + boxSize.x) &&
         (point.y >= boxPosition.y && point.y <= boxPosition.y + boxSize.y) &&
@@ -63,7 +63,7 @@ double SquaredDistPointAABB(const glm::vec3& p, const glm::vec3& min, const glm:
     return sq;
 }
 
-bool    Collisions::sphereVSAABB(glm::vec3 spherePosition, float sphereRadius, glm::vec3 boxPosition, glm::vec3 boxSize)
+bool    Collisions::sphereVSAABB(const glm::vec3& spherePosition, float sphereRadius, const glm::vec3& boxPosition, const glm::vec3& boxSize)
 {
     double squaredDistance = SquaredDistPointAABB(spherePosition, boxPosition, boxPosition + boxSize);
 
