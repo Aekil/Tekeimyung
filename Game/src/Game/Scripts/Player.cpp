@@ -26,20 +26,26 @@ void Player::Start()
     this->health = 200;
     this->buildableRadius = 5.7f;
     this->_transform = this->getComponent<sTransformComponent>();
+    _buildEnabled = false;
 
     LOG_DEBUG("BORN");
 }
 
 void Player::Update(float dt)
 {
+    if (this->keyboard[Keyboard::eKey::B] ==  Keyboard::eKeyState::KEY_PRESSED)
+    {
+        _buildEnabled = !_buildEnabled;
+    }
+
     this->CheckBuildableZone();
+
     this->Movement(dt);
 }
 
 void Player::CheckBuildableZone()
 {
     auto em = EntityFactory::getBindedEntityManager();
-    auto transform = this->getComponent<sTransformComponent>()->pos;
 
     for (auto &entity : em->getEntities())
     {
@@ -51,16 +57,23 @@ void Player::CheckBuildableZone()
             auto scriptComponent = entity.second->getComponent<sScriptComponent>();
 
             Tile* tile = scriptComponent->getScript<Tile>("Tile");
-            if (tile == nullptr)
-                break;
+            if (tile)
+            {
+                tile->SetBuildable(false);
+            }
 
             render->color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-            tile->SetBuildable(false);
 
-            if (Collisions::sphereVSAABB(transform, this->buildableRadius * SIZE_UNIT, box->pos + pos, glm::vec3(box->size.x * SIZE_UNIT, box->size.y * SIZE_UNIT, box->size.z * SIZE_UNIT)))
+            if (Collisions::sphereVSAABB(_transform->pos, this->buildableRadius * SIZE_UNIT, box->pos + pos, glm::vec3(box->size.x * SIZE_UNIT, box->size.y * SIZE_UNIT, box->size.z * SIZE_UNIT)))
             {
-                tile->SetBuildable(true);
-                render->color = glm::vec4(1.0f, 0.0f, 1.0f, 1.0f);
+                if (_buildEnabled)
+                {
+                    if (tile)
+                    {
+                        tile->SetBuildable(true);
+                    }
+                    render->color = glm::vec4(1.0f, 0.0f, 1.0f, 1.0f);
+                }
             }
         }
     }

@@ -13,6 +13,7 @@ public:
     ~Tile() {};
 
     bool onHover = false;
+
 public:
     virtual void Start();
     virtual void Update(float dt);
@@ -21,6 +22,11 @@ public:
     virtual void OnHoverExit();
 
     void SetBuildable(bool);
+
+private:
+    void displayPreview();
+    void destroyPreview();
+
 private:
     Entity* preview = nullptr;
     std::vector<std::string> buildableItems;

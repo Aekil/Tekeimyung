@@ -30,16 +30,24 @@ void Tile::Update(float dt)
         if (this->currentIdx >= this->buildableItems.size())
             this->currentIdx = 0;
     }
+
+    if (!this->m_buildable && this->preview != nullptr)
+    {
+        destroyPreview();
+    }
+    else if (this->m_buildable &&
+        this->preview == nullptr &&
+        this->onHover)
+    {
+        displayPreview();
+    }
 }
 
 void Tile::OnHoverEnter()
 {
     if (this->m_buildable)
     {
-        auto position = this->getComponent<sTransformComponent>()->pos;
-        this->preview = this->Instantiate(this->buildableItems[this->currentIdx], glm::vec3(position.x, position.y + 12.5f, position.z));
-        auto previewRenderer = this->preview->getComponent<sRenderComponent>();
-        previewRenderer->ignoreRaycast = true;
+        displayPreview();
     }
 
     auto renderer = this->getComponent<sRenderComponent>();
@@ -52,8 +60,7 @@ void Tile::OnHoverExit()
 {
     if (this->preview != nullptr)
     {
-        this->Destroy(this->preview);
-        this->preview = nullptr;
+        destroyPreview();
     }
 
     auto renderer = this->getComponent<sRenderComponent>();
@@ -65,4 +72,18 @@ void Tile::OnHoverExit()
 void Tile::SetBuildable(bool buildable)
 {
     this->m_buildable = buildable;
+}
+
+void Tile::displayPreview()
+{
+    auto position = this->getComponent<sTransformComponent>()->pos;
+    this->preview = this->Instantiate(this->buildableItems[this->currentIdx], glm::vec3(position.x, position.y + 12.5f, position.z));
+    auto previewRenderer = this->preview->getComponent<sRenderComponent>();
+    previewRenderer->ignoreRaycast = true;
+}
+
+void Tile::destroyPreview()
+{
+    this->Destroy(this->preview);
+    this->preview = nullptr;
 }
