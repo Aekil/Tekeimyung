@@ -14,6 +14,7 @@ void Projectile::Start()
     _projectileTransform = entity->getComponent<sTransformComponent>();
     _projectileCollider = entity->getComponent<sSphereColliderComponent>();
     _projectileRigidBody = entity->getComponent<sRigidBodyComponent>();
+    _projectileEmitter = entity->getComponent<sParticleEmitterComponent>();
 }
 
 void Projectile::Update(float dt)
@@ -29,7 +30,7 @@ void Projectile::Update(float dt)
     {
         LOG_INFO("No target");
         _targetId = 0;
-        em->destroyEntityRegister(this->entity);
+        destroyProjectile();
     }
     else
     {
@@ -44,7 +45,7 @@ void Projectile::OnCollisionEnter(Entity* entity)
         LOG_INFO("Destroy");
         EntityManager* em = EntityFactory::getBindedEntityManager();
         Entity* target = em->getEntity(_targetId);
-        em->destroyEntityRegister(this->entity);
+        destroyProjectile();
         em->destroyEntityRegister(target);
 
         Entity* explosion = Instantiate("ENEMY_EXPLOSION");
@@ -60,4 +61,10 @@ void Projectile::followTarget(Entity* target)
     sTransformComponent* targetTransform = target->getComponent<sTransformComponent>();
 
     _projectileRigidBody->velocity = glm::normalize(targetTransform->pos - (_projectileTransform->pos + _projectileCollider->pos)) * 80.0f;
+}
+
+void Projectile::destroyProjectile()
+{
+    // Set a low emitter life instead of destroying the entity
+    _projectileEmitter->emitterLife = 0.001f;
 }

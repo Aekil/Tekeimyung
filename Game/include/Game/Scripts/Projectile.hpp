@@ -22,6 +22,7 @@ public:
 
 private:
     void followTarget(Entity* target);
+    void destroyProjectile();
 
 private:
     uint32_t _targetId;
@@ -29,6 +30,7 @@ private:
     sTransformComponent* _projectileTransform;
     sSphereColliderComponent* _projectileCollider;
     sRigidBodyComponent* _projectileRigidBody;
+    sParticleEmitterComponent* _projectileEmitter;
 };
 
 REGISTER_SCRIPT(Projectile);
