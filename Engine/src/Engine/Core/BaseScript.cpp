@@ -6,7 +6,7 @@
 
 #include <Engine/EntityFactory.hpp>
 
-BaseScript::BaseScript()
+BaseScript::BaseScript(): isInitialized(false)
 {
 }
 

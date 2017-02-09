@@ -17,7 +17,7 @@
 
 #include <Engine/Systems/RenderingSystem.hpp>
 #include <Engine/Systems/ResolutionSystem.hpp>
-#include <Engine/Systems/GravitySystem.hpp>
+#include <Engine/Systems/RigidBodySystem.hpp>
 #include <Engine/Systems/CollisionSystem.hpp>
 #include <Engine/Systems/ParticleSystem.hpp>
 #include <Engine/Systems/ScriptSystem.hpp>
@@ -38,6 +38,7 @@ void    PlayState::setupSystems()
 {
     _world.addSystem<ScriptSystem>();
     _world.addSystem<MouseSystem>();
+    _world.addSystem<RigidBodySystem>();
     _world.addSystem<CollisionSystem>();
     _world.addSystem<ResolutionSystem>();
     _world.addSystem<ParticleSystem>();

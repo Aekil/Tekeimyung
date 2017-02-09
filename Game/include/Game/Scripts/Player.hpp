@@ -38,6 +38,9 @@ public:
     virtual void Death();
 
     virtual void OnCollisionEnter(Entity* entity);
+
+private:
+    glm::vec2 _direction;
 };
 
 REGISTER_SCRIPT(Player);

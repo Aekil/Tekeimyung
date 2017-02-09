@@ -7,6 +7,7 @@
 #include <dirent.h> // This include has to be called after "ComponentFactory.hpp"
 
 #include <Engine/BasicState.hpp>
+#include <Engine/EntityFactory.hpp>
 #include <Engine/Utils/Exception.hpp>
 #include <Engine/Utils/JsonWriter.hpp>
 #include <Engine/Utils/JsonReader.hpp>
@@ -71,6 +72,9 @@ void    LevelLoader::save(const std::string& levelName, const std::unordered_map
         const Entity* entity = entityPair.second;
         const auto& components = entity->getComponents();
 
+        // Reverse animations
+        EntityFactory::reverseAnimations((Entity*)entity);
+
         for (const auto& component: components)
         {
             JsonValue componentJson;
@@ -124,6 +128,10 @@ void    LevelLoader::load(const std::string& levelName, EntityManager* em)
             std::string componentName = it.key().asString();
             addComponentToEntity(entity, entityTypeName, componentJson, componentName);
         }
+
+        // Init animation
+        EntityFactory::initAnimations(entity);
+        em->notifyEntityCreated(entity);
     }
 }
 

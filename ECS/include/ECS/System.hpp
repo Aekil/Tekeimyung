@@ -35,6 +35,7 @@ public:
 
     virtual bool                        onEntityNewComponent(Entity* entity, sComponent* component);
     virtual bool                        onEntityRemovedComponent(Entity* entity, sComponent* component);
+    virtual bool                        onEntityCreated(Entity* entity) { return true; }
     virtual bool                        onEntityDeleted(Entity* entity);
 
     virtual const char*                 getName() const = 0;

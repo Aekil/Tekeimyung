@@ -132,10 +132,6 @@ void    EditorMenuDebugWindow::displayPlayStopMenu()
     }
 }
 
-void    EditorMenuDebugWindow::displayStateNotRegistered()
-{
-}
-
 void    EditorMenuDebugWindow::displaySaveAsPopup()
 {
     static char levelName[64] = "";

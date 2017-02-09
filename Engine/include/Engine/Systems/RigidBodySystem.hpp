@@ -6,9 +6,9 @@
 
 #include <ECS/System.hpp>
 
-START_SYSTEM(GravitySystem)
+START_SYSTEM(RigidBodySystem)
 public:
-    GravitySystem();
-    virtual ~GravitySystem() {};
+    RigidBodySystem();
+    virtual ~RigidBodySystem() {};
     virtual void    update(EntityManager &em, float elapsedTime);
-END_SYSTEM(GravitySystem)
+END_SYSTEM(RigidBodySystem)

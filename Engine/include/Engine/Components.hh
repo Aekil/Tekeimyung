@@ -90,35 +90,31 @@ bool                    ignoreRaycast = false;
 std::string texture;
 END_COMPONENT(sRenderComponent)
 
-START_COMPONENT(sDirectionComponent)
-sDirectionComponent(const glm::vec2& dir, float speed = 1.0f) : value(dir), moved(false), speed(speed), sComponent(sDirectionComponent::identifier) {}
 
+START_COMPONENT(sRigidBodyComponent)
 virtual sComponent* clone()
 {
-    sDirectionComponent* component = new sDirectionComponent();
+    sRigidBodyComponent* component = new sRigidBodyComponent();
     component->update(this);
 
     return (component);
 }
 
-virtual void update(sDirectionComponent* component)
+virtual void update(sRigidBodyComponent* component)
 {
-    this->value = component->value;
-    this->orientation = component->orientation;
-    this->speed = component->speed;
-    this->moved = component->moved;
+    this->gravity = component->gravity;
+    this->velocity = component->velocity;
 }
 
 virtual void update(sComponent* component)
 {
-    update(static_cast<sDirectionComponent*>(component));
+    update(static_cast<sRigidBodyComponent*>(component));
 }
 
-glm::vec2 value;
-glm::vec3 orientation;
-float speed = 1.0f;
-bool moved = false;
-END_COMPONENT(sDirectionComponent)
+glm::vec3 gravity;
+glm::vec3 velocity;
+END_COMPONENT(sRigidBodyComponent)
+
 
 START_COMPONENT(sBoxColliderComponent)
 virtual sComponent* clone()
@@ -186,27 +182,6 @@ std::shared_ptr<Sphere> sphere;
 bool display = true;
 END_COMPONENT(sSphereColliderComponent)
 
-START_COMPONENT(sGravityComponent)
-virtual sComponent* clone()
-{
-    sGravityComponent* component = new sGravityComponent();
-    component->update(this);
-
-    return (component);
-}
-
-virtual void update(sGravityComponent* component)
-{
-    this->value = component->value;
-}
-
-virtual void update(sComponent* component)
-{
-    update(static_cast<sGravityComponent*>(component));
-}
-
-glm::vec2 value;
-END_COMPONENT(sGravityComponent)
 
 enum class eEntityType
 {
@@ -263,8 +238,6 @@ virtual void update(sParticleEmitterComponent* component)
 
     this->colorStart = component->colorStart;
     this->colorFinish = component->colorFinish;
-    this->colorStartVariance = component->colorStartVariance;
-    this->colorFinishVariance = component->colorFinishVariance;
 
     this->sizeStart = component->sizeStart;
     this->sizeFinish = component->sizeFinish;
@@ -303,8 +276,6 @@ float speedVariance;
 // Particles color
 glm::vec4 colorStart;
 glm::vec4 colorFinish;
-glm::vec4 colorStartVariance;
-glm::vec4 colorFinishVariance;
 
 // Particles size
 float sizeStart;
@@ -535,7 +506,6 @@ virtual sComponent*     clone()
 virtual void            update(sScriptComponent* component)
 {
     this->scriptNames = component->scriptNames;
-    this->isInitialized = component->isInitialized;
 }
 
 virtual void            update(sComponent* component)
@@ -543,9 +513,39 @@ virtual void            update(sComponent* component)
     update(static_cast<sScriptComponent*>(component));
 }
 
+BaseScript*             getScript(const std::string& name)
+{
+    uint32_t i = 0;
+    for (const auto& scriptName: scriptNames)
+    {
+        if (scriptName == name)
+        {
+            BaseScript* script = scriptInstances[i];
+            // If the user need the script before it's initialized, auto initialized it
+            if (!script->isInitialized)
+            {
+                script->Start();
+                script->isInitialized = true;
+            }
+            return scriptInstances[i];
+        }
+        i++;
+    }
+
+    return nullptr;
+}
+
+template <typename T>
+T*             getScript(const std::string& name)
+{
+    BaseScript* script = getScript(name);
+    if (script)
+        return static_cast<T*>(script);
+    return nullptr;
+}
+
 std::vector<BaseScript*> scriptInstances;
 std::vector<std::string> scriptNames;
-bool isInitialized;
 
 std::string selectedScript; // Only used for editor
 END_COMPONENT(sScriptComponent)

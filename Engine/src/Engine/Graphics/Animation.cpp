@@ -22,6 +22,7 @@ Animation::~Animation() {}
 
 void    Animation::addParamAnimation(IParamAnimationPtr paramAnimation)
 {
+    isPlaying(true);
     paramAnimation->reset();
     _paramsAnimations.push_back(paramAnimation);
 }
@@ -99,6 +100,11 @@ void    Animation::isLoop(bool isLoop)
 bool    Animation::isPlaying() const
 {
     return (_isPlaying);
+}
+
+void    Animation::isPlaying(bool isPlaying)
+{
+    _isPlaying = isPlaying;
 }
 
 std::vector<IParamAnimationPtr >& Animation::getParamsAnimations()

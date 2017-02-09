@@ -1,3 +1,5 @@
+#pragma once
+
 #include <map>
 
 #include <Engine/Core/BaseScript.hpp>

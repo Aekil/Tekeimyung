@@ -44,6 +44,7 @@ public:
 
     void                        notifyEntityNewComponent(Entity* entity, sComponent* component);
     void                        notifyEntityRemovedComponent(Entity* entity, sComponent* component);
+    void                        notifyEntityCreated(Entity* entity);
     void                        notifyEntityDeleted(Entity* entity);
 
 private:

@@ -20,10 +20,9 @@
 // ex: { "sRenderComponent", sRenderComponent }
 #define COMPONENTS_TYPES(PROCESS)\
     PROCESS(sRenderComponent),\
-    PROCESS(sDirectionComponent),\
     PROCESS(sBoxColliderComponent),\
     PROCESS(sSphereColliderComponent),\
-    PROCESS(sGravityComponent),\
+    PROCESS(sRigidBodyComponent),\
     PROCESS(sTypeComponent),\
     PROCESS(sParticleEmitterComponent),\
     PROCESS(sNameComponent),\
@@ -80,7 +79,7 @@ public:
     {
         int enumInt = (int)enum_;
 
-        if (ImGui::Combo(name, &enumInt, (const char*)EnumManager<T>::enumStrings, (int)EnumManager<T>::enumLength))
+        if (ImGui::Combo(name, &enumInt, (const char**)EnumManager<T>::enumStrings, (int)EnumManager<T>::enumLength))
         {
             enum_ = (T)enumInt;
             return (true);
@@ -211,14 +210,14 @@ private:
 };
 
 /*
-** sDirectionComponent
+** sRigidBodyComponent
 */
 
 template <>
-class ComponentFactory<sDirectionComponent> final: public BaseComponentFactory<sDirectionComponent>
+class ComponentFactory<sRigidBodyComponent> final: public BaseComponentFactory<sRigidBodyComponent>
 {
 public:
-    char* getTypeName() override final { return "sDirectionComponent"; }
+    char* getTypeName() override final { return "sRigidBodyComponent"; }
     sComponent* loadFromJson(const std::string& entityType, const JsonValue& json) override final;
     JsonValue& saveToJson(const std::string& entityType, const sComponent* savedComponent = nullptr, JsonValue* toJson = nullptr) override final;
 };
@@ -264,19 +263,6 @@ class ComponentFactory<sResolutionComponent> final: public BaseComponentFactory<
 public:
     char* getTypeName() override final { return "sResolutionComponent"; }
     sComponent* loadFromJson(const std::string& entityType, const JsonValue& json) override final;
-};
-
-/*
-** sGravityComponent
-*/
-
-template <>
-class ComponentFactory<sGravityComponent> final: public BaseComponentFactory<sGravityComponent>
-{
-public:
-    char* getTypeName() override final { return "sGravityComponent"; }
-    sComponent* loadFromJson(const std::string& entityType, const JsonValue& json) override final;
-    JsonValue& saveToJson(const std::string& entityType, const sComponent* savedComponent = nullptr, JsonValue* toJson = nullptr) override final;
 };
 
 
