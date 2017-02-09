@@ -227,7 +227,7 @@ virtual sComponent* clone()
 virtual void update(sParticleEmitterComponent* component)
 {
     this->rate = component->rate;
-    this->spawnNb = component->spawnNb;
+    this->maxParticles = component->maxParticles;
     this->emitterLife = component->emitterLife;
     this->life = component->life;
     this->lifeVariance = component->lifeVariance;
@@ -255,8 +255,8 @@ virtual void update(sComponent* component)
 // Spawn particles each rate second
 float rate;
 
-// Spawn spawnNb particles each rate
-uint32_t spawnNb;
+// Limit the number of particles
+uint32_t maxParticles;
 
 // Emitter life, in seconds
 float emitterLife;

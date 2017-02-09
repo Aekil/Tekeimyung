@@ -4,7 +4,7 @@
          "name" : "FIRE_BALL"
       },
       "sParticleEmitterComponent" : {
-         "angle" : 40.645000457763672,
+         "angle" : 30.968002319335938,
          "angle_variance" : 0,
          "color" : {
             "finish" : {
@@ -23,6 +23,7 @@
          "emitter_life" : 0,
          "life" : 76,
          "life_variance" : 1,
+         "max_particles" : 86,
          "rate" : 0,
          "size" : {
             "finish" : 0,
@@ -90,9 +91,9 @@
       },
       "sTransformComponent" : {
          "pos" : {
-            "x" : 216.064697265625,
-            "y" : 57.65625,
-            "z" : 365.3341064453125
+            "x" : 198.98751831054688,
+            "y" : 107.41926574707031,
+            "z" : 237.88995361328125
          },
          "rotation" : {
             "x" : 0,

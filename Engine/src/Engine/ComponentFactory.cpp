@@ -866,7 +866,7 @@ sComponent* ComponentFactory<sParticleEmitterComponent>::loadFromJson(const std:
     JsonValue size = json.get("size", {});
 
     component->rate = json.getFloat("rate", 0.0f);
-    component->spawnNb = json.getUInt("spawn_nb", 1);
+    component->maxParticles = json.getUInt("max_particles", 50);
     component->emitterLife = json.getFloat("emitter_life", 0.0f);
     component->life = json.getUInt("life", 80);
     component->lifeVariance = json.getUInt("life_variance", 0);
@@ -926,7 +926,7 @@ JsonValue&    ComponentFactory<sParticleEmitterComponent>::saveToJson(const std:
     json.setValue("size", size);
 
     json.setFloat("rate", component->rate);
-    json.setUInt("spawn_nb", component->spawnNb);
+    json.setUInt("max_particles", component->maxParticles);
     json.setFloat("emitter_life", component->emitterLife);
     json.setUInt("life", component->life);
     json.setUInt("life_variance", component->lifeVariance);
@@ -948,7 +948,7 @@ bool    ComponentFactory<sParticleEmitterComponent>::updateEditor(const std::str
 
     changed |= ImGui::SliderFloat("Emitter life (0 to disable)", &component->emitterLife, 0.0f, 10.0f);
     changed |= ImGui::SliderFloat("Rate", &component->rate, 0.0f, 3.0f);
-    changed |= ImGui::SliderInt("Particles number per spawn", (int*)&component->spawnNb, 0, 50);
+    changed |= ImGui::SliderInt("Max particles", (int*)&component->maxParticles, 0, 500);
     changed |= ImGui::SliderFloat("Angle", &component->angle, 0.0f, 360.0f);
     changed |= ImGui::SliderFloat("Angle variance", &component->angleVariance, 0.0f, 360.0f);
     changed |= ImGui::SliderFloat("Speed", &component->speed, 0.0f, 200.0f);

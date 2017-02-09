@@ -92,42 +92,42 @@ void    ParticleSystem::updateEmitter(EntityManager &em, Entity* entity, float e
     // Create new particles each rate
     else if (emitter->elapsedTime >= emitterComp->rate && render->_display)
     {
+        if (emitter->particlesNb >= emitter->particles.size() || // Vector is full
+            emitter->particlesNb >= emitterComp->maxParticles) // Particles limit
+        {
+            return;
+        }
+
         glm::mat4 emitterOrientation;
         emitterOrientation = glm::rotate(emitterOrientation, glm::radians(transform->rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
         emitterOrientation = glm::rotate(emitterOrientation, glm::radians(transform->rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
         emitterOrientation = glm::rotate(emitterOrientation, glm::radians(transform->rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
 
-        for (uint32_t i = 0; i < emitterComp->spawnNb; i++)
-        {
-            sParticle particle;
-            float angle = Helper::randFloat(0, emitterComp->angleVariance);
-            float angleRadian = glm::radians(std::fmod(angle - emitterComp->angle, 360.0f));
+        sParticle particle;
+        float angle = Helper::randFloat(0, emitterComp->angleVariance);
+        float angleRadian = glm::radians(std::fmod(angle - emitterComp->angle, 360.0f));
 
-            particle.pos = transform->pos;
-            float theta = Helper::randFloat(0.0f, 1.0f) * (2.0f * glm::pi<float>());
-            float phi = (glm::pi<float>() / 2.0f) - (Helper::randFloat(0.0f, 1.0f) * angleRadian);
-            particle.velocity.x = glm::cos(theta) * glm::cos(phi);
-            particle.velocity.z = glm::sin(theta) * glm::cos(phi);
-            particle.velocity.y =  glm::sin(phi);
+        particle.pos = transform->pos;
+        float theta = Helper::randFloat(0.0f, 1.0f) * (2.0f * glm::pi<float>());
+        float phi = (glm::pi<float>() / 2.0f) - (Helper::randFloat(0.0f, 1.0f) * angleRadian);
+        particle.velocity.x = glm::cos(theta) * glm::cos(phi);
+        particle.velocity.z = glm::sin(theta) * glm::cos(phi);
+        particle.velocity.y =  glm::sin(phi);
 
-            particle.velocity = glm::vec3(emitterOrientation * glm::vec4(particle.velocity, 0.0f));
+        particle.velocity = glm::vec3(emitterOrientation * glm::vec4(particle.velocity, 0.0f));
 
-            particle.speed = emitterComp->speed + Helper::randFloat(0, emitterComp->speedVariance);
-            particle.life = emitterComp->life + Helper::randInt(0, emitterComp->lifeVariance);
+        particle.speed = emitterComp->speed + Helper::randFloat(0, emitterComp->speedVariance);
+        particle.life = emitterComp->life + Helper::randInt(0, emitterComp->lifeVariance);
 
-            particle.color = emitterComp->colorStart;
-            particle.colorStep = (emitterComp->colorFinish - emitterComp->colorStart) / glm::vec4((float)emitterComp->life);
+        particle.color = emitterComp->colorStart;
+        particle.colorStep = (emitterComp->colorFinish - emitterComp->colorStart) / glm::vec4((float)emitterComp->life);
 
-            particle.size = emitterComp->sizeStart * transform->scale;
-            particle.sizeStep = ((emitterComp->sizeFinish - emitterComp->sizeStart) / emitterComp->life) * transform->scale;
+        particle.size = emitterComp->sizeStart * transform->scale;
+        particle.sizeStep = ((emitterComp->sizeFinish - emitterComp->sizeStart) / emitterComp->life) * transform->scale;
 
-            // Can add a particle in particles list
-            if (emitter->particlesNb != emitter->particles.size())
-            {
-                emitter->particles[emitter->particlesNb] = particle;
-                emitter->particlesNb++;
-            }
-        }
+        // Add particle
+        emitter->particles[emitter->particlesNb] = particle;
+        emitter->particlesNb++;
 
         emitter->elapsedTime = 0;
     }
