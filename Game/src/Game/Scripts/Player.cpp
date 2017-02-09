@@ -6,6 +6,7 @@
 #include <Engine/Physics/Collisions.hpp>
 #include <Engine/EntityFactory.hpp>
 
+#include <Game/Scripts/Tile.hpp>
 #include <Game/Scripts/Player.hpp>
 
 void Player::Death()
@@ -44,31 +45,18 @@ void Player::CheckBuildableZone()
             auto scriptComponent = entity.second->getComponent<sScriptComponent>();
 
             render->color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+            Tile* tile = scriptComponent->getScript<Tile>("Tile");
 
-            if (scriptComponent != nullptr)
+            if (tile != nullptr)
             {
-                if (std::find(scriptComponent->scriptNames.cbegin(), scriptComponent->scriptNames.cend(), "Tile") != scriptComponent->scriptNames.cend())
-                {
-                    auto index = std::find(scriptComponent->scriptNames.cbegin(), scriptComponent->scriptNames.cend(), "Tile") - scriptComponent->scriptNames.begin();
-
-                    Tile* tile = (Tile*)scriptComponent->scriptInstances[index];
-                    tile->SetBuildable(false);
-                }
+                tile->SetBuildable(false);
             }
 
             if (Collisions::sphereVSAABB(transform, this->buildableRadius * SIZE_UNIT, box->pos + pos, glm::vec3(box->size.x * SIZE_UNIT, box->size.y * SIZE_UNIT, box->size.z * SIZE_UNIT)))
             {
-                if (entity.second->getComponent<sScriptComponent>() != nullptr)
+                if (tile != nullptr)
                 {
-                    auto scriptComponent = entity.second->getComponent<sScriptComponent>();
-
-                    if (std::find(scriptComponent->scriptNames.cbegin(), scriptComponent->scriptNames.cend(), "Tile") != scriptComponent->scriptNames.cend())
-                    {
-                        auto index = std::find(scriptComponent->scriptNames.cbegin(), scriptComponent->scriptNames.cend(), "Tile") - scriptComponent->scriptNames.begin();
-
-                        Tile* tile = (Tile*)scriptComponent->scriptInstances[index];
-                        tile->SetBuildable(true);
-                    }
+                    tile->SetBuildable(true);
                 }
                 render->color = glm::vec4(1.0f, 0.0f, 1.0f, 1.0f);
             }

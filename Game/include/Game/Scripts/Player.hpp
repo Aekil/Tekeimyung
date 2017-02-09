@@ -9,13 +9,6 @@
 
 #include <Game/Scripts/Health.hpp>
 
-class Tile
-{
-public:
-    Tile();
-    void SetBuildable(bool);
-};
-
 class Player : public BaseScript, public Health
 {
 public:
