@@ -44,20 +44,16 @@ void Player::CheckBuildableZone()
             auto render = entity.second->getComponent<sRenderComponent>();
             auto scriptComponent = entity.second->getComponent<sScriptComponent>();
 
-            render->color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
             Tile* tile = scriptComponent->getScript<Tile>("Tile");
+            if (tile == nullptr)
+                break;
 
-            if (tile != nullptr)
-            {
-                tile->SetBuildable(false);
-            }
+            render->color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+            tile->SetBuildable(false);
 
             if (Collisions::sphereVSAABB(transform, this->buildableRadius * SIZE_UNIT, box->pos + pos, glm::vec3(box->size.x * SIZE_UNIT, box->size.y * SIZE_UNIT, box->size.z * SIZE_UNIT)))
             {
-                if (tile != nullptr)
-                {
-                    tile->SetBuildable(true);
-                }
+                tile->SetBuildable(true);
                 render->color = glm::vec4(1.0f, 0.0f, 1.0f, 1.0f);
             }
         }
