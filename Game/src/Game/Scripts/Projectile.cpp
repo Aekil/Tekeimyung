@@ -46,6 +46,12 @@ void Projectile::OnCollisionEnter(Entity* entity)
         Entity* target = em->getEntity(_targetId);
         em->destroyEntityRegister(this->entity);
         em->destroyEntityRegister(target);
+
+        Entity* explosion = Instantiate("ENEMY_EXPLOSION");
+        sTransformComponent* explosionTransform = explosion->getComponent<sTransformComponent>();
+        sTransformComponent* targetTransform = target->getComponent<sTransformComponent>();
+        explosionTransform->pos = targetTransform->pos;
+        explosionTransform->needUpdate = true;
     }
 }
 
