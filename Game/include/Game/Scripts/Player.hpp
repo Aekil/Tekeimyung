@@ -20,7 +20,7 @@ public:
 private:
     void updateDirection();
     void CheckBuildableZone();
-    void Movement(float dt);
+    void Movement(float elapsedTime);
     void handleShoot();
 
     float buildableRadius;

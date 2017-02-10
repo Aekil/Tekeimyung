@@ -30,6 +30,7 @@ private:
 
 private:
     uint32_t _targetId;
+    float _speed;
 
     sTransformComponent* _projectileTransform;
     sSphereColliderComponent* _projectileCollider;

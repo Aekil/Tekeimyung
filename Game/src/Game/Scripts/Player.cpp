@@ -151,11 +151,11 @@ void Player::handleShoot()
 
         if (_render->_model)
         {
-            projectileScript->_projectileTransform->pos.y -= (_render->_model->getMin().y * _transform->scale.y);
+            projectileScript->_projectileTransform->pos.y -= (_render->_model->getMin().y * _transform->scale.y) / 2.0f;
         }
 
         projectileScript->_projectileTransform->needUpdate = true;
-        projectileScript->followDirection(_direction);
+        projectileScript->followDirection({_direction.x, 0.0f, _direction.z});
     }
 }
 

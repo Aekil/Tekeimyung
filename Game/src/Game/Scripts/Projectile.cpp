@@ -15,6 +15,7 @@ void Projectile::Start()
     _projectileCollider = entity->getComponent<sSphereColliderComponent>();
     _projectileRigidBody = entity->getComponent<sRigidBodyComponent>();
     _projectileEmitter = entity->getComponent<sParticleEmitterComponent>();
+    _speed = 150.0f;
 }
 
 void Projectile::Update(float dt)
@@ -65,12 +66,12 @@ void Projectile::followTarget(Entity* target)
 {
     sTransformComponent* targetTransform = target->getComponent<sTransformComponent>();
 
-    _projectileRigidBody->velocity = glm::normalize(targetTransform->pos - (_projectileTransform->pos + _projectileCollider->pos)) * 80.0f;
+    _projectileRigidBody->velocity = glm::normalize(targetTransform->pos - (_projectileTransform->pos + _projectileCollider->pos)) * _speed;
 }
 
 void Projectile::followDirection(const glm::vec3& dir)
 {
-    _projectileRigidBody->velocity = dir * 80.0f;
+    _projectileRigidBody->velocity = dir * _speed;
 }
 
 void Projectile::destroyProjectile()
