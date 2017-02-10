@@ -11,6 +11,7 @@
 #include <Engine/Physics/Collisions.hpp>
 #include <Engine/Physics/Physics.hpp>
 
+#include <Game/Scripts/Projectile.hpp>
 #include <Game/Scripts/Tile.hpp>
 #include <Game/Scripts/Player.hpp>
 
@@ -26,6 +27,7 @@ void Player::Start()
     this->health = 200;
     this->buildableRadius = 5.7f;
     this->_transform = this->getComponent<sTransformComponent>();
+    this->_render = this->getComponent<sRenderComponent>();
     _buildEnabled = false;
 
     LOG_DEBUG("BORN");
@@ -38,9 +40,29 @@ void Player::Update(float dt)
         _buildEnabled = !_buildEnabled;
     }
 
+    this->updateDirection();
     this->CheckBuildableZone();
-
     this->Movement(dt);
+    this->handleShoot();
+}
+
+void Player::updateDirection()
+{
+    Cursor& cursor = GameWindow::getInstance()->getMouse().getCursor();
+    Camera* camera = Renderer::getInstance()->getCurrentCamera();
+
+    if (!camera)
+        return;
+
+
+    Ray ray = camera->screenPosToRay((float)cursor.getX(), (float)cursor.getY());
+    float hitDistance;
+
+    if (Physics::raycastPlane(ray, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, hitDistance))
+    {
+        glm::vec3 target = ray.getPoint(hitDistance);
+        _direction = glm::normalize(target - _transform->pos);
+    }
 }
 
 void Player::CheckBuildableZone()
@@ -81,44 +103,59 @@ void Player::CheckBuildableZone()
 
 void Player::Movement(float elapsedTime)
 {
-    Cursor& cursor = GameWindow::getInstance()->getMouse().getCursor();
-    Camera* camera = Renderer::getInstance()->getCurrentCamera();
-
-    if (!camera)
-        return;
-
-
-    Ray ray = camera->screenPosToRay((float)cursor.getX(), (float)cursor.getY());
-    float hitDistance;
-
-    if (Physics::raycastPlane(ray, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, hitDistance))
+    // Update player rotation
     {
-        glm::vec3 target = ray.getPoint(hitDistance);
-        glm::vec3 dir = glm::normalize(target - _transform->pos);
-        float rotation = glm::degrees(std::atan2(dir.x, dir.z));
+        float rotation = glm::degrees(std::atan2(_direction.x, _direction.z));
         _transform->rotation.y = rotation;
         _transform->needUpdate = true;
     }
 
-    if (KB_P(Keyboard::eKey::S))
+    // Update player position
     {
-        _transform->pos += glm::vec3(1.0f, 0.0f, 1.0f);
-        _transform->needUpdate = true;
+        if (KB_P(Keyboard::eKey::S))
+        {
+            _transform->pos += glm::vec3(1.0f, 0.0f, 1.0f);
+            _transform->needUpdate = true;
+        }
+        if (KB_P(Keyboard::eKey::Z))
+        {
+            _transform->pos += glm::vec3(-1.0f, 0.0f, -1.0f);
+            _transform->needUpdate = true;
+        }
+        if (KB_P(Keyboard::eKey::Q))
+        {
+            _transform->pos += glm::vec3(-1.0f, 0.0f, 1.0f);
+            _transform->needUpdate = true;
+        }
+        if (KB_P(Keyboard::eKey::D))
+        {
+            _transform->pos += glm::vec3(1.0f, 0.0f, -1.0f);
+            _transform->needUpdate = true;
+        }
     }
-    if (KB_P(Keyboard::eKey::Z))
+}
+
+void Player::handleShoot()
+{
+    if (mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_1] == Mouse::eButtonState::CLICK_PRESSED)
     {
-        _transform->pos += glm::vec3(-1.0f, 0.0f, -1.0f);
-        _transform->needUpdate = true;
-    }
-    if (KB_P(Keyboard::eKey::Q))
-    {
-        _transform->pos += glm::vec3(-1.0f, 0.0f, 1.0f);
-        _transform->needUpdate = true;
-    }
-    if (KB_P(Keyboard::eKey::D))
-    {
-        _transform->pos += glm::vec3(1.0f, 0.0f, -1.0f);
-        _transform->needUpdate = true;
+        Entity*                 bullet;
+        sScriptComponent*       bulletScripts;
+        Projectile*             projectileScript;
+
+        bullet = Instantiate("PLAYER_BULLET");
+        bulletScripts = bullet->getComponent<sScriptComponent>();
+        projectileScript = bulletScripts->getScript<Projectile>("Projectile");
+
+        projectileScript->_projectileTransform->pos = _transform->pos;
+
+        if (_render->_model)
+        {
+            projectileScript->_projectileTransform->pos.y -= (_render->_model->getMin().y * _transform->scale.y);
+        }
+
+        projectileScript->_projectileTransform->needUpdate = true;
+        projectileScript->followDirection(_direction);
     }
 }
 

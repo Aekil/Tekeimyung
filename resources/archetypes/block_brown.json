@@ -1,8 +1,5 @@
 {
    "components" : {
-      "sNameComponent" : {
-         "name" : "BLOCK_BROWN"
-      },
       "sBoxColliderComponent" : {
          "isTrigger" : false,
          "pos" : {
@@ -16,6 +13,9 @@
             "z" : 2.5999999046325684
          }
       },
+      "sNameComponent" : {
+         "name" : "BLOCK_BROWN"
+      },
       "sRenderComponent" : {
          "animated" : false,
          "animations" : [],
@@ -25,6 +25,7 @@
             "g" : 1,
             "r" : 1
          },
+         "ignore_raycast" : false,
          "model" : "resources/models/blocks/block_brown.DAE",
          "texture" : "",
          "type" : "MESH"
@@ -34,9 +35,9 @@
       },
       "sTransformComponent" : {
          "pos" : {
-            "x" : 250,
+            "x" : 400,
             "y" : 0,
-            "z" : 450
+            "z" : 50
          },
          "rotation" : {
             "x" : 0,
@@ -53,5 +54,6 @@
          "type" : "TILE_WALKABLE"
       }
    },
-   "name" : "BLOCK_BROWN"
+   "name" : "BLOCK_BROWN",
+   "tag" : "BlockBrown"
 }

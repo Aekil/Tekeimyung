@@ -4,11 +4,14 @@
 
 #pragma once
 
+#include <glm/vec3.hpp>
+
 #include <Engine/Core/ScriptFactory.hpp>
 
 class Projectile : public BaseScript
 {
 friend class Tower;
+friend class Player;
 
 public:
     Projectile() {};
@@ -22,6 +25,7 @@ public:
 
 private:
     void followTarget(Entity* target);
+    void followDirection(const glm::vec3& dir);
     void destroyProjectile();
 
 private:

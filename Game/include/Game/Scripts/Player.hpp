@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <glm/vec3.hpp>
+
 #include <Engine/Core/BaseScript.hpp>
 #include <Engine/Core/ScriptFactory.hpp>
 
@@ -16,8 +18,10 @@ public:
     ~Player() {};
 
 private:
-    void Movement(float dt);
+    void updateDirection();
     void CheckBuildableZone();
+    void Movement(float dt);
+    void handleShoot();
 
     float buildableRadius;
 
@@ -33,8 +37,9 @@ public:
     virtual void OnCollisionEnter(Entity* entity);
 
 private:
-    glm::vec2 _direction;
+    glm::vec3 _direction;
     sTransformComponent* _transform;
+    sRenderComponent* _render;
     bool _buildEnabled;
 };
 

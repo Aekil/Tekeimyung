@@ -40,11 +40,11 @@ void Projectile::Update(float dt)
 
 void Projectile::OnCollisionEnter(Entity* entity)
 {
-    if (entity->id == _targetId)
+    if (entity->id == _targetId || entity->getTag() == "Enemy")
     {
         LOG_INFO("Destroy");
         EntityManager* em = EntityFactory::getBindedEntityManager();
-        Entity* target = em->getEntity(_targetId);
+        Entity* target = entity;
         destroyProjectile();
         em->destroyEntityRegister(target);
 
@@ -53,6 +53,11 @@ void Projectile::OnCollisionEnter(Entity* entity)
         sTransformComponent* targetTransform = target->getComponent<sTransformComponent>();
         explosionTransform->pos = targetTransform->pos;
         explosionTransform->needUpdate = true;
+        _targetId = 0;
+    }
+    else if (entity->getTag() == "BlockBrown")
+    {
+        destroyProjectile();
     }
 }
 
@@ -61,6 +66,11 @@ void Projectile::followTarget(Entity* target)
     sTransformComponent* targetTransform = target->getComponent<sTransformComponent>();
 
     _projectileRigidBody->velocity = glm::normalize(targetTransform->pos - (_projectileTransform->pos + _projectileCollider->pos)) * 80.0f;
+}
+
+void Projectile::followDirection(const glm::vec3& dir)
+{
+    _projectileRigidBody->velocity = dir * 80.0f;
 }
 
 void Projectile::destroyProjectile()
