@@ -111,47 +111,6 @@ void    PlayState::initEntities()
 {
     EntityManager* em = _world.getEntityManager();
 
-    // Create particles emitter
-    EntityFactory::createEntity(eArchetype::EMITTER_WATER, glm::vec3(12, 5, 1));
-
-    // Create character
-    Entity* player = EntityFactory::createEntity(eArchetype::PLAYER, glm::vec3(65, 16.25, 33));
-
-    Entity* enemy = EntityFactory::createEntity(eArchetype::ENEMY, glm::vec3(65, 18.75, 66));
-
-    EntityFactory::createEntity(eArchetype::GAME_MANAGER, glm::vec3(0, 0, 0));
-    EntityFactory::createEntity(eArchetype::CASTLE);
-
-    // Create spawner
-    //static uint32_t spawnerEntityID = SpawnerSystem::createSpawner(_map, glm::vec3(0.5, 5.5f, 0.5), eArchetype::SPAWNER);
-    //SpawnerSystem::setNbEntities(*em, spawnerEntityID, 5);
-    //SpawnerSystem::setSecBeforeFirstSpawn(*em, spawnerEntityID, 7); // method 1
-    //SpawnerSystem::setSecBeforeEachSpawn(*em, spawnerEntityID, 2);
-    //SpawnerSystem::setSecBeforeEachSpawn(*em, spawnerEntityID, 5);
-
-    /*static uint32_t spawnerEntityID2 = SpawnerSystem::createSpawner(_map, glm::vec3(0, 8.0f, 1), eArchetype::SPAWNER);
-    tSpawnerData spawnerData = { 5, 5, 2, 5 };
-    SpawnerSystem::setAllFields(*em, spawnerEntityID2, spawnerData); // method 2
-
-    static uint32_t spawnerEntityID3 = SpawnerSystem::createSpawner(_map, glm::vec3(0, 11.0f, 1), eArchetype::SPAWNER);
-    SpawnerSystem::setSecBeforeFirstSpawn(*em, spawnerEntityID3, 1);
-    SpawnerSystem::setSecBeforeEachSpawn(*em, spawnerEntityID3, 3); // method 1 (partial)
-
-    static uint32_t spawnerEntityID4 = SpawnerSystem::createSpawner(_map, glm::vec3(0, 2.0f, 1), eArchetype::SPAWNER);
-    SpawnerSystem::setAllFields(*em, spawnerEntityID4, *SpawnerSystem::getStructData(3, 1, 5, 2));*/ // method 3 : how to delete the tSpawnerData* in this use ?
-
-    /*static uint32_t spawnerEntityID = SpawnerSystem::createSpawner(_map, glm::vec3(0, 8.0f, 1), eArchetype::SPAWNER);
-    tSpawnerData spawnerData = { 5, 3, 2, 3 };
-    SpawnerSystem::setAllFields(*em, spawnerEntityID, spawnerData);
-
-    static uint32_t spawnerEntityID2 = SpawnerSystem::createSpawner(_map, glm::vec3(0, 8.0f, 1), eArchetype::SPAWNER);
-    tSpawnerData spawnerData2 = { 5, 15, 2, 3 };
-    SpawnerSystem::setAllFields(*em, spawnerEntityID2, spawnerData2);*/
-
-    // Create towers
-    //EntityFactory::createEntity(_map, glm::vec3(7, 4, 1), eArchetype::TOWER_FIRE);
-    //EntityFactory::createEntity(_map, glm::vec3(7, 7, 1), eArchetype::TOWER_FIRE);
-
     // Play first animation of entities
     for (auto entity: em->getEntities())
     {
