@@ -26,7 +26,7 @@ void Player::Start()
     this->health = 200;
     this->buildableRadius = 5.7f;
     this->_transform = this->getComponent<sTransformComponent>();
-    _buildEnabled = true;
+    _buildEnabled = false;
 
     LOG_DEBUG("BORN");
 }
@@ -100,22 +100,22 @@ void Player::Movement(float elapsedTime)
         _transform->needUpdate = true;
     }
 
-    if (KB_P(Keyboard::eKey::K))
+    if (KB_P(Keyboard::eKey::S))
     {
         _transform->pos += glm::vec3(1.0f, 0.0f, 1.0f);
         _transform->needUpdate = true;
     }
-    if (KB_P(Keyboard::eKey::I))
+    if (KB_P(Keyboard::eKey::Z))
     {
         _transform->pos += glm::vec3(-1.0f, 0.0f, -1.0f);
         _transform->needUpdate = true;
     }
-    if (KB_P(Keyboard::eKey::J))
+    if (KB_P(Keyboard::eKey::Q))
     {
         _transform->pos += glm::vec3(-1.0f, 0.0f, 1.0f);
         _transform->needUpdate = true;
     }
-    if (KB_P(Keyboard::eKey::L))
+    if (KB_P(Keyboard::eKey::D))
     {
         _transform->pos += glm::vec3(1.0f, 0.0f, -1.0f);
         _transform->needUpdate = true;

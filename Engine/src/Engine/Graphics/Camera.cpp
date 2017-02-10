@@ -17,7 +17,7 @@
 Camera*     Camera::_instance = nullptr;
 
 Camera::Camera(): _needUpdateView(true), _needUpdateProj(true), _fov(45.0f),
-                    _aspect(1920.0f / 1080.0f), _near(0.1f), _far(1000.0f),
+                    _aspect(1920.0f / 1080.0f), _near(0.1f), _far(1300.0f),
                     _up({0.0f, 1.0f, 0.0f}), _zoom(1.0f), _projType(Camera::eProj::ORTHOGRAPHIC_3D),
                     _needUpdateUbo(true)
 {

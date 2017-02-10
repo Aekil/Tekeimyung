@@ -37,7 +37,7 @@ bool    BasicState::init()
 
 void    BasicState::initCamera()
 {
-    _camera.translate(glm::vec3(350.0f, 250.0f, 300.0f));
+    _camera.translate(glm::vec3(350.0f, 450.0f, 300.0f));
     _camera.setDir(glm::vec3(-30.0f));
 
     // Set camera screen

@@ -92,7 +92,7 @@ bool    PlayState::update(float elapsedTime)
 
 void    PlayState::initCamera()
 {
-    _camera.translate(glm::vec3(350.0f, 250.0f, 300.0f));
+    _camera.translate(glm::vec3(350.0f, 450.0f, 300.0f));
     _camera.setDir(glm::vec3(-30.0f));
 
     // Set camera screen
@@ -166,31 +166,52 @@ void    PlayState::initEntities()
 
 void    PlayState::updateCameraInputs(float elapsedTime)
 {
-    auto &&keyboard = GameWindow::getInstance()->getKeyboard();
-    auto &&mouse = GameWindow::getInstance()->getMouse();
-    auto &&scroll = mouse.getScroll();
-    static double lastScrollOffset;
-
-    // Update position
-    if (keyboard.isPressed(Keyboard::eKey::D))
-        _camera.translate(glm::vec3(60.0f * elapsedTime, 0.0f, -60.0f * elapsedTime));
-    if (keyboard.isPressed(Keyboard::eKey::Q))
-        _camera.translate(glm::vec3(-60.0f * elapsedTime, 0.0f, 60.0f * elapsedTime));
-    if (keyboard.isPressed(Keyboard::eKey::Z))
-        _camera.translate(glm::vec3(-60.0f * elapsedTime, 0.0f, -60.0f * elapsedTime));
-    if (keyboard.isPressed(Keyboard::eKey::S))
-        _camera.translate(glm::vec3(60.0f * elapsedTime, 0.0f, 60.0f * elapsedTime));
+    auto &gameWindow = GameWindow::getInstance();
+    auto &mouse = gameWindow->getMouse();
+    auto &keyboard = gameWindow->getKeyboard();
 
     // Update Projection type
-    if (keyboard.isPressed(Keyboard::eKey::O))
-        _camera.setProjType(Camera::eProj::ORTHOGRAPHIC_3D);
-    else if (keyboard.isPressed(Keyboard::eKey::P))
-        _camera.setProjType(Camera::eProj::PERSPECTIVE);
+    {
+        if (keyboard.isPressed(Keyboard::eKey::O))
+            _camera.setProjType(Camera::eProj::ORTHOGRAPHIC_3D);
+        else if (keyboard.isPressed(Keyboard::eKey::P))
+            _camera.setProjType(Camera::eProj::PERSPECTIVE);
+    }
 
     // Update zoom
-    double offset = scroll.yOffset - lastScrollOffset;
+    {
+        auto &&scroll = mouse.getScroll();
+        static double lastScrollOffset;
 
-    if (offset)
-        _camera.zoom((float)(-offset * elapsedTime));
-    lastScrollOffset = scroll.yOffset;
+
+        double offset = scroll.yOffset - lastScrollOffset;
+
+        if (offset)
+            _camera.zoom((float)(-offset * elapsedTime));
+        lastScrollOffset = scroll.yOffset;
+    }
+
+    // Update camera position when reaching edge
+    {
+        static float edgeDist = 80.0f;
+        static float moveSpeed = 5.0f;
+        auto& cursor = mouse.getCursor();
+
+        if (cursor.getX() > gameWindow->getBufferWidth() - edgeDist)
+        {
+            _camera.translate({moveSpeed, 0.0f, -moveSpeed});
+        }
+        if (cursor.getX() < edgeDist)
+        {
+            _camera.translate({-moveSpeed, 0.0f, moveSpeed});
+        }
+        if (cursor.getY() > gameWindow->getBufferHeight() - edgeDist)
+        {
+            _camera.translate({moveSpeed, 0.0f, moveSpeed});
+        }
+        if (cursor.getY() < edgeDist)
+        {
+            _camera.translate({-moveSpeed, 0.0f, -moveSpeed});
+        }
+    }
 }
