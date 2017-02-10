@@ -47,14 +47,15 @@ void Player::CheckBuildableZone()
 {
     auto em = EntityFactory::getBindedEntityManager();
 
-    for (auto &entity : em->getEntities())
+    const auto& tiles = em->getEntitiesByTag("BlockBrown");
+    for (auto &tile : tiles)
     {
-        auto box = entity.second->getComponent<sBoxColliderComponent>();
+        auto box = tile->getComponent<sBoxColliderComponent>();
         if (box != nullptr)
         {
-            auto pos = entity.second->getComponent<sTransformComponent>()->pos;
-            auto render = entity.second->getComponent<sRenderComponent>();
-            auto scriptComponent = entity.second->getComponent<sScriptComponent>();
+            auto pos = tile->getComponent<sTransformComponent>()->pos;
+            auto render = tile->getComponent<sRenderComponent>();
+            auto scriptComponent = tile->getComponent<sScriptComponent>();
 
             if (!scriptComponent)
                 continue;

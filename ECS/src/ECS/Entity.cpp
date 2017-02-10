@@ -74,7 +74,9 @@ bool    Entity::hasComponent(size_t componentHashCode) const
 
 void    Entity::setTag(const std::string& tag)
 {
+    _em->removeEntityFromTagGroup(this, _tag);
     _tag = tag;
+    _em->addEntityToTagGroup(this, _tag);
 }
 
 const std::string&  Entity::getTag() const

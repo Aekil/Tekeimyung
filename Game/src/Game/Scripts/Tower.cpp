@@ -26,16 +26,14 @@ void Tower::Update(float dt)
 
     if (!_targetId)
     {
-        for (auto &entity : em->getEntities())
+        const auto& enemies = em->getEntitiesByTag("Enemy");
+        for (auto &enemy : enemies)
         {
-            sScriptComponent* scriptComponent = entity.second->getComponent<sScriptComponent>();
-            if (scriptComponent &&
-                scriptComponent->getScript("Enemy") &&
-                isInRange(entity.second) &&
+            if (isInRange(enemy) &&
                 _lastShotTime >= _fireRate)
             {
-                _targetId = entity.second->id;
-                shootTarget(entity.second);
+                _targetId = enemy->id;
+                shootTarget(enemy);
                 break;
             }
         }

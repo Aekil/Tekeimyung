@@ -70,6 +70,11 @@ std::unordered_map<uint32_t, Entity*>& EntityManager::getEntities()
     return (_entities);
 }
 
+const std::vector<Entity*>& EntityManager::getEntitiesByTag(const std::string& tag)
+{
+    return (_entitiesTagGroups[tag]);
+}
+
 Entity* EntityManager::getEntity(uint32_t id) const
 {
     auto &&it = _entities.find(id);
@@ -90,4 +95,24 @@ void    EntityManager::notifyEntityRemovedComponent(Entity* entity, sComponent* 
 void    EntityManager::notifyEntityCreated(Entity* entity)
 {
     _world.notifyEntityCreated(entity);
+}
+
+void    EntityManager::addEntityToTagGroup(Entity* entity, const std::string& name)
+{
+    if (name.size() == 0)
+        return;
+
+    _entitiesTagGroups[name].push_back(entity);
+}
+
+void    EntityManager::removeEntityFromTagGroup(Entity* entity, const std::string& name)
+{
+    if (name.size() == 0)
+        return;
+
+    auto& tagGroup = _entitiesTagGroups.find(name);
+    if (tagGroup != _entitiesTagGroups.end())
+    {
+        tagGroup->second.push_back(entity);
+    }
 }
