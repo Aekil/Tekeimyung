@@ -1,3 +1,4 @@
+#include <Engine/EntityFactory.hpp>
 #include <Game/Scripts/GameManager.hpp>
 
 void GameManager::Start()
@@ -22,5 +23,16 @@ void GameManager::Start()
 
 void GameManager::Update(float dt)
 {
-
+    EntityManager* em = EntityFactory::getBindedEntityManager();
+    const auto& projectiles = em->getEntitiesByTag("Projectile");
+    for (auto &projectile : projectiles)
+    {
+        sTransformComponent* transform = projectile->getComponent<sTransformComponent>();
+        if (transform->pos.x < 0 || transform->pos.z < 0 ||
+            transform->pos.x > this->mapSize * 25 ||
+            transform->pos.z > this->mapSize * 25)
+        {
+            em->destroyEntityRegister(projectile);
+        }
+    }
 }

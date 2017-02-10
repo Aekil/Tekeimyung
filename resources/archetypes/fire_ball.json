@@ -110,5 +110,6 @@
          "type" : "OBJECT"
       }
    },
-   "name" : "FIRE_BALL"
+   "name" : "FIRE_BALL",
+   "tag" : "Projectile"
 }

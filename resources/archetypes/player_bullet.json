@@ -96,5 +96,5 @@
       }
    },
    "name" : "PLAYER_BULLET",
-   "tag" : ""
+   "tag" : "Projectile"
 }
