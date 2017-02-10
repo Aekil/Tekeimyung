@@ -34,6 +34,15 @@ void    EntityManager::destroyEntity(Entity* entity)
     entity->_components.clear();
 
     _entities.erase(entity->id);
+
+    if (entity->getTag().size() != 0)
+    {
+        auto& entityTagGroup = _entitiesTagGroups[entity->getTag()];
+        auto& entityFind = std::find(entityTagGroup.begin(), entityTagGroup.end(), entity);
+        entityTagGroup.erase(entityFind);
+    }
+    _entities.erase(entity->id);
+    delete entity;
 }
 
 void    EntityManager::destroyEntityRegister(Entity* entity)
