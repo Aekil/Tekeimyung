@@ -10,20 +10,20 @@
             "finish" : {
                "a" : 0,
                "b" : 1,
-               "g" : 0,
-               "r" : 0
+               "g" : 1,
+               "r" : 1
             },
             "start" : {
                "a" : 1,
                "b" : 1,
-               "g" : 1,
-               "r" : 1
+               "g" : 0.41960784792900085,
+               "r" : 0
             }
          },
          "emitter_life" : 0,
-         "life" : 76,
-         "life_variance" : 1,
-         "max_particles" : 86,
+         "life" : 22,
+         "life_variance" : 0,
+         "max_particles" : 22,
          "rate" : 0,
          "size" : {
             "finish" : 0,
