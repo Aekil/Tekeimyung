@@ -60,6 +60,13 @@ enum class eArchetype
 
 class EntityFactory
 {
+private:
+    struct sEntityInfo
+    {
+        std::string tag;
+        std::list<std::string> components;
+    };
+
 public:
     EntityFactory();
     ~EntityFactory();
@@ -80,9 +87,10 @@ public:
     static const std::vector<const char*>&                  getTypesString();
     static bool                                             entityTypeExists(const std::string& type);
 
-    static const std::list<std::string>&                    getComponents(const std::string& typeName);
+    static const sEntityInfo&                               getInfos(const std::string& typeName);
     static const void                                       removeComponent(const std::string& typeName, const std::string& component);
     static const void                                       addComponent(const std::string& typeName, const std::string& component);
+    static const void                                       setTag(const std::string& typeName, const std::string& tag);
     static const std::string&                               getFile(const std::string& typeName);
 
     static void                                             updateEntitiesComponents(Entity* from, const std::string& entityName, IComponentFactory* compFactory, sComponent* component);
@@ -99,7 +107,7 @@ public:
 
 private:
     // Store entities components names (ComponentFactory has components)
-    static std::unordered_map<std::string, std::list<std::string>>         _entities;
+    static std::unordered_map<std::string, sEntityInfo>     _entities;
     static std::vector<const char*>                         _typesString;
     static EntityManager*                                   _em;
 

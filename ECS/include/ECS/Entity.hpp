@@ -51,10 +51,14 @@ public:
         return (hasComponent(componentType::identifier));
     }
 
+    void                            setTag(const std::string& tag);
+    const std::string&              getTag() const;
+
 public:
     uint32_t                        id;
     std::vector<sComponent*>        _components;
 
 private:
+    std::string                     _tag;
     EntityManager*                  _em;
 };

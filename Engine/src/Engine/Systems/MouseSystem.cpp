@@ -29,7 +29,7 @@ void MouseSystem::hoverEntity(EntityManager& em)
 
     Entity* selectedEntity = nullptr;
 
-    Ray ray = camera->screenPosToRay(cursor.getX(), cursor.getY());
+    Ray ray = camera->screenPosToRay((float)cursor.getX(), (float)cursor.getY());
     Physics::raycast(ray, &selectedEntity);
 
     if (selectedEntity != nullptr)

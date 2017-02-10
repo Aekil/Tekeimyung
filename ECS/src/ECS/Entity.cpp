@@ -71,3 +71,13 @@ bool    Entity::hasComponent(size_t componentHashCode) const
 
     return (false);
 }
+
+void    Entity::setTag(const std::string& tag)
+{
+    _tag = tag;
+}
+
+const std::string&  Entity::getTag() const
+{
+    return _tag;
+}

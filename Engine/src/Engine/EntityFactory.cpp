@@ -19,7 +19,7 @@
 
 #include <Engine/EntityFactory.hpp>
 
-std::unordered_map<std::string, std::list<std::string> >  EntityFactory::_entities;
+std::unordered_map<std::string, EntityFactory::sEntityInfo >  EntityFactory::_entities;
 std::unordered_map<std::string, std::string>  EntityFactory::_entitiesFiles;
 std::vector<const char*>  EntityFactory::_typesString = { ENTITIES_TYPES(GENERATE_STRING) };
 EntityManager*  EntityFactory::_em = nullptr;
@@ -48,16 +48,19 @@ void EntityFactory::loadDirectory(const std::string& archetypesDir)
             JsonReader jsonReader;
             JsonValue parsed;
             std::string typeName;
+            std::string tag;
             if (!jsonReader.parse(path, parsed))
                 EXCEPT(IOException, "Cannot parse archetype \"%s\"", path.c_str());
 
             typeName = parsed.getString("name", "");
+            tag = parsed.getString("tag", "");
             LOG_INFO("Load entity %s", typeName.c_str());
 
             if (!EntityFactory::entityTypeExists(typeName)) // The macro ENTITIES_TYPES did not create the type
                 EXCEPT(InvalidParametersException, "Failed to read entity archetype: Entity type \"%s\" does not exist", typeName.c_str());
 
             _entitiesFiles[typeName] = path;
+             _entities[typeName].tag = tag;
 
             // Create entity components
             auto &&components = parsed.get("components", {}).get();
@@ -71,17 +74,17 @@ void EntityFactory::loadDirectory(const std::string& archetypesDir)
 
                 LOG_INFO("Add %s component %s", typeName.c_str(), componentName.c_str());
                 IComponentFactory::initComponent(typeName, componentName, JsonValue(*it));
-                _entities[typeName].push_back(componentName);
+                _entities[typeName].components.push_back(componentName);
             }
 
-            if (std::find(_entities[typeName].begin(), _entities[typeName].end(), "sNameComponent") == _entities[typeName].end())
+            if (std::find(_entities[typeName].components.begin(), _entities[typeName].components.end(), "sNameComponent") == _entities[typeName].components.end())
                 EXCEPT(InvalidParametersException, "Failed to read entity archetype \"%s\": missing sNameComponent", typeName.c_str());
 
             // Add sTransformation component if not found
-            if (std::find(_entities[typeName].begin(), _entities[typeName].end(), "sTransformComponent") == _entities[typeName].end())
+            if (std::find(_entities[typeName].components.begin(), _entities[typeName].components.end(), "sTransformComponent") == _entities[typeName].components.end())
             {
                 IComponentFactory::initComponent(typeName, "sTransformComponent", {});
-                _entities[typeName].push_back("sTransformComponent");
+                _entities[typeName].components.push_back("sTransformComponent");
             }
         }
         // No file extension, is directory
@@ -177,7 +180,7 @@ void EntityFactory::createEntityType(const std::string& typeName)
 
     // Add transform component
     IComponentFactory::initComponent(typeName, "sTransformComponent", {});
-    _entities[typeName].push_back("sTransformComponent");
+    _entities[typeName].components.push_back("sTransformComponent");
 
     // Create file
     RessourceManager::getInstance()->createFile(filePath, "{\"name\": \"" + typeName + "\"}");
@@ -198,14 +201,14 @@ const std::vector<const char*>& EntityFactory::getTypesString()
     return _typesString;
 }
 
-const std::list<std::string>&   EntityFactory::getComponents(const std::string& typeName)
+const EntityFactory::sEntityInfo&   EntityFactory::getInfos(const std::string& typeName)
 {
     return _entities[typeName];
 }
 
 const void   EntityFactory::removeComponent(const std::string& typeName, const std::string& component)
 {
-    auto& components = _entities[typeName];
+    auto& components = _entities[typeName].components;
     auto foundComponent = std::find(components.begin(), components.end(), component);
     if (foundComponent != components.end())
     {
@@ -215,7 +218,12 @@ const void   EntityFactory::removeComponent(const std::string& typeName, const s
 
 const void   EntityFactory::addComponent(const std::string& typeName, const std::string& component)
 {
-    _entities[typeName].push_back(component);
+    _entities[typeName].components.push_back(component);
+}
+
+const void   EntityFactory::setTag(const std::string& typeName, const std::string& tag)
+{
+    _entities[typeName].tag = tag;
 }
 
 const std::string& EntityFactory::getFile(const std::string& typeName)
@@ -226,12 +234,14 @@ const std::string& EntityFactory::getFile(const std::string& typeName)
 Entity* EntityFactory::cloneEntity(const std::string& typeName)
 {
     Entity* clone = _em->createEntity();
-    auto entityComponents = _entities.find(typeName);
+    auto entity = _entities.find(typeName);
 
-    if (entityComponents == _entities.end())
+    if (entity == _entities.end())
         EXCEPT(InvalidParametersException, "The entity type %s does not exist", typeName.c_str());
 
-    for (auto &&component : entityComponents->second)
+    clone->setTag(entity->second.tag);
+
+    for (auto &&component : entity->second.components)
     {
         sComponent* component_ = IComponentFactory::createComponent(typeName, component);
         clone->addComponent(component_);
@@ -249,6 +259,9 @@ void    EntityFactory::copyEntityManager(EntityManager* dst, EntityManager* src)
     for (auto& entity: entities)
     {
         Entity* cloneEntity = dst->createEntity();
+
+        cloneEntity->setTag(entity.second->getTag());
+
         auto& components = entity.second->getComponents();
         for (auto& component : components)
         {
@@ -356,10 +369,11 @@ void    EntityFactory::saveEntityTemplateToJson(const std::string& typeName)
     JsonValue json;
     JsonValue components;
     std::string savedFile = EntityFactory::getFile(typeName);
-    auto&& entitycomponents = EntityFactory::getComponents(typeName);
+    auto&& entityInfos = EntityFactory::getInfos(typeName);
 
     json.setString("name", typeName);
-    for (auto &&component: entitycomponents)
+    json.setString("tag", entityInfos.tag);
+    for (auto &&component: entityInfos.components)
     {
         JsonValue& componentJson = IComponentFactory::getFactory(component)->saveToJson(typeName);
         components.setValue(component, componentJson);
@@ -373,8 +387,10 @@ void    EntityFactory::saveEntityTemplateToJson(const std::string& typeName)
 
 void    EntityFactory::saveEntityTemplate(const std::string& typeName, Entity* entity)
 {
+    EntityFactory::setTag(typeName, entity->getTag());
+
     {
-        auto& components = EntityFactory::getComponents(typeName);
+        auto& components = EntityFactory::getInfos(typeName).components;
         // Remove deleted components from factories
         for (auto it = components.begin(); it != components.end();)
         {
@@ -396,7 +412,7 @@ void    EntityFactory::saveEntityTemplate(const std::string& typeName, Entity* e
     }
 
     {
-        auto& components = EntityFactory::getComponents(typeName);
+        auto& components = EntityFactory::getInfos(typeName).components;
 
         // Reverse animations
         EntityFactory::reverseAnimations(entity);

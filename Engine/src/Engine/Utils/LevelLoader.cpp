@@ -91,6 +91,8 @@ void    LevelLoader::save(const std::string& levelName, const std::unordered_map
             }
         }
 
+        entityJson.setString("tag", entity->getTag());
+
         // Save entity components
         entityJson.setValue("components", entityComponentsJson);
         entitiesJson.push_back(entityJson);
@@ -118,9 +120,12 @@ void    LevelLoader::load(const std::string& levelName, EntityManager* em)
         JsonValue entityJson(*entityIt);
         auto &&components = entityJson.get("components", {}).get();
         std::string entityTypeName = entityJson.getString("name", "");
+        std::string entityTag = entityJson.getString("tag", "");
 
         if (entityTypeName.size() == 0)
             EXCEPT(InvalidParametersException, "Failed to load level \"%s\": missing entity type name", levelName.c_str());
+
+        entity->setTag(entityTag);
 
         for (Json::ValueIterator it = components.begin(); it != components.end(); it++)
         {

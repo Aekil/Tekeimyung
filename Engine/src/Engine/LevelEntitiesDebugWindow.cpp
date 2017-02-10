@@ -109,6 +109,20 @@ void    LevelEntitiesDebugWindow::displayEntityDebug(Entity* entity)
 
         ImGui::PopStyleColor(3);
 
+
+        // Edit entity tag
+        ImGui::Text("\n");
+        const std::string& entityTag = entity->getTag();
+        std::vector<char> entityTagVec(entityTag.cbegin(), entityTag.cend());
+        entityTagVec.push_back(0);
+        entityTagVec.resize(64);
+
+        if (ImGui::InputText("Tag", entityTagVec.data(), entityTagVec.size()))
+        {
+            entity->setTag(entityTagVec.data());
+        }
+
+
         // Display new component that can be added
         if (ImGui::BeginPopup("components"))
         {

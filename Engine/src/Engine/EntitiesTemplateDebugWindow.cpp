@@ -107,7 +107,8 @@ void    EntitiesTemplateDebugWindow::cloneTemplate(const std::string& cloneTypeN
     EntityFactory::createEntityType(newTypeName);
 
     // Save entity components
-    const auto& entityTypeComponents = EntityFactory::getComponents(cloneTypeName);
+    auto& entityTypeInfos = EntityFactory::getInfos(cloneTypeName);
+    const auto& entityTypeComponents = entityTypeInfos.components;
     for (auto componentName: entityTypeComponents)
     {
         auto compFactory = IComponentFactory::getFactory(componentName);
@@ -127,6 +128,8 @@ void    EntitiesTemplateDebugWindow::cloneTemplate(const std::string& cloneTypeN
         // Add component to EntityFactory
         EntityFactory::addComponent(newTypeName, componentName);
     }
+
+    EntityFactory::setTag(newTypeName, entityTypeInfos.tag);
 
     // Save the cloned template to json
     EntityFactory::saveEntityTemplateToJson(newTypeName);
