@@ -52,6 +52,7 @@ public:
     float               getAspect() const;
     float               getFov() const;
     eProj               getProjType() const;
+    const sScreen&      getScreen() const;
 
     void                setFov(float fov);
     void                setAspect(float aspect);

@@ -15,5 +15,5 @@ public:
 private:
     void hoverEntity(EntityManager&);
 
-    Entity* previousEntity = nullptr;
+    uint32_t previousEntityId = 0;
 END_SYSTEM(MouseSystem)

@@ -371,6 +371,7 @@ END_COMPONENT(sTransformComponent)
 
 
 #define HORIZONTAL_ALIGNMENT(PROCESS)       \
+    PROCESS(NONE)                           \
     PROCESS(LEFT)                           \
     PROCESS(MIDDLE)                         \
     PROCESS(RIGHT)
@@ -379,6 +380,7 @@ REGISTER_ENUM(eHorizontalAlignment, uint8_t, HORIZONTAL_ALIGNMENT);
 REGISTER_ENUM_MANAGER(eHorizontalAlignment, uint8_t, HORIZONTAL_ALIGNMENT);
 
 #define VERTICAL_ALIGNMENT(PROCESS)         \
+    PROCESS(NONE)                           \
     PROCESS(TOP)                            \
     PROCESS(MIDDLE)                         \
     PROCESS(BOTTOM)
@@ -500,14 +502,14 @@ BaseScript*             getScript(const char* name)
     {
         if (scriptName == name)
         {
-            BaseScript* script = scriptInstances[i];
+            BaseScript* script = scriptInstances[i].get();
             // If the user need the script before it's initialized, auto initialized it
             if (!script->isInitialized)
             {
                 script->Start();
                 script->isInitialized = true;
             }
-            return scriptInstances[i];
+            return script;
         }
         i++;
     }
@@ -524,7 +526,7 @@ T*             getScript(const char* name)
     return nullptr;
 }
 
-std::vector<BaseScript*> scriptInstances;
+std::vector<std::unique_ptr<BaseScript> > scriptInstances;
 std::vector<std::string> scriptNames;
 
 std::string selectedScript; // Only used for editor

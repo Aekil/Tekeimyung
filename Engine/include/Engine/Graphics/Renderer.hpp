@@ -41,5 +41,6 @@ private:
     UniformBuffer                       _cameraUbo;
 
     Camera*                             _currentCamera;
+    Camera*                             _lastCamera;
     Camera                              _UICamera;
 };

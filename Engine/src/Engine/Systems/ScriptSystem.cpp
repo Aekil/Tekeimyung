@@ -27,7 +27,7 @@ void    ScriptSystem::initializeScript(Entity* entity, sScriptComponent* scriptC
         auto scriptInstance = ScriptFactory::create(scriptName);
         scriptInstance->SetEntity(entity);
 
-        scriptComponent->scriptInstances.push_back(scriptInstance);
+        scriptComponent->scriptInstances.push_back(std::move(scriptInstance));
     }
 }
 

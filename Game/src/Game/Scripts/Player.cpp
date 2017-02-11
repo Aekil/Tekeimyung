@@ -25,6 +25,7 @@ void Player::Death()
 void Player::Start()
 {
     this->health = 200;
+    this->maxHealth = 200;
     this->buildableRadius = 5.7f;
     this->_transform = this->getComponent<sTransformComponent>();
     this->_render = this->getComponent<sRenderComponent>();

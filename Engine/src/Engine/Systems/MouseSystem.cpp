@@ -32,38 +32,40 @@ void MouseSystem::hoverEntity(EntityManager& em)
     Ray ray = camera->screenPosToRay((float)cursor.getX(), (float)cursor.getY());
     Physics::raycast(ray, &selectedEntity);
 
+    Entity* previousEntity = em.getEntity(this->previousEntityId);
+
     if (selectedEntity != nullptr)
     {
-        if (this->previousEntity != nullptr && this->previousEntity->id != selectedEntity->id)
+        if (previousEntity != nullptr && previousEntity->id != selectedEntity->id)
         {
-            if (this->previousEntity->getComponent<sScriptComponent>() != nullptr)
-                for (auto&& script : this->previousEntity->getComponent<sScriptComponent>()->scriptInstances)
+            if (previousEntity->getComponent<sScriptComponent>() != nullptr)
+                for (auto&& script : previousEntity->getComponent<sScriptComponent>()->scriptInstances)
                     script->OnHoverExit();
 
             if (selectedEntity->getComponent<sScriptComponent>() != nullptr)
                 for (auto&& script : selectedEntity->getComponent<sScriptComponent>()->scriptInstances)
                     script->OnHoverEnter();
 
-            this->previousEntity = selectedEntity;
+            this->previousEntityId = selectedEntity->id;
         }
-        else if (this->previousEntity == nullptr)
+        else if (previousEntity == nullptr)
         {
             if (selectedEntity->getComponent<sScriptComponent>() != nullptr)
                 for (auto&& script : selectedEntity->getComponent<sScriptComponent>()->scriptInstances)
                     script->OnHoverEnter();
 
-            this->previousEntity = selectedEntity;
+            this->previousEntityId = selectedEntity->id;
         }
     }
     else
     {
-        if (this->previousEntity != nullptr)
+        if (previousEntity != nullptr)
         {
-            if (this->previousEntity->getComponent<sScriptComponent>() != nullptr)
-                for (auto&& script : this->previousEntity->getComponent<sScriptComponent>()->scriptInstances)
+            if (previousEntity->getComponent<sScriptComponent>() != nullptr)
+                for (auto&& script : previousEntity->getComponent<sScriptComponent>()->scriptInstances)
                     script->OnHoverExit();
 
-            this->previousEntity = nullptr;
+            this->previousEntityId = 0;
         }
     }
 }

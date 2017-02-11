@@ -47,7 +47,10 @@ void    EntityManager::destroyEntity(Entity* entity)
 
 void    EntityManager::destroyEntityRegister(Entity* entity)
 {
-    _entitiesToDestroy.push_back(entity);
+    if (entity)
+    {
+        _entitiesToDestroy.push_back(entity);
+    }
 }
 
 void    EntityManager::destroyEntities()
@@ -55,11 +58,22 @@ void    EntityManager::destroyEntities()
     if (_entitiesToDestroy.empty())
         return;
 
-    for (auto entity : _entitiesToDestroy)
+    uint32_t i = 0;
+    uint32_t len = (uint32_t)_entitiesToDestroy.size();
+    for (i; i < len; ++i)
     {
-        destroyEntity(entity);
+        destroyEntity(_entitiesToDestroy[i]);
     }
-    _entitiesToDestroy.clear();
+
+    // Other entities have been added to _entitiesToDestroy during destroy
+    if (len != _entitiesToDestroy.size())
+    {
+        _entitiesToDestroy.erase(_entitiesToDestroy.begin(), _entitiesToDestroy.begin() + len);
+    }
+    else
+    {
+        _entitiesToDestroy.clear();
+    }
 }
 
 void    EntityManager::destroyAllEntities()

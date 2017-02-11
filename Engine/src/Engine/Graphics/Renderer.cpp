@@ -81,20 +81,21 @@ void    Renderer::onWindowResize()
 void    Renderer::render(Camera* camera, std::shared_ptr<Model> model,
                                         const glm::vec4& modelColor, const glm::mat4& modelTransform)
 {
-    camera->updateUboData(_cameraUbo, _currentCamera != camera);
+    camera->updateUboData(_cameraUbo, _lastCamera != camera);
     model->draw(_shaderProgram, modelColor, modelTransform);
 
     _currentCamera = camera;
+    _lastCamera = camera;
 }
 
 // TODO: draw all UI after models
 // Curently the UI is drawn at the same time as the transparent entities if the model is a plane
 void    Renderer::renderUI(std::shared_ptr<Model> model, const glm::vec4& modelColor, const glm::mat4& modelTransform)
 {
-    if (_currentCamera != &_UICamera)
+    if (_lastCamera != &_UICamera)
         _UICamera.updateUboData(_cameraUbo, true);
     model->draw(_shaderProgram, modelColor, modelTransform);
-    _currentCamera = &_UICamera;
+    _lastCamera = &_UICamera;
 }
 
 ShaderProgram&  Renderer::getShaderProgram()
