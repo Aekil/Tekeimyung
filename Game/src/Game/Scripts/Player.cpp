@@ -58,7 +58,7 @@ void Player::updateDirection()
     Ray ray = camera->screenPosToRay((float)cursor.getX(), (float)cursor.getY());
     float hitDistance;
 
-    if (Physics::raycastPlane(ray, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, hitDistance))
+    if (Physics::raycastPlane(ray, {0.0f, 1.0f, 0.0f}, {0.0f, _transform->pos.y, 0.0f}, hitDistance))
     {
         glm::vec3 target = ray.getPoint(hitDistance);
         _direction = glm::normalize(target - _transform->pos);
