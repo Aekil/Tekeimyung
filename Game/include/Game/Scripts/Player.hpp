@@ -41,6 +41,7 @@ private:
     sTransformComponent* _transform;
     sRenderComponent* _render;
     bool _buildEnabled;
+    int _damage;
 };
 
 REGISTER_SCRIPT(Player);

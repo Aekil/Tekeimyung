@@ -29,6 +29,7 @@ void Player::Start()
     this->_transform = this->getComponent<sTransformComponent>();
     this->_render = this->getComponent<sRenderComponent>();
     _buildEnabled = false;
+    _damage = 20;
 
     LOG_DEBUG("BORN");
 }
@@ -155,6 +156,7 @@ void Player::handleShoot()
         }
 
         projectileScript->_projectileTransform->needUpdate = true;
+        projectileScript->_damage = _damage;
         projectileScript->followDirection({_direction.x, 0.0f, _direction.z});
     }
 }

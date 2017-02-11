@@ -6,6 +6,7 @@
 #include <Engine/EntityFactory.hpp>
 #include <Engine/Utils/Debug.hpp>
 
+#include <Game/Scripts/Enemy.hpp>
 #include <Game/Scripts/Projectile.hpp>
 
 void Projectile::Start()
@@ -43,23 +44,29 @@ void Projectile::OnCollisionEnter(Entity* entity)
 {
     if (entity->id == _targetId || entity->getTag() == "Enemy")
     {
-        LOG_INFO("Destroy");
-        EntityManager* em = EntityFactory::getBindedEntityManager();
-        Entity* target = entity;
-        destroyProjectile();
-        em->destroyEntityRegister(target);
+        sScriptComponent* script = entity->getComponent<sScriptComponent>();
+        if (!script)
+        {
+            destroyProjectile();
+            LOG_WARN("Target has no Enemy tag");
+            return;
+        }
 
-        Entity* explosion = Instantiate("ENEMY_EXPLOSION");
-        sTransformComponent* explosionTransform = explosion->getComponent<sTransformComponent>();
-        sTransformComponent* targetTransform = target->getComponent<sTransformComponent>();
-        explosionTransform->pos = targetTransform->pos;
-        explosionTransform->needUpdate = true;
-        _targetId = 0;
+        Enemy* enemy = script->getScript<Enemy>("Enemy");
+        if (enemy->TakeDamage(_damage))
+        {
+            EntityManager* em = EntityFactory::getBindedEntityManager();
+            Entity* target = entity;
+
+            Entity* explosion = Instantiate("ENEMY_EXPLOSION");
+            sTransformComponent* explosionTransform = explosion->getComponent<sTransformComponent>();
+            sTransformComponent* targetTransform = target->getComponent<sTransformComponent>();
+            explosionTransform->pos = targetTransform->pos;
+            explosionTransform->needUpdate = true;
+            _targetId = 0;
+        }
     }
-    else if (entity->getTag() == "BlockBrown")
-    {
-        destroyProjectile();
-    }
+    destroyProjectile();
 }
 
 void Projectile::followTarget(Entity* target)

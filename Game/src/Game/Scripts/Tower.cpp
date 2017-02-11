@@ -17,6 +17,7 @@ void Tower::Start()
     _lastShotTime = _fireRate;
     _towerTransform = entity->getComponent<sTransformComponent>();
     _range = 22.0f;
+    _damage = 50;
 }
 
 void Tower::Update(float dt)
@@ -77,6 +78,7 @@ void Tower::shootTarget(Entity* target)
     projectileScript->_projectileTransform->pos = _towerTransform->pos;
     projectileScript->_projectileTransform->needUpdate = true;
     projectileScript->_targetId = target->id;
+    projectileScript->_damage = _damage;
     projectileScript->followTarget(target);
 
     _lastShotTime = 0.0f;

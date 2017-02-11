@@ -25,6 +25,7 @@ private:
     float       _fireRate;
     float       _lastShotTime;
     float       _range;
+    int         _damage;
 
     sTransformComponent* _towerTransform;
 };

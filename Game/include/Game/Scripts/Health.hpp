@@ -11,7 +11,7 @@ public:
     ~Health() {};
 
 public:
-    void TakeDamage(int);
+    bool TakeDamage(int);
 
 protected:
     int health;
