@@ -35,8 +35,6 @@
                     "z" : 1.0
                 }
             },
-            "sResolutionComponent" : {
-            },
             "sRenderComponent": {
                 "model": "resources/models/buildings/geometric_castle.DAE"
             },

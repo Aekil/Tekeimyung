@@ -791,16 +791,6 @@ bool    ComponentFactory<sSphereColliderComponent>::updateEditor(const std::stri
 
 
 /*
-** sResolutionComponent
-*/
-sComponent* ComponentFactory<sResolutionComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
-{
-    sResolutionComponent* component = new sResolutionComponent();
-
-    return (component);
-}
-
-/*
 ** sTypeComponent
 */
 

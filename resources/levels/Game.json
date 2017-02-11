@@ -19,7 +19,6 @@
                "texture" : "",
                "type" : "MESH"
             },
-            "sResolutionComponent" : null,
             "sScriptComponent" : {
                "class" : [ "Player" ]
             },
@@ -75,7 +74,6 @@
                "texture" : "",
                "type" : "MESH"
             },
-            "sResolutionComponent" : null,
             "sScriptComponent" : {
                "class" : [ "Castle" ]
             },
@@ -131,7 +129,6 @@
                "texture" : "",
                "type" : "MESH"
             },
-            "sResolutionComponent" : null,
             "sScriptComponent" : {
                "class" : [ "Tower" ]
             },
@@ -178,7 +175,6 @@
                "texture" : "",
                "type" : "MESH"
             },
-            "sResolutionComponent" : null,
             "sScriptComponent" : {
                "class" : [ "Tower" ]
             },
@@ -225,7 +221,6 @@
                "texture" : "",
                "type" : "MESH"
             },
-            "sResolutionComponent" : null,
             "sScriptComponent" : {
                "class" : [ "Tower" ]
             },
@@ -272,7 +267,6 @@
                "texture" : "",
                "type" : "MESH"
             },
-            "sResolutionComponent" : null,
             "sScriptComponent" : {
                "class" : [ "Tower" ]
             },
@@ -319,7 +313,6 @@
                "texture" : "",
                "type" : "MESH"
             },
-            "sResolutionComponent" : null,
             "sScriptComponent" : {
                "class" : [ "Tower" ]
             },
@@ -366,7 +359,6 @@
                "texture" : "",
                "type" : "MESH"
             },
-            "sResolutionComponent" : null,
             "sScriptComponent" : {
                "class" : [ "Tower" ]
             },

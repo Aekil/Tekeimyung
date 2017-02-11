@@ -18,6 +18,7 @@
 CollisionSystem::CollisionSystem()
 {
     this->addDependency<sSphereColliderComponent>();
+    this->addDependency<sRigidBodyComponent>();
 }
 
 void    CollisionSystem::update(EntityManager &em, float elapsedTime)
@@ -32,24 +33,22 @@ void    CollisionSystem::update(EntityManager &em, float elapsedTime)
 
             if (entity->id != entityB->id)
             {
-                sResolutionComponent* resolution = entity->getComponent<sResolutionComponent>();
-
-                if (resolution == nullptr) return;
+                sRigidBodyComponent* rigidBody = entity->getComponent<sRigidBodyComponent>();
 
                 if (this->isColliding(entity, entityB))
                 {
                     //if (!entityB->getComponent<sSphereColliderComponent>()->isTrigger)
                     //    LOG_DEBUG("NOT TRIGGER");
 
-                    if (resolution->resolutions.find(entityB->id) == resolution->resolutions.end() || resolution->resolutions[entityB->id] == eCollisionState::NO_COLLISION)
+                    if (rigidBody->collisions.find(entityB->id) == rigidBody->collisions.end() || rigidBody->collisions[entityB->id] == eCollisionState::NO_COLLISION)
                     {
-                        resolution->resolutions[entityB->id] = eCollisionState::ENTERING_COLLISION;
+                        rigidBody->collisions[entityB->id] = eCollisionState::ENTERING_COLLISION;
                     }
                 }
                 else
                 {
-                    if (resolution->resolutions[entityB->id] == eCollisionState::IS_COLLIDING)
-                        resolution->resolutions[entityB->id] = eCollisionState::EXIT_COLLISION;
+                    if (rigidBody->collisions[entityB->id] == eCollisionState::IS_COLLIDING)
+                        rigidBody->collisions[entityB->id] = eCollisionState::EXIT_COLLISION;
                 }
             }
         });

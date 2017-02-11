@@ -91,6 +91,14 @@ std::string texture;
 END_COMPONENT(sRenderComponent)
 
 
+enum class eCollisionState : uint8_t
+{
+    NO_COLLISION = 0,
+    ENTERING_COLLISION = 1,
+    IS_COLLIDING = 2,
+    EXIT_COLLISION = 3
+};
+
 START_COMPONENT(sRigidBodyComponent)
 virtual sComponent* clone()
 {
@@ -113,6 +121,7 @@ virtual void update(sComponent* component)
 
 glm::vec3 gravity;
 glm::vec3 velocity;
+std::map<uint32_t, eCollisionState> collisions;
 END_COMPONENT(sRigidBodyComponent)
 
 
@@ -311,35 +320,6 @@ virtual void update(sComponent* component)
 std::string value;
 END_COMPONENT(sNameComponent)
 
-enum class eCollisionState : int
-{
-    NO_COLLISION = 0,
-    ENTERING_COLLISION,
-    IS_COLLIDING,
-    EXIT_COLLISION,
-};
-
-START_COMPONENT(sResolutionComponent)
-virtual sComponent* clone()
-{
-    sResolutionComponent* component = new sResolutionComponent();
-    component->update(this);
-
-    return (component);
-}
-
-virtual void update(sResolutionComponent* component)
-{
-    this->resolutions = component->resolutions;
-}
-
-virtual void update(sComponent* component)
-{
-    update(static_cast<sResolutionComponent*>(component));
-}
-
-std::map<int, eCollisionState> resolutions;
-END_COMPONENT(sResolutionComponent)
 
 START_COMPONENT(sTransformComponent)
 virtual sComponent* clone()

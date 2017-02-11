@@ -19,7 +19,6 @@
                "texture" : "",
                "type" : "MESH"
             },
-            "sResolutionComponent" : null,
             "sScriptComponent" : {
                "class" : [ "Tower" ]
             },
@@ -128,7 +127,6 @@
                "texture" : "",
                "type" : "MESH"
             },
-            "sResolutionComponent" : null,
             "sScriptComponent" : {
                "class" : [ "Enemy" ]
             },
@@ -246,7 +244,6 @@
                "texture" : "",
                "type" : "MESH"
             },
-            "sResolutionComponent" : null,
             "sScriptComponent" : {
                "class" : [ "Enemy" ]
             },
@@ -364,7 +361,6 @@
                "texture" : "",
                "type" : "MESH"
             },
-            "sResolutionComponent" : null,
             "sScriptComponent" : {
                "class" : [ "Enemy" ]
             },

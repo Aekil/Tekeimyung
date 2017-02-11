@@ -18,7 +18,6 @@
          "texture" : "",
          "type" : "MESH"
       },
-      "sResolutionComponent" : {},
       "sScriptComponent" : {
          "class" : [ "Player" ]
       },

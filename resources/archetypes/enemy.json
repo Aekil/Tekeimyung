@@ -81,7 +81,6 @@
          "texture" : "",
          "type" : "MESH"
       },
-      "sResolutionComponent" : null,
       "sScriptComponent" : {
          "class" : [ "Enemy" ]
       },

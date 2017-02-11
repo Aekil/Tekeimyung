@@ -64,7 +64,6 @@
          "texture" : "resources/sprites/particles/particle_circle.png",
          "type" : "PLANE"
       },
-      "sResolutionComponent" : null,
       "sRigidBodyComponent" : {
          "gravity" : {
             "x" : 0,
