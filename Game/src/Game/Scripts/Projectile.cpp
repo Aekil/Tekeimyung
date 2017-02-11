@@ -31,7 +31,6 @@ void Projectile::Update(float dt)
     if (!target)
     {
         LOG_INFO("No target");
-        _targetId = 0;
         destroyProjectile();
     }
     else
@@ -45,14 +44,14 @@ void Projectile::OnCollisionEnter(Entity* entity)
     if (entity->id == _targetId || entity->getTag() == "Enemy")
     {
         sScriptComponent* script = entity->getComponent<sScriptComponent>();
-        if (!script)
+        Enemy* enemy = script ? script->getScript<Enemy>("Enemy") : nullptr;
+        if (!script || !enemy)
         {
             destroyProjectile();
-            LOG_WARN("Target has no Enemy tag");
+            LOG_WARN("Target has no sScriptComponent or no Enemy script");
             return;
         }
 
-        Enemy* enemy = script->getScript<Enemy>("Enemy");
         if (enemy->TakeDamage(_damage))
         {
             EntityManager* em = EntityFactory::getBindedEntityManager();
@@ -63,7 +62,6 @@ void Projectile::OnCollisionEnter(Entity* entity)
             sTransformComponent* targetTransform = target->getComponent<sTransformComponent>();
             explosionTransform->pos = targetTransform->pos;
             explosionTransform->needUpdate = true;
-            _targetId = 0;
         }
     }
     destroyProjectile();
@@ -83,6 +81,8 @@ void Projectile::followDirection(const glm::vec3& dir)
 
 void Projectile::destroyProjectile()
 {
+    _targetId = 0;
     // Set a low emitter life instead of destroying the entity
     _projectileEmitter->emitterLife = 0.001f;
+    _projectileRigidBody->collisionsEnabled = false;
 }

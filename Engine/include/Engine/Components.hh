@@ -112,6 +112,7 @@ virtual void update(sRigidBodyComponent* component)
 {
     this->gravity = component->gravity;
     this->velocity = component->velocity;
+    this->collisionsEnabled = component->collisionsEnabled;
 }
 
 virtual void update(sComponent* component)
@@ -122,6 +123,7 @@ virtual void update(sComponent* component)
 glm::vec3 gravity;
 glm::vec3 velocity;
 std::map<uint32_t, eCollisionState> collisions;
+bool collisionsEnabled;
 END_COMPONENT(sRigidBodyComponent)
 
 

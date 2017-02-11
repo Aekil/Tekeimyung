@@ -651,6 +651,7 @@ sComponent* ComponentFactory<sRigidBodyComponent>::loadFromJson(const std::strin
 
     component->gravity = json.getVec3f("gravity", {0.0f, 0.0f, 0.0f});
     component->velocity = json.getVec3f("velocity", {0.0f, 0.0f, 0.0f});
+    component->collisionsEnabled = json.getBool("collisions_enabled", true);
 
     return (component);
 }
@@ -662,6 +663,7 @@ JsonValue&    ComponentFactory<sRigidBodyComponent>::saveToJson(const std::strin
 
     json.setVec3f("gravity", component->gravity);
     json.setVec3f("velocity", component->velocity);
+    json.setBool("collisions_enabled", component->collisionsEnabled);
 
     return (json);
 }

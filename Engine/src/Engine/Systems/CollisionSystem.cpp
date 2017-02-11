@@ -34,7 +34,7 @@ void    CollisionSystem::update(EntityManager &em, float elapsedTime)
                     {
                         sRigidBodyComponent* rigidBody = entity->getComponent<sRigidBodyComponent>();
 
-                        if (this->isColliding(entity, entityB))
+                        if (rigidBody->collisionsEnabled && this->isColliding(entity, entityB))
                         {
                             //if (!entityB->getComponent<sSphereColliderComponent>()->isTrigger)
                             //    LOG_DEBUG("NOT TRIGGER");
@@ -44,7 +44,7 @@ void    CollisionSystem::update(EntityManager &em, float elapsedTime)
                                 rigidBody->collisions[entityB->id] = eCollisionState::ENTERING_COLLISION;
                             }
                         }
-                        else
+                        else if (rigidBody->collisionsEnabled)
                         {
                             if (rigidBody->collisions[entityB->id] == eCollisionState::IS_COLLIDING)
                                 rigidBody->collisions[entityB->id] = eCollisionState::EXIT_COLLISION;
