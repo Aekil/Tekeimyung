@@ -22,6 +22,7 @@ public:
 
 private:
     void                displayEntityDebug(Entity* entity);
+    void                createTemplate(Entity* entity, const std::string& newTypeName);
 
 private:
     EntityManager*      _em;

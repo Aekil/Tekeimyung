@@ -99,6 +99,27 @@ void    LevelEntitiesDebugWindow::displayEntityDebug(Entity* entity)
             ImGui::OpenPopup("components");
         }
 
+        ImGui::SameLine();
+        // Clone the template
+        if (ImGui::Button("Create template"))
+        {
+            ImGui::OpenPopup("create template");
+        }
+
+        // Clone template: specify new type name
+        if (ImGui::BeginPopup("create template"))
+        {
+            static char newTypeName[64] = "";
+
+            ImGui::InputText("New type", newTypeName, 64);
+            if (ImGui::Button("Create"))
+            {
+                createTemplate(entity, newTypeName);
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::EndPopup();
+        }
+
         // Save entity template to json
         // And apply changes to all entities of the same type in the scene
         ImGui::SameLine();
@@ -182,4 +203,47 @@ void    LevelEntitiesDebugWindow::displayEntityDebug(Entity* entity)
 uint32_t    LevelEntitiesDebugWindow::getSelectedEntityId()
 {
     return (_selectedEntityId);
+}
+
+void    LevelEntitiesDebugWindow::createTemplate(Entity* entity, const std::string& newTypeName)
+{
+    if (EntityFactory::entityTypeExists(newTypeName))
+    {
+        LOG_ERROR("Can't create entity type %s, it already exists", newTypeName.c_str());
+        return;
+    }
+
+    sNameComponent* cloneTypeName = entity->getComponent<sNameComponent>();
+    ASSERT(cloneTypeName != nullptr, "sNameComponent should exist");
+
+    EntityFactory::createEntityType(newTypeName);
+
+    EntityFactory::reverseAnimations(entity);
+
+    // Save entity components
+    auto& entityTypeInfos = EntityFactory::getInfos(cloneTypeName->value);
+    const auto& entityTypeComponents = entity->getComponents();
+    for (auto component: entityTypeComponents)
+    {
+        // Add cloned component to component factory
+        std::string componentName = IComponentFactory::getComponentNameWithHash(component->id);
+        auto compFactory = IComponentFactory::getFactory(componentName);
+        sComponent* newComponent = component->clone();
+
+        if (componentName == "sNameComponent")
+        {
+            sNameComponent* name = static_cast<sNameComponent*>(newComponent);
+            name->value = newTypeName;
+        }
+
+        compFactory->save(newTypeName, newComponent);
+
+        // Add component to EntityFactory
+        EntityFactory::addComponent(newTypeName, componentName);
+    }
+
+    EntityFactory::setTag(newTypeName, entityTypeInfos.tag);
+
+    // Save the cloned template to json
+    EntityFactory::saveEntityTemplateToJson(newTypeName);
 }
