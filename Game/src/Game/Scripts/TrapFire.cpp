@@ -6,12 +6,12 @@
 
 #include <Game/Scripts/TrapFire.hpp>
 
-void TrapFire::Start()
+void TrapFire::start()
 {
     this->damage = 50;
 }
 
-void TrapFire::Update(float dt)
+void TrapFire::update(float dt)
 {
 
 }

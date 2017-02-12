@@ -127,7 +127,7 @@ void    PlayState::updateCameraInputs(float elapsedTime)
     auto &mouse = gameWindow->getMouse();
     auto &keyboard = gameWindow->getKeyboard();
 
-    // Update Projection type
+    // update Projection type
     {
         if (keyboard.isPressed(Keyboard::eKey::O))
             _camera.setProjType(Camera::eProj::ORTHOGRAPHIC_3D);
@@ -135,7 +135,7 @@ void    PlayState::updateCameraInputs(float elapsedTime)
             _camera.setProjType(Camera::eProj::PERSPECTIVE);
     }
 
-    // Update zoom
+    // update zoom
     {
         auto &&scroll = mouse.getScroll();
         static double lastScrollOffset;
@@ -148,7 +148,7 @@ void    PlayState::updateCameraInputs(float elapsedTime)
         lastScrollOffset = scroll.yOffset;
     }
 
-    // Update camera position when reaching edge
+    // update camera position when reaching edge
     {
         static float edgeDist = 80.0f;
         static float moveSpeed = 5.0f;

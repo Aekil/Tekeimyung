@@ -8,17 +8,17 @@
 
 #include <Game/Scripts/Health.hpp>
 
-class Enemy : public BaseScript, public Health
+class Enemy final : public BaseScript, public Health
 {
 public:
-    Enemy() {};
+    Enemy() = default;
     ~Enemy() = default;
 
 public:
-    virtual void Start();
-    virtual void Update(float dt);
-    virtual void Death();
-    bool TakeDamage(int damage) override final;
+    void start() override final;
+    void update(float dt) override final;
+    void death() override final;
+    bool takeDamage(int damage) override final;
 
 private:
     Entity* _healthBarEmpty;

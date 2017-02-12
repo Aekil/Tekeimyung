@@ -6,7 +6,7 @@
 
 #include <Game/Scripts/TrapNeedle.hpp>
 
-void TrapNeedle::Start()
+void TrapNeedle::start()
 {
     this->damage = 35;
 
@@ -15,7 +15,7 @@ void TrapNeedle::Start()
     renderComponent->_animator.play("scale animation", true);
 }
 
-void TrapNeedle::Update(float dt)
+void TrapNeedle::update(float dt)
 {
 
 }

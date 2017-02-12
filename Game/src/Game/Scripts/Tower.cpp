@@ -10,7 +10,7 @@
 #include <Game/Scripts/Projectile.hpp>
 #include <Game/Scripts/Tower.hpp>
 
-void Tower::Start()
+void Tower::start()
 {
     _targetId = 0;
     _fireRate = 2.5f;
@@ -20,7 +20,7 @@ void Tower::Start()
     _damage = 50;
 }
 
-void Tower::Update(float dt)
+void Tower::update(float dt)
 {
     EntityManager* em = EntityFactory::getBindedEntityManager();
     _lastShotTime += dt;

@@ -2,25 +2,25 @@
 
 #include <Game/Scripts/Castle.hpp>
 
-void Castle::Start()
+void Castle::start()
 {
     this->health = 500;
 }
 
-void Castle::Update(float dt)
+void Castle::update(float dt)
 {
 }
 
-void Castle::OnCollisionEnter(Entity* entity)
+void Castle::onCollisionEnter(Entity* entity)
 {
     if (entity->getComponent<sNameComponent>()->value == "PLAYER")
     {
         LOG_DEBUG("Damage done");
-        this->TakeDamage(25);
+        this->takeDamage(25);
     }
 }
 
-void Castle::Death()
+void Castle::death()
 {
     this->Destroy();
     LOG_DEBUG("GAME OVER");

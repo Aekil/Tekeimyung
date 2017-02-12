@@ -8,15 +8,15 @@
 
 class Trap : public BaseScript
 {
+public:
+    Trap() = default;
+    ~Trap() = default;
+
+    virtual void start() = 0;
+    virtual void update(float dt) = 0;
+
+    void onCollisionEnter(Entity* entity) override final;
+
 protected:
     int damage;
-
-public:
-    Trap() {};
-    ~Trap() {};
-public:
-    virtual void Start() = 0;
-    virtual void Update(float dt) = 0;
-
-    virtual void OnCollisionEnter(Entity* entity);
 };

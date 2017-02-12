@@ -22,13 +22,13 @@ Health::~Health()
     em->destroyEntityRegister(_healthBar);
 }
 
-bool Health::TakeDamage(int damage)
+bool Health::takeDamage(int damage)
 {
     this->health -= damage;
 
     if (this->health <= 0)
     {
-        this->Death();
+        this->death();
         return (true);
     }
 

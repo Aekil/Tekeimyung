@@ -38,7 +38,7 @@ void RigidBodySystem::handleCollisions(EntityManager &em, Entity* entity, sRigid
             {
                 for (auto&& script : scriptComponent->scriptInstances)
                 {
-                    script->OnCollisionEnter(em.getEntity(it->first));
+                    script->onCollisionEnter(em.getEntity(it->first));
                 }
             }
             rigidBody->collisions[it->first] = eCollisionState::IS_COLLIDING;
@@ -49,7 +49,7 @@ void RigidBodySystem::handleCollisions(EntityManager &em, Entity* entity, sRigid
             {
                 for (auto&& script : scriptComponent->scriptInstances)
                 {
-                    script->OnCollisionExit(em.getEntity(it->first));
+                    script->onCollisionExit(em.getEntity(it->first));
                 }
             }
             rigidBody->collisions[it->first] = eCollisionState::NO_COLLISION;

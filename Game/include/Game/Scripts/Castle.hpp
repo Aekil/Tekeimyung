@@ -5,17 +5,17 @@
 
 #include <Game/Scripts/Health.hpp>
 
-class Castle : public BaseScript, public Health
+class Castle final : public BaseScript, public Health
 {
 public:
-    Castle() {};
-    ~Castle() {};
+    Castle() = default;
+    ~Castle() = default;
 
 public:
-    virtual void Start();
-    virtual void Update(float dt);
-    virtual void OnCollisionEnter(Entity* entity);
-    virtual void Death();
+    void start() override final;
+    void update(float dt) override final;
+    void onCollisionEnter(Entity* entity) override final;
+    void death() override final;
 };
 
 REGISTER_SCRIPT(Castle);

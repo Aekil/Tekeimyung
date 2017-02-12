@@ -17,12 +17,12 @@ public:
     virtual ~Health();
 
 public:
-    virtual bool TakeDamage(int damage);
+    virtual bool takeDamage(int damage);
 
 protected:
     int health;
     int maxHealth;
-    virtual void Death() = 0;
+    virtual void death() = 0;
     void init(sTransformComponent* transform, sRenderComponent* render);
     void update(sTransformComponent* transform);
 

@@ -6,14 +6,14 @@
 
 #include <Game/Scripts/Spawner.hpp>
 
-void Spawner::Start()
+void Spawner::start()
 {
     auto pos = this->getComponent<sTransformComponent>()->pos;
 
     this->Instantiate("ENEMY", glm::vec3(pos.x, 18.75, pos.z));
 }
 
-void Spawner::Update(float dt)
+void Spawner::update(float dt)
 {
-    
+
 }

@@ -6,7 +6,7 @@
 
 #include <Game/Scripts/Enemy.hpp>
 
-void Enemy::Start()
+void Enemy::start()
 {
     this->_render = getComponent<sRenderComponent>();
     this->_render->_animator.play("rotation_enemy", true);
@@ -16,7 +16,7 @@ void Enemy::Start()
     Health::init(_transform, _render);
 }
 
-void Enemy::Update(float dt)
+void Enemy::update(float dt)
 {
     auto pos = &(this->getComponent<sTransformComponent>()->pos);
 
@@ -25,13 +25,13 @@ void Enemy::Update(float dt)
     Health::update(_transform);
 }
 
-void Enemy::Death()
+void Enemy::death()
 {
     this->Destroy();
 }
 
-bool Enemy::TakeDamage(int damage)
+bool Enemy::takeDamage(int damage)
 {
     this->_render->_animator.play("hit", false);
-    return (Health::TakeDamage(damage));
+    return (Health::takeDamage(damage));
 }

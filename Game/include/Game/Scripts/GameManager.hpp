@@ -3,11 +3,11 @@
 #include <Engine/Core/BaseScript.hpp>
 #include <Engine/Core/ScriptFactory.hpp>
 
-class GameManager : public BaseScript
+class GameManager final : public BaseScript
 {
 public:
-    GameManager() {};
-    ~GameManager() {};
+    GameManager() = default;
+    ~GameManager() = default;
 
     int mapSize = 21;
 
@@ -60,8 +60,8 @@ public:
     };
 
 public:
-    virtual void Start();
-    virtual void Update(float dt);
+    void start() override final;
+    void update(float dt) override final;
 };
 
 REGISTER_SCRIPT(GameManager);

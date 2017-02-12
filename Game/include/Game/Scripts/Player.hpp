@@ -11,30 +11,30 @@
 
 #include <Game/Scripts/Health.hpp>
 
-class Player : public BaseScript, public Health
+class Player final : public BaseScript, public Health
 {
 public:
-    Player() {};
-    ~Player() {};
+    Player() = default;
+    ~Player() = default;
 
 private:
     void updateDirection();
-    void CheckBuildableZone();
-    void Movement(float elapsedTime);
+    void checkBuildableZone();
+    void movement(float elapsedTime);
     void handleShoot();
 
     float buildableRadius;
 
 public:
-    virtual void Start();
-    virtual void Update(float dt);
+    void start() override final;
+    void update(float dt) override final;
 
-    virtual void OnHoverEnter();
-    virtual void OnHoverExit();
+    virtual void onHoverEnter();
+    virtual void onHoverExit();
 
-    virtual void Death();
+    void death() override final;
 
-    virtual void OnCollisionEnter(Entity* entity);
+    void onCollisionEnter(Entity* entity) override final;
 
 private:
     glm::vec3 _direction;

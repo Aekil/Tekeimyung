@@ -6,12 +6,12 @@
 
 #include <Game/Scripts/TrapCutter.hpp>
 
-void TrapCutter::Start()
+void TrapCutter::start()
 {
     this->damage = 60;
 }
 
-void TrapCutter::Update(float dt)
+void TrapCutter::update(float dt)
 {
 
 }

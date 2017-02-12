@@ -8,20 +8,20 @@
 
 #include <Engine/Core/ScriptFactory.hpp>
 
-class Projectile : public BaseScript
+class Projectile final : public BaseScript
 {
 friend class Tower;
 friend class Player;
 
 public:
-    Projectile() {};
-    ~Projectile() {};
+    Projectile() = default;
+    ~Projectile() = default;
 
 public:
-    void Start();
-    void Update(float dt);
+    void start();
+    void update(float dt);
 
-    void OnCollisionEnter(Entity* entity) override final;
+    void onCollisionEnter(Entity* entity) override final;
 
 private:
     void followTarget(Entity* target);

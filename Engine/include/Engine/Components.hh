@@ -508,7 +508,7 @@ BaseScript*             getScript(const char* name)
             // If the user need the script before it's initialized, auto initialized it
             if (!script->isInitialized)
             {
-                script->Start();
+                script->start();
                 script->isInitialized = true;
             }
             return script;

@@ -6,15 +6,14 @@
 
 #include <Engine/Core/ScriptFactory.hpp>
 
-class Tower : public BaseScript
+class Tower final : public BaseScript
 {
 public:
-    Tower() {};
-    ~Tower() {};
+    Tower() = default;
+    ~Tower() = default;
 
-public:
-    void Start();
-    void Update(float dt);
+    void start();
+    void update(float dt);
 
 private:
     bool isInRange(Entity* entity);

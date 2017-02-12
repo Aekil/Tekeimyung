@@ -9,7 +9,7 @@
 #include <Game/Scripts/Enemy.hpp>
 #include <Game/Scripts/Projectile.hpp>
 
-void Projectile::Start()
+void Projectile::start()
 {
     _targetId = 0;
     _projectileTransform = entity->getComponent<sTransformComponent>();
@@ -19,7 +19,7 @@ void Projectile::Start()
     _speed = 150.0f;
 }
 
-void Projectile::Update(float dt)
+void Projectile::update(float dt)
 {
     if (!_targetId)
     {
@@ -39,7 +39,7 @@ void Projectile::Update(float dt)
     }
 }
 
-void Projectile::OnCollisionEnter(Entity* entity)
+void Projectile::onCollisionEnter(Entity* entity)
 {
     if (entity->id == _targetId || entity->getTag() == "Enemy")
     {
@@ -52,7 +52,7 @@ void Projectile::OnCollisionEnter(Entity* entity)
             return;
         }
 
-        if (enemy->TakeDamage(_damage))
+        if (enemy->takeDamage(_damage))
         {
             EntityManager* em = EntityFactory::getBindedEntityManager();
             Entity* target = entity;

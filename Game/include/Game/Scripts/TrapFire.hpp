@@ -6,14 +6,14 @@
 
 #include <Game/Scripts/Trap.hpp>
 
-class TrapFire : public Trap
+class TrapFire final : public Trap
 {
 public:
-    TrapFire() {};
-    ~TrapFire() {};
-public:
-    virtual void Start();
-    virtual void Update(float dt);
+    TrapFire() = default;
+    ~TrapFire() = default;
+
+    void start() override final;
+    void update(float dt) override final;
 };
 
 REGISTER_SCRIPT(TrapFire);

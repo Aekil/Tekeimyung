@@ -6,7 +6,7 @@
 
 #include <Game/Scripts/Tile.hpp>
 
-void Tile::Start()
+void Tile::start()
 {
     buildableItems.push_back("TOWER_FIRE");
     buildableItems.push_back("TRAP_NEEDLE");
@@ -15,7 +15,7 @@ void Tile::Start()
     _render = this->getComponent<sRenderComponent>();
 }
 
-void Tile::Update(float dt)
+void Tile::update(float dt)
 {
     if (this->m_buildable && this->onHover && this->mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_1] == Mouse::eButtonState::CLICK_PRESSED)
     {
@@ -44,7 +44,7 @@ void Tile::Update(float dt)
     }
 }
 
-void Tile::OnHoverEnter()
+void Tile::onHoverEnter()
 {
     if (this->m_buildable)
     {
@@ -55,7 +55,7 @@ void Tile::OnHoverEnter()
     this->onHover = true;
 }
 
-void Tile::OnHoverExit()
+void Tile::onHoverExit()
 {
     if (this->preview != nullptr)
     {
@@ -66,7 +66,7 @@ void Tile::OnHoverExit()
     this->onHover = false;
 }
 
-void Tile::SetBuildable(bool buildable)
+void Tile::setBuildable(bool buildable)
 {
     this->m_buildable = buildable;
 }

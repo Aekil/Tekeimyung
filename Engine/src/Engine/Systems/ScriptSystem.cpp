@@ -25,7 +25,7 @@ void    ScriptSystem::initializeScript(Entity* entity, sScriptComponent* scriptC
     for (auto&& scriptName : scriptComponent->scriptNames)
     {
         auto scriptInstance = ScriptFactory::create(scriptName);
-        scriptInstance->SetEntity(entity);
+        scriptInstance->setEntity(entity);
 
         scriptComponent->scriptInstances.push_back(std::move(scriptInstance));
     }
@@ -43,10 +43,10 @@ void    ScriptSystem::update(EntityManager &em, float elapsedTime)
             // because the entity components used in BaseScript::Start may not be added
             if (!script->isInitialized)
             {
-                script->Start();
+                script->start();
                 script->isInitialized = true;
             }
-            script->Update(elapsedTime);
+            script->update(elapsedTime);
         }
     });
 }

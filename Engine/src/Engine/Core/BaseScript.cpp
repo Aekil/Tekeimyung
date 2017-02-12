@@ -10,7 +10,7 @@ BaseScript::BaseScript(): isInitialized(false)
 {
 }
 
-void BaseScript::SetEntity(Entity* entity)
+void BaseScript::setEntity(Entity* entity)
 {
     this->entity = entity;
 }

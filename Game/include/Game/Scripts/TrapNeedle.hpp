@@ -6,14 +6,14 @@
 
 #include <Game/Scripts/Trap.hpp>
 
-class TrapNeedle : public Trap
+class TrapNeedle final : public Trap
 {
 public:
-    TrapNeedle() {};
-    ~TrapNeedle() {};
-public:
-    virtual void Start();
-    virtual void Update(float dt);
+    TrapNeedle() = default;
+    ~TrapNeedle() = default;
+
+    void start() override final;
+    void update(float dt) override final;
 };
 
 REGISTER_SCRIPT(TrapNeedle);

@@ -6,22 +6,21 @@
 
 #include <Engine/Core/ScriptFactory.hpp>
 
-class Tile : public BaseScript
+class Tile final : public BaseScript
 {
 public:
-    Tile() {};
-    ~Tile() {};
+    Tile() = default;
+    ~Tile() = default;
 
     bool onHover = false;
 
-public:
-    virtual void Start();
-    virtual void Update(float dt);
+    void start() override final;
+    void update(float dt) override final;
 
-    virtual void OnHoverEnter();
-    virtual void OnHoverExit();
+    void onHoverEnter() override final;
+    void onHoverExit() override final;
 
-    void SetBuildable(bool);
+    void setBuildable(bool);
 
 private:
     void displayPreview();

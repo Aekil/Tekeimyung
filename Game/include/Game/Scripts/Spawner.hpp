@@ -6,14 +6,14 @@
 
 #include <Engine/Core/ScriptFactory.hpp>
 
-class Spawner : public BaseScript
+class Spawner final : public BaseScript
 {
 public:
-    Spawner() {};
-    ~Spawner() {};
-public:
-    virtual void Start();
-    virtual void Update(float dt);
+    Spawner() = default;
+    ~Spawner() = default;
+
+    void start() override final;
+    void update(float dt) override final;
 };
 
 REGISTER_SCRIPT(Spawner);

@@ -6,7 +6,7 @@
 
 #include <Game/Scripts/Trap.hpp>
 
-void Trap::OnCollisionEnter(Entity* entity)
+void Trap::onCollisionEnter(Entity* entity)
 {
-    
+
 }

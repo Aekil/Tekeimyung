@@ -1,7 +1,7 @@
 #include <Engine/EntityFactory.hpp>
 #include <Game/Scripts/GameManager.hpp>
 
-void GameManager::Start()
+void GameManager::start()
 {
     for (int z = 0; z < this->mapSize; z++) {
         for (int x = 0; x < this->mapSize; x++) {
@@ -21,7 +21,7 @@ void GameManager::Start()
     }
 }
 
-void GameManager::Update(float dt)
+void GameManager::update(float dt)
 {
     EntityManager* em = EntityFactory::getBindedEntityManager();
     const auto& projectiles = em->getEntitiesByTag("Projectile");

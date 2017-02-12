@@ -40,11 +40,11 @@ void MouseSystem::hoverEntity(EntityManager& em)
         {
             if (previousEntity->getComponent<sScriptComponent>() != nullptr)
                 for (auto&& script : previousEntity->getComponent<sScriptComponent>()->scriptInstances)
-                    script->OnHoverExit();
+                    script->onHoverExit();
 
             if (selectedEntity->getComponent<sScriptComponent>() != nullptr)
                 for (auto&& script : selectedEntity->getComponent<sScriptComponent>()->scriptInstances)
-                    script->OnHoverEnter();
+                    script->onHoverEnter();
 
             this->previousEntityId = selectedEntity->id;
         }
@@ -52,7 +52,7 @@ void MouseSystem::hoverEntity(EntityManager& em)
         {
             if (selectedEntity->getComponent<sScriptComponent>() != nullptr)
                 for (auto&& script : selectedEntity->getComponent<sScriptComponent>()->scriptInstances)
-                    script->OnHoverEnter();
+                    script->onHoverEnter();
 
             this->previousEntityId = selectedEntity->id;
         }
@@ -63,7 +63,7 @@ void MouseSystem::hoverEntity(EntityManager& em)
         {
             if (previousEntity->getComponent<sScriptComponent>() != nullptr)
                 for (auto&& script : previousEntity->getComponent<sScriptComponent>()->scriptInstances)
-                    script->OnHoverExit();
+                    script->onHoverExit();
 
             this->previousEntityId = 0;
         }

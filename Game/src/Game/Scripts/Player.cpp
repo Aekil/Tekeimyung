@@ -15,14 +15,14 @@
 #include <Game/Scripts/Tile.hpp>
 #include <Game/Scripts/Player.hpp>
 
-void Player::Death()
+void Player::death()
 {
     this->Destroy();
 
     LOG_DEBUG("I'm dead now");
 }
 
-void Player::Start()
+void Player::start()
 {
     this->health = 200;
     this->maxHealth = 200;
@@ -35,7 +35,7 @@ void Player::Start()
     LOG_DEBUG("BORN");
 }
 
-void Player::Update(float dt)
+void Player::update(float dt)
 {
     if (this->keyboard[Keyboard::eKey::B] ==  Keyboard::eKeyState::KEY_PRESSED)
     {
@@ -43,8 +43,8 @@ void Player::Update(float dt)
     }
 
     this->updateDirection();
-    this->CheckBuildableZone();
-    this->Movement(dt);
+    this->checkBuildableZone();
+    this->movement(dt);
     this->handleShoot();
 }
 
@@ -67,7 +67,7 @@ void Player::updateDirection()
     }
 }
 
-void Player::CheckBuildableZone()
+void Player::checkBuildableZone()
 {
     auto em = EntityFactory::getBindedEntityManager();
 
@@ -89,30 +89,30 @@ void Player::CheckBuildableZone()
                 continue;
 
             render->color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-            tile->SetBuildable(false);
+            tile->setBuildable(false);
 
             if (!_buildEnabled)
                 continue;
 
             if (Collisions::sphereVSAABB(_transform->pos, this->buildableRadius * SIZE_UNIT, box->pos + pos, glm::vec3(box->size.x * SIZE_UNIT, box->size.y * SIZE_UNIT, box->size.z * SIZE_UNIT)))
             {
-                tile->SetBuildable(true);
+                tile->setBuildable(true);
                 render->color = glm::vec4(1.0f, 0.0f, 1.0f, 1.0f);
             }
         }
     }
 }
 
-void Player::Movement(float elapsedTime)
+void Player::movement(float elapsedTime)
 {
-    // Update player rotation
+    // update player rotation
     {
         float rotation = glm::degrees(std::atan2(_direction.x, _direction.z));
         _transform->rotation.y = rotation;
         _transform->needUpdate = true;
     }
 
-    // Update player position
+    // update player position
     {
         if (KB_P(Keyboard::eKey::S))
         {
@@ -162,24 +162,24 @@ void Player::handleShoot()
     }
 }
 
-void Player::OnHoverEnter()
+void Player::onHoverEnter()
 {
     auto renderComponent = this->getComponent<sRenderComponent>();
 
     renderComponent->color = glm::vec4(1.0f, 1.0f, 0.0f, 0.5f);
 }
 
-void Player::OnHoverExit()
+void Player::onHoverExit()
 {
     auto renderComponent = this->getComponent<sRenderComponent>();
 
     renderComponent->color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
-void Player::OnCollisionEnter(Entity* entity)
+void Player::onCollisionEnter(Entity* entity)
 {
     if (entity->getComponent<sNameComponent>()->value == "TRAP_NEEDLE")
     {
-        this->TakeDamage(25);
+        this->takeDamage(25);
     }
 }

@@ -19,19 +19,20 @@ class BaseScript
 public:
     BaseScript();
     virtual ~BaseScript() {};
-    virtual void Start() = 0;
-    virtual void Update(float dt) = 0;
+    virtual void start() = 0;
+    virtual void update(float dt) = 0;
 
-    virtual void OnCollisionEnter(Entity* entity) {};
-    virtual void OnCollisionExit(Entity* entity) {};
+    virtual void onCollisionEnter(Entity* entity) {};
+    virtual void onCollisionExit(Entity* entity) {};
 
-    virtual void OnHoverEnter() {};
-    virtual void OnHoverExit() {};
+    virtual void onHoverEnter() {};
+    virtual void onHoverExit() {};
 
-    void SetEntity(Entity* entity);
+    void setEntity(Entity* entity);
 
 public:
     bool isInitialized;
+
 protected:
     Entity* entity;
     Keyboard& keyboard = GameWindow::getInstance()->getKeyboard();
