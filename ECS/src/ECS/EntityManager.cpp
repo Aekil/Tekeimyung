@@ -33,14 +33,7 @@ void    EntityManager::destroyEntity(Entity* entity)
     });
     entity->_components.clear();
 
-    _entities.erase(entity->id);
-
-    if (entity->getTag().size() != 0)
-    {
-        auto& entityTagGroup = _entitiesTagGroups[entity->getTag()];
-        auto& entityFind = std::find(entityTagGroup.begin(), entityTagGroup.end(), entity);
-        entityTagGroup.erase(entityFind);
-    }
+    removeEntityFromTagGroup(entity, entity->getTag());
     _entities.erase(entity->id);
     delete entity;
 }
@@ -134,8 +127,12 @@ void    EntityManager::removeEntityFromTagGroup(Entity* entity, const std::strin
         return;
 
     auto& tagGroup = _entitiesTagGroups.find(name);
-    if (tagGroup != _entitiesTagGroups.end())
+    if (tagGroup == _entitiesTagGroups.end())
+        return;
+
+    auto& entityFind = std::find(tagGroup->second.cbegin(), tagGroup->second.cend(), entity);
+    if (entityFind != tagGroup->second.cend())
     {
-        tagGroup->second.push_back(entity);
+        tagGroup->second.erase(entityFind);
     }
 }
