@@ -16,6 +16,7 @@
 #include <Engine/Utils/LogDebugWindow.hpp>
 #include <Engine/Utils/OverlayDebugWindow.hpp>
 #include <Engine/Utils/MonitoringDebugWindow.hpp>
+#include <Engine/Utils/Debug.hpp>
 #include <Engine/Utils/Exception.hpp>
 #include <Engine/EditorState.hpp>
 #include <Engine/EntityFactory.hpp>
@@ -137,10 +138,19 @@ void    GameState::renderPreviousStates(const std::vector<uint32_t>& filterIds)
     {
         auto state = _gameStateManager->getStates()[i];
         World& stateWorld = state->getWorld();
+
+        if (filterIds.size() > 0 &&
+            std::find(filterIds.begin(), filterIds.end(), state->getId()) == filterIds.end())
+            continue;
+
+        #if defined(ENGINE_DEBUG)
+            if (state->getId() == EditorState::identifier && gameStateIdx > 1)
+                continue;
+        #endif
+
         System* stateRenderSystem = stateWorld.getSystem<RenderingSystem>();
 
-        if (stateRenderSystem &&
-            (filterIds.size() == 0 || std::find(filterIds.begin(), filterIds.end(), state->getId()) != filterIds.end()))
+        if (stateRenderSystem)
         {
             stateRenderSystem->update(*stateWorld.getEntityManager(), 0);
         }
