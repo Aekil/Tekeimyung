@@ -8,13 +8,11 @@
 
 void Enemy::Start()
 {
-    auto renderComponent = this->getComponent<sRenderComponent>();
-
-    renderComponent->_animator.play("rotation_enemy", true);
+    this->_render = getComponent<sRenderComponent>();
+    this->_render->_animator.play("rotation_enemy", true);
     this->health = 150;
     this->maxHealth = 150;
     this->_transform = getComponent<sTransformComponent>();
-    this->_render = getComponent<sRenderComponent>();
     Health::init(_transform, _render);
 }
 
@@ -30,4 +28,10 @@ void Enemy::Update(float dt)
 void Enemy::Death()
 {
     this->Destroy();
+}
+
+bool Enemy::TakeDamage(int damage)
+{
+    this->_render->_animator.play("hit", false);
+    return (Health::TakeDamage(damage));
 }

@@ -17,7 +17,7 @@ public:
     virtual ~Health();
 
 public:
-    bool TakeDamage(int);
+    virtual bool TakeDamage(int damage);
 
 protected:
     int health;

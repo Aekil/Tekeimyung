@@ -77,10 +77,6 @@ bool    Animator::play(const std::string& name, bool loop)
         return (false);
     }
 
-    if (isPlaying(animation) &&
-        animation->isLoop() == loop) // The animation loop did not change
-        return (true);
-
     // Stop all animations on the same layer
     std::vector<AnimationPtr>* layerAnimations = getPlayedLayer(animation->getLayer());
     if (layerAnimations)

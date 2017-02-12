@@ -18,6 +18,7 @@ public:
     virtual void Start();
     virtual void Update(float dt);
     virtual void Death();
+    bool TakeDamage(int damage) override final;
 
 private:
     Entity* _healthBarEmpty;
