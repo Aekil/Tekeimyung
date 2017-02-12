@@ -12,9 +12,13 @@ START_GAMESTATE(BasicState)
     ~BasicState();
 
     bool                                init() override final;
+    bool                                update(float elapsedTime);
     void                                setupSystems() override final;
 
+
+private:
     void                                initCamera();
+    void                                updateCameraInputs(float elapsedTime);
 
 private:
     Camera                              _camera;

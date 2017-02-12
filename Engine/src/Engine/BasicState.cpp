@@ -33,9 +33,15 @@ bool    BasicState::init()
     return (true);
 }
 
+bool    BasicState::update(float elapsedTime)
+{
+    updateCameraInputs(elapsedTime);
+    return (GameState::update(elapsedTime));
+}
+
 void    BasicState::initCamera()
 {
-    _camera.translate(glm::vec3(350.0f, 450.0f, 300.0f));
+    _camera.translate(glm::vec3(350.0f, 250.0f, 300.0f));
     _camera.setDir(glm::vec3(-30.0f));
 
     // Set camera screen
@@ -48,4 +54,52 @@ void    BasicState::initCamera()
     _camera.setScreen(screen);
     _camera.setProjType(Camera::eProj::ORTHOGRAPHIC_3D);
     _camera.setZoom(0.5f);
+}
+
+void    BasicState::updateCameraInputs(float elapsedTime)
+{
+    auto &gameWindow = GameWindow::getInstance();
+    auto &mouse = gameWindow->getMouse();
+
+    // Update zoom
+    {
+        auto &&scroll = mouse.getScroll();
+        static double lastScrollOffset;
+
+
+        double offset = scroll.yOffset - lastScrollOffset;
+
+        if (offset)
+            _camera.zoom((float)(-offset * elapsedTime));
+        lastScrollOffset = scroll.yOffset;
+    }
+
+    // Update camera position when reaching edge
+    {
+        static float edgeDist = 80.0f;
+        static float moveSpeed = 5.0f;
+        auto& cursor = mouse.getCursor();
+        ImGuiIO& io = ImGui::GetIO();
+
+        if (!io.WantCaptureMouse)
+        {
+            if (cursor.getX() > gameWindow->getBufferWidth() - edgeDist)
+            {
+                _camera.translate({moveSpeed, 0.0f, -moveSpeed});
+            }
+            if (cursor.getX() < edgeDist)
+            {
+                _camera.translate({-moveSpeed, 0.0f, moveSpeed});
+            }
+            if (cursor.getY() > gameWindow->getBufferHeight() - edgeDist)
+            {
+                _camera.translate({moveSpeed, 0.0f, moveSpeed});
+            }
+            if (cursor.getY() < edgeDist)
+            {
+                _camera.translate({-moveSpeed, 0.0f, -moveSpeed});
+            }
+        }
+
+    }
 }
