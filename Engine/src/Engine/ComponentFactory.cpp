@@ -440,6 +440,7 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationsEditor(sRenderCompon
             _lastAnimation->setLayer(animationLayerVec.data());
         }
     }
+    ImGui::Text("\n");
 
     // Delete animation
     if (ImGui::Button("Delete"))
@@ -480,6 +481,10 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationsEditor(sRenderCompon
     // New animation param selection
     ImGui::Text("\n");
     ImGui::Text("Params:");
+    if (_lastAnimation->getParamsAnimations().size() == 0)
+    {
+        ImGui::Text("The animation has no param yet");
+    }
     if (ImGui::BeginPopup("params"))
     {
         static const std::vector<std::string> params = { "color", "position", "scale", "rotation" };

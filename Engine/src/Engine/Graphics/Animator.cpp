@@ -2,6 +2,7 @@
 * @Author   Guillaume Labey
 */
 
+#include <algorithm>
 #include <Engine/Utils/Logger.hpp>
 
 #include <Engine/Graphics/Animator.hpp>
@@ -67,7 +68,7 @@ uint32_t    Animator::getAnimationsNb() const
     return ((uint32_t)_animations.size());
 }
 
-bool    Animator::play(const std::string& name, bool loop)
+bool    Animator::play(const std::string& name, bool loop, bool stopSameLayer)
 {
     AnimationPtr animation = getAnimation(name);
 
@@ -78,24 +79,36 @@ bool    Animator::play(const std::string& name, bool loop)
     }
 
     // Stop all animations on the same layer
-    std::vector<AnimationPtr>* layerAnimations = getPlayedLayer(animation->getLayer());
-    if (layerAnimations)
+    if (stopSameLayer)
     {
-        for (auto& layerAnimation: *layerAnimations)
+        sAnimationLayer* playedLayer = getPlayedLayer(animation->getLayer());
+        if (playedLayer)
         {
-            layerAnimation->reset();
-            layerAnimation->update(0);
-        }
+            for (auto& layerAnimation: playedLayer->animations)
+            {
+                layerAnimation->reset();
+                layerAnimation->update(0);
+            }
 
-        layerAnimations->clear();
+            playedLayer->animations.clear();
+        }
+    }
+    else if (isPlaying(animation))
+    {
+        removePlayedAnimation(animation);
     }
 
     // Set new played animation
-    _playedLayers[animation->getLayer()].push_back(animation);
+    _playedLayers[animation->getLayer()].animations.push_back(animation);
     animation->reset();
     animation->isLoop(loop);
 
     return (true);
+}
+
+bool    Animator::playQueued(const std::string& name, bool loop)
+{
+    return (play(name, loop, false));
 }
 
 bool    Animator::stop(const std::string& name)
@@ -110,20 +123,7 @@ bool    Animator::stop(const std::string& name)
 
     if (isPlaying(animation))
     {
-        std::vector<AnimationPtr>* layerAnimations = getPlayedLayer(animation->getLayer());
-        ASSERT(layerAnimations != nullptr, "A played animation should be on a layer");
-
-        auto& layerAnimation = std::find(layerAnimations->cbegin(), layerAnimations->cend(), animation);
-        ASSERT(layerAnimation != layerAnimations->end(), "The animation should be on the layer list");
-
-        animation->reset();
-        animation->update(0);
-
-        layerAnimations->erase(layerAnimation);
-        if (layerAnimations->size() == 0)
-        {
-            removePlayedLayer(animation->getLayer());
-        }
+        removePlayedAnimation(animation);
     }
     return (true);
 }
@@ -139,10 +139,11 @@ bool    Animator::isPlaying(const std::string& name) const
 
 bool    Animator::isPlaying(AnimationPtr animation) const
 {
-    for (const auto& layerAnimations: _playedLayers)
+    for (const auto& playedLayer: _playedLayers)
     {
-        if (layerAnimations.first == animation->getLayer() &&
-            std::find(layerAnimations.second.cbegin(), layerAnimations.second.cend(), animation) != layerAnimations.second.cend())
+        auto& layerAnimations = playedLayer.second.animations;
+        if (playedLayer.first == animation->getLayer() &&
+            std::find(layerAnimations.cbegin(), layerAnimations.cend(), animation) != layerAnimations.cend())
         {
             return (true);
         }
@@ -158,9 +159,9 @@ bool    Animator::isPlaying() const
 
 void    Animator::reset()
 {
-    for (const auto& layerAnimations: _playedLayers)
+    for (const auto& playedLayer: _playedLayers)
     {
-        for (auto& animation: layerAnimations.second)
+        for (auto& animation: playedLayer.second.animations)
         {
             animation->reset();
             animation->update(0);
@@ -171,28 +172,39 @@ void    Animator::reset()
 
 void    Animator::update(float elapsedTime)
 {
-    auto& layerAnimations = _playedLayers.begin();
-    for (layerAnimations; layerAnimations != _playedLayers.end();)
+    auto& playedLayer = _playedLayers.begin();
+    for (playedLayer; playedLayer != _playedLayers.end();)
     {
-        auto& animation = layerAnimations->second.begin();
-        for (animation; animation != layerAnimations->second.end();)
+        auto& layer = playedLayer->second;
+        AnimationPtr animation = layer.animations[layer.currentAnimation];
+
+        // The animation is finished
+        if (animation->update(elapsedTime))
         {
-            (*animation)->update(elapsedTime);
-            // Remove animation from played animation
-            if (!(*animation)->isPlaying())
-                animation = layerAnimations->second.erase(animation);
+            // Remove the animation from the played layer if there is no loop
+            if (!animation->isLoop())
+            {
+                layer.animations.erase(layer.animations.begin() + layer.currentAnimation);
+                layer.currentAnimation = std::min(layer.currentAnimation, (uint32_t)layer.animations.size() - 1);
+            }
             else
-                ++animation;
+            {
+                layer.currentAnimation++;
+                if (layer.currentAnimation >= layer.animations.size())
+                {
+                    layer.currentAnimation = 0;
+                }
+            }
         }
 
         // Remove layer from played layers
-        if (layerAnimations->second.size() == 0)
+        if (layer.animations.size() == 0)
         {
-            _playedLayers.erase(layerAnimations++);
+            _playedLayers.erase(playedLayer++);
         }
         else
         {
-            ++layerAnimations;
+            ++playedLayer;
         }
     }
 }
@@ -208,7 +220,7 @@ AnimationPtr    Animator::getAnimation(const std::string& name) const
     return (nullptr);
 }
 
-std::vector<AnimationPtr>*  Animator::getPlayedLayer(const std::string& layer)
+Animator::sAnimationLayer*  Animator::getPlayedLayer(const std::string& layer)
 {
     auto& animationLayer = _playedLayers.find(layer);
     if (animationLayer == _playedLayers.end())
@@ -220,4 +232,22 @@ std::vector<AnimationPtr>*  Animator::getPlayedLayer(const std::string& layer)
 void    Animator::removePlayedLayer(const std::string& layer)
 {
     _playedLayers.erase(layer);
+}
+
+void    Animator::removePlayedAnimation(AnimationPtr animation)
+{
+    sAnimationLayer* playedLayer = getPlayedLayer(animation->getLayer());
+    ASSERT(playedLayer != nullptr, "A played animation should be on a layer");
+
+    auto& layerAnimation = std::find(playedLayer->animations.cbegin(), playedLayer->animations.cend(), animation);
+    ASSERT(layerAnimation != playedLayer->animations.end(), "The animation should be on the layer list");
+
+    animation->reset();
+    animation->update(0);
+
+    playedLayer->animations.erase(layerAnimation);
+    if (playedLayer->animations.size() == 0)
+    {
+        removePlayedLayer(animation->getLayer());
+    }
 }

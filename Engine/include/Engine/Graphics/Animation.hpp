@@ -22,7 +22,7 @@ public:
 
     IParamAnimationPtr      getParamAnimation(const std::string& name);
 
-    void                    update(float elapsedTime);
+    bool                    update(float elapsedTime);
     void                    reset();
 
     const std::string&      getName() const;

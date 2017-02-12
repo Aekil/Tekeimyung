@@ -55,7 +55,7 @@ IParamAnimationPtr  Animation::getParamAnimation(const std::string& name)
     return (nullptr);
 }
 
-void    Animation::update(float elapsedTime)
+bool    Animation::update(float elapsedTime)
 {
     _isPlaying = false;
     for (auto paramAnimation: _paramsAnimations)
@@ -66,7 +66,12 @@ void    Animation::update(float elapsedTime)
     }
 
     if (!_isPlaying && _loop)
+    {
         reset();
+        return (true);
+    }
+
+    return (!_isPlaying);
 }
 
 void    Animation::reset()
