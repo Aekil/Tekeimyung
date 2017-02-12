@@ -145,7 +145,7 @@ sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& 
     {
         // Load animation
         JsonValue animationJon(animation);
-        AnimationPtr compAnimation = std::make_shared<Animation>(animationJon.getString("name", "animation"));
+        AnimationPtr compAnimation = std::make_shared<Animation>(animationJon.getString("name", "animation"), animationJon.getString("layer", "DEFAULT"));
 
         // Load animation params
         auto animationParams = animation["params"];
@@ -246,6 +246,7 @@ JsonValue&    ComponentFactory<sRenderComponent>::saveToJson(const std::string& 
         std::vector<JsonValue> paramsAnimation;
 
         animationJson.setString("name", animation->getName());
+        animationJson.setString("layer", animation->getLayer());
         // Save animation params
         for (const auto& paramAnimation: animation->getParamsAnimations())
         {
@@ -395,14 +396,15 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationsEditor(sRenderCompon
     ImGui::BeginChild("Animations", ImVec2(0, 100), true);
     for (auto animation: component->_animator.getAnimations())
     {
-        if (ImGui::Selectable(animation->getName().c_str(), component->_animator.getCurrentAnimation() == animation))
+        if (ImGui::Selectable(animation->getName().c_str(), _lastAnimation == animation))
         {
             component->_animator.play(animation->getName(), animation->isLoop());
+            _lastAnimation = animation;
         }
     }
     ImGui::EndChild();
 
-    if (!component->_animator.getCurrentAnimation())
+    if (!_lastAnimation)
         return (false);
 
     // Animation params style
@@ -410,25 +412,40 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationsEditor(sRenderCompon
     ImGui::PushStyleColor(ImGuiCol_HeaderHovered, ImColor(0.39f, 0.58f, 0.92f, 1.0f));
     ImGui::PushStyleColor(ImGuiCol_HeaderActive, ImColor(0.49f, 0.68f, 0.92f, 1.0f));
 
-    AnimationPtr playedAnimation = component->_animator.getCurrentAnimation();
-
     // Edit animation name
-    ImGui::Text("\n");
-    const std::string& animationName = playedAnimation->getName();
-    std::vector<char> animationNameVec(animationName.cbegin(), animationName.cend());
-    animationNameVec.push_back(0);
-    animationNameVec.resize(64);
-
-    if (ImGui::InputText("Name", animationNameVec.data(), animationNameVec.size()))
     {
-        playedAnimation->setName(animationNameVec.data());
+        ImGui::Text("\n");
+        const std::string& animationName = _lastAnimation->getName();
+        std::vector<char> animationNameVec(animationName.cbegin(), animationName.cend());
+        animationNameVec.push_back(0);
+        animationNameVec.resize(64);
+
+        if (ImGui::InputText("Name", animationNameVec.data(), animationNameVec.size()))
+        {
+            _lastAnimation->setName(animationNameVec.data());
+        }
+    }
+
+    // Edit animation layer
+    {
+        ImGui::Text("\n");
+        const std::string& animationLayer = _lastAnimation->getLayer();
+        std::vector<char> animationLayerVec(animationLayer.cbegin(), animationLayer.cend());
+        animationLayerVec.push_back(0);
+        animationLayerVec.resize(64);
+
+        if (ImGui::InputText("Layer", animationLayerVec.data(), animationLayerVec.size()))
+        {
+            component->_animator.stop(_lastAnimation->getName());
+            _lastAnimation->setLayer(animationLayerVec.data());
+        }
     }
 
     // Delete animation
     if (ImGui::Button("Delete"))
     {
         sTransformComponent* transform = entity->getComponent<sTransformComponent>();
-        component->_animator.removeAnimation(playedAnimation);
+        component->_animator.removeAnimation(_lastAnimation);
         transform->needUpdate = true;
         ImGui::PopStyleColor(3);
         return (false);
@@ -444,21 +461,20 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationsEditor(sRenderCompon
     ImGui::SameLine();
     if (ImGui::Button("Play"))
     {
-        component->_animator.play(playedAnimation->getName(), playedAnimation->isLoop());
+        component->_animator.play(_lastAnimation->getName(), _lastAnimation->isLoop());
     }
 
     ImGui::SameLine();
     if (ImGui::Button("Reset"))
     {
-        playedAnimation->reset();
-        playedAnimation->update(0);
-        playedAnimation->isPlaying(playedAnimation->isLoop() == true);
+        _lastAnimation->reset();
+        _lastAnimation->update(0);
     }
 
-    bool loop = playedAnimation->isLoop();
+    bool loop = _lastAnimation->isLoop();
     if (ImGui::Checkbox("Loop (preview, not saved)", &loop))
     {
-        component->_animator.play(playedAnimation->getName(), loop);
+        component->_animator.play(_lastAnimation->getName(), loop);
     }
 
     // New animation param selection
@@ -473,9 +489,9 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationsEditor(sRenderCompon
             if (ImGui::Button(param.c_str()))
             {
                 if (param == "color")
-                    playedAnimation->addParamAnimation(std::make_shared<ParamAnimation<glm::vec4> >(param, nullptr, IParamAnimation::eInterpolationType::ABSOLUTE));
+                    _lastAnimation->addParamAnimation(std::make_shared<ParamAnimation<glm::vec4> >(param, nullptr, IParamAnimation::eInterpolationType::ABSOLUTE));
                 else
-                    playedAnimation->addParamAnimation(std::make_shared<ParamAnimation<glm::vec3> >(param, nullptr));
+                    _lastAnimation->addParamAnimation(std::make_shared<ParamAnimation<glm::vec3> >(param, nullptr));
                 EntityFactory::initAnimations(entity);
             }
         }
@@ -483,7 +499,7 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationsEditor(sRenderCompon
     }
 
     // Edit animation params
-    updateParamsAnimationsEditor(playedAnimation, entity);
+    updateParamsAnimationsEditor(_lastAnimation, entity);
     ImGui::PopStyleColor(3);
 
     return (false);

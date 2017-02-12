@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <unordered_map>
 #include <Engine/Graphics/Animation.hpp>
 
 using AnimationPtr = std::shared_ptr<Animation>;
@@ -22,24 +23,27 @@ public:
     void                                removeAnimation(AnimationPtr animation);
     void                                removeAnimation(const std::string& name);
 
-    AnimationPtr                        getAnimation(const std::string& name) const;
     const std::vector<AnimationPtr>&    getAnimations() const;
-    std::vector<AnimationPtr>&          getAnimations();
-
     uint32_t                            getAnimationsNb() const;
 
     bool                                play(const std::string& name, bool loop = true);
+    bool                                stop(const std::string& name);
     bool                                isPlaying(const std::string& name) const;
+    bool                                isPlaying(AnimationPtr animation) const;
     bool                                isPlaying() const;
 
-    AnimationPtr                        getCurrentAnimation() const;
-
-    void                                stop();
     void                                reset();
     void                                update(float elapsedTime);
 
 private:
+    AnimationPtr                        getAnimation(const std::string& name) const;
+
+    std::vector<AnimationPtr>*          getPlayedLayer(const std::string& layer);
+    void                                removePlayedLayer(const std::string& layer);
+
+private:
     std::vector<AnimationPtr>           _animations;
 
-    AnimationPtr                        _currentAnimation;
+    // Store played animations by layers names
+    std::unordered_map<std::string, std::vector<AnimationPtr>> _playedLayers;
 };

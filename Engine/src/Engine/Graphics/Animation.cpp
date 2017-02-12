@@ -4,11 +4,12 @@
 
 #include <Engine/Graphics/Animation.hpp>
 
-Animation::Animation(const std::string& name): _name(name), _loop(true), _isPlaying(false) {}
+Animation::Animation(const std::string& name, const std::string& layer): _name(name), _layer(layer), _loop(true), _isPlaying(false) {}
 
 Animation::Animation(const Animation& rhs)
 {
     _name = rhs.getName();
+    _layer = rhs.getLayer();
     _loop = rhs.isLoop();
     _isPlaying = rhs.isPlaying();
 
@@ -85,6 +86,16 @@ const std::string&  Animation::getName() const
 void    Animation::setName(const std::string& name)
 {
     _name = name;
+}
+
+const std::string&  Animation::getLayer() const
+{
+    return (_layer);
+}
+
+void    Animation::setLayer(const std::string& layer)
+{
+    _layer = layer;
 }
 
 bool    Animation::isLoop() const
