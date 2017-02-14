@@ -35,7 +35,7 @@ public:
 
 private:
     bool                                    isTransparent(sRenderComponent *render) const;
-    std::shared_ptr<Model>                  getModel(sRenderComponent *render);
+    Model*                                  getModel(sRenderComponent *render);
 
 private:
     std::unordered_map<uint32_t, sEmitter*>*    _particleEmitters;

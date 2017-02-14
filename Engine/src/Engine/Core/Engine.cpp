@@ -7,6 +7,7 @@
 
 #include <Engine/Utils/Logger.hpp>
 #include <Engine/Utils/Timer.hpp>
+#include <Engine/Graphics/Geometries/GeometryFactory.hpp>
 
 #include <Engine/Core/Engine.hpp>
 
@@ -37,6 +38,8 @@ bool    Engine::init()
         LOG_ERROR("Engine: Failed to initialize sound manager");
         return (false);
     }
+
+    GeometryFactory::initGeometries();
 
     _renderer = Renderer::getInstance();
     if (!_renderer->initialize())

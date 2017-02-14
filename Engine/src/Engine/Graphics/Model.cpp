@@ -19,13 +19,13 @@ Model::Model() : _anim(0), _primitiveType(GL_TRIANGLES) {}
 
 Model::~Model() {}
 
-bool    Model::loadFromFile(const std::string &file)
+bool    Model::loadFromFile(const std::string &fileName)
 {
     _importer.SetPropertyInteger(AI_CONFIG_PP_SBP_REMOVE, aiPrimitiveType_POINT | aiPrimitiveType_LINE);
 
-    LOG_INFO("Loading model \"%s\"", file.c_str());
+    LOG_INFO("Loading model \"%s\"", fileName.c_str());
 
-    const aiScene* scene = _importer.ReadFile(file,
+    const aiScene* scene = _importer.ReadFile(fileName,
         aiProcess_CalcTangentSpace |
         aiProcess_Triangulate |
         aiProcess_SortByPType |
@@ -43,7 +43,7 @@ bool    Model::loadFromFile(const std::string &file)
 
     if (!scene)
     {
-        EXCEPT(InternalErrorException, "Failed to load model \"%s\"\nError: %s", file.c_str(), _importer.GetErrorString());
+        EXCEPT(InternalErrorException, "Failed to load model \"%s\"\nError: %s", fileName.c_str(), _importer.GetErrorString());
         return (false);
     }
 
@@ -59,12 +59,12 @@ bool    Model::loadFromFile(const std::string &file)
 
     for (uint32_t i = 0; i < scene->mNumMeshes; i++)
     {
-        std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
+        std::unique_ptr<Mesh> mesh = std::make_unique<Mesh>();
 
         mesh->loadFromAssimp(_skeleton, scene->mMeshes[i]);
-        mesh->material.loadFromAssimp(scene->mMaterials[scene->mMeshes[i]->mMaterialIndex], file.substr(0, file.find_last_of('/')));
+        mesh->material.loadFromAssimp(scene->mMaterials[scene->mMeshes[i]->mMaterialIndex], fileName.substr(0, fileName.find_last_of('/')));
 
-        _meshs.push_back(mesh);
+        _meshs.push_back(std::move(mesh));
     }
 
 
@@ -109,7 +109,7 @@ uint32_t    Model::getIndicesSize() const
     return (size);
 }
 
-const std::vector<std::shared_ptr<Mesh> > &Model::getMeshs() const
+const std::vector<std::unique_ptr<Mesh> > &Model::getMeshs() const
 {
     return (_meshs);
 }

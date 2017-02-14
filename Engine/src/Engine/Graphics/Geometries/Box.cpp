@@ -6,12 +6,12 @@
 
 Box::Box(Box::sInfo& info): Geometry(Geometry::eType::BOX)
 {
-    float width = SIZE_UNIT;
-    float height = SIZE_UNIT;
-    float length = SIZE_UNIT;
+    float width = info.width;
+    float height = info.height;
+    float length = info.length;
 
     // Box mesh
-    std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
+    std::unique_ptr<Mesh> mesh = std::make_unique<Mesh>();
     mesh->vertexs = {
         //1. pos
         //2. color
@@ -88,7 +88,7 @@ Box::Box(Box::sInfo& info): Geometry(Geometry::eType::BOX)
     mesh->material = material;
 
     // Add plane to meshs list
-    _meshs.push_back(mesh);
+    _meshs.push_back(std::move(mesh));
 
     initVertexData();
     initIndexData();

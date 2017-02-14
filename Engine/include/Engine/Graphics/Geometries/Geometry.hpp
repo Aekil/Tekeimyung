@@ -27,6 +27,7 @@ public:
     REGISTER_ENUM(eType, uint8_t, GEOMETRY_TYPES)
 
 public:
+    Geometry();
     Geometry(eType type);
     ~Geometry();
 
@@ -34,8 +35,12 @@ public:
     Material&           getMaterial() const;
     eType               getType() const;
 
+    static Resource::eType      getResourceType() { return Resource::eType::GEOMETRY; }
+
+    bool                        loadFromFile(const std::string &fileName) override final { return (nullptr); }
+
 private:
-    eType&              _type;
+    eType               _type;
 };
 
 REGISTER_ENUM_MANAGER(Geometry::eType, uint8_t, GEOMETRY_TYPES)

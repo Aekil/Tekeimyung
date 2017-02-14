@@ -9,6 +9,15 @@
 class Resource
 {
 public:
+    enum class eType
+    {
+        MODEL,
+        GEOMETRY,
+        FILE,
+        TEXTURE
+    };
+
+public:
     Resource();
     ~Resource();
 
@@ -17,6 +26,8 @@ public:
 
     const std::string   getPath() const;
     void                setPath(const std::string& path);
+
+    virtual bool        loadFromFile(const std::string& fileName) = 0;
 
 private:
     std::string         _id;

@@ -52,12 +52,12 @@ void    RessourceManager::loadResources(const std::string& directory)
             // Texture resource
             if (std::find(texturesExtensions.cbegin(), texturesExtensions.cend(), extension) != texturesExtensions.cend())
             {
-                loadTexture(basename, file);
+                loadResource<Texture>(basename, file);
             }
             // Model resource
             else if (std::find(modelsExtensions.cbegin(), modelsExtensions.cend(), extension) != modelsExtensions.cend())
             {
-                loadModel(basename, file);
+                loadResource<Model>(basename, file);
             }
             else if (std::find(soundsExtensions.cbegin(), soundsExtensions.cend(), extension) != soundsExtensions.cend())
             {
@@ -203,82 +203,9 @@ std::string RessourceManager::loadFile(const std::string basename, const std::st
     return (_files[basename].content);
 }
 
-
-/*
-** Texture
-*/
-
-Texture&    RessourceManager::getTexture(const std::string& fileName)
-{
-    // Textures are stored with their basename
-    std::string basename = getBasename(fileName);
-
-    // The texture is not loaded
-    if (_textures.find(basename) == _textures.end())
-    {
-        return loadTexture(basename, fileName);
-    }
-
-    auto &&texture = _textures.at(basename);
-    return (texture);
-}
-
-const std::vector<const char*>& RessourceManager::getTexturesNames() const
-{
-    return (_texturesNames);
-}
-
-
-Texture&    RessourceManager::loadTexture(const std::string basename, const std::string& fileName)
-{
-    _textures[basename] = {};
-    _textures[basename].loadFromFile(fileName);
-    _textures[basename].setId(basename);
-    _textures[basename].setPath(fileName);
-    _texturesNames.push_back(_textures.find(basename)->first.c_str());
-
-    return (_textures[basename]);
-}
-
-
-/*
-** Model
-*/
-
-std::shared_ptr<Model>  RessourceManager::getModel(const std::string& fileName)
-{
-    // Models are stored with their basename
-    std::string basename = getBasename(fileName);
-
-    // The model is not loaded
-    if (_models.find(basename) == _models.end())
-    {
-        return loadModel(basename, fileName);
-    }
-
-    auto &&model = _models.at(basename);
-    return (model);
-}
-
-const std::vector<const char*>& RessourceManager::getModelsNames() const
-{
-    return (_modelsNames);
-}
-
 const std::vector<RessourceManager::sSoundStrings>&  RessourceManager::getSoundsStrings() const
 {
     return (_soundsStrings);
-}
-
-std::shared_ptr<Model>  RessourceManager::loadModel(const std::string basename, const std::string& fileName)
-{
-    _models[basename] = std::make_shared<Model>();
-    _models[basename]->loadFromFile(fileName);
-    _models[basename]->setId(basename);
-    _models[basename]->setPath(fileName);
-    _modelsNames.push_back(_models.find(basename)->first.c_str());
-
-    return (_models[basename]);
 }
 
 void    RessourceManager::loadSound(const std::string basename, const std::string& fileName)
@@ -292,3 +219,67 @@ void    RessourceManager::loadSound(const std::string basename, const std::strin
     // Load sound in Sound Manager
     SoundManager::getInstance()->registerSound(fileName);
 }
+
+template<typename T>
+T*  RessourceManager::getResource(const std::string& fileName)
+{
+    // Resources are stored with their basename
+    std::string basename = getBasename(fileName);
+
+    // The resource is not loaded
+    auto& resourceMap = _resources[T::getResourceType()];
+    if (resourceMap.find(basename) == resourceMap.end())
+    {
+        return loadResource<T>(basename, fileName);
+    }
+
+    auto& resource = resourceMap.at(basename);
+    return (static_cast<T*>(resource.get()));
+}
+
+template<typename T>
+T*  RessourceManager::loadResource(const std::string& basename, const std::string& fileName)
+{
+    std::unique_ptr<T> resource = std::make_unique<T>();
+
+    if (!resource->loadFromFile(fileName))
+    {
+        return (nullptr);
+    }
+
+    auto& resourceMap = _resources[T::getResourceType()];
+
+    resource->setId(basename);
+    resource->setPath(fileName);
+    _resourcesNames[T::getResourceType()].push_back(resource->getId().c_str());
+    resourceMap[basename] = std::move(resource);
+    return (static_cast<T*>(resourceMap[basename].get()));
+}
+
+template<typename T>
+T*  RessourceManager::registerResource(const std::string& basename, std::unique_ptr<T> resource)
+{
+    auto& resourceMap = _resources[T::getResourceType()];
+
+    resource->setId(basename);
+    resourceMap[basename] = std::move(resource);
+
+    return (static_cast<T*>(resourceMap[basename].get()));
+}
+
+template<typename T>
+const std::vector<const char*>& RessourceManager::getResourcesNames()
+{
+    return _resourcesNames[T::getResourceType()];
+}
+
+template Model*  RessourceManager::getResource<Model>(const std::string& fileName);
+template Texture*  RessourceManager::getResource<Texture>(const std::string& fileName);
+template Geometry*  RessourceManager::getResource<Geometry>(const std::string& fileName);
+
+template Model*  RessourceManager::registerResource<Model>(const std::string& basename, std::unique_ptr<Model> resource);
+template Texture*  RessourceManager::registerResource<Texture>(const std::string& basename, std::unique_ptr<Texture> resource);
+template Geometry*  RessourceManager::registerResource<Geometry>(const std::string& basename, std::unique_ptr<Geometry> resource);
+
+template const std::vector<const char*>&  RessourceManager::getResourcesNames<Model>();
+template const std::vector<const char*>&  RessourceManager::getResourcesNames<Texture>();

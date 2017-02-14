@@ -23,7 +23,7 @@ Texture::~Texture()
     }
 }
 
-void    Texture::loadFromFile (const std::string &fileName)
+bool    Texture::loadFromFile (const std::string &fileName)
 {
     LOG_INFO("Loading texture \"%s\"", fileName.c_str());
 
@@ -52,6 +52,8 @@ void    Texture::loadFromFile (const std::string &fileName)
 
     // Unuse texture
     glBindTexture(GL_TEXTURE_2D, 0);
+
+    return (true);
 }
 
 void    Texture::setUnit(GLenum unit)

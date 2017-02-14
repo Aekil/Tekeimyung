@@ -75,11 +75,7 @@ void    RenderingSystem::renderCollider(Entity* entity)
     {
         if (!boxCollider->box)
         {
-            Box::sInfo boxInfo;
-            boxInfo.width = boxCollider->size.x;
-            boxInfo.height = boxCollider->size.y;
-            boxInfo.length = boxCollider->size.z;
-            boxCollider->box = std::make_shared<Box>(boxInfo);
+            boxCollider->box = static_cast<Box*>(GeometryFactory::getGeometry(Geometry::eType::BOX));
         }
 
         glm::mat4 boxTransform = transform->getTransform();
@@ -93,8 +89,8 @@ void    RenderingSystem::renderCollider(Entity* entity)
         if (!sphereCollider->sphere)
         {
             Sphere::sInfo sphereInfo;
-            sphereInfo.radius = sphereCollider->radius;
-            sphereCollider->sphere = std::make_shared<Sphere>(sphereInfo);
+            sphereInfo.radius = SIZE_UNIT;
+            sphereCollider->sphere = static_cast<Sphere*>(GeometryFactory::getGeometry(Geometry::eType::SPHERE));
         }
 
         glm::mat4 sphereTransform = transform->getTransform();
@@ -257,7 +253,7 @@ bool    RenderingSystem::isTransparent(sRenderComponent *render) const
     return (render->type == Geometry::eType::PLANE);
 }
 
-std::shared_ptr<Model>  RenderingSystem::getModel(sRenderComponent *render)
+Model*  RenderingSystem::getModel(sRenderComponent *render)
 {
     if (!render)
         return (nullptr);

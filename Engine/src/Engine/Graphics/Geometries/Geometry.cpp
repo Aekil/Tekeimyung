@@ -6,6 +6,8 @@
 
 #include <Engine/Graphics/Geometries/Geometry.hpp>
 
+Geometry::Geometry() {}
+
 Geometry::Geometry(Geometry::eType type): _type(type) {}
 
 Geometry::~Geometry() {}
@@ -24,7 +26,7 @@ Material&   Geometry::getMaterial() const
     return (_meshs[0]->material);
 }
 
-Geometry::eType   Geometry::getType() const
+Geometry::eType Geometry::getType() const
 {
     return (_type);
 }

@@ -14,5 +14,6 @@ public:
     GeometryFactory();
     ~GeometryFactory();
 
-    static std::shared_ptr<Geometry>   create(Geometry::eType& type, const std::string& texture);
+    static void                         initGeometries();
+    static Geometry*                    getGeometry(Geometry::eType type);
 };

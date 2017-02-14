@@ -22,7 +22,7 @@ public:
 public:
     Texture();
     ~Texture();
-    void                                    loadFromFile (const std::string& fileName);
+    bool                                    loadFromFile(const std::string& fileName) override final;
 
     void                                    setUnit(GLenum unit);
     void                                    bind() const;
@@ -31,6 +31,8 @@ public:
     unsigned int                            getHeight() const;
     unsigned char*                          getData() const;
     int                                     getComponentsNumber() const;
+
+    static Resource::eType      getResourceType() { return Resource::eType::TEXTURE; }
 
 private:
     GLuint                                  _texture;

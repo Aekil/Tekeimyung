@@ -328,21 +328,21 @@ bool    ComponentFactory<sRenderComponent>::updateEditor(const std::string& enti
         // Plan texture
         {
             static RessourceManager* resourceManager = RessourceManager::getInstance();
-            static std::vector<const char*>& texturesString = const_cast<std::vector<const char*>&>(resourceManager->getTexturesNames());
+            static std::vector<const char*>& texturesString = const_cast<std::vector<const char*>&>(resourceManager->getResourcesNames<Texture>());
             const char** texturesList = texturesString.data();
             int selectedTexture = -1;
             Texture* texture;
 
             if (component->texture.size() > 0)
             {
-                texture = &resourceManager->getTexture(component->texture);
+                texture = resourceManager->getResource<Texture>(component->texture);
                 selectedTexture = static_cast<int>(std::find(texturesString.cbegin(), texturesString.cend(), texture->getId()) - texturesString.begin());
             }
 
-            if (ImGui::ListBox("texture", &selectedTexture, texturesList, (int)resourceManager->getTexturesNames().size(), 4))
+            if (ImGui::ListBox("texture", &selectedTexture, texturesList, (int)resourceManager->getResourcesNames<Texture>().size(), 4))
             {
                 textureChanged = true;
-                texture = &resourceManager->getTexture(texturesString[selectedTexture]);
+                texture = resourceManager->getResource<Texture>(texturesString[selectedTexture]);
                 component->texture = texture->getPath();
             }
         }
@@ -352,15 +352,15 @@ bool    ComponentFactory<sRenderComponent>::updateEditor(const std::string& enti
     else if (component->type == Geometry::eType::MESH)
     {
         static RessourceManager* resourceManager = RessourceManager::getInstance();
-        static std::vector<const char*>& modelsString = const_cast<std::vector<const char*>&>(resourceManager->getModelsNames());
-        auto model = resourceManager->getModel(component->modelFile);
+        static std::vector<const char*>& modelsString = const_cast<std::vector<const char*>&>(resourceManager->getResourcesNames<Model>());
+        auto model = resourceManager->getResource<Model>(component->modelFile);
         int selectedModel = static_cast<int>(std::find(modelsString.cbegin(), modelsString.cend(), model->getId()) - modelsString.begin());
         const char** modelsList = modelsString.data();
 
-        if (ImGui::ListBox("model", &selectedModel, modelsList, (int)resourceManager->getModelsNames().size(), 4))
+        if (ImGui::ListBox("model", &selectedModel, modelsList, (int)resourceManager->getResourcesNames<Model>().size(), 4))
         {
             modelChanged = true;
-            model = resourceManager->getModel(modelsString[selectedModel]);
+            model = resourceManager->getResource<Model>(modelsString[selectedModel]);
             component->modelFile = model->getPath();
         }
     }

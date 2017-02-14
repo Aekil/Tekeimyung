@@ -20,6 +20,7 @@
 
 #include <Engine/Window/Keyboard.hpp>
 #include <Engine/Graphics/Model.hpp>
+#include <Engine/Graphics/Geometries/Plane.hpp>
 #include <Engine/Graphics/Geometries/Geometry.hpp>
 #include <Engine/Graphics/Geometries/GeometryFactory.hpp>
 #include <Engine/Graphics/Geometries/Box.hpp>
@@ -61,12 +62,18 @@ virtual void update(sComponent* component)
 void initModel()
 {
     if (type == Geometry::eType::MESH)
-        _model = RessourceManager::getInstance()->getModel(modelFile);
+        _model = RessourceManager::getInstance()->getResource<Model>(modelFile);
     else
-        _model = GeometryFactory::create(type, texture);
+    {
+        _model = GeometryFactory::getGeometry(type);
+        if (type == Geometry::eType::PLANE)
+        {
+            //static_cast<Plane*>(_model)->setTexture(texture);
+        }
+    }
 }
 
-std::shared_ptr<Model> getModel()
+Model* getModel()
 {
     if (!_model)
         initModel();
@@ -77,7 +84,7 @@ std::string modelFile;
 glm::vec4 color;
 bool animated;
 
-std::shared_ptr<Model> _model;
+Model* _model = nullptr;
 
 Animator                _animator;
 
@@ -158,7 +165,7 @@ glm::vec3 size;
 bool isTrigger;
 
 // Box model
-std::shared_ptr<Box> box;
+Box* box;
 bool display = true;
 END_COMPONENT(sBoxColliderComponent)
 
@@ -189,7 +196,7 @@ float radius;
 // isTrigger
 bool isTrigger;
 
-std::shared_ptr<Sphere> sphere;
+Sphere* sphere;
 bool display = true;
 END_COMPONENT(sSphereColliderComponent)
 

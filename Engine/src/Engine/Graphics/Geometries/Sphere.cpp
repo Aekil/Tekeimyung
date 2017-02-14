@@ -6,12 +6,12 @@
 
 Sphere::Sphere(Sphere::sInfo& info): Geometry(Geometry::eType::SPHERE)
 {
-    float radius = SIZE_UNIT;
-    uint32_t rings = static_cast<uint32_t>(SIZE_UNIT * 3.0f);
-    uint32_t sectors = static_cast<uint32_t>(SIZE_UNIT * 3.0f);
+    float radius = info.radius;
+    uint32_t rings = static_cast<uint32_t>(info.radius * 3.0f);
+    uint32_t sectors = static_cast<uint32_t>(info.radius * 3.0f);
 
     // Sphere mesh
-    std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
+    std::unique_ptr<Mesh> mesh = std::make_unique<Mesh>();
 
     float const R = 1.0f / (float)(rings - 1);
     float const S = 1.0f / (float)(sectors - 1);
@@ -56,7 +56,7 @@ Sphere::Sphere(Sphere::sInfo& info): Geometry(Geometry::eType::SPHERE)
     mesh->material = material;
 
     // Add plane to meshs list
-    _meshs.push_back(mesh);
+    _meshs.push_back(std::move(mesh));
 
     initVertexData();
     initIndexData();

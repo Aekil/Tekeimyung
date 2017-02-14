@@ -33,7 +33,7 @@ bool    Material::loadFromAssimp(aiMaterial* material, const std::string& path)
         material->GetTexture(aiTextureType_AMBIENT, 0, &file) == AI_SUCCESS)
     {
         _constants.texturesTypes |= Texture::eType::AMBIENT;
-        _textures[Texture::eType::AMBIENT] = &RessourceManager::getInstance()->getTexture(path + "/" + file.C_Str());
+        _textures[Texture::eType::AMBIENT] = RessourceManager::getInstance()->getResource<Texture>(path + "/" + file.C_Str());
         _textures[Texture::eType::AMBIENT]->setUnit(GL_TEXTURE0);
     }
 
@@ -42,7 +42,7 @@ bool    Material::loadFromAssimp(aiMaterial* material, const std::string& path)
         material->GetTexture(aiTextureType_DIFFUSE, 0, &file) == AI_SUCCESS)
     {
         _constants.texturesTypes |= Texture::eType::DIFFUSE;
-        _textures[Texture::eType::DIFFUSE] = &RessourceManager::getInstance()->getTexture(path + "/" + file.C_Str());
+        _textures[Texture::eType::DIFFUSE] = RessourceManager::getInstance()->getResource<Texture>(path + "/" + file.C_Str());
         _textures[Texture::eType::DIFFUSE]->setUnit(GL_TEXTURE1);
     }
     return (true);

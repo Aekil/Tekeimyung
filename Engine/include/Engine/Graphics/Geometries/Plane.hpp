@@ -20,4 +20,6 @@ public:
 public:
     Plane(Plane::sInfo& info);
     ~Plane();
+
+    void setTexture(const std::string& texture);
 };

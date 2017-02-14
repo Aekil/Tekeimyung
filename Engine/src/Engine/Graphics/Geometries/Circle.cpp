@@ -6,12 +6,12 @@
 
 Circle::Circle(Circle::sInfo& info): Geometry(Geometry::eType::CIRCLE)
 {
-    float outerRadius = SIZE_UNIT;
-    float innerRadius = SIZE_UNIT / 2.0f;
+    float outerRadius = info.outerRadius;
+    float innerRadius = info.innerRadius / 2.0f;
     uint32_t numSegments = 360;
 
     // Circle mesh
-    std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
+    std::unique_ptr<Mesh> mesh = std::make_unique<Mesh>();
 
 
     for (uint32_t i = 0; i <= numSegments; ++i)
@@ -45,7 +45,7 @@ Circle::Circle(Circle::sInfo& info): Geometry(Geometry::eType::CIRCLE)
     mesh->material = material;
 
     // Add plane to meshs list
-    _meshs.push_back(mesh);
+    _meshs.push_back(std::move(mesh));
 
     initVertexData();
     initIndexData();
