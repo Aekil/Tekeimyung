@@ -16,6 +16,8 @@
             "g" : 1,
             "r" : 1
          },
+         "ignore_raycast" : false,
+         "materials" : [ "button_confirm_no.mat" ],
          "model" : "resources/models/default.DAE",
          "texture" : "resources/sprites/buttons/button_no.png",
          "type" : "PLANE"
@@ -46,5 +48,6 @@
          "vertical_alignment" : "MIDDLE"
       }
    },
-   "name" : "BUTTON_CONFIRM_NO"
+   "name" : "BUTTON_CONFIRM_NO",
+   "tag" : ""
 }

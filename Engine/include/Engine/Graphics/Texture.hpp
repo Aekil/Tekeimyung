@@ -24,8 +24,7 @@ public:
     ~Texture();
     bool                                    loadFromFile(const std::string& fileName) override final;
 
-    void                                    setUnit(GLenum unit);
-    void                                    bind() const;
+    void                                    bind(GLenum unit) const;
 
     unsigned int                            getWidth() const;
     unsigned int                            getHeight() const;

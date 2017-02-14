@@ -14,8 +14,9 @@
                   "g" : 0.49019607901573181,
                   "r" : 0.26274511218070984
                },
+               "ignore_raycast" : false,
+               "materials" : [ "geometry_default.mat" ],
                "model" : "resources/models/default.DAE",
-               "texture" : "",
                "type" : "PLANE"
             },
             "sTransformComponent" : {
@@ -44,7 +45,8 @@
                "vertical_alignment" : "MIDDLE"
             }
          },
-         "name" : "BACKGROUND"
+         "name" : "BACKGROUND",
+         "tag" : ""
       },
       {
          "components" : {
@@ -60,8 +62,9 @@
                   "g" : 1,
                   "r" : 1
                },
+               "ignore_raycast" : false,
+               "materials" : [ "how_to_play_menu.mat" ],
                "model" : "resources/models/default.DAE",
-               "texture" : "resources/sprites/buttons/howtoplay.png",
                "type" : "PLANE"
             },
             "sTransformComponent" : {
@@ -90,7 +93,8 @@
                "vertical_alignment" : "MIDDLE"
             }
          },
-         "name" : "HOW_TO_PLAY_MENU"
+         "name" : "HOW_TO_PLAY_MENU",
+         "tag" : ""
       },
       {
          "components" : {
@@ -110,8 +114,9 @@
                   "g" : 1,
                   "r" : 1
                },
+               "ignore_raycast" : false,
+               "materials" : [ "button_return.mat" ],
                "model" : "resources/models/default.DAE",
-               "texture" : "resources/sprites/buttons/button_return.png",
                "type" : "PLANE"
             },
             "sTransformComponent" : {
@@ -140,7 +145,8 @@
                "vertical_alignment" : "MIDDLE"
             }
          },
-         "name" : "BUTTON_RETURN"
+         "name" : "BUTTON_RETURN",
+         "tag" : ""
       }
    ],
    "name" : "HowToPlay"

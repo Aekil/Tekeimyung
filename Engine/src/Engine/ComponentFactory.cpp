@@ -91,30 +91,6 @@ const std::unordered_map<uint32_t, std::string>& IComponentFactory::getComponent
     return (_componentsTypesHashs);
 }
 
-bool    IComponentFactory::updateComboString(const char* name, std::vector<const char*>& stringList, std::string& stringValue)
-{
-    // Get index of string in the vector
-    int stringIdx = -1;
-    uint32_t i = 0;
-    for (const auto& str: stringList)
-    {
-        if (str == stringValue)
-        {
-            stringIdx = i;
-            break;
-        }
-        ++i;
-    }
-
-    // Display combo and set new value
-    if (ImGui::Combo(name, &stringIdx, stringList.data(), (uint32_t)stringList.size()))
-    {
-        stringValue = stringList[stringIdx];
-        return (true);
-    }
-    return (false);
-}
-
 /*
 ** sRenderComponent
 */
@@ -127,54 +103,81 @@ sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& 
     component->animated = json.getBool("animated", false);
     component->modelFile = json.getString("model", "resources/models/default.DAE");
     component->color = json.getColor4f("color", { 1.0f, 1.0f, 1.0f, 1.0f });
-    component->texture = json.getString("texture", "");
     component->ignoreRaycast = json.getBool("ignore_raycast", false);
 
     std::string geometryName = json.getString("type", "MESH");
     component->type = EnumManager<Geometry::eType>::stringToEnum(geometryName);
 
     // Load animations
-    auto animations = json.get()["animations"];
-    if (animations.size() > 0 && animations.type() != Json::ValueType::arrayValue)
     {
-        LOG_ERROR("%s::sRenderComponent loadFromJson error: animations is not an array", entityType.c_str());
-        return (component);
+        auto animations = json.get()["animations"];
+        if (animations.size() > 0 && animations.type() != Json::ValueType::arrayValue)
+        {
+            LOG_ERROR("%s::sRenderComponent loadFromJson error: animations is not an array", entityType.c_str());
+            return (component);
+        }
+
+        for (const auto& animation: animations)
+        {
+            // Load animation
+            JsonValue animationJon(animation);
+            AnimationPtr compAnimation = std::make_shared<Animation>(animationJon.getString("name", "animation"), animationJon.getString("layer", "DEFAULT"));
+
+            // Load animation params
+            auto animationParams = animation["params"];
+            if (animationParams.type() != Json::ValueType::arrayValue)
+            {
+                LOG_ERROR("%s::sRenderComponent loadFromJson error: animation params is not an array for animation \"%s\"", entityType.c_str(), compAnimation->getName().c_str());
+                component->_animator.addAnimation(compAnimation);
+                break;
+            }
+
+            for (const auto& animationParam: animationParams)
+            {
+                JsonValue animationParamJson(animationParam);
+                std::string name = animationParamJson.getString("name", "param");
+                if (name == "color")
+                {
+                    std::shared_ptr<ParamAnimation<glm::vec4> > colorParam = std::make_shared<ParamAnimation<glm::vec4> >(name, nullptr, IParamAnimation::eInterpolationType::ABSOLUTE);
+                    loadColorParamAnimation(colorParam, animationParamJson);
+                    compAnimation->addParamAnimation(colorParam);
+                }
+                else
+                {
+                    std::shared_ptr<ParamAnimation<glm::vec3> > translateParam = std::make_shared<ParamAnimation<glm::vec3> >(name, nullptr);
+                    loadTranslateParamAnimation(translateParam, animationParamJson);
+                    compAnimation->addParamAnimation(translateParam);
+                }
+            }
+
+            component->_animator.addAnimation(compAnimation);
+        }
     }
 
-    for (const auto& animation: animations)
+    // Load materials
     {
-        // Load animation
-        JsonValue animationJon(animation);
-        AnimationPtr compAnimation = std::make_shared<Animation>(animationJon.getString("name", "animation"), animationJon.getString("layer", "DEFAULT"));
+        // Init model instance
+        ModelInstance* modelInstance = component->getModelInstance();
 
-        // Load animation params
-        auto animationParams = animation["params"];
-        if (animationParams.type() != Json::ValueType::arrayValue)
+        std::vector<std::string> materials = json.getStringVec("materials", {});
+
+        uint32_t meshsNb = (uint32_t)modelInstance->getModel()->getMeshs().size();
+        uint32_t i = 0;
+        for (const std::string& materialName: materials)
         {
-            LOG_ERROR("%s::sRenderComponent loadFromJson error: animation params is not an array for animation \"%s\"", entityType.c_str(), compAnimation->getName().c_str());
-            component->_animator.addAnimation(compAnimation);
-            break;
-        }
-
-        for (const auto& animationParam: animationParams)
-        {
-            JsonValue animationParamJson(animationParam);
-            std::string name = animationParamJson.getString("name", "param");
-            if (name == "color")
+            if (i >= meshsNb)
             {
-                std::shared_ptr<ParamAnimation<glm::vec4> > colorParam = std::make_shared<ParamAnimation<glm::vec4> >(name, nullptr, IParamAnimation::eInterpolationType::ABSOLUTE);
-                loadColorParamAnimation(colorParam, animationParamJson);
-                compAnimation->addParamAnimation(colorParam);
+                break;
             }
-            else
-            {
-                std::shared_ptr<ParamAnimation<glm::vec3> > translateParam = std::make_shared<ParamAnimation<glm::vec3> >(name, nullptr);
-                loadTranslateParamAnimation(translateParam, animationParamJson);
-                compAnimation->addParamAnimation(translateParam);
-            }
-        }
 
-        component->_animator.addAnimation(compAnimation);
+            Material* material = RessourceManager::getInstance()->getResource<Material>(materialName);
+            if (!material)
+            {
+                EXCEPT(InternalErrorException, "%s::sRenderComponent loadFromJson error: can't find material ", entityType.c_str(), materialName.c_str());
+            }
+
+            modelInstance->getMaterials()[i++] = material;
+        }
     }
 
     return (component);
@@ -228,7 +231,6 @@ void    ComponentFactory<sRenderComponent>::loadColorParamAnimation(std::shared_
 JsonValue&    ComponentFactory<sRenderComponent>::saveToJson(const std::string& entityType, const sComponent* savedComponent, JsonValue* toJson)
 {
     JsonValue& json = toJson ? *toJson : _componentsJson[entityType];
-    std::vector<JsonValue> animations;
     const sRenderComponent* component = static_cast<const sRenderComponent*>(savedComponent ? savedComponent : _components[entityType]);
 
 
@@ -236,35 +238,50 @@ JsonValue&    ComponentFactory<sRenderComponent>::saveToJson(const std::string& 
     json.setString("model", component->modelFile);
     json.setColor4f("color", component->color);
     json.setString("type", EnumManager<Geometry::eType>::enumToString(component->type));
-    json.setString("texture", component->texture);
     json.setBool("ignore_raycast", component->ignoreRaycast);
 
-    // Save animations
-    for (const auto& animation: component->_animator.getAnimations())
     {
-        JsonValue animationJson;
-        std::vector<JsonValue> paramsAnimation;
-
-        animationJson.setString("name", animation->getName());
-        animationJson.setString("layer", animation->getLayer());
-        // Save animation params
-        for (const auto& paramAnimation: animation->getParamsAnimations())
+        // Save animations
+        std::vector<JsonValue> animations;
+        for (const auto& animation: component->_animator.getAnimations())
         {
-            JsonValue paramAnimationJson;
-            if (paramAnimation->getName() == "color")
-                saveColorParamAnimation(paramAnimation, paramAnimationJson);
-            else
-                saveTranslateParamAnimation(paramAnimation, paramAnimationJson);
+            JsonValue animationJson;
+            std::vector<JsonValue> paramsAnimation;
 
-            paramAnimationJson.setString("name", paramAnimation->getName());
-            paramsAnimation.push_back(paramAnimationJson);
+            animationJson.setString("name", animation->getName());
+            animationJson.setString("layer", animation->getLayer());
+            // Save animation params
+            for (const auto& paramAnimation: animation->getParamsAnimations())
+            {
+                JsonValue paramAnimationJson;
+                if (paramAnimation->getName() == "color")
+                    saveColorParamAnimation(paramAnimation, paramAnimationJson);
+                else
+                    saveTranslateParamAnimation(paramAnimation, paramAnimationJson);
+
+                paramAnimationJson.setString("name", paramAnimation->getName());
+                paramsAnimation.push_back(paramAnimationJson);
+            }
+
+            animationJson.setValueVec("params", paramsAnimation);
+            animations.push_back(animationJson);
         }
 
-        animationJson.setValueVec("params", paramsAnimation);
-        animations.push_back(animationJson);
+        json.setValueVec("animations", animations);
     }
 
-    json.setValueVec("animations", animations);
+    // Load materials
+    {
+        std::vector<std::string> materialsNames;
+
+        auto& materials = const_cast<sRenderComponent*>(component)->getModelInstance()->getMaterials();
+        for (Material* material: materials)
+        {
+            materialsNames.push_back(material->getId());
+        }
+
+        json.setStringVec("materials", materialsNames);
+    }
 
     return (json);
 }
@@ -315,67 +332,60 @@ bool    ComponentFactory<sRenderComponent>::updateEditor(const std::string& enti
     *savedComponent = component;
     bool changed = false;
     bool typeChanged = false;
-    bool textureChanged = false;
     bool modelChanged = false;
 
     changed |= ImGui::ColorEdit4("color", glm::value_ptr(component->color));
     changed |= ImGui::Checkbox("Ignore mouse raycast", &component->ignoreRaycast);
-    typeChanged |= updateComboEnum<Geometry::eType>("Model type", component->type);
+    typeChanged |= Helper::updateComboEnum<Geometry::eType>("Model type", component->type);
 
-    // Plan
-    if (component->type == Geometry::eType::PLANE)
-    {
-        // Plan texture
-        {
-            static RessourceManager* resourceManager = RessourceManager::getInstance();
-            static std::vector<const char*>& texturesString = const_cast<std::vector<const char*>&>(resourceManager->getResourcesNames<Texture>());
-            const char** texturesList = texturesString.data();
-            int selectedTexture = -1;
-            Texture* texture;
-
-            if (component->texture.size() > 0)
-            {
-                texture = resourceManager->getResource<Texture>(component->texture);
-                selectedTexture = static_cast<int>(std::find(texturesString.cbegin(), texturesString.cend(), texture->getId()) - texturesString.begin());
-            }
-
-            if (ImGui::ListBox("texture", &selectedTexture, texturesList, (int)resourceManager->getResourcesNames<Texture>().size(), 4))
-            {
-                textureChanged = true;
-                texture = resourceManager->getResource<Texture>(texturesString[selectedTexture]);
-                component->texture = texture->getPath();
-            }
-        }
-
-    }
-    // MESH
-    else if (component->type == Geometry::eType::MESH)
+    if (component->type == Geometry::eType::MESH)
     {
         static RessourceManager* resourceManager = RessourceManager::getInstance();
         static std::vector<const char*>& modelsString = const_cast<std::vector<const char*>&>(resourceManager->getResourcesNames<Model>());
-        auto model = resourceManager->getResource<Model>(component->modelFile);
+        auto model = resourceManager->getOrLoadResource<Model>(component->modelFile);
         int selectedModel = static_cast<int>(std::find(modelsString.cbegin(), modelsString.cend(), model->getId()) - modelsString.begin());
         const char** modelsList = modelsString.data();
 
         if (ImGui::ListBox("model", &selectedModel, modelsList, (int)resourceManager->getResourcesNames<Model>().size(), 4))
         {
             modelChanged = true;
-            model = resourceManager->getResource<Model>(modelsString[selectedModel]);
+            model = resourceManager->getOrLoadResource<Model>(modelsString[selectedModel]);
             component->modelFile = model->getPath();
         }
     }
 
-    changed |= typeChanged || textureChanged || modelChanged;
+    changed |= typeChanged || modelChanged;
 
-    if (typeChanged || textureChanged || modelChanged)
+    if (typeChanged || modelChanged)
     {
         // Remove the model to auto reload the new model
-        component->_model = nullptr;
+        component->_modelInstance = nullptr;
     }
 
+    updateMaterialsEditor(component, entity);
     updateAnimationsEditor(component, entity);
 
     return (changed);
+}
+
+bool    ComponentFactory<sRenderComponent>::updateMaterialsEditor(sRenderComponent* component, Entity* entity)
+{
+    ImGui::Text("\n");
+    ImGui::Text("Materials");
+
+    auto& materials = component->getModelInstance()->getMaterials();
+    uint32_t materialsNb = (uint32_t)materials.size();
+    for (uint32_t i = 0; i < materialsNb; ++i)
+    {
+        ImGui::PushID(i);
+        std::string materialName = materials[i]->getId();
+        if (Helper::updateComboString("mat", RessourceManager::getInstance()->getResourcesNames<Material>(), materialName))
+        {
+            materials[i] = RessourceManager::getInstance()->getResource<Material>(materialName);
+        }
+        ImGui::PopID();
+    }
+    return (false);
 }
 
 bool    ComponentFactory<sRenderComponent>::updateAnimationsEditor(sRenderComponent* component, Entity* entity)
@@ -595,7 +605,7 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationParamTranslate(Entity
                 sortKeyFrames = true;
 
             // Easing type Combo box
-            updateComboEnum<IParamAnimation::eEasing>("Easing", keyFrame.easing);
+            Helper::updateComboEnum<IParamAnimation::eEasing>("Easing", keyFrame.easing);
         }
 
         ImGui::PopID();
@@ -649,7 +659,7 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationParamColor(std::share
                 sortKeyFrames = true;
 
             // Easing type listBox
-            updateComboEnum<IParamAnimation::eEasing>("Easing", keyFrame.easing);
+            Helper::updateComboEnum<IParamAnimation::eEasing>("Easing", keyFrame.easing);
         }
 
         ImGui::PopID();
@@ -728,10 +738,10 @@ bool    ComponentFactory<sBoxColliderComponent>::updateEditor(const std::string&
         sRenderComponent* render = entity->getComponent<sRenderComponent>();
         if (render)
         {
-            component->pos = glm::vec3(render->_model->getMin().x - 0.5f, render->_model->getMin().y - 0.5f, render->_model->getMin().z - 0.5f);
-            component->size.x = (render->_model->getSize().x + 1.0f) / SIZE_UNIT;
-            component->size.y = (render->_model->getSize().y + 1.0f) / SIZE_UNIT;
-            component->size.z = (render->_model->getSize().z + 1.0f) / SIZE_UNIT;
+            component->pos = glm::vec3(render->getModel()->getMin().x - 0.5f, render->getModel()->getMin().y - 0.5f, render->getModel()->getMin().z - 0.5f);
+            component->size.x = (render->getModel()->getSize().x + 1.0f) / SIZE_UNIT;
+            component->size.y = (render->getModel()->getSize().y + 1.0f) / SIZE_UNIT;
+            component->size.z = (render->getModel()->getSize().z + 1.0f) / SIZE_UNIT;
         }
     }
     if (ImGui::Button(component->display ? "Hide" : "Display"))
@@ -783,15 +793,15 @@ bool    ComponentFactory<sSphereColliderComponent>::updateEditor(const std::stri
         sRenderComponent* render = entity->getComponent<sRenderComponent>();
         if (render)
         {
-            float modelMaxSize = render->_model->getSize().x;
-            if (render->_model->getSize().y > modelMaxSize)
-                modelMaxSize = render->_model->getSize().y;
-            if (render->_model->getSize().z > modelMaxSize)
-                modelMaxSize = render->_model->getSize().z;
+            float modelMaxSize = render->getModel()->getSize().x;
+            if (render->getModel()->getSize().y > modelMaxSize)
+                modelMaxSize = render->getModel()->getSize().y;
+            if (render->getModel()->getSize().z > modelMaxSize)
+                modelMaxSize = render->getModel()->getSize().z;
             component->radius = (modelMaxSize / 2.0f + 1.0f) / SIZE_UNIT;
-            component->pos = glm::vec3(render->_model->getMin().x + (render->_model->getSize().x / 2.0f),
-                                        render->_model->getMin().y + (render->_model->getSize().y / 2.0f),
-                                        render->_model->getMin().z + (render->_model->getSize().z / 2.0f));
+            component->pos = glm::vec3(render->getModel()->getMin().x + (render->getModel()->getSize().x / 2.0f),
+                                        render->getModel()->getMin().y + (render->getModel()->getSize().y / 2.0f),
+                                        render->getModel()->getMin().z + (render->getModel()->getSize().z / 2.0f));
         }
 
     }
@@ -1130,12 +1140,12 @@ bool    ComponentFactory<sButtonComponent>::updateEditor(const std::string& enti
     *savedComponent = component;
     bool changed = false;
 
-    changed |= updateComboEnum<sButtonComponent::eAction>("Action", component->action);
+    changed |= Helper::updateComboEnum<sButtonComponent::eAction>("Action", component->action);
 
     if (component->action == sButtonComponent::eAction::ADD_LEVEL ||
         component->action == sButtonComponent::eAction::REPLACE_CURRENT_LEVEL)
     {
-        updateComboString("Level", LevelLoader::getInstance()->getLevels(), component->actionLevel);
+        Helper::updateComboString("Level", LevelLoader::getInstance()->getLevels(), component->actionLevel);
     }
 
     return (changed);
@@ -1264,8 +1274,8 @@ bool    ComponentFactory<sUiComponent>::updateEditor(const std::string& entityTy
     *savedComponent = component;
     bool changed = false;
 
-    changed |= updateComboEnum<eHorizontalAlignment>("Horizontal alignment", component->horizontalAlignment);
-    changed |= updateComboEnum<eVerticalAlignment>("Vertical alignment", component->verticalAlignment);
+    changed |= Helper::updateComboEnum<eHorizontalAlignment>("Horizontal alignment", component->horizontalAlignment);
+    changed |= Helper::updateComboEnum<eVerticalAlignment>("Vertical alignment", component->verticalAlignment);
     changed |= ImGui::InputFloat("horizontal offset", &component->offset.x, 1.0f, ImGuiInputTextFlags_AllowTabInput);
     changed |= ImGui::InputFloat("vertical offset", &component->offset.y, 1.0f, ImGuiInputTextFlags_AllowTabInput);
 

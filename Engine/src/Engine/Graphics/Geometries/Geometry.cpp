@@ -12,18 +12,18 @@ Geometry::Geometry(Geometry::eType type): _type(type) {}
 
 Geometry::~Geometry() {}
 
-void    Geometry::setMaterial(const Material& material)
+void    Geometry::setMaterial(Material* material)
 {
     ASSERT(_meshs.size() == 1, "A geometry should have 1 mesh");
 
-    _meshs[0]->material = material;
+    _meshs[0]->setMaterial(std::move(material));
 }
 
-Material&   Geometry::getMaterial() const
+Material*   Geometry::getMaterial() const
 {
     ASSERT(_meshs.size() == 1, "A geometry should have 1 mesh");
 
-    return (_meshs[0]->material);
+    return (_meshs[0]->getMaterial());
 }
 
 Geometry::eType Geometry::getType() const

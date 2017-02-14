@@ -89,3 +89,27 @@ float   Helper::smootherStep(float t)
 {
     return (t * t * t * (t * (6.0f * t - 15.0f) + 10.0f));
 }
+
+bool    Helper::updateComboString(const char* name, std::vector<const char*>& stringList, std::string& stringValue)
+{
+    // Get index of string in the vector
+    int stringIdx = -1;
+    uint32_t i = 0;
+    for (const auto& str: stringList)
+    {
+        if (str == stringValue)
+        {
+            stringIdx = i;
+            break;
+        }
+        ++i;
+    }
+
+    // Display combo and set new value
+    if (ImGui::Combo(name, &stringIdx, stringList.data(), (uint32_t)stringList.size()))
+    {
+        stringValue = stringList[stringIdx];
+        return (true);
+    }
+    return (false);
+}

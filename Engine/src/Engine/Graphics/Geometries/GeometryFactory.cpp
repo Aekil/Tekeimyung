@@ -53,19 +53,19 @@ Geometry*   GeometryFactory::getGeometry(Geometry::eType type)
     Geometry* geometry;
     if (type == Geometry::eType::PLANE)
     {
-        geometry = RessourceManager::getInstance()->getResource<Geometry>("plane");
+        geometry = RessourceManager::getInstance()->getOrLoadResource<Geometry>("plane");
     }
     else if (type == Geometry::eType::BOX)
     {
-        geometry = RessourceManager::getInstance()->getResource<Geometry>("box");
+        geometry = RessourceManager::getInstance()->getOrLoadResource<Geometry>("box");
     }
     else if (type == Geometry::eType::SPHERE)
     {
-        geometry = RessourceManager::getInstance()->getResource<Geometry>("sphere");
+        geometry = RessourceManager::getInstance()->getOrLoadResource<Geometry>("sphere");
     }
     else if (type == Geometry::eType::CIRCLE)
     {
-        geometry = RessourceManager::getInstance()->getResource<Geometry>("circle");
+        geometry = RessourceManager::getInstance()->getOrLoadResource<Geometry>("circle");
     }
     else
     {

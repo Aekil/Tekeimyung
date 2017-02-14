@@ -88,10 +88,15 @@ int     main(int ac, char** av)
         if (!engine.init())
             return (1);
 
-        // Load entities after engine initialization to have logs
-        EntityFactory::loadDirectory(ARCHETYPES_LOCATION);
         // Load textures, models & sounds
         RessourceManager::getInstance()->loadResources("resources");
+
+        // Load geometries: plane, sphere, box, circle
+        GeometryFactory::initGeometries();
+
+        // Load entities after engine initialization to have logs
+        EntityFactory::loadDirectory(ARCHETYPES_LOCATION);
+
 
         // Load levels
         LevelLoader::getInstance()->loadDirectory(LEVELS_DIRECTORY);

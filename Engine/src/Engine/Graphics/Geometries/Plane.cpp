@@ -32,10 +32,9 @@ Plane::Plane(Plane::sInfo& info): Geometry(Geometry::eType::PLANE)
     };
 
     // Plane material
-    Material material;
-    material._constants.ambient = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-    material._constants.diffuse = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-    mesh->material = material;
+    Material* material = RessourceManager::getInstance()->getResource<Material>("geometry_default.mat");
+    ASSERT(material != nullptr, "geometry_default.mat should exists");
+    mesh->setMaterial(material);
 
     // Add plane to meshs list
     _meshs.push_back(std::move(mesh));
@@ -56,12 +55,10 @@ void    Plane::setTexture(const std::string& texture)
     if (texture.length() == 0)
         return;
 
-    Material& material = getMaterial();
-
-   material._constants.texturesTypes |= Texture::eType::AMBIENT;
-   material._textures[Texture::eType::AMBIENT] = RessourceManager::getInstance()->getResource<Texture>(texture);
-   material._needUpdate = true;
+    Material* material = getMaterial();
+    material->setTexture(Texture::eType::AMBIENT, RessourceManager::getInstance()->getOrLoadResource<Texture>(texture));
 
    // Set diffuse to 0.0 or the texture transparency won't work
-   material._constants.diffuse = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
+   material->_constants.diffuse = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
+   material->_needUpdate = true;
 }

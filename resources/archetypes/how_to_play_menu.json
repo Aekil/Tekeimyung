@@ -12,6 +12,8 @@
             "g" : 1,
             "r" : 1
          },
+         "ignore_raycast" : false,
+         "materials" : [ "how_to_play_menu.mat" ],
          "model" : "resources/models/default.DAE",
          "texture" : "resources/sprites/buttons/howtoplay.png",
          "type" : "PLANE"
@@ -20,7 +22,7 @@
          "pos" : {
             "x" : 460,
             "y" : 183.5,
-            "z" : -1
+            "z" : 0
          },
          "rotation" : {
             "x" : 0,
@@ -34,11 +36,14 @@
          }
       },
       "sUiComponent" : {
+         "horizontal_alignment" : "MIDDLE",
          "offset" : {
             "x" : 0,
             "y" : 0
-         }
+         },
+         "vertical_alignment" : "MIDDLE"
       }
    },
-   "name" : "HOW_TO_PLAY_MENU"
+   "name" : "HOW_TO_PLAY_MENU",
+   "tag" : ""
 }

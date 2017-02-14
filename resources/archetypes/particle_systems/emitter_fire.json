@@ -4,7 +4,6 @@
          "name" : "EMITTER_FIRE"
       },
       "sParticleEmitterComponent" : {
-         "texture" : "resources/sprites/particles/particle_circle.png",
          "angle" : 0,
          "angle_variance" : 360.00003051757813,
          "color" : {
@@ -14,28 +13,17 @@
                "g" : 0.63999998569488525,
                "r" : 1
             },
-            "finish_variance" : {
-               "a" : 0,
-               "b" : 0,
-               "g" : 0,
-               "r" : 0
-            },
             "start" : {
                "a" : 0.60000002384185791,
                "b" : 0,
                "g" : 0.30000001192092896,
                "r" : 1
-            },
-            "start_variance" : {
-               "a" : 0,
-               "b" : 0,
-               "g" : 0,
-               "r" : 0
             }
          },
          "emitter_life" : 0.21500000357627869,
          "life" : 14,
          "life_variance" : 8,
+         "max_particles" : 50,
          "rate" : 0,
          "size" : {
             "finish" : 1,
@@ -45,11 +33,30 @@
          },
          "spawn_nb" : 1,
          "speed" : 119.35500335693359,
-         "speed_variance" : 150.53800964355469
+         "speed_variance" : 150.53800964355469,
+         "texture" : "resources/sprites/particles/particle_circle.png"
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "scale" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         }
       },
       "sTypeComponent" : {
          "type" : "OBJECT"
       }
    },
-   "name" : "EMITTER_FIRE"
+   "name" : "EMITTER_FIRE",
+   "tag" : ""
 }

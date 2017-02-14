@@ -12,7 +12,7 @@
 
 #include <Engine/Graphics/Texture.hpp>
 
-Texture::Texture(): _data(nullptr), _comp(0), _unit(GL_TEXTURE0) {}
+Texture::Texture(): _data(nullptr), _comp(0) {}
 
 Texture::~Texture()
 {
@@ -23,7 +23,7 @@ Texture::~Texture()
     }
 }
 
-bool    Texture::loadFromFile (const std::string &fileName)
+bool    Texture::loadFromFile(const std::string &fileName)
 {
     LOG_INFO("Loading texture \"%s\"", fileName.c_str());
 
@@ -56,14 +56,9 @@ bool    Texture::loadFromFile (const std::string &fileName)
     return (true);
 }
 
-void    Texture::setUnit(GLenum unit)
+void    Texture::bind(GLenum unit) const
 {
-    _unit = unit;
-}
-
-void    Texture::bind() const
-{
-    glActiveTexture(_unit);
+    glActiveTexture(unit);
     glBindTexture(GL_TEXTURE_2D, _texture);
 }
 

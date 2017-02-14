@@ -79,6 +79,7 @@
          },
          "geometry" : null,
          "ignore_raycast" : false,
+         "materials" : [ "_01 - Default" ],
          "model" : "resources/models/characters/enemy.DAE",
          "texture" : "",
          "type" : "MESH"

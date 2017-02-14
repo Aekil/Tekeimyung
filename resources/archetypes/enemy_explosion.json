@@ -46,6 +46,7 @@
             "r" : 1
          },
          "ignore_raycast" : false,
+         "materials" : [ "_01 - Default" ],
          "model" : "resources/models/characters/enemy.DAE",
          "texture" : "",
          "type" : "MESH"
@@ -71,5 +72,6 @@
          "type" : "CHARACTER"
       }
    },
-   "name" : "ENEMY_EXPLOSION"
+   "name" : "ENEMY_EXPLOSION",
+   "tag" : ""
 }

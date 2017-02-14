@@ -6,7 +6,7 @@
 
 
 #include <Engine/Graphics/ShaderProgram.hpp>
-#include <Engine/Graphics/Model.hpp>
+#include <Engine/Graphics/ModelInstance.hpp>
 #include <Engine/Graphics/Camera.hpp>
 
 #include <glm/mat4x4.hpp>
@@ -22,9 +22,9 @@ public:
     bool                                initialize();
     void                                onWindowResize();
 
-    void                                render(Camera* camera, Model* model,
+    void                                render(Camera* camera, ModelInstance* model,
                                             const glm::vec4& modelColor, const glm::mat4& modelTransform);
-    void                                renderUI(Model* model, const glm::vec4& modelColor, const glm::mat4& modelTransform);
+    void                                renderUI(ModelInstance* model, const glm::vec4& modelColor, const glm::mat4& modelTransform);
 
     ShaderProgram&                      getShaderProgram();
     Camera*                             getCurrentCamera();

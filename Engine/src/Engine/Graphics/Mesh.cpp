@@ -12,8 +12,7 @@
 
 #include <Engine/Graphics/Mesh.hpp>
 
-Mesh::Mesh() : offset(0), idxOffset(0)
-{}
+Mesh::Mesh() : offset(0), idxOffset(0), _material(nullptr) {}
 
 Mesh::~Mesh()
 {}
@@ -82,6 +81,16 @@ bool Mesh::loadFromAssimp(Skeleton& skeleton, aiMesh *mesh) {
     //loadBones(skeleton, mesh);
 
     return (true);
+}
+
+Material*   Mesh::getMaterial() const
+{
+    return (_material);
+}
+
+void    Mesh::setMaterial(Material* material)
+{
+    _material = material;
 }
 
 void    Mesh::loadBones(Skeleton& skeleton, aiMesh *mesh)

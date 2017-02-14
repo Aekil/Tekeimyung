@@ -42,6 +42,15 @@ void    EntitiesTemplateDebugWindow::build(float elapsedTime)
     }
     ImGui::PopStyleColor(3);
 
+    // Clone template: specify new type name
+    if (ImGui::Button("Save all"))
+    {
+        for (const auto& type: EntityFactory::getTypesString())
+        {
+            EntityFactory::saveEntityTemplateToJson(type);
+        }
+    }
+
     // Templates list
     ImGui::BeginChild("Templates list", ImVec2(150, 0), true);
     for (const auto& type: EntityFactory::getTypesString())

@@ -8,10 +8,12 @@
          "animations" : [],
          "color" : {
             "a" : 1,
-            "b" : 0.24705882370471954,
-            "g" : 0.37647059559822083,
-            "r" : 0.5058823823928833
+            "b" : 1,
+            "g" : 1,
+            "r" : 1
          },
+         "ignore_raycast" : false,
+         "materials" : [ "quit_confirm_popup.mat" ],
          "model" : "resources/models/default.DAE",
          "texture" : "",
          "type" : "PLANE"
@@ -34,11 +36,14 @@
          }
       },
       "sUiComponent" : {
+         "horizontal_alignment" : "MIDDLE",
          "offset" : {
             "x" : 0,
             "y" : 0
-         }
+         },
+         "vertical_alignment" : "MIDDLE"
       }
    },
-   "name" : "QUIT_CONFIRM_POPUP"
+   "name" : "QUIT_CONFIRM_POPUP",
+   "tag" : ""
 }

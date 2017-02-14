@@ -39,8 +39,6 @@ bool    Engine::init()
         return (false);
     }
 
-    GeometryFactory::initGeometries();
-
     _renderer = Renderer::getInstance();
     if (!_renderer->initialize())
     {

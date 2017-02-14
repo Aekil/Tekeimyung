@@ -24,5 +24,6 @@
          "type" : "TILE_WALKABLE"
       }
    },
-   "name" : "EMPTY_OBJECT"
+   "name" : "EMPTY_OBJECT",
+   "tag" : ""
 }

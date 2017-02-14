@@ -1,6 +1,9 @@
 {
    "components" : {
-      "sButtonComponent" : null,
+      "sButtonComponent" : {
+         "action" : "ADD_LEVEL",
+         "action_level" : "ConfirmExit"
+      },
       "sNameComponent" : {
          "name" : "BUTTON_QUIT"
       },
@@ -13,6 +16,8 @@
             "g" : 1,
             "r" : 1
          },
+         "ignore_raycast" : false,
+         "materials" : [ "button_quit.mat" ],
          "model" : "resources/models/default.DAE",
          "texture" : "resources/sprites/buttons/button_quit.png",
          "type" : "PLANE"
@@ -21,7 +26,7 @@
          "pos" : {
             "x" : 810,
             "y" : 295.44000244140625,
-            "z" : -1
+            "z" : 0
          },
          "rotation" : {
             "x" : 0,
@@ -35,11 +40,14 @@
          }
       },
       "sUiComponent" : {
+         "horizontal_alignment" : "MIDDLE",
          "offset" : {
             "x" : 0,
             "y" : -18
-         }
+         },
+         "vertical_alignment" : "MIDDLE"
       }
    },
-   "name" : "BUTTON_QUIT"
+   "name" : "BUTTON_QUIT",
+   "tag" : ""
 }

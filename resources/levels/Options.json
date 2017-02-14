@@ -18,8 +18,9 @@
                   "g" : 1,
                   "r" : 1
                },
+               "ignore_raycast" : false,
+               "materials" : [ "button_toogle_fullscreen.mat" ],
                "model" : "resources/models/default.DAE",
-               "texture" : "resources/sprites/buttons/button_toggle_fullscreen.png",
                "type" : "PLANE"
             },
             "sTransformComponent" : {
@@ -48,7 +49,8 @@
                "vertical_alignment" : "MIDDLE"
             }
          },
-         "name" : "BUTTON_TOGGLE_FULLSCREEN"
+         "name" : "BUTTON_TOGGLE_FULLSCREEN",
+         "tag" : ""
       },
       {
          "components" : {
@@ -68,8 +70,9 @@
                   "g" : 1,
                   "r" : 1
                },
+               "ignore_raycast" : false,
+               "materials" : [ "button_return.mat" ],
                "model" : "resources/models/default.DAE",
-               "texture" : "resources/sprites/buttons/button_return.png",
                "type" : "PLANE"
             },
             "sTransformComponent" : {
@@ -98,7 +101,8 @@
                "vertical_alignment" : "MIDDLE"
             }
          },
-         "name" : "BUTTON_RETURN"
+         "name" : "BUTTON_RETURN",
+         "tag" : ""
       }
    ],
    "name" : "Options"

@@ -4,9 +4,11 @@
 
 #pragma once
 
+#include <vector>
 #include <fstream>
 #include <memory>
 #include <string>
+#include <imgui.h>
 #include <assimp/matrix4x4.h>
 #include <assimp/quaternion.h>
 #include <assimp/vector3.h>
@@ -110,4 +112,18 @@ public:
     static float        parametricBlend(float t);
     static float        smoothStep(float t);
     static float        smootherStep(float t);
+
+    static bool         updateComboString(const char* name, std::vector<const char*>& stringList, std::string& stringValue);
+    template<typename T>
+    static bool         updateComboEnum(const char* name, T& enum_)
+    {
+        int enumInt = (int)enum_;
+
+        if (ImGui::Combo(name, &enumInt, (const char**)EnumManager<T>::enumStrings, (int)EnumManager<T>::enumLength))
+        {
+            enum_ = (T)enumInt;
+            return (true);
+        }
+        return (false);
+    }
 };

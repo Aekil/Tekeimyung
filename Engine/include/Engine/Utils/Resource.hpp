@@ -9,12 +9,13 @@
 class Resource
 {
 public:
-    enum class eType
+    enum class eType: uint8_t
     {
-        MODEL,
-        GEOMETRY,
-        FILE,
-        TEXTURE
+        MODEL = 0,
+        MATERIAL = 1,
+        GEOMETRY = 2,
+        FILE = 3,
+        TEXTURE = 4
     };
 
 public:

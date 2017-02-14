@@ -17,6 +17,8 @@ public:
     virtual ~Mesh();
 
     virtual bool                    loadFromAssimp(Skeleton& skeleton, aiMesh *mesh);
+    Material*                       getMaterial() const;
+    void                            setMaterial(Material* material);
 
 public:
     std::vector<Vertex>             vertexs;
@@ -25,8 +27,9 @@ public:
     uint32_t                        offset;
     uint32_t                        idxOffset;
 
+private:
     // Material
-    Material                        material;
+    Material*                       _material;
 
 private:
     void                            loadBones(Skeleton& skeleton, aiMesh *mesh);

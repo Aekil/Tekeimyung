@@ -1,6 +1,9 @@
 {
    "components" : {
-      "sButtonComponent" : null,
+      "sButtonComponent" : {
+         "action" : "NONE",
+         "action_level" : ""
+      },
       "sNameComponent" : {
          "name" : "BUTTON_CONFIRM_YES"
       },
@@ -13,6 +16,8 @@
             "g" : 1,
             "r" : 1
          },
+         "ignore_raycast" : false,
+         "materials" : [ "button_confirm_yes.mat" ],
          "model" : "resources/models/default.DAE",
          "texture" : "resources/sprites/buttons/button_yes.png",
          "type" : "PLANE"
@@ -35,11 +40,14 @@
          }
       },
       "sUiComponent" : {
+         "horizontal_alignment" : "MIDDLE",
          "offset" : {
             "x" : -4,
             "y" : 0
-         }
+         },
+         "vertical_alignment" : "MIDDLE"
       }
    },
-   "name" : "BUTTON_CONFIRM_YES"
+   "name" : "BUTTON_CONFIRM_YES",
+   "tag" : ""
 }

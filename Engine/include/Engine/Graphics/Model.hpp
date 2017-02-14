@@ -18,7 +18,8 @@
 
 #define BUFFER_OFFSET(bytes) ((GLubyte*) NULL + (bytes))
 
-class Model: public Resource {
+class Model: public Resource
+{
 public:
     Model();
     ~Model();
@@ -32,9 +33,10 @@ public:
     const glm::vec3&            getMin() const;
     const glm::vec3&            getMax() const;
 
-    void                        draw(const ShaderProgram& shaderProgram, const glm::vec4& color, const glm::mat4 transform) const;
-
     static Resource::eType      getResourceType() { return Resource::eType::MODEL; }
+
+    const Buffer&               getBuffer() const;
+    GLuint                      getPrimitiveType() const;
 
 protected:
     void                        initVertexData();

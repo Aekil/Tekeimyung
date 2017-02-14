@@ -5,14 +5,15 @@
 #pragma once
 
 #include <assimp/scene.h>
-#include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
 #include <unordered_map>
 
 #include <Engine/Graphics/ShaderProgram.hpp>
 #include <Engine/Graphics/UniformBuffer.hpp>
 #include <Engine/Graphics/Texture.hpp>
+#include <Engine/Utils/Resource.hpp>
 
-class Material
+class Material final: public Resource
 {
 public:
     typedef struct
@@ -23,11 +24,22 @@ public:
     }                   Constants;
 
 public:
-    Material();
+    Material(bool isModelMaterial = true);
+    Material(const Material& material);
     ~Material() {}
 
-    bool                loadFromAssimp(aiMaterial* material, const std::string& path);
+    Material&           operator=(const Material& material);
+
+    static Material*    loadFromAssimp(aiMaterial* assimpMaterial, const std::string& path);
     void                bind(const ShaderProgram& shaderProgram);
+    bool                isModelMaterial() const;
+
+    void                setTexture(Texture::eType type, Texture* texture);
+    Texture*            getTexture(Texture::eType type) const;
+
+    bool                loadFromFile(const std::string& fileName) override final;
+
+    static Resource::eType      getResourceType() { return Resource::eType::MATERIAL; }
 
 public:
     Constants           _constants;
@@ -36,5 +48,9 @@ public:
     // Need to update ubo data
     bool                _needUpdate;
 
+private:
     std::unordered_map<Texture::eType, Texture*> _textures;
+
+private:
+    bool                _isModelMaterial;
 };

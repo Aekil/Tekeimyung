@@ -12,6 +12,8 @@
             "g" : 0.49019607901573181,
             "r" : 0.26274511218070984
          },
+         "ignore_raycast" : false,
+         "materials" : [ "geometry_default.mat" ],
          "model" : "resources/models/default.DAE",
          "texture" : "",
          "type" : "PLANE"
@@ -34,11 +36,14 @@
          }
       },
       "sUiComponent" : {
+         "horizontal_alignment" : "MIDDLE",
          "offset" : {
             "x" : 0,
             "y" : 0
-         }
+         },
+         "vertical_alignment" : "MIDDLE"
       }
    },
-   "name" : "BACKGROUND"
+   "name" : "BACKGROUND",
+   "tag" : ""
 }

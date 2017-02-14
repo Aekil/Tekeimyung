@@ -7,6 +7,7 @@
          "animated" : true,
          "animations" : [
             {
+               "layer" : "DEFAULT",
                "name" : "scale animation",
                "params" : [
                   {
@@ -41,6 +42,8 @@
             "g" : 1,
             "r" : 1
          },
+         "ignore_raycast" : false,
+         "materials" : [ "Material #26", "Material #26" ],
          "model" : "resources/models/traps/trap_needle.DAE",
          "texture" : "",
          "type" : "MESH"
@@ -75,5 +78,6 @@
          }
       }
    },
-   "name" : "TRAP_NEEDLE"
+   "name" : "TRAP_NEEDLE",
+   "tag" : ""
 }

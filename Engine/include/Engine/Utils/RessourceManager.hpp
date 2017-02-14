@@ -9,19 +9,21 @@
 #include <vector>
 #include <memory>
 
-#include <Engine/Graphics/Texture.hpp>
-#include <Engine/Graphics/Model.hpp>
-#include <Engine/Graphics/Geometries/Geometry.hpp>
+#include <Engine/MaterialDebugWindow.hpp>
 #include <Engine/Graphics/Geometries/GeometryFactory.hpp>
+#include <Engine/Graphics/Material.hpp>
 
 // Textures and models files extensions loaded in RessourceManager::loadResources
 #define TEXTURES_EXT    "png", "jpg", "jpeg"
 #define MODELS_EXT      "dae", "obj", "fbx"
+#define MATERIALS_EXT   "mat"
 #define SOUNDS_EXT      "mp3", "wav"
 
 class RessourceManager
 {
 friend GeometryFactory;
+friend Material;
+friend MaterialDebugWindow;
 
 private:
     struct sFile
@@ -49,9 +51,13 @@ public:
     void                                            saveFile(const std::string& fileName, const std::string fileContent);
 
     template<typename T>
-    T*                                              getResource(const std::string& fileName);
+    T*                                              getResource(const std::string& name);
     template<typename T>
-    const std::vector<const char*>&                 getResourcesNames();
+    T*                                              getOrLoadResource(const std::string& name);
+    template<typename T>
+    T*                                              loadResource(const std::string& name);
+    template<typename T>
+    std::vector<const char*>&                       getResourcesNames();
 
     const std::vector<sSoundStrings>&               getSoundsStrings() const;
 
@@ -60,9 +66,7 @@ public:
 
 private:
     template<typename T>
-    T*                                              loadResource(const std::string& basename, const std::string& fileName);
-    template<typename T>
-    T*                                              registerResource(const std::string& basename, std::unique_ptr<T> resource);
+    T*                                              registerResource(const std::string& name, std::unique_ptr<T> resource);
 
     std::string                                     getBasename(const std::string& fileName);
     std::string                                     loadFile(const std::string basename, const std::string& fileName);
@@ -74,18 +78,8 @@ private:
     // Store files content with their basename
     std::unordered_map<std::string, sFile>          _files;
 
-    // Store textures with their basename
-    std::unordered_map<std::string, Texture>        _textures;
-    // Store textures basename list
-    std::vector<const char*>                        _texturesNames;
-
     std::unordered_map<Resource::eType, tResourcesMap> _resources;
     std::unordered_map<Resource::eType, std::vector<const char*>> _resourcesNames;
-
-    // Store models with their basename
-    std::unordered_map<std::string, std::shared_ptr<Model>> _models;
-    // Store models basename list
-    std::vector<const char*>                                _modelsNames;
 
     // Store sounds basename list
     std::vector<sSoundStrings>                              _soundsStrings;

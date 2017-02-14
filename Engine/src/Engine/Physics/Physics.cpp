@@ -27,12 +27,12 @@ bool    Physics::raycast(const Ray& ray, Entity** hitEntity)
         sTransformComponent* transform = entity->getComponent<sTransformComponent>();
 
         // We can't select entity that is not displayed or has model not initialized
-        if (!render || !render->_model || render->ignoreRaycast)
+        if (!render || !render->getModel() || render->ignoreRaycast)
             continue;
 
         // Model box collider position
-        glm::vec3 boxMin = glm::vec3(render->_model->getMin().x, render->_model->getMin().y, render->_model->getMin().z);
-        glm::vec3 boxMax = glm::vec3(render->_model->getMax().x, render->_model->getMax().y, render->_model->getMax().z);
+        glm::vec3 boxMin = glm::vec3(render->getModel()->getMin().x, render->getModel()->getMin().y, render->getModel()->getMin().z);
+        glm::vec3 boxMax = glm::vec3(render->getModel()->getMax().x, render->getModel()->getMax().y, render->getModel()->getMax().z);
 
         boxMin *= transform->scale;
         boxMax *= transform->scale;
@@ -64,12 +64,12 @@ bool    Physics::raycastAll(const Ray& ray, std::vector<Entity*> hitEntities)
         sTransformComponent* transform = entity->getComponent<sTransformComponent>();
 
         // We can't select entity that is not displayed or has model not initialized
-        if (!render || !render->_model || render->ignoreRaycast)
+        if (!render || !render->getModel() || render->ignoreRaycast)
             continue;
 
         // Model box collider position
-        glm::vec3 boxMin = glm::vec3(render->_model->getMin().x, render->_model->getMin().y, render->_model->getMin().z);
-        glm::vec3 boxMax = glm::vec3(render->_model->getMax().x, render->_model->getMax().y, render->_model->getMax().z);
+        glm::vec3 boxMin = glm::vec3(render->getModel()->getMin().x, render->getModel()->getMin().y, render->getModel()->getMin().z);
+        glm::vec3 boxMax = glm::vec3(render->getModel()->getMax().x, render->getModel()->getMax().y, render->getModel()->getMax().z);
 
         boxMin *= transform->scale;
         boxMax *= transform->scale;

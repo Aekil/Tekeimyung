@@ -1,6 +1,9 @@
 {
    "components" : {
-      "sButtonComponent" : null,
+      "sButtonComponent" : {
+         "action" : "ADD_LEVEL",
+         "action_level" : "Options"
+      },
       "sNameComponent" : {
          "name" : "BUTTON_OPTIONS"
       },
@@ -13,6 +16,8 @@
             "g" : 1,
             "r" : 1
          },
+         "ignore_raycast" : false,
+         "materials" : [ "button_options.mat" ],
          "model" : "resources/models/default.DAE",
          "texture" : "resources/sprites/buttons/button_options.png",
          "type" : "PLANE"
@@ -21,7 +26,7 @@
          "pos" : {
             "x" : 835,
             "y" : 386.97000122070313,
-            "z" : -1
+            "z" : 0
          },
          "rotation" : {
             "x" : 0,
@@ -35,11 +40,14 @@
          }
       },
       "sUiComponent" : {
+         "horizontal_alignment" : "MIDDLE",
          "offset" : {
             "x" : 0,
             "y" : -9
-         }
+         },
+         "vertical_alignment" : "MIDDLE"
       }
    },
-   "name" : "BUTTON_OPTIONS"
+   "name" : "BUTTON_OPTIONS",
+   "tag" : ""
 }

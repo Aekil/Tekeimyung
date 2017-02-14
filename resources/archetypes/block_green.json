@@ -26,6 +26,7 @@
             "r" : 1
          },
          "ignore_raycast" : false,
+         "materials" : [ "MAT_Green" ],
          "model" : "resources/models/blocks/block_green.DAE",
          "texture" : "",
          "type" : "MESH"

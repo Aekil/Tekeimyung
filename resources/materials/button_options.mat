@@ -1,0 +1,18 @@
+{
+   "ambient" : {
+      "a" : 1,
+      "b" : 0.30000001192092896,
+      "g" : 0.30000001192092896,
+      "r" : 0.30000001192092896
+   },
+   "diffuse" : {
+      "a" : 0,
+      "b" : 0,
+      "g" : 0,
+      "r" : 0
+   },
+   "textures" : {
+      "ambient" : "resources/sprites/buttons/button_options.png",
+      "diffuse" : ""
+   }
+}

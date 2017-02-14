@@ -78,7 +78,7 @@ void    Renderer::onWindowResize()
     _UICamera.updateUboData(_cameraUbo, true);
 }
 
-void    Renderer::render(Camera* camera, Model* model,
+void    Renderer::render(Camera* camera, ModelInstance* model,
                                         const glm::vec4& modelColor, const glm::mat4& modelTransform)
 {
     camera->updateUboData(_cameraUbo, _lastCamera != camera);
@@ -90,7 +90,7 @@ void    Renderer::render(Camera* camera, Model* model,
 
 // TODO: draw all UI after models
 // Curently the UI is drawn at the same time as the transparent entities if the model is a plane
-void    Renderer::renderUI(Model* model, const glm::vec4& modelColor, const glm::mat4& modelTransform)
+void    Renderer::renderUI(ModelInstance* model, const glm::vec4& modelColor, const glm::mat4& modelTransform)
 {
     if (_lastCamera != &_UICamera)
         _UICamera.updateUboData(_cameraUbo, true);

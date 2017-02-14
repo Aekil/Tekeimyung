@@ -5,8 +5,6 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 
 #include <Engine/Utils/Exception.hpp>
 #include <Engine/Utils/Logger.hpp>
@@ -62,7 +60,16 @@ bool    Model::loadFromFile(const std::string &fileName)
         std::unique_ptr<Mesh> mesh = std::make_unique<Mesh>();
 
         mesh->loadFromAssimp(_skeleton, scene->mMeshes[i]);
-        mesh->material.loadFromAssimp(scene->mMaterials[scene->mMeshes[i]->mMaterialIndex], fileName.substr(0, fileName.find_last_of('/')));
+
+        Material* material = Material::loadFromAssimp(scene->mMaterials[scene->mMeshes[i]->mMaterialIndex], fileName.substr(0, fileName.find_last_of('/')));
+
+        if (!material)
+        {
+            LOG_ERROR("Failed to load material for model \"%s\"", fileName.c_str());
+            return (false);
+        }
+
+        mesh->setMaterial(material);
 
         _meshs.push_back(std::move(mesh));
     }
@@ -114,26 +121,14 @@ const std::vector<std::unique_ptr<Mesh> > &Model::getMeshs() const
     return (_meshs);
 }
 
-void    Model::draw(const ShaderProgram& shaderProgram, const glm::vec4& color, const glm::mat4 transform) const
+const Buffer&       Model::getBuffer() const
 {
-    // Model matrix
-    static GLint uniModel = shaderProgram.getUniformLocation("model");
-    glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(transform));
+    return (_buffer);
+}
 
-    // Model color
-    static GLint colorModel = shaderProgram.getUniformLocation("modelColor");
-    glUniform4f(colorModel, color.x, color.y, color.z, color.w);
-
-    // Bind buffer
-    _buffer.bind();
-
-    for (auto &&mesh: _meshs)
-    {
-        mesh->material.bind(shaderProgram);
-
-        // Draw to screen
-        glDrawElements(_primitiveType, (GLuint)mesh->indices.size(), GL_UNSIGNED_INT, BUFFER_OFFSET((GLuint)mesh->idxOffset * sizeof(GLuint)));
-    }
+GLuint  Model::getPrimitiveType() const
+{
+    return (_primitiveType);
 }
 
 const glm::vec3&    Model::getSize() const

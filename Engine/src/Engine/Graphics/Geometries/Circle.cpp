@@ -2,6 +2,9 @@
 * @Author   Guillaume Labey
 */
 
+#include <Engine/Utils/Debug.hpp>
+#include <Engine/Utils/RessourceManager.hpp>
+
 #include <Engine/Graphics/Geometries/Circle.hpp>
 
 Circle::Circle(Circle::sInfo& info): Geometry(Geometry::eType::CIRCLE)
@@ -39,10 +42,9 @@ Circle::Circle(Circle::sInfo& info): Geometry(Geometry::eType::CIRCLE)
 
 
     // Circle material
-    Material material;
-    material._constants.ambient = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-    material._constants.diffuse = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-    mesh->material = material;
+    Material* material = RessourceManager::getInstance()->getResource<Material>("geometry_default.mat");
+    ASSERT(material != nullptr, "geometry_default.mat should exists");
+    mesh->setMaterial(material);
 
     // Add plane to meshs list
     _meshs.push_back(std::move(mesh));

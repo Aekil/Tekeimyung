@@ -45,11 +45,13 @@
             "r" : 1
          },
          "ignore_raycast" : false,
+         "materials" : [ "particle_circle.mat" ],
          "model" : "resources/models/default.DAE",
          "texture" : "resources/sprites/particles/particle_circle.png",
          "type" : "PLANE"
       },
       "sRigidBodyComponent" : {
+         "collisions_enabled" : true,
          "gravity" : {
             "x" : 0,
             "y" : 0,

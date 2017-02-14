@@ -73,21 +73,6 @@ public:
     virtual void                                                    saveComponentJson(const std::string& entityType, const JsonValue& json) = 0;
     virtual bool                                                    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity) = 0;
 
-    template<typename T>
-    bool updateComboEnum(const char* name, T& enum_)
-    {
-        int enumInt = (int)enum_;
-
-        if (ImGui::Combo(name, &enumInt, (const char**)EnumManager<T>::enumStrings, (int)EnumManager<T>::enumLength))
-        {
-            enum_ = (T)enumInt;
-            return (true);
-        }
-        return (false);
-    }
-
-    bool updateComboString(const char* name, std::vector<const char*>& stringList, std::string& stringValue);
-
 private:
     // Store Components types
     static std::unordered_map<std::string, IComponentFactory*>      _componentsTypes;
@@ -202,6 +187,7 @@ private:
     void            saveColorParamAnimation(std::shared_ptr<IParamAnimation> paramAnimation_, JsonValue& json);
 
     bool            updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity) override final;
+    bool            updateMaterialsEditor(sRenderComponent* component, Entity* entity);
     bool            updateAnimationsEditor(sRenderComponent* component, Entity* entity);
     bool            updateParamsAnimationsEditor(AnimationPtr playedAnimation, Entity* entity);
     bool            updateAnimationParamTranslate(Entity* entity, std::shared_ptr<IParamAnimation> paramAnimation_, uint32_t& frameNb);

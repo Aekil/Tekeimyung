@@ -151,10 +151,7 @@ void Player::handleShoot()
 
         projectileScript->_projectileTransform->pos = _transform->pos;
 
-        if (_render->_model)
-        {
-            projectileScript->_projectileTransform->pos.y -= (_render->_model->getMin().y * _transform->scale.y) / 2.0f;
-        }
+        projectileScript->_projectileTransform->pos.y -= (_render->getModel()->getMin().y * _transform->scale.y) / 2.0f;
 
         projectileScript->_projectileTransform->needUpdate = true;
         projectileScript->_damage = _damage;

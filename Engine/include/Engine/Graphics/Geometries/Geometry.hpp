@@ -31,8 +31,8 @@ public:
     Geometry(eType type);
     ~Geometry();
 
-    void                setMaterial(const Material& material);
-    Material&           getMaterial() const;
+    void                setMaterial(Material* material);
+    Material*           getMaterial() const;
     eType               getType() const;
 
     static Resource::eType      getResourceType() { return Resource::eType::GEOMETRY; }

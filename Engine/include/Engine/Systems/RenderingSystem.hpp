@@ -10,7 +10,7 @@
 #include <ECS/System.hpp>
 
 #include <Engine/Graphics/ShaderProgram.hpp>
-#include <Engine/Graphics/Model.hpp>
+#include <Engine/Graphics/ModelInstance.hpp>
 #include <Engine/Graphics/Camera.hpp>
 
 #include <Engine/Components.hh>
@@ -35,7 +35,7 @@ public:
 
 private:
     bool                                    isTransparent(sRenderComponent *render) const;
-    Model*                                  getModel(sRenderComponent *render);
+    ModelInstance*                          getModelInstance(sRenderComponent *render);
 
 private:
     std::unordered_map<uint32_t, sEmitter*>*    _particleEmitters;

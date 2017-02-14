@@ -12,6 +12,8 @@
             "g" : 1,
             "r" : 1
          },
+         "ignore_raycast" : false,
+         "materials" : [ "geometry_default.mat" ],
          "model" : "resources/models/default.DAE",
          "texture" : "resources/sprites/buttons/quit_confirmation_message.png",
          "type" : "PLANE"
@@ -34,11 +36,14 @@
          }
       },
       "sUiComponent" : {
+         "horizontal_alignment" : "MIDDLE",
          "offset" : {
             "x" : 0,
             "y" : 9
-         }
+         },
+         "vertical_alignment" : "MIDDLE"
       }
    },
-   "name" : "QUIT_CONFIRM_TEXT"
+   "name" : "QUIT_CONFIRM_TEXT",
+   "tag" : ""
 }

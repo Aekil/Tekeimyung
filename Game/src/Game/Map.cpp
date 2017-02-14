@@ -212,8 +212,8 @@ Entity* Map::getSelectedEntity(EntityManager* em, bool onlyTiles)
         sRenderComponent* render = entity->getComponent<sRenderComponent>();
         sTransformComponent* transform = entity->getComponent<sTransformComponent>();
 
-        // We can't select entity that is not displayed or has model not initialized
-        if (!render || !render->_model)
+        // We can't select entity that is not displayed
+        if (!render)
             continue;
 
         // The selectable zone of an entity is a box
@@ -222,12 +222,12 @@ Entity* Map::getSelectedEntity(EntityManager* em, bool onlyTiles)
         glm::vec3 boxSize;
 
         // Model box collider position
-        boxPos = glm::vec3(render->_model->getMin().x, render->_model->getMin().y, render->_model->getMin().z);
+        boxPos = glm::vec3(render->getModel()->getMin().x, render->getModel()->getMin().y, render->getModel()->getMin().z);
 
         // Model box collider size
-        boxSize.x = render->_model->getSize().x;
-        boxSize.y = render->_model->getSize().y;
-        boxSize.z = render->_model->getSize().z;
+        boxSize.x = render->getModel()->getSize().x;
+        boxSize.y = render->getModel()->getSize().y;
+        boxSize.z = render->getModel()->getSize().z;
 
         // Model box collider center
         boxCenter = boxPos;

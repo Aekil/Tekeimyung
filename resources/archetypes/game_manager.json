@@ -4,7 +4,7 @@
          "name" : "GAME_MANAGER"
       },
       "sScriptComponent" : {
-        "class" : [ "GameManager" ]
+         "class" : [ "GameManager" ]
       },
       "sTransformComponent" : {
          "pos" : {
@@ -27,5 +27,6 @@
          "type" : "TILE_WALKABLE"
       }
    },
-   "name" : "GAME_MANAGER"
+   "name" : "GAME_MANAGER",
+   "tag" : ""
 }

@@ -5,14 +5,15 @@
       },
       "sRenderComponent" : {
          "animated" : true,
-         "animations" : [
-         ],
+         "animations" : [],
          "color" : {
             "a" : 1,
             "b" : 1,
             "g" : 1,
             "r" : 1
          },
+         "ignore_raycast" : false,
+         "materials" : [ "Material #26", "Material #26" ],
          "model" : "resources/models/traps/trap_cutter.DAE",
          "texture" : "",
          "type" : "MESH"
@@ -47,5 +48,6 @@
          }
       }
    },
-   "name" : "TRAP_CUTTER"
+   "name" : "TRAP_CUTTER",
+   "tag" : ""
 }

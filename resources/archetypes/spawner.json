@@ -3,9 +3,6 @@
       "sNameComponent" : {
          "name" : "SPAWNER"
       },
-      "sScriptComponent" : {
-          "class" : [ "Spawner" ]
-      },
       "sRenderComponent" : {
          "animated" : false,
          "animations" : [],
@@ -15,9 +12,14 @@
             "g" : 1,
             "r" : 1
          },
+         "ignore_raycast" : false,
+         "materials" : [ "_01 - Default" ],
          "model" : "resources/models/blocks/block.DAE",
          "texture" : "",
          "type" : "MESH"
+      },
+      "sScriptComponent" : {
+         "class" : [ "Spawner" ]
       },
       "sTransformComponent" : {
          "pos" : {
@@ -40,5 +42,6 @@
          "type" : "TILE_WALKABLE"
       }
    },
-   "name" : "SPAWNER"
+   "name" : "SPAWNER",
+   "tag" : ""
 }

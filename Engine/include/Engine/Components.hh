@@ -20,6 +20,7 @@
 
 #include <Engine/Window/Keyboard.hpp>
 #include <Engine/Graphics/Model.hpp>
+#include <Engine/Graphics/ModelInstance.hpp>
 #include <Engine/Graphics/Geometries/Plane.hpp>
 #include <Engine/Graphics/Geometries/Geometry.hpp>
 #include <Engine/Graphics/Geometries/GeometryFactory.hpp>
@@ -46,9 +47,13 @@ virtual void update(sRenderComponent* component)
     this->modelFile = component->modelFile;
     this->color = component->color;
     this->animated = component->animated;
-    this->_model = component->_model;
+
+    if (component->_modelInstance)
+    {
+        this->_modelInstance = std::make_unique<ModelInstance>(*component->_modelInstance);
+    }
+
     this->type = component->type;
-    this->texture = component->texture;
     this->_animator = component->_animator;
     this->_display = component->_display;
     this->ignoreRaycast = component->ignoreRaycast;
@@ -59,32 +64,40 @@ virtual void update(sComponent* component)
     update(static_cast<sRenderComponent*>(component));
 }
 
-void initModel()
+void initModelInstance()
 {
     if (type == Geometry::eType::MESH)
-        _model = RessourceManager::getInstance()->getResource<Model>(modelFile);
+    {
+        Model* model = RessourceManager::getInstance()->getResource<Model>(modelFile);
+        _modelInstance = std::make_unique<ModelInstance>(model);
+    }
     else
     {
-        _model = GeometryFactory::getGeometry(type);
-        if (type == Geometry::eType::PLANE)
-        {
-            //static_cast<Plane*>(_model)->setTexture(texture);
-        }
+        Model* model = GeometryFactory::getGeometry(type);
+        _modelInstance = std::make_unique<ModelInstance>(model);
     }
 }
 
-Model* getModel()
+ModelInstance* getModelInstance()
 {
-    if (!_model)
-        initModel();
-    return _model;
+    if (!_modelInstance)
+        initModelInstance();
+    return _modelInstance.get();
 }
+
+const Model* getModel()
+{
+    if (!_modelInstance)
+        initModelInstance();
+    return _modelInstance->getModel();
+}
+
 
 std::string modelFile;
 glm::vec4 color;
 bool animated;
 
-Model* _model = nullptr;
+std::unique_ptr<ModelInstance> _modelInstance = nullptr;
 
 Animator                _animator;
 
@@ -92,9 +105,6 @@ Animator                _animator;
 Geometry::eType type;
 bool                    _display = true;
 bool                    ignoreRaycast = false;
-
-// texture for geometries
-std::string texture;
 END_COMPONENT(sRenderComponent)
 
 
@@ -165,7 +175,7 @@ glm::vec3 size;
 bool isTrigger;
 
 // Box model
-Box* box;
+std::unique_ptr<ModelInstance> box;
 bool display = true;
 END_COMPONENT(sBoxColliderComponent)
 
@@ -196,7 +206,7 @@ float radius;
 // isTrigger
 bool isTrigger;
 
-Sphere* sphere;
+std::unique_ptr<ModelInstance> sphere;
 bool display = true;
 END_COMPONENT(sSphereColliderComponent)
 

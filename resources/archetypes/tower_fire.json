@@ -13,6 +13,7 @@
             "r" : 1
          },
          "ignore_raycast" : false,
+         "materials" : [ "Adventurer_Skin", "MAT_Brown", "Mat_LightRed" ],
          "model" : "resources/models/buildings/tower_fire.DAE",
          "texture" : "",
          "type" : "MESH"
@@ -22,7 +23,7 @@
       },
       "sTransformComponent" : {
          "pos" : {
-            "x" : 200,
+            "x" : 250,
             "y" : 12.5,
             "z" : 275
          },
@@ -41,5 +42,6 @@
          "type" : "TILE_NOT_WALKABLE"
       }
    },
-   "name" : "TOWER_FIRE"
+   "name" : "TOWER_FIRE",
+   "tag" : ""
 }

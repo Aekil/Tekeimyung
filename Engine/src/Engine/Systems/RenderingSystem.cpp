@@ -42,7 +42,7 @@ void    RenderingSystem::renderEntity(sRenderComponent *render, Entity* entity, 
         return;
 
     sTransformComponent *transform = entity->getComponent<sTransformComponent>();
-    auto&& model = getModel(render);
+    auto&& model = getModelInstance(render);
 
     if (!model)
         return;
@@ -75,14 +75,14 @@ void    RenderingSystem::renderCollider(Entity* entity)
     {
         if (!boxCollider->box)
         {
-            boxCollider->box = static_cast<Box*>(GeometryFactory::getGeometry(Geometry::eType::BOX));
+            boxCollider->box = std::make_unique<ModelInstance>(GeometryFactory::getGeometry(Geometry::eType::BOX));
         }
 
         glm::mat4 boxTransform = transform->getTransform();
         boxTransform = glm::translate(boxTransform, boxCollider->pos);
         boxTransform = glm::scale(boxTransform, boxCollider->size);
 
-        Renderer::getInstance()->render(_camera, boxCollider->box, glm::vec4(0.87f, 1.0f, 1.0f, 0.1f), boxTransform);
+        Renderer::getInstance()->render(_camera, boxCollider->box.get(), glm::vec4(0.87f, 1.0f, 1.0f, 0.1f), boxTransform);
     }
     if (sphereCollider && sphereCollider->display)
     {
@@ -90,14 +90,14 @@ void    RenderingSystem::renderCollider(Entity* entity)
         {
             Sphere::sInfo sphereInfo;
             sphereInfo.radius = SIZE_UNIT;
-            sphereCollider->sphere = static_cast<Sphere*>(GeometryFactory::getGeometry(Geometry::eType::SPHERE));
+            sphereCollider->sphere = std::make_unique<ModelInstance>(GeometryFactory::getGeometry(Geometry::eType::SPHERE));
         }
 
         glm::mat4 sphereTransform = transform->getTransform();
         sphereTransform = glm::translate(sphereTransform, sphereCollider->pos);
         sphereTransform = glm::scale(sphereTransform, glm::vec3(sphereCollider->radius));
 
-        Renderer::getInstance()->render(_camera, sphereCollider->sphere, glm::vec4(0.87f, 1.0f, 1.0f, 0.1f), sphereTransform);
+        Renderer::getInstance()->render(_camera, sphereCollider->sphere.get(), glm::vec4(0.87f, 1.0f, 1.0f, 0.1f), sphereTransform);
     }
 }
 
@@ -142,7 +142,7 @@ void    RenderingSystem::renderParticles(EntityManager& em, float elapsedTime)
 
         bool isUi = entity->hasComponent<sUiComponent>();
         sRenderComponent *render = entity->getComponent<sRenderComponent>();
-        auto&& model = getModel(render);
+        auto&& model = getModelInstance(render);
 
         if (!model)
             continue;
@@ -253,12 +253,12 @@ bool    RenderingSystem::isTransparent(sRenderComponent *render) const
     return (render->type == Geometry::eType::PLANE);
 }
 
-Model*  RenderingSystem::getModel(sRenderComponent *render)
+ModelInstance*  RenderingSystem::getModelInstance(sRenderComponent *render)
 {
     if (!render)
         return (nullptr);
 
-    return (render->getModel());
+    return (render->getModelInstance());
 }
 
 bool    RenderingSystem::onEntityRemovedComponent(Entity* entity, sComponent* component)

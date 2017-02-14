@@ -26,6 +26,7 @@
             "r" : 1
          },
          "ignore_raycast" : false,
+         "materials" : [ "MAT_Brown" ],
          "model" : "resources/models/blocks/block_brown.DAE",
          "texture" : "",
          "type" : "MESH"
