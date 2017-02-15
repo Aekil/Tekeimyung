@@ -15,7 +15,7 @@
 #include <Engine/Utils/EventSound.hpp>
 #include <Engine/Utils/LevelLoader.hpp>
 #include <Engine/Utils/Logger.hpp>
-#include <Engine/Utils/RessourceManager.hpp>
+#include <Engine/Utils/ResourceManager.hpp>
 #include <Engine/Utils/Debug.hpp>
 
 #include <Game/GameStates/ConfirmExitState.hpp>
@@ -89,7 +89,7 @@ int     main(int ac, char** av)
             return (1);
 
         // Load textures, models & sounds
-        RessourceManager::getInstance()->loadResources("resources");
+        ResourceManager::getInstance()->loadResources("resources");
 
         // Load geometries: plane, sphere, box, circle
         GeometryFactory::initGeometries();

@@ -53,11 +53,11 @@ public:
     void                                            loadResources(const std::string& directory);
 
     template<typename T>
-    T*                                              getResource(const std::string& name);
+    T*                                              getResource(const std::string& path);
     template<typename T>
-    T*                                              getOrLoadResource(const std::string& name);
+    T*                                              getOrLoadResource(const std::string& path);
     template<typename T>
-    T*                                              loadResource(const std::string& name);
+    T*                                              loadResource(const std::string& path);
     template<typename T>
     std::vector<const char*>&                       getResourcesNames();
 

@@ -132,76 +132,76 @@ void    ResourceManager::loadSound(const std::string basename, const std::string
 }
 
 template<typename T>
-T*  ResourceManager::getResource(const std::string& name)
+T*  ResourceManager::getResource(const std::string& path)
 {
     // Resources are stored with their basename
-    std::string basename = getBasename(name);
+    std::string name = getBasename(path);
 
     // The resource is not loaded
     auto& resourceMap = _resources[T::getResourceType()];
-    if (resourceMap.find(basename) == resourceMap.end())
+    if (resourceMap.find(name) == resourceMap.end())
     {
         return (nullptr);
     }
 
-    auto& resource = resourceMap.at(basename);
+    auto& resource = resourceMap.at(name);
     return (static_cast<T*>(resource.get()));
 }
 
 template<typename T>
-T*  ResourceManager::getOrLoadResource(const std::string& name)
+T*  ResourceManager::getOrLoadResource(const std::string& path)
 {
-    T* resource = getResource<T>(name);
+    T* resource = getResource<T>(path);
 
     // The resource is not loaded
     if (!resource)
     {
-        return loadResource<T>(name);
+        return loadResource<T>(path);
     }
 
     return (resource);
 }
 
 template<typename T>
-T*  ResourceManager::loadResource(const std::string& name)
+T*  ResourceManager::loadResource(const std::string& path)
 {
-    std::string basename = getBasename(name);
+    std::string name = getBasename(path);
     std::unique_ptr<T> resource = std::make_unique<T>();
 
-    if (!resource->loadFromFile(name))
+    if (!resource->loadFromFile(path))
     {
         return (nullptr);
     }
 
     auto& resourceMap = _resources[T::getResourceType()];
 
-    resource->setId(basename);
-    resource->setPath(name);
-    resourceMap[basename] = std::move(resource);
+    resource->setId(name);
+    resource->setPath(path);
+    resourceMap[name] = std::move(resource);
     // TODO: Allocate char* for resource name
-    _resourcesNames[T::getResourceType()].push_back(resourceMap.find(basename)->first.c_str());
+    _resourcesNames[T::getResourceType()].push_back(resourceMap.find(name)->first.c_str());
 
-    return (static_cast<T*>(resourceMap[basename].get()));
+    return (static_cast<T*>(resourceMap[name].get()));
 }
 
 template<typename T>
 T*  ResourceManager::registerResource(std::unique_ptr<T> resource, const std::string& path)
 {
-    std::string basename = getBasename(path);
+    std::string name = getBasename(path);
     auto& resourceMap = _resources[T::getResourceType()];
 
-    if (resourceMap[basename] != nullptr)
+    if (resourceMap[name] != nullptr)
     {
-        LOG_WARN("ResourceManager::registerResource: registering resource \"%s\" that does already exists", basename.c_str());
+        LOG_WARN("ResourceManager::registerResource: registering resource \"%s\" that does already exists", name.c_str());
     }
 
-    resource->setId(basename);
+    resource->setId(name);
     resource->setPath(path);
-    resourceMap[basename] = std::move(resource);
+    resourceMap[name] = std::move(resource);
     // TODO: Allocate char* for resource name
-    _resourcesNames[T::getResourceType()].push_back(resourceMap.find(basename)->first.c_str());
+    _resourcesNames[T::getResourceType()].push_back(resourceMap.find(name)->first.c_str());
 
-    return (static_cast<T*>(resourceMap[basename].get()));
+    return (static_cast<T*>(resourceMap[name].get()));
 }
 
 template<typename T>
@@ -224,17 +224,17 @@ std::vector<const char*>& ResourceManager::getResourcesNames()
     return _resourcesNames[T::getResourceType()];
 }
 
-template Model*  ResourceManager::getOrLoadResource<Model>(const std::string& fileName);
-template Texture*  ResourceManager::getOrLoadResource<Texture>(const std::string& fileName);
-template Geometry*  ResourceManager::getOrLoadResource<Geometry>(const std::string& fileName);
-template Material*  ResourceManager::getOrLoadResource<Material>(const std::string& fileName);
-template File*  ResourceManager::getOrLoadResource<File>(const std::string& fileName);
+template Model*  ResourceManager::getOrLoadResource<Model>(const std::string& path);
+template Texture*  ResourceManager::getOrLoadResource<Texture>(const std::string& path);
+template Geometry*  ResourceManager::getOrLoadResource<Geometry>(const std::string& path);
+template Material*  ResourceManager::getOrLoadResource<Material>(const std::string& path);
+template File*  ResourceManager::getOrLoadResource<File>(const std::string& path);
 
-template Model*  ResourceManager::getResource<Model>(const std::string& fileName);
-template Texture*  ResourceManager::getResource<Texture>(const std::string& fileName);
-template Geometry*  ResourceManager::getResource<Geometry>(const std::string& fileName);
-template Material*  ResourceManager::getResource<Material>(const std::string& fileName);
-template File*  ResourceManager::getResource<File>(const std::string& fileName);
+template Model*  ResourceManager::getResource<Model>(const std::string& path);
+template Texture*  ResourceManager::getResource<Texture>(const std::string& path);
+template Geometry*  ResourceManager::getResource<Geometry>(const std::string& path);
+template Material*  ResourceManager::getResource<Material>(const std::string& path);
+template File*  ResourceManager::getResource<File>(const std::string& path);
 
 template Model*  ResourceManager::registerResource<Model>(std::unique_ptr<Model> resource, const std::string& path);
 template Texture*  ResourceManager::registerResource<Texture>(std::unique_ptr<Texture> resource, const std::string& path);
