@@ -28,7 +28,7 @@
 #include <Engine/Graphics/Geometries/Sphere.hpp>
 #include <Engine/Graphics/Animator.hpp>
 #include <Engine/Utils/Helper.hpp>
-#include <Engine/Utils/RessourceManager.hpp>
+#include <Engine/Utils/ResourceManager.hpp>
 #include <Engine/Utils/Timer.hpp>
 
 #include <Engine/Core/BaseScript.hpp>
@@ -68,7 +68,7 @@ void initModelInstance()
 {
     if (type == Geometry::eType::MESH)
     {
-        Model* model = RessourceManager::getInstance()->getResource<Model>(modelFile);
+        Model* model = ResourceManager::getInstance()->getResource<Model>(modelFile);
         _modelInstance = std::make_unique<ModelInstance>(model);
     }
     else

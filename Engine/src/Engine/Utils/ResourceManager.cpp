@@ -17,19 +17,19 @@
 #include <Engine/Utils/Helper.hpp>
 #include <Engine/Sound/SoundManager.hpp>
 
-#include <Engine/Utils/RessourceManager.hpp>
+#include <Engine/Utils/ResourceManager.hpp>
 
-RessourceManager*   RessourceManager::_ressourceManager = nullptr;
+ResourceManager*   ResourceManager::_ResourceManager = nullptr;
 
-RessourceManager::RessourceManager() {}
+ResourceManager::ResourceManager() {}
 
-RessourceManager::~RessourceManager() {}
+ResourceManager::~ResourceManager() {}
 
-void    RessourceManager::loadResources(const std::string& directory)
+void    ResourceManager::loadResources(const std::string& directory)
 {
     DIR* dir;
     struct dirent* ent;
-    RessourceManager* ressourceManager = RessourceManager::getInstance();
+    ResourceManager* ResourceManager = ResourceManager::getInstance();
     std::vector<std::string> texturesExtensions = { TEXTURES_EXT };
     std::vector<std::string> modelsExtensions = { MODELS_EXT };
     std::vector<std::string> materialsExtensions = { MATERIALS_EXT };
@@ -51,7 +51,7 @@ void    RessourceManager::loadResources(const std::string& directory)
         else
         {
             std::string file = std::string(directory).append("/").append(ent->d_name);
-            std::string extension = RessourceManager::getFileExtension(ent->d_name);
+            std::string extension = ResourceManager::getFileExtension(ent->d_name);
             std::string basename = getBasename(file);
 
             extension = Helper::lowerCaseString(extension);
@@ -81,17 +81,17 @@ void    RessourceManager::loadResources(const std::string& directory)
     closedir(dir);
 }
 
-RessourceManager*   RessourceManager::getInstance()
+ResourceManager*   ResourceManager::getInstance()
 {
-    if (!_ressourceManager)
+    if (!_ResourceManager)
     {
-        _ressourceManager = new RessourceManager();
+        _ResourceManager = new ResourceManager();
     }
 
-    return (_ressourceManager);
+    return (_ResourceManager);
 }
 
-std::string  RessourceManager::getFileExtension(const std::string& fileName)
+std::string  ResourceManager::getFileExtension(const std::string& fileName)
 {
     std::size_t size = fileName.rfind('.', fileName.length());
     if (size != std::string::npos)
@@ -100,7 +100,7 @@ std::string  RessourceManager::getFileExtension(const std::string& fileName)
     return ("");
 }
 
-std::string RessourceManager::getBasename(const std::string& fileName)
+std::string ResourceManager::getBasename(const std::string& fileName)
 {
     size_t basenameOcur;
     std::string basename = fileName;
@@ -114,12 +114,12 @@ std::string RessourceManager::getBasename(const std::string& fileName)
     return (basename);
 }
 
-const std::vector<RessourceManager::sSoundStrings>&  RessourceManager::getSoundsStrings() const
+const std::vector<ResourceManager::sSoundStrings>&  ResourceManager::getSoundsStrings() const
 {
     return (_soundsStrings);
 }
 
-void    RessourceManager::loadSound(const std::string basename, const std::string& fileName)
+void    ResourceManager::loadSound(const std::string basename, const std::string& fileName)
 {
     // Add sound string to Ressource Manager
     sSoundStrings soundString;
@@ -132,7 +132,7 @@ void    RessourceManager::loadSound(const std::string basename, const std::strin
 }
 
 template<typename T>
-T*  RessourceManager::getResource(const std::string& name)
+T*  ResourceManager::getResource(const std::string& name)
 {
     // Resources are stored with their basename
     std::string basename = getBasename(name);
@@ -149,7 +149,7 @@ T*  RessourceManager::getResource(const std::string& name)
 }
 
 template<typename T>
-T*  RessourceManager::getOrLoadResource(const std::string& name)
+T*  ResourceManager::getOrLoadResource(const std::string& name)
 {
     T* resource = getResource<T>(name);
 
@@ -163,7 +163,7 @@ T*  RessourceManager::getOrLoadResource(const std::string& name)
 }
 
 template<typename T>
-T*  RessourceManager::loadResource(const std::string& name)
+T*  ResourceManager::loadResource(const std::string& name)
 {
     std::string basename = getBasename(name);
     std::unique_ptr<T> resource = std::make_unique<T>();
@@ -185,14 +185,14 @@ T*  RessourceManager::loadResource(const std::string& name)
 }
 
 template<typename T>
-T*  RessourceManager::registerResource(std::unique_ptr<T> resource, const std::string& path)
+T*  ResourceManager::registerResource(std::unique_ptr<T> resource, const std::string& path)
 {
     std::string basename = getBasename(path);
     auto& resourceMap = _resources[T::getResourceType()];
 
     if (resourceMap[basename] != nullptr)
     {
-        LOG_WARN("RessourceManager::registerResource: registering resource \"%s\" that does already exists", basename.c_str());
+        LOG_WARN("ResourceManager::registerResource: registering resource \"%s\" that does already exists", basename.c_str());
     }
 
     resource->setId(basename);
@@ -205,7 +205,7 @@ T*  RessourceManager::registerResource(std::unique_ptr<T> resource, const std::s
 }
 
 template<typename T>
-T* RessourceManager::getOrCreateResource(const std::string& path)
+T* ResourceManager::getOrCreateResource(const std::string& path)
 {
     T* resource = getResource<T>(path);
 
@@ -219,31 +219,31 @@ T* RessourceManager::getOrCreateResource(const std::string& path)
 }
 
 template<typename T>
-std::vector<const char*>& RessourceManager::getResourcesNames()
+std::vector<const char*>& ResourceManager::getResourcesNames()
 {
     return _resourcesNames[T::getResourceType()];
 }
 
-template Model*  RessourceManager::getOrLoadResource<Model>(const std::string& fileName);
-template Texture*  RessourceManager::getOrLoadResource<Texture>(const std::string& fileName);
-template Geometry*  RessourceManager::getOrLoadResource<Geometry>(const std::string& fileName);
-template Material*  RessourceManager::getOrLoadResource<Material>(const std::string& fileName);
-template File*  RessourceManager::getOrLoadResource<File>(const std::string& fileName);
+template Model*  ResourceManager::getOrLoadResource<Model>(const std::string& fileName);
+template Texture*  ResourceManager::getOrLoadResource<Texture>(const std::string& fileName);
+template Geometry*  ResourceManager::getOrLoadResource<Geometry>(const std::string& fileName);
+template Material*  ResourceManager::getOrLoadResource<Material>(const std::string& fileName);
+template File*  ResourceManager::getOrLoadResource<File>(const std::string& fileName);
 
-template Model*  RessourceManager::getResource<Model>(const std::string& fileName);
-template Texture*  RessourceManager::getResource<Texture>(const std::string& fileName);
-template Geometry*  RessourceManager::getResource<Geometry>(const std::string& fileName);
-template Material*  RessourceManager::getResource<Material>(const std::string& fileName);
-template File*  RessourceManager::getResource<File>(const std::string& fileName);
+template Model*  ResourceManager::getResource<Model>(const std::string& fileName);
+template Texture*  ResourceManager::getResource<Texture>(const std::string& fileName);
+template Geometry*  ResourceManager::getResource<Geometry>(const std::string& fileName);
+template Material*  ResourceManager::getResource<Material>(const std::string& fileName);
+template File*  ResourceManager::getResource<File>(const std::string& fileName);
 
-template Model*  RessourceManager::registerResource<Model>(std::unique_ptr<Model> resource, const std::string& path);
-template Texture*  RessourceManager::registerResource<Texture>(std::unique_ptr<Texture> resource, const std::string& path);
-template Geometry*  RessourceManager::registerResource<Geometry>(std::unique_ptr<Geometry> resource, const std::string& path);
-template Material*  RessourceManager::registerResource<Material>(std::unique_ptr<Material> resource, const std::string& path);
-template File*  RessourceManager::registerResource<File>(std::unique_ptr<File> resource, const std::string& path);
+template Model*  ResourceManager::registerResource<Model>(std::unique_ptr<Model> resource, const std::string& path);
+template Texture*  ResourceManager::registerResource<Texture>(std::unique_ptr<Texture> resource, const std::string& path);
+template Geometry*  ResourceManager::registerResource<Geometry>(std::unique_ptr<Geometry> resource, const std::string& path);
+template Material*  ResourceManager::registerResource<Material>(std::unique_ptr<Material> resource, const std::string& path);
+template File*  ResourceManager::registerResource<File>(std::unique_ptr<File> resource, const std::string& path);
 
-template File*  RessourceManager::getOrCreateResource<File>(const std::string& path);
+template File*  ResourceManager::getOrCreateResource<File>(const std::string& path);
 
-template std::vector<const char*>&  RessourceManager::getResourcesNames<Model>();
-template std::vector<const char*>&  RessourceManager::getResourcesNames<Texture>();
-template std::vector<const char*>&  RessourceManager::getResourcesNames<Material>();
+template std::vector<const char*>&  ResourceManager::getResourcesNames<Model>();
+template std::vector<const char*>&  ResourceManager::getResourcesNames<Texture>();
+template std::vector<const char*>&  ResourceManager::getResourcesNames<Material>();

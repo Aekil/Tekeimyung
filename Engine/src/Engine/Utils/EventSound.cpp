@@ -3,7 +3,7 @@
 */
 
 #include <Engine/Utils/Logger.hpp>
-#include <Engine/Utils/RessourceManager.hpp>
+#include <Engine/Utils/ResourceManager.hpp>
 #include <Engine/Utils/Exception.hpp>
 #include <Engine/Sound/SoundManager.hpp>
 
@@ -38,7 +38,7 @@ int EventSound::getSoundIDFromEvent(eEventSound event)
     return (-2); // not supposed to happen
 }
 
-void    EventSound::linkEventSound(int i, int id, const RessourceManager::sSoundStrings& soundString)
+void    EventSound::linkEventSound(int i, int id, const ResourceManager::sSoundStrings& soundString)
 {
     // Out of range
     if (i < 0 || i >= _eventSoundDataList.size())

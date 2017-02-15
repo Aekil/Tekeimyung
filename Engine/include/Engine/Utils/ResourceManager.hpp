@@ -11,7 +11,7 @@
 
 #include <Engine/Utils/Resource.hpp>
 
-// Textures and models files extensions loaded in RessourceManager::loadResources
+// Textures and models files extensions loaded in ResourceManager::loadResources
 #define TEXTURES_EXT    "png", "jpg", "jpeg"
 #define MODELS_EXT      "dae", "obj", "fbx"
 #define MATERIALS_EXT   "mat"
@@ -23,7 +23,7 @@ class Material;
 class MaterialDebugWindow;
 class JsonWriter;
 
-class RessourceManager
+class ResourceManager
 {
 friend EntityFactory;
 friend GeometryFactory;
@@ -47,8 +47,8 @@ public:
     };
 
 public:
-    RessourceManager();
-    ~RessourceManager();
+    ResourceManager();
+    ~ResourceManager();
 
     void                                            loadResources(const std::string& directory);
 
@@ -63,7 +63,7 @@ public:
 
     const std::vector<sSoundStrings>&               getSoundsStrings() const;
 
-    static RessourceManager*                        getInstance();
+    static ResourceManager*                        getInstance();
     static std::string                              getFileExtension(const std::string& fileName);
 
 private:
@@ -85,5 +85,5 @@ private:
     std::vector<sSoundStrings>                              _soundsStrings;
 
     //Singleton instance
-    static RessourceManager*                        _ressourceManager;
+    static ResourceManager*                        _ResourceManager;
 };

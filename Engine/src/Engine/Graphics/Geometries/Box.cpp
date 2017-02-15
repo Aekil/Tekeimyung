@@ -3,7 +3,7 @@
 */
 
 #include <Engine/Utils/Debug.hpp>
-#include <Engine/Utils/RessourceManager.hpp>
+#include <Engine/Utils/ResourceManager.hpp>
 
 #include <Engine/Graphics/Geometries/Box.hpp>
 
@@ -85,7 +85,7 @@ Box::Box(Box::sInfo& info): Geometry(Geometry::eType::BOX)
     };
 
     // Box material
-    Material* material = RessourceManager::getInstance()->getResource<Material>("geometry_default.mat");
+    Material* material = ResourceManager::getInstance()->getResource<Material>("geometry_default.mat");
     ASSERT(material != nullptr, "geometry_default.mat should exists");
     mesh->setMaterial(material);
 

@@ -6,7 +6,7 @@
 
 #include <Engine/Utils/Helper.hpp>
 #include <Engine/Utils/Logger.hpp>
-#include <Engine/Utils/RessourceManager.hpp>
+#include <Engine/Utils/ResourceManager.hpp>
 #include <Engine/Sound/SoundManager.hpp>
 
 #include <Engine/SoundEditorWindow.hpp>
@@ -44,7 +44,7 @@ void    SoundEditorWindow::build(float elapsedTime)
     ImGui::SetWindowPos(ImVec2(_pos.x, _pos.y), ImGuiSetCond_Always);
 
     EventSound instance;
-    auto soundsStrings = RessourceManager::getInstance()->getSoundsStrings();
+    auto soundsStrings = ResourceManager::getInstance()->getSoundsStrings();
     /*static*/ std::vector<tEventSound> eventSoundData /*= EventSound::getEventSoundDataList()*/;
     eventSoundData = instance.getEventSoundDataList();
     static int soundEventIndex = 0;
@@ -160,7 +160,7 @@ void    SoundEditorWindow::build(float elapsedTime)
 
 void        SoundEditorWindow::buildSoundEventDetails(tEventSound* soundEvent, int soundEventIndex)
 {
-    auto    soundsStrings = RessourceManager::getInstance()->getSoundsStrings();
+    auto    soundsStrings = ResourceManager::getInstance()->getSoundsStrings();
 
     ImGui::BeginGroup();
 

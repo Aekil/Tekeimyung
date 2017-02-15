@@ -8,7 +8,7 @@
 #include <unordered_map>
 #include <utility>
 
-#include <Engine/Utils/RessourceManager.hpp>
+#include <Engine/Utils/ResourceManager.hpp>
 
 #include <Engine/Sound/SoundManager.hpp>
 
@@ -47,7 +47,7 @@ public:
     static const std::vector<tEventSound>&  getEventSoundDataList();
     static int                              getSoundIDFromEvent(eEventSound event);
 
-    static void                             linkEventSound(int i, int id, const RessourceManager::sSoundStrings& soundString);
+    static void                             linkEventSound(int i, int id, const ResourceManager::sSoundStrings& soundString);
     static void                             removeEventSound(int i);
 
     static bool                             isEventLinkedToSound(eEventSound event);

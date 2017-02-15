@@ -4,7 +4,7 @@
 
 #include <Engine/Utils/File.hpp>
 #include <Engine/Utils/Logger.hpp>
-#include <Engine/Utils/RessourceManager.hpp>
+#include <Engine/Utils/ResourceManager.hpp>
 
 #include <Engine/Utils/JsonWriter.hpp>
 
@@ -14,7 +14,7 @@ JsonWriter::~JsonWriter() {}
 
 void    JsonWriter::write(const std::string& fileName, JsonValue& json)
 {
-    File* file = RessourceManager::getInstance()->getOrCreateResource<File>(fileName);
+    File* file = ResourceManager::getInstance()->getOrCreateResource<File>(fileName);
     if (!file)
     {
         LOG_ERROR("Failed to get json resource %s", fileName.c_str());

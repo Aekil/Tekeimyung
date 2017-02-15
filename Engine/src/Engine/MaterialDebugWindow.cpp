@@ -10,7 +10,7 @@
 #include <Engine/Utils/Exception.hpp>
 #include <Engine/Utils/JsonWriter.hpp>
 #include <Engine/Utils/Logger.hpp>
-#include <Engine/Utils/RessourceManager.hpp>
+#include <Engine/Utils/ResourceManager.hpp>
 
 MaterialDebugWindow::MaterialDebugWindow(const glm::vec2& pos, const glm::vec2& size): DebugWindow("Material editor", pos, size) {}
 
@@ -60,10 +60,10 @@ void    MaterialDebugWindow::build(float elapsedTime)
 void    MaterialDebugWindow::displayMaterialsList()
 {
     ImGui::BeginChild("Materials list", ImVec2(_size.x * 40.0f / 100.0f, 0), true);
-    auto& materialNames = RessourceManager::getInstance()->getResourcesNames<Material>();
+    auto& materialNames = ResourceManager::getInstance()->getResourcesNames<Material>();
     for (const char* materialName: materialNames)
     {
-        Material* material = RessourceManager::getInstance()->getResource<Material>(materialName);
+        Material* material = ResourceManager::getInstance()->getResource<Material>(materialName);
         if (!material->isModelMaterial() && ImGui::Selectable(materialName, _selectedMaterialName == materialName))
         {
             _selectedMaterialName = materialName;
@@ -88,14 +88,14 @@ void    MaterialDebugWindow::displayMaterialsProperties()
 
         changed |= ImGui::ColorEdit4("Ambient", glm::value_ptr(_selectedMaterial->_constants.ambient));
         changed |= ImGui::ColorEdit4("Diffuse", glm::value_ptr(_selectedMaterial->_constants.diffuse));
-        if (Helper::updateComboString("Ambient texture", RessourceManager::getInstance()->getResourcesNames<Texture>(), ambientTextureName))
+        if (Helper::updateComboString("Ambient texture", ResourceManager::getInstance()->getResourcesNames<Texture>(), ambientTextureName))
         {
-            ambientTexture = RessourceManager::getInstance()->getResource<Texture>(ambientTextureName);
+            ambientTexture = ResourceManager::getInstance()->getResource<Texture>(ambientTextureName);
             _selectedMaterial->setTexture(Texture::eType::AMBIENT, ambientTexture);
         }
-        if (Helper::updateComboString("Diffuse texture", RessourceManager::getInstance()->getResourcesNames<Texture>(), diffuseTextureName))
+        if (Helper::updateComboString("Diffuse texture", ResourceManager::getInstance()->getResourcesNames<Texture>(), diffuseTextureName))
         {
-            diffuseTexture = RessourceManager::getInstance()->getResource<Texture>(diffuseTextureName);
+            diffuseTexture = ResourceManager::getInstance()->getResource<Texture>(diffuseTextureName);
             _selectedMaterial->setTexture(Texture::eType::DIFFUSE, diffuseTexture);
         }
 
@@ -131,7 +131,7 @@ void    MaterialDebugWindow::displayMaterialsProperties()
 bool    MaterialDebugWindow::createMaterial(std::string name)
 {
     name = name + ".mat";
-    auto& materialNames = RessourceManager::getInstance()->getResourcesNames<Material>();
+    auto& materialNames = ResourceManager::getInstance()->getResourcesNames<Material>();
     if (std::find(materialNames.cbegin(), materialNames.cend(), name) != materialNames.cend())
     {
         LOG_ERROR("Can't create material \"%s\": already exists", name.c_str());
@@ -140,7 +140,7 @@ bool    MaterialDebugWindow::createMaterial(std::string name)
 
     std::string filePath = std::string(MATERIALS_DIRECTORY) + name;
     std::unique_ptr<Material> material = std::make_unique<Material>(false);
-    RessourceManager::getInstance()->registerResource<Material>(std::move(material), filePath);
+    ResourceManager::getInstance()->registerResource<Material>(std::move(material), filePath);
     LOG_INFO("New material \"%s\" has been created", name.c_str());
 
     return (true);
@@ -155,7 +155,7 @@ bool    MaterialDebugWindow::cloneMaterial(Material* material, std::string clone
     }
 
     cloneName = cloneName + ".mat";
-    auto& materialNames = RessourceManager::getInstance()->getResourcesNames<Material>();
+    auto& materialNames = ResourceManager::getInstance()->getResourcesNames<Material>();
     if (std::find(materialNames.cbegin(), materialNames.cend(), cloneName) != materialNames.cend())
     {
         LOG_ERROR("Can't clone material \"%s\" with clone name \"%s\": already exists", material->getId().c_str(), cloneName.c_str());
@@ -164,7 +164,7 @@ bool    MaterialDebugWindow::cloneMaterial(Material* material, std::string clone
 
     std::string filePath = std::string(MATERIALS_DIRECTORY) + cloneName;
     std::unique_ptr<Material> cloneMaterial = std::make_unique<Material>(*material);
-    RessourceManager::getInstance()->registerResource<Material>(std::move(cloneMaterial), filePath);
+    ResourceManager::getInstance()->registerResource<Material>(std::move(cloneMaterial), filePath);
     LOG_INFO("Material \"%s\" has been cloned to \"%s\"", material->getId().c_str(), cloneName.c_str());
 
     return (true);
@@ -172,10 +172,10 @@ bool    MaterialDebugWindow::cloneMaterial(Material* material, std::string clone
 
 void    MaterialDebugWindow::saveMaterials()
 {
-    auto& materialNames = RessourceManager::getInstance()->getResourcesNames<Material>();
+    auto& materialNames = ResourceManager::getInstance()->getResourcesNames<Material>();
     for (const char* materialName: materialNames)
     {
-        Material* material = RessourceManager::getInstance()->getResource<Material>(materialName);
+        Material* material = ResourceManager::getInstance()->getResource<Material>(materialName);
 
         // Only save non-model materials
         if (!material->isModelMaterial())

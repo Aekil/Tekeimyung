@@ -7,7 +7,7 @@
 
 #include <Engine/Utils/Debug.hpp>
 #include <Engine/Utils/Logger.hpp>
-#include <Engine/Utils/RessourceManager.hpp>
+#include <Engine/Utils/ResourceManager.hpp>
 
 #include <Engine/Sound/SoundManager.hpp>
 

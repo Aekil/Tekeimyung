@@ -13,7 +13,7 @@
 #include <Engine/Window/Keyboard.hpp>
 #include <Engine/Window/GameWindow.hpp>
 #include <Engine/Utils/LevelLoader.hpp>
-#include <Engine/Utils/RessourceManager.hpp>
+#include <Engine/Utils/ResourceManager.hpp>
 #include <Engine/Graphics/Renderer.hpp>
 #include <Engine/Core/ScriptFactory.hpp>
 #include <Engine/EntityFactory.hpp>
@@ -170,7 +170,7 @@ sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& 
                 break;
             }
 
-            Material* material = RessourceManager::getInstance()->getResource<Material>(materialName);
+            Material* material = ResourceManager::getInstance()->getResource<Material>(materialName);
             if (!material)
             {
                 EXCEPT(InternalErrorException, "%s::sRenderComponent loadFromJson error: can't find material ", entityType.c_str(), materialName.c_str());
@@ -340,7 +340,7 @@ bool    ComponentFactory<sRenderComponent>::updateEditor(const std::string& enti
 
     if (component->type == Geometry::eType::MESH)
     {
-        static RessourceManager* resourceManager = RessourceManager::getInstance();
+        static ResourceManager* resourceManager = ResourceManager::getInstance();
         static std::vector<const char*>& modelsString = const_cast<std::vector<const char*>&>(resourceManager->getResourcesNames<Model>());
         auto model = resourceManager->getOrLoadResource<Model>(component->modelFile);
         int selectedModel = static_cast<int>(std::find(modelsString.cbegin(), modelsString.cend(), model->getId()) - modelsString.begin());
@@ -379,9 +379,9 @@ bool    ComponentFactory<sRenderComponent>::updateMaterialsEditor(sRenderCompone
     {
         ImGui::PushID(i);
         std::string materialName = materials[i]->getId();
-        if (Helper::updateComboString("mat", RessourceManager::getInstance()->getResourcesNames<Material>(), materialName))
+        if (Helper::updateComboString("mat", ResourceManager::getInstance()->getResourcesNames<Material>(), materialName))
         {
-            materials[i] = RessourceManager::getInstance()->getResource<Material>(materialName);
+            materials[i] = ResourceManager::getInstance()->getResource<Material>(materialName);
         }
         ImGui::PopID();
     }

@@ -5,7 +5,7 @@
 #include <Engine/Utils/Exception.hpp>
 #include <Engine/Utils/JsonReader.hpp>
 #include <Engine/Utils/Logger.hpp>
-#include <Engine/Utils/RessourceManager.hpp>
+#include <Engine/Utils/ResourceManager.hpp>
 
 #include <Engine/Graphics/Material.hpp>
 
@@ -55,7 +55,7 @@ Material*    Material::loadFromAssimp(aiMaterial* assimpMaterial, const std::str
 
     // Return material if already exists
     {
-        Material* material = RessourceManager::getInstance()->getResource<Material>(name.C_Str());
+        Material* material = ResourceManager::getInstance()->getResource<Material>(name.C_Str());
         if (material)
         {
             return (material);
@@ -78,7 +78,7 @@ Material*    Material::loadFromAssimp(aiMaterial* assimpMaterial, const std::str
     if (assimpMaterial->GetTextureCount(aiTextureType_AMBIENT) > 0 &&
         assimpMaterial->GetTexture(aiTextureType_AMBIENT, 0, &file) == AI_SUCCESS)
     {
-        Texture* ambientTexture = RessourceManager::getInstance()->getOrLoadResource<Texture>(path + "/" + file.C_Str());
+        Texture* ambientTexture = ResourceManager::getInstance()->getOrLoadResource<Texture>(path + "/" + file.C_Str());
         material->setTexture(Texture::eType::AMBIENT, ambientTexture);
     }
 
@@ -86,11 +86,11 @@ Material*    Material::loadFromAssimp(aiMaterial* assimpMaterial, const std::str
     if (assimpMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0 &&
         assimpMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &file) == AI_SUCCESS)
     {
-        Texture* diffuseTexture = RessourceManager::getInstance()->getOrLoadResource<Texture>(path + "/" + file.C_Str());
+        Texture* diffuseTexture = ResourceManager::getInstance()->getOrLoadResource<Texture>(path + "/" + file.C_Str());
         material->setTexture(Texture::eType::DIFFUSE, diffuseTexture);
     }
 
-    return (RessourceManager::getInstance()->registerResource<Material>(std::move(material), name.C_Str()));
+    return (ResourceManager::getInstance()->registerResource<Material>(std::move(material), name.C_Str()));
 }
 
 void    Material::bind(const ShaderProgram& shaderProgram)
@@ -145,7 +145,7 @@ bool        Material::loadFromFile(const std::string& fileName)
         std::string texturePath = textures.getString("ambient", "");
         if (texturePath.size() != 0)
         {
-            Texture* texture = RessourceManager::getInstance()->getOrLoadResource<Texture>(texturePath);
+            Texture* texture = ResourceManager::getInstance()->getOrLoadResource<Texture>(texturePath);
             setTexture(Texture::eType::AMBIENT, texture);
         }
     }
@@ -155,7 +155,7 @@ bool        Material::loadFromFile(const std::string& fileName)
         std::string texturePath = textures.getString("diffuse", "");
         if (texturePath.size() != 0)
         {
-            Texture* texture = RessourceManager::getInstance()->getOrLoadResource<Texture>(texturePath);
+            Texture* texture = ResourceManager::getInstance()->getOrLoadResource<Texture>(texturePath);
             setTexture(Texture::eType::DIFFUSE, texture);
         }
     }

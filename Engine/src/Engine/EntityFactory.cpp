@@ -13,7 +13,7 @@
 #include <Engine/Utils/Logger.hpp>
 #include <Engine/Utils/Helper.hpp>
 #include <Engine/Utils/Exception.hpp>
-#include <Engine/Utils/RessourceManager.hpp>
+#include <Engine/Utils/ResourceManager.hpp>
 
 #include <Engine/Utils/JsonReader.hpp>
 #include <Engine/Utils/JsonWriter.hpp>
@@ -40,7 +40,7 @@ void EntityFactory::loadDirectory(const std::string& archetypesDir)
 
     while ((ent = readdir(dir)) != NULL)
     {
-        if (RessourceManager::getFileExtension(ent->d_name) == "json")
+        if (ResourceManager::getFileExtension(ent->d_name) == "json")
         {
             // Get entity configuration file
             std::string path = std::string(archetypesDir).append("/").append(ent->d_name);
@@ -185,7 +185,7 @@ void EntityFactory::createEntityType(const std::string& typeName)
 
     // Check if file does not exist
     {
-        File* file = RessourceManager::getInstance()->getResource<File>(filePath);
+        File* file = ResourceManager::getInstance()->getResource<File>(filePath);
         if (file)
         {
             // TODO: Replace with LOG_ERROR (Why it does not work ??)
@@ -198,7 +198,7 @@ void EntityFactory::createEntityType(const std::string& typeName)
     {
         std::unique_ptr<File> resourceFile = std::make_unique<File>();
 
-        File* file = RessourceManager::getInstance()->registerResource<File>(std::move(resourceFile), filePath);
+        File* file = ResourceManager::getInstance()->registerResource<File>(std::move(resourceFile), filePath);
         if (file)
         {
             file->setContent("{\"name\": \"" + typeName + "\"}");

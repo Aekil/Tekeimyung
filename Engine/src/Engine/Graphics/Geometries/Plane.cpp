@@ -3,7 +3,7 @@
 */
 
 #include <Engine/Utils/Debug.hpp>
-#include <Engine/Utils/RessourceManager.hpp>
+#include <Engine/Utils/ResourceManager.hpp>
 
 #include <Engine/Graphics/Geometries/Plane.hpp>
 
@@ -32,7 +32,7 @@ Plane::Plane(Plane::sInfo& info): Geometry(Geometry::eType::PLANE)
     };
 
     // Plane material
-    Material* material = RessourceManager::getInstance()->getResource<Material>("geometry_default.mat");
+    Material* material = ResourceManager::getInstance()->getResource<Material>("geometry_default.mat");
     ASSERT(material != nullptr, "geometry_default.mat should exists");
     mesh->setMaterial(material);
 
@@ -56,7 +56,7 @@ void    Plane::setTexture(const std::string& texture)
         return;
 
     Material* material = getMaterial();
-    material->setTexture(Texture::eType::AMBIENT, RessourceManager::getInstance()->getOrLoadResource<Texture>(texture));
+    material->setTexture(Texture::eType::AMBIENT, ResourceManager::getInstance()->getOrLoadResource<Texture>(texture));
 
    // Set diffuse to 0.0 or the texture transparency won't work
    material->_constants.diffuse = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);

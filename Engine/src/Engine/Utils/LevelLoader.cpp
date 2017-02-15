@@ -179,7 +179,7 @@ void    LevelLoader::loadDirectory(const std::string& directory)
 
     while ((ent = readdir(dir)) != NULL)
     {
-        if (RessourceManager::getFileExtension(ent->d_name) == "json")
+        if (ResourceManager::getFileExtension(ent->d_name) == "json")
         {
             std::string fileName(ent->d_name);
             size_t extensionFind = fileName.find_last_of(".");
