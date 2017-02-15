@@ -55,9 +55,6 @@ void    UniformBuffer::bind(const ShaderProgram& shaderProgram, const char* bloc
 
     // Bind UBO
     glBindBufferBase(GL_UNIFORM_BUFFER, _bindingPoint, _UBO);
-
-    // Bind UBO with uniform block in shader
-    shaderProgram.bindBlock(_boundBlockIndex, _bindingPoint);
 }
 
 void    UniformBuffer::setBindingPoint(uint16_t bindingPoint)

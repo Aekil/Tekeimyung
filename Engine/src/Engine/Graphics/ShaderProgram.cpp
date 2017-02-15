@@ -112,8 +112,3 @@ GLuint  ShaderProgram::getUniformBlockIndex(const char* name) const
 {
     return (glGetUniformBlockIndex(_shaderProgram, name));
 }
-
-void    ShaderProgram::bindBlock(GLuint uniformBlockIndex, GLuint uniformBlockBinding) const
-{
-    glUniformBlockBinding(_shaderProgram, uniformBlockIndex, uniformBlockBinding);
-}

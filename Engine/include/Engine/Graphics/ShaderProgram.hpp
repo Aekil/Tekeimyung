@@ -21,8 +21,6 @@ public:
     GLuint                                  getUniformLocation(const char* location) const;
     GLuint                                  getUniformBlockIndex(const char* name) const;
 
-    void                                    bindBlock(GLuint uniformBlockIndex, GLuint uniformBlockBinding) const;
-
 private:
     std::string                             shaderNameFromType(GLenum shaderType) const;
     void                                    checkProgramError() const;
