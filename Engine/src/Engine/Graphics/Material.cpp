@@ -118,8 +118,17 @@ bool    Material::isModelMaterial() const
 
 void    Material::setTexture(Texture::eType type, Texture* texture)
 {
-    _constants.texturesTypes |= type;
+    if (texture)
+    {
+        _constants.texturesTypes |= type;
+    }
+    else
+    {
+        _constants.texturesTypes &= ~type;
+    }
+
     _textures[type] = texture;
+    _needUpdate = true;
 }
 
 Texture*    Material::getTexture(Texture::eType type) const

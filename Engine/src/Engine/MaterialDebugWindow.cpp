@@ -90,13 +90,26 @@ void    MaterialDebugWindow::displayMaterialsProperties()
         changed |= ImGui::ColorEdit4("Diffuse", glm::value_ptr(_selectedMaterial->_constants.diffuse));
         if (Helper::updateComboString("Ambient texture", ResourceManager::getInstance()->getResourcesNames<Texture>(), ambientTextureName))
         {
-            ambientTexture = ResourceManager::getInstance()->getResource<Texture>(ambientTextureName);
-            _selectedMaterial->setTexture(Texture::eType::AMBIENT, ambientTexture);
+            LOG_INFO("NEW TEXTURE: \"%s\"", ambientTextureName.c_str());
+            // Empty choice
+            if (ambientTextureName.size() == 0)
+                _selectedMaterial->setTexture(Texture::eType::AMBIENT, nullptr);
+            else
+            {
+                ambientTexture = ResourceManager::getInstance()->getResource<Texture>(ambientTextureName);
+                _selectedMaterial->setTexture(Texture::eType::AMBIENT, ambientTexture);
+            }
         }
         if (Helper::updateComboString("Diffuse texture", ResourceManager::getInstance()->getResourcesNames<Texture>(), diffuseTextureName))
         {
-            diffuseTexture = ResourceManager::getInstance()->getResource<Texture>(diffuseTextureName);
-            _selectedMaterial->setTexture(Texture::eType::DIFFUSE, diffuseTexture);
+            // Empty choice
+            if (diffuseTextureName.size() == 0)
+                _selectedMaterial->setTexture(Texture::eType::DIFFUSE, nullptr);
+            else
+            {
+                diffuseTexture = ResourceManager::getInstance()->getResource<Texture>(diffuseTextureName);
+                _selectedMaterial->setTexture(Texture::eType::DIFFUSE, diffuseTexture);
+            }
         }
 
         if (changed)

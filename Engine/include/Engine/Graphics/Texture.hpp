@@ -46,6 +46,10 @@ private:
 };
 
 
+inline int operator~(const Texture::eType& rhs) {
+    return (~static_cast<int>(rhs));
+}
+
 inline int operator|(int& lhs, const Texture::eType& rhs) {
     return (lhs | static_cast<int>(rhs));
 }

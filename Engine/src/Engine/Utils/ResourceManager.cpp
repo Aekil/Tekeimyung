@@ -21,7 +21,11 @@
 
 ResourceManager*   ResourceManager::_ResourceManager = nullptr;
 
-ResourceManager::ResourceManager() {}
+ResourceManager::ResourceManager()
+{
+    // Add empty name for empty choice
+    _resourcesNames[Resource::eType::TEXTURE].push_back("");
+}
 
 ResourceManager::~ResourceManager() {}
 
