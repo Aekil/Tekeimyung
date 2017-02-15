@@ -4,8 +4,9 @@
 
 #include <GL/glew.h>
 
-#include <Engine/Utils/RessourceManager.hpp>
 #include <Engine/Utils/Exception.hpp>
+#include <Engine/Utils/File.hpp>
+#include <Engine/Utils/RessourceManager.hpp>
 
 #include <Engine/Graphics/ShaderProgram.hpp>
 
@@ -29,7 +30,7 @@ void    ShaderProgram::attachShader(GLenum shaderType, const std::string& fileNa
     std::string         shaderString;
 
     // Get shader raw source code
-    shaderString = RessourceManager::getInstance()->getFile(fileName);
+    shaderString = RessourceManager::getInstance()->getOrLoadResource<File>(fileName)->getContent();
     const char *cShaderString = shaderString.c_str();
 
     // Create shader and compiles it

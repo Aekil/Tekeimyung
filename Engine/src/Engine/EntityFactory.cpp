@@ -9,6 +9,7 @@
 #include <dirent.h> // This include has to be called after "ComponentFactory.hpp"
 
 #include <Engine/Utils/Debug.hpp>
+#include <Engine/Utils/File.hpp>
 #include <Engine/Utils/Logger.hpp>
 #include <Engine/Utils/Helper.hpp>
 #include <Engine/Utils/Exception.hpp>
@@ -182,8 +183,31 @@ void EntityFactory::createEntityType(const std::string& typeName)
     IComponentFactory::initComponent(typeName, "sTransformComponent", {});
     _entities[typeName].components.push_back("sTransformComponent");
 
-    // Create file
-    RessourceManager::getInstance()->createFile(filePath, "{\"name\": \"" + typeName + "\"}");
+    // Check if file does not exist
+    {
+        File* file = RessourceManager::getInstance()->getResource<File>(filePath);
+        if (file)
+        {
+            // TODO: Replace with LOG_ERROR (Why it does not work ??)
+            LOG_WARN("Can't create entity type \"%s\": the file \"%s\" already exists", typeName.c_str(), filePath.c_str());
+            return;
+        }
+    }
+
+    // Register and save file
+    {
+        std::unique_ptr<File> resourceFile = std::make_unique<File>();
+
+        File* file = RessourceManager::getInstance()->registerResource<File>(std::move(resourceFile), filePath);
+        if (file)
+        {
+            file->setContent("{\"name\": \"" + typeName + "\"}");
+            file->save();
+        }
+    }
+
+    LOG_INFO("New entity type \"%s\" created", typeName.c_str());
+
 }
 
 void EntityFactory::bindEntityManager(EntityManager* em)

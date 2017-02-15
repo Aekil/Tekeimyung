@@ -90,7 +90,7 @@ Material*    Material::loadFromAssimp(aiMaterial* assimpMaterial, const std::str
         material->setTexture(Texture::eType::DIFFUSE, diffuseTexture);
     }
 
-    return (RessourceManager::getInstance()->registerResource<Material>(name.C_Str(), std::move(material)));
+    return (RessourceManager::getInstance()->registerResource<Material>(std::move(material), name.C_Str()));
 }
 
 void    Material::bind(const ShaderProgram& shaderProgram)

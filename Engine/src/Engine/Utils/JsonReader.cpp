@@ -3,6 +3,8 @@
 */
 
 #include <iostream>
+
+#include <Engine/Utils/File.hpp>
 #include <Engine/Utils/Logger.hpp>
 #include <Engine/Utils/JsonReader.hpp>
 #include <Engine/Utils/RessourceManager.hpp>
@@ -13,12 +15,12 @@ JsonReader::~JsonReader() {}
 
 bool    JsonReader::parse(const std::string& fileName, JsonValue& json)
 {
-    LOG_INFO("Loading json \"%s\"", fileName.c_str());
+    LOG_INFO("Parsing json \"%s\"", fileName.c_str());
 
     Json::Reader jsonReader;
     Json::Value parsed;
 
-    std::string document = RessourceManager::getInstance()->getFile(fileName);
+    std::string document = RessourceManager::getInstance()->getOrLoadResource<File>(fileName)->getContent();
 
     if (!jsonReader.parse(document, parsed))
     {

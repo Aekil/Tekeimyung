@@ -13,6 +13,7 @@
 #include <Engine/Graphics/Model.hpp>
 #include <Engine/Graphics/Texture.hpp>
 #include <Engine/Utils/Exception.hpp>
+#include <Engine/Utils/File.hpp>
 #include <Engine/Utils/Helper.hpp>
 #include <Engine/Sound/SoundManager.hpp>
 
@@ -113,107 +114,6 @@ std::string RessourceManager::getBasename(const std::string& fileName)
     return (basename);
 }
 
-/*
-** File
-*/
-
-void    RessourceManager::createFile(const std::string& fileName, const std::string& fileContent)
-{
-    std::ofstream file;
-    RessourceManager::sFile fileInfos;
-    std::string basename = getBasename(fileName);
-
-    // Check file does not exists
-    file.open(fileName.c_str());
-    if (!file.good())
-        EXCEPT(InternalErrorException, "Attempt to create the file %s which already exists", fileName.c_str());
-
-    // Open file to write
-    file = std::ofstream(fileName.c_str(), std::ios::out);
-    if (!file.good())
-        EXCEPT(InternalErrorException, "Failed to create the file %s", fileName.c_str());
-
-    // Save content
-    file << fileContent;
-    file.close();
-
-    // Save file in RessourceManager
-    fileInfos.path = fileName;
-    fileInfos.content = std::string(fileContent.begin(), fileContent.end());
-    fileInfos.basename = basename;
-    _files[basename] = fileInfos;
-}
-
-std::string RessourceManager::getFile(const std::string& fileName)
-{
-    // Textures are stored with their basename
-    std::string basename = getBasename(fileName);
-
-    // The file is not loaded
-    if (_files.find(basename) == _files.end())
-    {
-        return (loadFile(basename, fileName));
-    }
-
-    auto &&file = _files.at(basename);
-    return (file.content);
-}
-
-void        RessourceManager::saveFile(const std::string& fileName, const std::string fileContent)
-{
-    std::ofstream file;
-    RessourceManager::sFile fileInfos;
-    std::string basename = getBasename(fileName);
-
-    file.open(fileName.c_str(), std::ios::trunc);
-    if (!file.good())
-        EXCEPT(FileNotFoundException, "Failed to open file \"%s\"", fileName.c_str());
-
-    file << fileContent;
-    file.close();
-
-    // The file does not exist is RessourceManager
-    if (_files.find(basename) != _files.end())
-    {
-        // Init file informations
-        fileInfos.content = fileContent;
-        fileInfos.path = fileName;
-        fileInfos.basename = basename;
-    }
-    else
-    {
-        // Update file informations
-        fileInfos.content = fileContent;
-    }
-    _files[basename] = fileInfos;
-}
-
-std::string RessourceManager::loadFile(const std::string basename, const std::string& fileName)
-{
-    std::ifstream               file;
-    int                         fileSize;
-    std::vector<char>           fileContent;
-    RessourceManager::sFile     fileInfos;
-
-    file.open(fileName.c_str());
-    if (!file.good())
-        EXCEPT(FileNotFoundException, "Failed to open file \"%s\"", fileName.c_str());
-
-    file.seekg(0, file.end);
-    fileSize = static_cast<int>(file.tellg());
-    file.seekg(0, file.beg);
-
-    fileContent.resize(fileSize);
-    file.read(fileContent.data(), fileSize);
-    file.close();
-
-    fileInfos.path = fileName;
-    fileInfos.content = std::string(fileContent.begin(), fileContent.end());
-    fileInfos.basename = basename;
-    _files[basename] = fileInfos;
-    return (_files[basename].content);
-}
-
 const std::vector<RessourceManager::sSoundStrings>&  RessourceManager::getSoundsStrings() const
 {
     return (_soundsStrings);
@@ -285,21 +185,37 @@ T*  RessourceManager::loadResource(const std::string& name)
 }
 
 template<typename T>
-T*  RessourceManager::registerResource(const std::string& name, std::unique_ptr<T> resource)
+T*  RessourceManager::registerResource(std::unique_ptr<T> resource, const std::string& path)
 {
+    std::string basename = getBasename(path);
     auto& resourceMap = _resources[T::getResourceType()];
 
-    if (resourceMap[name] != nullptr)
+    if (resourceMap[basename] != nullptr)
     {
-        LOG_WARN("RessourceManager::registerResource: registering resource \"%s\" that does already exists", name.c_str());
+        LOG_WARN("RessourceManager::registerResource: registering resource \"%s\" that does already exists", basename.c_str());
     }
 
-    resource->setId(name);
-    resourceMap[name] = std::move(resource);
+    resource->setId(basename);
+    resource->setPath(path);
+    resourceMap[basename] = std::move(resource);
     // TODO: Allocate char* for resource name
-    _resourcesNames[T::getResourceType()].push_back(resourceMap.find(name)->first.c_str());
+    _resourcesNames[T::getResourceType()].push_back(resourceMap.find(basename)->first.c_str());
 
-    return (static_cast<T*>(resourceMap[name].get()));
+    return (static_cast<T*>(resourceMap[basename].get()));
+}
+
+template<typename T>
+T* RessourceManager::getOrCreateResource(const std::string& path)
+{
+    T* resource = getResource<T>(path);
+
+    // The resource is not loaded
+    if (!resource)
+    {
+        return registerResource<T>(std::make_unique<T>(), path);
+    }
+
+    return (resource);
 }
 
 template<typename T>
@@ -312,16 +228,21 @@ template Model*  RessourceManager::getOrLoadResource<Model>(const std::string& f
 template Texture*  RessourceManager::getOrLoadResource<Texture>(const std::string& fileName);
 template Geometry*  RessourceManager::getOrLoadResource<Geometry>(const std::string& fileName);
 template Material*  RessourceManager::getOrLoadResource<Material>(const std::string& fileName);
+template File*  RessourceManager::getOrLoadResource<File>(const std::string& fileName);
 
 template Model*  RessourceManager::getResource<Model>(const std::string& fileName);
 template Texture*  RessourceManager::getResource<Texture>(const std::string& fileName);
 template Geometry*  RessourceManager::getResource<Geometry>(const std::string& fileName);
 template Material*  RessourceManager::getResource<Material>(const std::string& fileName);
+template File*  RessourceManager::getResource<File>(const std::string& fileName);
 
-template Model*  RessourceManager::registerResource<Model>(const std::string& name, std::unique_ptr<Model> resource);
-template Texture*  RessourceManager::registerResource<Texture>(const std::string& name, std::unique_ptr<Texture> resource);
-template Geometry*  RessourceManager::registerResource<Geometry>(const std::string& name, std::unique_ptr<Geometry> resource);
-template Material*  RessourceManager::registerResource<Material>(const std::string& name, std::unique_ptr<Material> resource);
+template Model*  RessourceManager::registerResource<Model>(std::unique_ptr<Model> resource, const std::string& path);
+template Texture*  RessourceManager::registerResource<Texture>(std::unique_ptr<Texture> resource, const std::string& path);
+template Geometry*  RessourceManager::registerResource<Geometry>(std::unique_ptr<Geometry> resource, const std::string& path);
+template Material*  RessourceManager::registerResource<Material>(std::unique_ptr<Material> resource, const std::string& path);
+template File*  RessourceManager::registerResource<File>(std::unique_ptr<File> resource, const std::string& path);
+
+template File*  RessourceManager::getOrCreateResource<File>(const std::string& path);
 
 template std::vector<const char*>&  RessourceManager::getResourcesNames<Model>();
 template std::vector<const char*>&  RessourceManager::getResourcesNames<Texture>();

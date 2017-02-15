@@ -23,28 +23,28 @@ void GeometryFactory::initGeometries()
     {
         Plane::sInfo planeInfos = {SIZE_UNIT, SIZE_UNIT};
         std::unique_ptr<Geometry> plane = std::make_unique<Plane>(planeInfos);
-        RessourceManager::getInstance()->registerResource<Geometry>("plane", std::move(plane));
+        RessourceManager::getInstance()->registerResource<Geometry>(std::move(plane), "plane");
     }
 
     // Box
     {
         Box::sInfo boxInfos = {SIZE_UNIT, SIZE_UNIT, SIZE_UNIT};
         std::unique_ptr<Geometry> box = std::make_unique<Box>(boxInfos);
-        RessourceManager::getInstance()->registerResource<Geometry>("box", std::move(box));
+        RessourceManager::getInstance()->registerResource<Geometry>(std::move(box), "box");
     }
 
     // Sphere
     {
         Sphere::sInfo sphereInfos = {SIZE_UNIT};
         std::unique_ptr<Geometry> sphere = std::make_unique<Sphere>(sphereInfos);
-        RessourceManager::getInstance()->registerResource<Geometry>("sphere", std::move(sphere));
+        RessourceManager::getInstance()->registerResource<Geometry>(std::move(sphere), "sphere");
     }
 
     // Circle
     {
         Circle::sInfo circleInfos = {SIZE_UNIT, SIZE_UNIT};
         std::unique_ptr<Geometry> circle = std::make_unique<Circle>(circleInfos);
-        RessourceManager::getInstance()->registerResource<Geometry>("circle", std::move(circle));
+        RessourceManager::getInstance()->registerResource<Geometry>(std::move(circle), "circle");
     }
 }
 

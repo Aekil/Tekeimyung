@@ -2,6 +2,7 @@
 * @Author   Guillaume Labey
 */
 
+#include <Engine/Utils/File.hpp>
 #include <Engine/Utils/Logger.hpp>
 #include <Engine/Utils/RessourceManager.hpp>
 
@@ -13,6 +14,13 @@ JsonWriter::~JsonWriter() {}
 
 void    JsonWriter::write(const std::string& fileName, JsonValue& json)
 {
-    LOG_INFO("Saving json %s", fileName.c_str());
-    RessourceManager::getInstance()->saveFile(fileName, json.get().toStyledString());
+    File* file = RessourceManager::getInstance()->getOrCreateResource<File>(fileName);
+    if (!file)
+    {
+        LOG_ERROR("Failed to get json resource %s", fileName.c_str());
+        return;
+    }
+
+    file->setContent(json.get().toStyledString());
+    file->save();
 }

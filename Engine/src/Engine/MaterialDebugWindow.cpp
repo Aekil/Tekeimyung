@@ -138,8 +138,9 @@ bool    MaterialDebugWindow::createMaterial(std::string name)
         return (false);
     }
 
+    std::string filePath = std::string(MATERIALS_DIRECTORY) + name;
     std::unique_ptr<Material> material = std::make_unique<Material>(false);
-    RessourceManager::getInstance()->registerResource<Material>(name, std::move(material));
+    RessourceManager::getInstance()->registerResource<Material>(std::move(material), filePath);
     LOG_INFO("New material \"%s\" has been created", name.c_str());
 
     return (true);
@@ -161,8 +162,9 @@ bool    MaterialDebugWindow::cloneMaterial(Material* material, std::string clone
         return (false);
     }
 
+    std::string filePath = std::string(MATERIALS_DIRECTORY) + cloneName;
     std::unique_ptr<Material> cloneMaterial = std::make_unique<Material>(*material);
-    RessourceManager::getInstance()->registerResource<Material>(cloneName, std::move(cloneMaterial));
+    RessourceManager::getInstance()->registerResource<Material>(std::move(cloneMaterial), filePath);
     LOG_INFO("Material \"%s\" has been cloned to \"%s\"", material->getId().c_str(), cloneName.c_str());
 
     return (true);
@@ -214,9 +216,9 @@ void    MaterialDebugWindow::saveMaterial(Material* material, JsonValue& json)
     JsonWriter jsonWriter;
     std::string filePath = std::string(MATERIALS_DIRECTORY) + material->getId();
 
-    jsonWriter.write(filePath, json);
+    jsonWriter.write(material->getPath(), json);
 
-    // The material name has changed
+    // The material name has changed, rename the file
     if (material->getPath().size() != 0 && material->getPath() != filePath)
     {
         if (std::rename(material->getPath().c_str(), filePath.c_str()))
