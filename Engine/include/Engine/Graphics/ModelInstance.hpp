@@ -6,7 +6,7 @@
 
 # include <vector>
 # include <Engine/Graphics/Model.hpp>
-# include <Engine/Graphics/Material.hpp>
+# include <Engine/Graphics/MeshInstance.hpp>
 
 class ModelInstance
 {
@@ -17,15 +17,12 @@ public:
 
     ModelInstance& operator=(const ModelInstance& modelInstance);
 
-    void                        draw(const ShaderProgram& shaderProgram, const glm::vec4& color, const glm::mat4 transform) const;
+    void                        draw(const ShaderProgram& shaderProgram, const glm::vec4& color, const glm::mat4 transform);
     const Model*                getModel() const;
     Model*                      getModel();
-    std::vector<Material*>&     getMaterials();
+    std::vector<std::unique_ptr<MeshInstance> >&  getMeshsInstances();
 
 private:
     Model*                      _model;
-
-    // Material for each mesh
-    // By default, the materials of _model are copied
-    std::vector<Material*>      _materials;
+    std::vector<std::unique_ptr<MeshInstance> >   _meshsInstances;
 };

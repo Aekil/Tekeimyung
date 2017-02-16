@@ -176,7 +176,7 @@ sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& 
                 EXCEPT(InternalErrorException, "%s::sRenderComponent loadFromJson error: can't find material ", entityType.c_str(), materialName.c_str());
             }
 
-            modelInstance->getMaterials()[i++] = material;
+            modelInstance->getMeshsInstances()[i++]->setMaterial(material);
         }
     }
 
@@ -240,8 +240,8 @@ JsonValue&    ComponentFactory<sRenderComponent>::saveToJson(const std::string& 
     json.setString("type", EnumManager<Geometry::eType>::enumToString(component->type));
     json.setBool("ignore_raycast", component->ignoreRaycast);
 
+    // Save animations
     {
-        // Save animations
         std::vector<JsonValue> animations;
         for (const auto& animation: component->_animator.getAnimations())
         {
@@ -270,13 +270,15 @@ JsonValue&    ComponentFactory<sRenderComponent>::saveToJson(const std::string& 
         json.setValueVec("animations", animations);
     }
 
-    // Load materials
+    // Save materials
     {
         std::vector<std::string> materialsNames;
 
-        auto& materials = const_cast<sRenderComponent*>(component)->getModelInstance()->getMaterials();
-        for (Material* material: materials)
+        auto& meshsInstances = const_cast<sRenderComponent*>(component)->getModelInstance()->getMeshsInstances();
+        for (auto& meshInstance: meshsInstances)
         {
+            Material* material = meshInstance->getMaterial();
+            ASSERT(material != nullptr, "A mesh instance should have a material");
             materialsNames.push_back(material->getId());
         }
 
@@ -373,15 +375,18 @@ bool    ComponentFactory<sRenderComponent>::updateMaterialsEditor(sRenderCompone
     ImGui::Text("\n");
     ImGui::Text("Materials");
 
-    auto& materials = component->getModelInstance()->getMaterials();
-    uint32_t materialsNb = (uint32_t)materials.size();
-    for (uint32_t i = 0; i < materialsNb; ++i)
+    auto& meshsInstances = component->getModelInstance()->getMeshsInstances();
+    uint32_t i = 0;
+    for (auto& meshInstance: meshsInstances)
     {
-        ImGui::PushID(i);
-        std::string materialName = materials[i]->getId();
+        ImGui::PushID(i++);
+        Material* material = meshInstance->getMaterial();
+        ASSERT(material != nullptr, "A mesh instance should have a material");
+
+        std::string materialName = material->getId();
         if (Helper::updateComboString("mat", ResourceManager::getInstance()->getResourcesNames<Material>(), materialName))
         {
-            materials[i] = ResourceManager::getInstance()->getResource<Material>(materialName);
+            meshInstance->setMaterial(ResourceManager::getInstance()->getResource<Material>(materialName));
         }
         ImGui::PopID();
     }

@@ -14,17 +14,23 @@ ModelInstance::ModelInstance(Model* model) : _model(model)
     uint32_t i = 0;
     auto& meshs = _model->getMeshs();
 
-    _materials.resize(meshs.size());
+    _meshsInstances.resize(meshs.size());
     for (auto& mesh: meshs)
     {
-        _materials[i++] = mesh->getMaterial();
+        _meshsInstances[i++] = std::make_unique<MeshInstance>(mesh.get());
     }
 }
 
 ModelInstance::ModelInstance(const ModelInstance& modelInstance)
 {
     _model = modelInstance._model;
-    _materials = modelInstance._materials;
+
+    _meshsInstances.resize(modelInstance._meshsInstances.size());
+    uint32_t i = 0;
+    for (const auto& meshInstance: modelInstance._meshsInstances)
+    {
+        _meshsInstances[i++] = std::make_unique<MeshInstance>(*meshInstance);
+    }
 }
 
 ModelInstance::~ModelInstance() {}
@@ -32,11 +38,18 @@ ModelInstance::~ModelInstance() {}
 ModelInstance& ModelInstance::operator=(const ModelInstance& modelInstance)
 {
     _model = modelInstance._model;
-    _materials = modelInstance._materials;
+
+    _meshsInstances.resize(modelInstance._meshsInstances.size());
+    uint32_t i = 0;
+    for (const auto& meshInstance: modelInstance._meshsInstances)
+    {
+        _meshsInstances[i++] = std::make_unique<MeshInstance>(*meshInstance);
+    }
+
     return (*this);
 }
 
-void    ModelInstance::draw(const ShaderProgram& shaderProgram, const glm::vec4& color, const glm::mat4 transform) const
+void    ModelInstance::draw(const ShaderProgram& shaderProgram, const glm::vec4& color, const glm::mat4 transform)
 {
     // Model matrix
     static GLint uniModel = shaderProgram.getUniformLocation("model");
@@ -49,15 +62,13 @@ void    ModelInstance::draw(const ShaderProgram& shaderProgram, const glm::vec4&
     // Bind buffer
     _model->getBuffer().bind();
 
-    auto& meshs = _model->getMeshs();
-    uint32_t i = 0;
-    for (auto &&material: _materials)
+    for (auto& meshInstance: _meshsInstances)
     {
-        material->bind(shaderProgram);
+        meshInstance->getMaterial()->bind(shaderProgram);
+        Mesh* mesh = meshInstance->getMesh();
 
         // Draw to screen
-        glDrawElements(_model->getPrimitiveType(), (GLuint)meshs[i]->indices.size(), GL_UNSIGNED_INT, BUFFER_OFFSET((GLuint)meshs[i]->idxOffset * sizeof(GLuint)));
-        ++i;
+        glDrawElements(_model->getPrimitiveType(), (GLuint)mesh->indices.size(), GL_UNSIGNED_INT, BUFFER_OFFSET((GLuint)mesh->idxOffset * sizeof(GLuint)));
     }
 }
 
@@ -71,7 +82,7 @@ Model*  ModelInstance::getModel()
     return (_model);
 }
 
-std::vector<Material*>& ModelInstance::getMaterials()
+std::vector<std::unique_ptr<MeshInstance> >& ModelInstance::getMeshsInstances()
 {
-    return (_materials);
+    return (_meshsInstances);
 }
