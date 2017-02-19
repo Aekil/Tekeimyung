@@ -31,6 +31,13 @@ public:
 
     std::vector<Entity*>&                           getEntities();
     const std::vector<Entity*>&                     getEntitiesByTag(const std::string& tag);
+
+    template<typename T>
+    const std::vector<Entity*>&                     getEntitiesByComponent()
+    {
+        return (_entitiesComponentGroups[T::identifier]);
+    }
+
     Entity*                                         getEntity(uint32_t id) const;
 
     // This function is not notified by the entity or the entity manager
@@ -40,8 +47,12 @@ public:
 private:
     void                                            notifyEntityNewComponent(Entity* entity, sComponent* component);
     void                                            notifyEntityRemovedComponent(Entity* entity, sComponent* component);
+
     void                                            addEntityToTagGroup(Entity* entity, const std::string& name);
     void                                            removeEntityFromTagGroup(Entity* entity, const std::string& name);
+
+    void                                            addEntityToComponentGroup(Entity* entity, uint32_t componentHash);
+    void                                            removeEntityFromComponentGroup(Entity* entity, uint32_t componentHash);
 
 private:
     // TODO: Replace Entity pointer with ID ?
@@ -49,6 +60,10 @@ private:
 
     // Store entities by tag
     std::unordered_map<std::string, std::vector<Entity*> >        _entitiesTagGroups;
+
+    // Store entities by component
+    std::unordered_map<uint32_t, std::vector<Entity*> >        _entitiesComponentGroups;
+
     std::vector<Entity*>                            _entitiesToDestroy;
 
     World&                                          _world;

@@ -27,8 +27,9 @@ Entity* EntityManager::createEntity()
 void    EntityManager::destroyEntity(Entity* entity)
 {
     _world.notifyEntityDeleted(entity);
-    std::for_each(entity->_components.begin(), entity->_components.end(), [](sComponent* component)
+    std::for_each(entity->_components.begin(), entity->_components.end(), [this, &entity](sComponent* component)
     {
+        removeEntityFromComponentGroup(entity, component->id);
         delete component;
     });
     entity->_components.clear();
@@ -99,11 +100,13 @@ Entity* EntityManager::getEntity(uint32_t id) const
 
 void    EntityManager::notifyEntityNewComponent(Entity* entity, sComponent* component)
 {
+    addEntityToComponentGroup(entity, component->id);
     _world.notifyEntityNewComponent(entity, component);
 }
 
 void    EntityManager::notifyEntityRemovedComponent(Entity* entity, sComponent* component)
 {
+    removeEntityFromComponentGroup(entity, component->id);
     _world.notifyEntityRemovedComponent(entity, component);
 }
 
@@ -133,5 +136,23 @@ void    EntityManager::removeEntityFromTagGroup(Entity* entity, const std::strin
     if (entityFind != tagGroup->second.cend())
     {
         tagGroup->second.erase(entityFind);
+    }
+}
+
+void    EntityManager::addEntityToComponentGroup(Entity* entity, uint32_t componentHash)
+{
+    _entitiesComponentGroups[componentHash].push_back(entity);
+}
+
+void    EntityManager::removeEntityFromComponentGroup(Entity* entity, uint32_t componentHash)
+{
+    auto& componentGroup = _entitiesComponentGroups.find(componentHash);
+    if (componentGroup == _entitiesComponentGroups.end())
+        return;
+
+    auto& entityFind = std::find(componentGroup->second.cbegin(), componentGroup->second.cend(), entity);
+    if (entityFind != componentGroup->second.cend())
+    {
+        componentGroup->second.erase(entityFind);
     }
 }
