@@ -205,10 +205,8 @@ Entity* Map::getSelectedEntity(EntityManager* em, bool onlyTiles)
     Entity* selectedEntity = nullptr;
     float selectedEntityDist = 0.0f;
 
-    for (auto it : em->getEntities())
+    for (Entity* entity : em->getEntities())
     {
-        Entity* entity = it.second;
-
         sRenderComponent* render = entity->getComponent<sRenderComponent>();
         sTransformComponent* transform = entity->getComponent<sTransformComponent>();
 

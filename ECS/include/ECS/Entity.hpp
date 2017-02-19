@@ -10,11 +10,18 @@
 #include <ECS/Component.hh>
 
 class EntityManager;
+class EntityPool;
 
 class Entity
 {
-public:
+friend EntityManager;
+friend EntityPool;
+
+private:
+    Entity() {}
     Entity(EntityManager* em, uint32_t id_): id(id_), _em(em) {}
+
+public:
     ~Entity() {}
 
     bool operator==(uint32_t id_);
@@ -57,6 +64,7 @@ public:
 public:
     uint32_t                        id;
     std::vector<sComponent*>        _components;
+    bool                            _free;
 
 private:
     std::string                     _tag;

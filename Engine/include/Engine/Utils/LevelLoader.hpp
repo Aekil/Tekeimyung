@@ -33,7 +33,7 @@ class LevelLoader
     void                                addLevel(const std::string& levelName);
     bool                                hasLevel(const std::string& levelName);
 
-    void                                save(const std::string& levelName, const std::unordered_map<uint32_t, Entity*>& entities);
+    void                                save(const std::string& levelName, const std::vector<Entity*>& entities);
     void                                load(const std::string& levelName, EntityManager* em);
     void                                loadDirectory(const std::string& directory);
 

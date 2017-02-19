@@ -30,9 +30,8 @@ void    LevelEntitiesDebugWindow::build(float elapsedTime)
 
     filter.Draw();
     ImGui::BeginChild("Entities list", ImVec2(150, 0), true);
-    for (auto it: _em->getEntities())
+    for (Entity* entity: _em->getEntities())
     {
-        Entity* entity = it.second;
         sNameComponent* name = entity->getComponent<sNameComponent>();
 
         ASSERT(name != nullptr, "The entity should have a name");
@@ -59,7 +58,7 @@ void    LevelEntitiesDebugWindow::build(float elapsedTime)
     // The entity has been deleted or none is selected
     if (!selectedEntity)
     {
-        selectedEntity = _em->getEntities().begin()->second;
+        selectedEntity = _em->getEntities().front();
         _selectedEntityId = selectedEntity->id;
     }
 

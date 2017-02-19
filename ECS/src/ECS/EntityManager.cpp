@@ -6,21 +6,21 @@
 #include <random>
 
 #include <ECS/World.hpp>
-
 #include <ECS/EntityManager.hpp>
+#include <ECS/EntityPool.hpp>
 
-int                         EntityManager::_entityId = 1;
-
-
-EntityManager::EntityManager(World& world): _world(world) {}
+EntityManager::EntityManager(World& world): _world(world)
+{
+    _entityPool = std::make_unique<EntityPool>(this, 100);
+}
 
 EntityManager::~EntityManager() {}
 
 Entity* EntityManager::createEntity()
 {
-    Entity* entity = new Entity(this, _entityId++);
+    Entity* entity = _entityPool->allocate();
 
-    _entities[entity->id] = entity;
+    _entities.push_back(entity);
     return (entity);
 }
 
@@ -34,8 +34,9 @@ void    EntityManager::destroyEntity(Entity* entity)
     entity->_components.clear();
 
     removeEntityFromTagGroup(entity, entity->getTag());
-    _entities.erase(entity->id);
-    delete entity;
+    _entities.erase(std::find(_entities.cbegin(), _entities.cend(), entity));
+
+    _entityPool->free(entity);
 }
 
 void    EntityManager::destroyEntityRegister(Entity* entity)
@@ -74,14 +75,14 @@ void    EntityManager::destroyAllEntities()
     auto it = _entities.begin();
     for (it; it != _entities.end();)
     {
-        Entity* entity = it->second;
-        ++it;
+        Entity* entity = *it;
+        it = _entities.erase(it);
         destroyEntity(entity);
     }
     _entitiesToDestroy.clear();
 }
 
-std::unordered_map<uint32_t, Entity*>& EntityManager::getEntities()
+std::vector<Entity*>& EntityManager::getEntities()
 {
     return (_entities);
 }
@@ -93,9 +94,7 @@ const std::vector<Entity*>& EntityManager::getEntitiesByTag(const std::string& t
 
 Entity* EntityManager::getEntity(uint32_t id) const
 {
-    auto &&it = _entities.find(id);
-
-    return (it != _entities.end() ? it->second : nullptr);
+    return (_entityPool->getEntity(id));
 }
 
 void    EntityManager::notifyEntityNewComponent(Entity* entity, sComponent* component)

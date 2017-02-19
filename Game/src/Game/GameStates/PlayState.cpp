@@ -108,17 +108,6 @@ void    PlayState::initCamera()
 void    PlayState::initEntities()
 {
     EntityManager* em = _world.getEntityManager();
-
-    // Play first animation of entities
-    for (auto entity: em->getEntities())
-    {
-        sRenderComponent* render = entity.second->getComponent<sRenderComponent>();
-        if (render && render->_animator.getAnimationsNb() > 0)
-        {
-            AnimationPtr currentAnimation = render->_animator.getAnimations()[0];
-            render->_animator.play(currentAnimation->getName());
-        }
-    }
 }
 
 void    PlayState::updateCameraInputs(float elapsedTime)

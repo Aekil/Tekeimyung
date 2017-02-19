@@ -19,10 +19,8 @@ bool    Physics::raycast(const Ray& ray, Entity** hitEntity)
     Entity* nearestEntity = nullptr;
 
     EntityManager* em = EntityFactory::getBindedEntityManager();
-    for (auto it : em->getEntities())
+    for (Entity* entity: em->getEntities())
     {
-        Entity* entity = it.second;
-
         sRenderComponent* render = entity->getComponent<sRenderComponent>();
         sTransformComponent* transform = entity->getComponent<sTransformComponent>();
 
@@ -56,10 +54,8 @@ bool    Physics::raycast(const Ray& ray, Entity** hitEntity)
 bool    Physics::raycastAll(const Ray& ray, std::vector<Entity*> hitEntities)
 {
     EntityManager* em = EntityFactory::getBindedEntityManager();
-    for (auto it : em->getEntities())
+    for (Entity* entity: em->getEntities())
     {
-        Entity* entity = it.second;
-
         sRenderComponent* render = entity->getComponent<sRenderComponent>();
         sTransformComponent* transform = entity->getComponent<sTransformComponent>();
 

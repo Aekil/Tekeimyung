@@ -4,10 +4,12 @@
 
 #pragma once
 
-#include <unordered_map>
 #include <cstdint>
+#include <memory>
+#include <unordered_map>
 
 #include <ECS/Entity.hpp>
+#include <ECS/EntityPool.hpp>
 
 class World;
 
@@ -16,6 +18,7 @@ class EntityManager
 friend Entity;
 
 public:
+    EntityManager() = delete;
     EntityManager(World& world);
     ~EntityManager();
 
@@ -26,7 +29,7 @@ public:
     void                                            destroyEntities();
     void                                            destroyAllEntities();
 
-    std::unordered_map<uint32_t, Entity*>&          getEntities();
+    std::vector<Entity*>&                           getEntities();
     const std::vector<Entity*>&                     getEntitiesByTag(const std::string& tag);
     Entity*                                         getEntity(uint32_t id) const;
 
@@ -41,14 +44,14 @@ private:
     void                                            removeEntityFromTagGroup(Entity* entity, const std::string& name);
 
 private:
-    static int                                      _entityId;
-
-    // Store entities by id
-    std::unordered_map<uint32_t, Entity*>           _entities;
+    // TODO: Replace Entity pointer with ID ?
+    std::vector<Entity*>                            _entities;
 
     // Store entities by tag
     std::unordered_map<std::string, std::vector<Entity*> >        _entitiesTagGroups;
     std::vector<Entity*>                            _entitiesToDestroy;
 
     World&                                          _world;
+
+    std::unique_ptr<EntityPool>                     _entityPool;
 };

@@ -114,9 +114,8 @@ bool    EntityFactory::entityTypeExists(const std::string& type)
 Entity* EntityFactory::createOrGetEntity(eArchetype type)
 {
     std::string typeName = _typesString[(int)type];
-    for (auto &&entity_ : _em->getEntities())
+    for (Entity* entity : _em->getEntities())
     {
-        Entity* entity = entity_.second;
         sNameComponent* name = entity->getComponent<sNameComponent>();
 
         ASSERT(name != nullptr, "The entity should have a sNameComponent");
@@ -280,13 +279,13 @@ Entity* EntityFactory::cloneEntity(const std::string& typeName)
 void    EntityFactory::copyEntityManager(EntityManager* dst, EntityManager* src)
 {
     auto& entities = src->getEntities();
-    for (auto& entity: entities)
+    for (Entity* entity: entities)
     {
         Entity* cloneEntity = dst->createEntity();
 
-        cloneEntity->setTag(entity.second->getTag());
+        cloneEntity->setTag(entity->getTag());
 
-        auto& components = entity.second->getComponents();
+        auto& components = entity->getComponents();
         for (auto& component : components)
         {
             sComponent* cloneComponent = component->clone();
@@ -337,9 +336,8 @@ void    EntityFactory::reverseAnimations(Entity* entity)
 
 void    EntityFactory::updateEntitiesComponents(Entity* from, const std::string& entityName, IComponentFactory* compFactory, sComponent* component)
 {
-    for (auto &&entity_ : _em->getEntities())
+    for (Entity* entity: _em->getEntities())
     {
-        Entity* entity = entity_.second;
         sNameComponent* name = entity->getComponent<sNameComponent>();
 
         if (name->value == entityName && entity != from)
@@ -463,14 +461,13 @@ void    EntityFactory::saveEntityTemplate(const std::string& typeName, Entity* e
 
     {
         // Remove entities components if entity does not has the component
-        for (auto &&entityIt : _em->getEntities())
+        for (Entity* entity : _em->getEntities())
         {
-            Entity* entity_ = entityIt.second;
-            sNameComponent* name = entity_->getComponent<sNameComponent>();
+            sNameComponent* name = entity->getComponent<sNameComponent>();
 
-            if (name->value == typeName && entity_ != entity)
+            if (name->value == typeName && entity != entity)
             {
-                auto& components = entity_->getComponents();
+                auto& components = entity->getComponents();
                 auto& it = components.begin();
                 for (it; it != components.end();)
                 {

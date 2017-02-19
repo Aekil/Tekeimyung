@@ -57,7 +57,7 @@ bool    LevelLoader::hasLevel(const std::string& levelName)
     return (std::find(_levels.cbegin(), _levels.cend(), levelName) != _levels.cend());
 }
 
-void    LevelLoader::save(const std::string& levelName, const std::unordered_map<uint32_t, Entity*>& entities)
+void    LevelLoader::save(const std::string& levelName, const std::vector<Entity*>& entities)
 {
     JsonWriter jsonWriter;
     JsonValue json;
@@ -65,11 +65,10 @@ void    LevelLoader::save(const std::string& levelName, const std::unordered_map
 
     json.setString("name", levelName);
 
-    for (const auto& entityPair: entities)
+    for (const Entity* entity: entities)
     {
         JsonValue entityJson;
         JsonValue entityComponentsJson;
-        const Entity* entity = entityPair.second;
         const auto& components = entity->getComponents();
 
         // Reverse animations
