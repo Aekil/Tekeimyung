@@ -14,7 +14,7 @@ Plane::Plane(Plane::sInfo& info): Geometry(Geometry::eType::PLANE)
     float height = info.height;
 
     // Plane mesh
-    std::unique_ptr<Mesh> mesh = std::make_unique<Mesh>();
+    std::unique_ptr<Mesh> mesh = std::make_unique<Mesh>(this);
     mesh->vertexs = {
         //1. pos
         //2. color

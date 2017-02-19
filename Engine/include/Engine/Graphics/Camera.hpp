@@ -20,7 +20,7 @@ public:
         glm::mat4       proj;
         glm::mat4       view;
         glm::vec3       pos;
-        int             freezeRotations;
+        float           padding;
         // Target
         glm::vec3       dir;
     }                   Constants;
@@ -68,8 +68,9 @@ public:
 
     void                lookAt(const glm::vec3& pos, const glm::vec3& target, const glm::vec3& up);
 
-    void                update(const ShaderProgram& shaderProgram, float elapsedTime);
-    void                updateUboData(UniformBuffer& ubo, bool forceUpdate = false);
+    void                updateUBO();
+    UniformBuffer&      getUBO();
+
     void                freezeRotations(bool freeze);
 
     Ray                 screenPosToRay(float posX, float posY);
@@ -80,9 +81,11 @@ public:
 private:
     Camera::Constants   _constants;
 
+
+    UniformBuffer       _ubo;
+
     bool                _needUpdateView;
     bool                _needUpdateProj;
-    bool                _needUpdateUbo;
 
     /*
     ** Projection

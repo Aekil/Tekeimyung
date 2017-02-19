@@ -90,7 +90,6 @@ void    MaterialDebugWindow::displayMaterialsProperties()
         changed |= ImGui::ColorEdit4("Diffuse", glm::value_ptr(_selectedMaterial->_constants.diffuse));
         if (Helper::updateComboString("Ambient texture", ResourceManager::getInstance()->getResourcesNames<Texture>(), ambientTextureName))
         {
-            LOG_INFO("NEW TEXTURE: \"%s\"", ambientTextureName.c_str());
             // Empty choice
             if (ambientTextureName.size() == 0)
                 _selectedMaterial->setTexture(Texture::eType::AMBIENT, nullptr);
@@ -109,6 +108,32 @@ void    MaterialDebugWindow::displayMaterialsProperties()
             {
                 diffuseTexture = ResourceManager::getInstance()->getResource<Texture>(diffuseTextureName);
                 _selectedMaterial->setTexture(Texture::eType::DIFFUSE, diffuseTexture);
+            }
+        }
+
+        bool faceCamera = _selectedMaterial->_constants.faceCamera ? true : false;
+        if (ImGui::Checkbox("Face camera", &faceCamera))
+        {
+            _selectedMaterial->_constants.faceCamera = faceCamera == true ? 1 : 0;
+            changed = true;
+        }
+        ImGui::Checkbox("Transparent", &_selectedMaterial->_transparent);
+
+        // Blending modes
+        if (_selectedMaterial->_transparent)
+        {
+            // Src blend
+            std::string srcBlendString = Material::getBlendStringFromEnum(_selectedMaterial->_srcBlend);
+            if (Helper::updateComboString("Src blend", Material::getBlendModes(), srcBlendString))
+            {
+                _selectedMaterial->_srcBlend = Material::getBlendEnumFromString(srcBlendString);
+            }
+
+            // Dst blend
+            std::string dstBlendString = Material::getBlendStringFromEnum(_selectedMaterial->_dstBlend);
+            if (Helper::updateComboString("Dst blend", Material::getBlendModes(), dstBlendString))
+            {
+                _selectedMaterial->_dstBlend = Material::getBlendEnumFromString(dstBlendString);
             }
         }
 
@@ -199,6 +224,10 @@ void    MaterialDebugWindow::saveMaterials()
 
             json.setColor4f("ambient", material->_constants.ambient);
             json.setColor4f("diffuse", material->_constants.diffuse);
+            json.setBool("face_camera", material->_constants.faceCamera ? true : false);
+            json.setBool("transparent", material->_transparent);
+            json.setString("src_blend", Material::getBlendStringFromEnum(material->_srcBlend));
+            json.setString("dst_blend", Material::getBlendStringFromEnum(material->_dstBlend));
 
             if (material->getTexture(Texture::eType::AMBIENT))
             {

@@ -14,7 +14,7 @@ Circle::Circle(Circle::sInfo& info): Geometry(Geometry::eType::CIRCLE)
     uint32_t numSegments = 360;
 
     // Circle mesh
-    std::unique_ptr<Mesh> mesh = std::make_unique<Mesh>();
+    std::unique_ptr<Mesh> mesh = std::make_unique<Mesh>(this);
 
 
     for (uint32_t i = 0; i <= numSegments; ++i)

@@ -396,7 +396,7 @@ END_COMPONENT(sTransformComponent)
     PROCESS(RIGHT)
 
 REGISTER_ENUM(eHorizontalAlignment, uint8_t, HORIZONTAL_ALIGNMENT);
-REGISTER_ENUM_MANAGER(eHorizontalAlignment, uint8_t, HORIZONTAL_ALIGNMENT);
+REGISTER_ENUM_MANAGER(eHorizontalAlignment, HORIZONTAL_ALIGNMENT);
 
 #define VERTICAL_ALIGNMENT(PROCESS)         \
     PROCESS(NONE)                           \
@@ -405,7 +405,7 @@ REGISTER_ENUM_MANAGER(eHorizontalAlignment, uint8_t, HORIZONTAL_ALIGNMENT);
     PROCESS(BOTTOM)
 
 REGISTER_ENUM(eVerticalAlignment, uint8_t, VERTICAL_ALIGNMENT);
-REGISTER_ENUM_MANAGER(eVerticalAlignment, uint8_t, VERTICAL_ALIGNMENT);
+REGISTER_ENUM_MANAGER(eVerticalAlignment, VERTICAL_ALIGNMENT);
 
 START_COMPONENT(sUiComponent)
 virtual sComponent* clone()
@@ -472,7 +472,7 @@ bool        hovered = false;
 eAction     action = eAction::NONE;
 std::string actionLevel;
 END_COMPONENT(sButtonComponent)
-REGISTER_ENUM_MANAGER(sButtonComponent::eAction, uint8_t, BUTTON_ACTION);
+REGISTER_ENUM_MANAGER(sButtonComponent::eAction, BUTTON_ACTION);
 
 START_COMPONENT(sSoundComponent)
 virtual sComponent*     clone()

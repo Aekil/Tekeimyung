@@ -46,7 +46,7 @@ struct EnumManager
     if (enumString == #ENUM)                \
         return TmpEnum::ENUM;
 
-#define REGISTER_ENUM_MANAGER(ENUM_NAME, ENUM_TYPE, ENUM_LIST)                              \
+#define REGISTER_ENUM_MANAGER(ENUM_NAME, ENUM_LIST)                                         \
 template <>                                                                                 \
 struct EnumManager<ENUM_NAME>                                                               \
 {                                                                                           \

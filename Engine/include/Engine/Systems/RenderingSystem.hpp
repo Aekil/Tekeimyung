@@ -12,6 +12,7 @@
 #include <Engine/Graphics/ShaderProgram.hpp>
 #include <Engine/Graphics/ModelInstance.hpp>
 #include <Engine/Graphics/Camera.hpp>
+#include <Engine/Graphics/RenderQueue.hpp>
 
 #include <Engine/Components.hh>
 #include <Engine/Systems/ParticleSystem.hpp>
@@ -24,18 +25,8 @@ public:
     virtual void update(EntityManager& em, float elapsedTime);
     virtual bool                            init();
 
-    virtual bool                            onEntityRemovedComponent(Entity* entity, sComponent* component);
-    virtual bool                            onEntityCreated(Entity* entity);
-    virtual bool                            onEntityDeleted(Entity* entity);
-
-    void                                    renderEntity(sRenderComponent *render, Entity* entity, float elapsedTime);
-    void                                    renderCollider(Entity* entity);
-    void                                    renderColliders(EntityManager& em);
-    void                                    renderParticles(EntityManager& em, float elapsedTime);
-
-private:
-    bool                                    isTransparent(sRenderComponent *render) const;
-    ModelInstance*                          getModelInstance(sRenderComponent *render);
+    void                                    addParticlesToRenderQueue(EntityManager& em, float elapsedTime);
+    void                                    addCollidersToRenderQueue(Entity* entity);
 
 private:
     std::unordered_map<uint32_t, sEmitter*>*    _particleEmitters;
@@ -43,7 +34,7 @@ private:
     Camera*                                     _camera;
     Camera                                      _defaultCamera;
 
-    std::unordered_map<uint32_t, Entity*>       _transparentEntities;
+    RenderQueue                                 _renderQueue;
 
-    std::vector<uint32_t>                       _collidableEntities;
+    static bool _displayAllColliders;
 END_SYSTEM(RenderingSystem)

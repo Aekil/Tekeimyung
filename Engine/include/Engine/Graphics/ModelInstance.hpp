@@ -17,7 +17,6 @@ public:
 
     ModelInstance& operator=(const ModelInstance& modelInstance);
 
-    void                        draw(const ShaderProgram& shaderProgram, const glm::vec4& color, const glm::mat4 transform);
     const Model*                getModel() const;
     Model*                      getModel();
     std::vector<std::unique_ptr<MeshInstance> >&  getMeshsInstances();

@@ -11,13 +11,13 @@
                "a" : 0,
                "b" : 1,
                "g" : 0,
-               "r" : 0.72549021244049072
+               "r" : 1
             },
             "start" : {
                "a" : 1,
                "b" : 1,
                "g" : 0,
-               "r" : 0.73333334922790527
+               "r" : 1
             }
          },
          "emitter_life" : 0.64500004053115845,
@@ -42,11 +42,11 @@
          "color" : {
             "a" : 1,
             "b" : 1.0039216279983521,
-            "g" : 0,
+            "g" : 1,
             "r" : 1
          },
          "ignore_raycast" : false,
-         "materials" : [ "_01 - Default" ],
+         "materials" : [ "particles_explosion.mat" ],
          "model" : "resources/models/characters/enemy.DAE",
          "texture" : "",
          "type" : "MESH"

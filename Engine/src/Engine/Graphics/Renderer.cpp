@@ -3,6 +3,9 @@
 */
 
 #include <iostream>
+#include <algorithm>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include <Engine/Utils/Exception.hpp>
 #include <Engine/Window/GameWindow.hpp>
@@ -36,9 +39,6 @@ bool    Renderer::initialize()
         // Must be the same unit as material textures. See Material::loadFromAssimp
         glUniform1i(_shaderProgram.getUniformLocation("AmbientTexture"), 0);
         glUniform1i(_shaderProgram.getUniformLocation("DiffuseTexture"), 1);
-
-        _cameraUbo.setBindingPoint(1);
-        _cameraUbo.bind(_shaderProgram, "camera");
     }
     catch(const Exception& e)
     {
@@ -74,28 +74,130 @@ void    Renderer::onWindowResize()
     screen.bottom = 0;
     _UICamera.setScreen(screen);
     _UICamera.setProjType(Camera::eProj::ORTHOGRAPHIC_2D);
-    _UICamera.update(_shaderProgram, 0);
-    _UICamera.updateUboData(_cameraUbo, true);
+    _UICamera.updateUBO();
 }
 
-void    Renderer::render(Camera* camera, ModelInstance* model,
-                                        const glm::vec4& modelColor, const glm::mat4& modelTransform)
+void    Renderer::render(Camera* camera, RenderQueue& renderQueue)
 {
-    camera->updateUboData(_cameraUbo, _lastCamera != camera);
-    model->draw(_shaderProgram, modelColor, modelTransform);
-
     _currentCamera = camera;
-    _lastCamera = camera;
+
+    // Scene objects
+    {
+        camera->updateUBO();
+        camera->getUBO().bind(_shaderProgram, "camera");
+
+        renderOpaqueObjects(camera, renderQueue.getOpaqueMeshs(), renderQueue.getOpaqueMeshsNb());
+
+        // Enable blend to blend transparent ojects and particles
+        glEnable(GL_BLEND);
+        // Disable write to the depth buffer so that the depth of transparent objects is not written
+        // because we don't want a transparent object to hide an other transparent object
+        glDepthMask(GL_FALSE);
+        renderTransparentObjects(camera, renderQueue.getTransparentMeshs(), renderQueue.getTransparentMeshsNb());
+
+        // Enable depth buffer for opaque objects
+        //glDepthMask(GL_TRUE);
+        // Disable blending for opaque objects
+        glDisable(GL_BLEND);
+    }
+
+    // UI objects
+    {
+        _UICamera.getUBO().bind(_shaderProgram, "camera");
+
+        renderOpaqueObjects(camera, renderQueue.getUIOpaqueMeshs(), renderQueue.getUIOpaqueMeshsNb());
+
+        // Enable blend to blend transparent ojects and particles
+        glEnable(GL_BLEND);
+        // Disable write to the depth buffer so that the depth of transparent objects is not written
+        // because we don't want a transparent object to hide an other transparent object
+        glDepthMask(GL_FALSE);
+        renderTransparentObjects(camera, renderQueue.getUITransparentMeshs(), renderQueue.getUITransparentMeshsNb());
+
+        // Enable depth buffer for opaque objects
+        glDepthMask(GL_TRUE);
+        // Disable blending for opaque objects
+        glDisable(GL_BLEND);
+    }
+
 }
 
-// TODO: draw all UI after models
-// Curently the UI is drawn at the same time as the transparent entities if the model is a plane
-void    Renderer::renderUI(ModelInstance* model, const glm::vec4& modelColor, const glm::mat4& modelTransform)
+void    Renderer::renderOpaqueObjects(Camera* camera, std::vector<sRenderableMesh>& meshs, uint32_t meshsNb)
 {
-    if (_lastCamera != &_UICamera)
-        _UICamera.updateUboData(_cameraUbo, true);
-    model->draw(_shaderProgram, modelColor, modelTransform);
-    _lastCamera = &_UICamera;
+    for (uint32_t i = 0; i < meshsNb; ++i)
+    {
+        auto& renderableMesh = meshs[i];
+        Mesh* mesh = renderableMesh.meshInstance->getMesh();
+        // Model matrix
+        static GLint uniModel = _shaderProgram.getUniformLocation("model");
+        glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(renderableMesh.transform));
+
+        // Model color
+        static GLint colorModel = _shaderProgram.getUniformLocation("modelColor");
+        glUniform4f(colorModel, renderableMesh.color.x, renderableMesh.color.y, renderableMesh.color.z, renderableMesh.color.w);
+
+        // Bind buffer
+        mesh->getModel()->getBuffer().bind();
+
+        renderableMesh.meshInstance->getMaterial()->bind(_shaderProgram);
+
+        // Draw to screen
+        glDrawElements(mesh->getModel()->getPrimitiveType(), (GLuint)mesh->indices.size(), GL_UNSIGNED_INT, BUFFER_OFFSET((GLuint)mesh->idxOffset * sizeof(GLuint)));
+    }
+}
+
+bool sortTransparent(const sRenderableMesh& lhs, const sRenderableMesh& rhs)
+{
+    Material* lhsMaterial = lhs.meshInstance->getMaterial();
+    Material* rhsMaterial = rhs.meshInstance->getMaterial();
+
+    // Sort by src blend and by dst blend
+    return (lhsMaterial->_srcBlend < rhsMaterial->_srcBlend ||
+        lhsMaterial->_srcBlend == rhsMaterial->_srcBlend && lhsMaterial->_dstBlend < rhsMaterial->_dstBlend);
+}
+
+void    Renderer::renderTransparentObjects(Camera* camera, std::vector<sRenderableMesh>& meshs, uint32_t meshsNb)
+{
+    if (meshsNb == 0)
+        return;
+
+    std::sort(meshs.begin(), meshs.begin() + meshsNb, sortTransparent);
+
+    GLenum lastSrcBlend = meshs[0].meshInstance->getMaterial()->_srcBlend;
+    GLenum lastDstBlend = meshs[0].meshInstance->getMaterial()->_dstBlend;
+    glBlendFunc(lastSrcBlend, lastDstBlend);
+
+    for (uint32_t i = 0; i < meshsNb; ++i)
+    {
+        auto& renderableMesh = meshs[i];
+        Mesh* mesh = renderableMesh.meshInstance->getMesh();
+        Material* material = renderableMesh.meshInstance->getMaterial();
+
+        // Change blend mode
+        if (lastSrcBlend != material->_srcBlend ||
+            lastDstBlend != material->_dstBlend)
+        {
+            glBlendFunc(material->_srcBlend, material->_dstBlend);
+            lastSrcBlend = material->_srcBlend;
+            lastDstBlend = material->_dstBlend;
+        }
+
+        // Model matrix
+        static GLint uniModel = _shaderProgram.getUniformLocation("model");
+        glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(renderableMesh.transform));
+
+        // Model color
+        static GLint colorModel = _shaderProgram.getUniformLocation("modelColor");
+        glUniform4f(colorModel, renderableMesh.color.x, renderableMesh.color.y, renderableMesh.color.z, renderableMesh.color.w);
+
+        // Bind buffer
+        mesh->getModel()->getBuffer().bind();
+
+        material->bind(_shaderProgram);
+
+        // Draw to screen
+        glDrawElements(mesh->getModel()->getPrimitiveType(), (GLuint)mesh->indices.size(), GL_UNSIGNED_INT, BUFFER_OFFSET((GLuint)mesh->idxOffset * sizeof(GLuint)));
+    }
 }
 
 ShaderProgram&  Renderer::getShaderProgram()

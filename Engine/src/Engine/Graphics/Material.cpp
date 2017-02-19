@@ -3,6 +3,7 @@
 */
 
 #include <Engine/Utils/Exception.hpp>
+#include <Engine/Utils/Helper.hpp>
 #include <Engine/Utils/JsonReader.hpp>
 #include <Engine/Utils/Logger.hpp>
 #include <Engine/Utils/ResourceManager.hpp>
@@ -14,6 +15,9 @@ Material::Material(bool isModelMaterial): _needUpdate(true), _isModelMaterial(is
     _constants.diffuse = {1.0f, 1.0f, 1.0f, 1.0f};
     _constants.ambient = {0.3f, 0.3f, 0.3f, 1.0f};
     _constants.texturesTypes = 0;
+    _constants.faceCamera = 0;
+    _srcBlend = GL_SRC_ALPHA;
+    _dstBlend = GL_ONE_MINUS_SRC_ALPHA;
     _textures[Texture::eType::AMBIENT] = nullptr;
     _textures[Texture::eType::DIFFUSE] = nullptr;
 }
@@ -23,6 +27,9 @@ Material::Material(const Material& material)
     _constants.diffuse = material._constants.diffuse;
     _constants.ambient = material._constants.ambient;
     _constants.texturesTypes = material._constants.texturesTypes;
+    _constants.faceCamera = material._constants.faceCamera;
+    _srcBlend = material._srcBlend;
+    _dstBlend = material._dstBlend;
     _textures = material._textures;
     _isModelMaterial = material._isModelMaterial;
 }
@@ -32,6 +39,9 @@ Material&   Material::operator=(const Material& material)
     _constants.diffuse = material._constants.diffuse;
     _constants.ambient = material._constants.ambient;
     _constants.texturesTypes = material._constants.texturesTypes;
+    _constants.faceCamera = material._constants.faceCamera;
+    _srcBlend = material._srcBlend;
+    _dstBlend = material._dstBlend;
     _textures = material._textures;
     _isModelMaterial = material._isModelMaterial;
 
@@ -146,6 +156,10 @@ bool        Material::loadFromFile(const std::string& fileName)
 
     _constants.ambient = parsed.getColor4f("ambient", {0.3f, 0.3f, 0.3f, 1.0f});
     _constants.diffuse = parsed.getColor4f("diffuse", {1.0f, 1.0f, 1.0f, 1.0f});
+    _constants.faceCamera = parsed.getBool("face_camera", false) ? 1 : 0;
+    _transparent = parsed.getBool("transparent", false);
+    _srcBlend = Material::getBlendEnumFromString(parsed.getString("src_blend", "GL_SRC_ALPHA"));
+    _dstBlend = Material::getBlendEnumFromString(parsed.getString("dst_blend", "GL_ONE_MINUS_SRC_ALPHA"));
 
     JsonValue textures(parsed.get("textures", {}));
 
@@ -172,4 +186,25 @@ bool        Material::loadFromFile(const std::string& fileName)
     _isModelMaterial = false;
 
     return (true);
+}
+
+GLenum  Material::getBlendEnumFromString(const std::string& blendString)
+{
+    BLENDING_MODES(GENERATE_BLEND_CONDITION_ENUM);
+
+    return (GL_ZERO);
+}
+
+const char* Material::getBlendStringFromEnum(GLenum blendEnum)
+{
+    BLENDING_MODES(GENERATE_BLEND_CONDITION_STRING);
+
+    return ("");
+}
+
+std::vector<const char*>&   Material::getBlendModes()
+{
+    static std::vector<const char*> blendModes = { BLENDING_MODES(GENERATE_BLEND_STRING) };
+
+    return (blendModes);
 }

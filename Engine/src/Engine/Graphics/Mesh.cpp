@@ -12,7 +12,7 @@
 
 #include <Engine/Graphics/Mesh.hpp>
 
-Mesh::Mesh() : offset(0), idxOffset(0), _material(nullptr) {}
+Mesh::Mesh(Model* model) : offset(0), idxOffset(0), _material(nullptr), _model(model) {}
 
 Mesh::~Mesh()
 {}
@@ -91,6 +91,11 @@ Material*   Mesh::getMaterial() const
 void    Mesh::setMaterial(Material* material)
 {
     _material = material;
+}
+
+Model*  Mesh::getModel() const
+{
+    return (_model);
 }
 
 void    Mesh::loadBones(Skeleton& skeleton, aiMesh *mesh)

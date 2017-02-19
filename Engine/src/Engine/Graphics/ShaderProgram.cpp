@@ -75,7 +75,7 @@ void    ShaderProgram::checkProgramError() const
     if(!success)
     {
         glGetProgramInfoLog(_shaderProgram, 512, NULL, infoLog);
-        EXCEPT(RendererAPIException, "Failed to attach shaders to shader program");
+        EXCEPT(RendererAPIException, "Failed to attach shaders to shader program. Error: %s", infoLog);
     }
 }
 

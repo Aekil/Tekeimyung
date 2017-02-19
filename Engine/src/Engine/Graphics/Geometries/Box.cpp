@@ -14,7 +14,7 @@ Box::Box(Box::sInfo& info): Geometry(Geometry::eType::BOX)
     float length = info.length;
 
     // Box mesh
-    std::unique_ptr<Mesh> mesh = std::make_unique<Mesh>();
+    std::unique_ptr<Mesh> mesh = std::make_unique<Mesh>(this);
     mesh->vertexs = {
         //1. pos
         //2. color

@@ -19,8 +19,10 @@ public:
 
     const Mesh*                 getMesh() const;
     Mesh*                       getMesh();
+
     const Material*             getMaterial() const;
     Material*                   getMaterial();
+
 
     void                        setMaterial(Material* material);
 

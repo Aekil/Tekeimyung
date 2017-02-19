@@ -16,6 +16,7 @@ layout (std140, binding = 0) uniform material
     vec4    ambient;
     vec4    diffuse;
     int     texturesTypes;
+    int     faceCamera;
 };
 
 layout (std140, binding = 1) uniform camera
@@ -23,7 +24,6 @@ layout (std140, binding = 1) uniform camera
     mat4 proj;
     mat4 view;
     vec3 pos;
-    int freezeRotations;
     vec3 dir;
 };
 

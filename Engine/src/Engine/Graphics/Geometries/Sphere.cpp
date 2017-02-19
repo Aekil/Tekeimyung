@@ -14,7 +14,7 @@ Sphere::Sphere(Sphere::sInfo& info): Geometry(Geometry::eType::SPHERE)
     uint32_t sectors = static_cast<uint32_t>(info.radius * 3.0f);
 
     // Sphere mesh
-    std::unique_ptr<Mesh> mesh = std::make_unique<Mesh>();
+    std::unique_ptr<Mesh> mesh = std::make_unique<Mesh>(this);
 
     float const R = 1.0f / (float)(rings - 1);
     float const S = 1.0f / (float)(sectors - 1);

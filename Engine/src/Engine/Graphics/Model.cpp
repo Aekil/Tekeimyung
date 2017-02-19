@@ -57,7 +57,7 @@ bool    Model::loadFromFile(const std::string &fileName)
 
     for (uint32_t i = 0; i < scene->mNumMeshes; i++)
     {
-        std::unique_ptr<Mesh> mesh = std::make_unique<Mesh>();
+        std::unique_ptr<Mesh> mesh = std::make_unique<Mesh>(this);
 
         mesh->loadFromAssimp(_skeleton, scene->mMeshes[i]);
 

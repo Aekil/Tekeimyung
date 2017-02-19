@@ -18,13 +18,12 @@ Camera*     Camera::_instance = nullptr;
 
 Camera::Camera(): _needUpdateView(true), _needUpdateProj(true), _fov(45.0f),
                     _aspect(1920.0f / 1080.0f), _near(0.1f), _far(1300.0f),
-                    _up({0.0f, 1.0f, 0.0f}), _zoom(1.0f), _projType(Camera::eProj::ORTHOGRAPHIC_3D),
-                    _needUpdateUbo(true)
+                    _up({0.0f, 1.0f, 0.0f}), _zoom(1.0f), _projType(Camera::eProj::ORTHOGRAPHIC_3D)
 {
-    _constants.freezeRotations = 0;
     _constants.view = glm::mat4(1.0f);
     _windowBufferSize.x = (float)GameWindow::getInstance()->getBufferWidth();
     _windowBufferSize.y = (float)GameWindow::getInstance()->getBufferHeight();
+    _ubo.setBindingPoint(1);
 }
 
 Camera::~Camera() {}
@@ -143,7 +142,7 @@ void    Camera::setZoom(float amount)
         _needUpdateView = true;
 }
 
-void    Camera::update(const ShaderProgram& shaderProgram, float elapsedTime)
+void    Camera::updateUBO()
 {
     float windowBufferWidth = (float)GameWindow::getInstance()->getBufferWidth();
     float windowBufferHeight = (float)GameWindow::getInstance()->getBufferHeight();
@@ -192,7 +191,7 @@ void    Camera::update(const ShaderProgram& shaderProgram, float elapsedTime)
             ASSERT(0, "Unknown projection type");
 
         _needUpdateProj = false;
-        _needUpdateUbo = true;
+        _ubo.update(&_constants, sizeof(_constants));
     }
     if (_needUpdateView)
     {
@@ -209,26 +208,13 @@ void    Camera::update(const ShaderProgram& shaderProgram, float elapsedTime)
             ASSERT(0, "Unknown projection type");
 
         _needUpdateView = false;
-        _needUpdateUbo = true;
+        _ubo.update(&_constants, sizeof(_constants));
     }
-
 }
 
-void    Camera::updateUboData(UniformBuffer& ubo, bool forceUpdate)
+UniformBuffer&  Camera::getUBO()
 {
-    if (_needUpdateUbo || forceUpdate)
-        ubo.update(&_constants, sizeof(_constants));
-    _needUpdateUbo = false;
-}
-
-void    Camera::freezeRotations(bool freeze)
-{
-    // Don't update ubo if nothing changed
-    if (_constants.freezeRotations == static_cast<int>(freeze))
-        return;
-
-    _constants.freezeRotations = static_cast<int>(freeze);
-    _needUpdateUbo = true;
+    return (_ubo);
 }
 
 Ray     Camera::screenPosToRay(float posX, float posY)

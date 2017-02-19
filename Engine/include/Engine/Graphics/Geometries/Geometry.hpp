@@ -43,4 +43,4 @@ private:
     eType               _type;
 };
 
-REGISTER_ENUM_MANAGER(Geometry::eType, uint8_t, GEOMETRY_TYPES)
+REGISTER_ENUM_MANAGER(Geometry::eType, GEOMETRY_TYPES)

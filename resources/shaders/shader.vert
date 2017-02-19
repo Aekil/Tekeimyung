@@ -11,12 +11,19 @@ out vec3 fragPos;
 
 uniform mat4 model;
 
+layout (std140, binding = 0) uniform material
+{
+    vec4    ambient;
+    vec4    diffuse;
+    int     texturesTypes;
+    int     faceCamera;
+};
+
 layout (std140, binding = 1) uniform camera
 {
     mat4 proj;
     mat4 view;
     vec3 pos;
-    int freezeRotations;
     vec3 dir;
 };
 
@@ -24,7 +31,7 @@ void main()
 {
     mat4 modelView = view * model;
 
-    if (freezeRotations == 1)
+    if (faceCamera == 1)
     {
         float d = sqrt(pow(modelView[0][0], 2) + pow(modelView[1][1], 2) + pow(modelView[2][2], 2));
         // Column 0:

@@ -11,14 +11,19 @@
 # include <Engine/Graphics/Material.hpp>
 # include <Engine/Graphics/Skeleton.hpp>
 
+class Model;
+
 class Mesh {
 public:
-    Mesh();
+    Mesh(Model* model);
     virtual ~Mesh();
 
     virtual bool                    loadFromAssimp(Skeleton& skeleton, aiMesh *mesh);
     Material*                       getMaterial() const;
     void                            setMaterial(Material* material);
+
+    Model*                          getModel() const;
+
 
 public:
     std::vector<Vertex>             vertexs;
@@ -30,6 +35,7 @@ public:
 private:
     // Material
     Material*                       _material;
+    Model*                          _model;
 
 private:
     void                            loadBones(Skeleton& skeleton, aiMesh *mesh);

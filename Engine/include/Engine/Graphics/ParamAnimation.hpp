@@ -47,7 +47,7 @@ protected:
     std::string             _name;
 };
 
-REGISTER_ENUM_MANAGER(IParamAnimation::eEasing, char, EASING_TYPES);
+REGISTER_ENUM_MANAGER(IParamAnimation::eEasing, EASING_TYPES);
 
 // Param animation
 // Ex: position animation

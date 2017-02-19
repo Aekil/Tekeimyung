@@ -2,10 +2,6 @@
 * @Author   Guillaume Labey
 */
 
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
-#include <Engine/Graphics/ShaderProgram.hpp>
 #include <Engine/Graphics/ModelInstance.hpp>
 
 
@@ -47,29 +43,6 @@ ModelInstance& ModelInstance::operator=(const ModelInstance& modelInstance)
     }
 
     return (*this);
-}
-
-void    ModelInstance::draw(const ShaderProgram& shaderProgram, const glm::vec4& color, const glm::mat4 transform)
-{
-    // Model matrix
-    static GLint uniModel = shaderProgram.getUniformLocation("model");
-    glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(transform));
-
-    // Model color
-    static GLint colorModel = shaderProgram.getUniformLocation("modelColor");
-    glUniform4f(colorModel, color.x, color.y, color.z, color.w);
-
-    // Bind buffer
-    _model->getBuffer().bind();
-
-    for (auto& meshInstance: _meshsInstances)
-    {
-        meshInstance->getMaterial()->bind(shaderProgram);
-        Mesh* mesh = meshInstance->getMesh();
-
-        // Draw to screen
-        glDrawElements(_model->getPrimitiveType(), (GLuint)mesh->indices.size(), GL_UNSIGNED_INT, BUFFER_OFFSET((GLuint)mesh->idxOffset * sizeof(GLuint)));
-    }
 }
 
 const Model*    ModelInstance::getModel() const

@@ -8,6 +8,7 @@
 #include <Engine/Graphics/ShaderProgram.hpp>
 #include <Engine/Graphics/ModelInstance.hpp>
 #include <Engine/Graphics/Camera.hpp>
+#include <Engine/Graphics/RenderQueue.hpp>
 
 #include <glm/mat4x4.hpp>
 
@@ -22,9 +23,9 @@ public:
     bool                                initialize();
     void                                onWindowResize();
 
-    void                                render(Camera* camera, ModelInstance* model,
-                                            const glm::vec4& modelColor, const glm::mat4& modelTransform);
-    void                                renderUI(ModelInstance* model, const glm::vec4& modelColor, const glm::mat4& modelTransform);
+    void                                render(Camera* camera, RenderQueue& renderQueue);
+    void                                renderOpaqueObjects(Camera* camera, std::vector<sRenderableMesh>& meshs, uint32_t meshsNb);
+    void                                renderTransparentObjects(Camera* camera, std::vector<sRenderableMesh>& meshs, uint32_t meshsNb);
 
     ShaderProgram&                      getShaderProgram();
     Camera*                             getCurrentCamera();
@@ -37,10 +38,6 @@ private:
     // Singleton instance
     static std::shared_ptr<Renderer>    _instance;
 
-
-    UniformBuffer                       _cameraUbo;
-
     Camera*                             _currentCamera;
-    Camera*                             _lastCamera;
     Camera                              _UICamera;
 };
