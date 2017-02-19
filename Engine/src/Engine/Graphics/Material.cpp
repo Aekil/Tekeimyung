@@ -20,6 +20,7 @@ Material::Material(bool isModelMaterial): _needUpdate(true), _isModelMaterial(is
     _dstBlend = GL_ONE_MINUS_SRC_ALPHA;
     _textures[Texture::eType::AMBIENT] = nullptr;
     _textures[Texture::eType::DIFFUSE] = nullptr;
+    _ubo.init(sizeof(sConstants));
 }
 
 Material::Material(const Material& material)
@@ -32,6 +33,8 @@ Material::Material(const Material& material)
     _dstBlend = material._dstBlend;
     _textures = material._textures;
     _isModelMaterial = material._isModelMaterial;
+    _needUpdate = true;
+    _ubo.init(sizeof(sConstants));
 }
 
 Material&   Material::operator=(const Material& material)
@@ -44,6 +47,8 @@ Material&   Material::operator=(const Material& material)
     _dstBlend = material._dstBlend;
     _textures = material._textures;
     _isModelMaterial = material._isModelMaterial;
+    _needUpdate = true;
+    _ubo.init(sizeof(sConstants));
 
     return (*this);
 }

@@ -24,6 +24,7 @@ Camera::Camera(): _needUpdateView(true), _needUpdateProj(true), _fov(45.0f),
     _windowBufferSize.x = (float)GameWindow::getInstance()->getBufferWidth();
     _windowBufferSize.y = (float)GameWindow::getInstance()->getBufferHeight();
     _ubo.setBindingPoint(1);
+    _ubo.init(sizeof(_constants));
 }
 
 Camera::~Camera() {}
