@@ -238,7 +238,11 @@ void    LevelEntitiesDebugWindow::createTemplate(Entity* entity, const std::stri
         compFactory->save(newTypeName, newComponent);
 
         // Add component to EntityFactory
-        EntityFactory::addComponent(newTypeName, componentName);
+        // sNameComponent and sTransformComponent are already created in EntityFactory::createEntityType
+        if (componentName != "sNameComponent" && componentName != "sTransformComponent")
+        {
+            EntityFactory::addComponent(newTypeName, componentName);
+        }
     }
 
     EntityFactory::setTag(newTypeName, entityTypeInfos.tag);
