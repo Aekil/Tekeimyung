@@ -11,49 +11,46 @@ uniform sampler2D DiffuseTexture;
 
 uniform vec4 modelColor;
 
-layout (std140, binding = 0) uniform material
+layout (std140, binding = 0) uniform materialUniformBlock
 {
     vec4    ambient;
     vec4    diffuse;
     int     texturesTypes;
     int     faceCamera;
-};
+} material;
 
-layout (std140, binding = 1) uniform camera
-{
-    mat4 proj;
-    mat4 view;
-    vec3 pos;
-    vec3 dir;
-};
 
-vec4 getAmbient(vec4 lightAmbient)
+layout (std140, binding = 2) uniform lightUniformBlock
 {
-    if ((texturesTypes & 2) != 0)
-        return lightAmbient  * texture(AmbientTexture, fragTexCoords);
-    return lightAmbient * ambient;
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 direction;
+} light;
+
+vec4 getAmbient()
+{
+    if ((material.texturesTypes & 2) != 0)
+        return vec4(light.ambient, 1.0f)  * texture(AmbientTexture, fragTexCoords);
+    return vec4(light.ambient, 1.0f) * material.ambient;
 }
 
-vec4 getDiffuse(vec4 lightDiffuse, vec3 normal, vec3 lightDir)
+vec4 getDiffuse(vec3 normal)
 {
     normal = normalize(normal);
-    float diff = max(dot(normal, lightDir), 0.0);
+    float diff = max(dot(normal, -light.direction), 0.0);
 
-    if ((texturesTypes & 1) != 0)
-        return lightDiffuse * (diff * texture(DiffuseTexture, fragTexCoords));
-    return lightDiffuse * (diff * diffuse);
+    if ((material.texturesTypes & 1) != 0)
+        return vec4(light.diffuse, 1.0f) * (diff * texture(DiffuseTexture, fragTexCoords));
+    return vec4(light.diffuse, 1.0f) * (diff * material.diffuse);
 }
 
-vec4 CalcDirLight(vec3 lightDir, vec3 normal)
+vec4 CalcFragColor(vec3 normal)
 {
-    vec4 lightAmbient = vec4(0.5f, 0.5f, 0.5f, 1.0f);
-    vec4 lightDiffuse = vec4(1.0f, 1.0f, 1.0f, 1.0f);
-
     // Ambient
-    vec4 ambient = getAmbient(lightAmbient) * modelColor;
+    vec4 ambient = getAmbient() * modelColor;
 
     // Diffuse shading
-    vec4 diffuse = getDiffuse(lightDiffuse, normal, lightDir) * modelColor;
+    vec4 diffuse = getDiffuse(normal) * modelColor;
 
     return (ambient + diffuse);
 }
@@ -61,8 +58,7 @@ vec4 CalcDirLight(vec3 lightDir, vec3 normal)
 
 void main()
 {
-    vec3 lightDir = normalize(vec3(350.0f, 150.0f, 100.0f) - fragPos);
-    vec4 color = CalcDirLight(lightDir, fragNormal);
+    vec4 color = CalcFragColor(fragNormal);
 
     outFragColor = color;
 }

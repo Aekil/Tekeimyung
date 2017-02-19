@@ -4,8 +4,6 @@
 
 #pragma once
 
-#define BONES_PER_VERTEX 8
-
 #include <cstdint>
 #include <GL/glew.h>
 #include <glm/vec3.hpp>

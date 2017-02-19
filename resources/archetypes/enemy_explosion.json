@@ -49,7 +49,7 @@
          "materials" : [ "particles_explosion.mat" ],
          "model" : "resources/models/characters/enemy.DAE",
          "texture" : "",
-         "type" : "MESH"
+         "type" : "BOX"
       },
       "sTransformComponent" : {
          "pos" : {

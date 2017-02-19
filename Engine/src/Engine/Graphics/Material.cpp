@@ -13,7 +13,7 @@
 Material::Material(bool isModelMaterial): _needUpdate(true), _isModelMaterial(isModelMaterial)
 {
     _constants.diffuse = {1.0f, 1.0f, 1.0f, 1.0f};
-    _constants.ambient = {0.3f, 0.3f, 0.3f, 1.0f};
+    _constants.ambient = {1.0f, 1.0f, 1.0f, 1.0f};
     _constants.texturesTypes = 0;
     _constants.faceCamera = 0;
     _srcBlend = GL_SRC_ALPHA;
@@ -108,7 +108,7 @@ Material*    Material::loadFromAssimp(aiMaterial* assimpMaterial, const std::str
     return (ResourceManager::getInstance()->registerResource<Material>(std::move(material), name.C_Str()));
 }
 
-void    Material::bind(const ShaderProgram& shaderProgram)
+void    Material::bind()
 {
     if (_needUpdate)
     {
@@ -117,7 +117,7 @@ void    Material::bind(const ShaderProgram& shaderProgram)
     }
 
     // Bind ubo
-    _ubo.bind(shaderProgram, "material");
+    _ubo.bind();
 
     // Bind textures
     if (_constants.texturesTypes & Texture::eType::AMBIENT)

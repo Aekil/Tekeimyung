@@ -11,27 +11,27 @@ out vec3 fragPos;
 
 uniform mat4 model;
 
-layout (std140, binding = 0) uniform material
+layout (std140, binding = 0) uniform materialUniformBlock
 {
     vec4    ambient;
     vec4    diffuse;
     int     texturesTypes;
     int     faceCamera;
-};
+} material;
 
-layout (std140, binding = 1) uniform camera
+layout (std140, binding = 1) uniform cameraUniformBlock
 {
     mat4 proj;
     mat4 view;
     vec3 pos;
     vec3 dir;
-};
+} camera;
 
 void main()
 {
-    mat4 modelView = view * model;
+    mat4 modelView = camera.view * model;
 
-    if (faceCamera == 1)
+    if (material.faceCamera == 1)
     {
         float d = sqrt(pow(modelView[0][0], 2) + pow(modelView[1][1], 2) + pow(modelView[2][2], 2));
         // Column 0:
@@ -49,14 +49,14 @@ void main()
         modelView[2][1] = 0;
         modelView[2][2] = d;
 
-        fragNormal = -dir;
+        fragNormal = -camera.dir;
     }
     else
     {
         fragNormal = mat3(transpose(inverse(model))) * inNormal;
     }
 
-    gl_Position = proj * modelView * vec4(inPosition, 1.0);
+    gl_Position = camera.proj * modelView * vec4(inPosition, 1.0);
     fragTexCoords = inTexCoords;
     fragPos = vec3(model * vec4(inPosition, 1.0));
 }

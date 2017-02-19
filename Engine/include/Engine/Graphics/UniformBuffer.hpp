@@ -19,7 +19,7 @@ public:
     void                    update(void* data, uint32_t size, uint32_t offset = 0);
 
     // Bind UBO with uniform buffer block in shader
-    void                    bind(const ShaderProgram& shaderProgram, const char* blockName, uint32_t offset = 0, uint32_t size = 0);
+    void                    bind(uint32_t offset = 0, uint32_t size = 0);
 
     void                    setBindingPoint(uint16_t bindingPoint);
 

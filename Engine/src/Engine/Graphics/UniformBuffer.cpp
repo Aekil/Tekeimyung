@@ -46,17 +46,9 @@ void    UniformBuffer::update(void* data, uint32_t size, uint32_t offset)
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
-void    UniformBuffer::bind(const ShaderProgram& shaderProgram, const char* blockName, uint32_t offset, uint32_t size)
+void    UniformBuffer::bind(uint32_t offset, uint32_t size)
 {
     ASSERT(_init == true, "An UniformBuffer should be initialized before binding");
-
-    if (blockName != _boundBlock)
-    {
-        _boundBlock = blockName;
-
-        // Uniform block index in shader
-        _boundBlockIndex = shaderProgram.getUniformBlockIndex(blockName);
-    }
 
     if (!size)
         size = _size;

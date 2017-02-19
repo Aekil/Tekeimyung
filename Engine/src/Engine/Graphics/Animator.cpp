@@ -117,7 +117,7 @@ bool    Animator::stop(const std::string& name)
 
     if (!animation)
     {
-        LOG_WARN("Can't play animation \"%s\": this animation doesn not exist", name.c_str());
+        LOG_WARN("Can't stop animation \"%s\": this animation doesn not exist", name.c_str());
         return (false);
     }
 

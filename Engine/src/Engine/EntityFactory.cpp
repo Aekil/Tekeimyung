@@ -182,6 +182,12 @@ void EntityFactory::createEntityType(const std::string& typeName)
     IComponentFactory::initComponent(typeName, "sTransformComponent", {});
     _entities[typeName].components.push_back("sTransformComponent");
 
+    // Add name component
+    JsonValue nameComponentJson;
+    nameComponentJson.setString("name", typeName);
+    IComponentFactory::initComponent(typeName, "sNameComponent", nameComponentJson);
+    _entities[typeName].components.push_back("sNameComponent");
+
     // Check if file does not exist
     {
         File* file = ResourceManager::getInstance()->getResource<File>(filePath);

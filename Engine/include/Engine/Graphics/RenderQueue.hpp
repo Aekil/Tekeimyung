@@ -7,15 +7,17 @@
 #include <vector>
 #include <glm/vec4.hpp>
 #include <glm/mat4x4.hpp>
+#include <Engine/Graphics/Light.hpp>
 #include <Engine/Graphics/MeshInstance.hpp>
 #include <Engine/Graphics/ModelInstance.hpp>
 #include <Engine/Utils/Logger.hpp>
 
 #define MAX_RENDERABLE_MESHS 4000
+#define MAX_LIGHTS 50
 #define CHECK_QUEUE_NOT_FULL(queueSize)                                                                 \
         if (queueSize >= MAX_RENDERABLE_MESHS)                                                          \
         {                                                                                               \
-            LOG_WARN("RenderQueue::addModelInstance:: Can't add mesh to queue, the max number of meshs in the queue has been reached"); \
+            LOG_WARN("RenderQueue::addModel/addUIModel:: Can't add mesh to queue, the max number of meshs in the queue has been reached"); \
             return;                                                                                     \
         }
 
@@ -32,6 +34,7 @@ public:
 
     void                            addModel(ModelInstance* modelInstance, const glm::vec4& color, const glm::mat4& transform);
     void                            addUIModel(ModelInstance* modelInstance, const glm::vec4& color, const glm::mat4& transform);
+    void                            addLight(Light* light);
     void                            clear();
 
     std::vector<sRenderableMesh>& getOpaqueMeshs();
@@ -46,6 +49,9 @@ public:
     std::vector<sRenderableMesh>& getUITransparentMeshs();
     uint32_t getUITransparentMeshsNb() const;
 
+    std::vector<Light*>& getLights();
+    uint32_t getLightsNb() const;
+
 private:
     std::vector<sRenderableMesh>    _opaqueMeshs{MAX_RENDERABLE_MESHS};// TODO: Change static size
     uint32_t                        _opaqueMeshsNb{0};
@@ -58,4 +64,7 @@ private:
 
     std::vector<sRenderableMesh>    _uiTransparentMeshs{MAX_RENDERABLE_MESHS};// TODO: Change static size
     uint32_t                        _uiTransparentMeshsNb{0};
+
+    std::vector<Light*>             _lights{MAX_LIGHTS};// TODO: Change static size
+    uint32_t                        _lightsNb{0};
 };

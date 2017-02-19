@@ -487,6 +487,12 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationsEditor(sRenderCompon
         _lastAnimation->update(0);
     }
 
+    ImGui::SameLine();
+    if (ImGui::Button("Stop"))
+    {
+         component->_animator.stop(_lastAnimation->getName());
+    }
+
     bool loop = _lastAnimation->isLoop();
     if (ImGui::Checkbox("Loop (preview, not saved)", &loop))
     {
@@ -743,7 +749,7 @@ bool    ComponentFactory<sBoxColliderComponent>::updateEditor(const std::string&
         sRenderComponent* render = entity->getComponent<sRenderComponent>();
         if (render)
         {
-            component->pos = glm::vec3(render->getModel()->getMin().x - 0.5f, render->getModel()->getMin().y - 0.5f, render->getModel()->getMin().z - 0.5f);
+            component->pos = glm::vec3(0.0f, 0.0f, 0.0f);
             component->size.x = (render->getModel()->getSize().x + 1.0f) / SIZE_UNIT;
             component->size.y = (render->getModel()->getSize().y + 1.0f) / SIZE_UNIT;
             component->size.z = (render->getModel()->getSize().z + 1.0f) / SIZE_UNIT;

@@ -53,7 +53,7 @@ public:
     Material&           operator=(const Material& material);
 
     static Material*    loadFromAssimp(aiMaterial* assimpMaterial, const std::string& path);
-    void                bind(const ShaderProgram& shaderProgram);
+    void                bind();
 
     bool                isModelMaterial() const;
 

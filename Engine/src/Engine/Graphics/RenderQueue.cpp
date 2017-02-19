@@ -56,6 +56,18 @@ void    RenderQueue::addUIModel(ModelInstance* modelInstance, const glm::vec4& c
     }
 }
 
+void    RenderQueue::addLight(Light* light)
+{
+    if (_lightsNb >= MAX_LIGHTS)
+    {
+        LOG_WARN("RenderQueue::addLight:: Can't add light to queue, the max number of lights in the queue has been reached");
+        return;
+    }
+
+    _lights[_lightsNb] = light;
+    ++_lightsNb;
+}
+
 void    RenderQueue::clear()
 {
     std::memset(_opaqueMeshs.data(), 0, _opaqueMeshsNb * sizeof(void*));
@@ -69,7 +81,9 @@ void    RenderQueue::clear()
 
     std::memset(_uiTransparentMeshs.data(), 0, _uiTransparentMeshsNb * sizeof(void*));
     _uiTransparentMeshsNb = 0;
-}
+
+    std::memset(_lights.data(), 0, _lightsNb * sizeof(void*));
+    _lightsNb = 0;}
 
 std::vector<sRenderableMesh>& RenderQueue::getOpaqueMeshs()
 {
@@ -109,4 +123,14 @@ std::vector<sRenderableMesh>& RenderQueue::getUITransparentMeshs()
 uint32_t    RenderQueue::getUITransparentMeshsNb() const
 {
     return (_uiTransparentMeshsNb);
+}
+
+std::vector<Light*>& RenderQueue::getLights()
+{
+    return (_lights);
+}
+
+uint32_t    RenderQueue::getLightsNb() const
+{
+    return (_lightsNb);
 }
