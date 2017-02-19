@@ -2,7 +2,18 @@
 * @Author   Guillaume Labey
 */
 
+#include <iostream>
 #include <Engine/Graphics/Light.hpp>
+
+Light::Light(const Light& light)
+{
+    _ambient = light._ambient;
+    _diffuse = light._diffuse;
+    _direction = light._direction;
+    _needUpdate = true;
+    _ubo.init(sizeof(LightData));
+    _ubo.setBindingPoint(2);
+}
 
 Light::Light(): _needUpdate(true)
 {
@@ -14,6 +25,18 @@ Light::Light(): _needUpdate(true)
 }
 
 Light::~Light() {}
+
+Light&  Light::operator=(const Light& light)
+{
+    _ambient = light._ambient;
+    _diffuse = light._diffuse;
+    _direction = light._direction;
+    _needUpdate = true;
+    _ubo.init(sizeof(LightData));
+    _ubo.setBindingPoint(2);
+
+    return (*this);
+}
 
 const glm::vec3&    Light::getAmbient() const
 {

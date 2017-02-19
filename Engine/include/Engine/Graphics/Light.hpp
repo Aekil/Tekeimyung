@@ -19,8 +19,11 @@ private:
     };
 
 public:
+    Light(const Light& light);
     Light();
     ~Light();
+
+    Light&              operator=(const Light& light);
 
     const glm::vec3&    getAmbient() const;
     const glm::vec3&    getDiffuse() const;

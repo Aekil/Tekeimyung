@@ -57,7 +57,7 @@ bool    Renderer::initialize()
 
     // Enable depth buffer
     glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LESS);
+    glDepthFunc(GL_LEQUAL);
 
     // Activate back culling
     //glEnable(GL_CULL_FACE);

@@ -168,5 +168,15 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
 
     addParticlesToRenderQueue(em, elapsedTime);
 
+    // Add lights to render queue
+    {
+        auto& entities = em.getEntitiesByComponent<sLightComponent>();
+        for (Entity* entity : entities)
+        {
+            sLightComponent* lightComp = entity->getComponent<sLightComponent>();
+            _renderQueue.addLight(&lightComp->light);
+        }
+    }
+
     Renderer::getInstance()->render(_camera, _renderQueue);
 }

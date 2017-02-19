@@ -29,7 +29,8 @@
     PROCESS(sTransformComponent),\
     PROCESS(sButtonComponent),\
     PROCESS(sScriptComponent),\
-    PROCESS(sUiComponent)
+    PROCESS(sUiComponent),\
+    PROCESS(sLightComponent)
 
 #define GENERATE_PAIRS(COMPONENT) { #COMPONENT, new ComponentFactory<COMPONENT>() }
 
@@ -348,6 +349,22 @@ class ComponentFactory<sUiComponent> final: public BaseComponentFactory<sUiCompo
 {
 public:
     char* getTypeName() override final { return "sUiComponent"; }
+    sComponent* loadFromJson(const std::string& entityType, const JsonValue& json) override final;
+    JsonValue&  saveToJson(const std::string& entityType, const sComponent* savedComponent = nullptr, JsonValue* toJson = nullptr) override final;
+
+    bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity) override final;
+};
+
+
+/*
+** sLightComponent
+*/
+
+template <>
+class ComponentFactory<sLightComponent> final: public BaseComponentFactory<sLightComponent>
+{
+public:
+    char* getTypeName() override final { return "sLightComponent"; }
     sComponent* loadFromJson(const std::string& entityType, const JsonValue& json) override final;
     JsonValue&  saveToJson(const std::string& entityType, const sComponent* savedComponent = nullptr, JsonValue* toJson = nullptr) override final;
 

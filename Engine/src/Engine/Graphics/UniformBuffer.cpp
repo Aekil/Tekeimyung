@@ -5,7 +5,7 @@
 #include <cstring>
 
 #include <Engine/Graphics/UniformBuffer.hpp>
-#include <Engine/Utils/Debug.hpp>
+#include <Engine/Utils/Logger.hpp>
 
 UniformBuffer::UniformBuffer(): _UBO(0), _bindingPoint(0), _init(false), _size(0)
 {
@@ -17,7 +17,8 @@ UniformBuffer::~UniformBuffer() {}
 
 void    UniformBuffer::init(uint32_t size)
 {
-    ASSERT(_init == false, "An UniformBuffer should not be initialized 2 times");
+    if (_init)
+        return;
 
     // Bind UBO to GL_UNIFORM_BUFFER type so that all calls to GL_UNIFORM_BUFFER use VBO
     glBindBuffer(GL_UNIFORM_BUFFER, _UBO);
@@ -34,7 +35,11 @@ void    UniformBuffer::init(uint32_t size)
 
 void    UniformBuffer::update(void* data, uint32_t size, uint32_t offset)
 {
-    ASSERT(_init == true, "An UniformBuffer should be initialized before updating");
+    if (!_init)
+    {
+        LOG_WARN("UniformBuffer::update: Can't update buffer which is not initialized");
+        return;
+    }
 
     // Bind UBO to GL_UNIFORM_BUFFER type so that all calls to GL_UNIFORM_BUFFER use VBO
     glBindBuffer(GL_UNIFORM_BUFFER, _UBO);
@@ -48,7 +53,11 @@ void    UniformBuffer::update(void* data, uint32_t size, uint32_t offset)
 
 void    UniformBuffer::bind(uint32_t offset, uint32_t size)
 {
-    ASSERT(_init == true, "An UniformBuffer should be initialized before binding");
+    if (!_init)
+    {
+        LOG_WARN("UniformBuffer::bind: Can't bind buffer which is not initialized");
+        return;
+    }
 
     if (!size)
         size = _size;

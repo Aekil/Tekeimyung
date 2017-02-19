@@ -19,6 +19,7 @@
 #include <ECS/Component.hh>
 
 #include <Engine/Window/Keyboard.hpp>
+#include <Engine/Graphics/Light.hpp>
 #include <Engine/Graphics/Model.hpp>
 #include <Engine/Graphics/ModelInstance.hpp>
 #include <Engine/Graphics/Geometries/Plane.hpp>
@@ -550,3 +551,25 @@ std::vector<std::string> scriptNames;
 
 std::string selectedScript; // Only used for editor
 END_COMPONENT(sScriptComponent)
+
+START_COMPONENT(sLightComponent)
+virtual sComponent* clone()
+{
+    sLightComponent* component = new sLightComponent();
+    component->update(this);
+
+    return (component);
+}
+
+virtual void update(sLightComponent* component)
+{
+    this->light = component->light;
+}
+
+virtual void update(sComponent* component)
+{
+    update(static_cast<sLightComponent*>(component));
+}
+
+Light light;
+END_COMPONENT(sLightComponent)

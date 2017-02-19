@@ -417,6 +417,49 @@
          },
          "name" : "TOWER_FIRE",
          "tag" : ""
+      },
+      {
+         "components" : {
+            "sLightComponent" : {
+               "ambient" : {
+                  "x" : 0.30000001192092896,
+                  "y" : 0.30000001192092896,
+                  "z" : 0.30000001192092896
+               },
+               "diffuse" : {
+                  "x" : 1,
+                  "y" : 1,
+                  "z" : 1
+               },
+               "direction" : {
+                  "x" : -1,
+                  "y" : -0.30000001192092896,
+                  "z" : 0.30000001192092896
+               }
+            },
+            "sNameComponent" : {
+               "name" : "LIGHT"
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 1,
+                  "y" : 1,
+                  "z" : 1
+               }
+            }
+         },
+         "name" : "LIGHT",
+         "tag" : ""
       }
    ],
    "name" : "Game"

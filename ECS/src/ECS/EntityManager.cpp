@@ -73,11 +73,9 @@ void    EntityManager::destroyEntities()
 
 void    EntityManager::destroyAllEntities()
 {
-    auto it = _entities.begin();
-    for (it; it != _entities.end();)
+    for (std::size_t entitiesNb = _entities.size(); entitiesNb > 0; --entitiesNb)
     {
-        Entity* entity = *it;
-        it = _entities.erase(it);
+        Entity* entity = _entities[0];
         destroyEntity(entity);
     }
     _entitiesToDestroy.clear();

@@ -206,7 +206,13 @@ void EntityFactory::createEntityType(const std::string& typeName)
         File* file = ResourceManager::getInstance()->registerResource<File>(std::move(resourceFile), filePath);
         if (file)
         {
-            file->setContent("{\"name\": \"" + typeName + "\"}");
+            JsonValue entityJson;
+            JsonValue components;
+            components.setValue("sNameComponent", nameComponentJson);
+            entityJson.setString("name", typeName);
+            entityJson.setValue("components", components);
+
+            file->setContent(entityJson.get().toStyledString());
             file->save();
         }
     }
