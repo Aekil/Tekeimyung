@@ -47,19 +47,15 @@ bool    Model::loadFromFile(const std::string &fileName)
 
 
 
-    // Transform vertices with scene node transform matrix
-    //if (!scene->HasAnimations())
-    //{
-        // Modify scene nodes transformation matrix relative to parent node
-        computeSceneNodeAbsoluteTransform(scene->mRootNode);
-        transformVertices(_scene, scene->mRootNode);
-    //}
+    // Modify scene nodes transformation matrix relative to parent node
+    computeSceneNodeAbsoluteTransform(scene->mRootNode);
+    transformVertices(_scene, scene->mRootNode);
 
     for (uint32_t i = 0; i < scene->mNumMeshes; i++)
     {
         std::unique_ptr<Mesh> mesh = std::make_unique<Mesh>(this);
 
-        mesh->loadFromAssimp(_skeleton, scene->mMeshes[i]);
+        mesh->loadFromAssimp(scene->mMeshes[i]);
 
         Material* material = Material::loadFromAssimp(scene->mMaterials[scene->mMeshes[i]->mMaterialIndex], fileName.substr(0, fileName.find_last_of('/')));
 
@@ -74,18 +70,9 @@ bool    Model::loadFromFile(const std::string &fileName)
         _meshs.push_back(std::move(mesh));
     }
 
-
-/*    if (scene->HasAnimations())
-    {
-        std::cout << "FOUND " << scene->mNumAnimations << " animations" << std::endl;
-        std::cout << "FIRST: " << scene->mAnimations[0]->mName.data << std::endl;
-        updateBonesTransforms(scene, scene->mRootNode, glm::mat4(1.0), 2.0f);
-    }*/
-
     initVertexData();
     initIndexData();
     _buffer.updateData(_vertexData, getVertexsSize(), _indexData, getIndicesSize());
-    //_skeleton.updateUniformBuffer();
 
     calculateSize();
 
@@ -215,112 +202,6 @@ void    Model::computeSceneNodeAbsoluteTransform(aiNode* node)
 
     for (uint32_t i = 0; i < node->mNumChildren; i++)   {
         computeSceneNodeAbsoluteTransform(node->mChildren[i]);
-    }
-}
-
-const aiNodeAnim*   Model::getNodeAnim(const aiScene* scene, const std::string& name)
-{
-    for (uint32_t i = 0; i < scene->mAnimations[0]->mNumChannels; i++)
-    {
-        if (name == scene->mAnimations[0]->mChannels[i]->mNodeName.data)
-            return (scene->mAnimations[0]->mChannels[i]);
-    }
-    return (nullptr);
-}
-
-uint32_t FindRotation(float AnimationTime, const aiNodeAnim* pNodeAnim)
-{
-    for (uint32_t i = 0 ; i < pNodeAnim->mNumRotationKeys - 1 ; i++)
-    {
-        if (AnimationTime < (float)pNodeAnim->mRotationKeys[i + 1].mTime)
-        {
-            return i;
-        }
-    }
-
-    ASSERT(0, "qsdposkdqopsdqposdk"); // wtf
-}
-
-void calcInterpolatedRotation(glm::quat &out, float AnimationTime, const aiNodeAnim* pNodeAnim)
-{
-    aiQuaternion rotation;
-    // we need at least two values to interpolate...
-    if (pNodeAnim->mNumRotationKeys == 1) {
-        rotation = pNodeAnim->mRotationKeys[0].mValue;
-        Helper::copyAssimpQuat(rotation, out);
-        return;
-    }
-
-    uint32_t RotationIndex = FindRotation(AnimationTime, pNodeAnim);
-    uint32_t NextRotationIndex = (RotationIndex + 1);
-    ASSERT(NextRotationIndex < pNodeAnim->mNumRotationKeys, "lolqsdqds"); // wtf
-    float DeltaTime = pNodeAnim->mRotationKeys[NextRotationIndex].mTime - pNodeAnim->mRotationKeys[RotationIndex].mTime;
-    float Factor = (AnimationTime - (float)pNodeAnim->mRotationKeys[RotationIndex].mTime) / DeltaTime;
-    ASSERT(Factor >= 0.0f && Factor <= 1.0f, "lol"); // wtf
-    const aiQuaternion& StartRotationQ = pNodeAnim->mRotationKeys[RotationIndex].mValue;
-    const aiQuaternion& EndRotationQ = pNodeAnim->mRotationKeys[NextRotationIndex].mValue;
-    aiQuaternion::Interpolate(rotation, StartRotationQ, EndRotationQ, Factor);
-    rotation = rotation.Normalize();
-    Helper::copyAssimpQuat(rotation, out);
-}
-
-void    Model::updateBonesTransforms(const aiScene* scene, aiNode* node, const glm::mat4& parentTransform, float test)
-{
-    glm::mat4 nodeTransform;
-    Helper::copyAssimpMat(node->mTransformation, nodeTransform);
-
-    std::string nodeName = node->mName.data;
-    auto nodeAnim = getNodeAnim(scene, node->mName.data);
-    if (!nodeAnim)
-        nodeAnim = getNodeAnim(scene, std::string(node->mName.data) + "_$AssimpFbx$_Rotation");
-    if (nodeAnim)
-    {
-        Assimp::Interpolator<aiQuaternion> slerp;
-        Assimp::Interpolator<aiVector3D> lerp;
-        glm::vec3 pos;
-        glm::quat rotation;
-        glm::vec3 scale(1.0);
-
-        aiQuaternion aiRotation;
-        aiVector3D aiTranslation;
-        aiVector3D aiScale;
-
-        if ((uint32_t)test > nodeAnim->mNumRotationKeys - 1)
-            aiRotation = nodeAnim->mRotationKeys[nodeAnim->mNumRotationKeys - 1].mValue;
-        else
-            aiRotation = nodeAnim->mRotationKeys[(int)test].mValue;
-        if ((uint32_t)test > nodeAnim->mNumPositionKeys - 1)
-            aiTranslation = nodeAnim->mPositionKeys[nodeAnim->mNumPositionKeys - 1].mValue;
-        else
-            aiTranslation = nodeAnim->mPositionKeys[(int)test].mValue;
-        if ((uint32_t)test > nodeAnim->mNumScalingKeys - 1)
-            aiScale = nodeAnim->mScalingKeys[nodeAnim->mNumScalingKeys - 1].mValue;
-        else
-            aiScale = nodeAnim->mScalingKeys[(int)test].mValue;
-
-        //calcInterpolatedRotation(rotation, test, nodeAnim);
-        //lerp(aiTranslation, aiTranslation, nodeAnim->mPositionKeys[0].mValue, 0.5); // translation
-        //lerp(aiScale, aiScale, nodeAnim->mScalingKeys[0].mValue, 0.5); // scale*/
-        //slerp(aiRotation, aiRotation, nodeAnim->mRotationKeys[36].mValue, 0.5); // rotation
-
-        Helper::copyAssimpVec3(aiTranslation, pos);
-        Helper::copyAssimpVec3(aiScale, scale);
-        Helper::copyAssimpQuat(aiRotation, rotation);
-        //nodeTransform = glm::translate(glm::mat4(1.0), pos) * glm::mat4_cast(rotation) * glm::scale(glm::mat4(1.0f), scale);
-    }
-
-   nodeTransform = parentTransform * nodeTransform;
-
-    Skeleton::sBone* bone = _skeleton.getBoneByName(node->mName.data);
-    if (bone)
-    {
-        glm::mat4 globalTransform;
-        Helper::copyAssimpMat(scene->mRootNode->mTransformation, globalTransform);
-        bone->finalTransform = nodeTransform * bone->offset;
-    }
-
-    for (uint32_t i = 0; i < node->mNumChildren; i++)   {
-        updateBonesTransforms(scene, node->mChildren[i], nodeTransform, test);
     }
 }
 

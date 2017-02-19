@@ -13,7 +13,6 @@
 # include <Engine/Graphics/Mesh.hpp>
 # include <Engine/Graphics/Buffer.hpp>
 # include <Engine/Graphics/ShaderProgram.hpp>
-# include <Engine/Graphics/Skeleton.hpp>
 # include <Engine/Utils/Resource.hpp>
 
 #define BUFFER_OFFSET(bytes) ((GLubyte*) NULL + (bytes))
@@ -47,8 +46,6 @@ protected:
 private:
     void                        transformVertices(aiScene* scene, aiNode* node);
     void                        computeSceneNodeAbsoluteTransform(aiNode* node);
-    const aiNodeAnim*           getNodeAnim(const aiScene* scene, const std::string& name);
-    void                        updateBonesTransforms(const aiScene* scene, aiNode* node, const glm::mat4& parentTransform, float test);
 
 protected:
     std::vector<std::unique_ptr<Mesh> >   _meshs;
@@ -59,9 +56,6 @@ protected:
 
     // OpenGL Buffers
     Buffer                              _buffer;
-
-    // Model skeleton used for animations
-    Skeleton                            _skeleton;
 
     aiScene*                            _scene;
     Assimp::Importer                    _importer;

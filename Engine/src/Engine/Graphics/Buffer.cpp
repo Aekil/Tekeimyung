@@ -85,42 +85,6 @@ void    Buffer::updateData(Vertex* vertices, int verticesNb, GLuint* indices, in
         sizeof(Vertex), // size between vertices
         (GLvoid*)(sizeof(GL_FLOAT) * 9));
 
-    // First set of bones ids
-    glVertexAttribPointer(
-        4, // layout(location=4)
-        4, // 4 bones ids
-        GL_INT, // component type
-        GL_FALSE, // normalized values (between 0 and 1), GL_FALSE
-        sizeof(Vertex), // size between vertices
-        (GLvoid*)(sizeof(GL_FLOAT) * 11));
-
-    // Second set of bones ids
-    glVertexAttribPointer(
-        5, // layout(location=5)
-        4, // 4 bones ids
-        GL_INT, // component type
-        GL_FALSE, // normalized values (between 0 and 1), GL_FALSE
-        sizeof(Vertex), // size between vertices
-        (GLvoid*)(sizeof(GL_FLOAT) * 11 + sizeof(GL_INT) * 4));
-
-    // First set of bones weights
-    glVertexAttribPointer(
-        6, // layout(location=5)
-        4, // 4 bones weights
-        GL_FLOAT, // component type
-        GL_FALSE, // normalized values (between 0 and 1), GL_FALSE
-        sizeof(Vertex), // size between vertices
-        (GLvoid*)(sizeof(GL_FLOAT) * 11 + sizeof(GL_INT) * 8));
-
-    // Second set of bones weights
-    glVertexAttribPointer(
-        7, // layout(location=5)
-        4, // 4 bones weights
-        GL_FLOAT, // component type
-        GL_FALSE, // normalized values (between 0 and 1), GL_FALSE
-        sizeof(Vertex), // size between vertices
-        (GLvoid*)(sizeof(GL_FLOAT) * 15 + sizeof(GL_INT) * 8));
-
     // Enable vertex attributes with layout(location=0)
     glEnableVertexAttribArray(0);
 
@@ -132,18 +96,6 @@ void    Buffer::updateData(Vertex* vertices, int verticesNb, GLuint* indices, in
 
     // Enable vertex attributes with layout(location=3)
     glEnableVertexAttribArray(3);
-
-    // Enable vertex attributes with layout(location=4)
-    glEnableVertexAttribArray(4);
-
-    // Enable vertex attributes with layout(location=5)
-    glEnableVertexAttribArray(5);
-
-    // Enable vertex attributes with layout(location=4)
-    glEnableVertexAttribArray(6);
-
-    // Enable vertex attributes with layout(location=5)
-    glEnableVertexAttribArray(7);
 
     // Unbind Vertex Array
     glBindVertexArray(0);

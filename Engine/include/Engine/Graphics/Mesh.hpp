@@ -9,7 +9,6 @@
 
 # include <Engine/Graphics/Buffer.hpp>
 # include <Engine/Graphics/Material.hpp>
-# include <Engine/Graphics/Skeleton.hpp>
 
 class Model;
 
@@ -18,7 +17,7 @@ public:
     Mesh(Model* model);
     virtual ~Mesh();
 
-    virtual bool                    loadFromAssimp(Skeleton& skeleton, aiMesh *mesh);
+    virtual bool                    loadFromAssimp(aiMesh *mesh);
     Material*                       getMaterial() const;
     void                            setMaterial(Material* material);
 
@@ -36,8 +35,4 @@ private:
     // Material
     Material*                       _material;
     Model*                          _model;
-
-private:
-    void                            loadBones(Skeleton& skeleton, aiMesh *mesh);
-    void                            addVertexBonesInfos(uint32_t vertexId, float weight, uint32_t boneId);
 };
