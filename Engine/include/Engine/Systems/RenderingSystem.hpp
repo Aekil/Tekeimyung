@@ -26,7 +26,7 @@ public:
     virtual bool                            init();
 
     void                                    addParticlesToRenderQueue(EntityManager& em, float elapsedTime);
-    void                                    addCollidersToRenderQueue(Entity* entity);
+    void                                    addCollidersToRenderQueue(Entity* entity, sTransformComponent* transform);
 
 private:
     std::unordered_map<uint32_t, sEmitter*>*    _particleEmitters;

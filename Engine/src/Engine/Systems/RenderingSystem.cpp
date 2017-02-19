@@ -38,14 +38,13 @@ bool    RenderingSystem::init()
     return (true);
 }
 
-void    RenderingSystem::addCollidersToRenderQueue(Entity* entity)
+void    RenderingSystem::addCollidersToRenderQueue(Entity* entity, sTransformComponent* transform)
 {
     if (!entity)
         return;
 
     sBoxColliderComponent* boxCollider = entity->getComponent<sBoxColliderComponent>();
     sSphereColliderComponent* sphereCollider = entity->getComponent<sSphereColliderComponent>();
-    sTransformComponent *transform = entity->getComponent<sTransformComponent>();
     if (boxCollider && boxCollider->display &&
         (LevelEntitiesDebugWindow::getSelectedEntityId() == entity->id || _displayAllColliders))
     {
@@ -162,7 +161,7 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
                 else
                     _renderQueue.addModel(model, render->color, transform->getTransform());
 
-                addCollidersToRenderQueue(entity);
+                addCollidersToRenderQueue(entity, transform);
             }
         }
     });
