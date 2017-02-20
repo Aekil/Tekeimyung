@@ -498,7 +498,10 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationsEditor(sRenderCompon
     ImGui::SameLine();
     if (ImGui::Button("Stop"))
     {
-         component->_animator.stop(_lastAnimation->getName());
+        component->_animator.stop(_lastAnimation->getName());
+
+        sTransformComponent* transform = entity->getComponent<sTransformComponent>();
+        transform->needUpdate = true;
     }
 
     bool loop = _lastAnimation->isLoop();
