@@ -572,4 +572,7 @@ virtual void update(sComponent* component)
 }
 
 Light light;
+std::unique_ptr<ModelInstance> _lightCone = nullptr;
+
+glm::vec3 lastRotation;
 END_COMPONENT(sLightComponent)

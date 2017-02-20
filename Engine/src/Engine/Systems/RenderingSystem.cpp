@@ -130,6 +130,23 @@ void    RenderingSystem::addParticlesToRenderQueue(EntityManager& em, float elap
     }
 }
 
+void    RenderingSystem::addLightConeToRenderQueue(sLightComponent* lightComp, sTransformComponent* transform)
+{
+    if (!lightComp->_lightCone)
+    {
+        //Material* colliderMaterial = ResourceManager::getInstance()->getResource<Material>("colliders.mat");
+        Geometry* coneModel = GeometryFactory::getGeometry(Geometry::eType::CONE);
+
+        //boxModel->setMaterial(colliderMaterial);
+        lightComp->_lightCone = std::make_unique<ModelInstance>(coneModel);
+    }
+
+    //glm::mat4 coneTransform = transform->getTransform();
+    //coneTransform = glm::scale(coneTransform, glm::vec3(3.0f, 3.0f, 3.0f));
+
+    _renderQueue.addModel(lightComp->_lightCone.get(), glm::vec4(0.87f, 1.0f, 1.0f, 0.1f), transform->getTransform());
+}
+
 void    RenderingSystem::update(EntityManager& em, float elapsedTime)
 {
    _renderQueue.clear();
@@ -174,6 +191,21 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
         for (Entity* entity : entities)
         {
             sLightComponent* lightComp = entity->getComponent<sLightComponent>();
+            sTransformComponent* transform = entity->getComponent<sTransformComponent>();
+
+            // Only display light cone in debug mode
+            #if defined(ENGINE_DEBUG)
+                addLightConeToRenderQueue(lightComp, transform);
+            #endif
+
+            // Update light direction depending on rotation
+            if (transform->rotation != lightComp->lastRotation)
+            {
+                lightComp->lastRotation = transform->rotation;
+                glm::quat rotation(glm::vec3(glm::radians(transform->rotation.x), glm::radians(transform->rotation.y), glm::radians(transform->rotation.z)));
+                lightComp->light.setDirection(glm::vec3(glm::mat4_cast(rotation) * glm::vec4(0.0f, -1.0f, 0.0f, 0.0f)));
+            }
+
             _renderQueue.addLight(&lightComp->light);
         }
     }

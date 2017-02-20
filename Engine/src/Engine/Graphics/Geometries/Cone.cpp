@@ -11,7 +11,7 @@ Cone::Cone(Cone::sInfo& info): Geometry(Geometry::eType::CONE)
 {
     float bottomRadius = info.bottomRadius;
     float height = info.height;
-    uint32_t numSegments = 180;
+    uint32_t numSegments = 25;
 
     // Cone mesh
     std::unique_ptr<Mesh> mesh = std::make_unique<Mesh>(this);

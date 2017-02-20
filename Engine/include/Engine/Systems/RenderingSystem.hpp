@@ -27,6 +27,7 @@ public:
 
     void                                    addParticlesToRenderQueue(EntityManager& em, float elapsedTime);
     void                                    addCollidersToRenderQueue(Entity* entity, sTransformComponent* transform);
+    void                                    addLightConeToRenderQueue(sLightComponent* lightComp, sTransformComponent* transform);
 
 private:
     std::unordered_map<uint32_t, sEmitter*>*    _particleEmitters;

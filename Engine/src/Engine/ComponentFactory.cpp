@@ -1371,15 +1371,5 @@ bool    ComponentFactory<sLightComponent>::updateEditor(const std::string& entit
         }
     }
 
-    // Direction
-    {
-        glm::vec3 direction = component->light.getDirection();
-        if (ImGui::InputFloat3("Direction", glm::value_ptr(direction), 3))
-        {
-            component->light.setDirection(direction);
-            changed  = true;
-        }
-    }
-
     return (changed);
 }
