@@ -31,6 +31,17 @@ bool    EditorState::init()
 
 bool    EditorState::update(float elapsedTime)
 {
+    auto &gameWindow = GameWindow::getInstance();
+    auto &keyboard = gameWindow->getKeyboard();
+
+    // update Projection type
+    {
+        if (keyboard.isPressed(Keyboard::eKey::O))
+            _camera.setProjType(Camera::eProj::ORTHOGRAPHIC_3D);
+        else if (keyboard.isPressed(Keyboard::eKey::P))
+            _camera.setProjType(Camera::eProj::PERSPECTIVE);
+    }
+
     return (GameState::update(elapsedTime));
 }
 
