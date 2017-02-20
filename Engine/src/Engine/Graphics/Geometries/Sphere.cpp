@@ -29,7 +29,7 @@ Sphere::Sphere(Sphere::sInfo& info): Geometry(Geometry::eType::SPHERE)
 
             Vertex vertex;
 
-            vertex.uv = glm::vec2(s * S, r * R);
+            vertex.uv = -glm::vec2(s * S, r * R);
             vertex.pos = glm::vec3(x, y, z) * radius;
             vertex.normal = glm::vec3(x, y, z);
             vertex.color = glm::vec3(0.0f, 0.0f, 0.0f);
