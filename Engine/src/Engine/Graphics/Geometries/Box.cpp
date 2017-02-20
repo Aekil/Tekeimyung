@@ -22,16 +22,16 @@ Box::Box(Box::sInfo& info): Geometry(Geometry::eType::BOX)
         //4. texture uv
 
         // Front
-        {glm::vec3(-width / 2.0f, height / 2.0f, -length / 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(1.0f, 0.0f)},
-        {glm::vec3(width / 2.0f, height / 2.0f, -length / 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(0.0f, 0.0f)},
-        {glm::vec3(-width / 2.0f, -height / 2.0f, -length / 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(1.0f, 1.0f)},
-        {glm::vec3(width / 2.0f, -height / 2.0f, -length / 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(0.0f, 1.0f)},
+        {glm::vec3(-width / 2.0f, height / 2.0f, -length / 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(1.0f, 0.0f)},
+        {glm::vec3(width / 2.0f, height / 2.0f, -length / 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(0.0f, 0.0f)},
+        {glm::vec3(-width / 2.0f, -height / 2.0f, -length / 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(1.0f, 1.0f)},
+        {glm::vec3(width / 2.0f, -height / 2.0f, -length / 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(0.0f, 1.0f)},
 
         // Back
-        {glm::vec3(-width / 2.0f, height / 2.0f, length / 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(0.0f, 0.0f)},
-        {glm::vec3(width / 2.0f, height / 2.0f, length / 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(1.0f, 0.0f)},
-        {glm::vec3(-width / 2.0f, -height / 2.0f, length / 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(0.0f, 1.0f)},
-        {glm::vec3(width / 2.0f, -height / 2.0f, length / 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(1.0f, 1.0f)},
+        {glm::vec3(-width / 2.0f, height / 2.0f, length / 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(0.0f, 0.0f)},
+        {glm::vec3(width / 2.0f, height / 2.0f, length / 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(1.0f, 0.0f)},
+        {glm::vec3(-width / 2.0f, -height / 2.0f, length / 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(0.0f, 1.0f)},
+        {glm::vec3(width / 2.0f, -height / 2.0f, length / 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(1.0f, 1.0f)},
 
         // Left
         {glm::vec3(-width / 2.0f, height / 2.0f, -length / 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec2(0.0f, 0.0f)},
@@ -60,28 +60,28 @@ Box::Box(Box::sInfo& info): Geometry(Geometry::eType::BOX)
 
     mesh->indices = {
         // Front
-        2, 1, 0,
-        2, 3, 1,
+        0, 1, 2,
+        1, 3, 2,
 
         // Back
-        4, 5, 6,
-        6, 5, 7,
+        6, 5, 4,
+        7, 5, 6,
 
         // Left
-        8, 9, 10,
-        10, 9, 11,
+        10, 9, 8,
+        11, 9, 10,
 
         // Right
-        13, 12, 14,
-        13, 14, 15,
+        14, 12, 13,
+        15, 14, 13,
 
         // Top
-        16, 19, 17,
-        16, 18, 19,
+        17, 19, 16,
+        19, 18, 16,
 
         // Bottom
-        20, 21, 23,
-        20, 23, 22
+        23, 21, 20,
+        22, 23, 20
     };
 
     // Box material

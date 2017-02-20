@@ -34,8 +34,8 @@ Circle::Circle(Circle::sInfo& info): Geometry(Geometry::eType::CIRCLE)
         outerVertex.normal = glm::vec3(0.0f, 1.0f, 0.0f);
         outerVertex.color = glm::vec3(0.0f, 0.0f, 0.0f);
 
-        mesh->vertexs.push_back(innerVertex);
         mesh->vertexs.push_back(outerVertex);
+        mesh->vertexs.push_back(innerVertex);
         mesh->indices.push_back(i * 2);
         mesh->indices.push_back(i * 2 + 1);
     }

@@ -60,8 +60,8 @@ bool    Renderer::initialize()
     glDepthFunc(GL_LEQUAL);
 
     // Activate back culling
-    //glEnable(GL_CULL_FACE);
-    //glCullFace(GL_BACK);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
     return (true);
 }
 
