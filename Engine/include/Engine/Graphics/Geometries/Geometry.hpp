@@ -21,6 +21,7 @@
     PROCESS(BOX)\
     PROCESS(SPHERE)\
     PROCESS(CIRCLE)\
+    PROCESS(CONE)\
 
 class Geometry: public Model {
 public:

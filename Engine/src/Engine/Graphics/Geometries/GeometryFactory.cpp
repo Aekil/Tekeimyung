@@ -9,6 +9,7 @@
 #include <Engine/Graphics/Geometries/Plane.hpp>
 #include <Engine/Graphics/Geometries/Sphere.hpp>
 #include <Engine/Graphics/Geometries/Circle.hpp>
+#include <Engine/Graphics/Geometries/Cone.hpp>
 #include <Engine/Utils/Logger.hpp>
 
 #include <Engine/Graphics/Geometries/GeometryFactory.hpp>
@@ -35,16 +36,23 @@ void GeometryFactory::initGeometries()
 
     // Sphere
     {
-        Sphere::sInfo sphereInfos = {SIZE_UNIT};
+        Sphere::sInfo sphereInfos = {SIZE_UNIT / 2.0f};
         std::unique_ptr<Geometry> sphere = std::make_unique<Sphere>(sphereInfos);
         ResourceManager::getInstance()->registerResource<Geometry>(std::move(sphere), "sphere");
     }
 
     // Circle
     {
-        Circle::sInfo circleInfos = {SIZE_UNIT, SIZE_UNIT};
+        Circle::sInfo circleInfos = {SIZE_UNIT / 2.0f, SIZE_UNIT / 2.0f};
         std::unique_ptr<Geometry> circle = std::make_unique<Circle>(circleInfos);
         ResourceManager::getInstance()->registerResource<Geometry>(std::move(circle), "circle");
+    }
+
+    // Cone
+    {
+        Cone::sInfo coneInfos = {SIZE_UNIT / 2.0f, SIZE_UNIT};
+        std::unique_ptr<Geometry> cone = std::make_unique<Cone>(coneInfos);
+        ResourceManager::getInstance()->registerResource<Geometry>(std::move(cone), "cone");
     }
 }
 
@@ -66,6 +74,10 @@ Geometry*   GeometryFactory::getGeometry(Geometry::eType type)
     else if (type == Geometry::eType::CIRCLE)
     {
         geometry = ResourceManager::getInstance()->getOrLoadResource<Geometry>("circle");
+    }
+    else if (type == Geometry::eType::CONE)
+    {
+        geometry = ResourceManager::getInstance()->getOrLoadResource<Geometry>("cone");
     }
     else
     {
