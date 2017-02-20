@@ -173,7 +173,10 @@ sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& 
             Material* material = ResourceManager::getInstance()->getResource<Material>(materialName);
             if (!material)
             {
-                EXCEPT(InternalErrorException, "%s::sRenderComponent loadFromJson error: can't find material ", entityType.c_str(), materialName.c_str());
+                LOG_WARN("%s::sRenderComponent loadFromJson error: can't find material %s, the default material will be used ", entityType.c_str(), materialName.c_str());
+                material = ResourceManager::getInstance()->getResource<Material>("geometry_default.mat");
+
+                ASSERT(material != nullptr, "The material geometry_default.mat should exist")
             }
 
             modelInstance->getMeshsInstances()[i++]->setMaterial(material);
