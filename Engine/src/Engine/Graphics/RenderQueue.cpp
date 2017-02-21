@@ -16,7 +16,7 @@ void    RenderQueue::addModel(ModelInstance* modelInstance, const glm::vec4& col
         ASSERT(material != nullptr, "A mesh should have a material");
 
         sRenderableMesh renderableMesh = { meshInstance.get(), color, transform };
-        if (material->_transparent)
+        if (material->transparent)
         {
             CHECK_QUEUE_NOT_FULL(_transparentMeshsNb);
             _transparentMeshs[_transparentMeshsNb] = renderableMesh;
@@ -41,7 +41,7 @@ void    RenderQueue::addUIModel(ModelInstance* modelInstance, const glm::vec4& c
         ASSERT(material != nullptr, "A mesh should have a material");
 
         sRenderableMesh renderableMesh = { meshInstance.get(), color, transform };
-        if (material->_transparent)
+        if (material->transparent)
         {
             CHECK_QUEUE_NOT_FULL(_uiTransparentMeshsNb);
             _uiTransparentMeshs[_uiTransparentMeshsNb] = renderableMesh;

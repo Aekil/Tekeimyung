@@ -57,8 +57,4 @@ void    Plane::setTexture(const std::string& texture)
 
     Material* material = getMaterial();
     material->setTexture(Texture::eType::AMBIENT, ResourceManager::getInstance()->getOrLoadResource<Texture>(texture));
-
-   // Set diffuse to 0.0 or the texture transparency won't work
-   material->_constants.diffuse = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
-   material->_needUpdate = true;
 }

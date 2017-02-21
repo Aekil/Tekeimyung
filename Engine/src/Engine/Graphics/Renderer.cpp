@@ -176,8 +176,8 @@ bool sortTransparent(const sRenderableMesh& lhs, const sRenderableMesh& rhs)
     Material* rhsMaterial = rhs.meshInstance->getMaterial();
 
     // Sort by src blend and by dst blend
-    return (lhsMaterial->_srcBlend < rhsMaterial->_srcBlend ||
-        lhsMaterial->_srcBlend == rhsMaterial->_srcBlend && lhsMaterial->_dstBlend < rhsMaterial->_dstBlend);
+    return (lhsMaterial->srcBlend < rhsMaterial->srcBlend ||
+        lhsMaterial->srcBlend == rhsMaterial->srcBlend && lhsMaterial->dstBlend < rhsMaterial->dstBlend);
 }
 
 void    Renderer::renderTransparentObjects(Camera* camera,
@@ -191,8 +191,8 @@ void    Renderer::renderTransparentObjects(Camera* camera,
 
     std::sort(meshs.begin(), meshs.begin() + meshsNb, sortTransparent);
 
-    GLenum lastSrcBlend = meshs[0].meshInstance->getMaterial()->_srcBlend;
-    GLenum lastDstBlend = meshs[0].meshInstance->getMaterial()->_dstBlend;
+    GLenum lastSrcBlend = meshs[0].meshInstance->getMaterial()->srcBlend;
+    GLenum lastDstBlend = meshs[0].meshInstance->getMaterial()->dstBlend;
     glBlendFunc(lastSrcBlend, lastDstBlend);
 
     for (uint32_t j = 0; j < lightsNb; ++j)
@@ -204,12 +204,12 @@ void    Renderer::renderTransparentObjects(Camera* camera,
             Material* material = renderableMesh.meshInstance->getMaterial();
 
             // Change blend mode
-            if (lastSrcBlend != material->_srcBlend ||
-                lastDstBlend != material->_dstBlend)
+            if (lastSrcBlend != material->srcBlend ||
+                lastDstBlend != material->dstBlend)
             {
-                glBlendFunc(material->_srcBlend, material->_dstBlend);
-                lastSrcBlend = material->_srcBlend;
-                lastDstBlend = material->_dstBlend;
+                glBlendFunc(material->srcBlend, material->dstBlend);
+                lastSrcBlend = material->srcBlend;
+                lastDstBlend = material->dstBlend;
             }
 
             // Model matrix

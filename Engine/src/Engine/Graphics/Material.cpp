@@ -10,45 +10,46 @@
 
 #include <Engine/Graphics/Material.hpp>
 
-Material::Material(bool isModelMaterial): _needUpdate(true), _isModelMaterial(isModelMaterial)
+Material::Material(bool isModelMaterial): _isModelMaterial(isModelMaterial)
 {
-    _constants.diffuse = {1.0f, 1.0f, 1.0f, 1.0f};
-    _constants.ambient = {1.0f, 1.0f, 1.0f, 1.0f};
-    _constants.texturesTypes = 0;
-    _constants.faceCamera = 0;
-    _srcBlend = GL_SRC_ALPHA;
-    _dstBlend = GL_ONE_MINUS_SRC_ALPHA;
+    _diffuse = {1.0f, 1.0f, 1.0f, 1.0f};
+    _ambient = {1.0f, 1.0f, 1.0f, 1.0f};
+    _texturesTypes = 0;
+    _faceCamera = 0;
+    srcBlend = GL_SRC_ALPHA;
+    dstBlend = GL_ONE_MINUS_SRC_ALPHA;
     _textures[Texture::eType::AMBIENT] = nullptr;
     _textures[Texture::eType::DIFFUSE] = nullptr;
-    _ubo.init(sizeof(sConstants));
+    _ubo.init(sizeof(sMaterialData));
+    needUpdate();
 }
 
 Material::Material(const Material& material)
 {
-    _constants.diffuse = material._constants.diffuse;
-    _constants.ambient = material._constants.ambient;
-    _constants.texturesTypes = material._constants.texturesTypes;
-    _constants.faceCamera = material._constants.faceCamera;
-    _srcBlend = material._srcBlend;
-    _dstBlend = material._dstBlend;
+    _diffuse = material._diffuse;
+    _ambient = material._ambient;
+    _texturesTypes = material._texturesTypes;
+    _faceCamera = material._faceCamera;
+    srcBlend = material.srcBlend;
+    dstBlend = material.dstBlend;
     _textures = material._textures;
     _isModelMaterial = material._isModelMaterial;
-    _needUpdate = true;
-    _ubo.init(sizeof(sConstants));
+    _ubo.init(sizeof(sMaterialData));
+    needUpdate();
 }
 
 Material&   Material::operator=(const Material& material)
 {
-    _constants.diffuse = material._constants.diffuse;
-    _constants.ambient = material._constants.ambient;
-    _constants.texturesTypes = material._constants.texturesTypes;
-    _constants.faceCamera = material._constants.faceCamera;
-    _srcBlend = material._srcBlend;
-    _dstBlend = material._dstBlend;
+    _diffuse = material._diffuse;
+    _ambient = material._ambient;
+    _texturesTypes = material._texturesTypes;
+    _faceCamera = material._faceCamera;
+    srcBlend = material.srcBlend;
+    dstBlend = material.dstBlend;
     _textures = material._textures;
     _isModelMaterial = material._isModelMaterial;
-    _needUpdate = true;
-    _ubo.init(sizeof(sConstants));
+    _ubo.init(sizeof(sMaterialData));
+    needUpdate();
 
     return (*this);
 }
@@ -81,12 +82,12 @@ Material*    Material::loadFromAssimp(aiMaterial* assimpMaterial, const std::str
 
     // Diffuse color
     if (assimpMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, color) == AI_SUCCESS) {
-        material->_constants.diffuse = glm::vec4(color.r, color.g, color.b, 1.0f);
+        material->_diffuse = glm::vec4(color.r, color.g, color.b, 1.0f);
     }
 
     // Ambient color
     if (assimpMaterial->Get(AI_MATKEY_COLOR_AMBIENT, color) == AI_SUCCESS) {
-        material->_constants.ambient = glm::vec4(color.r, color.g, color.b, 1.0f);
+        material->_ambient = glm::vec4(color.r, color.g, color.b, 1.0f);
     }
 
     // Ambient texture
@@ -112,7 +113,12 @@ void    Material::bind()
 {
     if (_needUpdate)
     {
-        _ubo.update(&_constants, sizeof(_constants));
+        _data.ambient = _ambient;
+        _data.diffuse = _diffuse;
+        _data.texturesTypes = _texturesTypes;
+        _data.faceCamera = _faceCamera;
+
+        _ubo.update(&_data, sizeof(sMaterialData));
         _needUpdate = false;
     }
 
@@ -120,9 +126,9 @@ void    Material::bind()
     _ubo.bind();
 
     // Bind textures
-    if (_constants.texturesTypes & Texture::eType::AMBIENT)
+    if (_texturesTypes & Texture::eType::AMBIENT)
         _textures[Texture::eType::AMBIENT]->bind(GL_TEXTURE0);
-    if (_constants.texturesTypes & Texture::eType::DIFFUSE)
+    if (_texturesTypes & Texture::eType::DIFFUSE)
         _textures[Texture::eType::DIFFUSE]->bind(GL_TEXTURE1);
 }
 
@@ -135,15 +141,15 @@ void    Material::setTexture(Texture::eType type, Texture* texture)
 {
     if (texture)
     {
-        _constants.texturesTypes |= type;
+        _texturesTypes |= type;
     }
     else
     {
-        _constants.texturesTypes &= ~type;
+        _texturesTypes &= ~type;
     }
 
     _textures[type] = texture;
-    _needUpdate = true;
+    needUpdate();
 }
 
 Texture*    Material::getTexture(Texture::eType type) const
@@ -159,12 +165,12 @@ bool        Material::loadFromFile(const std::string& fileName)
     if (!jsonReader.parse(fileName, parsed))
         EXCEPT(IOException, "Cannot load material \"%s\"", fileName.c_str());
 
-    _constants.ambient = parsed.getColor4f("ambient", {0.3f, 0.3f, 0.3f, 1.0f});
-    _constants.diffuse = parsed.getColor4f("diffuse", {1.0f, 1.0f, 1.0f, 1.0f});
-    _constants.faceCamera = parsed.getBool("face_camera", false) ? 1 : 0;
-    _transparent = parsed.getBool("transparent", false);
-    _srcBlend = Material::getBlendEnumFromString(parsed.getString("src_blend", "GL_SRC_ALPHA"));
-    _dstBlend = Material::getBlendEnumFromString(parsed.getString("dst_blend", "GL_ONE_MINUS_SRC_ALPHA"));
+    _ambient = parsed.getColor4f("ambient", {0.3f, 0.3f, 0.3f, 1.0f});
+    _diffuse = parsed.getColor4f("diffuse", {1.0f, 1.0f, 1.0f, 1.0f});
+    _faceCamera = parsed.getBool("face_camera", false) ? 1 : 0;
+    transparent = parsed.getBool("transparent", false);
+    srcBlend = Material::getBlendEnumFromString(parsed.getString("src_blend", "GL_SRC_ALPHA"));
+    dstBlend = Material::getBlendEnumFromString(parsed.getString("dst_blend", "GL_ONE_MINUS_SRC_ALPHA"));
 
     JsonValue textures(parsed.get("textures", {}));
 
@@ -189,6 +195,7 @@ bool        Material::loadFromFile(const std::string& fileName)
     }
 
     _isModelMaterial = false;
+    needUpdate();
 
     return (true);
 }
@@ -212,4 +219,43 @@ std::vector<const char*>&   Material::getBlendModes()
     static std::vector<const char*> blendModes = { BLENDING_MODES(GENERATE_BLEND_STRING) };
 
     return (blendModes);
+}
+
+const glm::vec4&    Material::getAmbient() const
+{
+    return (_ambient);
+}
+
+const glm::vec4&    Material::getDiffuse() const
+{
+    return (_diffuse);
+}
+
+int     Material::isFacingCamera() const
+{
+    return (_faceCamera);
+}
+
+void    Material::setAmbient(const glm::vec4& ambient)
+{
+    _ambient = ambient;
+    needUpdate();
+}
+
+void    Material::setDiffuse(const glm::vec4& diffuse)
+{
+    _diffuse = diffuse;
+    needUpdate();
+}
+
+void    Material::isFacingCamera(bool faceCamera)
+{
+    _faceCamera = faceCamera;
+    needUpdate();
+}
+
+
+void    Material::needUpdate()
+{
+    _needUpdate = true;
 }

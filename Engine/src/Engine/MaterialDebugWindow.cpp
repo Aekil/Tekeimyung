@@ -78,7 +78,6 @@ void    MaterialDebugWindow::displayMaterialsProperties()
     ImGui::SameLine();
     ImGui::BeginChild("Properties", ImVec2(_size.x * 60.0f / 100.0f, 0), false);
 
-    bool changed = false;
     if (_selectedMaterial != nullptr)
     {
         Texture* ambientTexture = _selectedMaterial->getTexture(Texture::eType::AMBIENT);
@@ -86,8 +85,24 @@ void    MaterialDebugWindow::displayMaterialsProperties()
         std::string ambientTextureName = ambientTexture ? ambientTexture->getId() : "";
         std::string diffuseTextureName = diffuseTexture ? diffuseTexture->getId() : "";
 
-        changed |= ImGui::ColorEdit4("Ambient", glm::value_ptr(_selectedMaterial->_constants.ambient));
-        changed |= ImGui::ColorEdit4("Diffuse", glm::value_ptr(_selectedMaterial->_constants.diffuse));
+        // Ambient
+        {
+            glm::vec4 ambient = _selectedMaterial->getAmbient();
+            if (ImGui::ColorEdit4("Ambient", glm::value_ptr(ambient)))
+            {
+                _selectedMaterial->setAmbient(ambient);
+            }
+        }
+
+        // Diffuse
+        {
+            glm::vec4 diffuse = _selectedMaterial->getDiffuse();
+            if (ImGui::ColorEdit4("Diffuse", glm::value_ptr(diffuse)))
+            {
+                _selectedMaterial->setDiffuse(diffuse);
+            }
+        }
+
         if (Helper::updateComboString("Ambient texture", ResourceManager::getInstance()->getResourcesNames<Texture>(), ambientTextureName))
         {
             // Empty choice
@@ -111,35 +126,29 @@ void    MaterialDebugWindow::displayMaterialsProperties()
             }
         }
 
-        bool faceCamera = _selectedMaterial->_constants.faceCamera ? true : false;
+        bool faceCamera = _selectedMaterial->isFacingCamera() ? true : false;
         if (ImGui::Checkbox("Face camera", &faceCamera))
         {
-            _selectedMaterial->_constants.faceCamera = faceCamera == true ? 1 : 0;
-            changed = true;
+            _selectedMaterial->isFacingCamera(faceCamera == true ? 1 : 0);
         }
-        ImGui::Checkbox("Transparent", &_selectedMaterial->_transparent);
+        ImGui::Checkbox("Transparent", &_selectedMaterial->transparent);
 
         // Blending modes
-        if (_selectedMaterial->_transparent)
+        if (_selectedMaterial->transparent)
         {
             // Src blend
-            std::string srcBlendString = Material::getBlendStringFromEnum(_selectedMaterial->_srcBlend);
+            std::string srcBlendString = Material::getBlendStringFromEnum(_selectedMaterial->srcBlend);
             if (Helper::updateComboString("Src blend", Material::getBlendModes(), srcBlendString))
             {
-                _selectedMaterial->_srcBlend = Material::getBlendEnumFromString(srcBlendString);
+                _selectedMaterial->srcBlend = Material::getBlendEnumFromString(srcBlendString);
             }
 
             // Dst blend
-            std::string dstBlendString = Material::getBlendStringFromEnum(_selectedMaterial->_dstBlend);
+            std::string dstBlendString = Material::getBlendStringFromEnum(_selectedMaterial->dstBlend);
             if (Helper::updateComboString("Dst blend", Material::getBlendModes(), dstBlendString))
             {
-                _selectedMaterial->_dstBlend = Material::getBlendEnumFromString(dstBlendString);
+                _selectedMaterial->dstBlend = Material::getBlendEnumFromString(dstBlendString);
             }
-        }
-
-        if (changed)
-        {
-            _selectedMaterial->_needUpdate = true;
         }
 
         if (ImGui::Button("Clone"))
@@ -222,12 +231,12 @@ void    MaterialDebugWindow::saveMaterials()
             JsonValue json;
             JsonValue texturesJson;
 
-            json.setColor4f("ambient", material->_constants.ambient);
-            json.setColor4f("diffuse", material->_constants.diffuse);
-            json.setBool("face_camera", material->_constants.faceCamera ? true : false);
-            json.setBool("transparent", material->_transparent);
-            json.setString("src_blend", Material::getBlendStringFromEnum(material->_srcBlend));
-            json.setString("dst_blend", Material::getBlendStringFromEnum(material->_dstBlend));
+            json.setColor4f("ambient", material->getAmbient());
+            json.setColor4f("diffuse", material->getDiffuse());
+            json.setBool("face_camera", material->isFacingCamera() ? true : false);
+            json.setBool("transparent", material->transparent);
+            json.setString("src_blend", Material::getBlendStringFromEnum(material->srcBlend));
+            json.setString("dst_blend", Material::getBlendStringFromEnum(material->dstBlend));
 
             if (material->getTexture(Texture::eType::AMBIENT))
             {

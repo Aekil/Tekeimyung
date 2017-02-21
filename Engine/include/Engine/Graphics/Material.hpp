@@ -37,7 +37,7 @@
 class Material final: public Resource
 {
 public:
-    struct sConstants
+    struct sMaterialData
     {
         glm::vec4       ambient;
         glm::vec4       diffuse;
@@ -68,17 +68,33 @@ public:
     static const char*  getBlendStringFromEnum(GLenum blendEnum);
     static std::vector<const char*>& getBlendModes();
 
+    const glm::vec4&    getAmbient() const;
+    const glm::vec4&    getDiffuse() const;
+    int                 isFacingCamera() const;
+
+    void                setAmbient(const glm::vec4& ambient);
+    void                setDiffuse(const glm::vec4& diffuse);
+    void                isFacingCamera(bool faceCamera);
+
+private:
+    void                needUpdate();
+
 public:
-    sConstants          _constants;
+    bool                transparent{false};
+    GLenum              srcBlend;
+    GLenum              dstBlend;
+
+private:
+    sMaterialData       _data;
     UniformBuffer       _ubo;
 
     // Need to update ubo data
     bool                _needUpdate;
 
-    bool                _transparent{false};
-
-    GLenum              _srcBlend;
-    GLenum              _dstBlend;
+    glm::vec4           _ambient;
+    glm::vec4           _diffuse;
+    int                 _faceCamera;
+    int                 _texturesTypes;
 
 private:
     std::unordered_map<Texture::eType, Texture*> _textures;
