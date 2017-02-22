@@ -14,10 +14,20 @@
 
 #include <Engine/Systems/ParticleSystem.hpp>
 
+// We can't initialize the buffer pool because opengl is not initialized
+std::unique_ptr<BufferPool> ParticleSystem::_bufferPool = nullptr;
+
 ParticleSystem::ParticleSystem(bool editorMode): _editorMode(editorMode)
 {
     addDependency<sParticleEmitterComponent>();
     addDependency<sRenderComponent>();
+
+    if (!_bufferPool)
+    {
+        _bufferPool = std::make_unique<BufferPool>(1,
+                                    (uint32_t)(sizeof(glm::mat4) + sizeof(glm::vec4)) * MAX_PARTICLES,
+                                    GL_SHADER_STORAGE_BUFFER);
+    }
 }
 
 ParticleSystem::~ParticleSystem() {}
@@ -30,6 +40,8 @@ void    ParticleSystem::initEmitter(Entity* entity)
     emitter->particles.resize(MAX_PARTICLES);
     emitter->particlesNb = 0;
     emitter->elapsedTime = 0;
+    emitter->buffer = _bufferPool->allocate();
+
     _emitters[entity->id] = emitter;
 }
 
@@ -90,7 +102,9 @@ void    ParticleSystem::updateEmitter(EntityManager &em, Entity* entity, float e
         }
     }
     // Create new particles each rate
-    else if (emitter->elapsedTime >= emitterComp->rate && render->_display)
+    else if (emitter->elapsedTime >= emitterComp->rate &&
+        render->_display &&
+        emitter->particlesNb < MAX_PARTICLES)
     {
         if (emitter->particlesNb >= emitter->particles.size() || // Vector is full
             emitter->particlesNb >= emitterComp->maxParticles) // Particles limit
@@ -136,6 +150,8 @@ void    ParticleSystem::updateEmitter(EntityManager &em, Entity* entity, float e
 void    ParticleSystem::removeEmitter(uint32_t id)
 {
     sEmitter* emitter = _emitters[id];
+
+    _bufferPool->free(emitter->buffer);
 
     // Delete emitter pointer
     delete emitter;

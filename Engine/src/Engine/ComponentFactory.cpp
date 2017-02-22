@@ -470,7 +470,7 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationsEditor(sRenderCompon
     {
         sTransformComponent* transform = entity->getComponent<sTransformComponent>();
         component->_animator.removeAnimation(_lastAnimation);
-        transform->needUpdate = true;
+        transform->needUpdate();
         ImGui::PopStyleColor(3);
         return (false);
     }
@@ -501,7 +501,7 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationsEditor(sRenderCompon
         component->_animator.stop(_lastAnimation->getName());
 
         sTransformComponent* transform = entity->getComponent<sTransformComponent>();
-        transform->needUpdate = true;
+        transform->needUpdate();
     }
 
     bool loop = _lastAnimation->isLoop();
@@ -559,7 +559,7 @@ bool    ComponentFactory<sRenderComponent>::updateParamsAnimationsEditor(Animati
             {
                 sTransformComponent* transform = entity->getComponent<sTransformComponent>();
                 playedAnimation->removeParamAnimation(paramAnimation);
-                transform->needUpdate = true;
+                transform->needUpdate();
                 ImGui::PopID();
                 continue;
             }
@@ -617,7 +617,7 @@ bool    ComponentFactory<sRenderComponent>::updateAnimationParamTranslate(Entity
             if (totalFrames == 0)
             {
                 sTransformComponent* transform = entity->getComponent<sTransformComponent>();
-                transform->needUpdate = true;
+                transform->needUpdate();
             }
         }
         else
@@ -760,10 +760,12 @@ bool    ComponentFactory<sBoxColliderComponent>::updateEditor(const std::string&
         sRenderComponent* render = entity->getComponent<sRenderComponent>();
         if (render)
         {
-            component->pos = glm::vec3(0.0f, 0.0f, 0.0f);
             component->size.x = (render->getModel()->getSize().x + 1.0f) / SIZE_UNIT;
             component->size.y = (render->getModel()->getSize().y + 1.0f) / SIZE_UNIT;
             component->size.z = (render->getModel()->getSize().z + 1.0f) / SIZE_UNIT;
+            component->pos = glm::vec3(render->getModel()->getMin().x + (render->getModel()->getSize().x / 2.0f),
+                                        render->getModel()->getMin().y + (render->getModel()->getSize().y / 2.0f),
+                                        render->getModel()->getMin().z + (render->getModel()->getSize().z / 2.0f));
         }
     }
     if (ImGui::Button(component->display ? "Hide" : "Display"))
@@ -1276,6 +1278,7 @@ sComponent* ComponentFactory<sUiComponent>::loadFromJson(const std::string& enti
     component = new sUiComponent();
 
     component->offset = json.getVec2f("offset", { 0.0f, 0.0f });
+    component->layer = json.getUInt("layer", 0);
     component->horizontalAlignment = EnumManager<eHorizontalAlignment>::stringToEnum(json.getString("horizontal_alignment", "MIDDLE"));
     component->verticalAlignment = EnumManager<eVerticalAlignment>::stringToEnum(json.getString("vertical_alignment", "MIDDLE"));
 
@@ -1289,6 +1292,7 @@ JsonValue&    ComponentFactory<sUiComponent>::saveToJson(const std::string& enti
 
 
     json.setVec2f("offset", component->offset);
+    json.setUInt("layer", component->layer);
     json.setString("horizontal_alignment", EnumManager<eHorizontalAlignment>::enumToString(component->horizontalAlignment));
     json.setString("vertical_alignment", EnumManager<eVerticalAlignment>::enumToString(component->verticalAlignment));
 
@@ -1300,6 +1304,16 @@ bool    ComponentFactory<sUiComponent>::updateEditor(const std::string& entityTy
     sUiComponent* component = static_cast<sUiComponent*>(entityComponent ? entityComponent : _components[entityType]);
     *savedComponent = component;
     bool changed = false;
+
+    int layer = component->layer;
+    if (ImGui::InputInt("Layer", &layer, 1, ImGuiInputTextFlags_AllowTabInput))
+    {
+        if (layer < 0)
+            component->layer = 0;
+        else
+            component->layer = layer;
+        changed = true;
+    }
 
     changed |= Helper::updateComboEnum<eHorizontalAlignment>("Horizontal alignment", component->horizontalAlignment);
     changed |= Helper::updateComboEnum<eVerticalAlignment>("Vertical alignment", component->verticalAlignment);

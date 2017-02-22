@@ -197,7 +197,7 @@ void    ButtonSystem::setSelected(Entity* entity, bool hovered)
 
     iconTransform->pos.x = buttonTransform->pos.x - 42.0f;
     iconTransform->pos.y = buttonTransform->pos.y + (buttonSize.y / 2.0f) - (iconSize.y / 2.0f) + 10.0f;
-    iconTransform->needUpdate = true;
+    iconTransform->needUpdate();
 
     button->selected = true;
 }

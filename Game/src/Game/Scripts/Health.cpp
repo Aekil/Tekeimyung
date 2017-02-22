@@ -69,8 +69,8 @@ void Health::update(sTransformComponent* transform)
     this->_healthBarTransform->pos.x = screenPos.x;
     this->_healthBarTransform->pos.y = screenPos.y;
     this->_healthBarTransform->scale.x = (float)health / (float)maxHealth * maxScale;
-    this->_healthBarTransform->needUpdate = true;
+    this->_healthBarTransform->needUpdate();
     this->_healthBarEmptyTransform->pos.x = screenPos.x;
     this->_healthBarEmptyTransform->pos.y = screenPos.y;
-    this->_healthBarEmptyTransform->needUpdate = true;
+    this->_healthBarEmptyTransform->needUpdate();
 }

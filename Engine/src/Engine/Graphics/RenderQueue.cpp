@@ -6,7 +6,11 @@
 #include <Engine/Utils/Debug.hpp>
 #include <Engine/Utils/Logger.hpp>
 
-void    RenderQueue::addModel(ModelInstance* modelInstance, const glm::vec4& color, const glm::mat4& transform)
+void    RenderQueue::addModel(ModelInstance* modelInstance,
+                                UniformBuffer* ubo,
+                                uint32_t uboOffset,
+                                uint32_t uboSize,
+                                uint32_t instancesNb)
 {
     auto& meshsInstances = modelInstance->getMeshsInstances();
 
@@ -15,7 +19,7 @@ void    RenderQueue::addModel(ModelInstance* modelInstance, const glm::vec4& col
         Material *material = meshInstance->getMaterial();
         ASSERT(material != nullptr, "A mesh should have a material");
 
-        sRenderableMesh renderableMesh = { meshInstance.get(), color, transform };
+        sRenderableMesh renderableMesh = { meshInstance.get(), ubo, uboOffset, uboSize, instancesNb };
         if (material->transparent)
         {
             CHECK_QUEUE_NOT_FULL(_transparentMeshsNb);
@@ -31,7 +35,11 @@ void    RenderQueue::addModel(ModelInstance* modelInstance, const glm::vec4& col
     }
 }
 
-void    RenderQueue::addUIModel(ModelInstance* modelInstance, const glm::vec4& color, const glm::mat4& transform)
+void    RenderQueue::addUIModel(ModelInstance* modelInstance,
+                                UniformBuffer* ubo,
+                                uint32_t uboOffset,
+                                uint32_t uboSize,
+                                uint32_t instancesNb)
 {
     auto& meshsInstances = modelInstance->getMeshsInstances();
 
@@ -40,7 +48,7 @@ void    RenderQueue::addUIModel(ModelInstance* modelInstance, const glm::vec4& c
         Material *material = meshInstance->getMaterial();
         ASSERT(material != nullptr, "A mesh should have a material");
 
-        sRenderableMesh renderableMesh = { meshInstance.get(), color, transform };
+        sRenderableMesh renderableMesh = { meshInstance.get(), ubo, uboOffset, uboSize, instancesNb };
         if (material->transparent)
         {
             CHECK_QUEUE_NOT_FULL(_uiTransparentMeshsNb);

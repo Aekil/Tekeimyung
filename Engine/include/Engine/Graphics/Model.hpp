@@ -37,6 +37,8 @@ public:
     const Buffer&               getBuffer() const;
     GLuint                      getPrimitiveType() const;
 
+    virtual bool                isGeometry() const;
+
 protected:
     void                        initVertexData();
     void                        initIndexData();

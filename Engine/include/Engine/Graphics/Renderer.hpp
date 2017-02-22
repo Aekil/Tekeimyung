@@ -4,14 +4,15 @@
 
 #pragma once
 
+#include <unordered_map>
+#include <glm/mat4x4.hpp>
 
 #include <Engine/Graphics/Camera.hpp>
 #include <Engine/Graphics/Light.hpp>
+#include <Engine/Graphics/Material.hpp>
 #include <Engine/Graphics/ModelInstance.hpp>
 #include <Engine/Graphics/RenderQueue.hpp>
 #include <Engine/Graphics/ShaderProgram.hpp>
-
-#include <glm/mat4x4.hpp>
 
 class Renderer
 {
@@ -36,12 +37,13 @@ public:
                                                                 std::vector<Light*>& lights,
                                                                 uint32_t lightsNb);
 
-    ShaderProgram&                      getShaderProgram();
     Camera*                             getCurrentCamera();
     void                                setCurrentCamera(Camera* camera);
 
 private:
-    ShaderProgram                       _shaderProgram;
+    // One ShaderProgram for each possible permutation
+    std::unordered_map<int, ShaderProgram> _shaderPrograms;
+    ShaderProgram*                      _currentShaderProgram{nullptr};
 
 
     // Singleton instance

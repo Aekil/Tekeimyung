@@ -109,7 +109,7 @@ void Player::movement(float elapsedTime)
     {
         float rotation = glm::degrees(std::atan2(_direction.x, _direction.z));
         _transform->rotation.y = rotation;
-        _transform->needUpdate = true;
+        _transform->needUpdate();
     }
 
     // update player position
@@ -117,22 +117,22 @@ void Player::movement(float elapsedTime)
         if (KB_P(Keyboard::eKey::S))
         {
             _transform->pos += glm::vec3(1.0f, 0.0f, 1.0f);
-            _transform->needUpdate = true;
+            _transform->needUpdate();
         }
         if (KB_P(Keyboard::eKey::Z))
         {
             _transform->pos += glm::vec3(-1.0f, 0.0f, -1.0f);
-            _transform->needUpdate = true;
+            _transform->needUpdate();
         }
         if (KB_P(Keyboard::eKey::Q))
         {
             _transform->pos += glm::vec3(-1.0f, 0.0f, 1.0f);
-            _transform->needUpdate = true;
+            _transform->needUpdate();
         }
         if (KB_P(Keyboard::eKey::D))
         {
             _transform->pos += glm::vec3(1.0f, 0.0f, -1.0f);
-            _transform->needUpdate = true;
+            _transform->needUpdate();
         }
     }
 }
@@ -153,7 +153,7 @@ void Player::handleShoot()
 
         projectileScript->_projectileTransform->pos.y -= (_render->getModel()->getMin().y * _transform->scale.y) / 2.0f;
 
-        projectileScript->_projectileTransform->needUpdate = true;
+        projectileScript->_projectileTransform->needUpdate();
         projectileScript->_damage = _damage;
         projectileScript->followDirection({_direction.x, 0.0f, _direction.z});
     }

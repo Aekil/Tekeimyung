@@ -150,7 +150,7 @@ Entity* EntityFactory::createEntity(eArchetype type, const glm::vec3& pos)
 
     sTransformComponent* transformEntity = entity->getComponent<sTransformComponent>();
     transformEntity->pos = pos;
-    transformEntity->needUpdate = true;
+    transformEntity->needUpdate();
 
     return (entity);
 }
@@ -371,7 +371,7 @@ void    EntityFactory::updateEntitiesComponents(Entity* from, const std::string&
                     sTransformComponent* entityTransform = static_cast<sTransformComponent*>(entityComponent);
 
                     entityTransform->scale = transform->scale;
-                    entityTransform->needUpdate = true;
+                    entityTransform->needUpdate();
                 }
                 else
                 {

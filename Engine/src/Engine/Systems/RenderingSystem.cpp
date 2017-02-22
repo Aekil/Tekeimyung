@@ -21,6 +21,7 @@
 
 
 bool RenderingSystem::_displayAllColliders = false;
+std::unique_ptr<BufferPool> RenderingSystem::_bufferPool = nullptr;
 
 RenderingSystem::RenderingSystem(Camera* camera, std::unordered_map<uint32_t, sEmitter*>* particleEmitters):
                                 _camera(camera), _particleEmitters(particleEmitters)
@@ -29,6 +30,13 @@ RenderingSystem::RenderingSystem(Camera* camera, std::unordered_map<uint32_t, sE
 
     if (!_camera)
         _camera = &_defaultCamera;
+
+    if (!_bufferPool)
+    {
+        _bufferPool = std::make_unique<BufferPool>(50,
+                                    (uint32_t)(sizeof(glm::mat4) + sizeof(glm::vec4)),
+                                    GL_SHADER_STORAGE_BUFFER);
+    }
 }
 
 RenderingSystem::~RenderingSystem() {}
@@ -61,7 +69,10 @@ void    RenderingSystem::addCollidersToRenderQueue(Entity* entity, sTransformCom
         boxTransform = glm::translate(boxTransform, boxCollider->pos);
         boxTransform = glm::scale(boxTransform, boxCollider->size);
 
-        _renderQueue.addModel(boxCollider->box.get(), glm::vec4(0.87f, 1.0f, 1.0f, 0.1f), boxTransform);
+        BufferPool::SubBuffer* buffer = boxCollider->box->getBuffer(_bufferPool.get());
+        updateModelBuffer(buffer, boxTransform, glm::vec4(0.87f, 1.0f, 1.0f, 0.1f));
+
+        _renderQueue.addModel(boxCollider->box.get(), buffer->ubo, buffer->offset, buffer->size);
     }
     if (sphereCollider && sphereCollider->display &&
         (LevelEntitiesDebugWindow::getSelectedEntityId() == entity->id || _displayAllColliders))
@@ -81,7 +92,10 @@ void    RenderingSystem::addCollidersToRenderQueue(Entity* entity, sTransformCom
         sphereTransform = glm::translate(sphereTransform, sphereCollider->pos);
         sphereTransform = glm::scale(sphereTransform, glm::vec3(sphereCollider->radius));
 
-        _renderQueue.addModel(sphereCollider->sphere.get(), glm::vec4(0.87f, 1.0f, 1.0f, 0.1f), sphereTransform);
+        BufferPool::SubBuffer* buffer = sphereCollider->sphere->getBuffer(_bufferPool.get());
+        updateModelBuffer(buffer, sphereTransform, glm::vec4(0.87f, 1.0f, 1.0f, 0.1f));
+
+        _renderQueue.addModel(sphereCollider->sphere.get(), buffer->ubo, buffer->offset, buffer->size);
     }
 }
 
@@ -110,7 +124,7 @@ void    RenderingSystem::addParticlesToRenderQueue(EntityManager& em, float elap
             sTransformComponent* transform = entity->getComponent<sTransformComponent>();
 
             render->_animator.update(elapsedTime);
-            transform->needUpdate = true;
+            transform->needUpdate();
         }
 
         for (unsigned int i = 0; i < emitter->particlesNb; i++)
@@ -122,11 +136,16 @@ void    RenderingSystem::addParticlesToRenderQueue(EntityManager& em, float elap
             transformMatrix = glm::translate(transformMatrix, glm::vec3(particle.pos.x, particle.pos.y, particle.pos.z));
             transformMatrix = glm::scale(transformMatrix, particle.size);
 
-            if (isUi)
-                _renderQueue.addUIModel(model, particle.color, transformMatrix);
-            else
-            _renderQueue.addModel(model, particle.color, transformMatrix);
+            uint32_t uboOffset = (sizeof(glm::mat4) + sizeof(glm::vec4)) * i;
+            emitter->buffer->ubo->update(&transformMatrix, sizeof(glm::mat4), uboOffset);
+            emitter->buffer->ubo->update(&particle.color, sizeof(glm::vec4), uboOffset + sizeof(glm::mat4));
+
         }
+
+        if (isUi)
+            _renderQueue.addUIModel(model, emitter->buffer->ubo, 0, emitter->buffer->size, emitter->particlesNb);
+        else
+            _renderQueue.addModel(model, emitter->buffer->ubo, 0, emitter->buffer->size, emitter->particlesNb);
     }
 }
 
@@ -134,17 +153,17 @@ void    RenderingSystem::addLightConeToRenderQueue(sLightComponent* lightComp, s
 {
     if (!lightComp->_lightCone)
     {
-        //Material* colliderMaterial = ResourceManager::getInstance()->getResource<Material>("colliders.mat");
+        Material* material = ResourceManager::getInstance()->getResource<Material>("light.mat");
         Geometry* coneModel = GeometryFactory::getGeometry(Geometry::eType::CONE);
 
-        //boxModel->setMaterial(colliderMaterial);
+        coneModel->setMaterial(material);
         lightComp->_lightCone = std::make_unique<ModelInstance>(coneModel);
     }
 
-    //glm::mat4 coneTransform = transform->getTransform();
-    //coneTransform = glm::scale(coneTransform, glm::vec3(3.0f, 3.0f, 3.0f));
+    BufferPool::SubBuffer* buffer = lightComp->_lightCone->getBuffer(_bufferPool.get());
+    updateModelBuffer(buffer, transform->getTransform(), glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 
-    _renderQueue.addModel(lightComp->_lightCone.get(), glm::vec4(0.87f, 1.0f, 1.0f, 0.1f), transform->getTransform());
+    _renderQueue.addModel(lightComp->_lightCone.get(), buffer->ubo, buffer->offset, buffer->size);
 }
 
 void    RenderingSystem::update(EntityManager& em, float elapsedTime)
@@ -170,13 +189,15 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
                 if (render->_animator.isPlaying())
                 {
                     render->_animator.update(elapsedTime);
-                    transform->needUpdate = true;
+                    transform->needUpdate();
                 }
 
+                BufferPool::SubBuffer* buffer = getModelBuffer(transform, render);
+
                 if (entity->hasComponent<sUiComponent>())
-                    _renderQueue.addUIModel(model, render->color, transform->getTransform());
+                    _renderQueue.addUIModel(model, buffer->ubo, buffer->offset, buffer->size);
                 else
-                    _renderQueue.addModel(model, render->color, transform->getTransform());
+                    _renderQueue.addModel(model, buffer->ubo, buffer->offset, buffer->size);
 
                 addCollidersToRenderQueue(entity, transform);
             }
@@ -211,4 +232,24 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
     }
 
     Renderer::getInstance()->render(_camera, _renderQueue);
+}
+
+BufferPool::SubBuffer*  RenderingSystem::getModelBuffer(sTransformComponent* transform, sRenderComponent* render)
+{
+    BufferPool::SubBuffer* buffer = render->getModelInstance()->getBuffer(_bufferPool.get());
+
+    if (transform->isDirty() || render->lastColor != render->color)
+    {
+        transform->isDirty(true);
+        render->lastColor = render->color;
+        updateModelBuffer(buffer, transform->getTransform(), render->color);
+    }
+
+    return (buffer);
+}
+
+void    RenderingSystem::updateModelBuffer(BufferPool::SubBuffer* buffer, const glm::mat4& transform, const glm::vec4& color)
+{
+    buffer->ubo->update((void*)&transform, sizeof(glm::mat4), buffer->offset);
+    buffer->ubo->update((void*)&color, sizeof(glm::vec4), buffer->offset + sizeof(glm::mat4));
 }

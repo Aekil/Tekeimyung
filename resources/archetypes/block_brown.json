@@ -3,9 +3,9 @@
       "sBoxColliderComponent" : {
          "isTrigger" : false,
          "pos" : {
-            "x" : -13,
-            "y" : -0.5,
-            "z" : -13
+            "x" : 0,
+            "y" : 6.25,
+            "z" : 0
          },
          "size" : {
             "x" : 2.5999999046325684,
@@ -36,9 +36,9 @@
       },
       "sTransformComponent" : {
          "pos" : {
-            "x" : 400,
+            "x" : 0,
             "y" : 0,
-            "z" : 50
+            "z" : 0
          },
          "rotation" : {
             "x" : 0,

@@ -36,6 +36,8 @@ public:
     Material*           getMaterial() const;
     eType               getType() const;
 
+    bool                isGeometry() const override final;
+
     static Resource::eType      getResourceType() { return Resource::eType::GEOMETRY; }
 
     bool                        loadFromFile(const std::string &fileName) override final { return (nullptr); }

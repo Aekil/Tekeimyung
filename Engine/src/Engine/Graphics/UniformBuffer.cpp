@@ -9,25 +9,31 @@
 
 UniformBuffer::UniformBuffer(): _UBO(0), _bindingPoint(0), _init(false), _size(0)
 {
+    _bufferType = GL_UNIFORM_BUFFER;
     glGenBuffers(1, &_UBO);
 }
 
 
-UniformBuffer::~UniformBuffer() {}
+UniformBuffer::~UniformBuffer()
+{
+    glDeleteBuffers(1, &_UBO);
+}
 
-void    UniformBuffer::init(uint32_t size)
+void    UniformBuffer::init(uint32_t size, GLuint bufferType)
 {
     if (_init)
         return;
 
-    // Bind UBO to GL_UNIFORM_BUFFER type so that all calls to GL_UNIFORM_BUFFER use VBO
-    glBindBuffer(GL_UNIFORM_BUFFER, _UBO);
+    _bufferType = bufferType;
+
+    // Bind UBO to _bufferType type so that all calls to _bufferType use VBO
+    glBindBuffer(_bufferType, _UBO);
 
     // Update buffer data
-    glBufferData(GL_UNIFORM_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
+    glBufferData(_bufferType, size, nullptr, GL_DYNAMIC_DRAW);
 
     // Unbind UBO
-    glBindBuffer(GL_UNIFORM_BUFFER, 0);
+    glBindBuffer(_bufferType, 0);
 
     _size = size;
     _init = true;
@@ -41,14 +47,14 @@ void    UniformBuffer::update(void* data, uint32_t size, uint32_t offset)
         return;
     }
 
-    // Bind UBO to GL_UNIFORM_BUFFER type so that all calls to GL_UNIFORM_BUFFER use VBO
-    glBindBuffer(GL_UNIFORM_BUFFER, _UBO);
+    // Bind UBO to _bufferType type so that all calls to _bufferType use VBO
+    glBindBuffer(_bufferType, _UBO);
 
     // Update buffer data
-    glBufferSubData(GL_UNIFORM_BUFFER, offset, size, data);
+    glBufferSubData(_bufferType, offset, size, data);
 
     // Unbind UBO
-    glBindBuffer(GL_UNIFORM_BUFFER, 0);
+    glBindBuffer(_bufferType, 0);
 }
 
 void    UniformBuffer::bind(uint32_t offset, uint32_t size)
@@ -63,7 +69,7 @@ void    UniformBuffer::bind(uint32_t offset, uint32_t size)
         size = _size;
 
     // Bind UBO
-    glBindBufferRange(GL_UNIFORM_BUFFER, _bindingPoint, _UBO, offset, size);
+    glBindBufferRange(_bufferType, _bindingPoint, _UBO, offset, size);
 }
 
 void    UniformBuffer::setBindingPoint(uint16_t bindingPoint)

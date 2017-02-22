@@ -40,6 +40,7 @@
       },
       "sUiComponent" : {
          "horizontal_alignment" : "NONE",
+         "layer" : 0,
          "offset" : {
             "x" : 0,
             "y" : 0

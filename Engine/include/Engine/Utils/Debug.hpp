@@ -7,7 +7,9 @@
 #include <string>
 #include <Engine/Utils/Helper.hpp>
 
-#if defined(_DEBUG)
+// NDEBUG is defined for non-debug builds
+// CMAKE_INTDIR is set to "RelWithDebInfo" when the build is a release build with debug infos
+#if !defined(NDEBUG)
     #define ENGINE_DEBUG true
 
     #if defined(_MSC_VER)

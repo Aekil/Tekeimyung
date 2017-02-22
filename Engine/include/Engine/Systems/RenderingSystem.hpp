@@ -9,6 +9,7 @@
 
 #include <ECS/System.hpp>
 
+#include <Engine/Graphics/BufferPool.hpp>
 #include <Engine/Graphics/ShaderProgram.hpp>
 #include <Engine/Graphics/ModelInstance.hpp>
 #include <Engine/Graphics/Camera.hpp>
@@ -25,9 +26,13 @@ public:
     virtual void update(EntityManager& em, float elapsedTime);
     virtual bool                            init();
 
+private:
     void                                    addParticlesToRenderQueue(EntityManager& em, float elapsedTime);
     void                                    addCollidersToRenderQueue(Entity* entity, sTransformComponent* transform);
     void                                    addLightConeToRenderQueue(sLightComponent* lightComp, sTransformComponent* transform);
+
+    BufferPool::SubBuffer*                  getModelBuffer(sTransformComponent* transform, sRenderComponent* render);
+    void                                    updateModelBuffer(BufferPool::SubBuffer* buffer, const glm::mat4& transform, const glm::vec4& color);
 
 private:
     std::unordered_map<uint32_t, sEmitter*>*    _particleEmitters;
@@ -38,4 +43,5 @@ private:
     RenderQueue                                 _renderQueue;
 
     static bool _displayAllColliders;
+    static std::unique_ptr<BufferPool>          _bufferPool;
 END_SYSTEM(RenderingSystem)

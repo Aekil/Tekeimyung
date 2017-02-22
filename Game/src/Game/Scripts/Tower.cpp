@@ -76,7 +76,7 @@ void Tower::shootTarget(Entity* target)
     projectileScript = fireballScripts->getScript<Projectile>("Projectile");
 
     projectileScript->_projectileTransform->pos = _towerTransform->pos;
-    projectileScript->_projectileTransform->needUpdate = true;
+    projectileScript->_projectileTransform->needUpdate();
     projectileScript->_targetId = target->id;
     projectileScript->_damage = _damage;
     projectileScript->followTarget(target);

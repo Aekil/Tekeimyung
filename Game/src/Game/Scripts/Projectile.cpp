@@ -61,7 +61,7 @@ void Projectile::onCollisionEnter(Entity* entity)
             sTransformComponent* explosionTransform = explosion->getComponent<sTransformComponent>();
             sTransformComponent* targetTransform = target->getComponent<sTransformComponent>();
             explosionTransform->pos = targetTransform->pos;
-            explosionTransform->needUpdate = true;
+            explosionTransform->needUpdate();
         }
     }
     destroyProjectile();

@@ -7,6 +7,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <Engine/Graphics/Material.hpp>
 #include <Engine/Utils/Exception.hpp>
 #include <Engine/Window/GameWindow.hpp>
 
@@ -37,15 +38,38 @@ bool    Renderer::initialize()
 {
     try
     {
-        _shaderProgram.attachShader(GL_VERTEX_SHADER, "resources/shaders/shader.vert");
-        _shaderProgram.attachShader(GL_FRAGMENT_SHADER, "resources/shaders/shader.frag");
-        _shaderProgram.link();
-        _shaderProgram.use();
+        std::vector<std::vector<Material::eOption> > permutations = {
+            { },
+            { Material::eOption::TEXTURE_AMBIENT },
+            { Material::eOption::TEXTURE_DIFFUSE },
+            { Material::eOption::FACE_CAMERA },
 
-        // Set texture location unit
-        // Must be the same unit as material textures. See Material::loadFromAssimp
-        glUniform1i(_shaderProgram.getUniformLocation("AmbientTexture"), 0);
-        glUniform1i(_shaderProgram.getUniformLocation("DiffuseTexture"), 1);
+            { Material::eOption::TEXTURE_AMBIENT,
+                Material::eOption::TEXTURE_DIFFUSE },
+            { Material::eOption::TEXTURE_AMBIENT,
+                Material::eOption::FACE_CAMERA },
+            { Material::eOption::TEXTURE_DIFFUSE,
+                Material::eOption::FACE_CAMERA },
+
+            { Material::eOption::TEXTURE_AMBIENT,
+                Material::eOption::TEXTURE_DIFFUSE,
+                Material::eOption::FACE_CAMERA }
+        };
+
+        for (const auto& options: permutations)
+        {
+            int optionFlag = 0;
+            for (auto option: options)
+            {
+                optionFlag |= option;
+            }
+
+            auto& shaderProgram = _shaderPrograms[optionFlag];
+            shaderProgram.setOptions(optionFlag);
+            shaderProgram.attachShader(GL_VERTEX_SHADER, "resources/shaders/shader.vert", options);
+            shaderProgram.attachShader(GL_FRAGMENT_SHADER, "resources/shaders/shader.frag", options);
+            shaderProgram.link();
+        }
     }
     catch(const Exception& e)
     {
@@ -109,7 +133,7 @@ void    Renderer::render(Camera* camera, RenderQueue& renderQueue)
         renderTransparentObjects(camera, renderQueue.getTransparentMeshs(), renderQueue.getTransparentMeshsNb(), lights, lightsNb);
 
         // Enable depth buffer for opaque objects
-        //glDepthMask(GL_TRUE);
+        glDepthMask(GL_TRUE);
         // Disable blending for opaque objects
         glDisable(GL_BLEND);
     }
@@ -138,34 +162,69 @@ void    Renderer::render(Camera* camera, RenderQueue& renderQueue)
 
 }
 
+bool sortOpaque(const sRenderableMesh& lhs, const sRenderableMesh& rhs)
+{
+    Material* lhsMaterial = lhs.meshInstance->getMaterial();
+    Material* rhsMaterial = rhs.meshInstance->getMaterial();
+
+    // Sort by src blend and by dst blend
+    return (lhsMaterial->getOptions() > rhsMaterial->getOptions());
+}
+
 void    Renderer::renderOpaqueObjects(Camera* camera,
                                     std::vector<sRenderableMesh>& meshs,
                                     uint32_t meshsNb,
                                     std::vector<Light*>& lights,
                                     uint32_t lightsNb)
 {
+    if (meshsNb == 0)
+        return;
+
+    std::sort(meshs.begin(), meshs.begin() + meshsNb, sortOpaque);
+
     for (uint32_t j = 0; j < lightsNb; ++j)
     {
         for (uint32_t i = 0; i < meshsNb; ++i)
         {
             auto& renderableMesh = meshs[i];
             Mesh* mesh = renderableMesh.meshInstance->getMesh();
-            // Model matrix
-            static GLint uniModel = _shaderProgram.getUniformLocation("model");
-            glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(renderableMesh.transform));
+            Material* material = renderableMesh.meshInstance->getMaterial();
 
-            // Model color
-            static GLint colorModel = _shaderProgram.getUniformLocation("modelColor");
-            glUniform4f(colorModel, renderableMesh.color.x, renderableMesh.color.y, renderableMesh.color.z, renderableMesh.color.w);
+            // Bind new shader
+            if (!_currentShaderProgram || _currentShaderProgram->getOptions() != material->getOptions())
+            {
+                _currentShaderProgram = &_shaderPrograms.at(material->getOptions());
+                _currentShaderProgram->use();
+
+                // Set texture location unit
+                // Must be the same unit as material textures. See Material::loadFromAssimp
+                glUniform1i(_currentShaderProgram->getUniformLocation("AmbientTexture"), 0);
+                glUniform1i(_currentShaderProgram->getUniformLocation("DiffuseTexture"), 1);
+            }
 
             // Bind buffer
             mesh->getModel()->getBuffer().bind();
 
-            renderableMesh.meshInstance->getMaterial()->bind();
+            material->bind();
             lights[j]->bind();
+            renderableMesh.ubo->bind(renderableMesh.uboOffset, renderableMesh.uboSize);
 
             // Draw to screen
-            glDrawElements(mesh->getModel()->getPrimitiveType(), (GLuint)mesh->indices.size(), GL_UNSIGNED_INT, BUFFER_OFFSET((GLuint)mesh->idxOffset * sizeof(GLuint)));
+            if (renderableMesh.instancesNb > 0)
+            {
+                glDrawElementsInstanced(mesh->getModel()->getPrimitiveType(),
+                                (GLuint)mesh->indices.size(),
+                                GL_UNSIGNED_INT,
+                                BUFFER_OFFSET((GLuint)mesh->idxOffset * sizeof(GLuint)),
+                                renderableMesh.instancesNb);
+            }
+            else
+            {
+                glDrawElements(mesh->getModel()->getPrimitiveType(),
+                                (GLuint)mesh->indices.size(),
+                                GL_UNSIGNED_INT,
+                                BUFFER_OFFSET((GLuint)mesh->idxOffset * sizeof(GLuint)));
+            }
         }
     }
 }
@@ -175,9 +234,10 @@ bool sortTransparent(const sRenderableMesh& lhs, const sRenderableMesh& rhs)
     Material* lhsMaterial = lhs.meshInstance->getMaterial();
     Material* rhsMaterial = rhs.meshInstance->getMaterial();
 
-    // Sort by src blend and by dst blend
-    return (lhsMaterial->srcBlend < rhsMaterial->srcBlend ||
-        lhsMaterial->srcBlend == rhsMaterial->srcBlend && lhsMaterial->dstBlend < rhsMaterial->dstBlend);
+    // Sort by shaderProgram, src blend and dst blend
+    return (lhsMaterial->getOptions() > rhsMaterial->getOptions() ||
+        lhsMaterial->getOptions() == rhsMaterial->getOptions() && lhsMaterial->srcBlend < rhsMaterial->srcBlend ||
+        lhsMaterial->getOptions() > rhsMaterial->getOptions() && lhsMaterial->srcBlend == rhsMaterial->srcBlend && lhsMaterial->dstBlend < rhsMaterial->dstBlend);
 }
 
 void    Renderer::renderTransparentObjects(Camera* camera,
@@ -203,6 +263,18 @@ void    Renderer::renderTransparentObjects(Camera* camera,
             Mesh* mesh = renderableMesh.meshInstance->getMesh();
             Material* material = renderableMesh.meshInstance->getMaterial();
 
+            // Bind new shader
+            if (!_currentShaderProgram || _currentShaderProgram->getOptions() != material->getOptions())
+            {
+                _currentShaderProgram = &_shaderPrograms.at(material->getOptions());
+                _currentShaderProgram->use();
+
+                // Set texture location unit
+                // Must be the same unit as material textures. See Material::loadFromAssimp
+                glUniform1i(_currentShaderProgram->getUniformLocation("AmbientTexture"), 0);
+                glUniform1i(_currentShaderProgram->getUniformLocation("DiffuseTexture"), 1);
+            }
+
             // Change blend mode
             if (lastSrcBlend != material->srcBlend ||
                 lastDstBlend != material->dstBlend)
@@ -212,29 +284,31 @@ void    Renderer::renderTransparentObjects(Camera* camera,
                 lastDstBlend = material->dstBlend;
             }
 
-            // Model matrix
-            static GLint uniModel = _shaderProgram.getUniformLocation("model");
-            glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(renderableMesh.transform));
-
-            // Model color
-            static GLint colorModel = _shaderProgram.getUniformLocation("modelColor");
-            glUniform4f(colorModel, renderableMesh.color.x, renderableMesh.color.y, renderableMesh.color.z, renderableMesh.color.w);
-
             // Bind buffer
             mesh->getModel()->getBuffer().bind();
 
             material->bind();
             lights[j]->bind();
+            renderableMesh.ubo->bind(renderableMesh.uboOffset, renderableMesh.uboSize);
 
             // Draw to screen
-            glDrawElements(mesh->getModel()->getPrimitiveType(), (GLuint)mesh->indices.size(), GL_UNSIGNED_INT, BUFFER_OFFSET((GLuint)mesh->idxOffset * sizeof(GLuint)));
+            if (renderableMesh.instancesNb > 0)
+            {
+                glDrawElementsInstanced(mesh->getModel()->getPrimitiveType(),
+                                (GLuint)mesh->indices.size(),
+                                GL_UNSIGNED_INT,
+                                BUFFER_OFFSET((GLuint)mesh->idxOffset * sizeof(GLuint)),
+                                renderableMesh.instancesNb);
+            }
+            else
+            {
+                glDrawElements(mesh->getModel()->getPrimitiveType(),
+                                (GLuint)mesh->indices.size(),
+                                GL_UNSIGNED_INT,
+                                BUFFER_OFFSET((GLuint)mesh->idxOffset * sizeof(GLuint)));
+            }
         }
     }
-}
-
-ShaderProgram&  Renderer::getShaderProgram()
-{
-    return (_shaderProgram);
 }
 
 Camera* Renderer::getCurrentCamera()

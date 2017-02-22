@@ -1,0 +1,22 @@
+{
+   "ambient" : {
+      "a" : 0.63137257099151611,
+      "b" : 1,
+      "g" : 1,
+      "r" : 1
+   },
+   "diffuse" : {
+      "a" : 1,
+      "b" : 1,
+      "g" : 1,
+      "r" : 1
+   },
+   "dst_blend" : "GL_ONE_MINUS_SRC_ALPHA",
+   "face_camera" : false,
+   "src_blend" : "GL_SRC_ALPHA",
+   "textures" : {
+      "ambient" : "",
+      "diffuse" : ""
+   },
+   "transparent" : true
+}

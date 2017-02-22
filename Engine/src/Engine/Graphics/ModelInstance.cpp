@@ -29,7 +29,13 @@ ModelInstance::ModelInstance(const ModelInstance& modelInstance)
     }
 }
 
-ModelInstance::~ModelInstance() {}
+ModelInstance::~ModelInstance()
+{
+    if (_buffer)
+    {
+        _buffer->free();
+    }
+}
 
 ModelInstance& ModelInstance::operator=(const ModelInstance& modelInstance)
 {
@@ -59,3 +65,23 @@ std::vector<std::unique_ptr<MeshInstance> >& ModelInstance::getMeshsInstances()
 {
     return (_meshsInstances);
 }
+
+BufferPool::SubBuffer*  ModelInstance::getBuffer() const
+{
+    return (_buffer);
+}
+
+BufferPool::SubBuffer*  ModelInstance::getBuffer(BufferPool* bufferPool)
+{
+    if (!_buffer)
+    {
+        _buffer = bufferPool->allocate();
+    }
+    return (_buffer);
+}
+
+void    ModelInstance::setBuffer(BufferPool::SubBuffer* buffer)
+{
+    _buffer = buffer;
+}
+

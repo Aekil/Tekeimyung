@@ -14,8 +14,8 @@ Material::Material(bool isModelMaterial): _isModelMaterial(isModelMaterial)
 {
     _diffuse = {1.0f, 1.0f, 1.0f, 1.0f};
     _ambient = {1.0f, 1.0f, 1.0f, 1.0f};
-    _texturesTypes = 0;
     _faceCamera = 0;
+    _options = 0;
     srcBlend = GL_SRC_ALPHA;
     dstBlend = GL_ONE_MINUS_SRC_ALPHA;
     _textures[Texture::eType::AMBIENT] = nullptr;
@@ -28,8 +28,8 @@ Material::Material(const Material& material)
 {
     _diffuse = material._diffuse;
     _ambient = material._ambient;
-    _texturesTypes = material._texturesTypes;
     _faceCamera = material._faceCamera;
+    _options = 0;
     srcBlend = material.srcBlend;
     dstBlend = material.dstBlend;
     _textures = material._textures;
@@ -42,8 +42,8 @@ Material&   Material::operator=(const Material& material)
 {
     _diffuse = material._diffuse;
     _ambient = material._ambient;
-    _texturesTypes = material._texturesTypes;
     _faceCamera = material._faceCamera;
+    _options = 0;
     srcBlend = material.srcBlend;
     dstBlend = material.dstBlend;
     _textures = material._textures;
@@ -115,8 +115,6 @@ void    Material::bind()
     {
         _data.ambient = _ambient;
         _data.diffuse = _diffuse;
-        _data.texturesTypes = _texturesTypes;
-        _data.faceCamera = _faceCamera;
 
         _ubo.update(&_data, sizeof(sMaterialData));
         _needUpdate = false;
@@ -125,10 +123,13 @@ void    Material::bind()
     // Bind ubo
     _ubo.bind();
 
+    // Get updated options
+    int options = getOptions();
+
     // Bind textures
-    if (_texturesTypes & Texture::eType::AMBIENT)
+    if (options & eOption::TEXTURE_AMBIENT)
         _textures[Texture::eType::AMBIENT]->bind(GL_TEXTURE0);
-    if (_texturesTypes & Texture::eType::DIFFUSE)
+    if (options & eOption::TEXTURE_DIFFUSE)
         _textures[Texture::eType::DIFFUSE]->bind(GL_TEXTURE1);
 }
 
@@ -139,15 +140,6 @@ bool    Material::isModelMaterial() const
 
 void    Material::setTexture(Texture::eType type, Texture* texture)
 {
-    if (texture)
-    {
-        _texturesTypes |= type;
-    }
-    else
-    {
-        _texturesTypes &= ~type;
-    }
-
     _textures[type] = texture;
     needUpdate();
 }
@@ -251,11 +243,27 @@ void    Material::setDiffuse(const glm::vec4& diffuse)
 void    Material::isFacingCamera(bool faceCamera)
 {
     _faceCamera = faceCamera;
-    needUpdate();
 }
 
+int     Material::getOptions()
+{
+    if (_optionsFlagDirty)
+    {
+        if (_faceCamera)
+            _options |= eOption::FACE_CAMERA;
+        if (_textures[Texture::eType::AMBIENT] != nullptr)
+            _options |= eOption::TEXTURE_AMBIENT;
+        if (_textures[Texture::eType::DIFFUSE] != nullptr)
+            _options |= eOption::TEXTURE_DIFFUSE;
+
+        _optionsFlagDirty = false;
+    }
+
+    return (_options);
+}
 
 void    Material::needUpdate()
 {
     _needUpdate = true;
+    _optionsFlagDirty = true;
 }

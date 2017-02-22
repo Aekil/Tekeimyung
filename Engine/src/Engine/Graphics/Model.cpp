@@ -118,6 +118,11 @@ GLuint  Model::getPrimitiveType() const
     return (_primitiveType);
 }
 
+bool    Model::isGeometry() const
+{
+    return (false);
+}
+
 const glm::vec3&    Model::getSize() const
 {
     return (_size);

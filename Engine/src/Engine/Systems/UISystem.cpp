@@ -81,8 +81,8 @@ void    UISystem::handleAlignment(EntityManager& em, Entity* entity, bool forceU
         // Offsets
         transform->pos.x += windowWidth * ui->offset.x / 100.0f;
         transform->pos.y += windowHeight * ui->offset.y / 100.0f;
-        transform->pos.z = 0;
-        transform->needUpdate = true;
+        transform->pos.z = -(float)ui->layer;
+        transform->needUpdate();
     }
 
     ui->needUpdate = false;

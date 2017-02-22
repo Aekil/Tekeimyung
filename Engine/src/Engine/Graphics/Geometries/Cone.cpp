@@ -26,7 +26,7 @@ Cone::Cone(Cone::sInfo& info): Geometry(Geometry::eType::CONE)
         centerVertex.color = glm::vec3(0.0f, 0.0f, 0.0f);
         centerVertex.normal = glm::vec3(0.0f, -1.0f, 0.0f);
         mesh->vertexs.push_back(centerVertex);
-
+/*
         for (uint32_t i = 0; i <= numSegments; ++i)
         {
             float rad = glm::radians((float)i / (float)numSegments * 360.0f);
@@ -44,7 +44,7 @@ Cone::Cone(Cone::sInfo& info): Geometry(Geometry::eType::CONE)
             mesh->indices.push_back(0);
             mesh->indices.push_back(i + 1);
 
-        }
+        }*/
     }
 
     // Cone
@@ -73,7 +73,16 @@ Cone::Cone(Cone::sInfo& info): Geometry(Geometry::eType::CONE)
             mesh->vertexs.push_back(topVertex);
 
             mesh->indices.push_back((uint32_t)mesh->vertexs.size() - 1);
-            mesh->indices.push_back(verticesOffset + (i * 2) + 2);
+
+            if (i == numSegments)
+            {
+                mesh->indices.push_back(verticesOffset);
+            }
+            else
+            {
+                mesh->indices.push_back(verticesOffset + (i * 2) + 2);
+            }
+
             mesh->indices.push_back(verticesOffset + (i * 2));
 
         }
@@ -92,6 +101,8 @@ Cone::Cone(Cone::sInfo& info): Geometry(Geometry::eType::CONE)
     initIndexData();
     _buffer.updateData(_vertexData, getVertexsSize(), _indexData, getIndicesSize());
     calculateSize();
+
+    //_primitiveType = GL_LINE_STRIP;
 }
 
 Cone::~Cone() {}

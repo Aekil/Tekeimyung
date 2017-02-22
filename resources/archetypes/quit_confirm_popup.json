@@ -22,7 +22,7 @@
          "pos" : {
             "x" : 745,
             "y" : 384.5,
-            "z" : 0
+            "z" : -1
          },
          "rotation" : {
             "x" : 0,
@@ -37,6 +37,7 @@
       },
       "sUiComponent" : {
          "horizontal_alignment" : "MIDDLE",
+         "layer" : 0,
          "offset" : {
             "x" : 0,
             "y" : 0

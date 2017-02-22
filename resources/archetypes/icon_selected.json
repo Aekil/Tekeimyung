@@ -74,6 +74,7 @@
       },
       "sUiComponent" : {
          "horizontal_alignment" : "MIDDLE",
+         "layer" : 0,
          "offset" : {
             "x" : 0,
             "y" : 0

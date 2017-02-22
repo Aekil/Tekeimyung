@@ -7,6 +7,7 @@
 # include <vector>
 # include <Engine/Graphics/Model.hpp>
 # include <Engine/Graphics/MeshInstance.hpp>
+# include <Engine/Graphics/BufferPool.hpp>
 
 class ModelInstance
 {
@@ -21,7 +22,12 @@ public:
     Model*                      getModel();
     std::vector<std::unique_ptr<MeshInstance> >&  getMeshsInstances();
 
+    BufferPool::SubBuffer*      getBuffer() const;
+    BufferPool::SubBuffer*      getBuffer(BufferPool* bufferPool);
+    void                        setBuffer(BufferPool::SubBuffer* buffer);
+
 private:
     Model*                      _model;
     std::vector<std::unique_ptr<MeshInstance> >   _meshsInstances;
+    BufferPool::SubBuffer*      _buffer{nullptr};
 };

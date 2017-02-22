@@ -28,6 +28,7 @@
 #include <Engine/Graphics/Geometries/Box.hpp>
 #include <Engine/Graphics/Geometries/Sphere.hpp>
 #include <Engine/Graphics/Animator.hpp>
+#include <Engine/Graphics/UniformBuffer.hpp>
 #include <Engine/Utils/Helper.hpp>
 #include <Engine/Utils/ResourceManager.hpp>
 #include <Engine/Utils/Timer.hpp>
@@ -93,9 +94,7 @@ const Model* getModel()
     return _modelInstance->getModel();
 }
 
-
 std::string modelFile;
-glm::vec4 color;
 bool animated;
 
 std::unique_ptr<ModelInstance> _modelInstance = nullptr;
@@ -106,6 +105,11 @@ Animator                _animator;
 Geometry::eType type;
 bool                    _display = true;
 bool                    ignoreRaycast = false;
+
+glm::vec4 color;
+
+// Last color since ubo update
+glm::vec4 lastColor;
 END_COMPONENT(sRenderComponent)
 
 
@@ -367,7 +371,7 @@ void updateTransform()
 {
     glm::quat newRotate(glm::vec3(glm::radians(rotation.x), glm::radians(rotation.y), glm::radians(rotation.z)));
 
-    needUpdate = false;
+    _needUpdate = false;
     glm::mat4 newTranslate = glm::translate(glm::mat4(1.0), glm::vec3(pos.x, pos.y, pos.z));
     glm::mat4 newScale = glm::scale(glm::mat4(1.0), scale);
     transform = newTranslate * glm::mat4_cast(newRotate) * newScale;
@@ -375,18 +379,37 @@ void updateTransform()
 
 const glm::mat4& getTransform()
 {
-    if (needUpdate)
+    if (_needUpdate)
     {
         updateTransform();
     }
     return (transform);
 }
 
+inline void needUpdate()
+{
+    _needUpdate = true;
+    _dirty = true;
+}
+
+inline bool isDirty()
+{
+    return (_dirty);
+}
+
+inline void isDirty(bool dirty)
+{
+    _dirty = dirty;
+}
+
 glm::vec3   pos;
 glm::vec3   scale = { 1.0f, 1.0f, 1.0f };
 glm::vec3   rotation;
 glm::mat4   transform = glm::mat4(1.0f);
-bool        needUpdate = true;
+
+private:
+bool        _needUpdate = true;
+bool        _dirty = true;
 END_COMPONENT(sTransformComponent)
 
 
@@ -433,6 +456,7 @@ virtual void update(sComponent* component)
 eHorizontalAlignment    horizontalAlignment = eHorizontalAlignment::MIDDLE;
 eVerticalAlignment      verticalAlignment = eVerticalAlignment::MIDDLE;
 glm::vec2               offset{0.0f, 0.0f}; // Percentage offset
+uint32_t                layer{0}; // Layer used for UI ordering
 bool                    needUpdate = true;
 END_COMPONENT(sUiComponent)
 

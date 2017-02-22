@@ -10,6 +10,7 @@
 #include <Engine/Graphics/Light.hpp>
 #include <Engine/Graphics/MeshInstance.hpp>
 #include <Engine/Graphics/ModelInstance.hpp>
+#include <Engine/Graphics/UniformBuffer.hpp>
 #include <Engine/Utils/Logger.hpp>
 
 #define MAX_RENDERABLE_MESHS 4000
@@ -23,8 +24,10 @@
 
 struct sRenderableMesh {
     MeshInstance* meshInstance;
-    glm::vec4 color;
-    glm::mat4 transform;
+    UniformBuffer* ubo;
+    uint32_t uboOffset;
+    uint32_t uboSize;
+    uint32_t instancesNb;
 };
 
 class RenderQueue {
@@ -32,8 +35,15 @@ public:
     RenderQueue() = default;
     ~RenderQueue() = default;
 
-    void                            addModel(ModelInstance* modelInstance, const glm::vec4& color, const glm::mat4& transform);
-    void                            addUIModel(ModelInstance* modelInstance, const glm::vec4& color, const glm::mat4& transform);
+    void                            addModel(ModelInstance* modelInstance, UniformBuffer* ubo,
+                                                uint32_t uboOffset = 0,
+                                                uint32_t uboSize = 0,
+                                                uint32_t instancesNb = 0);
+    void                            addUIModel(ModelInstance* modelInstance,
+                                                UniformBuffer* ubo,
+                                                uint32_t uboOffset = 0,
+                                                uint32_t uboSize = 0,
+                                                uint32_t instancesNb = 0);
     void                            addLight(Light* light);
     void                            clear();
 

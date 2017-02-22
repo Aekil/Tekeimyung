@@ -8,10 +8,15 @@
 #include <glm/vec4.hpp>
 #include <unordered_map>
 
-#include <Engine/Graphics/ShaderProgram.hpp>
 #include <Engine/Graphics/UniformBuffer.hpp>
 #include <Engine/Graphics/Texture.hpp>
 #include <Engine/Utils/Resource.hpp>
+#include <Engine/Utils/Helper.hpp>
+
+#define MAT_OPTIONS(PROCESS)                    \
+    PROCESS(TEXTURE_AMBIENT, 1)                 \
+    PROCESS(TEXTURE_DIFFUSE, 2)                 \
+    PROCESS(FACE_CAMERA, 4)                     \
 
 #define BLENDING_MODES(PROCESS)                 \
     PROCESS(GL_ZERO)                            \
@@ -41,9 +46,9 @@ public:
     {
         glm::vec4       ambient;
         glm::vec4       diffuse;
-        int             texturesTypes;
-        int             faceCamera;
     };
+
+    REGISTER_ENUM(eOption, uint8_t, MAT_OPTIONS)
 
 public:
     Material(bool isModelMaterial = true);
@@ -76,6 +81,8 @@ public:
     void                setDiffuse(const glm::vec4& diffuse);
     void                isFacingCamera(bool faceCamera);
 
+    int                 getOptions();
+
 private:
     void                needUpdate();
 
@@ -90,11 +97,13 @@ private:
 
     // Need to update ubo data
     bool                _needUpdate;
+    bool                _optionsFlagDirty;
 
     glm::vec4           _ambient;
     glm::vec4           _diffuse;
     int                 _faceCamera;
-    int                 _texturesTypes;
+
+    int                 _options;
 
 private:
     std::unordered_map<Texture::eType, Texture*> _textures;
@@ -102,3 +111,25 @@ private:
 private:
     bool                _isModelMaterial;
 };
+
+REGISTER_ENUM_MANAGER(Material::eOption, MAT_OPTIONS)
+
+inline int operator~(const Material::eOption& rhs) {
+    return (~static_cast<int>(rhs));
+}
+
+inline int operator|(int& lhs, const Material::eOption& rhs) {
+    return (lhs | static_cast<int>(rhs));
+}
+
+inline int& operator|=(int& lhs, const Material::eOption& rhs) {
+    return (lhs = (lhs | static_cast<int>(rhs)));
+}
+
+inline int operator&(int& lhs, const Material::eOption& rhs) {
+    return (lhs & static_cast<int>(rhs));
+}
+
+inline int& operator&=(int& lhs, const Material::eOption& rhs) {
+    return (lhs = (lhs & static_cast<int>(rhs)));
+}

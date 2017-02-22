@@ -30,3 +30,8 @@ Geometry::eType Geometry::getType() const
 {
     return (_type);
 }
+
+bool    Geometry::isGeometry() const
+{
+    return (true);
+}

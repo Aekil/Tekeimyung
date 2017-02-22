@@ -9,12 +9,14 @@
 
 #include <ECS/System.hpp>
 
+#include <Engine/Graphics/BufferPool.hpp>
 #include <Engine/Graphics/Model.hpp>
 #include <Engine/Graphics/Geometries/Geometry.hpp>
+#include <Engine/Graphics/UniformBuffer.hpp>
 
 #include <Engine/Components.hh>
 
-#define MAX_PARTICLES   5000
+#define MAX_PARTICLES   2000
 
 struct sParticle
 {
@@ -42,6 +44,9 @@ struct sEmitter
     unsigned int            particlesNb;
     float                   life;
     float                   elapsedTime;
+
+    // Instance ubo
+    BufferPool::SubBuffer*  buffer;
 };
 
 START_SYSTEM(ParticleSystem)
@@ -59,5 +64,6 @@ private:
 
 private:
     std::unordered_map<uint32_t, sEmitter*>     _emitters;
-    bool            _editorMode;
+    bool                                        _editorMode;
+    static std::unique_ptr<BufferPool>          _bufferPool;
 END_SYSTEM(ParticleSystem)

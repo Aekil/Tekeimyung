@@ -22,7 +22,7 @@ void RigidBodySystem::update(EntityManager &em, float elapsedTime)
 
         rigidBody->velocity += rigidBody->gravity * elapsedTime;
         transform->pos += rigidBody->velocity * elapsedTime;
-        transform->needUpdate = true;
+        transform->needUpdate();
     });
 }
 
