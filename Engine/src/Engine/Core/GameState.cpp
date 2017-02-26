@@ -101,7 +101,7 @@ void    GameState::renderPreviousStates(const std::vector<uint32_t>& filterIds)
             std::find(filterIds.begin(), filterIds.end(), state->getId()) == filterIds.end())
             continue;
 
-        #if defined(ENGINE_DEBUG)
+        #if defined(ENGINE_DEBUG) && ENGINE_DEBUG == true
             if (state->getId() == EditorState::identifier && gameStateIdx > 1)
                 continue;
         #endif

@@ -33,6 +33,13 @@ if(MSVC)
       set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
 endif()
 
+# Define RELEASE_WITH_DEBUG for RelWithDebInfo build
+set(DEBUG_OPTIONS /D RELEASE_WITH_DEBUG)
+
+add_compile_options(
+    "$<$<CONFIG:RelWithDebInfo>:${DEBUG_OPTIONS}>"
+)
+
 add_subdirectory(ECS)
 add_subdirectory(Engine)
 add_subdirectory(Game)
