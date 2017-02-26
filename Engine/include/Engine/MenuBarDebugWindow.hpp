@@ -6,7 +6,6 @@
 
 #include <ECS/EntityManager.hpp>
 #include <Engine/Utils/DebugWindow.hpp>
-#include <Engine/Core/GameStateManager.hpp>
 
 class Engine;
 
@@ -15,7 +14,7 @@ class MenuBarDebugWindow: public DebugWindow
 friend Engine;
 
 public:
-    MenuBarDebugWindow(GameStateManager* gameStateManager, EntityManager* em, const glm::vec2& pos, const glm::vec2& size);
+    MenuBarDebugWindow(Engine* engine, EntityManager* em, const glm::vec2& pos, const glm::vec2& size);
     virtual ~MenuBarDebugWindow();
 
     void                build(std::shared_ptr<GameState> gameState, float elapsedTime) override final;
@@ -27,6 +26,7 @@ public:
 private:
     void                displayLevelsMenu();
     void                displayPlayStopMenu();
+    void                displayDebugMenu();
 
     void                displaySaveAsPopup();
     void                displayLoadPopup();
@@ -37,7 +37,7 @@ private:
     std::string         _currentLevel;
     std::string         _tmpLoadLevel;
 
-    GameStateManager*   _gameStateManager;
+    Engine*             _engine;
     // Entity manager of EditorState
     EntityManager*      _em;
 };

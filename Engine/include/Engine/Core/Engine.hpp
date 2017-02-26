@@ -28,6 +28,13 @@ public:
     void                                    addDebugWindow(Args... args)
     {
         std::shared_ptr<T> debugWindow = std::make_shared<T>(args...);
+
+        if (getDebugWindow<T>() != nullptr)
+        {
+            LOG_WARN("Engine::addDebugWindow: Attempt to add debug window \"%s\" that is already added", debugWindow->getTitle().c_str());
+            return;
+        }
+
         _debugWindows.push_back(debugWindow);
     }
 
@@ -52,6 +59,10 @@ public:
 
         return (nullptr);
     }
+
+    const std::vector<std::shared_ptr<DebugWindow>>& getDebugWindows() const;
+
+    void                                    toggleDebugWindowsDisplay(bool displayed);
 
 private:
     bool                                    initDebugWindows(int ac, char** av);

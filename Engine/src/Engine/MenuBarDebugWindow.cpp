@@ -4,14 +4,15 @@
 
 #include <imgui.h>
 
+#include <Engine/Core/Engine.hpp>
 #include <Engine/EditorState.hpp>
 #include <Engine/EntityFactory.hpp>
 #include <Engine/MenuBarDebugWindow.hpp>
 #include <Engine/Utils/LevelLoader.hpp>
 
 
-MenuBarDebugWindow::MenuBarDebugWindow(GameStateManager* gameStateManager, EntityManager* em, const glm::vec2& pos, const glm::vec2& size):
-                                   _gameStateManager(gameStateManager), _em(em), DebugWindow("Editor Menu", pos, size) {}
+MenuBarDebugWindow::MenuBarDebugWindow(Engine* engine, EntityManager* em, const glm::vec2& pos, const glm::vec2& size):
+                                   _engine(engine), _em(em), DebugWindow("Editor Menu", pos, size) {}
 
 MenuBarDebugWindow::~MenuBarDebugWindow() {}
 
@@ -31,6 +32,7 @@ void    MenuBarDebugWindow::build(std::shared_ptr<GameState> gameState, float el
     {
         displayLevelsMenu();
         displayPlayStopMenu();
+        displayDebugMenu();
         ImGui::EndMenuBar();
     }
 
@@ -43,7 +45,7 @@ void    MenuBarDebugWindow::displayLevelsMenu()
     bool loadLevel = false;
     bool saveLevel = false;
     bool saveLevelAs = false;
-    auto& currentState = _gameStateManager->getCurrentState();
+    auto& currentState = _engine->getGameStateManager().getCurrentState();
 
     // Enable menu if we are in play mode, we can't load or save the level
     if (ImGui::BeginMenu("Levels", currentState->getId() == EditorState::identifier))
@@ -99,10 +101,11 @@ void    MenuBarDebugWindow::displayLevelsMenu()
 
 void    MenuBarDebugWindow::displayPlayStopMenu()
 {
-    auto& currentState = _gameStateManager->getCurrentState();
+    auto& gameStateManager = _engine->getGameStateManager();
+    auto& currentState = gameStateManager.getCurrentState();
 
     // EditorState should be the first state
-    if (_gameStateManager->getStates()[0]->getId() != EditorState::identifier)
+    if (gameStateManager.getStates()[0]->getId() != EditorState::identifier)
     {
         return;
     }
@@ -123,13 +126,50 @@ void    MenuBarDebugWindow::displayPlayStopMenu()
             if (ImGui::MenuItem("Stop"))
             {
                 // Remove all states except from the first one (EditorState)
-                uint32_t statesNb = (uint32_t)_gameStateManager->getStates().size();
+                uint32_t statesNb = (uint32_t)gameStateManager.getStates().size();
                 for (statesNb; statesNb > 1; --statesNb)
                 {
-                    _gameStateManager->getStates().pop_back();
+                    gameStateManager.getStates().pop_back();
                 }
             }
         }
+        ImGui::EndMenu();
+    }
+}
+
+void    MenuBarDebugWindow::displayDebugMenu()
+{
+    uint32_t i = 0;
+    if (ImGui::BeginMenu("Debug"))
+    {
+        for (auto& debugWindow: _engine->getDebugWindows())
+        {
+            // Don't display MenuBarDebugWindow in menu
+            if (debugWindow->getId() == MenuBarDebugWindow::identifier)
+            {
+                continue;
+            }
+
+            // Push debug window ID to handle case 2 windows have the same title
+            ImGui::PushID(i++);
+            bool displayed = debugWindow->isDisplayed();
+            if (ImGui::MenuItem(debugWindow->getTitle().c_str(), nullptr, &displayed))
+            {
+                debugWindow->isDisplayed(displayed);
+            }
+            ImGui::PopID();
+        }
+
+        ImGui::Separator();
+        if (ImGui::MenuItem("Display all"))
+        {
+            _engine->toggleDebugWindowsDisplay(true);
+        }
+        if (ImGui::MenuItem("Hide all"))
+        {
+            _engine->toggleDebugWindowsDisplay(false);
+        }
+
         ImGui::EndMenu();
     }
 }
@@ -183,8 +223,10 @@ void    MenuBarDebugWindow::loadLevel(const std::string& levelName)
 
 void    MenuBarDebugWindow::play()
 {
-    std::shared_ptr<GameState> gameState = LevelLoader::getInstance()->createLevelState(_currentLevel, _gameStateManager);
+    auto& gameStateManager = _engine->getGameStateManager();
+
+    std::shared_ptr<GameState> gameState = LevelLoader::getInstance()->createLevelState(_currentLevel, &gameStateManager);
     // Remove the level file because the gameState will copy the EntityManager instead of loading the level
     gameState->setLevelFile("");
-    _gameStateManager->addState(gameState, _em);
+    gameStateManager.addState(gameState, _em);
 }

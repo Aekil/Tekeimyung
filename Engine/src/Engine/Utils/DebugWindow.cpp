@@ -27,7 +27,7 @@ bool    DebugWindow::isDisplayed() const
     return (_displayed);
 }
 
-void    DebugWindow::setDisplayed(bool displayed)
+void    DebugWindow::isDisplayed(bool displayed)
 {
     _displayed = displayed;
 }

@@ -150,6 +150,22 @@ GameStateManager&   Engine::getGameStateManager()
     return (_gameStateManager);
 }
 
+const std::vector<std::shared_ptr<DebugWindow>>&    Engine::getDebugWindows() const
+{
+    return (_debugWindows);
+}
+
+void    Engine::toggleDebugWindowsDisplay(bool displayed)
+{
+    for (auto& debugWindow: _debugWindows)
+    {
+        if (debugWindow->getId() != MenuBarDebugWindow::identifier)
+        {
+            debugWindow->isDisplayed(displayed);
+        }
+    }
+}
+
 bool    Engine::initDebugWindows(int ac, char** av)
 {
     // Don't add debug windows if we are not in debug mode
@@ -158,7 +174,7 @@ bool    Engine::initDebugWindows(int ac, char** av)
         // so the first state should be EditorState
         auto& frontState = _gameStateManager.getStates().front();
         ASSERT(frontState->getId() == EditorState::identifier, "The first state of the engine should be EditorState in debug mode");
-        addDebugWindow<MenuBarDebugWindow>(&_gameStateManager, frontState->getWorld().getEntityManager(), glm::vec2(0, 0), glm::vec2(0, 0));
+        addDebugWindow<MenuBarDebugWindow>(this, frontState->getWorld().getEntityManager(), glm::vec2(0, 0), glm::vec2(0, 0));
         addDebugWindow<OverlayDebugWindow>(glm::vec2(10, 10), glm::vec2(0, 0));
         addDebugWindow<LevelEntitiesDebugWindow>(glm::vec2(0, 80), glm::vec2(600, 350));
         addDebugWindow<EntitiesTemplateDebugWindow>(glm::vec2(600, 80), glm::vec2(300, 200));

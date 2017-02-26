@@ -23,7 +23,7 @@ public:
     void                setTitle(const std::string& title);
 
     bool                isDisplayed() const;
-    void                setDisplayed(bool displayed);
+    void                isDisplayed(bool displayed);
 
     virtual uint32_t    getId() const = 0;
 
