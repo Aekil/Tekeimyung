@@ -628,6 +628,11 @@ Timer&  GameWindow::getTimer()
 
 void    GameWindow::handleResize(int width, int height)
 {
+    // Don't handle resize if lost focus
+    // (Because with and height are 0)
+    if (_lostFocus)
+        return;
+
     _bufferWidth = width;
     _bufferHeight = height;
     setViewport(glm::ivec4(0.0f, 0.0f, _bufferWidth, _bufferHeight));
