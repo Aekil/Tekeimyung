@@ -97,7 +97,7 @@ bool    GameWindow::initialize()
     setViewport(glm::ivec4(0.0f, 0.0f, _bufferWidth, _bufferHeight));
     setRunning(true);
 
-    #if defined(ENGINE_DEBUG) && ENGINE_DEBUG == true
+    #if defined(ENGINE_DEBUG)
         initDebugOutput();
     #endif
 

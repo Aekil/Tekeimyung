@@ -23,8 +23,6 @@
         if (expression == false && Debug::engineAssert(expression, Helper::formatMessage(format, ## __VA_ARGS__), __FILE__, FUNCTION, __LINE__) == false) \
             std::abort();
 #else
-    #define ENGINE_DEBUG false
-
     #define ASSERT(expression, format, ...)
 #endif
 

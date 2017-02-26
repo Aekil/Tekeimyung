@@ -147,7 +147,7 @@ GameStateManager&   Engine::getGameStateManager()
 bool    Engine::initDebugWindows(int ac, char** av)
 {
     // Don't add debug windows if we are not in debug mode
-    #if defined(ENGINE_DEBUG) && ENGINE_DEBUG == true
+    #if defined(ENGINE_DEBUG)
         // We expect that initStartGameState is call before
         // so the first state should be EditorState
         auto& frontState = _gameStateManager.getStates().front();
@@ -195,7 +195,7 @@ bool    Engine::initDebugWindows(int ac, char** av)
 
 bool    Engine::initStartGameState(std::shared_ptr<GameState> startGameState)
 {
-    #if defined(ENGINE_DEBUG) && ENGINE_DEBUG == true
+    #if defined(ENGINE_DEBUG)
         startGameState = std::make_shared<EditorState>(&_gameStateManager);
     #endif
 

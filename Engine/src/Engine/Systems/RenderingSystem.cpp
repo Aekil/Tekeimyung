@@ -215,7 +215,7 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
             sTransformComponent* transform = entity->getComponent<sTransformComponent>();
 
             // Only display light cone in debug mode
-            #if defined(ENGINE_DEBUG) && ENGINE_DEBUG == true
+            #if defined(ENGINE_DEBUG)
                 addLightConeToRenderQueue(lightComp, transform);
             #endif
 
