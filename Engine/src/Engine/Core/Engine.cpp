@@ -93,7 +93,7 @@ bool    Engine::run(int ac, char** av, std::shared_ptr<GameState> startGameState
 
             if (!_gameStateManager.hasStates())
             {
-                LOG_WARN("Game: No game states in the game state manager");
+                LOG_WARN("Engine::run: No game states in the game state manager");
                 return (true);
             }
 
@@ -107,16 +107,22 @@ bool    Engine::run(int ac, char** av, std::shared_ptr<GameState> startGameState
             {
                 ImGuizmo::BeginFrame();
                 {
-                    // Update debug windows
-                    for (auto&& debugWindow: _debugWindows)
-                    {
-                        if (debugWindow->isDisplayed())
-                            debugWindow->build(currentState, elapsedTime);
-                    }
-
+                    // Update state before debug windows because it can remove
+                    // states (So we don't want the removed state to update)
                     if (currentState->update(elapsedTime) == false)
                     {
                         _gameStateManager.removeCurrentState();
+                        auto &&currentState = _gameStateManager.getCurrentState();
+                    }
+
+                    // Update debug windows
+                    if (_gameStateManager.hasStates())
+                    {
+                        for (auto&& debugWindow: _debugWindows)
+                        {
+                            if (debugWindow->isDisplayed())
+                                debugWindow->build(currentState, elapsedTime);
+                        }
                     }
                 }
             }
