@@ -15,7 +15,7 @@ public:
     LogDebugWindow(std::shared_ptr<Logger> logger, const glm::vec2& pos, const glm::vec2& size);
     virtual ~LogDebugWindow();
 
-    virtual void        build(float elapsedTime);
+    void        build(std::shared_ptr<GameState> gameState, float elapsedTime) override final;
 
     GENERATE_ID(LogDebugWindow);
 

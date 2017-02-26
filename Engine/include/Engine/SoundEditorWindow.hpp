@@ -22,7 +22,7 @@ public:
 
     //static std::shared_ptr<SoundEditorWindow>   getInstance();
 
-    virtual void                build(float elapsedTime);
+    void                        build(std::shared_ptr<GameState> gameState, float elapsedTime) override final;
 
     GENERATE_ID(SoundEditorWindow);
 

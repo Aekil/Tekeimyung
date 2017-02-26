@@ -4,9 +4,12 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 #include <glm/vec2.hpp>
+
 #include <ECS/crc32.hh>
+#include <Engine/Core/GameState.hpp>
 
 class DebugWindow
 {
@@ -14,7 +17,7 @@ public:
     DebugWindow(const std::string& tile = "", const glm::vec2& pos = {0, 0}, const glm::vec2& size = {100, 100});
     virtual     ~DebugWindow();
 
-    virtual void        build(float elapsedTime) = 0;
+    virtual void        build(std::shared_ptr<GameState> gameState, float elapsedTime) = 0;
 
     const std::string&  getTitle() const;
     void                setTitle(const std::string& title);

@@ -38,7 +38,7 @@ public:
 
     static std::shared_ptr<MonitoringDebugWindow>   getInstance();
 
-    virtual void                                    build(float elapsedTime);
+    void                                            build(std::shared_ptr<GameState> gameState, float elapsedTime) override final;
 
     void                                            updateSystem(uint16_t key, float timeSec, uint32_t nbEntities, const char* name);
 

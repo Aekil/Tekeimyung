@@ -11,7 +11,6 @@
 #include <ECS/EntityManager.hpp>
 
 #include <Engine/Core/GameStateManager.hpp>
-#include <Engine/Utils/DebugWindow.hpp>
 
 class GameStateManager;
 
@@ -34,35 +33,6 @@ public:
 
     uint32_t                getId() const;
 
-    template<typename T, typename... Args>
-    void                            addDebugWindow(Args... args)
-    {
-        std::shared_ptr<T> debugWindow = std::make_shared<T>(args...);
-        _debugWindows.push_back(debugWindow);
-    }
-
-    template<typename T>
-    void                            addDebugWindow(std::shared_ptr<T> newDebugWindow)
-    {
-        _debugWindows.push_back(newDebugWindow);
-    }
-
-    template<typename T>
-    std::shared_ptr<T>              getDebugWindow()
-    {
-        uint32_t id = T::identifier;
-
-        for (auto& debugWindow: _debugWindows)
-        {
-            if (debugWindow->getId() == id)
-            {
-                return (std::static_pointer_cast<T>(debugWindow));
-            }
-        }
-
-        return (nullptr);
-    }
-
     World&                          getWorld();
     void                            setLevelFile(const std::string& levelFile);
     void                            cloneEntityManager(EntityManager* em);
@@ -71,12 +41,10 @@ protected:
     void                            renderPreviousStates(const std::vector<uint32_t>& filterIds = {});
 
 private:
-    void                            initDebugWindows();
     void                            loadLevel();
 
 protected:
     World                   _world;
-    std::vector<std::shared_ptr<DebugWindow>> _debugWindows;
 
     GameStateManager*       _gameStateManager;
     std::string             _levelFile;

@@ -11,7 +11,7 @@ LogDebugWindow::LogDebugWindow(std::shared_ptr<Logger> logger, const glm::vec2& 
 
 LogDebugWindow::~LogDebugWindow() {}
 
-void    LogDebugWindow::build(float elapsedTime)
+void    LogDebugWindow::build(std::shared_ptr<GameState> gameState, float elapsedTime)
 {
     if (!ImGui::Begin(_title.c_str(), &_displayed, ImGuiWindowFlags_NoResize))
     {

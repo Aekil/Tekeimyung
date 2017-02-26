@@ -37,11 +37,6 @@ public:
             return (false);
         }
 
-        // Don't add debug windows if we are not in debug mode
-        #if defined(ENGINE_DEBUG) && ENGINE_DEBUG == true
-            gameState->initDebugWindows();
-        #endif
-
         gameState->onEnter();
 
         // Bind the entity manager of current state

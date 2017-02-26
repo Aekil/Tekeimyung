@@ -9,12 +9,12 @@
 #include <Engine/Utils/Helper.hpp>
 
 
-EntitiesTemplateDebugWindow::EntitiesTemplateDebugWindow(EntityManager* em, const glm::vec2& pos, const glm::vec2& size):
-                                    _em(em), DebugWindow("Entities templates", pos, size) {}
+EntitiesTemplateDebugWindow::EntitiesTemplateDebugWindow(const glm::vec2& pos, const glm::vec2& size):
+                                    DebugWindow("Entities templates", pos, size) {}
 
 EntitiesTemplateDebugWindow::~EntitiesTemplateDebugWindow() {}
 
-void    EntitiesTemplateDebugWindow::build(float elapsedTime)
+void    EntitiesTemplateDebugWindow::build(std::shared_ptr<GameState> gameState, float elapsedTime)
 {
     if (!ImGui::Begin(_title.c_str(), &_displayed, ImGuiWindowFlags_NoResize))
     {

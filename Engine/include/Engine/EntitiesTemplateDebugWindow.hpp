@@ -11,10 +11,10 @@
 class EntitiesTemplateDebugWindow: public DebugWindow
 {
 public:
-    EntitiesTemplateDebugWindow(EntityManager* em, const glm::vec2& pos, const glm::vec2& size);
+    EntitiesTemplateDebugWindow(const glm::vec2& pos, const glm::vec2& size);
     virtual ~EntitiesTemplateDebugWindow();
 
-    virtual void        build(float elapsedTime);
+    void                build(std::shared_ptr<GameState> gameState, float elapsedTime) override final;
 
     GENERATE_ID(EntitiesTemplateDebugWindow);
 
@@ -22,6 +22,5 @@ private:
     void                cloneTemplate(const std::string& cloneTypeName, const std::string& newTypeName);
 
 private:
-    EntityManager*      _em;
     std::string         _selectedEntityTemplate;
 };

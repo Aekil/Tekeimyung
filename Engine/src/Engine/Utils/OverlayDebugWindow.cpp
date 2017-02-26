@@ -12,7 +12,7 @@ OverlayDebugWindow::OverlayDebugWindow(const glm::vec2& pos, const glm::vec2& si
 
 OverlayDebugWindow::~OverlayDebugWindow() {}
 
-void    OverlayDebugWindow::build(float elapsedTime)
+void    OverlayDebugWindow::build(std::shared_ptr<GameState> gameState, float elapsedTime)
 {
     if (!ImGui::Begin(_title.c_str(), &_displayed, ImVec2(0, 0), 0.3f,
         ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings))

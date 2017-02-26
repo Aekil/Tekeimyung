@@ -32,7 +32,7 @@ SoundEditorWindow::~SoundEditorWindow() {}
     return (_soundEditorWindow);
 }*/
 
-void    SoundEditorWindow::build(float elapsedTime)
+void    SoundEditorWindow::build(std::shared_ptr<GameState> gameState, float elapsedTime)
 {
     if (!ImGui::Begin(_title.c_str(), &_displayed, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize))
     {

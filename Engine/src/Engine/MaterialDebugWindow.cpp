@@ -16,7 +16,7 @@ MaterialDebugWindow::MaterialDebugWindow(const glm::vec2& pos, const glm::vec2& 
 
 MaterialDebugWindow::~MaterialDebugWindow() {}
 
-void    MaterialDebugWindow::build(float elapsedTime)
+void    MaterialDebugWindow::build(std::shared_ptr<GameState> gameState, float elapsedTime)
 {
     if (!ImGui::Begin(_title.c_str(), &_displayed, ImGuiWindowFlags_NoResize))
     {

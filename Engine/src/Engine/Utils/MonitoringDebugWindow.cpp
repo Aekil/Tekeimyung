@@ -25,7 +25,7 @@ std::shared_ptr<MonitoringDebugWindow>   MonitoringDebugWindow::getInstance()
     return (_monitoringDebugWindow);
 }
 
-void    MonitoringDebugWindow::build(float elapsedTime)
+void    MonitoringDebugWindow::build(std::shared_ptr<GameState> gameState, float elapsedTime)
 {
     _checkSec += elapsedTime; // update time record
 

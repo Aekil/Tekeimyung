@@ -9,12 +9,12 @@
 
 uint32_t    LevelEntitiesDebugWindow::_selectedEntityId = 0;
 
-LevelEntitiesDebugWindow::LevelEntitiesDebugWindow(EntityManager* em, const glm::vec2& pos, const glm::vec2& size):
-                                    _em(em), DebugWindow("Level entities", pos, size) {}
+LevelEntitiesDebugWindow::LevelEntitiesDebugWindow(const glm::vec2& pos, const glm::vec2& size):
+                                    DebugWindow("Level entities", pos, size) {}
 
 LevelEntitiesDebugWindow::~LevelEntitiesDebugWindow() {}
 
-void    LevelEntitiesDebugWindow::build(float elapsedTime)
+void    LevelEntitiesDebugWindow::build(std::shared_ptr<GameState> gameState, float elapsedTime)
 {
     if (!ImGui::Begin(_title.c_str(), &_displayed, ImGuiWindowFlags_NoResize))
     {
@@ -28,9 +28,11 @@ void    LevelEntitiesDebugWindow::build(float elapsedTime)
     // Entities list
     static ImGuiTextFilter filter;
 
+    EntityManager* em = gameState->getWorld().getEntityManager();
+
     filter.Draw();
     ImGui::BeginChild("Entities list", ImVec2(150, 0), true);
-    for (Entity* entity: _em->getEntities())
+    for (Entity* entity: em->getEntities())
     {
         sNameComponent* name = entity->getComponent<sNameComponent>();
 
@@ -47,27 +49,27 @@ void    LevelEntitiesDebugWindow::build(float elapsedTime)
     }
     ImGui::EndChild();
 
-    if (_em->getEntities().size() == 0)
+    if (em->getEntities().size() == 0)
     {
         ImGui::End();
         return;
     }
 
-    Entity* selectedEntity = _em->getEntity(_selectedEntityId);
+    Entity* selectedEntity = em->getEntity(_selectedEntityId);
 
     // The entity has been deleted or none is selected
     if (!selectedEntity)
     {
-        selectedEntity = _em->getEntities().front();
+        selectedEntity = em->getEntities().front();
         _selectedEntityId = selectedEntity->id;
     }
 
-    displayEntityDebug(selectedEntity);
+    displayEntityDebug(em, selectedEntity);
 
     ImGui::End();
 }
 
-void    LevelEntitiesDebugWindow::displayEntityDebug(Entity* entity)
+void    LevelEntitiesDebugWindow::displayEntityDebug(EntityManager* em, Entity* entity)
 {
     ImGui::SameLine();
     ImGui::BeginGroup();
@@ -88,7 +90,7 @@ void    LevelEntitiesDebugWindow::displayEntityDebug(Entity* entity)
         {
             ImGui::PopStyleColor(3);
             ImGui::EndGroup();
-            _em->destroyEntity(entity);
+            em->destroyEntity(entity);
             return;
         }
 

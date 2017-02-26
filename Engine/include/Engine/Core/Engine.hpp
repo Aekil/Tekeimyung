@@ -6,12 +6,12 @@
 
 #include <memory>
 
-#include <Engine/Window/GameWindow.hpp>
-#include <Engine/Sound/SoundManager.hpp>
-#include <Engine/Graphics/Renderer.hpp>
-#include <Engine/Utils/Logger.hpp>
-
 #include <Engine/Core/GameStateManager.hpp>
+#include <Engine/Graphics/Renderer.hpp>
+#include <Engine/Sound/SoundManager.hpp>
+#include <Engine/Utils/DebugWindow.hpp>
+#include <Engine/Utils/Logger.hpp>
+#include <Engine/Window/GameWindow.hpp>
 
 class Engine
 {
@@ -20,9 +20,42 @@ public:
     ~Engine();
 
     bool                                    init();
-    bool                                    run();
+    bool                                    run(int ac, char** av, std::shared_ptr<GameState> startGameState);
     bool                                    stop();
     GameStateManager&                       getGameStateManager();
+
+    template<typename T, typename... Args>
+    void                                    addDebugWindow(Args... args)
+    {
+        std::shared_ptr<T> debugWindow = std::make_shared<T>(args...);
+        _debugWindows.push_back(debugWindow);
+    }
+
+    template<typename T>
+    void                                    addDebugWindow(std::shared_ptr<T> newDebugWindow)
+    {
+        _debugWindows.push_back(newDebugWindow);
+    }
+
+    template<typename T>
+    std::shared_ptr<T>                      getDebugWindow()
+    {
+        uint32_t id = T::identifier;
+
+        for (auto& debugWindow: _debugWindows)
+        {
+            if (debugWindow->getId() == id)
+            {
+                return (std::static_pointer_cast<T>(debugWindow));
+            }
+        }
+
+        return (nullptr);
+    }
+
+private:
+    bool                                    initDebugWindows(int ac, char** av);
+    bool                                    initStartGameState(std::shared_ptr<GameState> startGameState);
 
 private:
     GameStateManager                        _gameStateManager;
@@ -30,4 +63,6 @@ private:
     std::shared_ptr<SoundManager>           _soundManager;
     std::shared_ptr<Renderer>               _renderer;
     std::shared_ptr<Logger>                 _logger;
+
+    std::vector<std::shared_ptr<DebugWindow>> _debugWindows;
 };

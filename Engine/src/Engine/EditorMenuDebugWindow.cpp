@@ -11,11 +11,11 @@
 
 
 EditorMenuDebugWindow::EditorMenuDebugWindow(GameStateManager* gameStateManager, EntityManager* em, const glm::vec2& pos, const glm::vec2& size):
-                                    _em(em), _gameStateManager(gameStateManager), DebugWindow("Editor Menu", pos, size) {}
+                                   _gameStateManager(gameStateManager), _em(em), DebugWindow("Editor Menu", pos, size) {}
 
 EditorMenuDebugWindow::~EditorMenuDebugWindow() {}
 
-void    EditorMenuDebugWindow::build(float elapsedTime)
+void    EditorMenuDebugWindow::build(std::shared_ptr<GameState> gameState, float elapsedTime)
 {
     if (!ImGui::Begin(_title.c_str(), &_displayed, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize))
     {
@@ -24,6 +24,8 @@ void    EditorMenuDebugWindow::build(float elapsedTime)
     }
     // Set Window params
     ImGui::SetWindowPos(ImVec2(_pos.x, _pos.y), ImGuiSetCond_Always);
+
+    EntityManager* em = gameState->getWorld().getEntityManager();
 
     if (ImGui::BeginMenuBar())
     {

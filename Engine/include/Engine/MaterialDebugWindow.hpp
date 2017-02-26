@@ -16,7 +16,7 @@ public:
     MaterialDebugWindow(const glm::vec2& pos, const glm::vec2& size);
     ~MaterialDebugWindow();
 
-    void        build(float elapsedTime);
+    void        build(std::shared_ptr<GameState> gameState, float elapsedTime) override final;
 
     GENERATE_ID(MaterialDebugWindow);
 
