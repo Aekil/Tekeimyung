@@ -7,7 +7,7 @@
 #include <imgui_impl_glfw_gl3.h>
 #include <ImGuizmo.h>
 
-#include <Engine/EditorMenuDebugWindow.hpp>
+#include <Engine/MenuBarDebugWindow.hpp>
 #include <Engine/EditorState.hpp>
 #include <Engine/EntitiesTemplateDebugWindow.hpp>
 #include <Engine/Graphics/Geometries/GeometryFactory.hpp>
@@ -152,7 +152,7 @@ bool    Engine::initDebugWindows(int ac, char** av)
         // so the first state should be EditorState
         auto& frontState = _gameStateManager.getStates().front();
         ASSERT(frontState->getId() == EditorState::identifier, "The first state of the engine should be EditorState in debug mode");
-        addDebugWindow<EditorMenuDebugWindow>(&_gameStateManager, frontState->getWorld().getEntityManager(), glm::vec2(0, 0), glm::vec2(0, 0));
+        addDebugWindow<MenuBarDebugWindow>(&_gameStateManager, frontState->getWorld().getEntityManager(), glm::vec2(0, 0), glm::vec2(0, 0));
         addDebugWindow<OverlayDebugWindow>(glm::vec2(10, 10), glm::vec2(0, 0));
         addDebugWindow<LevelEntitiesDebugWindow>(glm::vec2(0, 80), glm::vec2(600, 350));
         addDebugWindow<EntitiesTemplateDebugWindow>(glm::vec2(600, 80), glm::vec2(300, 200));
@@ -164,7 +164,7 @@ bool    Engine::initDebugWindows(int ac, char** av)
         addDebugWindow<SoundEditorWindow>(glm::vec2(1200, 80), glm::vec2(450, 450));
         addDebugWindow<LogDebugWindow>(Logger::getInstance(), glm::vec2(0, 430), glm::vec2(300, 200));
 
-        // Handle command line for EditorMenuDebugWindow
+        // Handle command line for MenuBarDebugWindow
         if (ac >= 2)
         {
             // AV[1] => Level name (Ex: "Options")
@@ -174,8 +174,8 @@ bool    Engine::initDebugWindows(int ac, char** av)
                 return (false);
             }
 
-            auto debugMenu = getDebugWindow<EditorMenuDebugWindow>();
-            ASSERT(debugMenu != nullptr, "Engine should have EditorMenuDebugWindow in Debug mode");
+            auto debugMenu = getDebugWindow<MenuBarDebugWindow>();
+            ASSERT(debugMenu != nullptr, "Engine should have MenuBarDebugWindow in Debug mode");
             debugMenu->loadLevel(av[1]);
 
             // AV[2] => options (Ex: "-a")

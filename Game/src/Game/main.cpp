@@ -8,7 +8,6 @@
 
 #include <Engine/BasicState.hpp>
 #include <Engine/Core/Engine.hpp>
-#include <Engine/EditorMenuDebugWindow.hpp>
 #include <Engine/EntityFactory.hpp>
 #include <Engine/Utils/Exception.hpp>
 #include <Engine/Utils/EventSound.hpp>

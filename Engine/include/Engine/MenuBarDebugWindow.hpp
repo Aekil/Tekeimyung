@@ -10,19 +10,19 @@
 
 class Engine;
 
-class EditorMenuDebugWindow: public DebugWindow
+class MenuBarDebugWindow: public DebugWindow
 {
 friend Engine;
 
 public:
-    EditorMenuDebugWindow(GameStateManager* gameStateManager, EntityManager* em, const glm::vec2& pos, const glm::vec2& size);
-    virtual ~EditorMenuDebugWindow();
+    MenuBarDebugWindow(GameStateManager* gameStateManager, EntityManager* em, const glm::vec2& pos, const glm::vec2& size);
+    virtual ~MenuBarDebugWindow();
 
     void                build(std::shared_ptr<GameState> gameState, float elapsedTime) override final;
 
     void                loadLevel(const std::string& levelName);
 
-    GENERATE_ID(EditorMenuDebugWindow);
+    GENERATE_ID(MenuBarDebugWindow);
 
 private:
     void                displayLevelsMenu();
