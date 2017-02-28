@@ -48,7 +48,8 @@ bool    EditorState::update(float elapsedTime)
 void    EditorState::initCamera()
 {
     _camera.translate(glm::vec3(350.0f, 250.0f, 300.0f));
-    _camera.setDir(glm::vec3(-30.0f));
+    _camera.rotate(-35.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+    _camera.rotate(-135.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 
     // Set camera screen
     float size = 500.0f;

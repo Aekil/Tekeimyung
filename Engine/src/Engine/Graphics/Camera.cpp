@@ -93,12 +93,6 @@ void    Camera::setFar(float far)
     _needUpdateProj = true;
 }
 
-void    Camera::setDir(const glm::vec3& dir)
-{
-    _constants.dir = dir;
-    _needUpdateView = true;
-}
-
 void    Camera::setScreen(const sScreen& screen)
 {
     _screen = screen;
@@ -111,9 +105,34 @@ void    Camera::setProjType(eProj projType)
     _needUpdateProj = _needUpdateView = true;
 }
 
-void    Camera::translate(const glm::vec3& pos)
+void    Camera::translate(const glm::vec3& direction, eTransform transform)
 {
-    _constants.pos += pos;
+    if (transform == eTransform::LOCAL)
+    {
+        glm::quat rotate(glm::vec3(glm::radians(_orientation.x), glm::radians(_orientation.y), glm::radians(_orientation.z)));
+        _constants.pos += rotate * direction;
+    }
+    else
+    {
+        _constants.pos += direction;
+    }
+    _needUpdateView = true;
+}
+
+void    Camera::rotate(float amount, const glm::vec3& axis)
+{
+    if (axis.x == 1.0f)
+        _orientation.x += amount;
+    if (axis.y == 1.0f)
+        _orientation.y += amount;
+    if (axis.z == 1.0f)
+        _orientation.z += amount;
+
+    _constants.dir.x = cos(glm::radians(_orientation.x)) * cos(glm::radians(_orientation.y));
+    _constants.dir.y = sin(glm::radians(_orientation.x));
+    _constants.dir.z = cos(glm::radians(_orientation.x)) * sin(glm::radians(_orientation.y));
+    _constants.dir = glm::normalize(_constants.dir);
+
     _needUpdateView = true;
 }
 
@@ -202,7 +221,7 @@ void    Camera::updateUBO()
         }
         else if (_projType == Camera::eProj::PERSPECTIVE)
         {
-            glm::vec3 newPos = _constants.pos - (glm::normalize(_constants.dir) * _zoom * 300.0f);
+            glm::vec3 newPos = _constants.pos - (_constants.dir * _zoom * 300.0f);
             _constants.view = glm::lookAt(newPos, newPos + _constants.dir, _up);
         }
         else if (_projType != Camera::eProj::ORTHOGRAPHIC_2D)

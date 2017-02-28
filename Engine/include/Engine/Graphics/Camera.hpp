@@ -15,6 +15,12 @@
 class Camera
 {
 public:
+    enum class eTransform
+    {
+        LOCAL = 0,
+        WORLD = 1
+    };
+
     typedef struct
     {
         glm::mat4       proj;
@@ -58,11 +64,11 @@ public:
     void                setAspect(float aspect);
     void                setNear(float near);
     void                setFar(float far);
-    void                setDir(const glm::vec3& dir);
     void                setScreen(const sScreen& screen);
     void                setProjType(eProj projType);
 
-    void                translate(const glm::vec3& pos);
+    void                translate(const glm::vec3& direction, eTransform transform = eTransform::WORLD);
+    void                rotate(float amount, const glm::vec3& axis);
     void                zoom(float amount);
     void                setZoom(float amount);
 
@@ -112,6 +118,12 @@ private:
     glm::vec3           _up;
 
     glm::vec3           _windowBufferSize;
+
+    // Euleur angles orientation
+    // orientation.x = pitch
+    // orientation.y = yaw
+    // orientation.z = roll
+    glm::vec3           _orientation;
 
     static Camera*      _instance;
 };

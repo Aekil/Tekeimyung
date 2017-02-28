@@ -91,7 +91,8 @@ bool    PlayState::update(float elapsedTime)
 void    PlayState::initCamera()
 {
     _camera.translate(glm::vec3(650.0f, 450.0f, 600.0f));
-    _camera.setDir(glm::vec3(-30.0f));
+    _camera.rotate(-35.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+    _camera.rotate(-135.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 
     // Set camera screen
     float size = 500.0f;
@@ -148,19 +149,21 @@ void    PlayState::updateCameraInputs(float elapsedTime)
         {
             if (cursor.getX() > gameWindow->getBufferWidth() - edgeDist)
             {
-                _camera.translate({moveSpeed, 0.0f, -moveSpeed});
+                _camera.translate({-moveSpeed, 0.0f, 0.0f}, Camera::eTransform::LOCAL);
             }
             if (cursor.getX() < edgeDist)
             {
-                _camera.translate({-moveSpeed, 0.0f, moveSpeed});
+                _camera.translate({moveSpeed, 0.0f, 0.0f}, Camera::eTransform::LOCAL);
             }
             if (cursor.getY() > gameWindow->getBufferHeight() - edgeDist)
             {
-                _camera.translate({moveSpeed, 0.0f, moveSpeed});
+                // Double moveSpeed for Y because it seems to be slower then X due to isometric view
+                _camera.translate({0.0f, -moveSpeed * 2.0f, 0.0f}, Camera::eTransform::LOCAL);
             }
             if (cursor.getY() < edgeDist)
             {
-                _camera.translate({-moveSpeed, 0.0f, -moveSpeed});
+                // Double moveSpeed for Y because it seems to be slower then X due to isometric view
+                _camera.translate({0.0f, moveSpeed * 2.0f, 0.0f}, Camera::eTransform::LOCAL);
             }
         }
 
