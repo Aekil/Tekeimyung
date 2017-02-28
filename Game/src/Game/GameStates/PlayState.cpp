@@ -134,7 +134,10 @@ void    PlayState::updateCameraInputs(float elapsedTime)
         double offset = scroll.yOffset - lastScrollOffset;
 
         if (offset)
+        {
             _camera.zoom((float)(-offset * elapsedTime));
+            limitCameraZoom();
+        }
         lastScrollOffset = scroll.yOffset;
     }
 
@@ -168,4 +171,12 @@ void    PlayState::updateCameraInputs(float elapsedTime)
         }
 
     }
+}
+
+void    PlayState::limitCameraZoom()
+{
+    // Limit max zoom to 40
+    _camera.setZoom(std::max(_camera.getZoom(), 0.1f));
+    // Limit min zoom to 1.0f
+    _camera.setZoom(std::min(_camera.getZoom(), 0.5f));
 }

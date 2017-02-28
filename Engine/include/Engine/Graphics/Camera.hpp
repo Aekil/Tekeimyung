@@ -71,6 +71,7 @@ public:
     void                rotate(float amount, const glm::vec3& axis);
     void                zoom(float amount);
     void                setZoom(float amount);
+    float               getZoom() const;
 
     void                lookAt(const glm::vec3& pos, const glm::vec3& target, const glm::vec3& up);
 

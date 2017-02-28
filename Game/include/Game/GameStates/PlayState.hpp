@@ -33,6 +33,7 @@ START_GAMESTATE(PlayState, "Game")
 
 private:
     void                                updateCameraInputs(float elapsedTime);
+    void                                limitCameraZoom();
 
 private:
     Map*                                _map;

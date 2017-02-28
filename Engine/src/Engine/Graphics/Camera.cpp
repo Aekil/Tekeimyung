@@ -167,11 +167,6 @@ void    Camera::zoom(float amount)
 {
     _zoom -= amount;
 
-    // Limit max zoom to 40
-    _zoom = std::max(_zoom, 0.1f);
-    // Limit min zoom to 1.0f
-    _zoom = std::min(_zoom, 0.5f);
-
     if (_projType == Camera::eProj::ORTHOGRAPHIC_2D ||
         _projType == Camera::eProj::ORTHOGRAPHIC_3D)
         _needUpdateProj = true;
@@ -187,6 +182,11 @@ void    Camera::setZoom(float amount)
         _needUpdateProj = true;
     else
         _needUpdateView = true;
+}
+
+float   Camera::getZoom() const
+{
+    return (_zoom);
 }
 
 void    Camera::updateUBO()
