@@ -22,6 +22,7 @@ START_GAMESTATE(EditorState)
 private:
     void                                initCamera();
     void                                updateCamera(float elapsedTime);
+    void                                handleObjectSelection();
 
 private:
     Camera                              _camera;

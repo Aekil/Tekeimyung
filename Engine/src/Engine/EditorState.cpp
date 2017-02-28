@@ -2,13 +2,14 @@
 * @Author   Guillaume Labey
 */
 
-#include <Engine/Window/GameWindow.hpp>
-#include <Engine/Sound/SoundManager.hpp>
-
-#include <Engine/Systems/RenderingSystem.hpp>
-#include <Engine/Systems/UISystem.hpp>
 #include <Engine/EntityFactory.hpp>
 #include <Engine/EditorState.hpp>
+#include <Engine/LevelEntitiesDebugWindow.hpp>
+#include <Engine/Physics/Physics.hpp>
+#include <Engine/Sound/SoundManager.hpp>
+#include <Engine/Systems/RenderingSystem.hpp>
+#include <Engine/Systems/UISystem.hpp>
+#include <Engine/Window/GameWindow.hpp>
 
 
 EditorState::~EditorState() {}
@@ -32,6 +33,7 @@ bool    EditorState::init()
 bool    EditorState::update(float elapsedTime)
 {
     updateCamera(elapsedTime);
+    handleObjectSelection();
     return (GameState::update(elapsedTime));
 }
 
@@ -110,4 +112,32 @@ void    EditorState::updateCamera(float elapsedTime)
     }
 
     lastPosition = mousePos;
+}
+
+void    EditorState::handleObjectSelection()
+{
+    auto &gameWindow = GameWindow::getInstance();
+    auto &keyboard = gameWindow->getKeyboard();
+    auto &mouse = gameWindow->getMouse();
+
+    // The camera is rotating in EditorState::updateCamera
+    if (keyboard.getStateMap()[Keyboard::eKey::LEFT_ALT] == Keyboard::eKeyState::KEY_PRESSED ||
+        keyboard.getStateMap()[Keyboard::eKey::LEFT_ALT] == Keyboard::eKeyState::KEY_MAINTAINED)
+    {
+        return;
+    }
+
+    if (mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_1] == Mouse::eButtonState::CLICK_PRESSED)
+    {
+        Entity* selectedEntity;
+        auto& cursor = mouse.getCursor();
+
+        Ray ray = _camera.screenPosToRay((float)cursor.getX(), (float)cursor.getY());
+        Physics::raycast(ray, &selectedEntity);
+
+        if (selectedEntity)
+        {
+            LevelEntitiesDebugWindow::setSelectedEntityId(selectedEntity->id);
+        }
+    }
 }

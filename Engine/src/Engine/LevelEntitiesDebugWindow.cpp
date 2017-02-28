@@ -252,3 +252,8 @@ void    LevelEntitiesDebugWindow::createTemplate(Entity* entity, const std::stri
     // Save the cloned template to json
     EntityFactory::saveEntityTemplateToJson(newTypeName);
 }
+
+void    LevelEntitiesDebugWindow::setSelectedEntityId(uint32_t id)
+{
+    _selectedEntityId = id;
+}
