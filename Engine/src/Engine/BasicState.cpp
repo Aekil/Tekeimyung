@@ -74,33 +74,4 @@ void    BasicState::updateCameraInputs(float elapsedTime)
             _camera.zoom((float)(-offset * elapsedTime));
         lastScrollOffset = scroll.yOffset;
     }
-
-    // Update camera position when reaching edge
-    {
-        static float edgeDist = 80.0f;
-        static float moveSpeed = 5.0f;
-        auto& cursor = mouse.getCursor();
-        ImGuiIO& io = ImGui::GetIO();
-
-        if (!io.WantCaptureMouse)
-        {
-            if (cursor.getX() > gameWindow->getBufferWidth() - edgeDist)
-            {
-                _camera.translate({moveSpeed, 0.0f, -moveSpeed});
-            }
-            if (cursor.getX() < edgeDist)
-            {
-                _camera.translate({-moveSpeed, 0.0f, moveSpeed});
-            }
-            if (cursor.getY() > gameWindow->getBufferHeight() - edgeDist)
-            {
-                _camera.translate({moveSpeed, 0.0f, moveSpeed});
-            }
-            if (cursor.getY() < edgeDist)
-            {
-                _camera.translate({-moveSpeed, 0.0f, -moveSpeed});
-            }
-        }
-
-    }
 }

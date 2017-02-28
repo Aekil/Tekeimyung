@@ -19,8 +19,9 @@ START_GAMESTATE(EditorState)
     bool                                init() override final;
     bool                                update(float elapsedTime) override final;
 
+private:
     void                                initCamera();
-    void                                updateCameraInputs(float elapsedTime);
+    void                                updateCamera(float elapsedTime);
 
 private:
     Camera                              _camera;

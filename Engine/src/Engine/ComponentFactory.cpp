@@ -1106,6 +1106,8 @@ bool    ComponentFactory<sTransformComponent>::updateTransforms(glm::vec3& pos, 
 
     static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::TRANSLATE);
     bool changed = false;
+    bool cameraRotating = keyboard.getStateMap()[Keyboard::eKey::LEFT_ALT] == Keyboard::eKeyState::KEY_MAINTAINED ||
+                            keyboard.getStateMap()[Keyboard::eKey::LEFT_ALT] == Keyboard::eKeyState::KEY_PRESSED;
 
     if (ImGui::RadioButton("Translate", mCurrentGizmoOperation == ImGuizmo::TRANSLATE) || keyboard.isPressed(Keyboard::eKey::T))
         mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
@@ -1126,7 +1128,7 @@ bool    ComponentFactory<sTransformComponent>::updateTransforms(glm::vec3& pos, 
     ImGuizmo::Manipulate(glm::value_ptr(camera->getView()), glm::value_ptr(camera->getProj()), mCurrentGizmoOperation, mode, glm::value_ptr(transform), nullptr, nullptr);
     ImGuizmo::Enable(enableGuizmos);
 
-    if (ImGuizmo::IsOver() && enableGuizmos)
+    if (ImGuizmo::IsOver() && enableGuizmos && !cameraRotating)
     {
         ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transform), glm::value_ptr(pos), glm::value_ptr(rotation), glm::value_ptr(scale));
     }

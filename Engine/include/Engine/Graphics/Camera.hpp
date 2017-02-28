@@ -116,6 +116,8 @@ private:
     */
     // Up vector
     glm::vec3           _up;
+    // Right vector
+    glm::vec3           _right;
 
     glm::vec3           _windowBufferSize;
 

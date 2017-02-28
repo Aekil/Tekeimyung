@@ -31,17 +31,7 @@ bool    EditorState::init()
 
 bool    EditorState::update(float elapsedTime)
 {
-    auto &gameWindow = GameWindow::getInstance();
-    auto &keyboard = gameWindow->getKeyboard();
-
-    // update Projection type
-    {
-        if (keyboard.isPressed(Keyboard::eKey::O))
-            _camera.setProjType(Camera::eProj::ORTHOGRAPHIC_3D);
-        else if (keyboard.isPressed(Keyboard::eKey::P))
-            _camera.setProjType(Camera::eProj::PERSPECTIVE);
-    }
-
+    updateCamera(elapsedTime);
     return (GameState::update(elapsedTime));
 }
 
@@ -59,6 +49,64 @@ void    EditorState::initCamera()
     screen.top = size;
     screen.bottom = -screen.top;
     _camera.setScreen(screen);
-    _camera.setProjType(Camera::eProj::ORTHOGRAPHIC_3D);
+    _camera.setProjType(Camera::eProj::PERSPECTIVE);
     _camera.setZoom(0.5f);
+}
+
+void    EditorState::updateCamera(float elapsedTime)
+{
+    auto &gameWindow = GameWindow::getInstance();
+    auto &keyboard = gameWindow->getKeyboard();
+    auto &mouse = gameWindow->getMouse();
+
+    // Update zoom
+    {
+        auto &&scroll = mouse.getScroll();
+        static double lastScrollOffset;
+
+
+        double offset = scroll.yOffset - lastScrollOffset;
+
+        if (offset)
+            _camera.zoom((float)(-offset * elapsedTime));
+        lastScrollOffset = scroll.yOffset;
+    }
+
+    // Get mouse position (is used for camera translation and rotation)
+    auto& cursor = mouse.getCursor();
+    glm::vec2 mousePos{cursor.getX(), cursor.getY()};
+    static glm::vec2 lastPosition = mousePos;
+
+    // Update position
+    // TODO: use elapsedTime
+    {
+        static float movementSpeed = 20.0f;
+
+        if (mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_3] == Mouse::eButtonState::CLICK_MAINTAINED)
+        {
+
+            glm::vec2 mouseMovement = mousePos - lastPosition;
+            mouseMovement *= elapsedTime * movementSpeed;
+
+            _camera.translate({-mouseMovement.x, mouseMovement.y, 0.0f}, Camera::eTransform::LOCAL);
+        }
+    }
+
+    // Update rotation
+    {
+        static float rotationSpeed = 20.0f;
+
+        if (keyboard.getStateMap()[Keyboard::eKey::LEFT_ALT] == Keyboard::eKeyState::KEY_MAINTAINED &&
+            mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_1] == Mouse::eButtonState::CLICK_MAINTAINED)
+        {
+
+            glm::vec2 mouseMovement = mousePos - lastPosition;
+            mouseMovement *= elapsedTime * rotationSpeed;
+
+            _camera.rotate(mouseMovement.x, {0.0f, 1.0f, 0.0f});
+            _camera.rotate(-mouseMovement.y, {1.0f, 0.0f, 0.0f});
+        }
+    }
+
+    lastPosition = mousePos;
 }

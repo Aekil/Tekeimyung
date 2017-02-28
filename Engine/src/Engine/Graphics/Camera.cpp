@@ -109,8 +109,20 @@ void    Camera::translate(const glm::vec3& direction, eTransform transform)
 {
     if (transform == eTransform::LOCAL)
     {
-        glm::quat rotate(glm::vec3(glm::radians(_orientation.x), glm::radians(_orientation.y), glm::radians(_orientation.z)));
-        _constants.pos += rotate * direction;
+        // TODO: rotate direction with _orientation vector
+        // (Find why it does not work)
+        if (direction.x != 0.0f)
+        {
+            _constants.pos += _right * direction.x;
+        }
+        if (direction.y != 0.0f)
+        {
+            _constants.pos += _up * direction.y;
+        }
+        if (direction.z != 0.0f)
+        {
+            _constants.pos += _constants.dir * direction.z;
+        }
     }
     else
     {
@@ -128,10 +140,25 @@ void    Camera::rotate(float amount, const glm::vec3& axis)
     if (axis.z == 1.0f)
         _orientation.z += amount;
 
+
+    // Handle screen flipping
+    // TODO: Use quaternions
+    if (_orientation.x > 89.0f)
+    {
+        _orientation.x = 89.0f;
+    }
+    else if (_orientation.x < -89.0f)
+    {
+        _orientation.x = -89.0f;
+    }
+
     _constants.dir.x = cos(glm::radians(_orientation.x)) * cos(glm::radians(_orientation.y));
     _constants.dir.y = sin(glm::radians(_orientation.x));
     _constants.dir.z = cos(glm::radians(_orientation.x)) * sin(glm::radians(_orientation.y));
     _constants.dir = glm::normalize(_constants.dir);
+
+    _right = glm::normalize(glm::cross(_constants.dir, glm::normalize(glm::vec3(0.0f, 1.0f, 0.0f))));
+    _up = glm::normalize(glm::cross(_right, _constants.dir));
 
     _needUpdateView = true;
 }
