@@ -144,7 +144,7 @@ void    PlayState::updateCameraInputs(float elapsedTime)
     // update camera position when reaching edge
     {
         static float edgeDist = 80.0f;
-        static float moveSpeed = 5.0f;
+        static float moveSpeed = 300.0f;
         auto& cursor = mouse.getCursor();
         ImGuiIO& io = ImGui::GetIO();
 
@@ -152,21 +152,21 @@ void    PlayState::updateCameraInputs(float elapsedTime)
         {
             if (cursor.getX() > gameWindow->getBufferWidth() - edgeDist)
             {
-                _camera.translate({-moveSpeed, 0.0f, 0.0f}, Camera::eTransform::LOCAL);
+                _camera.translate({moveSpeed * elapsedTime, 0.0f, 0.0f}, Camera::eTransform::LOCAL);
             }
             if (cursor.getX() < edgeDist)
             {
-                _camera.translate({moveSpeed, 0.0f, 0.0f}, Camera::eTransform::LOCAL);
+                _camera.translate({-moveSpeed * elapsedTime, 0.0f, 0.0f}, Camera::eTransform::LOCAL);
             }
             if (cursor.getY() > gameWindow->getBufferHeight() - edgeDist)
             {
                 // Double moveSpeed for Y because it seems to be slower then X due to isometric view
-                _camera.translate({0.0f, -moveSpeed * 2.0f, 0.0f}, Camera::eTransform::LOCAL);
+                _camera.translate({0.0f, -moveSpeed * elapsedTime, 0.0f}, Camera::eTransform::LOCAL);
             }
             if (cursor.getY() < edgeDist)
             {
                 // Double moveSpeed for Y because it seems to be slower then X due to isometric view
-                _camera.translate({0.0f, moveSpeed * 2.0f, 0.0f}, Camera::eTransform::LOCAL);
+                _camera.translate({0.0f, moveSpeed * elapsedTime, 0.0f}, Camera::eTransform::LOCAL);
             }
         }
 
