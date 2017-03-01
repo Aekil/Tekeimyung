@@ -121,8 +121,10 @@ void    EditorState::handleObjectSelection()
     auto &mouse = gameWindow->getMouse();
 
     // The camera is rotating in EditorState::updateCamera
+    // or the mouse if over the guizmos
     if (keyboard.getStateMap()[Keyboard::eKey::LEFT_ALT] == Keyboard::eKeyState::KEY_PRESSED ||
-        keyboard.getStateMap()[Keyboard::eKey::LEFT_ALT] == Keyboard::eKeyState::KEY_MAINTAINED)
+        keyboard.getStateMap()[Keyboard::eKey::LEFT_ALT] == Keyboard::eKeyState::KEY_MAINTAINED ||
+        ImGuizmo::IsOver())
     {
         return;
     }
