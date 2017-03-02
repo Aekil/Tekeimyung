@@ -24,5 +24,11 @@ struct sComponent
         name(): sComponent(name::identifier) {} \
         static constexpr unsigned int identifier = #name##_crc32;
 
+// TODO: Add optional parameter to START_COMPONENT
+#define START_COMPONENT_INHERIT(name, baseClass) \
+    struct name : sComponent, public baseClass { \
+        name(): sComponent(name::identifier) {} \
+        static constexpr unsigned int identifier = #name##_crc32;
+
 #define END_COMPONENT(name) \
     };
