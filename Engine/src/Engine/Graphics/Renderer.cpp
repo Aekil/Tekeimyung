@@ -131,9 +131,9 @@ void    Renderer::render(Camera* camera, RenderQueue& renderQueue)
             glDepthMask(GL_FALSE);
             renderTransparentObjects(renderQueue.getTransparentMeshs(), renderQueue.getTransparentMeshsNb(), lights, lightsNb);
         }
-        else
+        else if (renderQueue.getOpaqueMeshsNb() + renderQueue.getTransparentMeshsNb() != 0)
         {
-            LOG_WARN("Attempt to render scene with no camera");
+            LOG_WARN("Attempt to render non-UI objects with no camera");
         }
     }
 
