@@ -19,6 +19,7 @@
 #include <ECS/Component.hh>
 
 #include <Engine/Window/Keyboard.hpp>
+#include <Engine/Graphics/Camera.hpp>
 #include <Engine/Graphics/Light.hpp>
 #include <Engine/Graphics/Model.hpp>
 #include <Engine/Graphics/ModelInstance.hpp>
@@ -600,3 +601,27 @@ std::unique_ptr<ModelInstance> _lightCone = nullptr;
 
 glm::vec3 lastRotation;
 END_COMPONENT(sLightComponent)
+
+
+START_COMPONENT(sCameraComponent)
+virtual sComponent* clone()
+{
+    sCameraComponent* component = new sCameraComponent();
+    component->update(this);
+
+    return (component);
+}
+
+virtual void update(sCameraComponent* component)
+{
+    this->camera = component->camera;
+}
+
+virtual void update(sComponent* component)
+{
+    update(static_cast<sCameraComponent*>(component));
+}
+
+Camera camera;
+
+END_COMPONENT(sCameraComponent)

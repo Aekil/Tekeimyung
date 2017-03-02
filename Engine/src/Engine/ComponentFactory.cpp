@@ -1389,3 +1389,34 @@ bool    ComponentFactory<sLightComponent>::updateEditor(const std::string& entit
 
     return (changed);
 }
+
+
+/*
+** sCameraComponent
+*/
+
+sComponent* ComponentFactory<sCameraComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
+{
+    sCameraComponent*  component;
+
+    component = new sCameraComponent();
+
+    return component;
+}
+
+JsonValue&    ComponentFactory<sCameraComponent>::saveToJson(const std::string& entityType, const sComponent* savedComponent, JsonValue* toJson)
+{
+    JsonValue& json = toJson ? *toJson : _componentsJson[entityType];
+    const sCameraComponent* component = static_cast<const sCameraComponent*>(savedComponent ? savedComponent : _components[entityType]);
+
+    return (json);
+}
+
+bool    ComponentFactory<sCameraComponent>::updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity)
+{
+    sCameraComponent* component = static_cast<sCameraComponent*>(entityComponent ? entityComponent : _components[entityType]);
+    *savedComponent = component;
+    bool changed = false;
+
+    return (changed);
+}
