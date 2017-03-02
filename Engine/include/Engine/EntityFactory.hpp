@@ -14,53 +14,9 @@
 
 #include <Engine/ComponentFactory.hpp>
 
-// Generate a list
-// string: "PLAYER", "TILE1", "TILE2"
-// enum: PLAYER, TILE1, TILE2
-#define ENTITIES_TYPES(PROCESS)\
-    PROCESS(EMPTY_OBJECT)\
-    PROCESS(PLAYER)\
-    PROCESS(ENEMY)\
-    PROCESS(ENEMY_EXPLOSION)\
-    PROCESS(BLOCK_GREEN)\
-    PROCESS(BLOCK_BROWN)\
-    PROCESS(SPAWNER)\
-    PROCESS(HEALTH)\
-    PROCESS(HEALTH_EMPTY)\
-    PROCESS(TOWER_FIRE)\
-    PROCESS(EMITTER_FIRE)\
-    PROCESS(EMITTER_WATER)\
-    PROCESS(FIRE_BALL)\
-    PROCESS(PLAYER_BULLET)\
-    PROCESS(ICON_SELECTED)\
-    PROCESS(BUTTON_RETURN)\
-    PROCESS(BUTTON_RESUME)\
-    PROCESS(BUTTON_QUIT)\
-    PROCESS(BUTTON_TOGGLE_FULLSCREEN)\
-    PROCESS(BUTTON_TOGGLE_WINDOWED)\
-    PROCESS(BUTTON_HOW_TO_PLAY)\
-    PROCESS(BUTTON_OPTIONS)\
-    PROCESS(HOW_TO_PLAY_MENU)\
-    PROCESS(BACKGROUND)\
-    PROCESS(BUTTON_CONFIRM_YES)\
-    PROCESS(BUTTON_CONFIRM_NO)\
-    PROCESS(QUIT_CONFIRM_POPUP)\
-    PROCESS(QUIT_CONFIRM_TEXT)\
-    PROCESS(GAME_MANAGER)\
-    PROCESS(CASTLE)\
-    PROCESS(TRAP_NEEDLE)\
-    PROCESS(TRAP_CUTTER)\
-    PROCESS(TRAP_FIRE)\
-    PROCESS(LIGHT)
-
 #define ARCHETYPES_LOCATION "resources/archetypes"
 
 class IComponentFactory;
-
-enum class eArchetype
-{
-    ENTITIES_TYPES(GENERATE_ENUM)
-};
 
 class EntityFactory
 {
@@ -76,10 +32,8 @@ public:
     ~EntityFactory();
     static void                                             loadDirectory(const std::string& archetypesDir);
 
-    static Entity*                                          createOrGetEntity(eArchetype type);
+    static Entity*                                          createOrGetEntity(const std::string& typeName);
 
-    static Entity*                                          createEntity(eArchetype type);
-    static Entity*                                          createEntity(eArchetype type, const glm::vec3& pos);
     static Entity*                                          createEntity(const std::string& typeName);
     static Entity*                                          createEntity(const std::string& typeName, const glm::vec3& pos);
 

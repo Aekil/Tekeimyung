@@ -22,12 +22,18 @@
 
 std::unordered_map<std::string, EntityFactory::sEntityInfo >  EntityFactory::_entities;
 std::unordered_map<std::string, std::string>  EntityFactory::_entitiesFiles;
-std::vector<const char*>  EntityFactory::_typesString = { ENTITIES_TYPES(GENERATE_STRING) };
+std::vector<const char*>  EntityFactory::_typesString;
 EntityManager*  EntityFactory::_em = nullptr;
 
 EntityFactory::EntityFactory() {}
 
-EntityFactory::~EntityFactory() {}
+EntityFactory::~EntityFactory()
+{
+    for (const char* typeString: _typesString)
+    {
+        delete typeString;
+    }
+}
 
 void EntityFactory::loadDirectory(const std::string& archetypesDir)
 {
@@ -57,11 +63,12 @@ void EntityFactory::loadDirectory(const std::string& archetypesDir)
             tag = parsed.getString("tag", "");
             LOG_INFO("Load entity %s", typeName.c_str());
 
-            if (!EntityFactory::entityTypeExists(typeName)) // The macro ENTITIES_TYPES did not create the type
-                EXCEPT(InvalidParametersException, "Failed to read entity archetype: Entity type \"%s\" does not exist", typeName.c_str());
+            if (EntityFactory::entityTypeExists(typeName)) // The macro ENTITIES_TYPES did not create the type
+                EXCEPT(InvalidParametersException, "Failed to read entity archetype \"%s\": Entity type \"%s\" already exist", path.c_str(), typeName.c_str());
 
             _entitiesFiles[typeName] = path;
              _entities[typeName].tag = tag;
+             _typesString.push_back(_strdup(typeName.c_str()));
 
             // Create entity components
             auto &&components = parsed.get("components", {}).get();
@@ -111,9 +118,8 @@ bool    EntityFactory::entityTypeExists(const std::string& type)
     return (false);
 }
 
-Entity* EntityFactory::createOrGetEntity(eArchetype type)
+Entity* EntityFactory::createOrGetEntity(const std::string& typeName)
 {
-    std::string typeName = _typesString[(int)type];
     for (Entity* entity : _em->getEntities())
     {
         sNameComponent* name = entity->getComponent<sNameComponent>();
@@ -126,33 +132,7 @@ Entity* EntityFactory::createOrGetEntity(eArchetype type)
         }
     }
 
-    return (createEntity(type));
-}
-
-Entity* EntityFactory::createEntity(eArchetype type)
-{
-    if ((int)type > (int)_typesString.size() - 1)
-    {
-        EXCEPT(InvalidParametersException, "The entity type does not exist");
-        return (nullptr);
-    }
-
-    ASSERT(_em != nullptr, "The entity manager should not be null");
-
-    std::string typeName = _typesString[(int)type];
-
-    return (cloneEntity(typeName));
-}
-
-Entity* EntityFactory::createEntity(eArchetype type, const glm::vec3& pos)
-{
-    Entity* entity = createEntity(type);
-
-    sTransformComponent* transformEntity = entity->getComponent<sTransformComponent>();
-    transformEntity->pos = pos;
-    transformEntity->needUpdate();
-
-    return (entity);
+    return (createEntity(typeName));
 }
 
 Entity* EntityFactory::createEntity(const std::string& typeName, const glm::vec3& pos)

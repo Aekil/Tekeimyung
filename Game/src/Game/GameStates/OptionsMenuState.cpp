@@ -75,13 +75,13 @@ bool                    OptionsMenuState::handleButtons()
 
 void                    OptionsMenuState::createToggleWindowModeButton()
 {
-    eArchetype          buttonArchetype;
+    std::string          buttonArchetype;
 
    /* if (_toggleWindowModeButton != nullptr)
         _world.getEntityManager()->destroyEntity(_toggleWindowModeButton);*/
     buttonArchetype = (GameWindow::getInstance()->isFullscreen() ?
-                       eArchetype::BUTTON_TOGGLE_WINDOWED :
-                       eArchetype::BUTTON_TOGGLE_FULLSCREEN);
+                       "BUTTON_TOGGLE_WINDOWED" :
+                       "BUTTON_TOGGLE_FULLSCREEN");
 
     // Create the button for the first time
     if (!_toggleWindowModeButton)

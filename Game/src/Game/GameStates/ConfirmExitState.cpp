@@ -29,7 +29,7 @@ void    ConfirmExitState::setupSystems()
 
 bool    ConfirmExitState::init()
 {
-    _yesButton = EntityFactory::createOrGetEntity(eArchetype::BUTTON_CONFIRM_YES);
+    _yesButton = EntityFactory::createOrGetEntity("BUTTON_CONFIRM_YES");
 
     return (true);
 }

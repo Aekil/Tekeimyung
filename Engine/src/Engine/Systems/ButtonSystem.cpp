@@ -229,7 +229,7 @@ void    ButtonSystem::removeSelected(EntityManager &em, int buttonIdx)
 
 void    ButtonSystem::setupSelectedIcon()
 {
-    _iconSelected = EntityFactory::createOrGetEntity(eArchetype::ICON_SELECTED);
+    _iconSelected = EntityFactory::createOrGetEntity("ICON_SELECTED");
     _iconRender = _iconSelected->getComponent<sRenderComponent>();
     _iconRender->_display = false;
 }

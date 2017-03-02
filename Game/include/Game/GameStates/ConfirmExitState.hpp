@@ -20,7 +20,6 @@ START_GAMESTATE(ConfirmExitState, "ConfirmExit")
     bool                                init() override final;
     bool                                update(float elapsedTime) override final;
 
-    Entity*                             createButton(eArchetype type, const glm::vec2& pos);
     bool                                handleButtons();
 
 private:
