@@ -17,14 +17,18 @@
 Camera*     Camera::_instance = nullptr;
 
 Camera::Camera(): _needUpdateView(true), _needUpdateProj(true), _fov(45.0f),
-                    _aspect(1920.0f / 1080.0f), _near(0.1f), _far(1300.0f),
-                    _zoom(1.0f), _projType(Camera::eProj::ORTHOGRAPHIC_3D)
+                    _near(0.1f), _far(1300.0f),
+                    _zoom(1.0f), _projType(Camera::eProj::PERSPECTIVE)
 {
     _constants.view = glm::mat4(1.0f);
-    _windowBufferSize.x = (float)GameWindow::getInstance()->getBufferWidth();
-    _windowBufferSize.y = (float)GameWindow::getInstance()->getBufferHeight();
     _ubo.setBindingPoint(1);
     _ubo.init(sizeof(_constants));
+
+    _viewportRect.offset.x = 0.0f;
+    _viewportRect.offset.y = 0.0f;
+    _viewportRect.extent.width = 1.0f;
+    _viewportRect.extent.height = 1.0f;
+    updateViewport();
 }
 
 Camera::~Camera() {}
@@ -46,7 +50,7 @@ const glm::mat4&    Camera::getProj() const
 
 float   Camera::getAspect() const
 {
-    return (_aspect);
+    return (_viewport.extent.width / _viewport.extent.height);
 }
 
 float   Camera::getFov() const
@@ -59,20 +63,19 @@ Camera::eProj   Camera::getProjType() const
     return (_projType);
 }
 
-const Camera::sScreen&  Camera::getScreen() const
+const Camera::sViewport&  Camera::getViewportRect() const
 {
-    return _screen;
+    return _viewportRect;
+}
+
+const Camera::sViewport&  Camera::getViewport() const
+{
+    return _viewport;
 }
 
 void    Camera::setFov(float fov)
 {
     _fov = fov;
-    _needUpdateProj = true;
-}
-
-void    Camera::setAspect(float aspect)
-{
-    _aspect = aspect;
     _needUpdateProj = true;
 }
 
@@ -88,9 +91,10 @@ void    Camera::setFar(float far)
     _needUpdateProj = true;
 }
 
-void    Camera::setScreen(const sScreen& screen)
+void    Camera::setViewportRect(const sViewport& viewportRect)
 {
-    _screen = screen;
+    _viewportRect = viewportRect;
+    updateViewport();
     _needUpdateProj = true;
 }
 
@@ -126,31 +130,20 @@ float   Camera::getZoom() const
     return (_zoom);
 }
 
-void    Camera::updateUBO()
+void    Camera::updateViewport()
 {
     float windowBufferWidth = (float)GameWindow::getInstance()->getBufferWidth();
     float windowBufferHeight = (float)GameWindow::getInstance()->getBufferHeight();
 
-    // The window size changed
-    if (_windowBufferSize.x != windowBufferWidth ||
-        _windowBufferSize.y != windowBufferHeight)
-    {
-        // Calculate the scale between the previous size and the new size
-        float scaleX = windowBufferWidth / _windowBufferSize.x;
-        float scaleY = windowBufferHeight / _windowBufferSize.y;
+    _viewport.offset.x = windowBufferWidth * _viewportRect.offset.x;
+    _viewport.offset.y = windowBufferHeight * _viewportRect.offset.y;
+    _viewport.extent.width = windowBufferWidth * _viewportRect.extent.width;
+    _viewport.extent.height = windowBufferHeight * _viewportRect.extent.height;
+    _needUpdateProj = true;
+}
 
-        // Apply the scale to the camera screen and modify the projection matrice
-        _screen.right *= scaleX;
-        _screen.left *= scaleX;
-        _screen.top *= scaleY;
-        _screen.bottom *= scaleY;
-        _needUpdateProj = true;
-
-        _windowBufferSize.x = windowBufferWidth;
-        _windowBufferSize.y = windowBufferHeight;
-
-    }
-
+void    Camera::updateUBO()
+{
     if (isDirty())
     {
         isDirty(false);
@@ -165,19 +158,19 @@ void    Camera::updateUBO()
     {
         if (_projType == Camera::eProj::ORTHOGRAPHIC_3D)
         {
-            _constants.proj = glm::ortho(_screen.left * _zoom, _screen.right * _zoom,
-                                            _screen.bottom * _zoom, _screen.top * _zoom,
+            _constants.proj = glm::ortho(_viewport.offset.x * _zoom, (_viewport.offset.x + _viewport.extent.width) * _zoom,
+                                            _viewport.offset.y * _zoom, (_viewport.offset.y + _viewport.extent.height) * _zoom,
                                             _near, _far);
         }
         else if (_projType == Camera::eProj::ORTHOGRAPHIC_2D)
         {
-            _constants.proj = glm::ortho(_screen.left * _zoom, _screen.right * _zoom,
-                                            _screen.bottom * _zoom, _screen.top * _zoom,
+            _constants.proj = glm::ortho(_viewport.offset.x * _zoom, (_viewport.offset.x + _viewport.extent.width) * _zoom,
+                                            _viewport.offset.y * _zoom, (_viewport.offset.y + _viewport.extent.height) * _zoom,
                                             0.0f, _far);
         }
         else if (_projType == Camera::eProj::PERSPECTIVE)
         {
-            _constants.proj = glm::perspective(_fov, _aspect, _near, _far);
+            _constants.proj = glm::perspective(_fov, getAspect(), _near, _far);
         }
         else
             ASSERT(0, "Unknown projection type");

@@ -45,16 +45,14 @@ void    EditorState::initCamera()
     _camera.rotate(-35.0f, glm::vec3(1.0f, 0.0f, 0.0f));
     _camera.rotate(-135.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 
-    // Set camera screen
-    float size = 500.0f;
-    Camera::sScreen screen;
-    screen.right = size * _camera.getAspect();
-    screen.left = -screen.right;
-    screen.top = size;
-    screen.bottom = -screen.top;
-    _camera.setScreen(screen);
+    // Set camera viewport
+    Camera::sViewport viewportRect;
+    viewportRect.offset.x = 0.0f;
+    viewportRect.offset.y = 0.0f;
+    viewportRect.extent.width = 1.0f;
+    viewportRect.extent.height = 1.0f;
     _camera.setProjType(Camera::eProj::PERSPECTIVE);
-    _camera.setZoom(0.5f);
+    _camera.setViewportRect(viewportRect);
 }
 
 void    EditorState::updateCamera(float elapsedTime)

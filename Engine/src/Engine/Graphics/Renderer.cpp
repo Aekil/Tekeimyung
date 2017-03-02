@@ -23,6 +23,10 @@ Renderer::Renderer(): _currentCamera(nullptr)
     _UILight.setDirection({0.0f, 0.0f, 1.0f});
     _UILight.setAmbient({0.8f, 0.8f, 0.8f});
     _UILight.setDiffuse({0.0f, 0.0f, 0.0f});
+
+    _UICamera.setProjType(Camera::eProj::ORTHOGRAPHIC_2D);
+    _UICamera.updateViewport();
+    _UICamera.updateUBO();
 }
 
 Renderer::~Renderer() {}
@@ -92,16 +96,7 @@ bool    Renderer::initialize()
 
 void    Renderer::onWindowResize()
 {
-    auto gameWindow = GameWindow::getInstance();
-
-    // Set camera screen
-    Camera::sScreen screen;
-    screen.right = (float)gameWindow->getBufferWidth();
-    screen.left = 0;
-    screen.top = (float)gameWindow->getBufferHeight();
-    screen.bottom = 0;
-    _UICamera.setScreen(screen);
-    _UICamera.setProjType(Camera::eProj::ORTHOGRAPHIC_2D);
+    _UICamera.updateViewport();
     _UICamera.updateUBO();
 }
 

@@ -70,7 +70,7 @@ bool    CollisionSystem::isColliding(Entity *firstEntity, Entity *secondEntity)
         return (Collisions::sphereVSsphere(
             firstSphereCollider->pos + firstTransform->getPos(),
             firstSphereCollider->radius * std::max({ firstTransform->getScale().x, firstTransform->getScale().y, firstTransform->getScale().z }) * SIZE_UNIT,
-            secondSphereCollider->pos + firstTransform->getPos(),
+            secondSphereCollider->pos + secondTransform->getPos(),
             secondSphereCollider->radius * std::max({ secondTransform->getScale().x, secondTransform->getScale().y, secondTransform->getScale().z }) * SIZE_UNIT
             ));
     }

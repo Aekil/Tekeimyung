@@ -21,7 +21,6 @@ public:
     Transform();
     ~Transform() = default;
 
-    void                updateTransform();
     const glm::mat4&    getTransform();
 
     void                needUpdate();
@@ -34,9 +33,9 @@ public:
     const glm::vec3&    getRotation() const;
     void                setRotation(const glm::vec3& rotation);
 
-    const glm::vec3&    getDirection() const;
-    const glm::vec3&    getUp() const;
-    const glm::vec3&    getRight() const;
+    const glm::vec3&    getDirection();
+    const glm::vec3&    getUp();
+    const glm::vec3&    getRight();
 
 
     void                scale(const glm::vec3& scale);
@@ -45,6 +44,7 @@ public:
 
 private:
     void                updateDirection();
+    void                updateTransform();
 
 protected:
     glm::mat4           _transform = glm::mat4(1.0f);
@@ -52,9 +52,9 @@ protected:
     glm::vec3           _pos;
 
     // Up vector
-    glm::vec3           _up;
+    glm::vec3           _up{0.0f, 1.0f, 0.0f};
     // Right vector
-    glm::vec3           _right;
+    glm::vec3           _right{1.0f, 0.0f, 0.0f};
 
     // Euleur angles orientation
     // orientation.x = pitch
@@ -65,7 +65,8 @@ protected:
     // Direction vector
     glm::vec3           _direction;
 
-    bool                _needUpdate{true};
+    bool                _needUpdateTransform{true};
+    bool                _needUpdateDirection{true};
     bool                _dirty{true};
 };
 

@@ -13,7 +13,6 @@
 
 #include <Engine/Window/IInputEvent.hpp>
 #include <Engine/Core/GameState.hpp>
-#include <Engine/Graphics/Camera.hpp>
 
 #include <Engine/EntityFactory.hpp>
 #include <Game/Map.hpp>
@@ -27,9 +26,6 @@ START_GAMESTATE(PlayState, "Game")
     void                                setupSystems() override final;
     bool                                init();
     bool                                update(float elapsedTime);
-
-    void                                initCamera();
-    void                                initEntities();
 
 private:
     void                                updateCameraInputs(float elapsedTime);

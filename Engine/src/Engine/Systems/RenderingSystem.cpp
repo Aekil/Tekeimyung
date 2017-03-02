@@ -249,6 +249,8 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
                 // Update camera transform
                 //TODO: only update if sTransformComponent changed
                 sTransformComponent* cameraTransform = cameras[0]->getComponent<sTransformComponent>();
+                camera->setRotation(cameraTransform->getRotation());
+                camera->setPos(cameraTransform->getPos());
             }
         }
     }

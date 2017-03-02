@@ -3,29 +3,7 @@
 #include <glm/gtx/quaternion.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-Transform::Transform()
-{
-    updateDirection();
-}
-
-void    Transform::updateTransform()
-{
-    glm::quat newRotate(glm::vec3(glm::radians(_rotation.x), glm::radians(_rotation.y), glm::radians(_rotation.z)));
-
-    _needUpdate = false;
-    glm::mat4 newTranslate = glm::translate(glm::mat4(1.0), glm::vec3(_pos.x, _pos.y, _pos.z));
-    glm::mat4 newScale = glm::scale(glm::mat4(1.0), _scale);
-    _transform = newTranslate * glm::mat4_cast(newRotate) * newScale;
-}
-
-const glm::mat4&    Transform::getTransform()
-{
-    if (_needUpdate)
-    {
-        updateTransform();
-    }
-    return (_transform);
-}
+Transform::Transform() {}
 
 void    Transform::scale(const glm::vec3& scale)
 {
@@ -80,8 +58,8 @@ void    Transform::rotate(float amount, const glm::vec3& axis)
         _rotation.x = -89.0f;
     }
 
-    updateDirection();
     needUpdate();
+    _needUpdateDirection = true;
 }
 
 void    Transform::updateDirection()
@@ -93,4 +71,15 @@ void    Transform::updateDirection()
 
     _right = glm::normalize(glm::cross(_direction, glm::normalize(glm::vec3(0.0f, 1.0f, 0.0f))));
     _up = glm::normalize(glm::cross(_right, _direction));
+    _needUpdateDirection = false;
+}
+
+void    Transform::updateTransform()
+{
+    glm::quat newRotate(glm::vec3(glm::radians(_rotation.x), glm::radians(_rotation.y), glm::radians(_rotation.z)));
+
+    _needUpdateTransform = false;
+    glm::mat4 newTranslate = glm::translate(glm::mat4(1.0), glm::vec3(_pos.x, _pos.y, _pos.z));
+    glm::mat4 newScale = glm::scale(glm::mat4(1.0), _scale);
+    _transform = newTranslate * glm::mat4_cast(newRotate) * newScale;
 }

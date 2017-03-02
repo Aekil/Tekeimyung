@@ -50,9 +50,6 @@ bool    PlayState::init()
 
     _map = new Map(*em, 20, 15, 4);
 
-    //initCamera();
-    initEntities();
-
     _pair = std::make_pair(Keyboard::eKey::F, new HandleFullscreenEvent());
 
     _backgroundMusic = EventSound::getEventByEventType(eEventSound::BACKGROUND);
@@ -86,29 +83,6 @@ bool    PlayState::update(float elapsedTime)
     #endif
 
     return (GameState::update(elapsedTime));
-}
-
-void    PlayState::initCamera()
-{
-/*    _camera.translate(glm::vec3(650.0f, 450.0f, 600.0f));
-    _camera.rotate(-35.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-    _camera.rotate(-135.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-
-    // Set camera screen
-    float size = 500.0f;
-    Camera::sScreen screen;
-    screen.right = size * _camera.getAspect();
-    screen.left = -screen.right;
-    screen.top = size;
-    screen.bottom = -screen.top;
-    _camera.setScreen(screen);
-    _camera.setProjType(Camera::eProj::ORTHOGRAPHIC_3D);
-    _camera.setZoom(0.5f);*/
-}
-
-void    PlayState::initEntities()
-{
-    EntityManager* em = _world.getEntityManager();
 }
 
 void    PlayState::updateCameraInputs(float elapsedTime)

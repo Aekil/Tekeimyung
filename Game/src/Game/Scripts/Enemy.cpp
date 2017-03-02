@@ -19,7 +19,7 @@ void Enemy::start()
 
 void Enemy::update(float dt)
 {
-    _transform->translate(glm::vec3(0.0f, 0.0f, -10 * dt));
+    _transform->translate(glm::vec3(0.0f, 0.0f, -10.0f * dt));
 
     Health::update(_transform);
 }

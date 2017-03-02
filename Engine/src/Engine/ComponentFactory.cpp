@@ -1096,7 +1096,6 @@ bool    ComponentFactory<sTransformComponent>::updateEditor(const std::string& e
         component->setPos(pos);
         component->setScale(scale);
         component->setRotation(rotation);
-        component->updateTransform();
     }
 
     return (false);
@@ -1359,7 +1358,6 @@ JsonValue&    ComponentFactory<sLightComponent>::saveToJson(const std::string& e
     JsonValue& json = toJson ? *toJson : _componentsJson[entityType];
     const sLightComponent* component = static_cast<const sLightComponent*>(savedComponent ? savedComponent : _components[entityType]);
 
-
     json.setVec3f("ambient", component->light.getAmbient());
     json.setVec3f("diffuse", component->light.getDiffuse());
     json.setVec3f("direction", component->light.getDirection());
@@ -1407,13 +1405,50 @@ sComponent* ComponentFactory<sCameraComponent>::loadFromJson(const std::string& 
 
     component = new sCameraComponent();
 
+    // Viewport
+    {
+        Camera::sViewport viewportRect = component->camera.getViewportRect();
+        JsonValue viewportJson(json.get()["viewport"]);
+        JsonValue offsetJson(viewportJson.get()["offset"]);
+        JsonValue extentJson(viewportJson.get()["extent"]);
+
+        viewportRect.offset.x = offsetJson.getFloat("x", 0.0f);
+        viewportRect.offset.y = offsetJson.getFloat("y", 0.0f);
+        viewportRect.extent.width = extentJson.getFloat("width", 1.0f);
+        viewportRect.extent.height = extentJson.getFloat("height", 1.0f);
+
+        component->camera.setViewportRect(viewportRect);
+    }
+
+    component->camera.setProjType(EnumManager<Camera::eProj>::stringToEnum(json.getString("projection", "PERSPECTIVE")));
+    component->camera.setZoom(json.getFloat("zoom", 1.0f));
+
     return component;
 }
 
 JsonValue&    ComponentFactory<sCameraComponent>::saveToJson(const std::string& entityType, const sComponent* savedComponent, JsonValue* toJson)
 {
     JsonValue& json = toJson ? *toJson : _componentsJson[entityType];
+    JsonValue viewportJson;
     const sCameraComponent* component = static_cast<const sCameraComponent*>(savedComponent ? savedComponent : _components[entityType]);
+
+    // Viewport
+    {
+        Camera::sViewport viewportRect = component->camera.getViewportRect();
+        JsonValue offsetJson;
+        JsonValue extentJson;
+        offsetJson.setFloat("x", viewportRect.offset.x);
+        offsetJson.setFloat("y", viewportRect.offset.y);
+        extentJson.setFloat("width", viewportRect.extent.width);
+        extentJson.setFloat("height", viewportRect.extent.height);
+
+        viewportJson.setValue("offset", offsetJson);
+        viewportJson.setValue("extent", extentJson);
+    }
+
+    json.setValue("viewport", viewportJson);
+    json.setString("projection", EnumManager<Camera::eProj>::enumToString(component->camera.getProjType()));
+    json.setFloat("zoom", component->camera.getZoom());
 
     return (json);
 }
@@ -1423,6 +1458,49 @@ bool    ComponentFactory<sCameraComponent>::updateEditor(const std::string& enti
     sCameraComponent* component = static_cast<sCameraComponent*>(entityComponent ? entityComponent : _components[entityType]);
     *savedComponent = component;
     bool changed = false;
+
+    // Viewport
+    {
+        bool viewportChanged = false;
+        Camera::sViewport viewportRect = component->camera.getViewportRect();
+
+        ImGui::Text("Viewport");
+        ImGui::PushItemWidth(100);
+        viewportChanged |= ImGui::InputFloat("X", &viewportRect.offset.x);
+        ImGui::SameLine();
+        viewportChanged |= ImGui::InputFloat("Y", &viewportRect.offset.y);
+        viewportChanged |= ImGui::InputFloat("Width", &viewportRect.extent.width);
+        ImGui::SameLine();
+        viewportChanged |= ImGui::InputFloat("Height", &viewportRect.extent.height);
+        ImGui::PopItemWidth();
+
+        if (viewportChanged)
+        {
+            changed = true;
+            component->camera.setViewportRect(viewportRect);
+        }
+    }
+
+    // Projection type
+    {
+        ImGui::Text("\n");
+        Camera::eProj projection = component->camera.getProjType();
+        if (Helper::updateComboEnum<Camera::eProj>("Projection", projection))
+        {
+            component->camera.setProjType(projection);
+            changed = true;
+        }
+    }
+
+    // Zoom
+    {
+        float zoom = component->camera.getZoom();
+        if (ImGui::InputFloat("Zoom", &zoom, 0.5f, ImGuiInputTextFlags_AllowTabInput))
+        {
+            component->camera.setZoom(zoom);
+            changed = true;
+        }
+    }
 
     return (changed);
 }

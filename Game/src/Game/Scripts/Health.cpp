@@ -57,7 +57,6 @@ void Health::update(sTransformComponent* transform)
     if (!camera)
         return;
 
-    auto& screen = camera->getScreen();
     glm::vec4 viewport(gameWindow->getViewport());
     glm::mat4 model = glm::translate(glm::mat4(1.0), transform->getPos());
     glm::vec3 screenPos = glm::project(_objCenter * transform->getScale(), camera->getView() * model, camera->getProj(), viewport);

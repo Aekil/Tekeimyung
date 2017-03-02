@@ -12,11 +12,17 @@
 #include <Engine/Graphics/ShaderProgram.hpp>
 #include <Engine/Graphics/Transform.hpp>
 #include <Engine/Graphics/UniformBuffer.hpp>
+#include <Engine/Utils/Helper.hpp>
+
+#define PROJECTION_TYPES(PROCESS)\
+    PROCESS(PERSPECTIVE)\
+    PROCESS(ORTHOGRAPHIC_3D)\
+    PROCESS(ORTHOGRAPHIC_2D)\
 
 class Camera: public Transform
 {
 public:
-    typedef struct
+    struct sConstants
     {
         glm::mat4       proj;
         glm::mat4       view;
@@ -24,22 +30,23 @@ public:
         float           padding;
         // Target
         glm::vec3       dir;
-    }                   Constants;
-
-    typedef struct
-    {
-        float           left;
-        float           right;
-        float           top;
-        float           bottom;
-    }                   sScreen;
-
-    enum class eProj: uint8_t
-    {
-        PERSPECTIVE = 0,
-        ORTHOGRAPHIC_3D = 1,
-        ORTHOGRAPHIC_2D = 2
     };
+
+    struct sViewport
+    {
+        struct sOffset
+        {
+            float           x;
+            float           y;
+        } offset;
+        struct sExtent
+        {
+            float           width;
+            float           height;
+        } extent;
+    };
+
+    REGISTER_ENUM(eProj, uint8_t, PROJECTION_TYPES)
 
 public:
     Camera();
@@ -52,13 +59,13 @@ public:
     float               getAspect() const;
     float               getFov() const;
     eProj               getProjType() const;
-    const sScreen&      getScreen() const;
+    const sViewport&    getViewportRect() const;
+    const sViewport&    getViewport() const;
 
     void                setFov(float fov);
-    void                setAspect(float aspect);
     void                setNear(float near);
     void                setFar(float far);
-    void                setScreen(const sScreen& screen);
+    void                setViewportRect(const sViewport& viewportRect);
     void                setProjType(eProj projType);
 
     void                zoom(float amount);
@@ -67,6 +74,7 @@ public:
 
     void                lookAt(const glm::vec3& pos, const glm::vec3& target, const glm::vec3& up);
 
+    void                updateViewport();
     void                updateUBO();
     UniformBuffer&      getUBO();
 
@@ -78,7 +86,7 @@ public:
     static Camera*      getInstance();
 
 private:
-    Camera::Constants   _constants;
+    sConstants          _constants;
 
 
     UniformBuffer       _ubo;
@@ -91,8 +99,6 @@ private:
     */
     // Field of view
     float               _fov;
-    // Aspect ratio. Ex: 1920/1080
-    float               _aspect;
     // Near clipping plane
     float               _near;
     // Far clipping plane
@@ -100,11 +106,14 @@ private:
 
     float               _zoom;
 
-    sScreen             _screen;
+    // Viewport values between 0 and 1
+    sViewport           _viewportRect;
+    // Viewport real values
+    sViewport           _viewport;
 
     eProj               _projType;
 
-    glm::vec3           _windowBufferSize;
-
     static Camera*      _instance;
 };
+
+REGISTER_ENUM_MANAGER(Camera::eProj, PROJECTION_TYPES)
