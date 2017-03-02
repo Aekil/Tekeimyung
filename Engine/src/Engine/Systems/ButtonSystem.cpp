@@ -70,13 +70,13 @@ void    ButtonSystem::handleButtonMouseHover(EntityManager& em, Entity* entity, 
 {
     sRenderComponent*       render = entity->getComponent<sRenderComponent>();
     sTransformComponent*    transform = entity->getComponent<sTransformComponent>();
-    const glm::vec3&        size = render->getModel()->getSize() * transform->scale;
+    const glm::vec3&        size = render->getModel()->getSize() * transform->getScale();
 
     // Check the mouse is in the button (2D AABB collision)
-    if (cursorPos.x >= transform->pos.x &&
-        cursorPos.x <= transform->pos.x + size.x &&
-        cursorPos.y >= transform->pos.y &&
-        cursorPos.y <= transform->pos.y + size.y)
+    if (cursorPos.x >= transform->getPos().x &&
+        cursorPos.x <= transform->getPos().x + size.x &&
+        cursorPos.y >= transform->getPos().y &&
+        cursorPos.y <= transform->getPos().y + size.y)
     {
         removeSelected(em, _currentSelected);
         _currentSelected = entityIdx;
@@ -192,12 +192,13 @@ void    ButtonSystem::setSelected(Entity* entity, bool hovered)
     sTransformComponent*    buttonTransform = entity->getComponent<sTransformComponent>();
     sRenderComponent*       buttonRender = entity->getComponent<sRenderComponent>();
 
-    const glm::vec3& buttonSize = buttonRender->getModel()->getSize() * buttonTransform->scale;
-    const glm::vec3& iconSize = iconRender->getModel()->getSize() * iconTransform->scale;
+    const glm::vec3& buttonSize = buttonRender->getModel()->getSize() * buttonTransform->getScale();
+    const glm::vec3& iconSize = iconRender->getModel()->getSize() * iconTransform->getScale();
 
-    iconTransform->pos.x = buttonTransform->pos.x - 42.0f;
-    iconTransform->pos.y = buttonTransform->pos.y + (buttonSize.y / 2.0f) - (iconSize.y / 2.0f) + 10.0f;
-    iconTransform->needUpdate();
+    glm::vec3 iconPos = iconTransform->getPos();
+    iconPos.x = buttonTransform->getPos().x - 42.0f;
+    iconPos.y = buttonTransform->getPos().y + (buttonSize.y / 2.0f) - (iconSize.y / 2.0f) + 10.0f;
+    iconTransform->setPos(iconPos);
 
     button->selected = true;
 }

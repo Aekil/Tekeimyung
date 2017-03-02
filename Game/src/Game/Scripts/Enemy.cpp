@@ -19,9 +19,7 @@ void Enemy::start()
 
 void Enemy::update(float dt)
 {
-    auto pos = &(this->getComponent<sTransformComponent>()->pos);
-
-    pos->z -= 10 * dt;
+    _transform->translate(glm::vec3(0.0f, 0.0f, -10 * dt));
 
     Health::update(_transform);
 }

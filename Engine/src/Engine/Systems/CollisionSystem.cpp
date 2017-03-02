@@ -68,10 +68,10 @@ bool    CollisionSystem::isColliding(Entity *firstEntity, Entity *secondEntity)
         sSphereColliderComponent* secondSphereCollider = secondEntity->getComponent<sSphereColliderComponent>();
 
         return (Collisions::sphereVSsphere(
-            firstSphereCollider->pos + firstTransform->pos,
-            firstSphereCollider->radius * std::max({ firstTransform->scale.x, firstTransform->scale.y, firstTransform->scale.z }) * SIZE_UNIT,
-            secondSphereCollider->pos + secondTransform->pos,
-            secondSphereCollider->radius * std::max({ secondTransform->scale.x, secondTransform->scale.y, secondTransform->scale.z }) * SIZE_UNIT
+            firstSphereCollider->pos + firstTransform->getPos(),
+            firstSphereCollider->radius * std::max({ firstTransform->getScale().x, firstTransform->getScale().y, firstTransform->getScale().z }) * SIZE_UNIT,
+            secondSphereCollider->pos + firstTransform->getPos(),
+            secondSphereCollider->radius * std::max({ secondTransform->getScale().x, secondTransform->getScale().y, secondTransform->getScale().z }) * SIZE_UNIT
             ));
     }
 

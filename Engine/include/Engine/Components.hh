@@ -346,7 +346,18 @@ std::string value;
 END_COMPONENT(sNameComponent)
 
 
+class EntityFactory;
+
 START_COMPONENT(sTransformComponent)
+// TODO: Remove this and use getter/setter in animations ?
+friend EntityFactory;
+
+enum class eTransform
+{
+    LOCAL = 0,
+    WORLD = 1
+};
+
 virtual sComponent* clone()
 {
     sTransformComponent* component = new sTransformComponent();
@@ -357,10 +368,10 @@ virtual sComponent* clone()
 
 virtual void update(sTransformComponent* component)
 {
-    this->pos = component->pos;
-    this->scale = component->scale;
-    this->rotation = component->rotation;
-    this->transform = component->transform;
+    this->_pos = component->_pos;
+    this->_scale = component->_scale;
+    this->_rotation = component->_rotation;
+    this->_transform = component->_transform;
 }
 
 virtual void update(sComponent* component)
@@ -370,12 +381,12 @@ virtual void update(sComponent* component)
 
 void updateTransform()
 {
-    glm::quat newRotate(glm::vec3(glm::radians(rotation.x), glm::radians(rotation.y), glm::radians(rotation.z)));
+    glm::quat newRotate(glm::vec3(glm::radians(_rotation.x), glm::radians(_rotation.y), glm::radians(_rotation.z)));
 
     _needUpdate = false;
-    glm::mat4 newTranslate = glm::translate(glm::mat4(1.0), glm::vec3(pos.x, pos.y, pos.z));
-    glm::mat4 newScale = glm::scale(glm::mat4(1.0), scale);
-    transform = newTranslate * glm::mat4_cast(newRotate) * newScale;
+    glm::mat4 newTranslate = glm::translate(glm::mat4(1.0), glm::vec3(_pos.x, _pos.y, _pos.z));
+    glm::mat4 newScale = glm::scale(glm::mat4(1.0), _scale);
+    _transform = newTranslate * glm::mat4_cast(newRotate) * newScale;
 }
 
 const glm::mat4& getTransform()
@@ -384,7 +395,7 @@ const glm::mat4& getTransform()
     {
         updateTransform();
     }
-    return (transform);
+    return (_transform);
 }
 
 inline void needUpdate()
@@ -403,10 +414,121 @@ inline void isDirty(bool dirty)
     _dirty = dirty;
 }
 
-glm::vec3   pos;
-glm::vec3   scale = { 1.0f, 1.0f, 1.0f };
-glm::vec3   rotation;
-glm::mat4   transform = glm::mat4(1.0f);
+inline const glm::vec3& getScale() const
+{
+    return (_scale);
+}
+
+inline void setScale(const glm::vec3& scale)
+{
+    _scale = scale;
+    needUpdate();
+}
+
+inline const glm::vec3& getPos() const
+{
+    return (_pos);
+}
+
+inline void setPos(const glm::vec3& pos)
+{
+    _pos = pos;
+    needUpdate();
+}
+
+inline const glm::vec3& getRotation() const
+{
+    return (_rotation);
+}
+
+inline void setRotation(const glm::vec3& rotation)
+{
+    _rotation = rotation;
+    needUpdate();
+}
+
+void    scale(const glm::vec3& scale)
+{
+    _scale += scale;
+    needUpdate();
+}
+
+void    translate(const glm::vec3& direction, eTransform transform = eTransform::WORLD)
+{
+    if (transform == eTransform::LOCAL)
+    {
+        // TODO: rotate direction with _orientation vector
+        // (Find why it does not work)
+        if (direction.x != 0.0f)
+        {
+            _pos += _right * direction.x;
+        }
+        if (direction.y != 0.0f)
+        {
+            _pos += _up * direction.y;
+        }
+        if (direction.z != 0.0f)
+        {
+            _pos += _direction * direction.z;
+        }
+    }
+    else
+    {
+        _pos += direction;
+    }
+
+    needUpdate();
+}
+
+void    rotate(float amount, const glm::vec3& axis)
+{
+    if (axis.x == 1.0f)
+        _rotation.x += amount;
+    if (axis.y == 1.0f)
+        _rotation.y += amount;
+    if (axis.z == 1.0f)
+        _rotation.z += amount;
+
+    // Handle screen flipping
+    // TODO: Use quaternions
+    if (_rotation.x > 89.0f)
+    {
+        _rotation.x = 89.0f;
+    }
+    else if (_rotation.x < -89.0f)
+    {
+        _rotation.x = -89.0f;
+    }
+
+    _direction.x = cos(glm::radians(_rotation.x)) * cos(glm::radians(_rotation.y));
+    _direction.y = sin(glm::radians(_rotation.x));
+    _direction.z = cos(glm::radians(_rotation.x)) * sin(glm::radians(_rotation.y));
+    _direction = glm::normalize(_direction);
+
+    _right = glm::normalize(glm::cross(_direction, glm::normalize(glm::vec3(0.0f, 1.0f, 0.0f))));
+    _up = glm::normalize(glm::cross(_right, _direction));
+    needUpdate();
+}
+
+
+private:
+glm::mat4           _transform = glm::mat4(1.0f);
+glm::vec3           _scale = { 1.0f, 1.0f, 1.0f };
+glm::vec3           _pos;
+
+// Up vector
+glm::vec3           _up;
+// Right vector
+glm::vec3           _right;
+
+// Euleur angles orientation
+// orientation.x = pitch
+// orientation.y = yaw
+// orientation.z = roll
+glm::vec3           _rotation;
+
+// Direction vector
+glm::vec3           _direction;
 
 private:
 bool        _needUpdate = true;

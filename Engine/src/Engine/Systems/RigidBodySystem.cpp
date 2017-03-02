@@ -21,7 +21,7 @@ void RigidBodySystem::update(EntityManager &em, float elapsedTime)
         handleCollisions(em, entity, rigidBody);
 
         rigidBody->velocity += rigidBody->gravity * elapsedTime;
-        transform->pos += rigidBody->velocity * elapsedTime;
+        transform->setPos(transform->getPos() + (rigidBody->velocity * elapsedTime));
         transform->needUpdate();
     });
 }

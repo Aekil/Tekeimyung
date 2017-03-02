@@ -60,8 +60,7 @@ void Projectile::onCollisionEnter(Entity* entity)
             Entity* explosion = Instantiate("ENEMY_EXPLOSION");
             sTransformComponent* explosionTransform = explosion->getComponent<sTransformComponent>();
             sTransformComponent* targetTransform = target->getComponent<sTransformComponent>();
-            explosionTransform->pos = targetTransform->pos;
-            explosionTransform->needUpdate();
+            explosionTransform->setPos(targetTransform->getPos());
         }
     }
     destroyProjectile();
@@ -71,7 +70,7 @@ void Projectile::followTarget(Entity* target)
 {
     sTransformComponent* targetTransform = target->getComponent<sTransformComponent>();
 
-    _projectileRigidBody->velocity = glm::normalize(targetTransform->pos - (_projectileTransform->pos + _projectileCollider->pos)) * _speed;
+    _projectileRigidBody->velocity = glm::normalize(targetTransform->getPos() - (_projectileTransform->getPos() + _projectileCollider->pos)) * _speed;
 }
 
 void Projectile::followDirection(const glm::vec3& dir)

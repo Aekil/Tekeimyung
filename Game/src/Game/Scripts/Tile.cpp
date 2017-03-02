@@ -19,7 +19,7 @@ void Tile::update(float dt)
 {
     if (this->m_buildable && this->onHover && this->mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_1] == Mouse::eButtonState::CLICK_PRESSED)
     {
-        auto position = this->getComponent<sTransformComponent>()->pos;
+        auto& position = this->getComponent<sTransformComponent>()->getPos();
 
         this->Instantiate(this->buildableItems[this->currentIdx], glm::vec3(position.x, position.y + 12.5f, position.z));
     }
@@ -73,7 +73,7 @@ void Tile::setBuildable(bool buildable)
 
 void Tile::displayPreview()
 {
-    auto position = this->getComponent<sTransformComponent>()->pos;
+    auto& position = this->getComponent<sTransformComponent>()->getPos();
     this->preview = this->Instantiate(this->buildableItems[this->currentIdx], glm::vec3(position.x, position.y + 12.5f, position.z));
     auto previewRenderer = this->preview->getComponent<sRenderComponent>();
     previewRenderer->ignoreRaycast = true;

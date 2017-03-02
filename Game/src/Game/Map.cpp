@@ -234,8 +234,8 @@ Entity* Map::getSelectedEntity(EntityManager* em, bool onlyTiles)
         boxCenter.z += (boxSize.z / 2.0f);
 
         // Convert box collider pos and center to world position
-        boxPos += transform->pos;
-        boxCenter += transform->pos;
+        boxPos += transform->getPos();
+        boxCenter += transform->getPos();
 
         // Calculate vector from near plane to far plane
         glm::vec3 rayDir = glm::normalize(farPoint - nearPoint);

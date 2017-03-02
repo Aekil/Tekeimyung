@@ -46,7 +46,7 @@ void Health::init(sTransformComponent* transform, sRenderComponent* render)
     _objCenter.x = render->getModel()->getMin().x + ((render->getModel()->getMax().x - render->getModel()->getMin().x) / 2.0f);
     _objCenter.y = render->getModel()->getMax().y;
     _objCenter.z = render->getModel()->getMin().z + ((render->getModel()->getMax().z - render->getModel()->getMin().z) / 2.0f);
-    maxScale = _healthBarEmptyTransform->scale.x;
+    maxScale = _healthBarEmptyTransform->getScale().x;
 }
 
 void Health::update(sTransformComponent* transform)
@@ -59,18 +59,16 @@ void Health::update(sTransformComponent* transform)
 
     auto& screen = camera->getScreen();
     glm::vec4 viewport(gameWindow->getViewport());
-    glm::mat4 model = glm::translate(glm::mat4(1.0), transform->pos);
-    glm::vec3 screenPos = glm::project(_objCenter * transform->scale, camera->getView() * model, camera->getProj(), viewport);
+    glm::mat4 model = glm::translate(glm::mat4(1.0), transform->getPos());
+    glm::vec3 screenPos = glm::project(_objCenter * transform->getScale(), camera->getView() * model, camera->getProj(), viewport);
 
     float healthSize = _healthRender->getModel()->getMax().x - _healthRender->getModel()->getMin().x;
-    screenPos.x -= healthSize * _healthBarEmptyTransform->scale.x / 2.0f;
+    screenPos.x -= healthSize * _healthBarEmptyTransform->getScale().x / 2.0f;
     screenPos.y += 4.0f;
 
-    this->_healthBarTransform->pos.x = screenPos.x;
-    this->_healthBarTransform->pos.y = screenPos.y;
-    this->_healthBarTransform->scale.x = (float)health / (float)maxHealth * maxScale;
-    this->_healthBarTransform->needUpdate();
-    this->_healthBarEmptyTransform->pos.x = screenPos.x;
-    this->_healthBarEmptyTransform->pos.y = screenPos.y;
-    this->_healthBarEmptyTransform->needUpdate();
+    this->_healthBarTransform->setPos(glm::vec3(screenPos.x, screenPos.y, this->_healthBarTransform->getPos().z));
+    this->_healthBarTransform->setScale(glm::vec3((float)health / (float)maxHealth * maxScale,
+                                                    this->_healthBarTransform->getScale().y,
+                                                    this->_healthBarTransform->getScale().z));
+    this->_healthBarEmptyTransform->setPos(glm::vec3(screenPos.x, screenPos.y, this->_healthBarEmptyTransform->getPos().z));
 }

@@ -32,12 +32,12 @@ bool    Physics::raycast(const Ray& ray, Entity** hitEntity)
         glm::vec3 boxMin = glm::vec3(render->getModel()->getMin().x, render->getModel()->getMin().y, render->getModel()->getMin().z);
         glm::vec3 boxMax = glm::vec3(render->getModel()->getMax().x, render->getModel()->getMax().y, render->getModel()->getMax().z);
 
-        boxMin *= transform->scale;
-        boxMax *= transform->scale;
+        boxMin *= transform->getScale();
+        boxMax *= transform->getScale();
 
         // Convert box collider to world position
-        boxMin += transform->pos;
-        boxMax += transform->pos;
+        boxMin += transform->getPos();
+        boxMax += transform->getPos();
 
         float distance = Collisions::rayVSAABB(ray, boxMin, boxMax);
         if (distance != 0 && (nearestEntity == nullptr || distance <= nearestHitDist))
@@ -67,12 +67,12 @@ bool    Physics::raycastAll(const Ray& ray, std::vector<Entity*> hitEntities)
         glm::vec3 boxMin = glm::vec3(render->getModel()->getMin().x, render->getModel()->getMin().y, render->getModel()->getMin().z);
         glm::vec3 boxMax = glm::vec3(render->getModel()->getMax().x, render->getModel()->getMax().y, render->getModel()->getMax().z);
 
-        boxMin *= transform->scale;
-        boxMax *= transform->scale;
+        boxMin *= transform->getScale();
+        boxMax *= transform->getScale();
 
         // Convert box collider to world position
-        boxMin += transform->pos;
-        boxMax += transform->pos;
+        boxMin += transform->getPos();
+        boxMax += transform->getPos();
 
         float distance = Collisions::rayVSAABB(ray, boxMin, boxMax);
         if (distance != 0)

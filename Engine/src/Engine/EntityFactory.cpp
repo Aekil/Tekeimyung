@@ -141,7 +141,7 @@ Entity* EntityFactory::createEntity(const std::string& typeName, const glm::vec3
 
     sTransformComponent* transform = entity->getComponent<sTransformComponent>();
 
-    transform->pos = pos;
+    transform->setPos(pos);
 
     return (entity);
 }
@@ -303,11 +303,11 @@ void    EntityFactory::initAnimations(Entity* entity)
         for (auto paramAnimation : animation->getParamsAnimations())
         {
             if (transform && paramAnimation->getName() == "position")
-                std::static_pointer_cast<ParamAnimation<glm::vec3>>(paramAnimation)->setParam(&transform->pos);
+                std::static_pointer_cast<ParamAnimation<glm::vec3>>(paramAnimation)->setParam(&transform->_pos);
             else if (transform && paramAnimation->getName() == "rotation")
-                std::static_pointer_cast<ParamAnimation<glm::vec3>>(paramAnimation)->setParam(&transform->rotation);
+                std::static_pointer_cast<ParamAnimation<glm::vec3>>(paramAnimation)->setParam(&transform->_rotation);
             else if (transform && paramAnimation->getName() == "scale")
-                std::static_pointer_cast<ParamAnimation<glm::vec3>>(paramAnimation)->setParam(&transform->scale);
+                std::static_pointer_cast<ParamAnimation<glm::vec3>>(paramAnimation)->setParam(&transform->_scale);
             else if (transform && paramAnimation->getName() == "color")
                 std::static_pointer_cast<ParamAnimation<glm::vec4>>(paramAnimation)->setParam(&render->color);
         }
@@ -350,7 +350,7 @@ void    EntityFactory::updateEntitiesComponents(Entity* from, const std::string&
                     sTransformComponent* transform = static_cast<sTransformComponent*>(component);
                     sTransformComponent* entityTransform = static_cast<sTransformComponent*>(entityComponent);
 
-                    entityTransform->scale = transform->scale;
+                    entityTransform->setScale(transform->getScale());
                     entityTransform->needUpdate();
                 }
                 else

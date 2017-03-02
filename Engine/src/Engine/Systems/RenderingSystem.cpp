@@ -220,10 +220,10 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
             #endif
 
             // Update light direction depending on rotation
-            if (transform->rotation != lightComp->lastRotation)
+            if (transform->getRotation() != lightComp->lastRotation)
             {
-                lightComp->lastRotation = transform->rotation;
-                glm::quat rotation(glm::vec3(glm::radians(transform->rotation.x), glm::radians(transform->rotation.y), glm::radians(transform->rotation.z)));
+                lightComp->lastRotation = transform->getRotation();
+                glm::quat rotation(glm::vec3(glm::radians(transform->getRotation().x), glm::radians(transform->getRotation().y), glm::radians(transform->getRotation().z)));
                 lightComp->light.setDirection(glm::vec3(glm::mat4_cast(rotation) * glm::vec4(0.0f, -1.0f, 0.0f, 0.0f)));
             }
 

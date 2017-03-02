@@ -56,8 +56,8 @@ void Tower::update(float dt)
 bool Tower::isInRange(Entity* entity)
 {
     sBoxColliderComponent* box = entity->getComponent<sBoxColliderComponent>();
-    auto& pos = entity->getComponent<sTransformComponent>()->pos;
-    auto& towerPos = this->entity->getComponent<sTransformComponent>()->pos;
+    auto& pos = entity->getComponent<sTransformComponent>()->getPos();
+    auto& towerPos = this->entity->getComponent<sTransformComponent>()->getPos();
 
     if (!box)
         return (false);
@@ -75,7 +75,7 @@ void Tower::shootTarget(Entity* target)
     fireballScripts = fireball->getComponent<sScriptComponent>();
     projectileScript = fireballScripts->getScript<Projectile>("Projectile");
 
-    projectileScript->_projectileTransform->pos = _towerTransform->pos;
+    projectileScript->_projectileTransform->setPos(_towerTransform->getPos());
     projectileScript->_projectileTransform->needUpdate();
     projectileScript->_targetId = target->id;
     projectileScript->_damage = _damage;

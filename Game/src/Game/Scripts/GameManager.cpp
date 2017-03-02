@@ -28,9 +28,9 @@ void GameManager::update(float dt)
     for (auto &projectile : projectiles)
     {
         sTransformComponent* transform = projectile->getComponent<sTransformComponent>();
-        if (transform->pos.x < 0 || transform->pos.z < 0 ||
-            transform->pos.x > this->mapSize * 25 ||
-            transform->pos.z > this->mapSize * 25)
+        if (transform->getPos().x < 0 || transform->getPos().z < 0 ||
+            transform->getPos().x > this->mapSize * 25 ||
+            transform->getPos().z > this->mapSize * 25)
         {
             em->destroyEntityRegister(projectile);
         }

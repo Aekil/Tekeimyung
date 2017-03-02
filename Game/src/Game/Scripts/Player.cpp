@@ -60,10 +60,10 @@ void Player::updateDirection()
     Ray ray = camera->screenPosToRay((float)cursor.getX(), (float)cursor.getY());
     float hitDistance;
 
-    if (Physics::raycastPlane(ray, {0.0f, 1.0f, 0.0f}, {0.0f, _transform->pos.y, 0.0f}, hitDistance))
+    if (Physics::raycastPlane(ray, {0.0f, 1.0f, 0.0f}, {0.0f, _transform->getPos().y, 0.0f}, hitDistance))
     {
         glm::vec3 target = ray.getPoint(hitDistance);
-        _direction = glm::normalize(target - _transform->pos);
+        _direction = glm::normalize(target - _transform->getPos());
     }
 }
 
@@ -77,7 +77,7 @@ void Player::checkBuildableZone()
         auto box = tile->getComponent<sBoxColliderComponent>();
         if (box != nullptr)
         {
-            auto pos = tile->getComponent<sTransformComponent>()->pos;
+            auto pos = tile->getComponent<sTransformComponent>()->getPos();
             auto render = tile->getComponent<sRenderComponent>();
             auto scriptComponent = tile->getComponent<sScriptComponent>();
 
@@ -94,7 +94,7 @@ void Player::checkBuildableZone()
             if (!_buildEnabled)
                 continue;
 
-            if (Collisions::sphereVSAABB(_transform->pos, this->buildableRadius * SIZE_UNIT, box->pos + pos, glm::vec3(box->size.x * SIZE_UNIT, box->size.y * SIZE_UNIT, box->size.z * SIZE_UNIT)))
+            if (Collisions::sphereVSAABB(_transform->getPos(), this->buildableRadius * SIZE_UNIT, box->pos + pos, glm::vec3(box->size.x * SIZE_UNIT, box->size.y * SIZE_UNIT, box->size.z * SIZE_UNIT)))
             {
                 tile->setBuildable(true);
                 render->color = glm::vec4(1.0f, 0.0f, 1.0f, 1.0f);
@@ -108,31 +108,26 @@ void Player::movement(float elapsedTime)
     // update player rotation
     {
         float rotation = glm::degrees(std::atan2(_direction.x, _direction.z));
-        _transform->rotation.y = rotation;
-        _transform->needUpdate();
+        _transform->setRotation(glm::vec3(_transform->getRotation().x, rotation, _transform->getRotation().z));
     }
 
     // update player position
     {
         if (KB_P(Keyboard::eKey::S))
         {
-            _transform->pos += glm::vec3(1.0f, 0.0f, 1.0f);
-            _transform->needUpdate();
+            _transform->translate(glm::vec3(1.0f, 0.0f, 1.0f));
         }
         if (KB_P(Keyboard::eKey::Z))
         {
-            _transform->pos += glm::vec3(-1.0f, 0.0f, -1.0f);
-            _transform->needUpdate();
+            _transform->translate(glm::vec3(-1.0f, 0.0f, -1.0f));
         }
         if (KB_P(Keyboard::eKey::Q))
         {
-            _transform->pos += glm::vec3(-1.0f, 0.0f, 1.0f);
-            _transform->needUpdate();
+            _transform->translate(glm::vec3(-1.0f, 0.0f, 1.0f));
         }
         if (KB_P(Keyboard::eKey::D))
         {
-            _transform->pos += glm::vec3(1.0f, 0.0f, -1.0f);
-            _transform->needUpdate();
+            _transform->translate(glm::vec3(1.0f, 0.0f, -1.0f));
         }
     }
 }
@@ -149,11 +144,10 @@ void Player::handleShoot()
         bulletScripts = bullet->getComponent<sScriptComponent>();
         projectileScript = bulletScripts->getScript<Projectile>("Projectile");
 
-        projectileScript->_projectileTransform->pos = _transform->pos;
+        projectileScript->_projectileTransform->setPos(_transform->getPos());
 
-        projectileScript->_projectileTransform->pos.y -= (_render->getModel()->getMin().y * _transform->scale.y) / 2.0f;
+        projectileScript->_projectileTransform->translate(glm::vec3(0.0f, -((_render->getModel()->getMin().y * _transform->getScale().y) / 2.0f), 0.0f));
 
-        projectileScript->_projectileTransform->needUpdate();
         projectileScript->_damage = _damage;
         projectileScript->followDirection({_direction.x, 0.0f, _direction.z});
     }

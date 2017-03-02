@@ -46,43 +46,50 @@ void    UISystem::handleAlignment(EntityManager& em, Entity* entity, bool forceU
         sRenderComponent* render = entity->getComponent<sRenderComponent>();
         sTransformComponent* transform = entity->getComponent<sTransformComponent>();
 
-        const glm::vec3& size = render->getModel()->getSize() * transform->scale;
+        const glm::vec3& size = render->getModel()->getSize() * transform->getScale();
         float windowWidth = (float) GameWindow::getInstance()->getBufferWidth();
         float windowHeight = (float) GameWindow::getInstance()->getBufferHeight();
 
         // Horizontal alignments
         if (ui->horizontalAlignment == eHorizontalAlignment::LEFT)
         {
-            transform->pos.x = 0;
+            float x = 0.0f;
+            transform->setPos(glm::vec3(x, transform->getPos().y, transform->getPos().z));
         }
         else if (ui->horizontalAlignment == eHorizontalAlignment::MIDDLE)
         {
-            transform->pos.x = (windowWidth / 2.0f) - (size.x / 2.0f);
+            float x = (windowWidth / 2.0f) - (size.x / 2.0f);
+            transform->setPos(glm::vec3(x, transform->getPos().y, transform->getPos().z));
         }
         else if (ui->horizontalAlignment == eHorizontalAlignment::RIGHT)
         {
-            transform->pos.x = windowWidth - size.x;
+            float x = windowWidth - size.x;
+            transform->setPos(glm::vec3(x, transform->getPos().y, transform->getPos().z));
         }
 
         // Vertical alignments
         if (ui->verticalAlignment == eVerticalAlignment::TOP)
         {
-            transform->pos.y = windowHeight - size.y;
+            float y = windowHeight - size.y;
+            transform->setPos(glm::vec3(transform->getPos().x, y, transform->getPos().z));
         }
         else if (ui->verticalAlignment == eVerticalAlignment::MIDDLE)
         {
-            transform->pos.y = (windowHeight / 2.0f) - (size.y / 2.0f);
+            float y = (windowHeight / 2.0f) - (size.y / 2.0f);
+            transform->setPos(glm::vec3(transform->getPos().x, y, transform->getPos().z));
         }
         else if (ui->verticalAlignment == eVerticalAlignment::BOTTOM)
         {
-            transform->pos.y = 0;
+            float y = 0.0f;
+            transform->setPos(glm::vec3(transform->getPos().x, y, transform->getPos().z));
         }
 
         // Offsets
-        transform->pos.x += windowWidth * ui->offset.x / 100.0f;
-        transform->pos.y += windowHeight * ui->offset.y / 100.0f;
-        transform->pos.z = -(float)ui->layer;
-        transform->needUpdate();
+        glm::vec3 pos = transform->getPos();
+        pos.x += windowWidth * ui->offset.x / 100.0f;
+        pos.y += windowHeight * ui->offset.y / 100.0f;
+        pos.z = -(float)ui->layer;
+        transform->setPos(pos);
     }
 
     ui->needUpdate = false;

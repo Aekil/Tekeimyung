@@ -113,15 +113,15 @@ void    ParticleSystem::updateEmitter(EntityManager &em, Entity* entity, float e
         }
 
         glm::mat4 emitterOrientation;
-        emitterOrientation = glm::rotate(emitterOrientation, glm::radians(transform->rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
-        emitterOrientation = glm::rotate(emitterOrientation, glm::radians(transform->rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-        emitterOrientation = glm::rotate(emitterOrientation, glm::radians(transform->rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+        emitterOrientation = glm::rotate(emitterOrientation, glm::radians(transform->getRotation().z), glm::vec3(0.0f, 0.0f, 1.0f));
+        emitterOrientation = glm::rotate(emitterOrientation, glm::radians(transform->getRotation().y), glm::vec3(0.0f, 1.0f, 0.0f));
+        emitterOrientation = glm::rotate(emitterOrientation, glm::radians(transform->getRotation().x), glm::vec3(1.0f, 0.0f, 0.0f));
 
         sParticle particle;
         float angle = Helper::randFloat(0, emitterComp->angleVariance);
         float angleRadian = glm::radians(std::fmod(angle - emitterComp->angle, 360.0f));
 
-        particle.pos = transform->pos;
+        particle.pos = transform->getPos();
         float theta = Helper::randFloat(0.0f, 1.0f) * (2.0f * glm::pi<float>());
         float phi = (glm::pi<float>() / 2.0f) - (Helper::randFloat(0.0f, 1.0f) * angleRadian);
         particle.velocity.x = glm::cos(theta) * glm::cos(phi);
@@ -136,8 +136,8 @@ void    ParticleSystem::updateEmitter(EntityManager &em, Entity* entity, float e
         particle.color = emitterComp->colorStart;
         particle.colorStep = (emitterComp->colorFinish - emitterComp->colorStart) / glm::vec4((float)emitterComp->life);
 
-        particle.size = emitterComp->sizeStart * transform->scale;
-        particle.sizeStep = ((emitterComp->sizeFinish - emitterComp->sizeStart) / emitterComp->life) * transform->scale;
+        particle.size = emitterComp->sizeStart * transform->getScale();
+        particle.sizeStep = ((emitterComp->sizeFinish - emitterComp->sizeStart) / emitterComp->life) * transform->getScale();
 
         // Add particle
         emitter->particles[emitter->particlesNb] = particle;

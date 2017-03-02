@@ -1056,9 +1056,9 @@ sComponent* ComponentFactory<sTransformComponent>::loadFromJson(const std::strin
 
     component = new sTransformComponent();
 
-    component->scale = json.getVec3f("scale", { 1.0f, 1.0f, 1.0f });
-    component->pos = json.getVec3f("pos", { 0.0f, 0.0f, 0.0f });
-    component->rotation = json.getVec3f("rotation", { 0.0f, 0.0f, 0.0f });
+    component->setScale(json.getVec3f("scale", { 1.0f, 1.0f, 1.0f }));
+    component->setPos(json.getVec3f("pos", { 0.0f, 0.0f, 0.0f }));
+    component->setRotation(json.getVec3f("rotation", { 0.0f, 0.0f, 0.0f }));
 
     return (component);
 }
@@ -1069,9 +1069,9 @@ JsonValue&    ComponentFactory<sTransformComponent>::saveToJson(const std::strin
     const sTransformComponent* component = static_cast<const sTransformComponent*>(savedComponent ? savedComponent : _components[entityType]);
 
 
-    json.setVec3f("scale", component->scale);
-    json.setVec3f("pos", component->pos);
-    json.setVec3f("rotation", component->rotation);
+    json.setVec3f("scale", component->getScale());
+    json.setVec3f("pos", component->getPos());
+    json.setVec3f("rotation", component->getRotation());
 
     return (json);
 }
@@ -1082,14 +1082,20 @@ bool    ComponentFactory<sTransformComponent>::updateEditor(const std::string& e
     *savedComponent = component;
     bool changed = false;
 
-    component->updateTransform();
+    glm::vec3 pos = component->getPos();
+    glm::vec3 scale = component->getPos();
+    glm::vec3 rotation = component->getRotation();
+    glm::mat4 transform = component->getTransform();
 
-    if (ComponentFactory<sTransformComponent>::updateTransforms(component->pos,
-                                                            component->scale,
-                                                            component->rotation,
-                                                            component->transform,
+    if (ComponentFactory<sTransformComponent>::updateTransforms(pos,
+                                                            scale,
+                                                            rotation,
+                                                            transform,
                                                             ImGuizmo::WORLD))
     {
+        component->setPos(pos);
+        component->setScale(scale);
+        component->setRotation(rotation);
         component->updateTransform();
     }
 
