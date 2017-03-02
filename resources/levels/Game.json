@@ -460,6 +460,46 @@
          },
          "name" : "LIGHT",
          "tag" : ""
+      },
+      {
+         "components" : {
+            "sCameraComponent" : {
+               "projection" : "ORTHOGRAPHIC_3D",
+               "viewport" : {
+                  "extent" : {
+                     "height" : 1,
+                     "width" : 1
+                  },
+                  "offset" : {
+                     "x" : -0.5,
+                     "y" : -0.5
+                  }
+               },
+               "zoom" : 0.5
+            },
+            "sNameComponent" : {
+               "name" : "CAMERA"
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 650,
+                  "y" : 450,
+                  "z" : 600
+               },
+               "rotation" : {
+                  "x" : -35,
+                  "y" : -135,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 0.99999988079071045,
+                  "y" : 1,
+                  "z" : 1
+               }
+            }
+         },
+         "name" : "CAMERA",
+         "tag" : ""
       }
    ],
    "name" : "Game"
