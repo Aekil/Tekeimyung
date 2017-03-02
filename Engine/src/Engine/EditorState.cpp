@@ -20,7 +20,9 @@ void    EditorState::setupSystems()
 {
     _world.addSystem<ParticleSystem>(true);
     _world.addSystem<UISystem>();
-    _world.addSystem<RenderingSystem>(&_camera, _world.getSystem<ParticleSystem>()->getEmitters());
+    _world.addSystem<RenderingSystem>(_world.getSystem<ParticleSystem>()->getEmitters());
+
+    _world.getSystem<RenderingSystem>()->attachCamera(&_camera);
 }
 
 bool    EditorState::init()
@@ -81,7 +83,6 @@ void    EditorState::updateCamera(float elapsedTime)
     static glm::vec2 lastPosition = mousePos;
 
     // Update position
-    // TODO: use elapsedTime
     {
         static float movementSpeed = 20.0f;
 

@@ -12,7 +12,6 @@
 #include <Engine/Graphics/BufferPool.hpp>
 #include <Engine/Graphics/ShaderProgram.hpp>
 #include <Engine/Graphics/ModelInstance.hpp>
-#include <Engine/Graphics/Camera.hpp>
 #include <Engine/Graphics/RenderQueue.hpp>
 
 #include <Engine/Components.hh>
@@ -20,11 +19,12 @@
 
 START_SYSTEM(RenderingSystem)
 public:
-    RenderingSystem(Camera* camera, std::unordered_map<uint32_t, sEmitter*>* particleEmitters);
-    virtual ~RenderingSystem();
+    RenderingSystem(std::unordered_map<uint32_t, sEmitter*>* particleEmitters);
+    ~RenderingSystem() override final;
 
-    virtual void update(EntityManager& em, float elapsedTime);
-    virtual bool                            init();
+    void update(EntityManager& em, float elapsedTime) override final;
+
+    void                                    attachCamera(Camera* camera);
 
 private:
     void                                    addParticlesToRenderQueue(EntityManager& em, float elapsedTime);
@@ -37,11 +37,12 @@ private:
 private:
     std::unordered_map<uint32_t, sEmitter*>*    _particleEmitters;
 
-    Camera*                                     _camera;
-    Camera                                      _defaultCamera;
-
     RenderQueue                                 _renderQueue;
 
     static bool _displayAllColliders;
     static std::unique_ptr<BufferPool>          _bufferPool;
+
+    // A camera can be attached to the RenderSystem
+    // If no camera is attached, it will use the camera of an entity with sCameraComponent
+    Camera*                                     _camera{nullptr};
 END_SYSTEM(RenderingSystem)

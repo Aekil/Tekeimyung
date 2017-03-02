@@ -18,7 +18,7 @@ Camera*     Camera::_instance = nullptr;
 
 Camera::Camera(): _needUpdateView(true), _needUpdateProj(true), _fov(45.0f),
                     _aspect(1920.0f / 1080.0f), _near(0.1f), _far(1300.0f),
-                    _up({0.0f, 1.0f, 0.0f}), _zoom(1.0f), _projType(Camera::eProj::ORTHOGRAPHIC_3D)
+                    _zoom(1.0f), _projType(Camera::eProj::ORTHOGRAPHIC_3D)
 {
     _constants.view = glm::mat4(1.0f);
     _windowBufferSize.x = (float)GameWindow::getInstance()->getBufferWidth();
@@ -32,11 +32,6 @@ Camera::~Camera() {}
 bool    Camera::needUpdate() const
 {
     return (_needUpdateProj || _needUpdateView);
-}
-
-const glm::vec3&    Camera::getPos() const
-{
-    return (_constants.pos);
 }
 
 const glm::mat4&    Camera::getView() const
@@ -105,64 +100,6 @@ void    Camera::setProjType(eProj projType)
     _needUpdateProj = _needUpdateView = true;
 }
 
-void    Camera::translate(const glm::vec3& direction, eTransform transform)
-{
-    if (transform == eTransform::LOCAL)
-    {
-        // TODO: rotate direction with _orientation vector
-        // (Find why it does not work)
-        if (direction.x != 0.0f)
-        {
-            _constants.pos += _right * direction.x;
-        }
-        if (direction.y != 0.0f)
-        {
-            _constants.pos += _up * direction.y;
-        }
-        if (direction.z != 0.0f)
-        {
-            _constants.pos += _constants.dir * direction.z;
-        }
-    }
-    else
-    {
-        _constants.pos += direction;
-    }
-    _needUpdateView = true;
-}
-
-void    Camera::rotate(float amount, const glm::vec3& axis)
-{
-    if (axis.x == 1.0f)
-        _orientation.x += amount;
-    if (axis.y == 1.0f)
-        _orientation.y += amount;
-    if (axis.z == 1.0f)
-        _orientation.z += amount;
-
-
-    // Handle screen flipping
-    // TODO: Use quaternions
-    if (_orientation.x > 89.0f)
-    {
-        _orientation.x = 89.0f;
-    }
-    else if (_orientation.x < -89.0f)
-    {
-        _orientation.x = -89.0f;
-    }
-
-    _constants.dir.x = cos(glm::radians(_orientation.x)) * cos(glm::radians(_orientation.y));
-    _constants.dir.y = sin(glm::radians(_orientation.x));
-    _constants.dir.z = cos(glm::radians(_orientation.x)) * sin(glm::radians(_orientation.y));
-    _constants.dir = glm::normalize(_constants.dir);
-
-    _right = glm::normalize(glm::cross(_constants.dir, glm::normalize(glm::vec3(0.0f, 1.0f, 0.0f))));
-    _up = glm::normalize(glm::cross(_right, _constants.dir));
-
-    _needUpdateView = true;
-}
-
 void    Camera::zoom(float amount)
 {
     _zoom -= amount;
@@ -214,6 +151,14 @@ void    Camera::updateUBO()
 
     }
 
+    if (isDirty())
+    {
+        isDirty(false);
+        _constants.dir = getDirection();
+        _constants.pos = getPos();
+        _needUpdateView = true;
+    }
+
 
     // Update matrix
     if (_needUpdateProj)
@@ -244,12 +189,12 @@ void    Camera::updateUBO()
     {
         if (_projType == Camera::eProj::ORTHOGRAPHIC_3D)
         {
-            _constants.view = glm::lookAt(_constants.pos, _constants.pos + _constants.dir, _up);
+            _constants.view = glm::lookAt(getPos(), getPos() + getDirection(), getUp());
         }
         else if (_projType == Camera::eProj::PERSPECTIVE)
         {
-            glm::vec3 newPos = _constants.pos - (_constants.dir * _zoom * 300.0f);
-            _constants.view = glm::lookAt(newPos, newPos + _constants.dir, _up);
+            glm::vec3 newPos = getPos() - (getDirection() * _zoom * 300.0f);
+            _constants.view = glm::lookAt(newPos, newPos + getDirection(), getUp());
         }
         else if (_projType != Camera::eProj::ORTHOGRAPHIC_2D)
             ASSERT(0, "Unknown projection type");

@@ -41,7 +41,7 @@ void    PlayState::setupSystems()
     _world.addSystem<CollisionSystem>();
     _world.addSystem<ParticleSystem>();
     _world.addSystem<UISystem>();
-    _world.addSystem<RenderingSystem>(&_camera, _world.getSystem<ParticleSystem>()->getEmitters());
+    _world.addSystem<RenderingSystem>(_world.getSystem<ParticleSystem>()->getEmitters());
 }
 
 bool    PlayState::init()
@@ -50,7 +50,7 @@ bool    PlayState::init()
 
     _map = new Map(*em, 20, 15, 4);
 
-    initCamera();
+    //initCamera();
     initEntities();
 
     _pair = std::make_pair(Keyboard::eKey::F, new HandleFullscreenEvent());
@@ -75,7 +75,7 @@ bool    PlayState::update(float elapsedTime)
         _gameStateManager->addState<PauseState>();
     }
 
-    updateCameraInputs(elapsedTime);
+    //updateCameraInputs(elapsedTime);
 
     // Play background music
     #if (ENABLE_SOUND)
@@ -90,7 +90,7 @@ bool    PlayState::update(float elapsedTime)
 
 void    PlayState::initCamera()
 {
-    _camera.translate(glm::vec3(650.0f, 450.0f, 600.0f));
+/*    _camera.translate(glm::vec3(650.0f, 450.0f, 600.0f));
     _camera.rotate(-35.0f, glm::vec3(1.0f, 0.0f, 0.0f));
     _camera.rotate(-135.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 
@@ -103,7 +103,7 @@ void    PlayState::initCamera()
     screen.bottom = -screen.top;
     _camera.setScreen(screen);
     _camera.setProjType(Camera::eProj::ORTHOGRAPHIC_3D);
-    _camera.setZoom(0.5f);
+    _camera.setZoom(0.5f);*/
 }
 
 void    PlayState::initEntities()
@@ -113,7 +113,7 @@ void    PlayState::initEntities()
 
 void    PlayState::updateCameraInputs(float elapsedTime)
 {
-    auto &gameWindow = GameWindow::getInstance();
+/*    auto &gameWindow = GameWindow::getInstance();
     auto &mouse = gameWindow->getMouse();
     auto &keyboard = gameWindow->getKeyboard();
 
@@ -170,13 +170,13 @@ void    PlayState::updateCameraInputs(float elapsedTime)
             }
         }
 
-    }
+    }*/
 }
 
 void    PlayState::limitCameraZoom()
 {
     // Limit max zoom to 40
-    _camera.setZoom(std::max(_camera.getZoom(), 0.1f));
+    //_camera.setZoom(std::max(_camera.getZoom(), 0.1f));
     // Limit min zoom to 1.0f
-    _camera.setZoom(std::min(_camera.getZoom(), 0.5f));
+    //_camera.setZoom(std::min(_camera.getZoom(), 0.5f));
 }

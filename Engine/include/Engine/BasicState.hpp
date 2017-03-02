@@ -19,7 +19,4 @@ START_GAMESTATE(BasicState)
 private:
     void                                initCamera();
     void                                updateCameraInputs(float elapsedTime);
-
-private:
-    Camera                              _camera;
 END_GAMESTATE(BasicState)

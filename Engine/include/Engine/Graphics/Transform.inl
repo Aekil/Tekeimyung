@@ -46,3 +46,18 @@ inline void    Transform::setRotation(const glm::vec3& rotation)
     _rotation = rotation;
     needUpdate();
 }
+
+inline const glm::vec3& Transform::getDirection() const
+{
+    return (_direction);
+}
+
+inline const glm::vec3& Transform::getUp() const
+{
+    return (_up);
+}
+
+inline const glm::vec3& Transform::getRight() const
+{
+    return (_right);
+}

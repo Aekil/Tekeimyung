@@ -26,13 +26,11 @@ public:
     void                                onWindowResize();
 
     void                                render(Camera* camera, RenderQueue& renderQueue);
-    void                                renderOpaqueObjects(Camera* camera,
-                                                            std::vector<sRenderableMesh>& meshs,
+    void                                renderOpaqueObjects(std::vector<sRenderableMesh>& meshs,
                                                             uint32_t meshsNb,
                                                             std::vector<Light*>& lights,
                                                             uint32_t lightsNb);
-    void                                renderTransparentObjects(Camera* camera,
-                                                                std::vector<sRenderableMesh>& meshs,
+    void                                renderTransparentObjects(std::vector<sRenderableMesh>& meshs,
                                                                 uint32_t meshsNb,
                                                                 std::vector<Light*>& lights,
                                                                 uint32_t lightsNb);

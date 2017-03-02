@@ -9,6 +9,7 @@
 
 #include <Engine/Graphics/Material.hpp>
 #include <Engine/Utils/Exception.hpp>
+#include <Engine/Utils/Logger.hpp>
 #include <Engine/Window/GameWindow.hpp>
 
 #include <Engine/Graphics/Renderer.hpp>
@@ -106,36 +107,39 @@ void    Renderer::onWindowResize()
 
 void    Renderer::render(Camera* camera, RenderQueue& renderQueue)
 {
-    _currentCamera = camera;
+
 
     // Scene objects
     {
-        auto& lights = renderQueue.getLights();
-        uint32_t lightsNb = renderQueue.getLightsNb();
-
-        // Set default light
-        if (lightsNb == 0)
+        if (camera)
         {
-            lights[0] = &_defaultLight;
-            lightsNb = 1;
+            _currentCamera = camera;
+            auto& lights = renderQueue.getLights();
+            uint32_t lightsNb = renderQueue.getLightsNb();
+
+            // Set default light
+            if (lightsNb == 0)
+            {
+                lights[0] = &_defaultLight;
+                lightsNb = 1;
+            }
+
+            camera->updateUBO();
+            camera->getUBO().bind();
+
+            renderOpaqueObjects(renderQueue.getOpaqueMeshs(), renderQueue.getOpaqueMeshsNb(), lights, lightsNb);
+
+            // Enable blend to blend transparent ojects and particles
+            glEnable(GL_BLEND);
+            // Disable write to the depth buffer so that the depth of transparent objects is not written
+            // because we don't want a transparent object to hide an other transparent object
+            glDepthMask(GL_FALSE);
+            renderTransparentObjects(renderQueue.getTransparentMeshs(), renderQueue.getTransparentMeshsNb(), lights, lightsNb);
         }
-
-        camera->updateUBO();
-        camera->getUBO().bind();
-
-        renderOpaqueObjects(camera, renderQueue.getOpaqueMeshs(), renderQueue.getOpaqueMeshsNb(), lights, lightsNb);
-
-        // Enable blend to blend transparent ojects and particles
-        glEnable(GL_BLEND);
-        // Disable write to the depth buffer so that the depth of transparent objects is not written
-        // because we don't want a transparent object to hide an other transparent object
-        glDepthMask(GL_FALSE);
-        renderTransparentObjects(camera, renderQueue.getTransparentMeshs(), renderQueue.getTransparentMeshsNb(), lights, lightsNb);
-
-        // Enable depth buffer for opaque objects
-        glDepthMask(GL_TRUE);
-        // Disable blending for opaque objects
-        glDisable(GL_BLEND);
+        else
+        {
+            LOG_WARN("Attempt to render scene with no camera");
+        }
     }
 
     // UI objects
@@ -145,14 +149,14 @@ void    Renderer::render(Camera* camera, RenderQueue& renderQueue)
 
         _UICamera.getUBO().bind();
 
-        renderOpaqueObjects(camera, renderQueue.getUIOpaqueMeshs(), renderQueue.getUIOpaqueMeshsNb(), lights, 1);
+        renderOpaqueObjects(renderQueue.getUIOpaqueMeshs(), renderQueue.getUIOpaqueMeshsNb(), lights, 1);
 
         // Enable blend to blend transparent ojects and particles
         glEnable(GL_BLEND);
         // Disable write to the depth buffer so that the depth of transparent objects is not written
         // because we don't want a transparent object to hide an other transparent object
         glDepthMask(GL_FALSE);
-        renderTransparentObjects(camera, renderQueue.getUITransparentMeshs(), renderQueue.getUITransparentMeshsNb(), lights, 1);
+        renderTransparentObjects(renderQueue.getUITransparentMeshs(), renderQueue.getUITransparentMeshsNb(), lights, 1);
 
         // Enable depth buffer for opaque objects
         glDepthMask(GL_TRUE);
@@ -171,8 +175,7 @@ bool sortOpaque(const sRenderableMesh& lhs, const sRenderableMesh& rhs)
     return (lhsMaterial->getOptions() > rhsMaterial->getOptions());
 }
 
-void    Renderer::renderOpaqueObjects(Camera* camera,
-                                    std::vector<sRenderableMesh>& meshs,
+void    Renderer::renderOpaqueObjects(std::vector<sRenderableMesh>& meshs,
                                     uint32_t meshsNb,
                                     std::vector<Light*>& lights,
                                     uint32_t lightsNb)
@@ -240,8 +243,7 @@ bool sortTransparent(const sRenderableMesh& lhs, const sRenderableMesh& rhs)
         lhsMaterial->getOptions() > rhsMaterial->getOptions() && lhsMaterial->srcBlend == rhsMaterial->srcBlend && lhsMaterial->dstBlend < rhsMaterial->dstBlend);
 }
 
-void    Renderer::renderTransparentObjects(Camera* camera,
-                                            std::vector<sRenderableMesh>& meshs,
+void    Renderer::renderTransparentObjects(std::vector<sRenderableMesh>& meshs,
                                             uint32_t meshsNb,
                                             std::vector<Light*>& lights,
                                             uint32_t lightsNb)

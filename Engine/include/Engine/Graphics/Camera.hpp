@@ -10,17 +10,12 @@
 
 #include <Engine/Graphics/Ray.hpp>
 #include <Engine/Graphics/ShaderProgram.hpp>
+#include <Engine/Graphics/Transform.hpp>
 #include <Engine/Graphics/UniformBuffer.hpp>
 
-class Camera
+class Camera: public Transform
 {
 public:
-    enum class eTransform
-    {
-        LOCAL = 0,
-        WORLD = 1
-    };
-
     typedef struct
     {
         glm::mat4       proj;
@@ -52,7 +47,6 @@ public:
 
     bool                needUpdate() const;
 
-    const glm::vec3&    getPos() const;
     const glm::mat4&    getView() const;
     const glm::mat4&    getProj() const;
     float               getAspect() const;
@@ -67,8 +61,6 @@ public:
     void                setScreen(const sScreen& screen);
     void                setProjType(eProj projType);
 
-    void                translate(const glm::vec3& direction, eTransform transform = eTransform::WORLD);
-    void                rotate(float amount, const glm::vec3& axis);
     void                zoom(float amount);
     void                setZoom(float amount);
     float               getZoom() const;
@@ -112,21 +104,7 @@ private:
 
     eProj               _projType;
 
-    /*
-    ** View
-    */
-    // Up vector
-    glm::vec3           _up;
-    // Right vector
-    glm::vec3           _right;
-
     glm::vec3           _windowBufferSize;
-
-    // Euleur angles orientation
-    // orientation.x = pitch
-    // orientation.y = yaw
-    // orientation.z = roll
-    glm::vec3           _orientation;
 
     static Camera*      _instance;
 };

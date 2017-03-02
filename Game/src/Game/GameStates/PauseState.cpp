@@ -30,7 +30,7 @@ void    PauseState::setupSystems()
     _world.addSystem<ParticleSystem>();
     _world.addSystem<UISystem>();
     _world.addSystem<ButtonSystem>(_gameStateManager);
-    _world.addSystem<RenderingSystem>(nullptr, _world.getSystem<ParticleSystem>()->getEmitters());
+    _world.addSystem<RenderingSystem>(_world.getSystem<ParticleSystem>()->getEmitters());
 }
 
 bool    PauseState::init()

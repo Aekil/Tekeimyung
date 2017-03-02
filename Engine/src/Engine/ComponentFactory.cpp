@@ -1083,7 +1083,7 @@ bool    ComponentFactory<sTransformComponent>::updateEditor(const std::string& e
     bool changed = false;
 
     glm::vec3 pos = component->getPos();
-    glm::vec3 scale = component->getPos();
+    glm::vec3 scale = component->getScale();
     glm::vec3 rotation = component->getRotation();
     glm::mat4 transform = component->getTransform();
 

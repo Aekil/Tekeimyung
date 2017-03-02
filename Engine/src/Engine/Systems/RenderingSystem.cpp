@@ -23,13 +23,10 @@
 bool RenderingSystem::_displayAllColliders = false;
 std::unique_ptr<BufferPool> RenderingSystem::_bufferPool = nullptr;
 
-RenderingSystem::RenderingSystem(Camera* camera, std::unordered_map<uint32_t, sEmitter*>* particleEmitters):
-                                _camera(camera), _particleEmitters(particleEmitters)
+RenderingSystem::RenderingSystem(std::unordered_map<uint32_t, sEmitter*>* particleEmitters):
+                                _particleEmitters(particleEmitters)
 {
     addDependency<sRenderComponent>();
-
-    if (!_camera)
-        _camera = &_defaultCamera;
 
     if (!_bufferPool)
     {
@@ -41,9 +38,9 @@ RenderingSystem::RenderingSystem(Camera* camera, std::unordered_map<uint32_t, sE
 
 RenderingSystem::~RenderingSystem() {}
 
-bool    RenderingSystem::init()
+void    RenderingSystem::attachCamera(Camera* camera)
 {
-    return (true);
+    _camera = camera;
 }
 
 void    RenderingSystem::addCollidersToRenderQueue(Entity* entity, sTransformComponent* transform)
@@ -231,7 +228,32 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
         }
     }
 
-    Renderer::getInstance()->render(_camera, _renderQueue);
+    // Get scene camera
+    Camera* camera = nullptr;
+    {
+        // Use attached camera if exists
+        // Else use the camera of camera entities
+        if (_camera)
+        {
+            camera = _camera;
+        }
+        else
+        {
+            auto& cameras = em.getEntitiesByComponent<sCameraComponent>();
+            // Render with the first camera found
+            // TODO: render with multiple camera ?
+            if (cameras.size() > 0)
+            {
+                camera = &cameras[0]->getComponent<sCameraComponent>()->camera;
+
+                // Update camera transform
+                //TODO: only update if sTransformComponent changed
+                sTransformComponent* cameraTransform = cameras[0]->getComponent<sTransformComponent>();
+            }
+        }
+    }
+
+    Renderer::getInstance()->render(camera, _renderQueue);
 }
 
 BufferPool::SubBuffer*  RenderingSystem::getModelBuffer(sTransformComponent* transform, sRenderComponent* render)
@@ -240,7 +262,7 @@ BufferPool::SubBuffer*  RenderingSystem::getModelBuffer(sTransformComponent* tra
 
     if (transform->isDirty() || render->lastColor != render->color)
     {
-        transform->isDirty(true);
+        transform->isDirty(false);
         render->lastColor = render->color;
         updateModelBuffer(buffer, transform->getTransform(), render->color);
     }

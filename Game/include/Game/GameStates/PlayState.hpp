@@ -39,6 +39,5 @@ private:
     Map*                                _map;
     std::pair <Keyboard::eKey, IInputEvent *>    _pair;
 
-    Camera                              _camera;
     tEventSound*                        _backgroundMusic = nullptr;
 END_GAMESTATE(PlayState)

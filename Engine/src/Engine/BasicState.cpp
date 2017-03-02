@@ -24,24 +24,24 @@ void    BasicState::setupSystems()
     _world.addSystem<ParticleSystem>();
     _world.addSystem<UISystem>();
     _world.addSystem<ButtonSystem>(_gameStateManager);
-    _world.addSystem<RenderingSystem>(&_camera, _world.getSystem<ParticleSystem>()->getEmitters());
+    _world.addSystem<RenderingSystem>(_world.getSystem<ParticleSystem>()->getEmitters());
 }
 
 bool    BasicState::init()
 {
-    initCamera();
+    //initCamera();
     return (true);
 }
 
 bool    BasicState::update(float elapsedTime)
 {
-    updateCameraInputs(elapsedTime);
+    //updateCameraInputs(elapsedTime);
     return (GameState::update(elapsedTime));
 }
 
 void    BasicState::initCamera()
 {
-    _camera.translate(glm::vec3(350.0f, 250.0f, 300.0f));
+/*    _camera.translate(glm::vec3(350.0f, 250.0f, 300.0f));
     _camera.rotate(-35.0f, glm::vec3(1.0f, 0.0f, 0.0f));
     _camera.rotate(-135.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 
@@ -54,12 +54,12 @@ void    BasicState::initCamera()
     screen.bottom = -screen.top;
     _camera.setScreen(screen);
     _camera.setProjType(Camera::eProj::ORTHOGRAPHIC_3D);
-    _camera.setZoom(0.5f);
+    _camera.setZoom(0.5f);*/
 }
 
 void    BasicState::updateCameraInputs(float elapsedTime)
 {
-    auto &gameWindow = GameWindow::getInstance();
+/*    auto &gameWindow = GameWindow::getInstance();
     auto &mouse = gameWindow->getMouse();
 
     // Update zoom
@@ -73,5 +73,5 @@ void    BasicState::updateCameraInputs(float elapsedTime)
         if (offset)
             _camera.zoom((float)(-offset * elapsedTime));
         lastScrollOffset = scroll.yOffset;
-    }
+    }*/
 }

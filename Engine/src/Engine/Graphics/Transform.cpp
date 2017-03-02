@@ -3,6 +3,11 @@
 #include <glm/gtx/quaternion.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+Transform::Transform()
+{
+    updateDirection();
+}
+
 void    Transform::updateTransform()
 {
     glm::quat newRotate(glm::vec3(glm::radians(_rotation.x), glm::radians(_rotation.y), glm::radians(_rotation.z)));
@@ -75,6 +80,12 @@ void    Transform::rotate(float amount, const glm::vec3& axis)
         _rotation.x = -89.0f;
     }
 
+    updateDirection();
+    needUpdate();
+}
+
+void    Transform::updateDirection()
+{
     _direction.x = cos(glm::radians(_rotation.x)) * cos(glm::radians(_rotation.y));
     _direction.y = sin(glm::radians(_rotation.x));
     _direction.z = cos(glm::radians(_rotation.x)) * sin(glm::radians(_rotation.y));
@@ -82,5 +93,4 @@ void    Transform::rotate(float amount, const glm::vec3& axis)
 
     _right = glm::normalize(glm::cross(_direction, glm::normalize(glm::vec3(0.0f, 1.0f, 0.0f))));
     _up = glm::normalize(glm::cross(_right, _direction));
-    needUpdate();
 }

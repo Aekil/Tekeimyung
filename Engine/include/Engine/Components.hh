@@ -367,6 +367,9 @@ virtual void update(sTransformComponent* component)
     this->_scale = component->_scale;
     this->_rotation = component->_rotation;
     this->_transform = component->_transform;
+    this->_direction = component->_direction;
+    this->_up = component->_up;
+    this->_right = component->_right;
 }
 
 virtual void update(sComponent* component)
