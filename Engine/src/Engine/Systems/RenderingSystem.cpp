@@ -163,6 +163,48 @@ void    RenderingSystem::addLightConeToRenderQueue(sLightComponent* lightComp, s
     _renderQueue.addModel(lightComp->_lightCone.get(), buffer->ubo, buffer->offset, buffer->size);
 }
 
+void    RenderingSystem::addCameraViewToRenderQueue(sCameraComponent* cameraComp, sTransformComponent* transform)
+{
+    if (!cameraComp->_cameraView)
+    {
+        Material* material = ResourceManager::getInstance()->getResource<Material>("camera.mat");
+        Geometry* boxModel = GeometryFactory::getGeometry(Geometry::eType::BOX);
+
+        boxModel->setMaterial(material);
+        cameraComp->_cameraView = std::make_unique<ModelInstance>(boxModel);
+    }
+
+    glm::mat4 transformMat = transform->getTransform();
+
+    glm::vec3 projSize;
+    // TODO: Perspective volume display
+    if (cameraComp->camera.getProjType() != Camera::eProj::PERSPECTIVE)
+    {
+        projSize.x = cameraComp->camera.getViewport().extent.width * cameraComp->camera.getZoom();
+        projSize.y = cameraComp->camera.getViewport().extent.height * cameraComp->camera.getZoom();
+        projSize.z = cameraComp->camera.getFar();
+    }
+    else
+    {
+        projSize = glm::vec3(SIZE_UNIT);
+    }
+
+    transformMat = glm::translate(transformMat, glm::vec3(projSize.x / 2.0f,
+                                                        projSize.y / 2.0f,
+                                                        -projSize.z / 2.0f));
+    transformMat = glm::translate(transformMat, glm::vec3(cameraComp->camera.getViewport().offset.x * cameraComp->camera.getZoom(),
+                                                        cameraComp->camera.getViewport().offset.y * cameraComp->camera.getZoom(),
+                                                        0.0f));
+    transformMat = glm::scale(transformMat, glm::vec3(projSize.x / SIZE_UNIT,
+                                                        projSize.y / SIZE_UNIT,
+                                                        projSize.z / SIZE_UNIT));
+
+    BufferPool::SubBuffer* buffer = cameraComp->_cameraView->getBuffer(_bufferPool.get());
+    updateModelBuffer(buffer, transformMat, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+
+    _renderQueue.addModel(cameraComp->_cameraView.get(), buffer->ubo, buffer->offset, buffer->size);
+}
+
 void    RenderingSystem::update(EntityManager& em, float elapsedTime)
 {
    _renderQueue.clear();
@@ -254,6 +296,19 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
             }
         }
     }
+
+    // Add cameras views to render queue
+    #if defined(ENGINE_DEBUG)
+    {
+        auto& cameras = em.getEntitiesByComponent<sCameraComponent>();
+        for (auto& camera: cameras)
+        {
+            sTransformComponent* transform = camera->getComponent<sTransformComponent>();
+            sCameraComponent* cameraComp = camera->getComponent<sCameraComponent>();
+            addCameraViewToRenderQueue(cameraComp, transform);
+        }
+    }
+    #endif
 
     Renderer::getInstance()->render(camera, _renderQueue);
 }

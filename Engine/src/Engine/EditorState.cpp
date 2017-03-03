@@ -29,6 +29,7 @@ bool    EditorState::init()
 {
     SoundManager::getInstance()->setVolume(0.3f);
     initCamera();
+
     return (true);
 }
 
@@ -43,7 +44,8 @@ void    EditorState::initCamera()
 {
     _camera.translate(glm::vec3(350.0f, 250.0f, 500.0f));
     _camera.rotate(-35.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-    _camera.rotate(-47.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    _camera.rotate(47.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    _camera.setFar(5000.0f);
 
     // Set camera viewport
     Camera::sViewport viewportRect;
@@ -105,7 +107,7 @@ void    EditorState::updateCamera(float elapsedTime)
             glm::vec2 mouseMovement = mousePos - lastPosition;
             mouseMovement *= elapsedTime * rotationSpeed;
 
-            _camera.rotate(mouseMovement.x, {0.0f, 1.0f, 0.0f});
+            _camera.rotate(-mouseMovement.x, {0.0f, 1.0f, 0.0f});
             _camera.rotate(-mouseMovement.y, {1.0f, 0.0f, 0.0f});
         }
     }

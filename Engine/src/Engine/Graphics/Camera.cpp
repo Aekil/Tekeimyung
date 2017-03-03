@@ -61,6 +61,16 @@ float   Camera::getFov() const
     return (_fov);
 }
 
+float   Camera::getFar() const
+{
+    return (_far);
+}
+
+float   Camera::getNear() const
+{
+    return (_near);
+}
+
 Camera::eProj   Camera::getProjType() const
 {
     return (_projType);

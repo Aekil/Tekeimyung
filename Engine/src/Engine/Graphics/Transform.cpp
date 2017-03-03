@@ -53,9 +53,9 @@ void    Transform::rotate(float amount, const glm::vec3& axis)
 void    Transform::updateDirection()
 {
     // TODO: Use rollQuat (need gimbal lock handle)
-    glm::quat pitchQuat = glm::angleAxis(glm::radians(-_rotation.x), glm::vec3(1, 0, 0));
-    glm::quat yawQuat = glm::angleAxis(glm::radians(_rotation.y), glm::vec3(0, 1, 0));
-    glm::quat rollQuat = glm::angleAxis(glm::radians(_rotation.z),glm::vec3(0,0,1));
+    glm::quat pitchQuat = glm::angleAxis(glm::radians(-_rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+    glm::quat yawQuat = glm::angleAxis(glm::radians(-_rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+    glm::quat rollQuat = glm::angleAxis(glm::radians(-_rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
     _orientation = pitchQuat * yawQuat;
     _orientation = glm::normalize(_orientation);
 

@@ -30,6 +30,7 @@ private:
     void                                    addParticlesToRenderQueue(EntityManager& em, float elapsedTime);
     void                                    addCollidersToRenderQueue(Entity* entity, sTransformComponent* transform);
     void                                    addLightConeToRenderQueue(sLightComponent* lightComp, sTransformComponent* transform);
+    void                                    addCameraViewToRenderQueue(sCameraComponent* cameraComp, sTransformComponent* transform);
 
     BufferPool::SubBuffer*                  getModelBuffer(sTransformComponent* transform, sRenderComponent* render);
     void                                    updateModelBuffer(BufferPool::SubBuffer* buffer, const glm::mat4& transform, const glm::vec4& color);

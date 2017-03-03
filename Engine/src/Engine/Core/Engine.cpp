@@ -179,7 +179,6 @@ bool    Engine::initDebugWindows(int ac, char** av)
         addDebugWindow<LevelEntitiesDebugWindow>(glm::vec2(0, 80), glm::vec2(600, 350));
         addDebugWindow<EntitiesTemplateDebugWindow>(glm::vec2(600, 80), glm::vec2(300, 200));
         addDebugWindow<MonitoringDebugWindow>(MonitoringDebugWindow::getInstance());
-        addDebugWindow<LogDebugWindow>(Logger::getInstance(), glm::vec2(0, 430), glm::vec2(300, 200));
         addDebugWindow<MaterialDebugWindow>(glm::vec2(GameWindow::getInstance()->getBufferWidth() - 500,
                                                     GameWindow::getInstance()->getBufferHeight() - 300),
                                             glm::vec2(500, 300));

@@ -56,6 +56,8 @@ public:
     const glm::mat4&    getProj();
     float               getAspect() const;
     float               getFov() const;
+    float               getFar() const;
+    float               getNear() const;
     eProj               getProjType() const;
     const sViewport&    getViewportRect() const;
     const sViewport&    getViewport() const;

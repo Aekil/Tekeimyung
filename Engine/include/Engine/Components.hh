@@ -588,5 +588,5 @@ virtual void update(sComponent* component)
 }
 
 Camera camera;
-
+std::unique_ptr<ModelInstance> _cameraView = nullptr;
 END_COMPONENT(sCameraComponent)

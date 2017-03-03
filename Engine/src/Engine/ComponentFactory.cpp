@@ -1091,7 +1091,7 @@ bool    ComponentFactory<sTransformComponent>::updateEditor(const std::string& e
                                                             scale,
                                                             rotation,
                                                             transform,
-                                                            ImGuizmo::WORLD))
+                                                            ImGuizmo::LOCAL))
     {
         component->setPos(pos);
         component->setScale(scale);
