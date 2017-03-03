@@ -29,9 +29,12 @@ protected:
 private:
     Entity* _healthBarEmpty;
     sTransformComponent* _healthBarEmptyTransform;
+
     Entity* _healthBar;
     sTransformComponent* _healthBarTransform;
+
     sRenderComponent* _healthRender;
+
     glm::vec3 _objCenter;
 
     float maxScale;

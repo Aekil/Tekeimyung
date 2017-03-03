@@ -16,6 +16,7 @@ void Tower::start()
     _fireRate = 2.5f;
     _lastShotTime = _fireRate;
     _towerTransform = entity->getComponent<sTransformComponent>();
+    _towerRender = entity->getComponent<sRenderComponent>();
     _range = 22.0f;
     _damage = 50;
 }
@@ -76,6 +77,7 @@ void Tower::shootTarget(Entity* target)
     projectileScript = fireballScripts->getScript<Projectile>("Projectile");
 
     projectileScript->_projectileTransform->setPos(_towerTransform->getPos());
+    projectileScript->_projectileTransform->translate(glm::vec3(0.0f, _towerRender->getModel()->getMax().y - 20.0f, 0.0f));
     projectileScript->_targetId = target->id;
     projectileScript->_damage = _damage;
     projectileScript->followTarget(target);

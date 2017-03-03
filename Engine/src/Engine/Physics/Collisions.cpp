@@ -29,6 +29,12 @@ bool    Collisions::pointVSAABB(const glm::vec3& point, const glm::vec3& boxPosi
         (point.z >= boxPosition.z && point.z <= boxPosition.z + boxSize.z);
 }
 
+bool    Collisions::pointVSAABB2D(const glm::vec2& point, const glm::vec2& boxPosition, const glm::vec2& boxSize)
+{
+    return  (point.x >= boxPosition.x && point.x <= boxPosition.x + boxSize.x) &&
+        (point.y >= boxPosition.y && point.y <= boxPosition.y + boxSize.y);
+}
+
 double SquaredDistPointAABB(const glm::vec3& p, const glm::vec3& min, const glm::vec3& max)
 {
     auto check = [&](

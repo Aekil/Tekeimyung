@@ -14,7 +14,6 @@ public:
     ButtonSystem(GameStateManager* gameStateManager);
     virtual ~ButtonSystem();
 
-    virtual bool                        init();
     virtual void                        update(EntityManager &em, float elapsedTime);
 
 private:

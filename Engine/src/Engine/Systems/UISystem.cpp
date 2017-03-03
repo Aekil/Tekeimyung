@@ -53,34 +53,34 @@ void    UISystem::handleAlignment(EntityManager& em, Entity* entity, bool forceU
         // Horizontal alignments
         if (ui->horizontalAlignment == eHorizontalAlignment::LEFT)
         {
-            float x = 0.0f;
+            float x = size.x / 2.0f;
             transform->setPos(glm::vec3(x, transform->getPos().y, transform->getPos().z));
         }
         else if (ui->horizontalAlignment == eHorizontalAlignment::MIDDLE)
         {
-            float x = (windowWidth / 2.0f) - (size.x / 2.0f);
+            float x = windowWidth / 2.0f;
             transform->setPos(glm::vec3(x, transform->getPos().y, transform->getPos().z));
         }
         else if (ui->horizontalAlignment == eHorizontalAlignment::RIGHT)
         {
-            float x = windowWidth - size.x;
+            float x = windowWidth - (size.x / 2.0f);
             transform->setPos(glm::vec3(x, transform->getPos().y, transform->getPos().z));
         }
 
         // Vertical alignments
         if (ui->verticalAlignment == eVerticalAlignment::TOP)
         {
-            float y = windowHeight - size.y;
+            float y = windowHeight - (size.y / 2.0f);
             transform->setPos(glm::vec3(transform->getPos().x, y, transform->getPos().z));
         }
         else if (ui->verticalAlignment == eVerticalAlignment::MIDDLE)
         {
-            float y = (windowHeight / 2.0f) - (size.y / 2.0f);
+            float y = windowHeight / 2.0f;
             transform->setPos(glm::vec3(transform->getPos().x, y, transform->getPos().z));
         }
         else if (ui->verticalAlignment == eVerticalAlignment::BOTTOM)
         {
-            float y = 0.0f;
+            float y = size.y / 2.0f;
             transform->setPos(glm::vec3(transform->getPos().x, y, transform->getPos().z));
         }
 

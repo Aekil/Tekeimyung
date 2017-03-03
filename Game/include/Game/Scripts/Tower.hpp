@@ -27,6 +27,7 @@ private:
     int         _damage;
 
     sTransformComponent* _towerTransform;
+    sRenderComponent* _towerRender;
 };
 
 REGISTER_SCRIPT(Tower);

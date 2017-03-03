@@ -9,6 +9,7 @@
 #include <Engine/Window/GameWindow.hpp>
 #include <Engine/Utils/Logger.hpp>
 #include <Engine/Utils/LevelLoader.hpp>
+#include <Engine/Physics/Collisions.hpp>
 
 #include <Engine/Components.hh>
 #include <Engine/EntityFactory.hpp>
@@ -27,14 +28,6 @@ ButtonSystem::ButtonSystem(GameStateManager* gameStateManager): _gameStateManage
 }
 
 ButtonSystem::~ButtonSystem() {}
-
-bool    ButtonSystem::init()
-{
-    //  For future purposes, it is commented for now.
-    //if (!GameWindow::getInstance()->isCursorVisible())
-    //    GameWindow::getInstance()->setCursorVisible(true);
-    return (true);
-}
 
 void    ButtonSystem::update(EntityManager& em, float elapsedTime)
 {
@@ -70,13 +63,11 @@ void    ButtonSystem::handleButtonMouseHover(EntityManager& em, Entity* entity, 
 {
     sRenderComponent*       render = entity->getComponent<sRenderComponent>();
     sTransformComponent*    transform = entity->getComponent<sTransformComponent>();
-    const glm::vec3&        size = render->getModel()->getSize() * transform->getScale();
+    const glm::vec2&        size = glm::vec2(render->getModel()->getSize() * transform->getScale());
+    glm::vec2               pos = glm::vec2(transform->getPos()) - (size / 2.0f);
 
     // Check the mouse is in the button (2D AABB collision)
-    if (cursorPos.x >= transform->getPos().x &&
-        cursorPos.x <= transform->getPos().x + size.x &&
-        cursorPos.y >= transform->getPos().y &&
-        cursorPos.y <= transform->getPos().y + size.y)
+    if (Collisions::pointVSAABB2D(cursorPos, pos, size))
     {
         removeSelected(em, _currentSelected);
         _currentSelected = entityIdx;
@@ -196,8 +187,8 @@ void    ButtonSystem::setSelected(Entity* entity, bool hovered)
     const glm::vec3& iconSize = iconRender->getModel()->getSize() * iconTransform->getScale();
 
     glm::vec3 iconPos = iconTransform->getPos();
-    iconPos.x = buttonTransform->getPos().x - 42.0f;
-    iconPos.y = buttonTransform->getPos().y + (buttonSize.y / 2.0f) - (iconSize.y / 2.0f) + 10.0f;
+    iconPos.x = buttonTransform->getPos().x - (buttonSize.x / 2.0f) - 32.0f;
+    iconPos.y = buttonTransform->getPos().y;
     iconTransform->setPos(iconPos);
 
     button->selected = true;

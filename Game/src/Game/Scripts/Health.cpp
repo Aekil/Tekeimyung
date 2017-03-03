@@ -62,12 +62,14 @@ void Health::update(sTransformComponent* transform)
     glm::vec3 screenPos = glm::project(_objCenter * transform->getScale(), camera->getView() * model, camera->getProj(), viewport);
 
     float healthSize = _healthRender->getModel()->getMax().x - _healthRender->getModel()->getMin().x;
-    screenPos.x -= healthSize * _healthBarEmptyTransform->getScale().x / 2.0f;
+    float healthEmptySize = healthSize * _healthBarEmptyTransform->getScale().x / 2.0f;
     screenPos.y += 4.0f;
 
     this->_healthBarTransform->setPos(glm::vec3(screenPos.x, screenPos.y, this->_healthBarTransform->getPos().z));
     this->_healthBarTransform->setScale(glm::vec3((float)health / (float)maxHealth * maxScale,
                                                     this->_healthBarTransform->getScale().y,
                                                     this->_healthBarTransform->getScale().z));
+    this->_healthBarTransform->translate(-glm::vec3(healthEmptySize - ((this->_healthBarTransform->getScale().x * healthSize) / 2.0f),
+                                                    0.0f, 0.0f));
     this->_healthBarEmptyTransform->setPos(glm::vec3(screenPos.x, screenPos.y, this->_healthBarEmptyTransform->getPos().z));
 }
