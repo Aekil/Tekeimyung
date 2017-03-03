@@ -13,7 +13,7 @@
             "r" : 1
          },
          "ignore_raycast" : false,
-         "materials" : [ "Adventurer_Skin", "MAT_Brown", "Mat_LightRed" ],
+         "materials" : [ "MAT_LightBrown", "MAT_Brown", "Mat_LightRed" ],
          "model" : "resources/models/buildings/tower_fire.DAE",
          "texture" : "",
          "type" : "MESH"
@@ -23,7 +23,7 @@
       },
       "sTransformComponent" : {
          "pos" : {
-            "x" : 250,
+            "x" : 200,
             "y" : 12.5,
             "z" : 275
          },

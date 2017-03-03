@@ -1,6 +1,5 @@
 #include <Engine/Graphics/Transform.hpp>
 
-#include <glm/gtx/quaternion.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 Transform::Transform() {}
@@ -53,19 +52,25 @@ void    Transform::rotate(float amount, const glm::vec3& axis)
 
 void    Transform::updateDirection()
 {
-    // This rotation is only used to find the direction, do not use for transform calculation
-    // TODO: Find why _rotation.y has to be inversed
-    glm::quat rotationQuat(glm::vec3(glm::radians(_rotation.x), glm::radians(-_rotation.y), glm::radians(_rotation.z)));
+    // TODO: Use rollQuat (need gimbal lock handle)
+    glm::quat pitchQuat = glm::angleAxis(glm::radians(-_rotation.x), glm::vec3(1, 0, 0));
+    glm::quat yawQuat = glm::angleAxis(glm::radians(_rotation.y), glm::vec3(0, 1, 0));
+    glm::quat rollQuat = glm::angleAxis(glm::radians(_rotation.z),glm::vec3(0,0,1));
+    _orientation = pitchQuat * yawQuat;
+    _orientation = glm::normalize(_orientation);
 
-    _direction = rotationQuat * glm::vec3(0.0f, 0.0f, -1.0f);
-    _direction = glm::normalize(_direction);
-    _right = glm::normalize(glm::cross(_direction, glm::normalize(glm::vec3(0.0f, 1.0f, 0.0f))));
-    _up = glm::normalize(glm::cross(_right, _direction));
+    glm::mat4 rotate = glm::mat4_cast(_orientation);
+    _up = glm::normalize(glm::vec3(rotate[0][1], rotate[1][1], rotate[2][1]));
+    _right = glm::normalize(glm::vec3(rotate[0][0], rotate[1][0], rotate[2][0]));
+    _direction = glm::normalize(glm::vec3(rotate[0][2], rotate[1][2], rotate[2][2]));
+
     _needUpdateDirection = false;
 }
 
 void    Transform::updateTransform()
 {
+    // TODO: Call getOrientation() to get orientation
+    // (Not working because _rotation.x need to be inversed)
     glm::quat rotationQuat(glm::vec3(glm::radians(_rotation.x), glm::radians(_rotation.y), glm::radians(_rotation.z)));
 
     _needUpdateTransform = false;

@@ -226,17 +226,19 @@ void    Camera::updateProj()
 
 void    Camera::updateView()
 {
-    if (_projType == Camera::eProj::ORTHOGRAPHIC_3D)
+    glm::vec3 pos;
+    if (_projType == Camera::eProj::PERSPECTIVE)
     {
-        _view = glm::lookAt(getPos(), getPos() + getDirection(), getUp());
+        pos = ((getDirection() * _zoom - getDirection()) * 300.0f) + getPos();
     }
-    else if (_projType == Camera::eProj::PERSPECTIVE)
+    else
     {
-        glm::vec3 newPos = ((getDirection() * -_zoom + getDirection()) * 300.0f) + getPos();
-        _view = glm::lookAt(newPos, newPos + getDirection(), getUp());
+        pos = getPos();
     }
-    else if (_projType != Camera::eProj::ORTHOGRAPHIC_2D)
-        ASSERT(0, "Unknown projection type");
+
+    glm::mat4 rotate = glm::mat4_cast(getOrientation());
+    glm::mat4 translate = glm::translate(glm::mat4(1.0), -pos);
+    _view = rotate * translate;
 
     _needUpdateView = false;
 }

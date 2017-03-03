@@ -107,19 +107,6 @@ void    EditorState::updateCamera(float elapsedTime)
 
             _camera.rotate(mouseMovement.x, {0.0f, 1.0f, 0.0f});
             _camera.rotate(-mouseMovement.y, {1.0f, 0.0f, 0.0f});
-
-            // Prevent screen flipping
-            glm::vec3 rotation = _camera.getRotation();
-            if (rotation.x > 89.0f)
-            {
-                rotation.x =  89.0f;
-                _camera.setRotation(rotation);
-            }
-            else if (rotation.x < -89.0f)
-            {
-                rotation.x = -89.0f;
-                _camera.setRotation(rotation);
-            }
         }
     }
 

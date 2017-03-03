@@ -57,6 +57,15 @@ inline void    Transform::setRotation(const glm::vec3& rotation)
     needUpdate();
 }
 
+inline const glm::quat& Transform::getOrientation()
+{
+    if (_needUpdateDirection)
+    {
+        updateDirection();
+    }
+    return (_orientation);
+}
+
 inline const glm::vec3& Transform::getDirection()
 {
     if (_needUpdateDirection)

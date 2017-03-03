@@ -7,6 +7,7 @@
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 #include <glm/mat4x4.hpp>
+#include <glm/gtx/quaternion.hpp>
 
 class Transform
 {
@@ -32,6 +33,7 @@ public:
     void                setPos(const glm::vec3& pos);
     const glm::vec3&    getRotation() const;
     void                setRotation(const glm::vec3& rotation);
+    const glm::quat&    getOrientation();
 
     const glm::vec3&    getDirection();
     const glm::vec3&    getUp();
@@ -61,6 +63,8 @@ protected:
     // orientation.y = yaw
     // orientation.z = roll
     glm::vec3           _rotation;
+
+    glm::quat           _orientation;
 
     // Direction vector
     glm::vec3           _direction;
