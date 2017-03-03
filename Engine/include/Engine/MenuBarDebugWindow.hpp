@@ -32,6 +32,7 @@ private:
     void                displayLoadPopup();
 
     void                play();
+    void                newLevel();
 
 private:
     std::string         _currentLevel;

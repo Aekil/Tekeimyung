@@ -52,9 +52,7 @@ void    MenuBarDebugWindow::displayLevelsMenu()
     {
         if (ImGui::MenuItem("New"))
         {
-            _tmpLoadLevel = "";
-            _currentLevel = "";
-            _em->destroyAllEntities();
+            newLevel();
         }
         if (ImGui::MenuItem("Load"))
         {
@@ -229,4 +227,14 @@ void    MenuBarDebugWindow::play()
     // Remove the level file because the gameState will copy the EntityManager instead of loading the level
     gameState->setLevelFile("");
     gameStateManager.addState(gameState, _em);
+}
+
+void    MenuBarDebugWindow::newLevel()
+{
+    _tmpLoadLevel = "";
+    _currentLevel = "";
+    _em->destroyAllEntities();
+
+    EntityFactory::createEntity("CAMERA");
+    EntityFactory::createEntity("LIGHT");
 }
