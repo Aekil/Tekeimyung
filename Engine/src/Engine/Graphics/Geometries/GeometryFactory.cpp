@@ -10,6 +10,7 @@
 #include <Engine/Graphics/Geometries/Sphere.hpp>
 #include <Engine/Graphics/Geometries/Circle.hpp>
 #include <Engine/Graphics/Geometries/Cone.hpp>
+#include <Engine/Graphics/Geometries/Trapeze.hpp>
 #include <Engine/Utils/Logger.hpp>
 
 #include <Engine/Graphics/Geometries/GeometryFactory.hpp>
@@ -54,6 +55,15 @@ void GeometryFactory::initGeometries()
         std::unique_ptr<Geometry> cone = std::make_unique<Cone>(coneInfos);
         ResourceManager::getInstance()->registerResource<Geometry>(std::move(cone), "cone");
     }
+
+    // Trapeze
+    {
+        Trapeze::sInfo trapezeInfos = {SIZE_UNIT / 2.0f,
+                                        {SIZE_UNIT / 2.0f, SIZE_UNIT / 2.0f},
+                                        {SIZE_UNIT, SIZE_UNIT}};
+        std::unique_ptr<Geometry> cone = std::make_unique<Trapeze>(trapezeInfos);
+        ResourceManager::getInstance()->registerResource<Geometry>(std::move(cone), "trapeze");
+    }
 }
 
 Geometry*   GeometryFactory::getGeometry(Geometry::eType type)
@@ -78,6 +88,10 @@ Geometry*   GeometryFactory::getGeometry(Geometry::eType type)
     else if (type == Geometry::eType::CONE)
     {
         geometry = ResourceManager::getInstance()->getOrLoadResource<Geometry>("cone");
+    }
+    else if (type == Geometry::eType::TRAPEZE)
+    {
+        geometry = ResourceManager::getInstance()->getOrLoadResource<Geometry>("trapeze");
     }
     else
     {

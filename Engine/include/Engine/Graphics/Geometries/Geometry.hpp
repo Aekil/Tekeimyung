@@ -22,6 +22,7 @@
     PROCESS(SPHERE)\
     PROCESS(CIRCLE)\
     PROCESS(CONE)\
+    PROCESS(TRAPEZE)\
 
 class Geometry: public Model {
 public:
