@@ -18,5 +18,6 @@
       "ambient" : "resources/sprites/buttons/howtoplay.png",
       "diffuse" : ""
    },
-   "transparent" : true
+   "transparent" : true,
+   "wireframe" : false
 }

@@ -18,5 +18,6 @@
       "ambient" : "resources/sprites/particles/particle_circle.png",
       "diffuse" : ""
    },
-   "transparent" : false
+   "transparent" : false,
+   "wireframe" : false
 }

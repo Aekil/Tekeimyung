@@ -18,5 +18,6 @@
       "ambient" : "resources/sprites/buttons/button_return.png",
       "diffuse" : ""
    },
-   "transparent" : false
+   "transparent" : false,
+   "wireframe" : false
 }
