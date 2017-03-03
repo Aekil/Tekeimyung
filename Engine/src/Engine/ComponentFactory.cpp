@@ -1096,6 +1096,7 @@ bool    ComponentFactory<sTransformComponent>::updateEditor(const std::string& e
         component->setPos(pos);
         component->setScale(scale);
         component->setRotation(rotation);
+        component->getTransform();
     }
 
     return (false);
@@ -1129,9 +1130,8 @@ bool    ComponentFactory<sTransformComponent>::updateTransforms(glm::vec3& pos, 
 
     ImGuizmo::RecomposeMatrixFromComponents(glm::value_ptr(pos), glm::value_ptr(rotation), glm::value_ptr(scale), glm::value_ptr(transform));
 
-
+    ImGuizmo::Enable(enableGuizmos && !cameraRotating);
     ImGuizmo::Manipulate(glm::value_ptr(camera->getView()), glm::value_ptr(camera->getProj()), mCurrentGizmoOperation, mode, glm::value_ptr(transform), nullptr, nullptr);
-    ImGuizmo::Enable(enableGuizmos);
 
     if (ImGuizmo::IsOver() && enableGuizmos && !cameraRotating)
     {

@@ -33,19 +33,22 @@ Camera::Camera(): _needUpdateView(true), _needUpdateProj(true), _fov(45.0f),
 
 Camera::~Camera() {}
 
-bool    Camera::needUpdate() const
+const glm::mat4&    Camera::getView()
 {
-    return (_needUpdateProj || _needUpdateView);
+    if (_needUpdateView)
+    {
+        updateView();
+    }
+    return (_view);
 }
 
-const glm::mat4&    Camera::getView() const
+const glm::mat4&    Camera::getProj()
 {
-    return (_constants.view);
-}
-
-const glm::mat4&    Camera::getProj() const
-{
-    return (_constants.proj);
+    if (_needUpdateProj)
+    {
+        updateProj();
+    }
+    return (_proj);
 }
 
 float   Camera::getAspect() const
@@ -77,18 +80,21 @@ void    Camera::setFov(float fov)
 {
     _fov = fov;
     _needUpdateProj = true;
+    isDirty(true);
 }
 
 void    Camera::setNear(float near)
 {
     _near = near;
     _needUpdateProj = true;
+    isDirty(true);
 }
 
 void    Camera::setFar(float far)
 {
     _far = far;
     _needUpdateProj = true;
+    isDirty(true);
 }
 
 void    Camera::setViewportRect(const sViewport& viewportRect)
@@ -96,23 +102,25 @@ void    Camera::setViewportRect(const sViewport& viewportRect)
     _viewportRect = viewportRect;
     updateViewport();
     _needUpdateProj = true;
+    isDirty(true);
 }
 
 void    Camera::setProjType(eProj projType)
 {
     _projType = projType;
     _needUpdateProj = _needUpdateView = true;
+    isDirty(true);
 }
 
 void    Camera::zoom(float amount)
 {
     _zoom -= amount;
-
     if (_projType == Camera::eProj::ORTHOGRAPHIC_2D ||
         _projType == Camera::eProj::ORTHOGRAPHIC_3D)
         _needUpdateProj = true;
     else
         _needUpdateView = true;
+    isDirty(true);
 }
 
 void    Camera::setZoom(float amount)
@@ -123,6 +131,7 @@ void    Camera::setZoom(float amount)
         _needUpdateProj = true;
     else
         _needUpdateView = true;
+    isDirty(true);
 }
 
 float   Camera::getZoom() const
@@ -140,60 +149,23 @@ void    Camera::updateViewport()
     _viewport.extent.width = windowBufferWidth * _viewportRect.extent.width;
     _viewport.extent.height = windowBufferHeight * _viewportRect.extent.height;
     _needUpdateProj = true;
+    isDirty(true);
 }
 
 void    Camera::updateUBO()
 {
     if (isDirty())
     {
-        isDirty(false);
-        _constants.dir = getDirection();
-        _constants.pos = getPos();
+        // Camera view depend on translate, so force update view
+        // as isDirty() could be true if translate is called
         _needUpdateView = true;
-    }
 
-
-    // Update matrix
-    if (_needUpdateProj)
-    {
-        if (_projType == Camera::eProj::ORTHOGRAPHIC_3D)
-        {
-            _constants.proj = glm::ortho(_viewport.offset.x * _zoom, (_viewport.offset.x + _viewport.extent.width) * _zoom,
-                                            _viewport.offset.y * _zoom, (_viewport.offset.y + _viewport.extent.height) * _zoom,
-                                            _near, _far);
-        }
-        else if (_projType == Camera::eProj::ORTHOGRAPHIC_2D)
-        {
-            _constants.proj = glm::ortho(_viewport.offset.x * _zoom, (_viewport.offset.x + _viewport.extent.width) * _zoom,
-                                            _viewport.offset.y * _zoom, (_viewport.offset.y + _viewport.extent.height) * _zoom,
-                                            0.0f, _far);
-        }
-        else if (_projType == Camera::eProj::PERSPECTIVE)
-        {
-            _constants.proj = glm::perspective(_fov, getAspect(), _near, _far);
-        }
-        else
-            ASSERT(0, "Unknown projection type");
-
-        _needUpdateProj = false;
+        _constants.proj = getProj();
+        _constants.view = getView();
+        _constants.pos = getPos();
+        _constants.dir = getDirection();
         _ubo.update(&_constants, sizeof(_constants));
-    }
-    if (_needUpdateView)
-    {
-        if (_projType == Camera::eProj::ORTHOGRAPHIC_3D)
-        {
-            _constants.view = glm::lookAt(getPos(), getPos() + getDirection(), getUp());
-        }
-        else if (_projType == Camera::eProj::PERSPECTIVE)
-        {
-            glm::vec3 newPos = getPos() - (getDirection() * _zoom * 300.0f);
-            _constants.view = glm::lookAt(newPos, newPos + getDirection(), getUp());
-        }
-        else if (_projType != Camera::eProj::ORTHOGRAPHIC_2D)
-            ASSERT(0, "Unknown projection type");
-
-        _needUpdateView = false;
-        _ubo.update(&_constants, sizeof(_constants));
+        isDirty(false);
     }
 }
 
@@ -226,4 +198,45 @@ void    Camera::setInstance(Camera* instance)
 Camera* Camera::getInstance()
 {
     return (_instance);
+}
+
+void    Camera::updateProj()
+{
+    if (_projType == Camera::eProj::ORTHOGRAPHIC_3D)
+    {
+        _proj = glm::ortho(_viewport.offset.x * _zoom, (_viewport.offset.x + _viewport.extent.width) * _zoom,
+                                        _viewport.offset.y * _zoom, (_viewport.offset.y + _viewport.extent.height) * _zoom,
+                                        _near, _far);
+    }
+    else if (_projType == Camera::eProj::ORTHOGRAPHIC_2D)
+    {
+        _proj = glm::ortho(_viewport.offset.x * _zoom, (_viewport.offset.x + _viewport.extent.width) * _zoom,
+                                        _viewport.offset.y * _zoom, (_viewport.offset.y + _viewport.extent.height) * _zoom,
+                                        0.0f, _far);
+    }
+    else if (_projType == Camera::eProj::PERSPECTIVE)
+    {
+        _proj = glm::perspective(_fov, getAspect(), _near, _far);
+    }
+    else
+        ASSERT(0, "Unknown projection type");
+
+    _needUpdateProj = false;
+}
+
+void    Camera::updateView()
+{
+    if (_projType == Camera::eProj::ORTHOGRAPHIC_3D)
+    {
+        _view = glm::lookAt(getPos(), getPos() + getDirection(), getUp());
+    }
+    else if (_projType == Camera::eProj::PERSPECTIVE)
+    {
+        glm::vec3 newPos = ((getDirection() * -_zoom + getDirection()) * 300.0f) + getPos();
+        _view = glm::lookAt(newPos, newPos + getDirection(), getUp());
+    }
+    else if (_projType != Camera::eProj::ORTHOGRAPHIC_2D)
+        ASSERT(0, "Unknown projection type");
+
+    _needUpdateView = false;
 }

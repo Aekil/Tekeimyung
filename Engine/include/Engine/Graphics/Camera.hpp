@@ -52,10 +52,8 @@ public:
     Camera();
     ~Camera();
 
-    bool                needUpdate() const;
-
-    const glm::mat4&    getView() const;
-    const glm::mat4&    getProj() const;
+    const glm::mat4&    getView();
+    const glm::mat4&    getProj();
     float               getAspect() const;
     float               getFov() const;
     eProj               getProjType() const;
@@ -86,11 +84,16 @@ public:
     static Camera*      getInstance();
 
 private:
+    void                updateProj();
+    void                updateView();
+
+private:
     sConstants          _constants;
 
 
     UniformBuffer       _ubo;
 
+    // Update proj/view if true
     bool                _needUpdateView;
     bool                _needUpdateProj;
 
@@ -114,6 +117,9 @@ private:
     eProj               _projType;
 
     static Camera*      _instance;
+
+    glm::mat4           _proj;
+    glm::mat4           _view;
 };
 
 REGISTER_ENUM_MANAGER(Camera::eProj, PROJECTION_TYPES)

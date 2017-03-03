@@ -47,28 +47,18 @@ void    Transform::rotate(float amount, const glm::vec3& axis)
     if (axis.z == 1.0f)
         _rotation.z += amount;
 
-    // Handle screen flipping
-    // TODO: Use quaternions
-    if (_rotation.x > 89.0f)
-    {
-        _rotation.x = 89.0f;
-    }
-    else if (_rotation.x < -89.0f)
-    {
-        _rotation.x = -89.0f;
-    }
-
     needUpdate();
     _needUpdateDirection = true;
 }
 
 void    Transform::updateDirection()
 {
-    _direction.x = cos(glm::radians(_rotation.x)) * cos(glm::radians(_rotation.y));
-    _direction.y = sin(glm::radians(_rotation.x));
-    _direction.z = cos(glm::radians(_rotation.x)) * sin(glm::radians(_rotation.y));
-    _direction = glm::normalize(_direction);
+    // This rotation is only used to find the direction, do not use for transform calculation
+    // TODO: Find why _rotation.y has to be inversed
+    glm::quat rotationQuat(glm::vec3(glm::radians(_rotation.x), glm::radians(-_rotation.y), glm::radians(_rotation.z)));
 
+    _direction = rotationQuat * glm::vec3(0.0f, 0.0f, -1.0f);
+    _direction = glm::normalize(_direction);
     _right = glm::normalize(glm::cross(_direction, glm::normalize(glm::vec3(0.0f, 1.0f, 0.0f))));
     _up = glm::normalize(glm::cross(_right, _direction));
     _needUpdateDirection = false;
@@ -76,10 +66,10 @@ void    Transform::updateDirection()
 
 void    Transform::updateTransform()
 {
-    glm::quat newRotate(glm::vec3(glm::radians(_rotation.x), glm::radians(_rotation.y), glm::radians(_rotation.z)));
+    glm::quat rotationQuat(glm::vec3(glm::radians(_rotation.x), glm::radians(_rotation.y), glm::radians(_rotation.z)));
 
     _needUpdateTransform = false;
     glm::mat4 newTranslate = glm::translate(glm::mat4(1.0), glm::vec3(_pos.x, _pos.y, _pos.z));
     glm::mat4 newScale = glm::scale(glm::mat4(1.0), _scale);
-    _transform = newTranslate * glm::mat4_cast(newRotate) * newScale;
+    _transform = newTranslate * glm::mat4_cast(rotationQuat) * newScale;
 }
