@@ -87,6 +87,7 @@ private:
     void                needUpdate();
 
 public:
+    bool                wireframe{false};
     bool                transparent{false};
     GLenum              srcBlend;
     GLenum              dstBlend;

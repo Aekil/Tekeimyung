@@ -132,6 +132,7 @@ void    MaterialDebugWindow::displayMaterialsProperties()
             _selectedMaterial->isFacingCamera(faceCamera == true ? 1 : 0);
         }
         ImGui::Checkbox("Transparent", &_selectedMaterial->transparent);
+        ImGui::Checkbox("Wireframe", &_selectedMaterial->wireframe);
 
         // Blending modes
         if (_selectedMaterial->transparent)
@@ -235,6 +236,7 @@ void    MaterialDebugWindow::saveMaterials()
             json.setColor4f("diffuse", material->getDiffuse());
             json.setBool("face_camera", material->isFacingCamera() ? true : false);
             json.setBool("transparent", material->transparent);
+            json.setBool("wireframe", material->wireframe);
             json.setString("src_blend", Material::getBlendStringFromEnum(material->srcBlend));
             json.setString("dst_blend", Material::getBlendStringFromEnum(material->dstBlend));
 

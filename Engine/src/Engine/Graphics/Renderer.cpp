@@ -207,10 +207,14 @@ void    Renderer::renderOpaqueObjects(std::vector<sRenderableMesh>& meshs,
             lights[j]->bind();
             renderableMesh.ubo->bind(renderableMesh.uboOffset, renderableMesh.uboSize);
 
+            GLuint primitive = mesh->getModel()->getPrimitiveType();
+            if (material->wireframe)
+                primitive = GL_LINE_STRIP;
+
             // Draw to screen
             if (renderableMesh.instancesNb > 0)
             {
-                glDrawElementsInstanced(mesh->getModel()->getPrimitiveType(),
+                glDrawElementsInstanced(primitive,
                                 (GLuint)mesh->indices.size(),
                                 GL_UNSIGNED_INT,
                                 BUFFER_OFFSET((GLuint)mesh->idxOffset * sizeof(GLuint)),
@@ -218,7 +222,7 @@ void    Renderer::renderOpaqueObjects(std::vector<sRenderableMesh>& meshs,
             }
             else
             {
-                glDrawElements(mesh->getModel()->getPrimitiveType(),
+                glDrawElements(primitive,
                                 (GLuint)mesh->indices.size(),
                                 GL_UNSIGNED_INT,
                                 BUFFER_OFFSET((GLuint)mesh->idxOffset * sizeof(GLuint)));
@@ -288,10 +292,14 @@ void    Renderer::renderTransparentObjects(std::vector<sRenderableMesh>& meshs,
             lights[j]->bind();
             renderableMesh.ubo->bind(renderableMesh.uboOffset, renderableMesh.uboSize);
 
+            GLuint primitive = mesh->getModel()->getPrimitiveType();
+            if (material->wireframe)
+                primitive = GL_LINE_STRIP;
+
             // Draw to screen
             if (renderableMesh.instancesNb > 0)
             {
-                glDrawElementsInstanced(mesh->getModel()->getPrimitiveType(),
+                glDrawElementsInstanced(primitive,
                                 (GLuint)mesh->indices.size(),
                                 GL_UNSIGNED_INT,
                                 BUFFER_OFFSET((GLuint)mesh->idxOffset * sizeof(GLuint)),
@@ -299,7 +307,7 @@ void    Renderer::renderTransparentObjects(std::vector<sRenderableMesh>& meshs,
             }
             else
             {
-                glDrawElements(mesh->getModel()->getPrimitiveType(),
+                glDrawElements(primitive,
                                 (GLuint)mesh->indices.size(),
                                 GL_UNSIGNED_INT,
                                 BUFFER_OFFSET((GLuint)mesh->idxOffset * sizeof(GLuint)));

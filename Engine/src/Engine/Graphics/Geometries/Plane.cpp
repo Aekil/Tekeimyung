@@ -27,8 +27,8 @@ Plane::Plane(Plane::sInfo& info): Geometry(Geometry::eType::PLANE)
     };
 
     mesh->indices = {
-        0, 2, 1,
-        1, 2, 3
+        0, 2, 3,
+        3, 1, 0
     };
 
     // Plane material

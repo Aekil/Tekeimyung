@@ -161,6 +161,7 @@ bool        Material::loadFromFile(const std::string& fileName)
     _diffuse = parsed.getColor4f("diffuse", {1.0f, 1.0f, 1.0f, 1.0f});
     _faceCamera = parsed.getBool("face_camera", false) ? 1 : 0;
     transparent = parsed.getBool("transparent", false);
+    wireframe = parsed.getBool("wireframe", false);
     srcBlend = Material::getBlendEnumFromString(parsed.getString("src_blend", "GL_SRC_ALPHA"));
     dstBlend = Material::getBlendEnumFromString(parsed.getString("dst_blend", "GL_ONE_MINUS_SRC_ALPHA"));
 
