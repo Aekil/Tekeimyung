@@ -18,7 +18,7 @@ Camera*     Camera::_instance = nullptr;
 
 Camera::Camera(): _needUpdateView(true), _needUpdateProj(true), _fov(45.0f),
                     _near(0.1f), _far(1300.0f),
-                    _zoom(0.0f), _projType(Camera::eProj::PERSPECTIVE)
+                    _projType(Camera::eProj::PERSPECTIVE)
 {
     _constants.view = glm::mat4(1.0f);
     _ubo.setBindingPoint(1);
@@ -28,6 +28,7 @@ Camera::Camera(): _needUpdateView(true), _needUpdateProj(true), _fov(45.0f),
     _viewportRect.offset.y = 0.0f;
     _viewportRect.extent.width = 1.0f;
     _viewportRect.extent.height = 1.0f;
+    _projSize = 500;
     updateViewport();
 }
 
@@ -76,6 +77,11 @@ Camera::eProj   Camera::getProjType() const
     return (_projType);
 }
 
+float   Camera::getProjSize() const
+{
+    return (_projSize);
+}
+
 const Camera::sViewport&  Camera::getViewportRect() const
 {
     return _viewportRect;
@@ -122,31 +128,11 @@ void    Camera::setProjType(eProj projType)
     isDirty(true);
 }
 
-void    Camera::zoom(float amount)
+void    Camera::setProjSize(float projSize)
 {
-    _zoom -= amount;
-    if (_projType == Camera::eProj::ORTHOGRAPHIC_2D ||
-        _projType == Camera::eProj::ORTHOGRAPHIC_3D)
-        _needUpdateProj = true;
-    else
-        _needUpdateView = true;
+    _projSize = projSize;
+    _needUpdateProj = true;
     isDirty(true);
-}
-
-void    Camera::setZoom(float amount)
-{
-    _zoom = amount;
-    if (_projType == Camera::eProj::ORTHOGRAPHIC_2D ||
-        _projType == Camera::eProj::ORTHOGRAPHIC_3D)
-        _needUpdateProj = true;
-    else
-        _needUpdateView = true;
-    isDirty(true);
-}
-
-float   Camera::getZoom() const
-{
-    return (_zoom);
 }
 
 void    Camera::updateViewport()
@@ -214,8 +200,8 @@ void    Camera::updateProj()
 {
     if (_projType == Camera::eProj::ORTHOGRAPHIC_3D)
     {
-        glm::vec2 projSize(_viewport.extent.width, _viewport.extent.height);
-        projSize += projSize * -_zoom;
+        float size = _projSize * getAspect();
+        glm::vec2 projSize(_projSize * getAspect(), _projSize);
         glm::vec4 screen = glm::vec4((projSize.x / 2.0f * -1.0f) + _viewport.offset.x,
                             (projSize.x / 2.0f) + _viewport.offset.x,
                             (projSize.y / 2.0f * -1.0f) + _viewport.offset.y,
@@ -229,7 +215,6 @@ void    Camera::updateProj()
     else if (_projType == Camera::eProj::ORTHOGRAPHIC_2D)
     {
         glm::vec2 projSize(_viewport.extent.width, _viewport.extent.height);
-        projSize += projSize * -_zoom;
         _proj = glm::ortho(_viewport.offset.x, projSize.x + _viewport.offset.x,
                                         _viewport.offset.y, projSize.y + _viewport.offset.y,
                                         0.0f, _far);
@@ -246,18 +231,8 @@ void    Camera::updateProj()
 
 void    Camera::updateView()
 {
-    glm::vec3 pos;
-    if (_projType == Camera::eProj::PERSPECTIVE)
-    {
-        pos = ((getDirection() * _zoom) * 300.0f) * -1.0f + getPos();
-    }
-    else
-    {
-        pos = getPos();
-    }
-
     glm::mat4 rotate = glm::mat4_cast(getOrientation());
-    glm::mat4 translate = glm::translate(glm::mat4(1.0), -pos);
+    glm::mat4 translate = glm::translate(glm::mat4(1.0), -getPos());
     _view = rotate * translate;
 
     _needUpdateView = false;

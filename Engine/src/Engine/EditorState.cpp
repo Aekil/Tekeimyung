@@ -63,17 +63,17 @@ void    EditorState::updateCamera(float elapsedTime)
     auto &keyboard = gameWindow->getKeyboard();
     auto &mouse = gameWindow->getMouse();
 
-    // Update zoom
+    // Move the camera along forward vector with mouse scroll
     {
         auto &&scroll = mouse.getScroll();
         static double lastScrollOffset;
-        static float scrollSpeed = 5.0f;
+        static float scrollSpeed = 3000.0f;
 
 
         double offset = scroll.yOffset - lastScrollOffset;
 
         if (offset)
-            _camera.zoom((float)(offset * elapsedTime * scrollSpeed));
+            _camera.translate(glm::vec3(0.0f, 0.0f, (float)(offset * elapsedTime * scrollSpeed)), Transform::eTransform::LOCAL);
         lastScrollOffset = scroll.yOffset;
     }
 
@@ -84,7 +84,7 @@ void    EditorState::updateCamera(float elapsedTime)
 
     // Update position
     {
-        static float movementSpeed = 20.0f;
+        static float movementSpeed = 30.0f;
 
         if (mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_3] == Mouse::eButtonState::CLICK_MAINTAINED)
         {

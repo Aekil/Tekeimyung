@@ -1425,7 +1425,7 @@ sComponent* ComponentFactory<sCameraComponent>::loadFromJson(const std::string& 
     }
 
     component->camera.setProjType(EnumManager<Camera::eProj>::stringToEnum(json.getString("projection", "PERSPECTIVE")));
-    component->camera.setZoom(json.getFloat("zoom", 0.0f));
+    component->camera.setProjSize(json.getFloat("projection_size", 500.0f));
     component->camera.setNear(json.getFloat("near", 0.1f));
     component->camera.setFar(json.getFloat("far", 100.0f));
     component->camera.setFov(json.getFloat("fov", 45.0f));
@@ -1455,7 +1455,7 @@ JsonValue&    ComponentFactory<sCameraComponent>::saveToJson(const std::string& 
 
     json.setValue("viewport", viewportJson);
     json.setString("projection", EnumManager<Camera::eProj>::enumToString(component->camera.getProjType()));
-    json.setFloat("zoom", component->camera.getZoom());
+    json.setFloat("projection_size", component->camera.getProjSize());
     json.setFloat("near", component->camera.getNear());
     json.setFloat("far", component->camera.getFar());
     json.setFloat("fov", component->camera.getFov());
@@ -1504,16 +1504,6 @@ bool    ComponentFactory<sCameraComponent>::updateEditor(const std::string& enti
         }
     }
 
-    // Zoom
-    {
-        float zoom = component->camera.getZoom();
-        if (ImGui::InputFloat("Zoom", &zoom, 0.5f, ImGuiInputTextFlags_AllowTabInput))
-        {
-            component->camera.setZoom(zoom);
-            changed = true;
-        }
-    }
-
     // Near
     {
         float near = component->camera.getNear();
@@ -1534,7 +1524,7 @@ bool    ComponentFactory<sCameraComponent>::updateEditor(const std::string& enti
         }
     }
 
-    // Fov
+    // Projection size
     {
         // Fov is only used for perspective
         if (component->camera.getProjType() == Camera::eProj::PERSPECTIVE)
@@ -1543,6 +1533,15 @@ bool    ComponentFactory<sCameraComponent>::updateEditor(const std::string& enti
             if (ImGui::InputFloat("Fov", &fov, 1.0f, ImGuiInputTextFlags_AllowTabInput))
             {
                 component->camera.setFov(fov);
+                changed = true;
+            }
+        }
+        else if (component->camera.getProjType() == Camera::eProj::ORTHOGRAPHIC_3D)
+        {
+            float projSize = component->camera.getProjSize();
+            if (ImGui::InputFloat("Projection size", &projSize, 10.0f, ImGuiInputTextFlags_AllowTabInput))
+            {
+                component->camera.setProjSize(projSize);
                 changed = true;
             }
         }

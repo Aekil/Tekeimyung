@@ -59,6 +59,7 @@ public:
     float               getFar() const;
     float               getNear() const;
     eProj               getProjType() const;
+    float               getProjSize() const;
     const sViewport&    getViewportRect() const;
     const sViewport&    getViewport() const;
 
@@ -67,10 +68,7 @@ public:
     void                setFar(float far);
     void                setViewportRect(const sViewport& viewportRect);
     void                setProjType(eProj projType);
-
-    void                zoom(float amount);
-    void                setZoom(float amount);
-    float               getZoom() const;
+    void                setProjSize(float projSize);
 
     void                lookAt(const glm::vec3& pos, const glm::vec3& target, const glm::vec3& up);
 
@@ -99,9 +97,6 @@ private:
     bool                _needUpdateView;
     bool                _needUpdateProj;
 
-    /*
-    ** Projection
-    */
     // Field of view
     float               _fov;
     // Near clipping plane
@@ -109,7 +104,8 @@ private:
     // Far clipping plane
     float               _far;
 
-    float               _zoom;
+    // Projection size for ORTHOGRAPHIC_3D
+    float               _projSize;
 
     // Viewport values between 0 and 1
     sViewport           _viewportRect;

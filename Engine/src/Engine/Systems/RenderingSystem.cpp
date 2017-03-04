@@ -190,12 +190,10 @@ void    RenderingSystem::addCameraViewPerspectiveToRenderQueue(sCameraComponent*
         cameraComp->_cameraView = std::make_unique<ModelInstance>(cameraComp->_cameraPerspective.get());
     }
 
-    // Camera translation for zoom
-    transform->_posOffsetWorld = (camera.getDirection() * camera.getZoom()) * 300.0f * -1.0f;
     transform->_posOffsetLocal = glm::vec3(0.0f);
+    transform->_posOffsetWorld = glm::vec3(0.0f);
 
-    // Translate before aplying model transformation because _posOffsetWorld is in world space
-    glm::mat4 transformMat = glm::translate(glm::mat4(1.0f), transform->_posOffsetWorld) * transform->getTransform();
+    glm::mat4 transformMat = transform->getTransform();
 
     // Rotate trapeze so that top and bottom faces are parallel to camera direction
     glm::quat rotation(glm::vec3(glm::radians(90.0f), glm::radians(0.0f), glm::radians(0.0f)));
@@ -230,12 +228,9 @@ void    RenderingSystem::addCameraViewOrthoGraphicToRenderQueue(sCameraComponent
     glm::mat4 transformMat = transform->getTransform();
 
     glm::vec3 projSize;
-    projSize.x = camera.getViewport().extent.width;
-    projSize.y = camera.getViewport().extent.height;
+    projSize.x = camera.getProjSize() * camera.getAspect();
+    projSize.y = camera.getProjSize();
     projSize.z = camera.getFar() - camera.getNear();
-
-    projSize.x += projSize.x * -camera.getZoom();
-    projSize.y += projSize.y * -camera.getZoom();
 
     // Translate box corresponding to viewport offsets and near distance
     transform->_posOffsetLocal = glm::vec3(camera.getViewport().offset.x,
