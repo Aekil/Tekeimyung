@@ -309,15 +309,18 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
 
     // Add lights to render queue
     {
-        auto& entities = em.getEntitiesByComponent<sLightComponent>();
-        for (Entity* entity : entities)
+        auto& lights = em.getEntitiesByComponent<sLightComponent>();
+        for (Entity* light : lights)
         {
-            sLightComponent* lightComp = entity->getComponent<sLightComponent>();
-            sTransformComponent* transform = entity->getComponent<sTransformComponent>();
+            sLightComponent* lightComp = light->getComponent<sLightComponent>();
+            sTransformComponent* transform = light->getComponent<sTransformComponent>();
 
             // Only display light cone in debug mode
             #if defined(ENGINE_DEBUG)
-                addLightConeToRenderQueue(lightComp, transform);
+                if (LevelEntitiesDebugWindow::getSelectedEntityId() == light->id)
+                {
+                    addLightConeToRenderQueue(lightComp, transform);
+                }
             #endif
 
             // Update light direction depending on rotation
@@ -359,15 +362,18 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
         auto& cameras = em.getEntitiesByComponent<sCameraComponent>();
         for (auto& camera: cameras)
         {
-            sTransformComponent* transform = camera->getComponent<sTransformComponent>();
-            sCameraComponent* cameraComp = camera->getComponent<sCameraComponent>();
+            if (LevelEntitiesDebugWindow::getSelectedEntityId() == camera->id)
+            {
+                sTransformComponent* transform = camera->getComponent<sTransformComponent>();
+                sCameraComponent* cameraComp = camera->getComponent<sCameraComponent>();
 
-            // Update camera transform
-            //TODO: only update if sTransformComponent changed
-            cameraComp->camera.setRotation(transform->getRotation());
-            cameraComp->camera.setPos(transform->getPos());
+                // Update camera transform
+                //TODO: only update if sTransformComponent changed
+                cameraComp->camera.setRotation(transform->getRotation());
+                cameraComp->camera.setPos(transform->getPos());
 
-            addCameraViewToRenderQueue(cameraComp, transform);
+                addCameraViewToRenderQueue(cameraComp, transform);
+            }
         }
     }
     #endif
