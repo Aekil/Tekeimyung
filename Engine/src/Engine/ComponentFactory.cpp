@@ -1088,6 +1088,7 @@ bool    ComponentFactory<sTransformComponent>::updateEditor(const std::string& e
     glm::mat4 transform = component->getTransform();
 
     if (ComponentFactory<sTransformComponent>::updateTransforms(pos,
+                                                            component->_posOffset,
                                                             scale,
                                                             rotation,
                                                             transform,
@@ -1102,7 +1103,7 @@ bool    ComponentFactory<sTransformComponent>::updateEditor(const std::string& e
     return (false);
 }
 
-bool    ComponentFactory<sTransformComponent>::updateTransforms(glm::vec3& pos, glm::vec3& scale, glm::vec3& rotation, glm::mat4& transform, ImGuizmo::MODE mode)
+bool    ComponentFactory<sTransformComponent>::updateTransforms(glm::vec3& pos, const glm::vec3& posOffset, glm::vec3& scale, glm::vec3& rotation, glm::mat4& transform, ImGuizmo::MODE mode)
 {
     auto &&keyboard = GameWindow::getInstance()->getKeyboard();
     Camera* camera = Renderer::getInstance()->getCurrentCamera();
@@ -1128,7 +1129,7 @@ bool    ComponentFactory<sTransformComponent>::updateTransforms(glm::vec3& pos, 
     changed |= ImGui::InputFloat3("Rotation", glm::value_ptr(rotation), 3);
     changed |= ImGui::InputFloat3("Scale", glm::value_ptr(scale), 3);
 
-    ImGuizmo::RecomposeMatrixFromComponents(glm::value_ptr(pos), glm::value_ptr(rotation), glm::value_ptr(scale), glm::value_ptr(transform));
+    ImGuizmo::RecomposeMatrixFromComponents(glm::value_ptr(pos + posOffset), glm::value_ptr(rotation), glm::value_ptr(scale), glm::value_ptr(transform));
 
     ImGuizmo::Enable(enableGuizmos && !cameraRotating);
     ImGuizmo::Manipulate(glm::value_ptr(camera->getView()), glm::value_ptr(camera->getProj()), mCurrentGizmoOperation, mode, glm::value_ptr(transform), nullptr, nullptr);
@@ -1136,6 +1137,7 @@ bool    ComponentFactory<sTransformComponent>::updateTransforms(glm::vec3& pos, 
     if (ImGuizmo::IsOver() && enableGuizmos && !cameraRotating)
     {
         ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transform), glm::value_ptr(pos), glm::value_ptr(rotation), glm::value_ptr(scale));
+        pos -= posOffset;
     }
 
     return (true);

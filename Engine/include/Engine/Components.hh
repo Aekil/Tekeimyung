@@ -370,12 +370,16 @@ virtual void update(sTransformComponent* component)
     this->_direction = component->_direction;
     this->_up = component->_up;
     this->_right = component->_right;
+    this->_posOffset = component->_posOffset;
 }
 
 virtual void update(sComponent* component)
 {
     update(static_cast<sTransformComponent*>(component));
 }
+
+// Used only for ImgGuizmo display
+glm::vec3 _posOffset;
 END_COMPONENT(sTransformComponent)
 
 
