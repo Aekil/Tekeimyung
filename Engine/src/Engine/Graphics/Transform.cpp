@@ -14,6 +14,11 @@ void    Transform::translate(const glm::vec3& direction, eTransform transform)
 {
     if (transform == eTransform::LOCAL)
     {
+        if (_needUpdateDirection)
+        {
+            updateDirection();
+        }
+
         // TODO: rotate direction with _orientation vector
         // (Find why it does not work)
         if (direction.x != 0.0f)
@@ -56,7 +61,7 @@ void    Transform::updateDirection()
     glm::quat pitchQuat = glm::angleAxis(glm::radians(-_rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
     glm::quat yawQuat = glm::angleAxis(glm::radians(-_rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
     glm::quat rollQuat = glm::angleAxis(glm::radians(-_rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
-    _orientation = pitchQuat * yawQuat;
+    _orientation = pitchQuat * yawQuat * rollQuat;
     _orientation = glm::normalize(_orientation);
 
     glm::mat4 rotate = glm::mat4_cast(_orientation);

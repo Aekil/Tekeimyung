@@ -199,6 +199,9 @@ void    RenderingSystem::addCameraViewPerspectiveToRenderQueue(sCameraComponent*
 
     transformMat = transformMat * translate * glm::mat4_cast(rotation);
 
+    transform->_posOffset = glm::vec3(0.0f,
+                                    0.0f,
+                                -cameraComp->camera.getNear());
 
 
     BufferPool::SubBuffer* buffer = cameraComp->_cameraView->getBuffer(_bufferPool.get());
@@ -222,22 +225,18 @@ void    RenderingSystem::addCameraViewOrthoGraphicToRenderQueue(sCameraComponent
     glm::vec3 projSize;
     projSize.x = cameraComp->camera.getViewport().extent.width * cameraComp->camera.getZoom();
     projSize.y = cameraComp->camera.getViewport().extent.height * cameraComp->camera.getZoom();
-    projSize.z = cameraComp->camera.getFar();
+    projSize.z = cameraComp->camera.getFar() - cameraComp->camera.getNear();
 
-    transform->_posOffset = glm::vec3(projSize.x / 2.0f,
-                            projSize.y / 2.0f,
-                            -projSize.z / 2.0f);
-    transform->_posOffset += glm::vec3(cameraComp->camera.getViewport().offset.x * cameraComp->camera.getZoom(),
-                                                        cameraComp->camera.getViewport().offset.y * cameraComp->camera.getZoom(),
-                                                        0.0f);
-    transformMat = glm::translate(transformMat, transform->_posOffset);
-    transformMat = glm::scale(transformMat, glm::vec3(projSize.x / SIZE_UNIT,
+    transform->_posOffset = glm::vec3(cameraComp->camera.getViewport().offset.x,
+                            cameraComp->camera.getViewport().offset.y,
+                            -cameraComp->camera.getNear());
+
+    glm::mat4 translate = glm::translate(glm::mat4(1.0f), transform->_posOffset);
+    translate = glm::translate(translate, glm::vec3(0.0f, 0.0f, -(projSize.z / 2.0f)));
+    glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(projSize.x / SIZE_UNIT,
                                                         projSize.y / SIZE_UNIT,
                                                         projSize.z / SIZE_UNIT));
-
-    // Don't apply this offset to translate,
-    // It allows the camera pivot point be behind the view volume in ImGuizmo
-    transform->_posOffset.z += projSize.z / 2.0f;
+    transformMat = transformMat * translate * scale;
 
     BufferPool::SubBuffer* buffer = cameraComp->_cameraView->getBuffer(_bufferPool.get());
     updateModelBuffer(buffer, transformMat, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));

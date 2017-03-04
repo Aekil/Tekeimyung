@@ -214,9 +214,11 @@ void    Camera::updateProj()
 {
     if (_projType == Camera::eProj::ORTHOGRAPHIC_3D)
     {
-        _proj = glm::ortho(_viewport.offset.x * _zoom, (_viewport.offset.x + _viewport.extent.width) * _zoom,
-                                        _viewport.offset.y * _zoom, (_viewport.offset.y + _viewport.extent.height) * _zoom,
-                                        _near, _far);
+        _proj = glm::ortho((_viewport.extent.width / 2.0f * -1.0f) * _zoom + _viewport.offset.x,
+                            (_viewport.extent.width / 2.0f) * _zoom + _viewport.offset.x,
+                            (_viewport.extent.height / 2.0f * -1.0f) * _zoom + _viewport.offset.y,
+                            (_viewport.extent.height / 2.0f) * _zoom + _viewport.offset.y,
+                            _near, _far);
     }
     else if (_projType == Camera::eProj::ORTHOGRAPHIC_2D)
     {
