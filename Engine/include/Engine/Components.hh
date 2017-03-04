@@ -588,5 +588,10 @@ virtual void update(sComponent* component)
 }
 
 Camera camera;
+// View model instance
 std::unique_ptr<ModelInstance> _cameraView = nullptr;
+
+// Camera perspective need to create a trapeze with specific dimensions
+// so we can't use a model from GeometryFactory and just scale it
+std::unique_ptr<Geometry> _cameraPerspective = nullptr;
 END_COMPONENT(sCameraComponent)

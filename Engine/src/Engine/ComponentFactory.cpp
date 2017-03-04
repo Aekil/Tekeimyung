@@ -1422,6 +1422,9 @@ sComponent* ComponentFactory<sCameraComponent>::loadFromJson(const std::string& 
 
     component->camera.setProjType(EnumManager<Camera::eProj>::stringToEnum(json.getString("projection", "PERSPECTIVE")));
     component->camera.setZoom(json.getFloat("zoom", 1.0f));
+    component->camera.setNear(json.getFloat("near", 0.1f));
+    component->camera.setFar(json.getFloat("far", 100.0f));
+    component->camera.setFov(json.getFloat("fov", 45.0f));
 
     return component;
 }
@@ -1449,6 +1452,9 @@ JsonValue&    ComponentFactory<sCameraComponent>::saveToJson(const std::string& 
     json.setValue("viewport", viewportJson);
     json.setString("projection", EnumManager<Camera::eProj>::enumToString(component->camera.getProjType()));
     json.setFloat("zoom", component->camera.getZoom());
+    json.setFloat("near", component->camera.getNear());
+    json.setFloat("far", component->camera.getFar());
+    json.setFloat("fov", component->camera.getFov());
 
     return (json);
 }
@@ -1458,6 +1464,7 @@ bool    ComponentFactory<sCameraComponent>::updateEditor(const std::string& enti
     sCameraComponent* component = static_cast<sCameraComponent*>(entityComponent ? entityComponent : _components[entityType]);
     *savedComponent = component;
     bool changed = false;
+    bool projectionChanged = false;
 
     // Viewport
     {
@@ -1489,6 +1496,7 @@ bool    ComponentFactory<sCameraComponent>::updateEditor(const std::string& enti
         {
             component->camera.setProjType(projection);
             changed = true;
+            projectionChanged = true;
         }
     }
 
@@ -1501,6 +1509,44 @@ bool    ComponentFactory<sCameraComponent>::updateEditor(const std::string& enti
             changed = true;
         }
     }
+
+    // Near
+    {
+        float near = component->camera.getNear();
+        if (ImGui::InputFloat("Near", &near, 5.0f, ImGuiInputTextFlags_AllowTabInput))
+        {
+            component->camera.setNear(near);
+            changed = true;
+        }
+    }
+
+    // Far
+    {
+        float far = component->camera.getFar();
+        if (ImGui::InputFloat("Far", &far, 5.0f, ImGuiInputTextFlags_AllowTabInput))
+        {
+            component->camera.setFar(far);
+            changed = true;
+        }
+    }
+
+    // Fov
+    {
+        float fov = component->camera.getFov();
+        if (ImGui::InputFloat("Fov", &fov, 1.0f, ImGuiInputTextFlags_AllowTabInput))
+        {
+            component->camera.setFov(fov);
+            changed = true;
+        }
+    }
+
+    // In perspective we need to recreate the trapeze model
+    if (projectionChanged ||
+        (changed && component->camera.getProjType() == Camera::eProj::PERSPECTIVE))
+    {
+        component->_cameraView = nullptr;
+    }
+
 
     return (changed);
 }

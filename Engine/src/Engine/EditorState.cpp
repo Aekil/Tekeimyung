@@ -73,7 +73,7 @@ void    EditorState::updateCamera(float elapsedTime)
         double offset = scroll.yOffset - lastScrollOffset;
 
         if (offset)
-            _camera.zoom((float)(-offset * elapsedTime * scrollSpeed));
+            _camera.zoom((float)(offset * elapsedTime * scrollSpeed));
         lastScrollOffset = scroll.yOffset;
     }
 

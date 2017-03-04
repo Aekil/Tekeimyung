@@ -30,6 +30,9 @@ private:
     void                                    addParticlesToRenderQueue(EntityManager& em, float elapsedTime);
     void                                    addCollidersToRenderQueue(Entity* entity, sTransformComponent* transform);
     void                                    addLightConeToRenderQueue(sLightComponent* lightComp, sTransformComponent* transform);
+
+    void                                    addCameraViewPerspectiveToRenderQueue(sCameraComponent* cameraComp, sTransformComponent* transform);
+    void                                    addCameraViewOrthoGraphicToRenderQueue(sCameraComponent* cameraComp, sTransformComponent* transform);
     void                                    addCameraViewToRenderQueue(sCameraComponent* cameraComp, sTransformComponent* transform);
 
     BufferPool::SubBuffer*                  getModelBuffer(sTransformComponent* transform, sRenderComponent* render);

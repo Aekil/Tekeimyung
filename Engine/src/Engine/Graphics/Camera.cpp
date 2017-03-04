@@ -239,7 +239,7 @@ void    Camera::updateView()
     glm::vec3 pos;
     if (_projType == Camera::eProj::PERSPECTIVE)
     {
-        pos = ((getDirection() * _zoom - getDirection()) * 300.0f) + getPos();
+        pos = ((getDirection() * _zoom - getDirection()) * 300.0f) * -1.0f + getPos();
     }
     else
     {

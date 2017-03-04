@@ -13,6 +13,7 @@
 #include <Engine/Utils/Exception.hpp>
 #include <Engine/Utils/Logger.hpp>
 #include <Engine/Window/GameWindow.hpp>
+#include <Engine/Graphics/Geometries/Trapeze.hpp>
 #include <Engine/Graphics/Renderer.hpp>
 
 #include <Engine/LevelEntitiesDebugWindow.hpp>
@@ -163,31 +164,65 @@ void    RenderingSystem::addLightConeToRenderQueue(sLightComponent* lightComp, s
     _renderQueue.addModel(lightComp->_lightCone.get(), buffer->ubo, buffer->offset, buffer->size);
 }
 
-void    RenderingSystem::addCameraViewToRenderQueue(sCameraComponent* cameraComp, sTransformComponent* transform)
+void    RenderingSystem::addCameraViewPerspectiveToRenderQueue(sCameraComponent* cameraComp, sTransformComponent* transform)
+{
+    Camera& camera = cameraComp->camera;
+    if (!cameraComp->_cameraView)
+    {
+        Material* material = ResourceManager::getInstance()->getResource<Material>("camera.mat");
+        float aspect = camera.getAspect();
+        float fov = camera.getFov();
+
+        Trapeze::sInfo trapezeInfos;
+        trapezeInfos.height = camera.getFar() - camera.getNear();
+
+        // Near plane size
+        trapezeInfos.top.length = 2.0f * tan(fov / 2.0f) * camera.getNear();
+        trapezeInfos.top.width = trapezeInfos.top.length * aspect;
+
+        // Far plane size
+        trapezeInfos.bottom.length = 2.0f * tan(fov / 2.0f) * camera.getFar();
+        trapezeInfos.bottom.width = trapezeInfos.bottom.length * aspect;
+
+        cameraComp->_cameraPerspective = std::make_unique<Trapeze>(trapezeInfos);
+
+        cameraComp->_cameraPerspective->setMaterial(material);
+        cameraComp->_cameraView = std::make_unique<ModelInstance>(cameraComp->_cameraPerspective.get());
+    }
+
+    glm::mat4 transformMat = transform->getTransform();
+    glm::quat rotation(glm::vec3(glm::radians(90.0f), glm::radians(0.0f), glm::radians(0.0f)));
+    glm::mat4 translate = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f,
+                                                            0.0f,
+                                                            -((camera.getFar() - camera.getNear()) / 2.0f + camera.getNear())));
+    translate = glm::translate(translate, (camera.getDirection() * camera.getZoom() - camera.getDirection()) * 300.0f * -1.0f);
+
+    transformMat = transformMat * translate * glm::mat4_cast(rotation);
+
+
+
+    BufferPool::SubBuffer* buffer = cameraComp->_cameraView->getBuffer(_bufferPool.get());
+    updateModelBuffer(buffer, transformMat, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+
+    _renderQueue.addModel(cameraComp->_cameraView.get(), buffer->ubo, buffer->offset, buffer->size);
+}
+
+void    RenderingSystem::addCameraViewOrthoGraphicToRenderQueue(sCameraComponent* cameraComp, sTransformComponent* transform)
 {
     if (!cameraComp->_cameraView)
     {
         Material* material = ResourceManager::getInstance()->getResource<Material>("camera.mat");
-        Geometry* boxModel = GeometryFactory::getGeometry(Geometry::eType::BOX);
-
-        boxModel->setMaterial(material);
-        cameraComp->_cameraView = std::make_unique<ModelInstance>(boxModel);
+        Geometry* viewPreviewModel = GeometryFactory::getGeometry(Geometry::eType::BOX);
+        viewPreviewModel->setMaterial(material);
+        cameraComp->_cameraView = std::make_unique<ModelInstance>(viewPreviewModel);
     }
 
     glm::mat4 transformMat = transform->getTransform();
 
     glm::vec3 projSize;
-    // TODO: Perspective volume display
-    if (cameraComp->camera.getProjType() != Camera::eProj::PERSPECTIVE)
-    {
-        projSize.x = cameraComp->camera.getViewport().extent.width * cameraComp->camera.getZoom();
-        projSize.y = cameraComp->camera.getViewport().extent.height * cameraComp->camera.getZoom();
-        projSize.z = cameraComp->camera.getFar();
-    }
-    else
-    {
-        projSize = glm::vec3(SIZE_UNIT);
-    }
+    projSize.x = cameraComp->camera.getViewport().extent.width * cameraComp->camera.getZoom();
+    projSize.y = cameraComp->camera.getViewport().extent.height * cameraComp->camera.getZoom();
+    projSize.z = cameraComp->camera.getFar();
 
     transformMat = glm::translate(transformMat, glm::vec3(projSize.x / 2.0f,
                                                         projSize.y / 2.0f,
@@ -203,6 +238,18 @@ void    RenderingSystem::addCameraViewToRenderQueue(sCameraComponent* cameraComp
     updateModelBuffer(buffer, transformMat, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 
     _renderQueue.addModel(cameraComp->_cameraView.get(), buffer->ubo, buffer->offset, buffer->size);
+}
+
+void    RenderingSystem::addCameraViewToRenderQueue(sCameraComponent* cameraComp, sTransformComponent* transform)
+{
+    if (cameraComp->camera.getProjType() == Camera::eProj::PERSPECTIVE)
+    {
+        addCameraViewPerspectiveToRenderQueue(cameraComp, transform);
+    }
+    else
+    {
+        addCameraViewOrthoGraphicToRenderQueue(cameraComp, transform);
+    }
 }
 
 void    RenderingSystem::update(EntityManager& em, float elapsedTime)
