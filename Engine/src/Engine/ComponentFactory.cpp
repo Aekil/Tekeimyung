@@ -1536,11 +1536,15 @@ bool    ComponentFactory<sCameraComponent>::updateEditor(const std::string& enti
 
     // Fov
     {
-        float fov = component->camera.getFov();
-        if (ImGui::InputFloat("Fov", &fov, 1.0f, ImGuiInputTextFlags_AllowTabInput))
+        // Fov is only used for perspective
+        if (component->camera.getProjType() == Camera::eProj::PERSPECTIVE)
         {
-            component->camera.setFov(fov);
-            changed = true;
+            float fov = component->camera.getFov();
+            if (ImGui::InputFloat("Fov", &fov, 1.0f, ImGuiInputTextFlags_AllowTabInput))
+            {
+                component->camera.setFov(fov);
+                changed = true;
+            }
         }
     }
 
