@@ -1082,14 +1082,14 @@ bool    ComponentFactory<sTransformComponent>::updateEditor(const std::string& e
     *savedComponent = component;
     bool changed = false;
 
-    component->translate(component->_posOffset, Transform::eTransform::LOCAL);
+    component->translate(component->_posOffsetLocal, Transform::eTransform::LOCAL);
+    component->translate(component->_posOffsetWorld, Transform::eTransform::WORLD);
     glm::vec3 pos = component->getPos();
     glm::vec3 scale = component->getScale();
     glm::vec3 rotation = component->getRotation();
     glm::mat4 transform = component->getTransform();
 
     if (ComponentFactory<sTransformComponent>::updateTransforms(pos,
-                                                            component->_posOffset,
                                                             scale,
                                                             rotation,
                                                             transform,
@@ -1098,14 +1098,15 @@ bool    ComponentFactory<sTransformComponent>::updateEditor(const std::string& e
         component->setPos(pos);
         component->setScale(scale);
         component->setRotation(rotation);
-        component->translate(-component->_posOffset, Transform::eTransform::LOCAL);
+        component->translate(-component->_posOffsetLocal, Transform::eTransform::LOCAL);
+        component->translate(-component->_posOffsetWorld, Transform::eTransform::WORLD);
         component->getTransform();
     }
 
     return (false);
 }
 
-bool    ComponentFactory<sTransformComponent>::updateTransforms(glm::vec3& pos, const glm::vec3& posOffset, glm::vec3& scale, glm::vec3& rotation, glm::mat4& transform, ImGuizmo::MODE mode)
+bool    ComponentFactory<sTransformComponent>::updateTransforms(glm::vec3& pos, glm::vec3& scale, glm::vec3& rotation, glm::mat4& transform, ImGuizmo::MODE mode)
 {
     auto &&keyboard = GameWindow::getInstance()->getKeyboard();
     Camera* camera = Renderer::getInstance()->getCurrentCamera();

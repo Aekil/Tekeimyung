@@ -228,7 +228,7 @@ void    Camera::updateProj()
     }
     else if (_projType == Camera::eProj::PERSPECTIVE)
     {
-        _proj = glm::perspective(_fov, getAspect(), _near, _far);
+        _proj = glm::perspective(glm::radians(_fov), getAspect(), _near, _far);
     }
     else
         ASSERT(0, "Unknown projection type");

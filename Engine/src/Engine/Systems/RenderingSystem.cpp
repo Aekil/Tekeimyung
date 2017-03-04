@@ -171,7 +171,7 @@ void    RenderingSystem::addCameraViewPerspectiveToRenderQueue(sCameraComponent*
     {
         Material* material = ResourceManager::getInstance()->getResource<Material>("camera.mat");
         float aspect = camera.getAspect();
-        float fov = camera.getFov();
+        float fov = glm::radians(camera.getFov());
 
         Trapeze::sInfo trapezeInfos;
         trapezeInfos.height = camera.getFar() - camera.getNear();
@@ -190,18 +190,24 @@ void    RenderingSystem::addCameraViewPerspectiveToRenderQueue(sCameraComponent*
         cameraComp->_cameraView = std::make_unique<ModelInstance>(cameraComp->_cameraPerspective.get());
     }
 
-    glm::mat4 transformMat = transform->getTransform();
+    // Camera translation for zoom
+    transform->_posOffsetWorld = (camera.getDirection() * camera.getZoom() - camera.getDirection()) * 300.0f * -1.0f;
+    transform->_posOffsetLocal = glm::vec3(0.0f);
+
+    // Translate before aplying model transformation because _posOffsetWorld is in world space
+    glm::mat4 transformMat = glm::translate(glm::mat4(1.0f), transform->_posOffsetWorld) * transform->getTransform();
+
+    // Rotate trapeze so that top and bottom faces are parallel to camera direction
     glm::quat rotation(glm::vec3(glm::radians(90.0f), glm::radians(0.0f), glm::radians(0.0f)));
+    // Place the camera to the back of the trapeze
     glm::mat4 translate = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f,
                                                             0.0f,
-                                                            -((camera.getFar() - camera.getNear()) / 2.0f + camera.getNear())));
-    translate = glm::translate(translate, (camera.getDirection() * camera.getZoom() - camera.getDirection()) * 300.0f * -1.0f);
+                                                            -((camera.getFar() - camera.getNear()) / 2.0f)));
+    // Translate camera near
+    translate = glm::translate(translate, glm::vec3(0.0f, 0.0f, -camera.getNear()));
 
     transformMat = transformMat * translate * glm::mat4_cast(rotation);
 
-    transform->_posOffset = glm::vec3(0.0f,
-                                    0.0f,
-                                -cameraComp->camera.getNear());
 
 
     BufferPool::SubBuffer* buffer = cameraComp->_cameraView->getBuffer(_bufferPool.get());
@@ -212,6 +218,7 @@ void    RenderingSystem::addCameraViewPerspectiveToRenderQueue(sCameraComponent*
 
 void    RenderingSystem::addCameraViewOrthoGraphicToRenderQueue(sCameraComponent* cameraComp, sTransformComponent* transform)
 {
+    Camera& camera = cameraComp->camera;
     if (!cameraComp->_cameraView)
     {
         Material* material = ResourceManager::getInstance()->getResource<Material>("camera.mat");
@@ -223,16 +230,21 @@ void    RenderingSystem::addCameraViewOrthoGraphicToRenderQueue(sCameraComponent
     glm::mat4 transformMat = transform->getTransform();
 
     glm::vec3 projSize;
-    projSize.x = cameraComp->camera.getViewport().extent.width * cameraComp->camera.getZoom();
-    projSize.y = cameraComp->camera.getViewport().extent.height * cameraComp->camera.getZoom();
-    projSize.z = cameraComp->camera.getFar() - cameraComp->camera.getNear();
+    projSize.x = camera.getViewport().extent.width * camera.getZoom();
+    projSize.y = camera.getViewport().extent.height * camera.getZoom();
+    projSize.z = camera.getFar() - camera.getNear();
 
-    transform->_posOffset = glm::vec3(cameraComp->camera.getViewport().offset.x,
-                            cameraComp->camera.getViewport().offset.y,
-                            -cameraComp->camera.getNear());
+    // Translate box corresponding to viewport offsets and near distance
+    transform->_posOffsetLocal = glm::vec3(camera.getViewport().offset.x,
+                            camera.getViewport().offset.y,
+                            0.0f);
+    transform->_posOffsetWorld = glm::vec3(0.0f);
 
-    glm::mat4 translate = glm::translate(glm::mat4(1.0f), transform->_posOffset);
+    glm::mat4 translate = glm::translate(glm::mat4(1.0f), transform->_posOffsetLocal);
+    // Place the camera to the back of the box
     translate = glm::translate(translate, glm::vec3(0.0f, 0.0f, -(projSize.z / 2.0f)));
+    // Translate camera near
+    translate = glm::translate(translate, glm::vec3(0.0f, 0.0f, -camera.getNear()));
     glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(projSize.x / SIZE_UNIT,
                                                         projSize.y / SIZE_UNIT,
                                                         projSize.z / SIZE_UNIT));
@@ -339,12 +351,6 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
             if (cameras.size() > 0)
             {
                 camera = &cameras[0]->getComponent<sCameraComponent>()->camera;
-
-                // Update camera transform
-                //TODO: only update if sTransformComponent changed
-                sTransformComponent* cameraTransform = cameras[0]->getComponent<sTransformComponent>();
-                camera->setRotation(cameraTransform->getRotation());
-                camera->setPos(cameraTransform->getPos());
             }
         }
     }
@@ -357,6 +363,12 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
         {
             sTransformComponent* transform = camera->getComponent<sTransformComponent>();
             sCameraComponent* cameraComp = camera->getComponent<sCameraComponent>();
+
+            // Update camera transform
+            //TODO: only update if sTransformComponent changed
+            cameraComp->camera.setRotation(transform->getRotation());
+            cameraComp->camera.setPos(transform->getPos());
+
             addCameraViewToRenderQueue(cameraComp, transform);
         }
     }

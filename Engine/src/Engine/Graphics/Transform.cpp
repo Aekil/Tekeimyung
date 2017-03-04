@@ -79,7 +79,7 @@ void    Transform::updateTransform()
     glm::quat rotationQuat(glm::vec3(glm::radians(_rotation.x), glm::radians(_rotation.y), glm::radians(_rotation.z)));
 
     _needUpdateTransform = false;
-    glm::mat4 newTranslate = glm::translate(glm::mat4(1.0), glm::vec3(_pos.x, _pos.y, _pos.z));
+    glm::mat4 newTranslate = glm::translate(glm::mat4(1.0), _pos);
     glm::mat4 newScale = glm::scale(glm::mat4(1.0), _scale);
     _transform = newTranslate * glm::mat4_cast(rotationQuat) * newScale;
 }
