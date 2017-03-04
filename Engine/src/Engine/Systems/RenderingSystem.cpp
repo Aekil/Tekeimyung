@@ -191,7 +191,7 @@ void    RenderingSystem::addCameraViewPerspectiveToRenderQueue(sCameraComponent*
     }
 
     // Camera translation for zoom
-    transform->_posOffsetWorld = (camera.getDirection() * camera.getZoom() - camera.getDirection()) * 300.0f * -1.0f;
+    transform->_posOffsetWorld = (camera.getDirection() * camera.getZoom()) * 300.0f * -1.0f;
     transform->_posOffsetLocal = glm::vec3(0.0f);
 
     // Translate before aplying model transformation because _posOffsetWorld is in world space
@@ -230,9 +230,12 @@ void    RenderingSystem::addCameraViewOrthoGraphicToRenderQueue(sCameraComponent
     glm::mat4 transformMat = transform->getTransform();
 
     glm::vec3 projSize;
-    projSize.x = camera.getViewport().extent.width * camera.getZoom();
-    projSize.y = camera.getViewport().extent.height * camera.getZoom();
+    projSize.x = camera.getViewport().extent.width;
+    projSize.y = camera.getViewport().extent.height;
     projSize.z = camera.getFar() - camera.getNear();
+
+    projSize.x += projSize.x * -camera.getZoom();
+    projSize.y += projSize.y * -camera.getZoom();
 
     // Translate box corresponding to viewport offsets and near distance
     transform->_posOffsetLocal = glm::vec3(camera.getViewport().offset.x,
@@ -263,7 +266,7 @@ void    RenderingSystem::addCameraViewToRenderQueue(sCameraComponent* cameraComp
     {
         addCameraViewPerspectiveToRenderQueue(cameraComp, transform);
     }
-    else
+    else if (cameraComp->camera.getProjType() == Camera::eProj::ORTHOGRAPHIC_3D)
     {
         addCameraViewOrthoGraphicToRenderQueue(cameraComp, transform);
     }

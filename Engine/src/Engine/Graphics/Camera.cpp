@@ -18,7 +18,7 @@ Camera*     Camera::_instance = nullptr;
 
 Camera::Camera(): _needUpdateView(true), _needUpdateProj(true), _fov(45.0f),
                     _near(0.1f), _far(1300.0f),
-                    _zoom(1.0f), _projType(Camera::eProj::PERSPECTIVE)
+                    _zoom(0.0f), _projType(Camera::eProj::PERSPECTIVE)
 {
     _constants.view = glm::mat4(1.0f);
     _ubo.setBindingPoint(1);
@@ -214,16 +214,24 @@ void    Camera::updateProj()
 {
     if (_projType == Camera::eProj::ORTHOGRAPHIC_3D)
     {
-        _proj = glm::ortho((_viewport.extent.width / 2.0f * -1.0f) * _zoom + _viewport.offset.x,
-                            (_viewport.extent.width / 2.0f) * _zoom + _viewport.offset.x,
-                            (_viewport.extent.height / 2.0f * -1.0f) * _zoom + _viewport.offset.y,
-                            (_viewport.extent.height / 2.0f) * _zoom + _viewport.offset.y,
+        glm::vec2 projSize(_viewport.extent.width, _viewport.extent.height);
+        projSize += projSize * -_zoom;
+        glm::vec4 screen = glm::vec4((projSize.x / 2.0f * -1.0f) + _viewport.offset.x,
+                            (projSize.x / 2.0f) + _viewport.offset.x,
+                            (projSize.y / 2.0f * -1.0f) + _viewport.offset.y,
+                            (projSize.y / 2.0f) + _viewport.offset.y);
+        _proj = glm::ortho(screen.x,
+                            screen.y,
+                            screen.z,
+                            screen.w,
                             _near, _far);
     }
     else if (_projType == Camera::eProj::ORTHOGRAPHIC_2D)
     {
-        _proj = glm::ortho(_viewport.offset.x * _zoom, (_viewport.offset.x + _viewport.extent.width) * _zoom,
-                                        _viewport.offset.y * _zoom, (_viewport.offset.y + _viewport.extent.height) * _zoom,
+        glm::vec2 projSize(_viewport.extent.width, _viewport.extent.height);
+        projSize += projSize * -_zoom;
+        _proj = glm::ortho(_viewport.offset.x, projSize.x + _viewport.offset.x,
+                                        _viewport.offset.y, projSize.y + _viewport.offset.y,
                                         0.0f, _far);
     }
     else if (_projType == Camera::eProj::PERSPECTIVE)
@@ -241,7 +249,7 @@ void    Camera::updateView()
     glm::vec3 pos;
     if (_projType == Camera::eProj::PERSPECTIVE)
     {
-        pos = ((getDirection() * _zoom - getDirection()) * 300.0f) * -1.0f + getPos();
+        pos = ((getDirection() * _zoom) * 300.0f) * -1.0f + getPos();
     }
     else
     {

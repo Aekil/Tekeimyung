@@ -1425,7 +1425,7 @@ sComponent* ComponentFactory<sCameraComponent>::loadFromJson(const std::string& 
     }
 
     component->camera.setProjType(EnumManager<Camera::eProj>::stringToEnum(json.getString("projection", "PERSPECTIVE")));
-    component->camera.setZoom(json.getFloat("zoom", 1.0f));
+    component->camera.setZoom(json.getFloat("zoom", 0.0f));
     component->camera.setNear(json.getFloat("near", 0.1f));
     component->camera.setFar(json.getFloat("far", 100.0f));
     component->camera.setFov(json.getFloat("fov", 45.0f));
