@@ -109,7 +109,7 @@ void    RenderingSystem::addParticlesToRenderQueue(EntityManager& em, float elap
         if (entity == nullptr)
             continue;
 
-        bool isUi = entity->hasComponent<sUiComponent>();
+        sUiComponent* uiComponent = entity->getComponent<sUiComponent>();
         sRenderComponent *render = entity->getComponent<sRenderComponent>();
         auto&& model = render->getModelInstance();
 
@@ -140,8 +140,8 @@ void    RenderingSystem::addParticlesToRenderQueue(EntityManager& em, float elap
 
         }
 
-        if (isUi)
-            _renderQueue.addUIModel(model, emitter->buffer->ubo, 0, emitter->buffer->size, emitter->particlesNb);
+        if (uiComponent)
+            _renderQueue.addUIModel(model, emitter->buffer->ubo, uiComponent->layer, 0, emitter->buffer->size, emitter->particlesNb);
         else
             _renderQueue.addModel(model, emitter->buffer->ubo, 0, emitter->buffer->size, emitter->particlesNb);
     }
@@ -294,9 +294,10 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
                 }
 
                 BufferPool::SubBuffer* buffer = getModelBuffer(transform, render);
+                sUiComponent* uiComponent = entity->getComponent<sUiComponent>();
 
-                if (entity->hasComponent<sUiComponent>())
-                    _renderQueue.addUIModel(model, buffer->ubo, buffer->offset, buffer->size);
+                if (uiComponent)
+                    _renderQueue.addUIModel(model, buffer->ubo, uiComponent->layer, buffer->offset, buffer->size, uiComponent->layer);
                 else
                     _renderQueue.addModel(model, buffer->ubo, buffer->offset, buffer->size);
 

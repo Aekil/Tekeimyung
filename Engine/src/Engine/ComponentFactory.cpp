@@ -14,6 +14,7 @@
 #include <Engine/Window/GameWindow.hpp>
 #include <Engine/Utils/LevelLoader.hpp>
 #include <Engine/Utils/ResourceManager.hpp>
+#include <Engine/Systems/UISystem.hpp>
 #include <Engine/Graphics/Renderer.hpp>
 #include <Engine/Core/ScriptFactory.hpp>
 #include <Engine/EntityFactory.hpp>
@@ -1289,7 +1290,7 @@ sComponent* ComponentFactory<sUiComponent>::loadFromJson(const std::string& enti
     component = new sUiComponent();
 
     component->offset = json.getVec2f("offset", { 0.0f, 0.0f });
-    component->layer = json.getUInt("layer", 0);
+    component->layer = json.getInt("layer", 0);
     component->horizontalAlignment = EnumManager<eHorizontalAlignment>::stringToEnum(json.getString("horizontal_alignment", "MIDDLE"));
     component->verticalAlignment = EnumManager<eVerticalAlignment>::stringToEnum(json.getString("vertical_alignment", "MIDDLE"));
 
@@ -1303,7 +1304,7 @@ JsonValue&    ComponentFactory<sUiComponent>::saveToJson(const std::string& enti
 
 
     json.setVec2f("offset", component->offset);
-    json.setUInt("layer", component->layer);
+    json.setInt("layer", component->layer);
     json.setString("horizontal_alignment", EnumManager<eHorizontalAlignment>::enumToString(component->horizontalAlignment));
     json.setString("vertical_alignment", EnumManager<eVerticalAlignment>::enumToString(component->verticalAlignment));
 
@@ -1319,10 +1320,7 @@ bool    ComponentFactory<sUiComponent>::updateEditor(const std::string& entityTy
     int layer = component->layer;
     if (ImGui::InputInt("Layer", &layer, 1, ImGuiInputTextFlags_AllowTabInput))
     {
-        if (layer < 0)
-            component->layer = 0;
-        else
-            component->layer = layer;
+        component->layer = layer;
         changed = true;
     }
 

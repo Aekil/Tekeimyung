@@ -28,6 +28,9 @@ struct sRenderableMesh {
     uint32_t uboOffset;
     uint32_t uboSize;
     uint32_t instancesNb;
+
+    // Layer to sort UI
+    int layer;
 };
 
 class RenderQueue {
@@ -41,6 +44,7 @@ public:
                                                 uint32_t instancesNb = 0);
     void                            addUIModel(ModelInstance* modelInstance,
                                                 UniformBuffer* ubo,
+                                                int layer,
                                                 uint32_t uboOffset = 0,
                                                 uint32_t uboSize = 0,
                                                 uint32_t instancesNb = 0);

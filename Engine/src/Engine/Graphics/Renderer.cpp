@@ -135,10 +135,14 @@ void    Renderer::render(Camera* camera, RenderQueue& renderQueue)
         {
             LOG_WARN("Attempt to render non-UI objects with no camera");
         }
-
-        glDepthMask(GL_TRUE);
-        glDisable(GL_BLEND);
     }
+
+    // Disable write to the depth buffer and depth test because UI is sort with layers
+    glDepthMask(GL_FALSE);
+    glDisable(GL_DEPTH_TEST);
+
+    // Disable blending for opaque objects
+    glDisable(GL_BLEND);
 
     // UI objects
     {
@@ -151,16 +155,16 @@ void    Renderer::render(Camera* camera, RenderQueue& renderQueue)
 
         // Enable blend to blend transparent ojects and particles
         glEnable(GL_BLEND);
-        // Disable write to the depth buffer so that the depth of transparent objects is not written
-        // because we don't want a transparent object to hide an other transparent object
-        glDepthMask(GL_FALSE);
         renderTransparentObjects(renderQueue.getUITransparentMeshs(), renderQueue.getUITransparentMeshsNb(), lights, 1);
 
-        // Enable depth buffer for opaque objects
-        glDepthMask(GL_TRUE);
-        // Disable blending for opaque objects
-        glDisable(GL_BLEND);
     }
+
+    // Enable depth buffer write and depth test for non-UI objects
+    glDepthMask(GL_TRUE);
+    glEnable(GL_DEPTH_TEST);
+
+    // Disable blending for opaque objects
+    glDisable(GL_BLEND);
 
 }
 
@@ -169,8 +173,9 @@ bool sortOpaque(const sRenderableMesh& lhs, const sRenderableMesh& rhs)
     Material* lhsMaterial = lhs.meshInstance->getMaterial();
     Material* rhsMaterial = rhs.meshInstance->getMaterial();
 
-    // Sort by src blend and by dst blend
-    return (lhsMaterial->getOptions() > rhsMaterial->getOptions());
+    // Sort by layer and shaderProgram
+    return (lhs.layer > rhs.layer ||
+            lhs.layer > rhs.layer && lhsMaterial->getOptions() > rhsMaterial->getOptions());
 }
 
 void    Renderer::renderOpaqueObjects(std::vector<sRenderableMesh>& meshs,
@@ -239,10 +244,11 @@ bool sortTransparent(const sRenderableMesh& lhs, const sRenderableMesh& rhs)
     Material* lhsMaterial = lhs.meshInstance->getMaterial();
     Material* rhsMaterial = rhs.meshInstance->getMaterial();
 
-    // Sort by shaderProgram, src blend and dst blend
-    return (lhsMaterial->getOptions() > rhsMaterial->getOptions() ||
-        lhsMaterial->getOptions() == rhsMaterial->getOptions() && lhsMaterial->srcBlend < rhsMaterial->srcBlend ||
-        lhsMaterial->getOptions() > rhsMaterial->getOptions() && lhsMaterial->srcBlend == rhsMaterial->srcBlend && lhsMaterial->dstBlend < rhsMaterial->dstBlend);
+    // Sort by layer, shaderProgram, src blend and dst blend
+    return (lhs.layer > rhs.layer ||
+        lhs.layer > rhs.layer && lhsMaterial->getOptions() > rhsMaterial->getOptions() ||
+        lhs.layer > rhs.layer && lhsMaterial->getOptions() == rhsMaterial->getOptions() && lhsMaterial->srcBlend < rhsMaterial->srcBlend ||
+        lhs.layer > rhs.layer && lhsMaterial->getOptions() > rhsMaterial->getOptions() && lhsMaterial->srcBlend == rhsMaterial->srcBlend && lhsMaterial->dstBlend < rhsMaterial->dstBlend);
 }
 
 void    Renderer::renderTransparentObjects(std::vector<sRenderableMesh>& meshs,

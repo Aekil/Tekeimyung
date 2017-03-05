@@ -19,7 +19,7 @@ void    RenderQueue::addModel(ModelInstance* modelInstance,
         Material *material = meshInstance->getMaterial();
         ASSERT(material != nullptr, "A mesh should have a material");
 
-        sRenderableMesh renderableMesh = { meshInstance.get(), ubo, uboOffset, uboSize, instancesNb };
+        sRenderableMesh renderableMesh = { meshInstance.get(), ubo, uboOffset, uboSize, instancesNb, 0 };
         if (material->transparent)
         {
             CHECK_QUEUE_NOT_FULL(_transparentMeshsNb);
@@ -37,6 +37,7 @@ void    RenderQueue::addModel(ModelInstance* modelInstance,
 
 void    RenderQueue::addUIModel(ModelInstance* modelInstance,
                                 UniformBuffer* ubo,
+                                int layer,
                                 uint32_t uboOffset,
                                 uint32_t uboSize,
                                 uint32_t instancesNb)
@@ -48,7 +49,7 @@ void    RenderQueue::addUIModel(ModelInstance* modelInstance,
         Material *material = meshInstance->getMaterial();
         ASSERT(material != nullptr, "A mesh should have a material");
 
-        sRenderableMesh renderableMesh = { meshInstance.get(), ubo, uboOffset, uboSize, instancesNb };
+        sRenderableMesh renderableMesh = { meshInstance.get(), ubo, uboOffset, uboSize, instancesNb, layer };
         if (material->transparent)
         {
             CHECK_QUEUE_NOT_FULL(_uiTransparentMeshsNb);
