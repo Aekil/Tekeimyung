@@ -1485,8 +1485,8 @@ bool    ComponentFactory<sCameraComponent>::updateEditor(const std::string& enti
 
         Helper::limitValueInRange<float>(0.0f, 1.0f, viewportRect.offset.x);
         Helper::limitValueInRange<float>(0.0f, 1.0f, viewportRect.offset.y);
-        Helper::limitValueInRange<float>(0.0f, 1.0f, viewportRect.extent.width);
-        Helper::limitValueInRange<float>(0.0f, 1.0f, viewportRect.extent.height);
+        Helper::limitValueInRange<float>(0.1f, 1.0f, viewportRect.extent.width);
+        Helper::limitValueInRange<float>(0.1f, 1.0f, viewportRect.extent.height);
 
         if (viewportChanged)
         {
