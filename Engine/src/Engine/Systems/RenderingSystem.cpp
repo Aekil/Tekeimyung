@@ -393,7 +393,8 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
                 cameraComp->camera.setPos(transform->getPos());
             }
 
-            if (LevelEntitiesDebugWindow::getSelectedEntityId() == camera->id)
+            if (LevelEntitiesDebugWindow::getSelectedEntityId() == camera->id &&
+                &cameraComp->camera != _camera)
             {
                 addCameraViewToRenderQueue(cameraComp, transform);
             }

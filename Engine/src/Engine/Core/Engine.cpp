@@ -178,12 +178,14 @@ bool    Engine::initDebugWindows(int ac, char** av)
         addDebugWindow<OverlayDebugWindow>(glm::vec2(10, 10), glm::vec2(0, 0));
         addDebugWindow<LevelEntitiesDebugWindow>(glm::vec2(0, 80), glm::vec2(600, 350));
         addDebugWindow<EntitiesTemplateDebugWindow>(glm::vec2(600, 80), glm::vec2(300, 200));
-        addDebugWindow<MonitoringDebugWindow>(MonitoringDebugWindow::getInstance());
         addDebugWindow<MaterialDebugWindow>(glm::vec2(GameWindow::getInstance()->getBufferWidth() - 500,
                                                     GameWindow::getInstance()->getBufferHeight() - 300),
                                             glm::vec2(500, 300));
-        addDebugWindow<SoundEditorWindow>(glm::vec2(1200, 80), glm::vec2(450, 450));
+        addDebugWindow<SoundEditorWindow>(glm::vec2(GameWindow::getInstance()->getBufferWidth() - 950,
+                                                    GameWindow::getInstance()->getBufferHeight() - 200),
+                                        glm::vec2(450, 200));
         addDebugWindow<LogDebugWindow>(Logger::getInstance(), glm::vec2(0, 430), glm::vec2(300, 200));
+        addDebugWindow<MonitoringDebugWindow>(MonitoringDebugWindow::getInstance());
 
         // Handle command line for MenuBarDebugWindow
         if (ac >= 2)

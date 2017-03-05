@@ -24,6 +24,8 @@ private:
     void                                updateCamera(float elapsedTime);
     void                                handleObjectSelection();
 
+    void                                renderCameraPreview(Camera& camera);
+
 private:
     Camera                              _camera;
 END_GAMESTATE(EditorState)

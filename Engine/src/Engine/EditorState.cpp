@@ -4,6 +4,7 @@
 
 #include <Engine/EntityFactory.hpp>
 #include <Engine/EditorState.hpp>
+#include <Engine/Graphics/Renderer.hpp>
 #include <Engine/LevelEntitiesDebugWindow.hpp>
 #include <Engine/Physics/Physics.hpp>
 #include <Engine/Sound/SoundManager.hpp>
@@ -37,7 +38,25 @@ bool    EditorState::update(float elapsedTime)
 {
     updateCamera(elapsedTime);
     handleObjectSelection();
-    return (GameState::update(elapsedTime));
+
+    // Update the GameState before because we want to draw the camera preview after drawing editor scene
+    if (!GameState::update(elapsedTime))
+    {
+        return (false);
+    }
+
+    uint32_t selectedEntityId = LevelEntitiesDebugWindow::getSelectedEntityId();
+    Entity* selectedEntity = _world.getEntityManager()->getEntity(selectedEntityId);
+    if (selectedEntity)
+    {
+        sCameraComponent* cameraComponent = selectedEntity->getComponent<sCameraComponent>();
+        if (cameraComponent)
+        {
+            renderCameraPreview(cameraComponent->camera);
+        }
+    }
+
+    return (true);
 }
 
 void    EditorState::initCamera()
@@ -143,4 +162,31 @@ void    EditorState::handleObjectSelection()
             LevelEntitiesDebugWindow::setSelectedEntityId(selectedEntity->id);
         }
     }
+}
+
+void    EditorState::renderCameraPreview(Camera& camera)
+{
+    auto renderSystem = _world.getSystem<RenderingSystem>();
+
+
+    // Save viewport because we'll modify it
+    Camera::sViewport viewportRect = camera.getViewportRect();
+    // Modify viewport for preview
+    camera.setViewportRect({
+        0.0f, // offset.x
+        0.0f, // offset.y
+        0.3f * viewportRect.extent.width, // extent.width
+        0.3f * viewportRect.extent.height // extent.height
+    });
+
+    // Attach preview camera
+    renderSystem->attachCamera(&camera);
+    renderSystem->update(*_world.getEntityManager(), 0.0f);
+
+    // Reset viewport
+    camera.setViewportRect(viewportRect);
+
+    // Attach editor camera
+    renderSystem->attachCamera(&_camera);
+    Renderer::getInstance()->setCurrentCamera(&_camera);
 }

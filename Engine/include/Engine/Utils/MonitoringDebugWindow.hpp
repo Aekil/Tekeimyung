@@ -33,7 +33,7 @@ typedef struct sMonitoring
 class MonitoringDebugWindow : public DebugWindow
 {
 public:
-    MonitoringDebugWindow(const glm::vec2& pos = glm::vec2(0, 650), const glm::vec2& size = glm::vec2(450, 300));
+    MonitoringDebugWindow(const glm::vec2& pos = glm::vec2(900, 80), const glm::vec2& size = glm::vec2(450, 300));
     virtual ~MonitoringDebugWindow();
 
     static std::shared_ptr<MonitoringDebugWindow>   getInstance();
