@@ -36,8 +36,35 @@ bool    EditorState::init()
 
 bool    EditorState::update(float elapsedTime)
 {
+    Camera* selectedCamera{nullptr};
     updateCamera(elapsedTime);
     handleObjectSelection();
+
+    if (!_cameraPreview)
+    {
+        _cameraPreview = EntityFactory::createEntity("CAMERA_PREVIEW", false);
+        _cameraPreviewTransform = _cameraPreview->getComponent<sTransformComponent>();
+        _cameraPreviewRender = _cameraPreview->getComponent<sRenderComponent>();
+        _cameraPreviewUI = _cameraPreview->getComponent<sUiComponent>();
+    }
+
+    _cameraPreviewRender->_display = false;
+
+    // Get selected camera
+    {
+        uint32_t selectedEntityId = LevelEntitiesDebugWindow::getSelectedEntityId();
+        Entity* selectedEntity = _world.getEntityManager()->getEntity(selectedEntityId);
+        if (selectedEntity)
+        {
+            sCameraComponent* cameraComponent = selectedEntity->getComponent<sCameraComponent>();
+            if (cameraComponent)
+            {
+                selectedCamera = &cameraComponent->camera;
+                _cameraPreviewRender->_display = true;
+            }
+        }
+    }
+
 
     // Update the GameState before because we want to draw the camera preview after drawing editor scene
     if (!GameState::update(elapsedTime))
@@ -45,16 +72,15 @@ bool    EditorState::update(float elapsedTime)
         return (false);
     }
 
-    uint32_t selectedEntityId = LevelEntitiesDebugWindow::getSelectedEntityId();
-    Entity* selectedEntity = _world.getEntityManager()->getEntity(selectedEntityId);
-    if (selectedEntity)
+    _cameraPreviewRender->_display = false;
+
+    if (selectedCamera)
     {
-        sCameraComponent* cameraComponent = selectedEntity->getComponent<sCameraComponent>();
-        if (cameraComponent)
-        {
-            renderCameraPreview(cameraComponent->camera);
-        }
+        renderCameraPreview(*selectedCamera);
+        return (true);
     }
+
+    _cameraPreviewRender->_display = false;
 
     return (true);
 }
@@ -181,6 +207,20 @@ void    EditorState::renderCameraPreview(Camera& camera)
 
     // Attach preview camera
     renderSystem->attachCamera(&camera);
+
+    // Update camera preview background
+    {
+        glm::vec3 scale;
+        scale.x = (camera.getViewportRect().extent.width * _camera.getViewport().extent.width) / SIZE_UNIT;
+        scale.y = (camera.getViewportRect().extent.height * _camera.getViewport().extent.height) / SIZE_UNIT;
+        scale.z = 1.0f;
+
+        _cameraPreviewTransform->setScale(scale);
+        _cameraPreviewUI->needUpdate = true;
+    }
+
+
+    // Render camera preview
     renderSystem->update(*_world.getEntityManager(), 0.0f);
 
     // Reset viewport

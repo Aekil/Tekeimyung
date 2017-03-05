@@ -22,7 +22,7 @@ public:
     EntityManager(World& world);
     ~EntityManager();
 
-    Entity*                                         createEntity();
+    Entity*                                         createEntity(bool store = true);
 
     void                                            destroyEntity(Entity* entity);
     void                                            destroyEntityRegister(Entity* entity);

@@ -10,6 +10,10 @@
 #include <ECS/System.hpp>
 #include <ECS/World.hpp>
 
+struct sTransformComponent;
+struct sRenderComponent;
+struct sUiComponent;
+
 START_GAMESTATE(EditorState)
  public:
     ~EditorState();
@@ -28,4 +32,9 @@ private:
 
 private:
     Camera                              _camera;
+
+    Entity*                             _cameraPreview{nullptr};
+    sTransformComponent*                _cameraPreviewTransform{nullptr};
+    sRenderComponent*                   _cameraPreviewRender{nullptr};
+    sUiComponent*                       _cameraPreviewUI{nullptr};
 END_GAMESTATE(EditorState)

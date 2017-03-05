@@ -1,0 +1,53 @@
+{
+   "components" : {
+      "sButtonComponent" : {
+         "action" : "REMOVE_CURRENT_LEVEL",
+         "action_level" : ""
+      },
+      "sNameComponent" : {
+         "name" : "CAMERA_PREVIEW"
+      },
+      "sRenderComponent" : {
+         "animated" : false,
+         "animations" : [],
+         "color" : {
+            "a" : 1,
+            "b" : 1,
+            "g" : 1,
+            "r" : 1
+         },
+         "ignore_raycast" : false,
+         "materials" : [ "camera_preview.mat" ],
+         "model" : "resources/models/default.DAE",
+         "type" : "PLANE"
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 40,
+            "y" : 30,
+            "z" : 0
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "scale" : {
+            "x" : 8,
+            "y" : 6,
+            "z" : 6
+         }
+      },
+      "sUiComponent" : {
+         "horizontal_alignment" : "LEFT",
+         "layer" : 0,
+         "offset" : {
+            "x" : 0,
+            "y" : 0
+         },
+         "vertical_alignment" : "BOTTOM"
+      }
+   },
+   "name" : "CAMERA_PREVIEW",
+   "tag" : ""
+}

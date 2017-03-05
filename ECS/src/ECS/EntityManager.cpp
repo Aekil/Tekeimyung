@@ -16,11 +16,14 @@ EntityManager::EntityManager(World& world): _world(world)
 
 EntityManager::~EntityManager() {}
 
-Entity* EntityManager::createEntity()
+Entity* EntityManager::createEntity(bool store)
 {
     Entity* entity = _entityPool->allocate();
 
-    _entities.push_back(entity);
+    if (store)
+    {
+        _entities.push_back(entity);
+    }
     return (entity);
 }
 

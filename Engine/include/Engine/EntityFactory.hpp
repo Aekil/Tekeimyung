@@ -34,8 +34,8 @@ public:
 
     static Entity*                                          createOrGetEntity(const std::string& typeName);
 
-    static Entity*                                          createEntity(const std::string& typeName);
-    static Entity*                                          createEntity(const std::string& typeName, const glm::vec3& pos);
+    static Entity*                                          createEntity(const std::string& typeName, bool store = true);
+    static Entity*                                          createEntity(const std::string& typeName, const glm::vec3& pos, bool store = true);
 
     static void                                             bindEntityManager(EntityManager* em);
     static EntityManager*                                   getBindedEntityManager();
@@ -56,7 +56,7 @@ public:
     static void                                             initAnimations(Entity* entity);
     static void                                             reverseAnimations(Entity* entity);
 
-    static Entity*                                          cloneEntity(const std::string& typeName);
+    static Entity*                                          cloneEntity(const std::string& typeName, bool store = true);
 
     static void                                             copyEntityManager(EntityManager* dst, EntityManager* src);
 

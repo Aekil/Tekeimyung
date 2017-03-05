@@ -1,7 +1,11 @@
 {
    "components" : {
       "sCameraComponent" : {
+         "far" : 100,
+         "fov" : 45,
+         "near" : 0.10000000149011612,
          "projection" : "PERSPECTIVE",
+         "projection_size" : 500,
          "viewport" : {
             "extent" : {
                "height" : 1,

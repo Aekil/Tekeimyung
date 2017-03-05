@@ -135,9 +135,9 @@ Entity* EntityFactory::createOrGetEntity(const std::string& typeName)
     return (createEntity(typeName));
 }
 
-Entity* EntityFactory::createEntity(const std::string& typeName, const glm::vec3& pos)
+Entity* EntityFactory::createEntity(const std::string& typeName, const glm::vec3& pos, bool store)
 {
-    Entity *entity = cloneEntity(typeName);
+    Entity *entity = cloneEntity(typeName, store);
 
     sTransformComponent* transform = entity->getComponent<sTransformComponent>();
 
@@ -146,9 +146,9 @@ Entity* EntityFactory::createEntity(const std::string& typeName, const glm::vec3
     return (entity);
 }
 
-Entity* EntityFactory::createEntity(const std::string& typeName)
+Entity* EntityFactory::createEntity(const std::string& typeName, bool store)
 {
-    return (cloneEntity(typeName));
+    return (cloneEntity(typeName, store));
 }
 
 void EntityFactory::createEntityType(const std::string& typeName)
@@ -246,9 +246,9 @@ const std::string& EntityFactory::getFile(const std::string& typeName)
     return _entitiesFiles[typeName];
 }
 
-Entity* EntityFactory::cloneEntity(const std::string& typeName)
+Entity* EntityFactory::cloneEntity(const std::string& typeName, bool store)
 {
-    Entity* clone = _em->createEntity();
+    Entity* clone = _em->createEntity(store);
     auto entity = _entities.find(typeName);
 
     if (entity == _entities.end())

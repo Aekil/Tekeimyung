@@ -468,7 +468,7 @@
                "fov" : 45,
                "near" : 200,
                "projection" : "ORTHOGRAPHIC_3D",
-               "projection_size" : 500,
+               "projection_size" : 520,
                "viewport" : {
                   "extent" : {
                      "height" : 1,
@@ -488,9 +488,9 @@
             },
             "sTransformComponent" : {
                "pos" : {
-                  "x" : 650,
-                  "y" : 450,
-                  "z" : 600
+                  "x" : 675.994384765625,
+                  "y" : 468.94912719726563,
+                  "z" : 552.669921875
                },
                "rotation" : {
                   "x" : -34.999996185302734,
