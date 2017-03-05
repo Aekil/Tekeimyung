@@ -362,16 +362,16 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
         auto& cameras = em.getEntitiesByComponent<sCameraComponent>();
         for (auto& camera: cameras)
         {
+            sTransformComponent* transform = camera->getComponent<sTransformComponent>();
+            sCameraComponent* cameraComp = camera->getComponent<sCameraComponent>();
+
+            // Update camera transform
+            //TODO: only update if sTransformComponent changed
+            cameraComp->camera.setRotation(transform->getRotation());
+            cameraComp->camera.setPos(transform->getPos());
+
             if (LevelEntitiesDebugWindow::getSelectedEntityId() == camera->id)
             {
-                sTransformComponent* transform = camera->getComponent<sTransformComponent>();
-                sCameraComponent* cameraComp = camera->getComponent<sCameraComponent>();
-
-                // Update camera transform
-                //TODO: only update if sTransformComponent changed
-                cameraComp->camera.setRotation(transform->getRotation());
-                cameraComp->camera.setPos(transform->getPos());
-
                 addCameraViewToRenderQueue(cameraComp, transform);
             }
         }
