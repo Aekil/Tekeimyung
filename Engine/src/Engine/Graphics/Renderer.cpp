@@ -135,6 +135,9 @@ void    Renderer::render(Camera* camera, RenderQueue& renderQueue)
         {
             LOG_WARN("Attempt to render non-UI objects with no camera");
         }
+
+        glDepthMask(GL_TRUE);
+        glDisable(GL_BLEND);
     }
 
     // UI objects
