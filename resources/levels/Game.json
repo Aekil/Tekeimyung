@@ -468,6 +468,7 @@
                "fov" : 45,
                "near" : 200,
                "projection" : "ORTHOGRAPHIC_3D",
+               "projection_size" : 500,
                "viewport" : {
                   "extent" : {
                      "height" : 1,
@@ -477,11 +478,13 @@
                      "x" : 0,
                      "y" : 0
                   }
-               },
-               "zoom" : 0.5
+               }
             },
             "sNameComponent" : {
                "name" : "CAMERA"
+            },
+            "sScriptComponent" : {
+               "class" : [ "CameraScript" ]
             },
             "sTransformComponent" : {
                "pos" : {
