@@ -94,7 +94,6 @@ bool    GameWindow::initialize()
     registerEvents();
     ImGui_ImplGlfwGL3_Init(_window, false);
 
-    setViewport(glm::ivec4(0.0f, 0.0f, _bufferWidth, _bufferHeight));
     setRunning(true);
 
     #if defined(ENGINE_DEBUG)
@@ -248,17 +247,6 @@ Keyboard&	GameWindow::getKeyboard()
 Mouse&      GameWindow::getMouse()
 {
     return (_mouse);
-}
-
-void    GameWindow::setViewport(const glm::ivec4& viewport)
-{
-    _viewport = viewport;
-    glViewport(_viewport.x, _viewport.y, _viewport.z, _viewport.w);
-}
-
-const glm::ivec4 GameWindow::getViewport() const
-{
-    return (_viewport);
 }
 
 void    GameWindow::maximize()
@@ -635,7 +623,6 @@ void    GameWindow::handleResize(int width, int height)
 
     _bufferWidth = width;
     _bufferHeight = height;
-    setViewport(glm::ivec4(0.0f, 0.0f, _bufferWidth, _bufferHeight));
 
     // Handle window resize for menu systems
     for (auto& gameState: _gameStateManager->getStates())

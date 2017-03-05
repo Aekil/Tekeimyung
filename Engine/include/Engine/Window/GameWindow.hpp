@@ -35,9 +35,6 @@ public:
 	Keyboard&							getKeyboard();
     Mouse&                              getMouse();
 
-    void                                setViewport(const glm::ivec4& viewport);
-    const glm::ivec4                    getViewport() const;
-
     void                                maximize();
     void                                toggleFullscreen();
     void                                setRunning(bool running);
@@ -96,8 +93,6 @@ private:
     int                                 _screenHeight;
     int                                 _bufferWidth;
     int                                 _bufferHeight;
-
-    glm::ivec4                          _viewport;
 
     std::string                         _title;
     bool                                _fullscreen;

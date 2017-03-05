@@ -157,4 +157,17 @@ public:
         }
         return (false);
     }
+
+    template<typename T>
+    static void limitValueInRange(const T& min, const T& max, T& value)
+    {
+        if (value < min)
+        {
+            value = min;
+        }
+        else if (value > max)
+        {
+            value = max;
+        }
+    }
 };

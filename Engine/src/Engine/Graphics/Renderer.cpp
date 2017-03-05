@@ -119,6 +119,12 @@ void    Renderer::render(Camera* camera, RenderQueue& renderQueue)
                 lightsNb = 1;
             }
 
+            // Set viewport
+            glViewport((uint32_t)camera->getViewport().offset.x,
+                        (uint32_t)camera->getViewport().offset.y,
+                        (uint32_t)camera->getViewport().extent.width,
+                        (uint32_t)camera->getViewport().extent.height);
+
             camera->updateUBO();
             camera->getUBO().bind();
 

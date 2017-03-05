@@ -179,9 +179,13 @@ Ray     Camera::screenPosToRay(float posX, float posY)
 
     // Unproject 2D points to get 3D points
     // Get 3D point on near plane
-    glm::vec3 nearPoint = glm::unProject(nearScreen, getView(), getProj(), gameWindow->getViewport());
+    glm::vec4 viewport = glm::vec4(getViewport().offset.x,
+                                getViewport().offset.y,
+                                getViewport().extent.width,
+                                getViewport().extent.height);
+    glm::vec3 nearPoint = glm::unProject(nearScreen, getView(), getProj(), viewport);
     // Get 3D point on far plane
-    glm::vec3 farPoint = glm::unProject(farScreen, getView(), getProj(), gameWindow->getViewport());
+    glm::vec3 farPoint = glm::unProject(farScreen, getView(), getProj(), viewport);
 
     return Ray(nearPoint, farPoint - nearPoint);
 }
@@ -200,16 +204,14 @@ void    Camera::updateProj()
 {
     if (_projType == Camera::eProj::ORTHOGRAPHIC_3D)
     {
-        float size = _projSize * getAspect();
-        glm::vec2 projSize(_projSize * getAspect(), _projSize);
-        glm::vec4 screen = glm::vec4((projSize.x / 2.0f * -1.0f) + _viewport.offset.x,
-                            (projSize.x / 2.0f) + _viewport.offset.x,
-                            (projSize.y / 2.0f * -1.0f) + _viewport.offset.y,
-                            (projSize.y / 2.0f) + _viewport.offset.y);
-        _proj = glm::ortho(screen.x,
-                            screen.y,
-                            screen.z,
-                            screen.w,
+        glm::vec2 projSize;
+        projSize.x = getProjSize() * getAspect();
+        projSize.y = getProjSize();
+
+        _proj = glm::ortho(projSize.x / 2.0f * -1.0f,
+                            projSize.x / 2.0f,
+                            projSize.y / 2.0f * -1.0f,
+                            projSize.y / 2.0f,
                             _near, _far);
     }
     else if (_projType == Camera::eProj::ORTHOGRAPHIC_2D)
@@ -236,4 +238,47 @@ void    Camera::updateView()
     _view = rotate * translate;
 
     _needUpdateView = false;
+}
+
+glm::vec3   Camera::getVisibleAreaSize(const glm::vec3& projSize) const
+{
+    glm::vec3 visibleProjSize = projSize;
+    glm::vec2 maxProjSize = {projSize.x / getViewportRect().extent.width,
+                             projSize.y / getViewportRect().extent.height};
+    glm::vec2 offset = {getViewportRect().offset.x * maxProjSize.x,
+                        getViewportRect().offset.y * maxProjSize.y};
+
+    // Update X size
+    {
+        if (offset.x >= 0)
+        {
+            float outScreen = maxProjSize.x - (projSize.x + offset.x);
+            if (outScreen < 0.0f)
+            {
+                visibleProjSize.x += outScreen;
+            }
+        }
+        else
+        {
+            visibleProjSize.x += offset.x;
+        }
+    }
+
+    // Update Y size
+    {
+        if (offset.y >= 0)
+        {
+            float outScreen = maxProjSize.y - (projSize.y + offset.y);
+            if (outScreen < 0.0f)
+            {
+                visibleProjSize.y += outScreen;
+            }
+        }
+        else
+        {
+            visibleProjSize.y += offset.y;
+        }
+    }
+
+    return (visibleProjSize);
 }

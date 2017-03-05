@@ -1475,13 +1475,18 @@ bool    ComponentFactory<sCameraComponent>::updateEditor(const std::string& enti
 
         ImGui::Text("Viewport");
         ImGui::PushItemWidth(100);
-        viewportChanged |= ImGui::InputFloat("X", &viewportRect.offset.x);
+        viewportChanged |= ImGui::InputFloat("X", &viewportRect.offset.x, 0.1f, ImGuiInputTextFlags_AllowTabInput);
         ImGui::SameLine();
-        viewportChanged |= ImGui::InputFloat("Y", &viewportRect.offset.y);
-        viewportChanged |= ImGui::InputFloat("Width", &viewportRect.extent.width);
+        viewportChanged |= ImGui::InputFloat("Y", &viewportRect.offset.y, 0.1f, ImGuiInputTextFlags_AllowTabInput);
+        viewportChanged |= ImGui::InputFloat("Width", &viewportRect.extent.width, 0.1f, ImGuiInputTextFlags_AllowTabInput);
         ImGui::SameLine();
-        viewportChanged |= ImGui::InputFloat("Height", &viewportRect.extent.height);
+        viewportChanged |= ImGui::InputFloat("Height", &viewportRect.extent.height, 0.1f, ImGuiInputTextFlags_AllowTabInput);
         ImGui::PopItemWidth();
+
+        Helper::limitValueInRange<float>(0.0f, 1.0f, viewportRect.offset.x);
+        Helper::limitValueInRange<float>(0.0f, 1.0f, viewportRect.offset.y);
+        Helper::limitValueInRange<float>(0.0f, 1.0f, viewportRect.extent.width);
+        Helper::limitValueInRange<float>(0.0f, 1.0f, viewportRect.extent.height);
 
         if (viewportChanged)
         {

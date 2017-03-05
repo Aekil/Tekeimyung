@@ -34,7 +34,7 @@ void CameraScript::update(float dt)
     // update zoom
     {
         auto &&scroll = mouse.getScroll();
-        static double lastScrollOffset;
+        static double lastScrollOffset = scroll.yOffset;
 
 
         double offset = scroll.yOffset - lastScrollOffset;

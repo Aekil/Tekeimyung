@@ -184,21 +184,40 @@ void    RenderingSystem::addCameraViewPerspectiveToRenderQueue(sCameraComponent*
         trapezeInfos.bottom.length = 2.0f * tan(fov / 2.0f) * camera.getFar();
         trapezeInfos.bottom.width = trapezeInfos.bottom.length * aspect;
 
+
+        glm::vec3 visibleNearSize = camera.getVisibleAreaSize({trapezeInfos.top.width,
+                                                                trapezeInfos.top.length,
+                                                                trapezeInfos.height});
+        glm::vec3 visibleFarSize = camera.getVisibleAreaSize({trapezeInfos.bottom.width,
+                                                                trapezeInfos.bottom.length,
+                                                                trapezeInfos.height});
+
+
+        transform->_posOffsetLocal = glm::vec3((trapezeInfos.bottom.width - visibleFarSize.x) / 2.0f * -1.0f,
+                                                (trapezeInfos.bottom.length - visibleFarSize.y) / 2.0f * - 1.0f,
+                                                0.0f);
+
+        trapezeInfos.bottom.width = visibleFarSize.x;
+        trapezeInfos.bottom.length = visibleFarSize.y;
+        trapezeInfos.top.width = visibleNearSize.x;
+        trapezeInfos.top.length = visibleNearSize.y;
+
+
         cameraComp->_cameraPerspective = std::make_unique<Trapeze>(trapezeInfos);
 
         cameraComp->_cameraPerspective->setMaterial(material);
         cameraComp->_cameraView = std::make_unique<ModelInstance>(cameraComp->_cameraPerspective.get());
     }
 
-    transform->_posOffsetLocal = glm::vec3(0.0f);
     transform->_posOffsetWorld = glm::vec3(0.0f);
 
     glm::mat4 transformMat = transform->getTransform();
 
     // Rotate trapeze so that top and bottom faces are parallel to camera direction
     glm::quat rotation(glm::vec3(glm::radians(90.0f), glm::radians(0.0f), glm::radians(0.0f)));
+    glm::mat4 translate = glm::translate(glm::mat4(1.0f), -transform->_posOffsetLocal);
     // Place the camera to the back of the trapeze
-    glm::mat4 translate = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f,
+    translate = glm::translate(translate, glm::vec3(0.0f,
                                                             0.0f,
                                                             -((camera.getFar() - camera.getNear()) / 2.0f)));
     // Translate camera near
@@ -231,21 +250,21 @@ void    RenderingSystem::addCameraViewOrthoGraphicToRenderQueue(sCameraComponent
     projSize.x = camera.getProjSize() * camera.getAspect();
     projSize.y = camera.getProjSize();
     projSize.z = camera.getFar() - camera.getNear();
+    glm::vec3 visibleProjSize = camera.getVisibleAreaSize(projSize);
 
-    // Translate box corresponding to viewport offsets and near distance
-    transform->_posOffsetLocal = glm::vec3(camera.getViewport().offset.x,
-                            camera.getViewport().offset.y,
-                            0.0f);
+    transform->_posOffsetLocal = glm::vec3((projSize.x - visibleProjSize.x) / 2.0f * -1.0f,
+                                            (projSize.y - visibleProjSize.y) / 2.0f * - 1.0f,
+                                            0.0f);
     transform->_posOffsetWorld = glm::vec3(0.0f);
 
     glm::mat4 translate = glm::translate(glm::mat4(1.0f), transform->_posOffsetLocal);
     // Place the camera to the back of the box
-    translate = glm::translate(translate, glm::vec3(0.0f, 0.0f, -(projSize.z / 2.0f)));
+    translate = glm::translate(translate, glm::vec3(0.0f, 0.0f, -(visibleProjSize.z / 2.0f)));
     // Translate camera near
     translate = glm::translate(translate, glm::vec3(0.0f, 0.0f, -camera.getNear()));
-    glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(projSize.x / SIZE_UNIT,
-                                                        projSize.y / SIZE_UNIT,
-                                                        projSize.z / SIZE_UNIT));
+    glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(visibleProjSize.x / SIZE_UNIT,
+                                                        visibleProjSize.y / SIZE_UNIT,
+                                                        visibleProjSize.z / SIZE_UNIT));
     transformMat = transformMat * translate * scale;
 
     BufferPool::SubBuffer* buffer = cameraComp->_cameraView->getBuffer(_bufferPool.get());

@@ -83,6 +83,9 @@ public:
     static void         setInstance(Camera* instance);
     static Camera*      getInstance();
 
+    // Size of visible ortho projection
+    glm::vec3           getVisibleAreaSize(const glm::vec3& projSize) const;
+
 private:
     void                updateProj();
     void                updateView();
