@@ -18,6 +18,7 @@ public:
 private:
     sCameraComponent*   _cameraComp;
     float               _scrollSpeed;
+    double              _lastScrollOffset;
 };
 
 REGISTER_SCRIPT(CameraScript);

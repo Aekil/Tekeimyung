@@ -14,6 +14,10 @@ void CameraScript::start()
 {
     _cameraComp = entity->getComponent<sCameraComponent>();
     _scrollSpeed = 1500.0f;
+
+    auto &mouse = GameWindow::getInstance()->getMouse();
+    auto &&scroll = mouse.getScroll();
+    _lastScrollOffset = scroll.yOffset;
 }
 
 void CameraScript::update(float dt)
@@ -34,10 +38,8 @@ void CameraScript::update(float dt)
     // update zoom
     {
         auto &&scroll = mouse.getScroll();
-        static double lastScrollOffset = scroll.yOffset;
 
-
-        double offset = scroll.yOffset - lastScrollOffset;
+        double offset = scroll.yOffset - _lastScrollOffset;
 
         if (offset)
         {
@@ -49,7 +51,7 @@ void CameraScript::update(float dt)
             camera.setProjSize(std::max(camera.getProjSize(), 250.0f));
             //camera.zoom((float)(-offset * dt));
         }
-        lastScrollOffset = scroll.yOffset;
+        _lastScrollOffset = scroll.yOffset;
     }
 
     // update camera position when reaching edge

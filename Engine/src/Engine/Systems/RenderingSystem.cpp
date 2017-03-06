@@ -355,31 +355,10 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
         }
     }
 
-    // Get scene camera
-    Camera* camera = nullptr;
-    {
-        // Use attached camera if exists
-        // Else use the camera of camera entities
-        if (_camera)
-        {
-            camera = _camera;
-        }
-        else
-        {
-            auto& cameras = em.getEntitiesByComponent<sCameraComponent>();
-            // Render with the first camera found
-            // TODO: render with multiple camera ?
-            if (cameras.size() > 0)
-            {
-                camera = &cameras[0]->getComponent<sCameraComponent>()->camera;
-            }
-        }
-    }
-
     // Add cameras views to render queue
-    #if defined(ENGINE_DEBUG)
     {
         auto& cameras = em.getEntitiesByComponent<sCameraComponent>();
+
         for (auto& camera: cameras)
         {
             sTransformComponent* transform = camera->getComponent<sTransformComponent>();
@@ -393,16 +372,36 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
                 cameraComp->camera.setPos(transform->getPos());
             }
 
-            if (LevelEntitiesDebugWindow::getSelectedEntityId() == camera->id &&
-                &cameraComp->camera != _camera)
+            if (!_camera)
             {
-                addCameraViewToRenderQueue(cameraComp, transform);
+                Renderer::getInstance()->render(&cameraComp->camera, _renderQueue);
             }
         }
-    }
-    #endif
 
-    Renderer::getInstance()->render(camera, _renderQueue);
+        if (_camera)
+        {
+            #if defined(ENGINE_DEBUG)
+                uint32_t selectedEntityId = LevelEntitiesDebugWindow::getSelectedEntityId();
+                Entity* selectedEntity = em.getEntity(selectedEntityId);
+                if (selectedEntity)
+                {
+                    sCameraComponent* cameraComp = selectedEntity->getComponent<sCameraComponent>();
+                    sTransformComponent* transform = selectedEntity->getComponent<sTransformComponent>();
+                    if (cameraComp)
+                    {
+                        addCameraViewToRenderQueue(cameraComp, transform);
+                    }
+                }
+            #endif
+            Renderer::getInstance()->render(_camera, _renderQueue);
+        }
+        // There is no camera but we can still render UI
+        else if (cameras.size() == 0)
+        {
+            Renderer::getInstance()->render(nullptr, _renderQueue);
+        }
+    }
+
 }
 
 BufferPool::SubBuffer*  RenderingSystem::getModelBuffer(sTransformComponent* transform, sRenderComponent* render)

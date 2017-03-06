@@ -199,8 +199,8 @@ void    EditorState::renderCameraPreview(Camera& camera)
     Camera::sViewport viewportRect = camera.getViewportRect();
     // Modify viewport for preview
     camera.setViewportRect({
-        0.0f, // offset.x
-        0.0f, // offset.y
+        0.3f * viewportRect.offset.x, // offset.x
+        0.3f * viewportRect.offset.y, // offset.y
         0.3f * viewportRect.extent.width, // extent.width
         0.3f * viewportRect.extent.height // extent.height
     });
@@ -211,8 +211,8 @@ void    EditorState::renderCameraPreview(Camera& camera)
     // Update camera preview background
     {
         glm::vec3 scale;
-        scale.x = (camera.getViewportRect().extent.width * _camera.getViewport().extent.width) / SIZE_UNIT;
-        scale.y = (camera.getViewportRect().extent.height * _camera.getViewport().extent.height) / SIZE_UNIT;
+        scale.x = (0.3f * _camera.getViewport().extent.width) / SIZE_UNIT;
+        scale.y = (0.3f * _camera.getViewport().extent.height) / SIZE_UNIT;
         scale.z = 1.0f;
 
         _cameraPreviewTransform->setScale(scale);

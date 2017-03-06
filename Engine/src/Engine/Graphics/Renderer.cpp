@@ -157,6 +157,7 @@ void    Renderer::render(Camera* camera, RenderQueue& renderQueue)
 
         _UICamera.getUBO().bind();
 
+
         renderOpaqueObjects(renderQueue.getUIOpaqueMeshs(), renderQueue.getUIOpaqueMeshsNb(), lights, 1);
 
         // Enable blend to blend transparent ojects and particles
