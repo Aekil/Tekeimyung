@@ -91,6 +91,9 @@ bool    Renderer::initialize()
     // Activate back culling
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
+
+    //Enable scissor
+    glEnable(GL_SCISSOR_TEST);
     return (true);
 }
 

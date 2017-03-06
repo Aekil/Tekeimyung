@@ -220,8 +220,21 @@ void    EditorState::renderCameraPreview(Camera& camera)
     }
 
 
+    // Set scissor to the size of the camera viewport
+    // because we don't want the camera preview to be rendered outside the window preview
+    glScissor(0,
+            0,
+            static_cast<uint32_t>(0.3f * GameWindow::getInstance()->getBufferWidth()),
+            static_cast<uint32_t>(0.3f * GameWindow::getInstance()->getBufferHeight()));
+
     // Render camera preview
     renderSystem->update(*_world.getEntityManager(), 0.0f);
+
+    // Reset scissor
+    glScissor(0,
+            0,
+            (uint32_t)GameWindow::getInstance()->getBufferWidth(),
+            (uint32_t)GameWindow::getInstance()->getBufferHeight());
 
     // Reset viewport
     camera.setViewportRect(viewportRect);
