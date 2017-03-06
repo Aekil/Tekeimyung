@@ -10,6 +10,7 @@
 #include <Engine/Window/GameWindow.hpp>
 #include <Engine/EditorState.hpp>
 #include <Engine/EntityFactory.hpp>
+#include <Engine/Systems/UISystem.hpp>
 
 #include <Engine/Core/GameState.hpp>
 
@@ -127,5 +128,17 @@ void    GameState::loadLevel()
     {
         LOG_INFO("Loading level \"%s\"", _levelFile.c_str());
         LevelLoader::getInstance()->load(_levelFile, _world.getEntityManager());
+    }
+}
+
+void    GameState::onWindowResize()
+{
+    // Update UI system
+    {
+        UISystem* uiSystem = _world.getSystem<UISystem>();
+        if (uiSystem)
+        {
+            uiSystem->onWindowResize(*_world.getEntityManager());
+        }
     }
 }

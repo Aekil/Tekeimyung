@@ -9,7 +9,6 @@
 
 #include <Engine/Graphics/Renderer.hpp>
 #include <Engine/Sound/SoundManager.hpp>
-#include <Engine/Systems/UISystem.hpp>
 #include <Engine/Utils/Debug.hpp>
 #include <Engine/Utils/Logger.hpp>
 
@@ -627,11 +626,7 @@ void    GameWindow::handleResize(int width, int height)
     // Handle window resize for menu systems
     for (auto& gameState: _gameStateManager->getStates())
     {
-        UISystem* uiSystem = gameState->getWorld().getSystem<UISystem>();
-        if (uiSystem)
-        {
-            uiSystem->onWindowResize(*gameState->getWorld().getEntityManager());
-        }
+        gameState->onWindowResize();
     }
 
     Renderer::getInstance()->onWindowResize();

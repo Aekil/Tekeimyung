@@ -13,10 +13,12 @@
 #include <Engine/Core/GameStateManager.hpp>
 
 class GameStateManager;
+class GameWindow;
 
 class GameState
 {
 friend class GameStateManager;
+friend class GameWindow;
 
 public:
     GameState(GameStateManager* gameStateManager, uint32_t id, const std::string& levelFile = "");
@@ -42,6 +44,7 @@ protected:
 
 private:
     void                            loadLevel();
+    void                            onWindowResize();
 
 protected:
     World                   _world;

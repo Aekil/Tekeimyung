@@ -155,6 +155,11 @@ void    Renderer::render(Camera* camera, RenderQueue& renderQueue)
         // Use this light for UI
         std::vector<Light*> lights = {&_UILight};
 
+        // Set viewport
+        glViewport((uint32_t)_UICamera.getViewport().offset.x,
+                    (uint32_t)_UICamera.getViewport().offset.y,
+                    (uint32_t)_UICamera.getViewport().extent.width,
+                    (uint32_t)_UICamera.getViewport().extent.height);
         _UICamera.getUBO().bind();
 
 
