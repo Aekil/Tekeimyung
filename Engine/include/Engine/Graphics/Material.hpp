@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include <assimp/scene.h>
 #include <glm/vec4.hpp>
 #include <unordered_map>
 
@@ -38,6 +37,8 @@
 #define GENERATE_BLEND_CONDITION_ENUM(ENUM)     \
     if (blendString == #ENUM)                    \
         return ENUM;
+
+struct aiMaterial;
 
 class Material final: public Resource
 {

@@ -1,6 +1,12 @@
 #	@Author   Guillaume Labey
 #	@Author   Mathieu Chassara
 
+# include macros
+include(${PROJECT_SOURCE_DIR}/cmake/Macros.cmake)
+
+# define the path of CMake modules
+set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/modules/")
+
 cmake_minimum_required(VERSION 3.0)
 set(EXECUTABLE_NAME "ENGINE")
 project(${EXECUTABLE_NAME})
@@ -60,16 +66,18 @@ find_package(OpenGL REQUIRED)
 
 # Find FMOD library
 
-#Set Assimp directory and library on Windows
-IF (WIN32)
-  set(ASSIMP_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/external/Assimp/include)
-  include_directories(${ASSIMP_INCLUDE_DIR})
-  IF (CMAKE_SIZEOF_VOID_P EQUAL 8)
-    find_library(assimp assimp PATHS ${CMAKE_SOURCE_DIR}/external/Assimp/lib/x64)
-  ELSE()
-    find_library(assimp assimp PATHS ${CMAKE_SOURCE_DIR}/external/Assimp/lib/x86)
-  ENDIF()
-ENDIF()
+# Find assimp
+find_package(Assimp)
+if (NOT ASSIMP_FOUND)
+    if (ENGINE_OS_WINDOWS)
+        set(ASSIMP_ROOT "${CMAKE_SOURCE_DIR}/external/assimp/lib/windows/${ARCH_DIR}")
+    elseif (ENGINE_OS_LINUX)
+        set(ASSIMP_ROOT "${CMAKE_SOURCE_DIR}/external/assimp/lib/linux")
+    endif()
+
+    set(ASSIMP_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/external/assimp/include")
+    find_package(Assimp REQUIRED)
+endif()
 
 IF (WIN32)
 #Set FMOD directory and library on Windows
@@ -90,6 +98,7 @@ include_directories(${CMAKE_SOURCE_DIR}/external/stb_image/)
 include_directories(${CMAKE_SOURCE_DIR}/external/imgui/)
 include_directories(${CMAKE_SOURCE_DIR}/external/imGuizmo/)
 include_directories(${CMAKE_SOURCE_DIR}/external/jsoncpp)
+include_directories(${ASSIMP_INCLUDE_DIR})
 
 # Include dirent only for windows
 # Linux have his own header
@@ -106,9 +115,9 @@ IF (WIN32)
 ENDIF()
 
 # Link libraries with executable
-target_link_libraries(${EXECUTABLE_NAME} ECS ${GLFW_LIBRARY} ${GLEW_LIBRARY} ${OPENGL_gl_LIBRARY} ${FMOD_LIBRARY} ${assimp})
+target_link_libraries(${EXECUTABLE_NAME} ECS ${GLFW_LIBRARY} ${GLEW_LIBRARY} ${OPENGL_gl_LIBRARY} ${FMOD_LIBRARY} ${ASSIMP_LIBRARY})
 
 
 # Store include dir into variable and share it with other projects through cache
-set(${EXECUTABLE_NAME}_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include ${GLFW_INCLUDE_DIR} ${GLEW_INCLUDE_DIR} ${OPENGL_INCLUDE_DIR} ${ASSIMP_INCLUDE_DIR} ${FMOD_INCLUDE_DIR}
+set(${EXECUTABLE_NAME}_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include ${GLFW_INCLUDE_DIR} ${GLEW_INCLUDE_DIR} ${OPENGL_INCLUDE_DIR} ${FMOD_INCLUDE_DIR}
 CACHE INTERNAL "${EXECUTABLE_NAME}: Include Directories" FORCE)

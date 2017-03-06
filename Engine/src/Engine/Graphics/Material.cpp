@@ -2,6 +2,8 @@
 * @Author   Guillaume Labey
 */
 
+#include <assimp/scene.h>
+
 #include <Engine/Utils/Exception.hpp>
 #include <Engine/Utils/Helper.hpp>
 #include <Engine/Utils/JsonReader.hpp>

@@ -8,7 +8,6 @@
 # include <vector>
 # include <memory>
 # include <glm/gtx/quaternion.hpp>
-# include <assimp/Importer.hpp>
 
 # include <Engine/Graphics/Mesh.hpp>
 # include <Engine/Graphics/Buffer.hpp>
@@ -16,6 +15,13 @@
 # include <Engine/Utils/Resource.hpp>
 
 #define BUFFER_OFFSET(bytes) ((GLubyte*) NULL + (bytes))
+
+struct aiScene;
+struct aiNode;
+namespace Assimp
+{
+    class Importer;
+};
 
 class Model: public Resource
 {
@@ -46,7 +52,7 @@ protected:
     void                        calculateSize();
 
 private:
-    void                        transformVertices(aiScene* scene, aiNode* node);
+    void                        transformVertices(const aiScene* scene, aiNode* node);
     void                        computeSceneNodeAbsoluteTransform(aiNode* node);
 
 protected:
@@ -58,9 +64,6 @@ protected:
 
     // OpenGL Buffers
     Buffer                              _buffer;
-
-    aiScene*                            _scene;
-    Assimp::Importer                    _importer;
     float                               _anim;
 
     glm::vec3                           _size;

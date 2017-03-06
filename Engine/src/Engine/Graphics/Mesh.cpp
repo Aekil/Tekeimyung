@@ -2,6 +2,7 @@
 * @Author   Guillaume Labey
 */
 
+#include <assimp/scene.h>
 #include <cstring>
 #include <glm/vec3.hpp>
 #include <glm/vec2.hpp>

@@ -19,11 +19,12 @@ Model::~Model() {}
 
 bool    Model::loadFromFile(const std::string &fileName)
 {
-    _importer.SetPropertyInteger(AI_CONFIG_PP_SBP_REMOVE, aiPrimitiveType_POINT | aiPrimitiveType_LINE);
+    Assimp::Importer importer;
+    importer.SetPropertyInteger(AI_CONFIG_PP_SBP_REMOVE, aiPrimitiveType_POINT | aiPrimitiveType_LINE);
 
     LOG_INFO("Loading model \"%s\"", fileName.c_str());
 
-    const aiScene* scene = _importer.ReadFile(fileName,
+    const aiScene* scene = importer.ReadFile(fileName,
         aiProcess_CalcTangentSpace |
         aiProcess_Triangulate |
         aiProcess_SortByPType |
@@ -37,19 +38,15 @@ bool    Model::loadFromFile(const std::string &fileName)
         aiProcess_OptimizeMeshes |
         aiProcess_GenSmoothNormals);
 
-    _scene = const_cast<aiScene*>(scene);
-
     if (!scene)
     {
-        EXCEPT(InternalErrorException, "Failed to load model \"%s\"\nError: %s", fileName.c_str(), _importer.GetErrorString());
+        EXCEPT(InternalErrorException, "Failed to load model \"%s\"\nError: %s", fileName.c_str(), importer.GetErrorString());
         return (false);
     }
 
-
-
     // Modify scene nodes transformation matrix relative to parent node
     computeSceneNodeAbsoluteTransform(scene->mRootNode);
-    transformVertices(_scene, scene->mRootNode);
+    transformVertices(scene, scene->mRootNode);
 
     for (uint32_t i = 0; i < scene->mNumMeshes; i++)
     {
@@ -178,7 +175,7 @@ void    Model::initIndexData()
     }
 }
 
-void    Model::transformVertices(aiScene* scene, aiNode* node)
+void    Model::transformVertices(const aiScene* scene, aiNode* node)
 {
     aiMatrix4x4 nodeTransform = node->mTransformation;
 

@@ -5,12 +5,12 @@
 #pragma once
 
 # include <vector>
-# include <assimp/scene.h>
 
 # include <Engine/Graphics/Buffer.hpp>
 # include <Engine/Graphics/Material.hpp>
 
 class Model;
+struct aiMesh;
 
 class Mesh {
 public:

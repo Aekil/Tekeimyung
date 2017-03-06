@@ -1,0 +1,36 @@
+# detect os
+if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
+    set(ENGINE_OS_WINDOWS 1)
+elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+    set(ENGINE_OS_LINUX 1)
+elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Android")
+    set(ENGINE_OS_ANDROID 1)
+else()
+    message(FATAL_ERROR "Unsupported operating system or environment")
+    return()
+endif()
+
+# detect compiler
+if(CMAKE_CXX_COMPILER MATCHES ".*clang[+][+]" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang++")
+    set(ENGINE_COMPILER_CLANG 1)
+elseif(CMAKE_COMPILER_IS_GNUCXX)
+    set(ENGINE_COMPILER_GCC 1)
+elseif(MSVC)
+    set(ENGINE_COMPILER_MSVC 1)
+else()
+    message(FATAL_ERROR "Unsupported compiler")
+    return()
+endif()
+
+# define the install directory for miscellaneous files
+if(ENGINE_OS_WINDOWS)
+    set(INSTALL_MISC_DIR .)
+elseif(ENGINE_OS_LINUX)
+    set(INSTALL_MISC_DIR share/lug)
+endif()
+
+if (CMAKE_CL_64)
+  set(ARCH_DIR "x64")
+else()
+  set(ARCH_DIR "x86")
+endif()

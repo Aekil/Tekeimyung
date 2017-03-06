@@ -18,7 +18,6 @@ function(source_group_files)
         else()
             set(filepath_relative "${filepath}")
         endif()
-		
         get_filename_component(file_path "${filepath_relative}" PATH)
         string(REPLACE "/" "\\" file_path_msvc "${file_path}")
         source_group("${file_path_msvc}" FILES "${filepath}")
