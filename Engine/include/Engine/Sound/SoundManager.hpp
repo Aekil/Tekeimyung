@@ -6,9 +6,6 @@
 
 #include <cstdint>
 #include <memory>
-#include <fmod.hpp>
-#include <fmod_common.h>
-#include <fmod_errors.h>
 
 #define ENABLE_SOUND        false
 
@@ -16,6 +13,14 @@
 
 #define NB_MAX_CHANNELS     64
 #define NB_MAX_SOUNDS       64
+
+
+namespace FMOD
+{
+    class Sound;
+    class Channel;
+    class System;
+};
 
 enum class eSoundType: char {
     NONE = 0,
@@ -90,7 +95,7 @@ private:
 private:
     static std::shared_ptr<SoundManager>    _soundManager;
 
-    FMOD_RESULT                             _result;
+    int                                     _result;
     FMOD::System*                           _system;
 
     tSound                                  _sounds[NB_MAX_SOUNDS];

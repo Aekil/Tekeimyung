@@ -79,18 +79,23 @@ if (NOT ASSIMP_FOUND)
     find_package(Assimp REQUIRED)
 endif()
 
-IF (WIN32)
-#Set FMOD directory and library on Windows
-  set(FMOD_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/external/fmod/inc)
-    find_library(FMOD_LIBRARY fmodL64_vc PATHS ${CMAKE_SOURCE_DIR}/external/fmod/lib)
-  ELSE()
+# Find fmod
+find_package(FMOD)
+if (NOT FMOD_FOUND)
+    if (ENGINE_OS_WINDOWS)
+        set(FMOD_ROOT "${CMAKE_SOURCE_DIR}/external/fmod/lib/windows/${ARCH_DIR}")
+    elseif (ENGINE_OS_LINUX)
+        set(FMOD_ROOT "${CMAKE_SOURCE_DIR}/external/fmod/lib/linux")
+    endif()
+
+    set(FMOD_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/external/fmod/include")
     find_package(FMOD REQUIRED)
-ENDIF()
+endif()
 
 
 
 # Add project and libraries includes
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include ${GLFW_INCLUDE_DIR} ${GLEW_INCLUDE_DIR} ${OPENGL_INCLUDE_DIR} ${FMOD_INCLUDE_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include ${GLFW_INCLUDE_DIR} ${GLEW_INCLUDE_DIR} ${OPENGL_INCLUDE_DIR})
 
 # Add external includes
 include_directories(${CMAKE_SOURCE_DIR}/external/glm/)
@@ -98,6 +103,7 @@ include_directories(${CMAKE_SOURCE_DIR}/external/stb_image/)
 include_directories(${CMAKE_SOURCE_DIR}/external/imgui/)
 include_directories(${CMAKE_SOURCE_DIR}/external/imGuizmo/)
 include_directories(${CMAKE_SOURCE_DIR}/external/jsoncpp)
+include_directories(${FMOD_INCLUDE_DIR})
 include_directories(${ASSIMP_INCLUDE_DIR})
 
 # Include dirent only for windows
@@ -119,5 +125,5 @@ target_link_libraries(${EXECUTABLE_NAME} ECS ${GLFW_LIBRARY} ${GLEW_LIBRARY} ${O
 
 
 # Store include dir into variable and share it with other projects through cache
-set(${EXECUTABLE_NAME}_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include ${GLFW_INCLUDE_DIR} ${GLEW_INCLUDE_DIR} ${OPENGL_INCLUDE_DIR} ${FMOD_INCLUDE_DIR}
+set(${EXECUTABLE_NAME}_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include ${GLFW_INCLUDE_DIR} ${GLEW_INCLUDE_DIR} ${OPENGL_INCLUDE_DIR}
 CACHE INTERNAL "${EXECUTABLE_NAME}: Include Directories" FORCE)

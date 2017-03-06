@@ -5,6 +5,10 @@
 #include <cmath>
 #include <iostream>
 
+#include <fmod.hpp>
+#include <fmod_common.h>
+#include <fmod_errors.h>
+
 #include <Engine/Utils/Debug.hpp>
 #include <Engine/Utils/Logger.hpp>
 #include <Engine/Utils/ResourceManager.hpp>
