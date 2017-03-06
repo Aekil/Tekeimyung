@@ -1,6 +1,6 @@
 {
    "ambient" : {
-      "a" : 1,
+      "a" : 0,
       "b" : 1,
       "g" : 1,
       "r" : 1
@@ -18,6 +18,6 @@
       "ambient" : "",
       "diffuse" : ""
    },
-   "transparent" : false,
+   "transparent" : true,
    "wireframe" : false
 }
