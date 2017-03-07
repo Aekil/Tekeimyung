@@ -62,20 +62,32 @@ set(SQUIRREL_ENGINE_INCLUDE_DIR ${SQUIRREL_ENGINE_INCLUDE_DIR} ${dependencies_di
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(SQUIRREL_ENGINE DEFAULT_MSG SQUIRREL_ENGINE_LIBRARY_RELEASE SQUIRREL_ENGINE_INCLUDE_DIR)
 
-if(SQUIRREL_ENGINE_FOUND)
-    set(SQUIRREL_ENGINE_LIBRARY debug ${SQUIRREL_ENGINE_LIBRARY_DEBUG}
-                       optimized ${SQUIRREL_ENGINE_LIBRARY_RELEASE}
-    )
-    set(SQUIRREL_ENGINE_LIBRARY ${SQUIRREL_ENGINE_LIBRARY}
-                                ${GLFW_LIBRARY}
-                                ${GLEW_LIBRARY}
-                                ${ECS_LIBRARY}
-                                ${FMOD_LIBRARY}
-                                ${ASSIMP_LIBRARY}
-                                ${OPENGL_gl_LIBRARY}
-    )
+
+# Append release and debug libraries to SQUIRREL_ENGINE_LIBRARY
+if (SQUIRREL_ENGINE_LIBRARY_DEBUG OR SQUIRREL_ENGINE_LIBRARY_RELEASE)
+    if (SQUIRREL_ENGINE_LIBRARY_DEBUG)
+        set(SQUIRREL_ENGINE_LIBRARY ${SQUIRREL_ENGINE_LIBRARY}
+            debug ${SQUIRREL_ENGINE_LIBRARY_DEBUG}
+        )
+    endif()
+
+    if (SQUIRREL_ENGINE_LIBRARY_RELEASE)
+        set(SQUIRREL_ENGINE_LIBRARY ${SQUIRREL_ENGINE_LIBRARY}
+            debug ${SQUIRREL_ENGINE_LIBRARY_RELEASE}
+        )
+    endif()
 else()
     message(FATAL_ERROR "Can't find Squirrel Engine")
 endif()
+
+
+set(SQUIRREL_ENGINE_LIBRARY ${SQUIRREL_ENGINE_LIBRARY}
+                            ${GLFW_LIBRARY}
+                            ${GLEW_LIBRARY}
+                            ${ECS_LIBRARY}
+                            ${FMOD_LIBRARY}
+                            ${ASSIMP_LIBRARY}
+                            ${OPENGL_gl_LIBRARY}
+)
 
 mark_as_advanced(SQUIRREL_ENGINE_INCLUDE_DIR SQUIRREL_ENGINE_LIBRARY)
