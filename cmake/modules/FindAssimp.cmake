@@ -10,6 +10,7 @@ find_path(ASSIMP_INCLUDE_DIR
     PATHS $ENV{ASSIMP_ROOT}/include ${ASSIMP_ROOT}/include
 )
 
+# Find libraries
 find_library(ASSIMP_LIBRARY_RELEASE
     NAMES assimp-vc140-mt assimp
     PATHS $ENV{ASSIMP_ROOT} ${ASSIMP_ROOT}

@@ -91,6 +91,7 @@ find_package(Assimp)
 if (NOT ASSIMP_FOUND)
     if (ENGINE_OS_WINDOWS)
         set(ASSIMP_ROOT "${CMAKE_SOURCE_DIR}/../external/assimp/lib/windows/${ARCH_DIR}")
+        file(GLOB_RECURSE ASSIMP_DLLS "${CMAKE_SOURCE_DIR}/../external/assimp/bin/windows/${ARCH_DIR}/*")
     elseif (ENGINE_OS_LINUX)
         set(ASSIMP_ROOT "${CMAKE_SOURCE_DIR}/../external/assimp/lib/linux")
     endif()
@@ -104,6 +105,7 @@ find_package(FMOD)
 if (NOT FMOD_FOUND)
     if (ENGINE_OS_WINDOWS)
         set(FMOD_ROOT "${CMAKE_SOURCE_DIR}/../external/fmod/lib/windows/${ARCH_DIR}")
+        file(GLOB_RECURSE FMOD_DLLS "${CMAKE_SOURCE_DIR}/../external/fmod/bin/windows/${ARCH_DIR}/*")
     elseif (ENGINE_OS_LINUX)
         set(FMOD_ROOT "${CMAKE_SOURCE_DIR}/../external/fmod/lib/linux")
     endif()
@@ -191,3 +193,9 @@ install(FILES ${ASSIMP_LIBRARY_DEBUG}
 install(FILES ${ECS_LIBRARY_DEBUG}
                 ${ECS_LIBRARY_RELEASE}
         DESTINATION dependencies/lib/ecs)
+
+# Install dll dependencies
+install(FILES ${FMOD_DLLS}
+        DESTINATION dependencies/bin/fmod)
+install(FILES ${ASSIMP_DLLS}
+        DESTINATION dependencies/bin/assimp)

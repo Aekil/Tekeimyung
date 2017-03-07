@@ -14,6 +14,7 @@ find_path(FMOD_INCLUDE_DIR
 set(FMOD_RELEASE_LIBRARIES fmod_vc fmod64_vc libfmod)
 set(FMOD_DEBUG_LIBRARIES fmodL_vc fmod64L_vc libfmodL)
 
+# Find libraries
 find_library(FMOD_LIBRARY_RELEASE
     NAMES ${FMOD_RELEASE_LIBRARIES}
     PATHS $ENV{FMOD_ROOT} ${FMOD_ROOT}
@@ -25,6 +26,7 @@ find_library(FMOD_LIBRARY_DEBUG
     PATHS $ENV{FMOD_ROOT} ${FMOD_ROOT}
     PATH_SUFFIXES lib
 )
+
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(FMOD DEFAULT_MSG FMOD_LIBRARY_RELEASE FMOD_INCLUDE_DIR)

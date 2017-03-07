@@ -55,6 +55,8 @@ find_package(ASSIMP REQUIRED)
 # Find Opengl library
 find_package(OpenGL REQUIRED)
 
+
+
 # Append include dependencies
 file(GLOB dependencies_dirs ${SQUIRREL_ENGINE_ROOT}/dependencies/include/*)
 set(SQUIRREL_ENGINE_INCLUDE_DIR ${SQUIRREL_ENGINE_INCLUDE_DIR} ${dependencies_dirs})

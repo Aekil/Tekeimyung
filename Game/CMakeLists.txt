@@ -37,6 +37,14 @@ include_directories(${SQUIRREL_ENGINE_INCLUDE_DIR})
 # Create executable
 add_executable(${EXECUTABLE_NAME} ${source_files} ${include_files})
 
+# Copy  Squirrel Engine dependencies dlls
+file(GLOB_RECURSE DEPENDENCIES_DLLS "${SQUIRREL_ENGINE_ROOT}/dependencies/bin/*")
+foreach(dll_path IN ITEMS ${DEPENDENCIES_DLLS})
+    add_custom_command(TARGET ${EXECUTABLE_NAME}
+                        POST_BUILD
+                        COMMAND ${CMAKE_COMMAND} -E copy ${dll_path} ${CMAKE_CURRENT_BINARY_DIR})
+endforeach()
+
 
 # Link libraries with executable
 target_link_libraries(${EXECUTABLE_NAME} ${SQUIRREL_ENGINE_LIBRARY})
