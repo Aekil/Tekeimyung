@@ -53,3 +53,9 @@ target_link_libraries(${EXECUTABLE_NAME} ${SQUIRREL_ENGINE_LIBRARY})
 
 # Copy resources in Game directory
 file(COPY ../resources DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
+# Copy engine resources in Game directory
+file(GLOB FILES_AND_DIRS ${SQUIRREL_RESOURCES_DIR}/*)
+foreach(RESOURCE_DIR ${FILES_AND_DIRS})
+  file(COPY ${RESOURCE_DIR} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/resources_engine)
+endforeach()

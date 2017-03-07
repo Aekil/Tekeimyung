@@ -1,0 +1,110 @@
+{
+   "entities" : [
+      {
+         "components" : {
+            "sNameComponent" : {
+               "name" : "EMPTY_OBJECT"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 1
+               },
+               "ignore_raycast" : false,
+               "model" : "resources/models/default.DAE",
+               "texture" : "",
+               "type" : "MESH"
+            },
+            "sScriptComponent" : {
+               "class" : [ "Player" ]
+            },
+            "sSphereColliderComponent" : {
+               "isTrigger" : false,
+               "pos" : {
+                  "x" : 0,
+                  "y" : 17.521810531616211,
+                  "z" : 0
+               },
+               "radius" : 4
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 100,
+                  "y" : 100,
+                  "z" : 200
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 1,
+                  "y" : 1,
+                  "z" : 1
+               }
+            },
+            "sTypeComponent" : {
+               "type" : "TILE_WALKABLE"
+            }
+         },
+         "name" : "EMPTY_OBJECT"
+      },
+      {
+         "components" : {
+            "sNameComponent" : {
+               "name" : "EMPTY_OBJECT"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 1
+               },
+               "ignore_raycast" : false,
+               "model" : "resources/models/default.DAE",
+               "texture" : "",
+               "type" : "MESH"
+            },
+            "sSphereColliderComponent" : {
+               "isTrigger" : false,
+               "pos" : {
+                  "x" : 0,
+                  "y" : 17.521810531616211,
+                  "z" : 0
+               },
+               "radius" : 4
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 100,
+                  "y" : 100,
+                  "z" : 0
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 1,
+                  "y" : 1,
+                  "z" : 1
+               }
+            },
+            "sTypeComponent" : {
+               "type" : "TILE_WALKABLE"
+            }
+         },
+         "name" : "EMPTY_OBJECT"
+      }
+   ],
+   "name" : "testt"
+}

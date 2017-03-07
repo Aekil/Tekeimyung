@@ -9,6 +9,7 @@
 
 #include <Engine/MenuBarDebugWindow.hpp>
 #include <Engine/EditorState.hpp>
+#include <Engine/EntityFactory.hpp>
 #include <Engine/EntitiesTemplateDebugWindow.hpp>
 #include <Engine/Graphics/Geometries/GeometryFactory.hpp>
 #include <Engine/LevelEntitiesDebugWindow.hpp>
@@ -27,19 +28,19 @@ Engine::Engine() {}
 
 Engine::~Engine() {}
 
-bool    Engine::init()
+bool    Engine::init(const std::string& engineResourcesDir)
 {
     _logger = Logger::getInstance();
     if (!_logger->initialize())
     {
-        std::cerr << "Engine: Failed to initialize logger" << std::endl;
+        std::cerr << "Engine::init Failed to initialize logger" << std::endl;
         return (false);
     }
 
     _window = std::make_shared<GameWindow>(&_gameStateManager);
     if (!_window->initialize())
     {
-        LOG_ERROR("Engine: Failed to initialize window");
+        LOG_ERROR("Engine::init Failed to initialize window");
         return (false);
     }
     GameWindow::setInstance(_window);
@@ -47,15 +48,27 @@ bool    Engine::init()
     _soundManager = SoundManager::getInstance();
     if (!_soundManager->initialize())
     {
-        LOG_ERROR("Engine: Failed to initialize sound manager");
+        LOG_ERROR("Engine::init Failed to initialize sound manager");
         return (false);
     }
 
     _renderer = Renderer::getInstance();
-    if (!_renderer->initialize())
+    if (!_renderer->initialize(engineResourcesDir))
     {
-        LOG_ERROR("Engine: Failed to initialize renderer");
+        LOG_ERROR("Engine::init Failed to initialize renderer");
         return (false);
+    }
+
+    // Init resources
+    {
+        // Load all resources
+        ResourceManager::getInstance()->loadResources(engineResourcesDir);
+
+        // Load geometries: plane, sphere, box, circle
+        GeometryFactory::initGeometries();
+
+        // Load archetypes
+        EntityFactory::loadDirectory(engineResourcesDir);
     }
 
     return (true);

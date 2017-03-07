@@ -1,0 +1,205 @@
+{
+   "entities" : [
+      {
+         "components" : {
+            "sNameComponent" : {
+               "name" : "FIRE_BALL"
+            },
+            "sParticleEmitterComponent" : {
+               "angle" : 30.968002319335938,
+               "angle_variance" : 0,
+               "color" : {
+                  "finish" : {
+                     "a" : 0,
+                     "b" : 0,
+                     "g" : 0.63999998569488525,
+                     "r" : 1
+                  },
+                  "start" : {
+                     "a" : 0.60000002384185791,
+                     "b" : 0,
+                     "g" : 0.30000001192092896,
+                     "r" : 1
+                  }
+               },
+               "emitter_life" : 0,
+               "life" : 76,
+               "life_variance" : 1,
+               "max_particles" : 86,
+               "rate" : 0,
+               "size" : {
+                  "finish" : 0.5910000205039978,
+                  "finish_variance" : 0,
+                  "start" : 2.1510000228881836,
+                  "start_variance" : 0
+               },
+               "speed" : 34.409000396728516,
+               "speed_variance" : 0,
+               "texture" : "resources/sprites/particles/particle_circle.png"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 1
+               },
+               "ignore_raycast" : false,
+               "materials" : [ "particle_circle.mat" ],
+               "model" : "resources/models/default.DAE",
+               "type" : "PLANE"
+            },
+            "sRigidBodyComponent" : {
+               "collisions_enabled" : true,
+               "gravity" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "velocity" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               }
+            },
+            "sScriptComponent" : {
+               "class" : [ "Projectile" ]
+            },
+            "sSphereColliderComponent" : {
+               "isTrigger" : false,
+               "pos" : {
+                  "x" : 2,
+                  "y" : 9,
+                  "z" : -5
+               },
+               "radius" : 0.60000002384185791
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 198.98751831054688,
+                  "y" : 107.41926574707031,
+                  "z" : 237.88995361328125
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 1,
+                  "y" : 1,
+                  "z" : 1
+               }
+            },
+            "sTypeComponent" : {
+               "type" : "OBJECT"
+            }
+         },
+         "name" : "FIRE_BALL",
+         "tag" : "Projectile"
+      },
+      {
+         "components" : {
+            "sNameComponent" : {
+               "name" : "FIRE_BALL"
+            },
+            "sParticleEmitterComponent" : {
+               "angle" : 30.968002319335938,
+               "angle_variance" : 0,
+               "color" : {
+                  "finish" : {
+                     "a" : 0,
+                     "b" : 0,
+                     "g" : 0.63999998569488525,
+                     "r" : 1
+                  },
+                  "start" : {
+                     "a" : 0.60000002384185791,
+                     "b" : 0,
+                     "g" : 0.30000001192092896,
+                     "r" : 1
+                  }
+               },
+               "emitter_life" : 0,
+               "life" : 76,
+               "life_variance" : 1,
+               "max_particles" : 86,
+               "rate" : 0,
+               "size" : {
+                  "finish" : 0,
+                  "finish_variance" : 0,
+                  "start" : 1.0480000972747803,
+                  "start_variance" : 0
+               },
+               "speed" : 34.409000396728516,
+               "speed_variance" : 0,
+               "texture" : "resources/sprites/particles/particle_circle.png"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 1
+               },
+               "ignore_raycast" : false,
+               "materials" : [ "particle_circle.mat" ],
+               "model" : "resources/models/default.DAE",
+               "type" : "PLANE"
+            },
+            "sRigidBodyComponent" : {
+               "collisions_enabled" : true,
+               "gravity" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "velocity" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               }
+            },
+            "sScriptComponent" : {
+               "class" : [ "Projectile" ]
+            },
+            "sSphereColliderComponent" : {
+               "isTrigger" : false,
+               "pos" : {
+                  "x" : 2,
+                  "y" : 9,
+                  "z" : -5
+               },
+               "radius" : 0.60000002384185791
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 100,
+                  "y" : 107.41926574707031,
+                  "z" : 237.88995361328125
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 3,
+                  "y" : 3,
+                  "z" : 3
+               }
+            },
+            "sTypeComponent" : {
+               "type" : "OBJECT"
+            }
+         },
+         "name" : "FIRE_BALL",
+         "tag" : "Projectile"
+      }
+   ],
+   "name" : "testlol"
+}

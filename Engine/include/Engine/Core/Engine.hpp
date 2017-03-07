@@ -19,7 +19,7 @@ public:
     Engine();
     ~Engine();
 
-    bool                                    init();
+    bool                                    init(const std::string& engineResourcesDir);
     bool                                    run(int ac, char** av, std::shared_ptr<GameState> startGameState);
     bool                                    stop();
     GameStateManager&                       getGameStateManager();

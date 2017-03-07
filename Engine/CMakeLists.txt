@@ -199,3 +199,6 @@ install(FILES ${FMOD_DLLS}
         DESTINATION dependencies/bin/fmod)
 install(FILES ${ASSIMP_DLLS}
         DESTINATION dependencies/bin/assimp)
+
+# Install resources
+install_directories(${CMAKE_SOURCE_DIR}/resources resources)

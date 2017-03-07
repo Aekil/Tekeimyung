@@ -1,0 +1,59 @@
+{
+   "entities" : [
+      {
+         "components" : {
+            "sNameComponent" : {
+               "name" : "PLAYER"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 1,
+                  "b" : 0.98333263397216797,
+                  "g" : 0.98333263397216797,
+                  "r" : 1
+               },
+               "ignore_raycast" : false,
+               "model" : "resources/models/characters/character.DAE",
+               "texture" : "",
+               "type" : "MESH"
+            },
+            "sScriptComponent" : {
+               "class" : [ "Player" ]
+            },
+            "sSphereColliderComponent" : {
+               "isTrigger" : false,
+               "pos" : {
+                  "x" : 0,
+                  "y" : 15,
+                  "z" : 0
+               },
+               "radius" : 1.7999999523162842
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 65,
+                  "y" : 6.25,
+                  "z" : 33
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : -84.007659912109375,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 1.0416662693023682,
+                  "y" : 1.0416662693023682,
+                  "z" : 1.0416662693023682
+               }
+            },
+            "sTypeComponent" : {
+               "type" : "CHARACTER"
+            }
+         },
+         "name" : "PLAYER"
+      }
+   ],
+   "name" : "playerRotation"
+}

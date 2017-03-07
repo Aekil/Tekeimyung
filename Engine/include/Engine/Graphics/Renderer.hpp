@@ -22,7 +22,7 @@ public:
 
     static std::shared_ptr<Renderer>    getInstance();
 
-    bool                                initialize();
+    bool                                initialize(const std::string& engineResourcesDir);
     void                                onWindowResize();
 
     void                                render(Camera* camera, RenderQueue& renderQueue);

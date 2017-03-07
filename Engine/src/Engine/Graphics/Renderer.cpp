@@ -39,7 +39,7 @@ std::shared_ptr<Renderer>   Renderer::getInstance()
     return (_instance);
 }
 
-bool    Renderer::initialize()
+bool    Renderer::initialize(const std::string& engineResourcesDir)
 {
     try
     {
@@ -71,8 +71,8 @@ bool    Renderer::initialize()
 
             auto& shaderProgram = _shaderPrograms[optionFlag];
             shaderProgram.setOptions(optionFlag);
-            shaderProgram.attachShader(GL_VERTEX_SHADER, "resources/shaders/shader.vert", options);
-            shaderProgram.attachShader(GL_FRAGMENT_SHADER, "resources/shaders/shader.frag", options);
+            shaderProgram.attachShader(GL_VERTEX_SHADER, engineResourcesDir + "/shaders/shader.vert", options);
+            shaderProgram.attachShader(GL_FRAGMENT_SHADER, engineResourcesDir + "/shaders/shader.frag", options);
             shaderProgram.link();
         }
     }

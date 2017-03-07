@@ -1,0 +1,134 @@
+{
+   "entities" : [
+      {
+         "components" : {
+            "sCameraComponent" : {
+               "projection" : "PERSPECTIVE",
+               "viewport" : {
+                  "extent" : {
+                     "height" : 1,
+                     "width" : 1
+                  },
+                  "offset" : {
+                     "x" : -0.5,
+                     "y" : -0.5
+                  }
+               },
+               "zoom" : 1
+            },
+            "sNameComponent" : {
+               "name" : "CAMERA"
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 450,
+                  "y" : 300,
+                  "z" : 600
+               },
+               "rotation" : {
+                  "x" : -35,
+                  "y" : -47,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 0.99999994039535522,
+                  "y" : 1,
+                  "z" : 0.99999988079071045
+               }
+            }
+         },
+         "name" : "CAMERA",
+         "tag" : ""
+      },
+      {
+         "components" : {
+            "sLightComponent" : {
+               "ambient" : {
+                  "x" : 0.30000001192092896,
+                  "y" : 0.30000001192092896,
+                  "z" : 0.30000001192092896
+               },
+               "diffuse" : {
+                  "x" : 1,
+                  "y" : 1,
+                  "z" : 1
+               },
+               "direction" : {
+                  "x" : -0.4377860426902771,
+                  "y" : -0.71845251321792603,
+                  "z" : -0.54052692651748657
+               }
+            },
+            "sNameComponent" : {
+               "name" : "LIGHT"
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 358.12460327148438,
+                  "y" : 203.8074951171875,
+                  "z" : 280.68218994140625
+               },
+               "rotation" : {
+                  "x" : 39.243698120117188,
+                  "y" : -31.303653717041016,
+                  "z" : -54.352916717529297
+               },
+               "scale" : {
+                  "x" : 1.9999793767929077,
+                  "y" : 5.2489604949951172,
+                  "z" : 1.999961256980896
+               }
+            }
+         },
+         "name" : "LIGHT",
+         "tag" : ""
+      },
+      {
+         "components" : {
+            "sNameComponent" : {
+               "name" : "TOWER_FIRE"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 1
+               },
+               "ignore_raycast" : false,
+               "materials" : [ "Adventurer_Skin", "MAT_Brown", "Mat_LightRed" ],
+               "model" : "resources/models/buildings/tower_fire.DAE",
+               "type" : "MESH"
+            },
+            "sScriptComponent" : {
+               "class" : [ "Test" ]
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 250,
+                  "y" : 12.5,
+                  "z" : 275
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 1,
+                  "y" : 1,
+                  "z" : 1
+               }
+            },
+            "sTypeComponent" : {
+               "type" : "TILE_NOT_WALKABLE"
+            }
+         },
+         "name" : "TOWER_FIRE",
+         "tag" : ""
+      }
+   ],
+   "name" : "rotations"
+}

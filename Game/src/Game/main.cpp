@@ -41,14 +41,11 @@ int     main(int ac, char** av)
     auto &&gameStateManager = engine.getGameStateManager();
     try
     {
-        if (!engine.init())
+        if (!engine.init("resources_engine"))
             return (1);
 
         // Load textures, models & sounds
         ResourceManager::getInstance()->loadResources("resources");
-
-        // Load geometries: plane, sphere, box, circle
-        GeometryFactory::initGeometries();
 
         // Load entities after engine initialization to have logs
         EntityFactory::loadDirectory(ARCHETYPES_LOCATION);

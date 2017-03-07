@@ -56,8 +56,8 @@ function(source_group_files)
 endfunction(source_group_files)
 
 function(install_directories dirs_path install_path)
-    file(GLOB DEPLOY_FILES_AND_DIRS ${dirs_path}/*)
-    foreach(ITEM ${DEPLOY_FILES_AND_DIRS})
+    file(GLOB FILES_AND_DIRS ${dirs_path}/*)
+    foreach(ITEM ${FILES_AND_DIRS})
         if (IS_DIRECTORY "${ITEM}")
             install(DIRECTORY ${ITEM}
                     DESTINATION ${install_path})

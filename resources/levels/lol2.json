@@ -1,0 +1,88 @@
+{
+   "entities" : [
+      {
+         "components" : {
+            "sButtonComponent" : {
+               "action" : "NONE",
+               "action_level" : ""
+            },
+            "sNameComponent" : {
+               "name" : "BUTTON_RESUME"
+            },
+            "sParticleEmitterComponent" : {
+               "angle" : 50,
+               "angle_variance" : 0,
+               "color" : {
+                  "finish" : {
+                     "a" : 0,
+                     "b" : 1,
+                     "g" : 1,
+                     "r" : 1
+                  },
+                  "start" : {
+                     "a" : 1,
+                     "b" : 1,
+                     "g" : 1,
+                     "r" : 1
+                  }
+               },
+               "emitter_life" : 0,
+               "life" : 80,
+               "life_variance" : 0,
+               "rate" : 0,
+               "size" : {
+                  "finish" : 0,
+                  "finish_variance" : 0,
+                  "start" : 0.61800003051757813,
+                  "start_variance" : 0
+               },
+               "spawn_nb" : 1,
+               "speed" : 30,
+               "speed_variance" : 0,
+               "texture" : ""
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 1
+               },
+               "ignore_raycast" : false,
+               "model" : "resources/models/default.DAE",
+               "texture" : "resources/sprites/buttons/button_resume.png",
+               "type" : "PLANE"
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 760,
+                  "y" : 570.030029296875,
+                  "z" : 0
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 40,
+                  "y" : 6,
+                  "z" : 6
+               }
+            },
+            "sUiComponent" : {
+               "horizontal_alignment" : "MIDDLE",
+               "offset" : {
+                  "x" : 0,
+                  "y" : 9
+               },
+               "vertical_alignment" : "MIDDLE"
+            }
+         },
+         "name" : "BUTTON_RESUME"
+      }
+   ],
+   "name" : "lol2"
+}
