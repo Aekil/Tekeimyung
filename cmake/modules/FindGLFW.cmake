@@ -47,6 +47,10 @@ if (WIN32)
           PATHS
               ${GLFW_LOCATION}/lib
               $ENV{GLFW_LOCATION}/lib
+              ${GLFW_LOCATION}
+              $ENV{GLFW_LOCATION}
+              {GLFW_LOCATION}/lib/windows/x86
+              $ENV{GLFW_LOCATION}/lib/windows/x86
               $ENV{PROGRAMFILES}/GLFW/lib
               DOC "The GLFW library")
     else()
@@ -56,6 +60,10 @@ if (WIN32)
           PATHS
               ${GLFW_LOCATION}/lib
               $ENV{GLFW_LOCATION}/lib
+              ${GLFW_LOCATION}
+              $ENV{GLFW_LOCATION}
+              $ENV{GLFW_LOCATION}/lib/windows/x64
+              ${GLFW_LOCATION}/lib/windows/x64
               $ENV{PROGRAMFILES}/GLFW/lib
               DOC "The GLFW library")
     endif()
@@ -67,6 +75,8 @@ if (${CMAKE_HOST_UNIX})
         PATHS
             ${GLFW_LOCATION}/include
             $ENV{GLFW_LOCATION}/include
+            ${GLFW_LOCATION}/include/linux
+            $ENV{GLFW_LOCATION}/include/linux
             /usr/include
             /usr/local/include
             /sw/include
@@ -80,6 +90,8 @@ if (${CMAKE_HOST_UNIX})
         PATHS
             ${GLFW_LOCATION}/lib
             $ENV{GLFW_LOCATION}/lib
+            $ENV{GLFW_LOCATION}/lib/linux
+            {GLFW_LOCATION}/lib/linux
             /usr/lib64
             /usr/lib
             /usr/local/lib64

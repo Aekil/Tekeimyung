@@ -41,6 +41,8 @@ if (WIN32)
           PATHS
               ${GLEW_LOCATION}/lib
               ${GLEW_LOCATION}/lib/x86
+              ${GLEW_LOCATION}/lib/windows/x86
+              $ENV{GLEW_LOCATION}/lib/windows/x86
               ${GLEW_LOCATION}/lib/win32
               ${GLEW_LOCATION}/lib/Release/win32
               ${GLEW_LOCATION}/lib/Release MX/win32
@@ -70,6 +72,8 @@ if (WIN32)
               $ENV{GLEW_LOCATION}/lib/x64
               $ENV{GLEW_LOCATION}/lib/Release/x64
               $ENV{GLEW_LOCATION}/lib/Release MX/x64
+              ${GLEW_LOCATION}/lib/windows/x64
+              $ENV{GLEW_LOCATION}/lib/windows/x64
               $ENV{PROGRAMFILES}/GLEW/lib/x64
               ${PROJECT_SOURCE_DIR}/extern/glew/bin
               ${PROJECT_SOURCE_DIR}/extern/glew/lib/x64
@@ -103,6 +107,8 @@ if (${CMAKE_HOST_UNIX})
         PATHS
             ${GLEW_LOCATION}/lib
             $ENV{GLEW_LOCATION}/lib
+            ${GLEW_LOCATION}/lib/linux
+            $ENV{GLEW_LOCATION}/lib/linux
             /usr/lib64
             /usr/lib
             /usr/local/lib64

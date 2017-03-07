@@ -1,25 +1,42 @@
-#	@Author   Guillaume Labey
-#	@Author   Mathieu Chassara
+#   @Author   Guillaume Labey
+#   @Author   Mathieu Chassara
+
+cmake_minimum_required(VERSION 3.0)
+
+project("Squirrel Engine")
+
 
 # include macros
-include(${PROJECT_SOURCE_DIR}/cmake/Macros.cmake)
+include(${PROJECT_SOURCE_DIR}/../cmake/Macros.cmake)
 
 # define the path of CMake modules
-set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/modules/")
+set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/../cmake/modules/")
 
 # set the output directory for library
 set(LIBRARY_OUTPUT_PATH "${PROJECT_BINARY_DIR}/lib")
+set(ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
 
-cmake_minimum_required(VERSION 3.0)
+
+# Add parallel build
+if(ENGINE_COMPILER_MSVC)
+      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
+endif()
+
+# Define RELEASE_WITH_DEBUG for RelWithDebInfo build
+set(DEBUG_OPTIONS /D RELEASE_WITH_DEBUG)
+
+add_compile_options(
+    "$<$<CONFIG:RelWithDebInfo>:${DEBUG_OPTIONS}>"
+)
+
 set(LIBRARY_NAME "squirrel_engine")
-project(${LIBRARY_NAME})
 
 # All source files using glob
-file(GLOB_RECURSE source_files src/*)
-file(GLOB_RECURSE include_files include/*)
-file(GLOB_RECURSE imgui_source_files ${CMAKE_SOURCE_DIR}/external/imgui/*.cpp*)
-file(GLOB_RECURSE imGuizmo_source_files ${CMAKE_SOURCE_DIR}/external/imGuizmo/*.cpp*)
-file(GLOB_RECURSE jsoncpp_source_files ${CMAKE_SOURCE_DIR}/external/jsoncpp/*.cpp)
+file(GLOB_RECURSE source_files ${CMAKE_SOURCE_DIR}/src/*)
+file(GLOB_RECURSE include_files ${CMAKE_SOURCE_DIR}/include/*)
+file(GLOB_RECURSE imgui_source_files ${CMAKE_SOURCE_DIR}/../external/imgui/*.cpp*)
+file(GLOB_RECURSE imGuizmo_source_files ${CMAKE_SOURCE_DIR}/../external/imGuizmo/*.cpp*)
+file(GLOB_RECURSE jsoncpp_source_files ${CMAKE_SOURCE_DIR}/../external/jsoncpp/*.cpp)
 
 # Group files into the Visual Studio tree structure
 source_group_files(${source_files})
@@ -28,34 +45,57 @@ source_group_files(${jsoncpp_source_files})
 source_group_files(${imgui_source_files})
 source_group_files(${imGuizmo_source_files})
 
-
-# add ECS includes with ECS_INCLUDE_DIRS
-include_directories(${ECS_INCLUDE_DIRS})
-
 # Use static lib of glew
 add_definitions(-DGLEW_STATIC)
 
-# Find GLFW library
-find_package(GLFW 3.0.0 REQUIRED)
+# Find ECS
+find_package(ECS)
+if (NOT ECS_FOUND)
+    if (ENGINE_OS_WINDOWS)
+        set(ECS_ROOT "${CMAKE_SOURCE_DIR}/../external/ecs/lib/windows/${ARCH_DIR}")
+    elseif (ENGINE_OS_LINUX)
+        set(ECS_ROOT "${CMAKE_SOURCE_DIR}/../external/ecs/lib/linux")
+    endif()
+
+    set(ECS_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/../external/ecs/include")
+    find_package(ECS REQUIRED)
+endif()
 
 # Find GLEW library
-find_package(GLEW 3.0.0 REQUIRED)
+find_package(GLEW 3.0.0)
+if (NOT GLEW_FOUND)
+    if (ENGINE_OS_WINDOWS)
+        set(GLEW_LOCATION "${CMAKE_SOURCE_DIR}/../external/glew")
+    elseif (ENGINE_OS_LINUX)
+        set(GLEW_LOCATION "${CMAKE_SOURCE_DIR}/../external/glew")
+    endif()
+    find_package(GLEW 3.0.0 REQUIRED)
+endif()
+
+# Find GLFW library
+find_package(GLFW 3.0.0)
+if (NOT GLFW_FOUND)
+    if (ENGINE_OS_WINDOWS)
+        set(GLFW_LOCATION "${CMAKE_SOURCE_DIR}/../external/glfw")
+    elseif (ENGINE_OS_LINUX)
+        set(GLFW_LOCATION "${CMAKE_SOURCE_DIR}/../external/glfw")
+    endif()
+    find_package(GLFW 3.0.0 REQUIRED)
+endif()
 
 # Find Opengl library
 find_package(OpenGL REQUIRED)
-
-# Find FMOD library
 
 # Find assimp
 find_package(Assimp)
 if (NOT ASSIMP_FOUND)
     if (ENGINE_OS_WINDOWS)
-        set(ASSIMP_ROOT "${CMAKE_SOURCE_DIR}/external/assimp/lib/windows/${ARCH_DIR}")
+        set(ASSIMP_ROOT "${CMAKE_SOURCE_DIR}/../external/assimp/lib/windows/${ARCH_DIR}")
     elseif (ENGINE_OS_LINUX)
-        set(ASSIMP_ROOT "${CMAKE_SOURCE_DIR}/external/assimp/lib/linux")
+        set(ASSIMP_ROOT "${CMAKE_SOURCE_DIR}/../external/assimp/lib/linux")
     endif()
 
-    set(ASSIMP_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/external/assimp/include")
+    set(ASSIMP_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/../external/assimp/include")
     find_package(Assimp REQUIRED)
 endif()
 
@@ -63,55 +103,91 @@ endif()
 find_package(FMOD)
 if (NOT FMOD_FOUND)
     if (ENGINE_OS_WINDOWS)
-        set(FMOD_ROOT "${CMAKE_SOURCE_DIR}/external/fmod/lib/windows/${ARCH_DIR}")
+        set(FMOD_ROOT "${CMAKE_SOURCE_DIR}/../external/fmod/lib/windows/${ARCH_DIR}")
     elseif (ENGINE_OS_LINUX)
-        set(FMOD_ROOT "${CMAKE_SOURCE_DIR}/external/fmod/lib/linux")
+        set(FMOD_ROOT "${CMAKE_SOURCE_DIR}/../external/fmod/lib/linux")
     endif()
 
-    set(FMOD_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/external/fmod/include")
+    set(FMOD_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/../external/fmod/include")
     find_package(FMOD REQUIRED)
 endif()
 
 
 
 # Add project and libraries includes
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include ${GLFW_INCLUDE_DIR} ${GLEW_INCLUDE_DIR} ${OPENGL_INCLUDE_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include ${GLFW_INCLUDE_DIR} ${GLEW_INCLUDE_DIR} ${OPENGL_INCLUDE_DIR} ${ECS_INCLUDE_DIR})
 
 # Add external includes
-include_directories(${CMAKE_SOURCE_DIR}/external/glm/)
-include_directories(${CMAKE_SOURCE_DIR}/external/stb_image/)
-include_directories(${CMAKE_SOURCE_DIR}/external/imgui/)
-include_directories(${CMAKE_SOURCE_DIR}/external/imGuizmo/)
-include_directories(${CMAKE_SOURCE_DIR}/external/jsoncpp)
+include_directories(${CMAKE_SOURCE_DIR}/../external/glm/)
+include_directories(${CMAKE_SOURCE_DIR}/../external/stb_image/)
+include_directories(${CMAKE_SOURCE_DIR}/../external/imgui/)
+include_directories(${CMAKE_SOURCE_DIR}/../external/imGuizmo/)
+include_directories(${CMAKE_SOURCE_DIR}/../external/jsoncpp)
 include_directories(${FMOD_INCLUDE_DIR})
 include_directories(${ASSIMP_INCLUDE_DIR})
 
 # Include dirent only for windows
 # Linux have his own header
 IF (ENGINE_OS_WINDOWS)
-    include_directories(${CMAKE_SOURCE_DIR}/external/dirent)
+    include_directories(${CMAKE_SOURCE_DIR}/../external/dirent)
 ENDIF()
 
-# Create executable
+# Create library
 add_library(${LIBRARY_NAME} STATIC ${source_files} ${include_files} ${imgui_source_files} ${imGuizmo_source_files} ${jsoncpp_source_files})
+
+# Add debug postfix
+set_target_properties(${LIBRARY_NAME} PROPERTIES DEBUG_POSTFIX -d)
 
 #Disable ImGui C4244 warnings on Windows
 IF (WIN32)
   set_property(SOURCE ${imgui_source_files} APPEND_STRING PROPERTY COMPILE_FLAGS "/wd4244")
 ENDIF()
 
-# Link libraries with executable
-target_link_libraries(${LIBRARY_NAME} ECS ${GLFW_LIBRARY} ${GLEW_LIBRARY} ${OPENGL_gl_LIBRARY} ${FMOD_LIBRARY} ${ASSIMP_LIBRARY})
+# Link libraries with engine library
+target_link_libraries(${LIBRARY_NAME} ${ECS_LIBRARY} ${GLFW_LIBRARY} ${GLEW_LIBRARY} ${OPENGL_gl_LIBRARY} ${FMOD_LIBRARY} ${ASSIMP_LIBRARY})
 
-
-# Store include dir into variable and share it with other projects through cache
-set(${LIBRARY_NAME}_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include ${GLFW_INCLUDE_DIR} ${GLEW_INCLUDE_DIR} ${OPENGL_INCLUDE_DIR} ${ECS_INCLUDE_DIRS}
-CACHE INTERNAL "${LIBRARY_NAME}: Include Directories" FORCE)
 
 # setup the install of the library
 install(TARGETS ${LIBRARY_NAME}
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib
     RUNTIME DESTINATION bin)
-install(FILES ${include_files}
-        DESTINATION include/Engine/)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/Engine
+        DESTINATION include)
+
+# Install include dependencies
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/../external/glm
+        DESTINATION dependencies/include)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/../external/stb_image
+        DESTINATION dependencies/include)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/../external/imgui
+        DESTINATION dependencies/include)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/../external/imGuizmo
+        DESTINATION dependencies/include)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/../external/jsoncpp
+        DESTINATION dependencies/include)
+install(DIRECTORY ${GLEW_INCLUDE_DIR}/GL
+        DESTINATION dependencies/include/glew)
+install(DIRECTORY ${GLFW_INCLUDE_DIR}/GLFW
+        DESTINATION dependencies/include/glfw)
+install(DIRECTORY ${ECS_INCLUDE_DIR}/ECS
+        DESTINATION dependencies/include/ecs)
+IF (ENGINE_OS_WINDOWS)
+    install(DIRECTORY ${CMAKE_SOURCE_DIR}/../external/dirent
+        DESTINATION dependencies/include)
+ENDIF()
+
+# Install libraries dependencies
+install(FILES ${GLFW_LIBRARY}
+        DESTINATION dependencies/lib/glfw)
+install(FILES ${GLEW_LIBRARY}
+        DESTINATION dependencies/lib/glew)
+install(FILES ${FMOD_LIBRARY_DEBUG}
+                ${FMOD_LIBRARY_RELEASE}
+        DESTINATION dependencies/lib/fmod)
+install(FILES ${ASSIMP_LIBRARY_DEBUG}
+                ${ASSIMP_LIBRARY_RELEASE}
+        DESTINATION dependencies/lib/assimp)
+install(FILES ${ECS_LIBRARY_DEBUG}
+                ${ECS_LIBRARY_RELEASE}
+        DESTINATION dependencies/lib/ecs)
