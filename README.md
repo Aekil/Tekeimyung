@@ -2,28 +2,17 @@
 <br />
 
 
-## Building with CMake on Windows
+## 1) Building the Engine
 
-### Downloading Dependencies
-* [GLFW] (http://www.glfw.org/download.html)
-* [GLEW] (http://glew.sourceforge.net/)
-* [FMOD] (http://www.fmod.org/download/) - make sure to download the Low Level Programmer API
- 
-### Libraries environment variables
-Variable | Type
----------|-----
-GLFW_INCLUDE_DIR | PATH
-GLFW_LIBRARY | FILE_PATH
-GLEW_LOCATION | PATH
-FMOD_INCLUDE_DIR | PATH (something like : FMOD Studio API Windows\api\lowlevel\inc)
-FMOD_LIBRARY | FILE_PATH (something like : FMOD Studio API Windows\api\lowlevel\lib\fmod?_vc.lib)
+No requirements needed, just run cmake.
+
+After you compile the engine, run the "INSTALL" project.
+By default, it will install the engine on your C: drive on Windows, so you'll need to have admins rights. To change that, modify the CMAKE_INSTALL_PREFIX variable in your cmake to the path you want the engine to be installed.
 
 
-<br />
-## Building with CMake on Linux
+## 2) Building the Game
 
-### Downloading Dependencies
-Simply use your package manager to install these libraries:
-* GLFW
-* GLEW
-* FMOD
+Add SQUIRREL_ENGINE_ROOT variable in your cmake to the path where the engine is installed.
+Then, just run cmake, all the needed dlls are also copied.
+
+Note that the engine has different libraries for debug and release, so you'll have to build the engine in both debug and release if you want to compile the Game in debug and release.
