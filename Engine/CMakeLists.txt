@@ -49,7 +49,7 @@ source_group_files(${imGuizmo_source_files})
 add_definitions(-DGLEW_STATIC)
 
 # Find ECS
-find_package(ECS)
+find_package(ECS QUIET)
 if (NOT ECS_FOUND)
     if (ENGINE_OS_WINDOWS)
         set(ECS_ROOT "${CMAKE_SOURCE_DIR}/../external/ecs/lib/windows/${ARCH_DIR}")
@@ -62,7 +62,7 @@ if (NOT ECS_FOUND)
 endif()
 
 # Find GLEW library
-find_package(GLEW 3.0.0)
+find_package(GLEW 3.0.0 QUIET)
 if (NOT GLEW_FOUND)
     if (ENGINE_OS_WINDOWS)
         set(GLEW_LOCATION "${CMAKE_SOURCE_DIR}/../external/glew")
@@ -73,7 +73,7 @@ if (NOT GLEW_FOUND)
 endif()
 
 # Find GLFW library
-find_package(GLFW 3.0.0)
+find_package(GLFW 3.0.0 QUIET)
 if (NOT GLFW_FOUND)
     if (ENGINE_OS_WINDOWS)
         set(GLFW_LOCATION "${CMAKE_SOURCE_DIR}/../external/glfw")
@@ -87,7 +87,7 @@ endif()
 find_package(OpenGL REQUIRED)
 
 # Find assimp
-find_package(Assimp)
+find_package(Assimp QUIET)
 if (NOT ASSIMP_FOUND)
     if (ENGINE_OS_WINDOWS)
         set(ASSIMP_ROOT "${CMAKE_SOURCE_DIR}/../external/assimp/lib/windows/${ARCH_DIR}")
@@ -101,7 +101,7 @@ if (NOT ASSIMP_FOUND)
 endif()
 
 # Find fmod
-find_package(FMOD)
+find_package(FMOD QUIET)
 if (NOT FMOD_FOUND)
     if (ENGINE_OS_WINDOWS)
         set(FMOD_ROOT "${CMAKE_SOURCE_DIR}/../external/fmod/lib/windows/${ARCH_DIR}")
