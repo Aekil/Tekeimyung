@@ -45,12 +45,12 @@ if (WIN32)
           NAMES
               glfw3
           PATHS
+              $ENV${GLFW_LOCATION}
+              ${GLFW_LOCATION}
               ${GLFW_LOCATION}/lib
               $ENV{GLFW_LOCATION}/lib
               ${GLFW_LOCATION}
               $ENV{GLFW_LOCATION}
-              {GLFW_LOCATION}/lib/windows/x86
-              $ENV{GLFW_LOCATION}/lib/windows/x86
               $ENV{PROGRAMFILES}/GLFW/lib
               DOC "The GLFW library")
     else()
@@ -58,12 +58,12 @@ if (WIN32)
           NAMES
               glfw3
           PATHS
+              $ENV${GLFW_LOCATION}
+              ${GLFW_LOCATION}
               ${GLFW_LOCATION}/lib
               $ENV{GLFW_LOCATION}/lib
               ${GLFW_LOCATION}
               $ENV{GLFW_LOCATION}
-              $ENV{GLFW_LOCATION}/lib/windows/x64
-              ${GLFW_LOCATION}/lib/windows/x64
               $ENV{PROGRAMFILES}/GLFW/lib
               DOC "The GLFW library")
     endif()
@@ -88,6 +88,8 @@ if (${CMAKE_HOST_UNIX})
         NAMES
             glfw3 glfw
         PATHS
+            $ENV${GLFW_LOCATION}
+            ${GLFW_LOCATION}
             ${GLFW_LOCATION}/lib
             $ENV{GLFW_LOCATION}/lib
             $ENV{GLFW_LOCATION}/lib/linux
