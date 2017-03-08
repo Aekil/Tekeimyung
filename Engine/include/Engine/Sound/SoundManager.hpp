@@ -9,8 +9,6 @@
 
 #define ENABLE_SOUND        false
 
-#define SOUNDS_DIRECTORY    "resources/sounds"
-
 #define NB_MAX_CHANNELS     64
 #define NB_MAX_SOUNDS       64
 

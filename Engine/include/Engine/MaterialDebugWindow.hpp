@@ -8,8 +8,6 @@
 #include <Engine/Utils/DebugWindow.hpp>
 #include <Engine/Utils/JsonValue.hpp>
 
-#define MATERIALS_DIRECTORY    "resources/materials/"
-
 class MaterialDebugWindow: public DebugWindow
 {
 public:

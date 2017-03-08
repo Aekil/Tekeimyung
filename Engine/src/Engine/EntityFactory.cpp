@@ -153,8 +153,10 @@ Entity* EntityFactory::createEntity(const std::string& typeName, bool store)
 
 void EntityFactory::createEntityType(const std::string& typeName)
 {
+    std::string saveDirectory = ResourceManager::getInstance()->getDirectoryPath("archetypes");
+
     // Add entity to factory
-    std::string filePath = ARCHETYPES_LOCATION + std::string("/") + Helper::lowerCaseString(typeName) + ".json";
+    std::string filePath = saveDirectory + Helper::lowerCaseString(typeName) + ".json";
     _entitiesFiles[typeName] = filePath;
     _typesString.push_back(_entitiesFiles.find(typeName)->first.c_str());
 

@@ -46,12 +46,13 @@ int     main(int ac, char** av)
 
         // Load textures, models & sounds
         ResourceManager::getInstance()->loadResources("resources");
+        ResourceManager::getInstance()->setSaveDirectory("resources");
 
         // Load entities after engine initialization to have logs
-        EntityFactory::loadDirectory(ARCHETYPES_LOCATION);
+        EntityFactory::loadDirectory("resources/archetypes");
 
         // Load levels
-        LevelLoader::getInstance()->loadDirectory(LEVELS_DIRECTORY);
+        LevelLoader::getInstance()->loadDirectory("resources/levels");
         REGISTER_GAMESTATE(ConfirmExitState);
         REGISTER_GAMESTATE(HowToPlayState);
         REGISTER_GAMESTATE(OptionsMenuState);

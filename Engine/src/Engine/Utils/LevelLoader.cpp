@@ -62,6 +62,7 @@ void    LevelLoader::save(const std::string& levelName, const std::vector<Entity
     JsonWriter jsonWriter;
     JsonValue json;
     std::vector<JsonValue> entitiesJson;
+    std::string saveDirectory = ResourceManager::getInstance()->getDirectoryPath("levels");
 
     json.setString("name", levelName);
 
@@ -100,7 +101,7 @@ void    LevelLoader::save(const std::string& levelName, const std::vector<Entity
     // Save entities
     json.setValueVec("entities", entitiesJson);
 
-    jsonWriter.write(std::string(LEVELS_DIRECTORY) + levelName + ".json", json);
+    jsonWriter.write(saveDirectory + levelName + ".json", json);
     LOG_INFO("The level %s has been saved", levelName.c_str());
 }
 
@@ -108,8 +109,9 @@ void    LevelLoader::load(const std::string& levelName, EntityManager* em)
 {
     JsonReader jsonReader;
     JsonValue parsed;
+    std::string saveDirectory = ResourceManager::getInstance()->getDirectoryPath("levels");
 
-    if (!jsonReader.parse(std::string(LEVELS_DIRECTORY) + levelName + ".json", parsed))
+    if (!jsonReader.parse(saveDirectory + levelName + ".json", parsed))
         EXCEPT(IOException, "Cannot load level \"%s\"", levelName.c_str());
 
     auto &&entities = parsed.get("entities", {}).get();

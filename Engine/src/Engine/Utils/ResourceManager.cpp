@@ -85,6 +85,22 @@ void    ResourceManager::loadResources(const std::string& directory)
     closedir(dir);
 }
 
+void    ResourceManager::setSaveDirectory(const std::string& directory)
+{
+    _saveDirectory = directory;
+}
+
+std::string     ResourceManager::getDirectoryPath(const std::string& directory) const
+{
+    std::string saveDirectory = _saveDirectory;
+    if (saveDirectory.size() == 0)
+    {
+        EXCEPT(FileNotFoundException, "Cannot get directory path \"%s\". The save directory has not been set", directory.c_str());
+    }
+    saveDirectory += "/" + directory + "/";
+    return (saveDirectory);
+}
+
 ResourceManager*   ResourceManager::getInstance()
 {
     if (!_ResourceManager)
@@ -171,13 +187,19 @@ T*  ResourceManager::loadResource(const std::string& path)
 {
     std::string name = getBasename(path);
     std::unique_ptr<T> resource = std::make_unique<T>();
+    auto& resourceMap = _resources[T::getResourceType()];
+
+    // Resource is already loaded
+    if (resourceMap[name] != nullptr)
+    {
+        LOG_WARN("ResourceManager::loadResource: loading resource \"%s\" that does already exists. Path is %s", name.c_str(), path.c_str());
+        return (static_cast<T*>(resourceMap[name].get()));
+    }
 
     if (!resource->loadFromFile(path))
     {
         return (nullptr);
     }
-
-    auto& resourceMap = _resources[T::getResourceType()];
 
     resource->setId(name);
     resource->setPath(path);
@@ -194,9 +216,11 @@ T*  ResourceManager::registerResource(std::unique_ptr<T> resource, const std::st
     std::string name = getBasename(path);
     auto& resourceMap = _resources[T::getResourceType()];
 
+    // Resource is already registered
     if (resourceMap[name] != nullptr)
     {
-        LOG_WARN("ResourceManager::registerResource: registering resource \"%s\" that does already exists", name.c_str());
+        LOG_WARN("ResourceManager::registerResource: registering resource \"%s\" that does already exists. Path is %s", name.c_str(), path.c_str());
+        return (static_cast<T*>(resourceMap[name].get()));
     }
 
     resource->setId(name);

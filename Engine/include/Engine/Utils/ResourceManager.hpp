@@ -52,6 +52,10 @@ public:
 
     void                                            loadResources(const std::string& directory);
 
+    void                                            setSaveDirectory(const std::string& directory);
+    // Just return the directory appended to the save directory, with error checks
+    std::string                                     getDirectoryPath(const std::string& directory) const;
+
     template<typename T>
     T*                                              getResource(const std::string& path);
     template<typename T>
@@ -83,6 +87,8 @@ private:
 
     // Store sounds basename list
     std::vector<sSoundStrings>                              _soundsStrings;
+
+    std::string                                     _saveDirectory;
 
     //Singleton instance
     static ResourceManager*                        _ResourceManager;

@@ -186,7 +186,7 @@ bool    MaterialDebugWindow::createMaterial(std::string name)
         return (false);
     }
 
-    std::string filePath = std::string(MATERIALS_DIRECTORY) + name;
+    std::string filePath = ResourceManager::getInstance()->getDirectoryPath("materials") + name;
     std::unique_ptr<Material> material = std::make_unique<Material>(false);
     ResourceManager::getInstance()->registerResource<Material>(std::move(material), filePath);
     LOG_INFO("New material \"%s\" has been created", name.c_str());
@@ -210,7 +210,7 @@ bool    MaterialDebugWindow::cloneMaterial(Material* material, std::string clone
         return (false);
     }
 
-    std::string filePath = std::string(MATERIALS_DIRECTORY) + cloneName;
+    std::string filePath = ResourceManager::getInstance()->getDirectoryPath("materials") + cloneName;
     std::unique_ptr<Material> cloneMaterial = std::make_unique<Material>(*material);
     ResourceManager::getInstance()->registerResource<Material>(std::move(cloneMaterial), filePath);
     LOG_INFO("Material \"%s\" has been cloned to \"%s\"", material->getId().c_str(), cloneName.c_str());
@@ -267,12 +267,12 @@ void    MaterialDebugWindow::saveMaterials()
 void    MaterialDebugWindow::saveMaterial(Material* material, JsonValue& json)
 {
     JsonWriter jsonWriter;
-    std::string filePath = std::string(MATERIALS_DIRECTORY) + material->getId();
 
     jsonWriter.write(material->getPath(), json);
 
     // The material name has changed, rename the file
-    if (material->getPath().size() != 0 && material->getPath() != filePath)
+    // TODO: Handle rename with material path (not recreating the full path, or it will move the engine materials in the game materials)
+/*    if (material->getPath().size() != 0 && material->getPath() != filePath)
     {
         if (std::rename(material->getPath().c_str(), filePath.c_str()))
         {
@@ -280,5 +280,6 @@ void    MaterialDebugWindow::saveMaterial(Material* material, JsonValue& json)
         }
     }
 
-    material->setPath(filePath);
+
+    material->setPath(filePath);*/
 }

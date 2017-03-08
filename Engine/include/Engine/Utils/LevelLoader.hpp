@@ -14,8 +14,6 @@
 #include <Engine/Utils/JsonValue.hpp>
 #include <Engine/Core/GameState.hpp>
 
-#define LEVELS_DIRECTORY    "resources/levels/"
-
 #define REGISTER_GAMESTATE(NAME)                                    \
     LevelLoader::getInstance()->addLoadedState<NAME##Factory>();
 
