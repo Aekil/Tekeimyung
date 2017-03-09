@@ -35,6 +35,7 @@ public:
     void death() override final;
 
     void onCollisionEnter(Entity* entity) override final;
+    void onCollisionExit(Entity* entity) override final;
 
 private:
     glm::vec3 _direction;

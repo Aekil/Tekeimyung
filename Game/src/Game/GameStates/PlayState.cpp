@@ -27,8 +27,8 @@ void    PlayState::setupSystems()
 {
     _world.addSystem<ScriptSystem>();
     _world.addSystem<MouseSystem>();
-    _world.addSystem<RigidBodySystem>();
     _world.addSystem<CollisionSystem>();
+    _world.addSystem<RigidBodySystem>();
     _world.addSystem<ParticleSystem>();
     _world.addSystem<UISystem>();
     _world.addSystem<RenderingSystem>(_world.getSystem<ParticleSystem>()->getEmitters());
