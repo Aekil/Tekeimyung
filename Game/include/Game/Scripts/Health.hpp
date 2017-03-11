@@ -37,5 +37,5 @@ private:
 
     glm::vec3 _objCenter;
 
-    float maxScale;
+    float _maxScale;
 };

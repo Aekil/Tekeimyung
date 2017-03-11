@@ -46,7 +46,7 @@ void Health::init(sTransformComponent* transform, sRenderComponent* render)
     _objCenter.x = render->getModel()->getMin().x + ((render->getModel()->getMax().x - render->getModel()->getMin().x) / 2.0f);
     _objCenter.y = render->getModel()->getMax().y;
     _objCenter.z = render->getModel()->getMin().z + ((render->getModel()->getMax().z - render->getModel()->getMin().z) / 2.0f);
-    maxScale = _healthBarEmptyTransform->getScale().x;
+    _maxScale = _healthBarEmptyTransform->getScale().x;
 }
 
 void Health::update(sTransformComponent* transform)
@@ -69,7 +69,7 @@ void Health::update(sTransformComponent* transform)
     screenPos.y += 4.0f;
 
     this->_healthBarTransform->setPos(glm::vec3(screenPos.x, screenPos.y, this->_healthBarTransform->getPos().z));
-    this->_healthBarTransform->setScale(glm::vec3((float)health / (float)maxHealth * maxScale,
+    this->_healthBarTransform->setScale(glm::vec3((float)health / (float)maxHealth * _maxScale,
                                                     this->_healthBarTransform->getScale().y,
                                                     this->_healthBarTransform->getScale().z));
     this->_healthBarTransform->translate(-glm::vec3(healthEmptySize - ((this->_healthBarTransform->getScale().x * healthSize) / 2.0f),
