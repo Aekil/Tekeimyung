@@ -17,7 +17,7 @@ bool    System::init()
 
 void    System::forEachEntity(EntityManager& em, std::function<void(Entity* entity)> callback)
 {
-    for (int idx = 0; idx < this->_entities.size(); idx++)
+    for (uint32_t idx = 0; idx < this->_entities.size(); idx++)
     {
         Entity* entity = em.getEntity(this->_entities[idx]);
         if (entity)

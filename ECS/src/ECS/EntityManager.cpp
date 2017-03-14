@@ -94,6 +94,18 @@ const std::vector<Entity*>& EntityManager::getEntitiesByTag(const std::string& t
     return (_entitiesTagGroups[tag]);
 }
 
+Entity* EntityManager::getEntityByTag(const std::string& tag)
+{
+    const auto& tagGroup = _entitiesTagGroups[tag];
+
+    if (tagGroup.size() > 0)
+    {
+        return (tagGroup[0]);
+    }
+
+    return (nullptr);
+}
+
 Entity* EntityManager::getEntity(uint32_t id) const
 {
     return (_entityPool->getEntity(id));

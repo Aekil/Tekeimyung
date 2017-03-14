@@ -5,6 +5,9 @@
 #pragma once
 
 #include    <Engine/Core/ScriptFactory.hpp>
+#include <glm/vec3.hpp>
+
+class GameManager;
 
 class       Spawner final : public BaseScript
 {
@@ -32,18 +35,19 @@ public:
     JsonValue saveToJson() override final;
     void loadFromJson(const JsonValue& json) override final;
 
-public:
-    Entity* getWaveManager() const;
-
-    void    setWaveManager(Entity* waveManager);
-    void    deleteSpawnerConfig(int index);
-
 private:
     Entity* _parent;
     std::vector<sConfig> _configs;
 
     uint32_t _selectedConfig{0};
 
+private:
+    std::vector<glm::vec3> getClosestPath() const;
+
+    GameManager* _gameManager{nullptr};
+    sTransformComponent* _transform;
+
+    std::vector<glm::vec3> _closestPath;
 };
 
 REGISTER_SCRIPT(Spawner);

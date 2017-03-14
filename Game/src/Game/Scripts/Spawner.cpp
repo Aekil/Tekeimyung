@@ -3,15 +3,61 @@
 */
 
 #include <Engine/Components.hh>
+#include <Engine/EntityFactory.hpp>
 
+#include <Game/Scripts/Enemy.hpp>
+#include <Game/Scripts/GameManager.hpp>
 #include <Game/Scripts/Spawner.hpp>
 #include <Game/Scripts/WaveManager.hpp>
 
 void Spawner::start()
 {
-    auto& pos = this->getComponent<sTransformComponent>()->getPos();
+    auto em = EntityFactory::getBindedEntityManager();
+    _transform = this->getComponent<sTransformComponent>();
+    auto& pos = _transform->getPos();
 
-    this->Instantiate("ENEMY", glm::vec3(pos.x, 18.75, pos.z));
+    // Init closest path
+    {
+        Entity* gameManager = em->getEntityByTag("GameManager");
+        if (!gameManager)
+        {
+            LOG_WARN("Can't find entity with GameManager tag");
+            return;
+        }
+
+        auto scriptComponent = gameManager->getComponent<sScriptComponent>();
+
+        if (!scriptComponent)
+        {
+            LOG_WARN("Can't find scriptComponent on GameManager entity");
+            return;
+        }
+
+        _gameManager = scriptComponent->getScript<GameManager>("GameManager");
+        _closestPath = getClosestPath();
+    }
+
+    // Spawn enemy and set closest path
+/*    {
+        Entity* enemy = this->Instantiate("ENEMY", glm::vec3(pos.x, 18.75, pos.z));
+        auto scriptComponent = enemy->getComponent<sScriptComponent>();
+
+        if (!scriptComponent)
+        {
+            LOG_WARN("Can't find scriptComponent on ENEMY entity");
+            return;
+        }
+
+        Enemy* enemyScript = scriptComponent->getScript<Enemy>("Enemy");
+
+        if (!enemyScript)
+        {
+            LOG_WARN("Can't find Enemy script on ENEMY entity");
+            return;
+        }
+        enemyScript->setPath(_closestPath);
+    }
+*/
 }
 
 void Spawner::update(float dt)
@@ -167,36 +213,27 @@ void    Spawner::loadFromJson(const JsonValue& json)
     }
 }
 
-Entity* Spawner::getWaveManager() const
+std::vector<glm::vec3> Spawner::getClosestPath() const
 {
-    return (this->_parent);
-}
-
-void    Spawner::setWaveManager(Entity* waveManager)
-{
-    if (waveManager->getTag() != "WaveManager")
-        LOG_INFO("TG noob c'est pas un WaveManager.");
-    else
-        this->_parent = waveManager;
-}
-
-/*void    Spawner::addSpawnerConfig(SpawnerConfiguration config)
-{
-    if (this->_parent != nullptr)
-        LOG_INFO("TG noob tu as besoin d'un WaveManager.");
-    else
+    if (!_gameManager ||
+        _gameManager->paths.size() == 0)
     {
-        sScriptComponent*   script = this->_parent->getComponent<sScriptComponent>();
-        WaveManager*        waveManagerScript = script->getScript<WaveManager>("WaveManager");
-
-        if (config.associatedWave <= 0 || config.associatedWave > waveManagerScript->getWaves())
-            LOG_INFO("TG noob spécifie une bonne wave, gros bâtard.");
-        else
-            this->_configs.push_back(config);
+        return (std::vector<glm::vec3>());
     }
-}*/
 
-void    Spawner::deleteSpawnerConfig(int index)
-{
-    this->_configs.erase(this->_configs.begin() + index);
+    float closestDistance = 99999999999999.9f;
+    std::vector<glm::vec3> closestPath = _gameManager->paths[0];
+    for (auto path: _gameManager->paths)
+    {
+        if (path.size() == 0)
+            continue;
+        float distance = glm::distance(_transform->getPos(), path[0]);
+        if (distance < closestDistance)
+        {
+            closestPath = path;
+            closestDistance = distance;
+        }
+    }
+
+    return (closestPath);
 }

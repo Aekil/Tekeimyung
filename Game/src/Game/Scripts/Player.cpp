@@ -169,8 +169,15 @@ void Player::onHoverExit()
 
 void Player::onCollisionEnter(Entity* entity)
 {
+    LOG_DEBUG("onCollisionEnter Player, anyang.");
+
     if (entity->getComponent<sNameComponent>()->value == "TRAP_NEEDLE")
     {
         this->takeDamage(25);
     }
+}
+
+void Player::onCollisionExit(Entity* entity)
+{
+    LOG_DEBUG("onCollisionExit Player, bisous.");
 }

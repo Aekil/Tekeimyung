@@ -73,7 +73,7 @@ bool    Collisions::sphereVSAABB(const glm::vec3& spherePosition, float sphereRa
 {
     double squaredDistance = SquaredDistPointAABB(spherePosition, boxPosition, boxPosition + boxSize);
 
-    return squaredDistance <= (sphereRadius * sphereRadius);
+    return squaredDistance < (sphereRadius * sphereRadius);
 }
 
 float Collisions::rayVSAABB(const Ray& ray, const glm::vec3& boxMin, const glm::vec3& boxMax)

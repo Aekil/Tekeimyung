@@ -62,14 +62,14 @@ void EntityPool::free(Entity* entity)
 Entity* EntityPool::getEntity(uint32_t entityId)
 {
     // Remember ID is ID + 1
-    entityId--;
-
-    uint32_t chunkNb = entityId / _entitiesPerChunk;
+    uint32_t chunkNb = (entityId - 1) / _entitiesPerChunk;
 
     if (chunkNb >= _chunks.size() || entityId == 0)
+    {
         return (nullptr);
+    }
 
-    Entity* entity = _chunks[chunkNb]->entities + (entityId % _entitiesPerChunk);
+    Entity* entity = _chunks[chunkNb]->entities + ((entityId - 1) % _entitiesPerChunk);
 
     // The entity is not allocated
     if (entity->_free)
