@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <string>
 #include <glm/vec3.hpp>
 
 #include <ECS/Entity.hpp>
@@ -31,6 +32,10 @@ public:
     virtual bool updateEditor() { return (false); }
 
     void setEntity(Entity* entity);
+    Entity* getEntity();
+
+    const std::string& getName() const;
+    void setName(const std::string& name);
 
 public:
     bool isInitialized;
@@ -50,5 +55,8 @@ protected:
 
     virtual void Destroy();
     virtual void Destroy(Entity*);
+
+private:
+    std::string _name;
 };
 

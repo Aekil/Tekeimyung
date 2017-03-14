@@ -35,7 +35,7 @@ void RigidBodySystem::handleCollisions(EntityManager &em, Entity* entity, sRigid
         {
             if (scriptComponent != nullptr)
             {
-                for (auto&& script : scriptComponent->scriptInstances)
+                for (auto&& script : scriptComponent->scripts)
                 {
                     script->onCollisionEnter(em.getEntity(it->first));
                 }
@@ -46,7 +46,7 @@ void RigidBodySystem::handleCollisions(EntityManager &em, Entity* entity, sRigid
         {
             if (scriptComponent != nullptr)
             {
-                for (auto&& script : scriptComponent->scriptInstances)
+                for (auto&& script : scriptComponent->scripts)
                 {
                     script->onCollisionExit(em.getEntity(it->first));
                 }

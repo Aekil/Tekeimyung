@@ -1201,7 +1201,12 @@ sComponent* ComponentFactory<sScriptComponent>::loadFromJson(const std::string& 
 
     component = new sScriptComponent();
 
-    component->scriptNames = json.getStringVec("class", {});
+    std::vector<std::string> scriptNames = json.getStringVec("class", {});
+    for (const auto& scriptName: scriptNames)
+    {
+        auto scriptInstance = ScriptFactory::create(scriptName);
+        component->scripts.push_back(std::move(scriptInstance));
+    }
 
     return component;
 }
@@ -1211,7 +1216,12 @@ JsonValue&    ComponentFactory<sScriptComponent>::saveToJson(const std::string& 
     JsonValue& json = toJson ? *toJson : _componentsJson[entityType];
     const sScriptComponent* component = static_cast<const sScriptComponent*>(savedComponent ? savedComponent : _components[entityType]);
 
-    json.setStringVec("class", component->scriptNames);
+    std::vector<std::string> scriptNames;
+    for (const auto& script: component->scripts)
+    {
+        scriptNames.push_back(script->getName());
+    }
+    json.setStringVec("class", scriptNames);
 
     return (json);
 }
@@ -1238,12 +1248,14 @@ bool    ComponentFactory<sScriptComponent>::updateEditor(const std::string& enti
         for (auto script: ScriptFactory::getScriptsNames())
         {
             // Entity does not have this script
-            if (std::find(component->scriptNames.cbegin(), component->scriptNames.cend(), script) == component->scriptNames.cend())
+            if (!component->hasScript(script))
             {
                 // Script button pressed, add it to the entity
                 if (ImGui::Button(script))
                 {
-                    component->scriptNames.push_back(script);
+                    auto scriptInstance = ScriptFactory::create(script);
+                    scriptInstance->setEntity(entity);
+                    component->scripts.push_back(std::move(scriptInstance));
                 }
             }
         }
@@ -1252,44 +1264,38 @@ bool    ComponentFactory<sScriptComponent>::updateEditor(const std::string& enti
 
     // Scripts list
     ImGui::BeginChild("Scripts", ImVec2(0, 100), true);
-    for (auto& script: component->scriptNames)
+    for (auto& script: component->scripts)
     {
-        if (ImGui::Selectable(script.c_str(), component->selectedScript == script))
+        if (ImGui::Selectable(script->getName().c_str(), component->selectedScript == script.get()))
         {
-            component->selectedScript = script;
+            component->selectedScript = script.get();
         }
     }
     ImGui::EndChild();
 
-    if (component->selectedScript.size() == 0)
+    if (!component->selectedScript)
         return (changed);
 
     // Delete script
     if (ImGui::Button("Delete"))
     {
-        auto& eraseIt = std::remove(component->scriptNames.begin(), component->scriptNames.end(), component->selectedScript);
-        component->scriptNames.erase(eraseIt);
+        uint32_t i = 0;
+        // Find script index in scripts vector
+        for (const auto& script: component->scripts)
+        {
+            if (script.get() == component->selectedScript)
+                break;
+            i++;
+        }
+        component->scripts.erase(component->scripts.begin() + i);
+        component->selectedScript = nullptr;
         return (true);
     }
 
     ImGui::Text("\n");
-    ImGui::Text("%s script options\n--------------------\n", component->selectedScript.c_str());
+    ImGui::Text("%s script options\n--------------------\n", component->selectedScript->getName().c_str());
 
-    // Init scripts if not initialized (Case in EditorState)
-    {
-        if (component->scriptInstances.size() == 0 &&
-            component->scriptNames.size() != 0)
-        {
-            for (auto&& scriptName : component->scriptNames)
-            {
-                auto scriptInstance = ScriptFactory::create(scriptName);
-                scriptInstance->setEntity(entity);
-
-                component->scriptInstances.push_back(std::move(scriptInstance));
-            }
-        }
-    }
-    component->getScript(component->selectedScript.c_str())->updateEditor();
+    component->selectedScript->updateEditor();
 
     return (changed);
 }

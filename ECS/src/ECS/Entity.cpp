@@ -18,6 +18,7 @@ bool Entity::operator==(Entity &entity)
 
 void    Entity::addComponent(sComponent* component)
 {
+    component->entity = this;
     _components.push_back(component);
     _em->notifyEntityNewComponent(this, component);
 }

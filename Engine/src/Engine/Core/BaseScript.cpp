@@ -15,6 +15,11 @@ void BaseScript::setEntity(Entity* entity)
     this->entity = entity;
 }
 
+Entity* BaseScript::getEntity()
+{
+    return (entity);
+}
+
 void BaseScript::Destroy()
 {
     auto em = EntityFactory::getBindedEntityManager();
@@ -32,4 +37,14 @@ void BaseScript::Destroy(Entity* entity)
 Entity* BaseScript::Instantiate(std::string type, glm::vec3 pos)
 {
     return EntityFactory::createEntity(type, pos);
+}
+
+const std::string&  BaseScript::getName() const
+{
+    return (_name);
+}
+
+void    BaseScript::setName(const std::string& name)
+{
+    _name = name;
 }
