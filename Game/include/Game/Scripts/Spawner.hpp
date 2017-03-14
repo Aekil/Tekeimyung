@@ -14,11 +14,11 @@ public:
         struct sEntity
         {
             std::string name;
-            int     spawnAmount{0};
+            uint32_t spawnAmount{0};
             float   timeUntilNextSpawn{0};
         };
         std::vector<sEntity> spawnableEntities;
-        int     associatedWave{0};
+        uint32_t associatedWave{0};
     };
 
 public:
@@ -29,6 +29,7 @@ public:
     void    update(float dt) override final;
 
     bool updateEditor() override final;
+    JsonValue saveToJson() override final;
 
 public:
     Entity* getWaveManager() const;

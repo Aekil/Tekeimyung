@@ -1216,12 +1216,15 @@ JsonValue&    ComponentFactory<sScriptComponent>::saveToJson(const std::string& 
     JsonValue& json = toJson ? *toJson : _componentsJson[entityType];
     const sScriptComponent* component = static_cast<const sScriptComponent*>(savedComponent ? savedComponent : _components[entityType]);
 
-    std::vector<std::string> scriptNames;
+    std::vector<JsonValue> scriptsJson;
     for (const auto& script: component->scripts)
     {
-        scriptNames.push_back(script->getName());
+        JsonValue scriptJson = script->saveToJson();
+        scriptJson.setString("name", script->getName());
+        scriptsJson.push_back(scriptJson);
     }
-    json.setStringVec("class", scriptNames);
+
+    json.setValueVec("scripts", scriptsJson);
 
     return (json);
 }

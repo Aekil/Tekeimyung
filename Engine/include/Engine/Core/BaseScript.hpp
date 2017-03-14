@@ -10,6 +10,7 @@
 #include <ECS/Entity.hpp>
 
 #include <Engine/Utils/Logger.hpp>
+#include <Engine/Utils/JsonValue.hpp>
 
 #include <Engine/Window/GameWindow.hpp>
 
@@ -30,6 +31,7 @@ public:
     virtual void onHoverExit() {};
 
     virtual bool updateEditor() { return (false); }
+    virtual JsonValue saveToJson() { return (JsonValue()); };
 
     void setEntity(Entity* entity);
     Entity* getEntity();
