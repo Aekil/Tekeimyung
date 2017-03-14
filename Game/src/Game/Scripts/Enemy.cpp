@@ -10,7 +10,6 @@ void Enemy::start()
 {
     this->_render = getComponent<sRenderComponent>();
     this->_render->_animator.play("rotation_enemy", true);
-    this->_render->_animator.playQueued("attack", true);
     this->maxHealth = 150;
     this->_speed = 10.0f;
     this->health = this->maxHealth;

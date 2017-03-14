@@ -1242,6 +1242,7 @@ JsonValue&    ComponentFactory<sScriptComponent>::saveToJson(const std::string& 
         scriptsJson.push_back(scriptJson);
     }
 
+
     json.setValueVec("scripts", scriptsJson);
 
     return (json);

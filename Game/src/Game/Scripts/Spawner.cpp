@@ -14,7 +14,6 @@ void Spawner::start()
 {
     auto em = EntityFactory::getBindedEntityManager();
     _transform = this->getComponent<sTransformComponent>();
-    auto& pos = _transform->getPos();
 
     // Init closest path
     {
@@ -36,33 +35,30 @@ void Spawner::start()
         _gameManager = scriptComponent->getScript<GameManager>("GameManager");
         _closestPath = getClosestPath();
     }
-
-    // Spawn enemy and set closest path
-    {
-        Entity* enemy = this->Instantiate("ENEMY", glm::vec3(pos.x, 18.75, pos.z));
-        auto scriptComponent = enemy->getComponent<sScriptComponent>();
-
-        if (!scriptComponent)
-        {
-            LOG_WARN("Can't find scriptComponent on ENEMY entity");
-            return;
-        }
-
-        Enemy* enemyScript = scriptComponent->getScript<Enemy>("Enemy");
-
-        if (!enemyScript)
-        {
-            LOG_WARN("Can't find Enemy script on ENEMY entity");
-            return;
-        }
-        enemyScript->setPath(_closestPath);
-    }
-
 }
 
 void Spawner::update(float dt)
 {
 
+    for (auto& config: _configs)
+    {
+        // TODO: Handle multiple wave configs for the same wave
+        if (config.associatedWave == _currentWave)
+        {
+            for (auto& entity: config.spawnableEntities)
+            {
+                entity.elapsedTime += dt;
+                if ((!entity.spawnedNb || entity.elapsedTime >= entity.timeUntilNextSpawn) &&
+                    entity.spawnedNb < entity.spawnAmount)
+                {
+                    entity.elapsedTime = 0.0f;
+                    entity.spawnedNb++;
+                    spawnEntity(entity.name);
+                }
+            }
+            break;
+        }
+    }
 }
 
 bool Spawner::updateEditor()
@@ -211,6 +207,28 @@ void    Spawner::loadFromJson(const JsonValue& json)
         }
         _configs.push_back(config);
     }
+}
+
+void    Spawner::spawnEntity(const std::string& entityName)
+{
+    auto& pos = _transform->getPos();
+    Entity* enemy = this->Instantiate(entityName, glm::vec3(pos.x, 18.75, pos.z));
+    auto scriptComponent = enemy->getComponent<sScriptComponent>();
+
+    if (!scriptComponent)
+    {
+        LOG_WARN("Can't find scriptComponent on %s entity", entityName.c_str());
+        return;
+    }
+
+    Enemy* enemyScript = scriptComponent->getScript<Enemy>("Enemy");
+
+    if (!enemyScript)
+    {
+        LOG_WARN("Can't find Enemy script on %s entity", entityName.c_str());
+        return;
+    }
+    enemyScript->setPath(_closestPath);
 }
 
 std::vector<glm::vec3> Spawner::getClosestPath() const

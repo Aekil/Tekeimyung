@@ -134,7 +134,7 @@
             }
          },
          "name" : "GAME_MANAGER",
-         "tag" : ""
+         "tag" : "GameManager"
       },
       {
          "components" : {

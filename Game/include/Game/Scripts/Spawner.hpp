@@ -19,6 +19,9 @@ public:
             std::string name;
             uint32_t spawnAmount{0};
             float   timeUntilNextSpawn{0};
+
+            float elapsedTime{0};
+            float spawnedNb{0};
         };
         std::vector<sEntity> spawnableEntities;
         uint32_t associatedWave{0};
@@ -36,14 +39,17 @@ public:
     void loadFromJson(const JsonValue& json) override final;
 
 private:
+    void spawnEntity(const std::string& entityName);
+    std::vector<glm::vec3> getClosestPath() const;
+
+private:
     Entity* _parent;
     std::vector<sConfig> _configs;
 
     uint32_t _selectedConfig{0};
+    uint32_t _currentWave{0};
 
 private:
-    std::vector<glm::vec3> getClosestPath() const;
-
     GameManager* _gameManager{nullptr};
     sTransformComponent* _transform;
 

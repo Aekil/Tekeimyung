@@ -22,7 +22,18 @@
          "class" : [ "Spawner" ],
          "scripts" : [
             {
-               "configs" : [],
+               "configs" : [
+                  {
+                     "associated_wave" : 0,
+                     "spawnable_entities" : [
+                        {
+                           "amount" : 10,
+                           "spawn_time" : 1.5,
+                           "type" : "ENEMY"
+                        }
+                     ]
+                  }
+               ],
                "name" : "Spawner"
             }
          ]

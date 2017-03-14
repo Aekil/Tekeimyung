@@ -507,7 +507,13 @@ virtual void            update(sScriptComponent* component)
 {
     for (auto& script: component->scripts)
     {
+        JsonValue json = script->saveToJson();
+
         auto scriptInstance = ScriptFactory::create(script->getName());
+
+        // Little trick to update the component ._.
+        scriptInstance->loadFromJson(json);
+
         this->scripts.push_back(std::move(scriptInstance));
     }
 }
