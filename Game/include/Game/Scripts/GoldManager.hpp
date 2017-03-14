@@ -4,18 +4,22 @@
 
 #pragma once
 
+#include <Engine/Core/BaseScript.hpp>
 #include <Engine/Core/ScriptFactory.hpp>
 
 #define MAX_AMOUNT_OF_GOLD          1000000 // $$$ \o/ $$$
 #define STARTING_AMOUNT_OF_GOLD     200
 
+#define GOLD_TIME_BONUS             5 // amount of golds we earn every GOLD_TIMER
+#define GOLD_TIMER                  5.0f // x seconds
+
 #define WARN_STR_GOLD_LIMITS    "[GAME] Gold limits reached / Attempt to add inappropriate gold amount / Integer overflow potential"
 
-class Gold final : public BaseScript
+class GoldManager final : public BaseScript
 {
 public:
-    Gold() = default;
-    ~Gold() = default;
+    GoldManager() = default;
+    ~GoldManager() = default;
 
     void    start();
     void    update(float dt);
@@ -33,4 +37,4 @@ private:
     int     _golds;
 };
 
-REGISTER_SCRIPT(Gold);
+REGISTER_SCRIPT(GoldManager);

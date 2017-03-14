@@ -4,39 +4,46 @@
 
 #include <Engine/Utils/Logger.hpp>
 
-#include <Game/Scripts/Gold.hpp>
+#include <Game/Scripts/GoldManager.hpp>
 
-void Gold::start()
+void GoldManager::start()
 {
     _golds = STARTING_AMOUNT_OF_GOLD;
 }
 
-void Gold::update(float dt)
+void GoldManager::update(float dt)
 {
+    static float elapsedTime = 0;
 
+    elapsedTime += dt;
+    if (elapsedTime >= GOLD_TIMER)
+    {
+        addGolds(GOLD_TIME_BONUS);
+        elapsedTime -= GOLD_TIMER;
+    }
 }
 
-inline int Gold::getGolds() const
+inline int GoldManager::getGolds() const
 {
     return (_golds);
 }
 
-inline void Gold::setGolds(int newGoldAmount)
+inline void GoldManager::setGolds(int newGoldAmount)
 {
     secureSetGolds(newGoldAmount);
 }
 
-inline void Gold::addGolds(int addedGolds)
+inline void GoldManager::addGolds(int addedGolds)
 {
     secureSetGolds(_golds + addedGolds);
 }
 
-inline bool Gold::removeGolds(int removedGolds)
+inline bool GoldManager::removeGolds(int removedGolds)
 {
     secureSetGolds(_golds - removedGolds);
 }
 
-void Gold::secureSetGolds(int futureValue)
+void GoldManager::secureSetGolds(int futureValue)
 {
     if (futureValue > MAX_AMOUNT_OF_GOLD)
     {
