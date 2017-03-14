@@ -19,7 +19,12 @@
          "type" : "MESH"
       },
       "sScriptComponent" : {
-         "class" : [ "TrapFire" ]
+         "class" : [ "TrapFire" ],
+         "scripts" : [
+            {
+               "name" : "TrapFire"
+            }
+         ]
       },
       "sSphereColliderComponent" : {
          "isTrigger" : false,

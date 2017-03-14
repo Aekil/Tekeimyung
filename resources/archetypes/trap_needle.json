@@ -49,7 +49,12 @@
          "type" : "MESH"
       },
       "sScriptComponent" : {
-         "class" : [ "TrapNeedle" ]
+         "class" : [ "TrapNeedle" ],
+         "scripts" : [
+            {
+               "name" : "TrapNeedle"
+            }
+         ]
       },
       "sSphereColliderComponent" : {
          "isTrigger" : false,

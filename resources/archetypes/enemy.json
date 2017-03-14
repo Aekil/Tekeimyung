@@ -98,7 +98,12 @@
          }
       },
       "sScriptComponent" : {
-         "class" : [ "Enemy" ]
+         "class" : [ "Enemy" ],
+         "scripts" : [
+            {
+               "name" : "Enemy"
+            }
+         ]
       },
       "sSphereColliderComponent" : {
          "isTrigger" : false,

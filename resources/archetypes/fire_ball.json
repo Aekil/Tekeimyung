@@ -79,7 +79,12 @@
          }
       },
       "sScriptComponent" : {
-         "class" : [ "Projectile" ]
+         "class" : [ "Projectile" ],
+         "scripts" : [
+            {
+               "name" : "Projectile"
+            }
+         ]
       },
       "sSphereColliderComponent" : {
          "isTrigger" : false,

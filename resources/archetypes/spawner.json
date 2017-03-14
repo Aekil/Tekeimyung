@@ -19,7 +19,13 @@
          "type" : "MESH"
       },
       "sScriptComponent" : {
-         "class" : [ "Spawner" ]
+         "class" : [ "Spawner" ],
+         "scripts" : [
+            {
+               "configs" : [],
+               "name" : "Spawner"
+            }
+         ]
       },
       "sTransformComponent" : {
          "pos" : {

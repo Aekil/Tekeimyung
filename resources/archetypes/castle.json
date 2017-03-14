@@ -18,7 +18,12 @@
          "type" : "MESH"
       },
       "sScriptComponent" : {
-         "class" : [ "Castle" ]
+         "class" : [ "Castle" ],
+         "scripts" : [
+            {
+               "name" : "Castle"
+            }
+         ]
       },
       "sSphereColliderComponent" : {
          "isTrigger" : false,

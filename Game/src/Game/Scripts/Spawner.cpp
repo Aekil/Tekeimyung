@@ -38,7 +38,7 @@ void Spawner::start()
     }
 
     // Spawn enemy and set closest path
-/*    {
+    {
         Entity* enemy = this->Instantiate("ENEMY", glm::vec3(pos.x, 18.75, pos.z));
         auto scriptComponent = enemy->getComponent<sScriptComponent>();
 
@@ -57,7 +57,7 @@ void Spawner::start()
         }
         enemyScript->setPath(_closestPath);
     }
-*/
+
 }
 
 void Spawner::update(float dt)

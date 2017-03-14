@@ -19,21 +19,13 @@
          "texture" : "",
          "type" : "MESH"
       },
-      "sRigidBodyComponent" : {
-         "collisions_enabled" : true,
-         "gravity" : {
-            "x" : 0,
-            "y" : 0,
-            "z" : 0
-         },
-         "velocity" : {
-            "x" : 0,
-            "y" : 0,
-            "z" : 0
-         }
-      },
       "sScriptComponent" : {
-         "class" : [ "Player" ]
+         "class" : [ "Player" ],
+         "scripts" : [
+            {
+               "name" : "Player"
+            }
+         ]
       },
       "sSphereColliderComponent" : {
          "isTrigger" : false,
@@ -52,7 +44,7 @@
          },
          "rotation" : {
             "x" : 0,
-            "y" : -84.007659912109375,
+            "y" : -84.007637023925781,
             "z" : 0
          },
          "scale" : {
