@@ -18,7 +18,7 @@ void Tower::start()
     _towerTransform = entity->getComponent<sTransformComponent>();
     _towerRender = entity->getComponent<sRenderComponent>();
     _range = 22.0f;
-    _damage = 50;
+    _damage = 100;
 }
 
 void Tower::update(float dt)

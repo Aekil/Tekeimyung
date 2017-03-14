@@ -18,13 +18,16 @@ public:
 
 public:
     virtual bool takeDamage(int damage);
+    int getHealth() const;
+
+protected:
+    virtual void death() = 0;
+    void init(sTransformComponent* transform, sRenderComponent* render);
+    void update(sTransformComponent* transform);
 
 protected:
     int health;
     int maxHealth;
-    virtual void death() = 0;
-    void init(sTransformComponent* transform, sRenderComponent* render);
-    void update(sTransformComponent* transform);
 
 private:
     Entity* _healthBarEmpty;

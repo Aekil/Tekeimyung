@@ -45,7 +45,7 @@ void Projectile::onCollisionEnter(Entity* entity)
     {
         sScriptComponent* script = entity->getComponent<sScriptComponent>();
         Enemy* enemy = script ? script->getScript<Enemy>("Enemy") : nullptr;
-        if (!script || !enemy)
+        if (!script || !enemy || enemy->getHealth() <= 0)
         {
             destroyProjectile();
             LOG_WARN("Target has no sScriptComponent or no Enemy script");

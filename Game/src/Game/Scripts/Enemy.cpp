@@ -34,7 +34,7 @@ void Enemy::update(float dt)
     }
     else
     {
-        _transform->translate(glm::vec3(0.0f, 0.0f, this->_speed * dt));
+        _transform->translate(glm::vec3(0.0f, 0.0f, -this->_speed * dt));
     }
 
     Health::update(_transform);

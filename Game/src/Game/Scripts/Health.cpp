@@ -35,6 +35,11 @@ bool Health::takeDamage(int damage)
     return (false);
 }
 
+int Health::getHealth() const
+{
+    return (health);
+}
+
 void Health::init(sTransformComponent* transform, sRenderComponent* render)
 {
     this->_healthBarEmpty = EntityFactory::createEntity("HEALTH_EMPTY");
