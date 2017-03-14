@@ -31,6 +31,7 @@ public:
 
     std::vector<Entity*>&                           getEntities();
     const std::vector<Entity*>&                     getEntitiesByTag(const std::string& tag);
+    Entity*                                         getEntityByTag(const std::string& tag);
 
     template<typename T>
     const std::vector<Entity*>&                     getEntitiesByComponent()

@@ -39,7 +39,9 @@ void    CollisionSystem::update(EntityManager &em, float elapsedTime)
                         {
                             if (entityB->getComponent<sSphereColliderComponent>() != nullptr && !entityB->getComponent<sSphereColliderComponent>()->isTrigger
                                 || entityB->getComponent<sBoxColliderComponent>() != nullptr && !entityB->getComponent<sBoxColliderComponent>()->isTrigger)
-                                LOG_DEBUG("NOT TRIGGER");
+                            {
+                                //LOG_DEBUG("NOT TRIGGER");
+                            }
 
                             if (rigidBody->collisions.find(entityB->id) == rigidBody->collisions.end() || rigidBody->collisions[entityB->id] == eCollisionState::NO_COLLISION)
                             {

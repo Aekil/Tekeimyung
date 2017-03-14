@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <glm/vec3.hpp>
+
 #include <Engine/Core/ScriptFactory.hpp>
 
 #include <Game/Scripts/Health.hpp>
@@ -20,6 +22,8 @@ public:
     void death() override final;
     bool takeDamage(int damage) override final;
 
+    void setPath(const std::vector<glm::vec3>& path);
+
 private:
     Entity* _healthBarEmpty;
     sTransformComponent* _healthBarEmptyTransform;
@@ -29,6 +33,9 @@ private:
     sTransformComponent* _transform;
     sRenderComponent* _render;
     sRenderComponent* _healthRender;
+
+    std::vector<glm::vec3> _path;
+    uint32_t _pathProgress{0};
 };
 
 REGISTER_SCRIPT(Enemy);
