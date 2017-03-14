@@ -1201,10 +1201,28 @@ sComponent* ComponentFactory<sScriptComponent>::loadFromJson(const std::string& 
 
     component = new sScriptComponent();
 
-    std::vector<std::string> scriptNames = json.getStringVec("class", {});
-    for (const auto& scriptName: scriptNames)
+    auto scripts = json.get()["scripts"];
+    if (scripts.size() > 0 && scripts.type() != Json::ValueType::arrayValue)
     {
+        LOG_ERROR("%s::sScriptComponent loadFromJson error: scripts is not an array", entityType.c_str());
+        return (component);
+    }
+
+    for (const auto& script: scripts)
+    {
+        // Load animation
+        JsonValue scriptJson(script);
+        std::string scriptName = scriptJson.getString("name", "");
+
         auto scriptInstance = ScriptFactory::create(scriptName);
+        if (!scriptInstance)
+        {
+            LOG_ERROR("%s::sScriptComponent loadFromJson error: script \"%s\" does not exists", entityType.c_str(), scriptName.c_str());
+            continue;
+        }
+
+        scriptInstance->loadFromJson(scriptJson);
+
         component->scripts.push_back(std::move(scriptInstance));
     }
 

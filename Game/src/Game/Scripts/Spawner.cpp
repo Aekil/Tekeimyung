@@ -130,6 +130,43 @@ JsonValue Spawner::saveToJson()
     return (json);
 }
 
+void    Spawner::loadFromJson(const JsonValue& json)
+{
+    auto configs = json.get()["configs"];
+    if (configs.size() > 0 && configs.type() != Json::ValueType::arrayValue)
+    {
+        LOG_ERROR("Spawner::loadFromJson error: configs is not an array");
+        return;
+    }
+
+    for (const auto& config_: configs)
+    {
+        // Load animation
+        sConfig config;
+        JsonValue configJson(config_);
+
+        config.associatedWave = configJson.getUInt("associated_wave", 0);
+        auto entities = configJson.get()["spawnable_entities"];
+        if (entities.size() > 0 && entities.type() != Json::ValueType::arrayValue)
+        {
+            LOG_ERROR("Spawner::loadFromJson error: entities is not an array");
+            continue;
+        }
+
+        for (auto& entity_: entities)
+        {
+            JsonValue entityJson(entity_);
+            sConfig::sEntity entity;
+
+            entity.name = entityJson.getString("type", "ENEMY");
+            entity.spawnAmount = entityJson.getUInt("amount", 0);
+            entity.timeUntilNextSpawn = entityJson.getFloat("spawn_time", 0.5f);
+            config.spawnableEntities.push_back(entity);
+        }
+        _configs.push_back(config);
+    }
+}
+
 Entity* Spawner::getWaveManager() const
 {
     return (this->_parent);

@@ -30,6 +30,7 @@ public:
 
     bool updateEditor() override final;
     JsonValue saveToJson() override final;
+    void loadFromJson(const JsonValue& json) override final;
 
 public:
     Entity* getWaveManager() const;

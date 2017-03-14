@@ -32,6 +32,7 @@ public:
 
     virtual bool updateEditor() { return (false); }
     virtual JsonValue saveToJson() { return (JsonValue()); };
+    virtual void loadFromJson(const JsonValue& json) {}
 
     void setEntity(Entity* entity);
     Entity* getEntity();
