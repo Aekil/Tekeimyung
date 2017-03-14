@@ -21,7 +21,6 @@ public:
     void    start() override final;
     void    update(float dt) override final;
 
-public:
     int     getWaves() const;
     float   getTimeBeforeWaveStarts() const;
 

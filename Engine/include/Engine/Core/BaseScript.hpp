@@ -28,6 +28,8 @@ public:
     virtual void onHoverEnter() {};
     virtual void onHoverExit() {};
 
+    virtual bool updateEditor() { return (false); }
+
     void setEntity(Entity* entity);
 
 public:

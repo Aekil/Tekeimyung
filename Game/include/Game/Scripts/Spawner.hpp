@@ -6,10 +6,21 @@
 
 #include    <Engine/Core/ScriptFactory.hpp>
 
-#include    <Game/Scripts/SpawnerConfiguration.hpp>
-
 class       Spawner final : public BaseScript
 {
+public:
+    struct sConfig
+    {
+        struct sEntity
+        {
+            std::string name;
+            int     spawnAmount{0};
+            float   timeUntilNextSpawn{0};
+        };
+        std::vector<sEntity> spawnableEntities;
+        int     associatedWave{0};
+    };
+
 public:
     Spawner() = default;
     ~Spawner() = default;
@@ -17,17 +28,20 @@ public:
     void    start() override final;
     void    update(float dt) override final;
 
-private:
-    Entity* _parent;
-    std::vector<SpawnerConfiguration>   _configs;
+    bool updateEditor() override final;
 
 public:
     Entity* getWaveManager() const;
-    std::vector<SpawnerConfiguration>   getSpawnerConfigs() const;
 
     void    setWaveManager(Entity* waveManager);
-    void    addSpawnerConfig(SpawnerConfiguration config);
     void    deleteSpawnerConfig(int index);
+
+private:
+    Entity* _parent;
+    std::vector<sConfig> _configs;
+
+    uint32_t _selectedConfig{0};
+
 };
 
 REGISTER_SCRIPT(Spawner);

@@ -1264,9 +1264,6 @@ bool    ComponentFactory<sScriptComponent>::updateEditor(const std::string& enti
     if (component->selectedScript.size() == 0)
         return (changed);
 
-    ImGui::Text("\n");
-    ImGui::Text("%s script options\n", component->selectedScript.c_str());
-
     // Delete script
     if (ImGui::Button("Delete"))
     {
@@ -1274,6 +1271,25 @@ bool    ComponentFactory<sScriptComponent>::updateEditor(const std::string& enti
         component->scriptNames.erase(eraseIt);
         return (true);
     }
+
+    ImGui::Text("\n");
+    ImGui::Text("%s script options\n--------------------\n", component->selectedScript.c_str());
+
+    // Init scripts if not initialized (Case in EditorState)
+    {
+        if (component->scriptInstances.size() == 0 &&
+            component->scriptNames.size() != 0)
+        {
+            for (auto&& scriptName : component->scriptNames)
+            {
+                auto scriptInstance = ScriptFactory::create(scriptName);
+                scriptInstance->setEntity(entity);
+
+                component->scriptInstances.push_back(std::move(scriptInstance));
+            }
+        }
+    }
+    component->getScript(component->selectedScript.c_str())->updateEditor();
 
     return (changed);
 }
