@@ -12,6 +12,7 @@ void Enemy::start()
     this->_render->_animator.play("rotation_enemy", true);
     this->_render->_animator.playQueued("attack", true);
     this->maxHealth = 150;
+    this->_speed = 10.0f;
     this->health = this->maxHealth;
     this->_transform = getComponent<sTransformComponent>();
     Health::init(_transform, _render);
@@ -26,7 +27,7 @@ void Enemy::update(float dt)
         const glm::vec3& entityPos = this->_transform->getPos();
         glm::vec3 direction = glm::normalize(targetPos - entityPos);
 
-        direction *= 10.0f * dt;
+        direction *= this->_speed * dt;
         _transform->translate(direction);
 
         if (glm::distance(targetPos, entityPos) < 1.0f)
@@ -34,7 +35,7 @@ void Enemy::update(float dt)
     }
     else
     {
-        _transform->translate(glm::vec3(0.0f, 0.0f, -10.0f * dt));
+        _transform->translate(glm::vec3(0.0f, 0.0f, this->_speed * dt));
     }
 
     Health::update(_transform);
