@@ -29,6 +29,13 @@ void BaseScript::Destroy(Entity* entity)
     em->destroyEntityRegister(entity);
 }
 
+const std::vector<Entity*>& BaseScript::GetEntitiesByTag(const std::string& tag);
+{
+    auto em = EntityFactory::getBindedEntityManager();
+
+    return em->getEntitiesByTag(tag);
+}
+
 Entity* BaseScript::Instantiate(std::string type, glm::vec3 pos)
 {
     return EntityFactory::createEntity(type, pos);

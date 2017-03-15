@@ -19,11 +19,8 @@ public:
 
 private:
     void updateDirection();
-    void checkBuildableZone();
     void movement(float elapsedTime);
     void handleShoot();
-
-    float buildableRadius;
 
 public:
     void start() override final;
@@ -41,7 +38,6 @@ private:
     glm::vec3 _direction;
     sTransformComponent* _transform;
     sRenderComponent* _render;
-    bool _buildEnabled;
     int _damage;
 };
 

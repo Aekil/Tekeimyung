@@ -8,10 +8,6 @@
 
 void Tile::start()
 {
-    buildableItems.push_back("TOWER_FIRE");
-    buildableItems.push_back("TRAP_NEEDLE");
-    buildableItems.push_back("TRAP_CUTTER");
-    buildableItems.push_back("TRAP_FIRE");
     _render = this->getComponent<sRenderComponent>();
 }
 
