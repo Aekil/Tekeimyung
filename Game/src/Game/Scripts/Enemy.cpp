@@ -29,8 +29,10 @@ void Enemy::update(float dt)
         direction *= this->_speed * dt;
         _transform->translate(direction);
 
-        if (glm::distance(targetPos, entityPos) < 1.0f)
+        if (glm::length(direction) > glm::length(targetPos - entityPos))
+        {
             _pathProgress++;
+        }
     }
     else
     {
@@ -42,7 +44,6 @@ void Enemy::update(float dt)
 
 void    Enemy::onCollisionEnter(Entity* entity)
 {
-    
 }
 
 void Enemy::death()
