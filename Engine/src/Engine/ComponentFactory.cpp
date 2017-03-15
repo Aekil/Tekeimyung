@@ -1337,6 +1337,8 @@ sComponent* ComponentFactory<sUiComponent>::loadFromJson(const std::string& enti
     component->layer = json.getInt("layer", 0);
     component->horizontalAlignment = EnumManager<eHorizontalAlignment>::stringToEnum(json.getString("horizontal_alignment", "MIDDLE"));
     component->verticalAlignment = EnumManager<eVerticalAlignment>::stringToEnum(json.getString("vertical_alignment", "MIDDLE"));
+    component->percentageSize = json.getBool("percentage_size", false);
+    component->size = json.getVec2f("size", {0.1f, 0.1f});
 
     return component;
 }
@@ -1351,6 +1353,8 @@ JsonValue&    ComponentFactory<sUiComponent>::saveToJson(const std::string& enti
     json.setInt("layer", component->layer);
     json.setString("horizontal_alignment", EnumManager<eHorizontalAlignment>::enumToString(component->horizontalAlignment));
     json.setString("vertical_alignment", EnumManager<eVerticalAlignment>::enumToString(component->verticalAlignment));
+    json.setBool("percentage_size", component->percentageSize);
+    json.setVec2f("size", component->size);
 
     return (json);
 }
@@ -1370,8 +1374,28 @@ bool    ComponentFactory<sUiComponent>::updateEditor(const std::string& entityTy
 
     changed |= Helper::updateComboEnum<eHorizontalAlignment>("Horizontal alignment", component->horizontalAlignment);
     changed |= Helper::updateComboEnum<eVerticalAlignment>("Vertical alignment", component->verticalAlignment);
-    changed |= ImGui::InputFloat("horizontal offset", &component->offset.x, 1.0f, ImGuiInputTextFlags_AllowTabInput);
-    changed |= ImGui::InputFloat("vertical offset", &component->offset.y, 1.0f, ImGuiInputTextFlags_AllowTabInput);
+    changed |= ImGui::InputFloat("Horizontal offset", &component->offset.x, 1.0f, ImGuiInputTextFlags_AllowTabInput);
+    changed |= ImGui::InputFloat("Vertical offset", &component->offset.y, 1.0f, ImGuiInputTextFlags_AllowTabInput);
+    changed |= ImGui::Checkbox("Percentage size", &component->percentageSize);
+
+    if (component->percentageSize)
+    {
+        if (ImGui::InputFloat("vertical size", &component->size.x, 0.05f, ImGuiInputTextFlags_AllowTabInput))
+        {
+            changed = true;
+            // Set size.x between 0 and 1
+            component->size.x = std::min(component->size.x, 1.0f);
+            component->size.x = std::max(component->size.x, 0.0f);
+        }
+
+        if (ImGui::InputFloat("horizontal size", &component->size.y, 0.05f, ImGuiInputTextFlags_AllowTabInput))
+        {
+            changed = true;
+            // Set size.y between 0 and 1
+            component->size.y = std::min(component->size.y, 1.0f);
+            component->size.y = std::max(component->size.y, 0.0f);
+        }
+    }
 
     if (changed)
     {

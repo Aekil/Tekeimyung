@@ -46,49 +46,68 @@ void    UISystem::handleAlignment(EntityManager& em, Entity* entity, bool forceU
         sRenderComponent* render = entity->getComponent<sRenderComponent>();
         sTransformComponent* transform = entity->getComponent<sTransformComponent>();
 
-        const glm::vec3& size = render->getModel()->getSize() * transform->getScale();
+        glm::vec3 size = render->getModel()->getSize();
         float windowWidth = (float) GameWindow::getInstance()->getBufferWidth();
         float windowHeight = (float) GameWindow::getInstance()->getBufferHeight();
 
+        // Scale
+        {
+            if (ui->percentageSize)
+            {
+                glm::vec3 scale = transform->getScale();
+                scale.x = (windowWidth * ui->size.x) / size.x;
+                scale.y = (windowHeight * ui->size.y) / size.y;
+                transform->setScale(scale);
+            }
+        }
+
+        size *= transform->getScale();
+
         // Horizontal alignments
-        if (ui->horizontalAlignment == eHorizontalAlignment::LEFT)
         {
-            float x = size.x / 2.0f;
-            transform->setPos(glm::vec3(x, transform->getPos().y, transform->getPos().z));
-        }
-        else if (ui->horizontalAlignment == eHorizontalAlignment::MIDDLE)
-        {
-            float x = windowWidth / 2.0f;
-            transform->setPos(glm::vec3(x, transform->getPos().y, transform->getPos().z));
-        }
-        else if (ui->horizontalAlignment == eHorizontalAlignment::RIGHT)
-        {
-            float x = windowWidth - (size.x / 2.0f);
-            transform->setPos(glm::vec3(x, transform->getPos().y, transform->getPos().z));
+            if (ui->horizontalAlignment == eHorizontalAlignment::LEFT)
+            {
+                float x = size.x / 2.0f;
+                transform->setPos(glm::vec3(x, transform->getPos().y, transform->getPos().z));
+            }
+            else if (ui->horizontalAlignment == eHorizontalAlignment::MIDDLE)
+            {
+                float x = windowWidth / 2.0f;
+                transform->setPos(glm::vec3(x, transform->getPos().y, transform->getPos().z));
+            }
+            else if (ui->horizontalAlignment == eHorizontalAlignment::RIGHT)
+            {
+                float x = windowWidth - (size.x / 2.0f);
+                transform->setPos(glm::vec3(x, transform->getPos().y, transform->getPos().z));
+            }
         }
 
         // Vertical alignments
-        if (ui->verticalAlignment == eVerticalAlignment::TOP)
         {
-            float y = windowHeight - (size.y / 2.0f);
-            transform->setPos(glm::vec3(transform->getPos().x, y, transform->getPos().z));
-        }
-        else if (ui->verticalAlignment == eVerticalAlignment::MIDDLE)
-        {
-            float y = windowHeight / 2.0f;
-            transform->setPos(glm::vec3(transform->getPos().x, y, transform->getPos().z));
-        }
-        else if (ui->verticalAlignment == eVerticalAlignment::BOTTOM)
-        {
-            float y = size.y / 2.0f;
-            transform->setPos(glm::vec3(transform->getPos().x, y, transform->getPos().z));
+            if (ui->verticalAlignment == eVerticalAlignment::TOP)
+            {
+                float y = windowHeight - (size.y / 2.0f);
+                transform->setPos(glm::vec3(transform->getPos().x, y, transform->getPos().z));
+            }
+            else if (ui->verticalAlignment == eVerticalAlignment::MIDDLE)
+            {
+                float y = windowHeight / 2.0f;
+                transform->setPos(glm::vec3(transform->getPos().x, y, transform->getPos().z));
+            }
+            else if (ui->verticalAlignment == eVerticalAlignment::BOTTOM)
+            {
+                float y = size.y / 2.0f;
+                transform->setPos(glm::vec3(transform->getPos().x, y, transform->getPos().z));
+            }
         }
 
         // Offsets
-        glm::vec3 pos = transform->getPos();
-        pos.x += windowWidth * ui->offset.x / 100.0f;
-        pos.y += windowHeight * ui->offset.y / 100.0f;
-        transform->setPos(pos);
+        {
+            glm::vec3 pos = transform->getPos();
+            pos.x += windowWidth * ui->offset.x / 100.0f;
+            pos.y += windowHeight * ui->offset.y / 100.0f;
+            transform->setPos(pos);
+        }
     }
 
     ui->needUpdate = false;

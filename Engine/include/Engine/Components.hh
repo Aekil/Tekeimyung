@@ -430,8 +430,11 @@ virtual void update(sComponent* component)
 eHorizontalAlignment    horizontalAlignment = eHorizontalAlignment::MIDDLE;
 eVerticalAlignment      verticalAlignment = eVerticalAlignment::MIDDLE;
 glm::vec2               offset{0.0f, 0.0f}; // Percentage offset
+bool                    percentageSize{false}; // Use percentage for ui size
+glm::vec2               size{0.1f, 0.1f}; // Percentage size
 int                     layer{0}; // Layer used for UI ordering
 bool                    needUpdate = true;
+
 END_COMPONENT(sUiComponent)
 
 
