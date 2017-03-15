@@ -96,7 +96,7 @@ bool Spawner::updateEditor()
     // Configs editor
     {
         auto& config = _configs[_selectedConfig];
-        static std::vector<const char*> spawnableEntityTypes = {"ENEMY"};
+        static std::vector<const char*> spawnableEntityTypes = {"ENEMY", "ENEMY_SPEED", "ENEMY_TANK"};
 
         int wave = config.associatedWave;
         if (ImGui::InputInt("Associated wave", &wave, 1, ImGuiInputTextFlags_AllowTabInput))

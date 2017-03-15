@@ -20,7 +20,7 @@ void Castle::update(float dt)
 
 void Castle::onCollisionEnter(Entity* entity)
 {
-    if (entity->getComponent<sNameComponent>()->value == "ENEMY")
+    if (entity->getTag() == "Enemy")
     {
         //LOG_DEBUG("Damage done");
         this->takeDamage(150);
