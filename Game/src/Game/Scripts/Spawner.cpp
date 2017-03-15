@@ -39,25 +39,22 @@ void Spawner::start()
 
 void Spawner::update(float dt)
 {
-
-    for (auto& config: _configs)
+    auto& it = _currentWaves.begin();
+    for (it; it != _currentWaves.end();)
     {
-        // TODO: Handle multiple wave configs for the same wave
-        if (config.associatedWave == _currentWave)
-        {
-            for (auto& entity: config.spawnableEntities)
+        sConfig* waveConfig = *it;
+
+        waveConfig->updateSpawnedEntities();
+        spawnEntities(waveConfig, dt);
+
+        if ((waveConfig->spawnedEntities.size() == 0 && // All spawned entities are dead
+            waveConfig->allEntitiesSpawned()) ||
+            waveConfig->spawnableEntities.size() == 0) // The spawner has not spawnable entities
             {
-                entity.elapsedTime += dt;
-                if ((!entity.spawnedNb || entity.elapsedTime >= entity.timeUntilNextSpawn) &&
-                    entity.spawnedNb < entity.spawnAmount)
-                {
-                    entity.elapsedTime = 0.0f;
-                    entity.spawnedNb++;
-                    spawnEntity(entity.name);
-                }
+                it = _currentWaves.erase(it);
             }
-            break;
-        }
+        else
+            ++it;
     }
 }
 
@@ -209,26 +206,22 @@ void    Spawner::loadFromJson(const JsonValue& json)
     }
 }
 
-void    Spawner::spawnEntity(const std::string& entityName)
+void    Spawner::startWave(uint32_t waveNb)
 {
-    auto& pos = _transform->getPos();
-    Entity* enemy = this->Instantiate(entityName, glm::vec3(pos.x, 18.75, pos.z));
-    auto scriptComponent = enemy->getComponent<sScriptComponent>();
-
-    if (!scriptComponent)
+    for (auto& config: _configs)
     {
-        LOG_WARN("Can't find scriptComponent on %s entity", entityName.c_str());
-        return;
+        // TODO: Handle multiple wave configs for the same wave
+        if (config.associatedWave == waveNb)
+        {
+            _currentWaves.push_back(&config);
+            break;
+        }
     }
+}
 
-    Enemy* enemyScript = scriptComponent->getScript<Enemy>("Enemy");
-
-    if (!enemyScript)
-    {
-        LOG_WARN("Can't find Enemy script on %s entity", entityName.c_str());
-        return;
-    }
-    enemyScript->setPath(_closestPath);
+bool    Spawner::checkEndWave()
+{
+    return (_currentWaves.size() == 0);
 }
 
 std::vector<glm::vec3> Spawner::getClosestPath() const
@@ -254,4 +247,77 @@ std::vector<glm::vec3> Spawner::getClosestPath() const
     }
 
     return (closestPath);
+}
+
+Entity*    Spawner::spawnEntity(const std::string& entityName)
+{
+    auto& pos = _transform->getPos();
+    Entity* enemy = this->Instantiate(entityName, glm::vec3(pos.x, 18.75, pos.z));
+    auto scriptComponent = enemy->getComponent<sScriptComponent>();
+
+    if (!scriptComponent)
+    {
+        LOG_WARN("Can't find scriptComponent on %s entity", entityName.c_str());
+        return (enemy);
+    }
+
+    Enemy* enemyScript = scriptComponent->getScript<Enemy>("Enemy");
+
+    if (!enemyScript)
+    {
+        LOG_WARN("Can't find Enemy script on %s entity", entityName.c_str());
+        return (enemy);
+    }
+    enemyScript->setPath(_closestPath);
+
+    return (enemy);
+}
+
+void    Spawner::spawnEntities(sConfig* waveConfig, float dt)
+{
+    for (auto& entity: waveConfig->spawnableEntities)
+    {
+        entity.elapsedTime += dt;
+        if ((!entity.spawnedNb || entity.elapsedTime >= entity.timeUntilNextSpawn) && // First spawn or timeUntilNextSpawn
+            entity.spawnedNb < entity.spawnAmount)
+        {
+            entity.elapsedTime = 0.0f;
+            entity.spawnedNb++;
+            Entity* spawnedEntity = spawnEntity(entity.name);
+            if (!spawnedEntity)
+            {
+                LOG_ERROR("Cannot spawn entity");
+                continue;
+            }
+            waveConfig->spawnedEntities.push_back(spawnedEntity->id);
+        }
+    }
+}
+
+void    Spawner::sConfig::updateSpawnedEntities()
+{
+    auto em = EntityFactory::getBindedEntityManager();
+    auto& it = spawnedEntities.begin();
+    for (it; it != spawnedEntities.end();)
+    {
+        uint32_t entityId = *it;
+        // The entity of the wave config is dead
+        if (!em->getEntity(entityId))
+        {
+            it = spawnedEntities.erase(it);
+        }
+        else
+            ++it;
+    }
+}
+
+bool Spawner::sConfig::allEntitiesSpawned()
+{
+    bool allSpawned = true;
+    for (auto& entity: spawnableEntities)
+    {
+        if (entity.spawnedNb != entity.spawnAmount)
+            allSpawned = false;
+    }
+    return (allSpawned);
 }

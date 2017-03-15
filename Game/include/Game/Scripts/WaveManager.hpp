@@ -13,10 +13,6 @@ public:
     WaveManager() = default;
     ~WaveManager() = default;
 
-private:
-    int     _waves;
-    float   _timeBeforeWaveStarts;
-
 public:
     void    start() override final;
     void    update(float dt) override final;
@@ -26,6 +22,15 @@ public:
 
     void    setWaves(int waves);
     void    setTimeBeforeWaveStarts(float time);
+
+private:
+    void    startWave(uint32_t wave);
+    bool    checkEndWave();
+
+private:
+    int     _waves;
+    float   _timeBeforeWaveStarts;
+    int _currentWave{-1};
 };
 
 REGISTER_SCRIPT(WaveManager);

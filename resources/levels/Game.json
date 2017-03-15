@@ -109,6 +109,9 @@
                "scripts" : [
                   {
                      "name" : "GameManager"
+                  },
+                  {
+                     "name" : "WaveManager"
                   }
                ]
             },

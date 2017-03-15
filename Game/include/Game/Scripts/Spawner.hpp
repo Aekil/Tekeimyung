@@ -25,6 +25,11 @@ public:
         };
         std::vector<sEntity> spawnableEntities;
         uint32_t associatedWave{0};
+
+        std::vector<uint32_t> spawnedEntities;
+
+        void updateSpawnedEntities(); // Remove dead entities from sEntity::spawnedEntities
+        bool allEntitiesSpawned();
     };
 
 public:
@@ -38,18 +43,22 @@ public:
     JsonValue saveToJson() override final;
     void loadFromJson(const JsonValue& json) override final;
 
+    void startWave(uint32_t waveNb);
+    bool checkEndWave();
+
 private:
-    void spawnEntity(const std::string& entityName);
     std::vector<glm::vec3> getClosestPath() const;
+    Entity* spawnEntity(const std::string& entityName);
+    void spawnEntities(sConfig* waveConfig, float dt);
 
 private:
     Entity* _parent;
     std::vector<sConfig> _configs;
 
     uint32_t _selectedConfig{0};
-    uint32_t _currentWave{0};
 
-private:
+    std::vector<sConfig*> _currentWaves;
+
     GameManager* _gameManager{nullptr};
     sTransformComponent* _transform;
 
