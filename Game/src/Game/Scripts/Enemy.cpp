@@ -16,6 +16,8 @@ void Enemy::start()
     this->health = this->maxHealth;
     this->_transform = getComponent<sTransformComponent>();
     Health::init(_transform, _render);
+    _dyingSound = EventSound::getEventByEventType(eEventSound::ENEMY_DYING);
+    _earningCoins = EventSound::getEventByEventType(eEventSound::EARN_COINS_FROM_ENEMY);
 }
 
 void Enemy::update(float dt)
@@ -44,6 +46,16 @@ void Enemy::update(float dt)
 void Enemy::death()
 {
     this->Destroy();
+#if (ENABLE_SOUND)
+    if (_dyingSound->soundID != -1 && !SoundManager::getInstance()->isSoundPlaying(_dyingSound->soundID))
+    {
+        SoundManager::getInstance()->playSound(_dyingSound->soundID);
+    }
+    if (_earningCoins->soundID != -1 && !SoundManager::getInstance()->isSoundPlaying(_earningCoins->soundID))
+    {
+        SoundManager::getInstance()->playSound(_earningCoins->soundID);
+    }
+#endif
 }
 
 bool Enemy::takeDamage(int damage)

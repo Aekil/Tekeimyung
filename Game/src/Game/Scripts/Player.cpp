@@ -31,6 +31,7 @@ void Player::start()
     this->_render = this->getComponent<sRenderComponent>();
     _buildEnabled = false;
     _damage = 20;
+    _shootSound = EventSound::getEventByEventType(eEventSound::PLAYER_SHOOT);
 
     LOG_DEBUG("BORN");
 }
@@ -150,6 +151,13 @@ void Player::handleShoot()
 
         projectileScript->_damage = _damage;
         projectileScript->followDirection({_direction.x, 0.0f, _direction.z});
+
+#if (ENABLE_SOUND)
+        if (_shootSound->soundID != -1 && !SoundManager::getInstance()->isSoundPlaying(_shootSound->soundID))
+        {
+            SoundManager::getInstance()->playSound(_shootSound->soundID);
+        }
+#endif
     }
 }
 

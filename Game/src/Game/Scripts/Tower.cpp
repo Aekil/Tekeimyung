@@ -19,6 +19,7 @@ void Tower::start()
     _towerRender = entity->getComponent<sRenderComponent>();
     _range = 22.0f;
     _damage = 50;
+    _towershootSound = EventSound::getEventByEventType(eEventSound::TOWER_SHOOT);
 }
 
 void Tower::update(float dt)
@@ -81,6 +82,13 @@ void Tower::shootTarget(Entity* target)
     projectileScript->_targetId = target->id;
     projectileScript->_damage = _damage;
     projectileScript->followTarget(target);
+
+#if (ENABLE_SOUND)
+    if (_towershootSound->soundID != -1 && !SoundManager::getInstance()->isSoundPlaying(_towershootSound->soundID))
+    {
+        SoundManager::getInstance()->playSound(_towershootSound->soundID);
+    }
+#endif
 
     _lastShotTime = 0.0f;
 }

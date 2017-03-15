@@ -6,6 +6,7 @@
 
 #include <glm/vec3.hpp>
 
+#include <Engine/Utils/EventSound.hpp>
 #include <Engine/Core/BaseScript.hpp>
 #include <Engine/Core/ScriptFactory.hpp>
 
@@ -43,6 +44,7 @@ private:
     sRenderComponent* _render;
     bool _buildEnabled;
     int _damage;
+    tEventSound* _shootSound = nullptr;
 };
 
 REGISTER_SCRIPT(Player);
