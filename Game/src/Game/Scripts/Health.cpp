@@ -42,13 +42,10 @@ void Health::init(sRenderComponent* render)
     _objCenter.x = render->getModel()->getMin().x + ((render->getModel()->getMax().x - render->getModel()->getMin().x) / 2.0f);
     _objCenter.y = render->getModel()->getMax().y;
     _objCenter.z = render->getModel()->getMin().z + ((render->getModel()->getMax().z - render->getModel()->getMin().z) / 2.0f);
-    this->_healthRender = _progressBar.filled->getComponent<sRenderComponent>();
 }
 
 void Health::update(sTransformComponent* transform)
 {
-    _progressBar.update();
-
     Camera* camera = Renderer::getInstance()->getCurrentCamera();
     auto& gameWindow = GameWindow::getInstance();
 
@@ -62,12 +59,10 @@ void Health::update(sTransformComponent* transform)
     glm::mat4 model = glm::translate(glm::mat4(1.0), transform->getPos());
     glm::vec3 screenPos = glm::project(_objCenter * transform->getScale(), camera->getView() * model, camera->getProj(), viewport);
 
-    float healthSize = _healthRender->getModel()->getMax().x - _healthRender->getModel()->getMin().x;
-    float healthEmptySize = healthSize * _progressBar.emptyTransform->getScale().x / 2.0f;
     screenPos.y += 4.0f;
 
     this->_progressBar.filledTransform->setPos(glm::vec3(screenPos.x, screenPos.y, this->_progressBar.filledTransform->getPos().z));
-    this->_progressBar.filledTransform->translate(-glm::vec3(healthEmptySize - ((this->_progressBar.filledTransform->getScale().x * healthSize) / 2.0f),
-                                                    0.0f, 0.0f));
     this->_progressBar.emptyTransform->setPos(glm::vec3(screenPos.x, screenPos.y, this->_progressBar.emptyTransform->getPos().z));
+
+    _progressBar.update();
 }

@@ -16,6 +16,7 @@ public:
 
     void init(const std::string& entityProgressBarEmpty, const std::string& entityProgressBar);
     void update();
+    void display(bool display);
 
 public:
     float maxProgress;
@@ -23,7 +24,9 @@ public:
 
     Entity* empty{nullptr};
     sTransformComponent* emptyTransform{nullptr};
+    sRenderComponent*   emptyRender{nullptr};
 
     Entity* filled{nullptr};
     sTransformComponent* filledTransform{nullptr};
+    sRenderComponent*   filledRender{nullptr};
 };

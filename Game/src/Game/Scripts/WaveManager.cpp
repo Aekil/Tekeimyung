@@ -11,7 +11,10 @@ void        WaveManager::start()
 {
     auto em = EntityFactory::getBindedEntityManager();
     this->_waves = 4;
-    this->_timeBeforeWaveStarts = 5.0f;
+    _progressBar.maxProgress = 5.0f;
+    _progressBar.currentProgress = 0.0f;
+    _progressBar.init("TIMER_BAR_EMPTY", "TIMER_BAR");
+    _progressBar.display(false);
 }
 
 void        WaveManager::update(float dt)
@@ -19,13 +22,31 @@ void        WaveManager::update(float dt)
     if (_currentWave >= _waves)
         return;
 
+    if (_progressBar.currentProgress > 0.0f ||
+        _currentWave == -1)
+    {
+        _progressBar.currentProgress -= dt;
+        _progressBar.update();
+
+        if (_progressBar.currentProgress <= 0.0f)
+        {
+            _progressBar.display(false);
+            ++_currentWave;
+            if (_currentWave >= _waves)
+                return;
+            startWave(_currentWave);
+        }
+        return;
+    }
+
     // All spawners entities are dead
     if (checkEndWave())
     {
-        ++_currentWave;
-        if (_currentWave >= _waves)
-            return;
-        startWave(_currentWave);
+        if (_currentWave + 1 < _waves)
+        {
+            _progressBar.currentProgress = _progressBar.maxProgress;
+            _progressBar.display(true);
+        }
     }
 }
 
@@ -34,19 +55,9 @@ int         WaveManager::getWaves() const
     return (this->_waves);
 }
 
-float       WaveManager::getTimeBeforeWaveStarts() const
-{
-    return (this->_timeBeforeWaveStarts);
-}
-
 void        WaveManager::setWaves(int waves)
 {
     this->_waves = waves;
-}
-
-void        WaveManager::setTimeBeforeWaveStarts(float time)
-{
-    this->_timeBeforeWaveStarts = time;
 }
 
 void    WaveManager::startWave(uint32_t wave)

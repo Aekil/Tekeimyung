@@ -1,11 +1,7 @@
 {
    "components" : {
-      "sButtonComponent" : {
-         "action" : "REMOVE_CURRENT_LEVEL",
-         "action_level" : ""
-      },
       "sNameComponent" : {
-         "name" : "CAMERA_PREVIEW"
+         "name" : "TIMER_BAR_EMPTY"
       },
       "sRenderComponent" : {
          "animated" : false,
@@ -17,14 +13,14 @@
             "r" : 1
          },
          "ignore_raycast" : false,
-         "materials" : [ "camera_preview.mat" ],
+         "materials" : [ "geometry_default.mat" ],
          "model" : "resources/models/default.DAE",
          "type" : "PLANE"
       },
       "sTransformComponent" : {
          "pos" : {
-            "x" : 40,
-            "y" : 30,
+            "x" : 960,
+            "y" : 978.86248779296875,
             "z" : 0
          },
          "rotation" : {
@@ -33,26 +29,29 @@
             "z" : 0
          },
          "scale" : {
-            "x" : 8,
-            "y" : 6,
-            "z" : 6
+            "x" : 76.800003051757813,
+            "y" : 1.5255000591278076,
+            "z" : 1
          }
       },
+      "sTypeComponent" : {
+         "type" : "TILE_WALKABLE"
+      },
       "sUiComponent" : {
-         "horizontal_alignment" : "LEFT",
-         "layer" : 0,
+         "horizontal_alignment" : "MIDDLE",
+         "layer" : 1,
          "offset" : {
             "x" : 0,
-            "y" : 0
+            "y" : -3
          },
          "percentage_size" : false,
          "size" : {
             "x" : 0.10000000149011612,
             "y" : 0.10000000149011612
          },
-         "vertical_alignment" : "BOTTOM"
+         "vertical_alignment" : "TOP"
       }
    },
-   "name" : "CAMERA_PREVIEW",
+   "name" : "TIMER_BAR_EMPTY",
    "tag" : ""
 }

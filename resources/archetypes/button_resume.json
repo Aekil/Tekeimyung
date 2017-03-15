@@ -46,6 +46,11 @@
             "x" : 0,
             "y" : 9
          },
+         "percentage_size" : false,
+         "size" : {
+            "x" : 0.10000000149011612,
+            "y" : 0.10000000149011612
+         },
          "vertical_alignment" : "MIDDLE"
       }
    },

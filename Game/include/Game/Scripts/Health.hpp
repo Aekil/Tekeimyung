@@ -25,7 +25,6 @@ protected:
     void update(sTransformComponent* transform);
 
 private:
-    sRenderComponent*   _healthRender{nullptr};
     glm::vec3           _objCenter;
     ProgressBar         _progressBar;
 };
