@@ -20,6 +20,34 @@
             "name" : "building.mp3",
             "path" : "resources/sounds/sfx/building.mp3"
          }
+      },
+      {
+         "name" : "ENEMY_DYING",
+         "sound" : {
+            "name" : "explosion.mp3",
+            "path" : "resources/sounds/sfx/explosion.mp3"
+         }
+      },
+      {
+         "name" : "TOWER_SHOOT",
+         "sound" : {
+            "name" : "laser_shoot1.wav",
+            "path" : "resources/sounds/sfx/laser_shoot1.wav"
+         }
+      },
+      {
+         "name" : "PLAYER_SHOOT",
+         "sound" : {
+            "name" : "laser_shoot2.wav",
+            "path" : "resources/sounds/sfx/laser_shoot2.wav"
+         }
+      },
+      {
+         "name" : "EARN_COINS_FROM_ENEMY",
+         "sound" : {
+            "name" : "pickup_coin2.wav",
+            "path" : "resources/sounds/sfx/pickup_coin2.wav"
+         }
       }
    ]
 }
