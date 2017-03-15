@@ -1,0 +1,139 @@
+{
+   "components" : {
+      "sBoxColliderComponent" : {
+         "isTrigger" : false,
+         "pos" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "size" : {
+            "x" : 1.1000000238418579,
+            "y" : 1.1000000238418579,
+            "z" : 1.1000000238418579
+         }
+      },
+      "sNameComponent" : {
+         "name" : "ENEMY_TANK"
+      },
+      "sRenderComponent" : {
+         "animated" : false,
+         "animations" : [
+            {
+               "layer" : "MOVE_LAYER",
+               "name" : "rotation_enemy",
+               "params" : [
+                  {
+                     "frames" : [
+                        {
+                           "easing" : "NONE",
+                           "time" : 1.5,
+                           "value" : {
+                              "x" : 0,
+                              "y" : 0,
+                              "z" : 360
+                           }
+                        }
+                     ],
+                     "name" : "rotation"
+                  }
+               ]
+            },
+            {
+               "layer" : "HIT_LAYER",
+               "name" : "hit",
+               "params" : [
+                  {
+                     "frames" : [
+                        {
+                           "easing" : "EASE_IN",
+                           "time" : 0.5,
+                           "value" : {
+                              "w" : 1,
+                              "x" : 1,
+                              "y" : 0,
+                              "z" : 0
+                           }
+                        },
+                        {
+                           "easing" : "EASE_OUT",
+                           "time" : 1,
+                           "value" : {
+                              "w" : 1,
+                              "x" : 1,
+                              "y" : 0,
+                              "z" : 1
+                           }
+                        }
+                     ],
+                     "name" : "color"
+                  }
+               ]
+            }
+         ],
+         "color" : {
+            "a" : 1,
+            "b" : 1.0023009777069092,
+            "g" : 0,
+            "r" : 1
+         },
+         "ignore_raycast" : false,
+         "materials" : [ "geometry_default.mat" ],
+         "model" : "resources/models/characters/enemy.DAE",
+         "type" : "TRAPEZE"
+      },
+      "sRigidBodyComponent" : {
+         "collisions_enabled" : true,
+         "gravity" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "velocity" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         }
+      },
+      "sScriptComponent" : {
+         "scripts" : [
+            {
+               "health" : 220,
+               "name" : "Enemy",
+               "speed" : 25
+            }
+         ]
+      },
+      "sSphereColliderComponent" : {
+         "isTrigger" : false,
+         "pos" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "radius" : 1
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 74.449356079101563,
+            "y" : -70.0439453125,
+            "z" : 339.77798461914063
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : 3.0517567211063579e-05,
+            "z" : 0
+         },
+         "scale" : {
+            "x" : 0.71669149398803711,
+            "y" : 0.91669178009033203,
+            "z" : 0.91669297218322754
+         }
+      },
+      "sTypeComponent" : {
+         "type" : "CHARACTER"
+      }
+   },
+   "name" : "ENEMY_TANK",
+   "tag" : "Enemy"
+}

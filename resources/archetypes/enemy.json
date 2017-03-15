@@ -103,7 +103,7 @@
             {
                "health" : 150,
                "name" : "Enemy",
-               "speed" : 50
+               "speed" : 40
             }
          ]
       },
