@@ -418,6 +418,8 @@ virtual void update(sUiComponent* component)
     this->horizontalAlignment = component->horizontalAlignment;
     this->verticalAlignment = component->verticalAlignment;
     this->offset = component->offset;
+    this->percentageSize = component->percentageSize;
+    this->size = component->size;
     this->layer = component->layer;
     this->needUpdate = component->needUpdate;
 }
