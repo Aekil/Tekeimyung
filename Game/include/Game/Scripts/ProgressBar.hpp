@@ -12,19 +12,18 @@ class ProgressBar
 {
 public:
     ProgressBar() = default;
-    virtual ~ProgressBar();
+    ~ProgressBar();
 
     void init(const std::string& entityProgressBarEmpty, const std::string& entityProgressBar);
     void update();
 
-protected:
-    float _maxProgress;
-    float _currentProgress;
+public:
+    float maxProgress;
+    float currentProgress;
 
-protected:
-    Entity* _progressBarEmpty{nullptr};
-    sTransformComponent* _progressBarEmptyTransform{nullptr};
+    Entity* empty{nullptr};
+    sTransformComponent* emptyTransform{nullptr};
 
-    Entity* _progressBar{nullptr};
-    sTransformComponent* _progressBarTransform{nullptr};
+    Entity* filled{nullptr};
+    sTransformComponent* filledTransform{nullptr};
 };

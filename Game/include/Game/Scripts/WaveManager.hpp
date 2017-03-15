@@ -11,7 +11,7 @@ class       WaveManager final : public BaseScript
 {
 public:
     WaveManager() = default;
-    ~WaveManager() = default;
+    ~WaveManager() override final = default;
 
 public:
     void    start() override final;

@@ -7,11 +7,11 @@
 #include <glm/vec3.hpp>
 #include <Game/Scripts/ProgressBar.hpp>
 
-class Health: public ProgressBar
+class Health
 {
 public:
     Health() = default;
-    virtual ~Health() override = default;
+    virtual ~Health() = default;
 
 public:
     virtual bool takeDamage(int damage);
@@ -27,4 +27,5 @@ protected:
 private:
     sRenderComponent*   _healthRender{nullptr};
     glm::vec3           _objCenter;
+    ProgressBar         _progressBar;
 };
