@@ -25,6 +25,9 @@ private:
     void    startWave(uint32_t wave);
     bool    checkEndWave();
 
+    void    handleStartWave();
+    void    handleEndWave();
+
 private:
     int     _waves;
     float   _timeBeforeWaveStarts;

@@ -30,11 +30,7 @@ void        WaveManager::update(float dt)
 
         if (_progressBar.currentProgress <= 0.0f)
         {
-            _progressBar.display(false);
-            ++_currentWave;
-            if (_currentWave >= _waves)
-                return;
-            startWave(_currentWave);
+            handleStartWave();
         }
         return;
     }
@@ -44,8 +40,7 @@ void        WaveManager::update(float dt)
     {
         if (_currentWave + 1 < _waves)
         {
-            _progressBar.currentProgress = _progressBar.maxProgress;
-            _progressBar.display(true);
+            handleEndWave();
         }
     }
 }
@@ -105,4 +100,40 @@ bool    WaveManager::checkEndWave()
     }
 
     return (endWave);
+}
+
+void    WaveManager::handleStartWave()
+{
+    auto em = EntityFactory::getBindedEntityManager();
+
+    _progressBar.display(false);
+    ++_currentWave;
+    if (_currentWave >= _waves)
+        return;
+    startWave(_currentWave);
+
+    Entity* player = em->getEntityByTag("Player");
+    if (!player)
+    {
+        LOG_WARN("Can't find entity with tag Player");
+        return;
+    }
+    sTransformComponent* playerTransform = player->getComponent<sTransformComponent>();
+    playerTransform->setPos({96.0f, 22.5f, 116.0f});
+}
+
+void    WaveManager::handleEndWave()
+{
+    auto em = EntityFactory::getBindedEntityManager();
+    _progressBar.currentProgress = _progressBar.maxProgress;
+    _progressBar.display(true);
+
+    Entity* player = em->getEntityByTag("Player");
+    if (!player)
+    {
+        LOG_WARN("Can't find entity with tag Player");
+        return;
+    }
+    sTransformComponent* playerTransform = player->getComponent<sTransformComponent>();
+    playerTransform->setPos({65.0f, 16.250f, 33.0f});
 }
