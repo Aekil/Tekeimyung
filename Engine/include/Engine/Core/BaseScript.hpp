@@ -46,7 +46,7 @@ protected:
 
     virtual Entity* Instantiate(std::string, glm::vec3 pos = glm::vec3(0,0,0));
 
-    virtual const std::vector<Entity*>& GetEntitiesByTag(const std::string&);
+    virtual const std::vector<Entity*>& GetEntitiesByTag(const std::string& tag);
     virtual void Destroy();
     virtual void Destroy(Entity*);
 };

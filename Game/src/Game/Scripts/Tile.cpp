@@ -4,7 +4,10 @@
 
 #include <Engine/Components.hh>
 
+#include <Engine/EntityFactory.hpp>
+
 #include <Game/Scripts/Tile.hpp>
+#include <Game/Scripts/Build.hpp>
 
 void Tile::start()
 {
@@ -13,70 +16,30 @@ void Tile::start()
 
 void Tile::update(float dt)
 {
-    if (this->m_buildable && this->onHover && this->mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_1] == Mouse::eButtonState::CLICK_PRESSED)
-    {
-        auto& position = this->getComponent<sTransformComponent>()->getPos();
-
-        this->Instantiate(this->buildableItems[this->currentIdx], glm::vec3(position.x, position.y + 12.5f, position.z));
-    }
-
-    if (this->mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_2] == Mouse::eButtonState::CLICK_PRESSED)
-    {
-        this->currentIdx++;
-
-        if (this->currentIdx >= this->buildableItems.size())
-            this->currentIdx = 0;
-    }
-
-    if (!this->m_buildable && this->preview != nullptr)
-    {
-        destroyPreview();
-    }
-    else if (this->m_buildable &&
-        this->preview == nullptr &&
-        this->onHover)
-    {
-        displayPreview();
-    }
 }
 
 void Tile::onHoverEnter()
 {
-    if (this->m_buildable)
-    {
-        displayPreview();
-    }
-
-    _render->color = glm::vec4(0.5f, 0.5f, 0.5f, 1.0f);
-    this->onHover = true;
+    auto em = EntityFactory::getBindedEntityManager();
+    
+    auto buildScript = em->getEntityByTag("Player")->getComponent<sScriptComponent>()->getScript<Build>("Build");
+    buildScript->setTile(this->entity);
 }
 
 void Tile::onHoverExit()
 {
-    if (this->preview != nullptr)
-    {
-        destroyPreview();
-    }
+    auto em = EntityFactory::getBindedEntityManager();
 
-    _render->color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-    this->onHover = false;
+    auto buildScript = em->getEntityByTag("Player")->getComponent<sScriptComponent>()->getScript<Build>("Build");
+    buildScript->setTile(nullptr);
 }
 
 void Tile::setBuildable(bool buildable)
 {
-    this->m_buildable = buildable;
+    this->_buildable = buildable;
 }
 
-void Tile::displayPreview()
+bool Tile::isBuildable()
 {
-    auto& position = this->getComponent<sTransformComponent>()->getPos();
-    this->preview = this->Instantiate(this->buildableItems[this->currentIdx], glm::vec3(position.x, position.y + 12.5f, position.z));
-    auto previewRenderer = this->preview->getComponent<sRenderComponent>();
-    previewRenderer->ignoreRaycast = true;
-}
-
-void Tile::destroyPreview()
-{
-    this->Destroy(this->preview);
-    this->preview = nullptr;
+    return this->_buildable;
 }

@@ -8,11 +8,9 @@
 #include <Engine/EntityFactory.hpp>
 #include <Engine/Graphics/Camera.hpp>
 #include <Engine/Graphics/Renderer.hpp>
-#include <Engine/Physics/Collisions.hpp>
 #include <Engine/Physics/Physics.hpp>
 
 #include <Game/Scripts/Projectile.hpp>
-#include <Game/Scripts/Tile.hpp>
 #include <Game/Scripts/Player.hpp>
 
 void Player::death()

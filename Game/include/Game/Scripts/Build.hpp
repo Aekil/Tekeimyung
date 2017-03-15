@@ -9,21 +9,26 @@
 class Build : public BaseScript
 {
 public:
-    Build() {} = default;
-    ~Build() {} = default;
+    Build() = default;
+    ~Build() = default;
 public:
     virtual void start() override final;
     virtual void update(float dt) override final;
+    void setTile(const Entity*);
 
 private:
     void checkBuildableZone();
-
+    void buildInput();
 private:
+    const Entity* _tile;
+    Entity* _preview;
+
     sTransformComponent* _transform;
     sRenderComponent* _render;
     std::vector<std::string> _buildableItems;
     bool _buildEnabled;
     float _buildableRadius;
+    int _currentIdx = 0;
 };
 
 REGISTER_SCRIPT(Build);
