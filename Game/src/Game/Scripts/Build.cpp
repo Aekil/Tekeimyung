@@ -62,7 +62,9 @@ void Build::buildInput()
                 this->_currentIdx = 0;
 
                 entity->getComponent<sScriptComponent>()->getScript<Teleport>("Teleport")->setTPPos(this->_firstTpPos);
+                entity->getComponent<sScriptComponent>()->getScript<Teleport>("Teleport")->setActivity(false);
                 this->firstTp->getComponent<sScriptComponent>()->getScript<Teleport>("Teleport")->setTPPos(glm::vec3(position.x, position.y + 12.5f, position.z));
+                this->firstTp->getComponent<sScriptComponent>()->getScript<Teleport>("Teleport")->setActivity(true);
             }
         }
     }

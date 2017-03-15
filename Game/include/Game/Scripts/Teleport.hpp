@@ -16,11 +16,14 @@ public:
     virtual void update(float dt) override final;
 
     virtual void onCollisionEnter(Entity* entity) override final;
+    virtual void onCollisionExit(Entity* entity) override final;
 
     void setTPPos(glm::vec3);
+    void setActivity(bool);
 
 private:
     glm::vec3 _tpPos;
+    bool _enable;
 };
 
 REGISTER_SCRIPT(Teleport);

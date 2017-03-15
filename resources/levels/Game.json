@@ -143,6 +143,19 @@
                "model" : "resources/models/characters/character.DAE",
                "type" : "MESH"
             },
+            "sRigidBodyComponent" : {
+               "collisions_enabled" : true,
+               "gravity" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "velocity" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               }
+            },
             "sScriptComponent" : {
                "class" : [ "Player", "Build" ]
             },
