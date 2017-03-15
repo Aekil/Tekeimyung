@@ -17,8 +17,8 @@ void Tower::start()
     _lastShotTime = _fireRate;
     _towerTransform = entity->getComponent<sTransformComponent>();
     _towerRender = entity->getComponent<sRenderComponent>();
-    _range = 22.0f;
-    _damage = 100;
+    _range = 8.0f;
+    _damage = 75;
 }
 
 void Tower::update(float dt)

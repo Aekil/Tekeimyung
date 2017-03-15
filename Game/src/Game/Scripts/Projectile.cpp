@@ -30,7 +30,7 @@ void Projectile::update(float dt)
     Entity* target = em->getEntity(_targetId);
     if (!target)
     {
-        LOG_INFO("No target");
+        //LOG_INFO("No target");
         destroyProjectile();
     }
     else

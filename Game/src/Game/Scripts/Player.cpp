@@ -18,8 +18,7 @@
 void Player::death()
 {
     this->Destroy();
-
-    LOG_DEBUG("I'm dead now");
+    //LOG_DEBUG("I'm dead now");
 }
 
 void Player::start()
@@ -32,7 +31,7 @@ void Player::start()
     _buildEnabled = false;
     _damage = 20;
 
-    LOG_DEBUG("BORN");
+    //LOG_DEBUG("BORN");
 }
 
 void Player::update(float dt)
@@ -169,8 +168,7 @@ void Player::onHoverExit()
 
 void Player::onCollisionEnter(Entity* entity)
 {
-    LOG_DEBUG("onCollisionEnter Player, anyang.");
-
+    //LOG_DEBUG("onCollisionEnter Player, anyang.");
     if (entity->getComponent<sNameComponent>()->value == "TRAP_NEEDLE")
     {
         this->takeDamage(25);
@@ -179,5 +177,5 @@ void Player::onCollisionEnter(Entity* entity)
 
 void Player::onCollisionExit(Entity* entity)
 {
-    LOG_DEBUG("onCollisionExit Player, bisous.");
+    //LOG_DEBUG("onCollisionExit Player, bisous.");
 }

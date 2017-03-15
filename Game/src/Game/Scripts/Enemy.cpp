@@ -40,6 +40,11 @@ void Enemy::update(float dt)
     Health::update(_transform);
 }
 
+void    Enemy::onCollisionEnter(Entity* entity)
+{
+    
+}
+
 void Enemy::death()
 {
     this->Destroy();

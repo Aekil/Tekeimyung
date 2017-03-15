@@ -19,6 +19,7 @@ public:
 public:
     void start() override final;
     void update(float dt) override final;
+    void onCollisionEnter(Entity* entity) override final;
     void death() override final;
     bool takeDamage(int damage) override final;
 
