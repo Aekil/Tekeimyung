@@ -10,11 +10,11 @@ void Enemy::start()
 {
     this->_render = getComponent<sRenderComponent>();
     this->_render->_animator.play("rotation_enemy", true);
-    this->maxHealth = 150;
-    this->_speed = 10.0f;
-    this->health = this->maxHealth;
+    setHealth(150);
+    setMaxHealth(150);
+    this->_speed = 50.0f;
     this->_transform = getComponent<sTransformComponent>();
-    Health::init(_transform, _render);
+    Health::init(_render);
 }
 
 void Enemy::update(float dt)

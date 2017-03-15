@@ -4,8 +4,8 @@
 
 #include <Engine/EntityFactory.hpp>
 
-#include <Game/Scripts/WaveManager.hpp>
 #include <Game/Scripts/Spawner.hpp>
+#include <Game/Scripts/WaveManager.hpp>
 
 void        WaveManager::start()
 {

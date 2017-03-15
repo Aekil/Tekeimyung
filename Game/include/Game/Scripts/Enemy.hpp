@@ -14,7 +14,7 @@ class Enemy final : public BaseScript, public Health
 {
 public:
     Enemy() = default;
-    ~Enemy() = default;
+    ~Enemy() override final = default;
 
 public:
     void start() override final;

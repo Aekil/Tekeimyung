@@ -4,7 +4,8 @@
 
 void Castle::start()
 {
-    this->health = 500;
+    setHealth(500);
+    setMaxHealth(500);
 }
 
 void Castle::update(float dt)
