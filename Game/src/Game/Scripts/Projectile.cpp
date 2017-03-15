@@ -62,8 +62,8 @@ void Projectile::onCollisionEnter(Entity* entity)
             sTransformComponent* targetTransform = target->getComponent<sTransformComponent>();
             explosionTransform->setPos(targetTransform->getPos());
         }
+        destroyProjectile();
     }
-    destroyProjectile();
 }
 
 void Projectile::followTarget(Entity* target)
