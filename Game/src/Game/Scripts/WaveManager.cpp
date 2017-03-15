@@ -19,19 +19,13 @@ void        WaveManager::update(float dt)
     if (_currentWave >= _waves)
         return;
 
-    if (_currentWave == -1)
-    {
-        _currentWave = 0;
-        startWave(_currentWave);
-    }
-
     // All spawners entities are dead
     if (checkEndWave())
     {
         ++_currentWave;
         if (_currentWave >= _waves)
             return;
-        startWave(++_currentWave);
+        startWave(_currentWave);
     }
 }
 
