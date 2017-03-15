@@ -10,9 +10,7 @@ void Enemy::start()
 {
     this->_render = getComponent<sRenderComponent>();
     this->_render->_animator.play("rotation_enemy", true);
-    setHealth(150);
-    setMaxHealth(150);
-    this->_speed = 50.0f;
+    setHealth(getMaxHealth());
     this->_transform = getComponent<sTransformComponent>();
     Health::init(_render);
 }
@@ -61,4 +59,38 @@ void Enemy::setPath(const std::vector<glm::vec3>& path)
 {
     _path = path;
     _pathProgress = 0;
+}
+
+bool Enemy::updateEditor()
+{
+    bool changed = false;
+
+    changed |= ImGui::InputFloat("Speed", &_speed, 10.0f, ImGuiInputTextFlags_AllowTabInput);
+
+    int health = getMaxHealth();
+    if (ImGui::InputInt("Health", &health, 10, ImGuiInputTextFlags_AllowTabInput))
+    {
+        if (health < 0)
+            health = 0;
+        setMaxHealth(health);
+        changed = true;
+    }
+
+    return (changed);
+}
+
+JsonValue Enemy::saveToJson()
+{
+    JsonValue json;
+
+    json.setFloat("speed", _speed);
+    json.setUInt("health", getMaxHealth());
+
+    return (json);
+}
+
+void    Enemy::loadFromJson(const JsonValue& json)
+{
+    _speed = json.getFloat("speed", 50.0f);
+    setMaxHealth(json.getUInt("health", 150));
 }

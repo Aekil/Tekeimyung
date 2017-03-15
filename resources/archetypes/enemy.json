@@ -101,7 +101,9 @@
          "class" : [ "Enemy" ],
          "scripts" : [
             {
-               "name" : "Enemy"
+               "health" : 150,
+               "name" : "Enemy",
+               "speed" : 50
             }
          ]
       },

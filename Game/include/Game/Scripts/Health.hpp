@@ -16,6 +16,7 @@ public:
 public:
     virtual bool takeDamage(int damage);
     int getHealth() const;
+    int getMaxHealth() const;
     void setHealth(int health);
     void setMaxHealth(int maxHealth);
 

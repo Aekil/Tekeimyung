@@ -25,6 +25,10 @@ public:
 
     void setPath(const std::vector<glm::vec3>& path);
 
+    bool updateEditor() override final;
+    JsonValue saveToJson() override final;
+    void loadFromJson(const JsonValue& json) override final;
+
 private:
     Entity* _healthBarEmpty;
     sTransformComponent* _healthBarEmptyTransform;

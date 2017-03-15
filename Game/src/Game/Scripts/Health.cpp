@@ -26,6 +26,11 @@ int Health::getHealth() const
     return ((int)_progressBar.currentProgress);
 }
 
+int Health::getMaxHealth() const
+{
+    return ((int)_progressBar.maxProgress);
+}
+
 void    Health::setHealth(int health)
 {
     _progressBar.currentProgress = (float)health;
