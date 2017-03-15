@@ -33,7 +33,7 @@
          }
       },
       "sScriptComponent" : {
-         "class" : [ "Player" ]
+         "class" : [ "Player", "Build" ]
       },
       "sSphereColliderComponent" : {
          "isTrigger" : false,
@@ -66,5 +66,5 @@
       }
    },
    "name" : "PLAYER",
-   "tag" : ""
+   "tag" : "Player"
 }
