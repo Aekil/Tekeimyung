@@ -158,6 +158,19 @@
                "model" : "resources/models/characters/character.DAE",
                "type" : "MESH"
             },
+            "sRigidBodyComponent" : {
+               "collisions_enabled" : true,
+               "gravity" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "velocity" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               }
+            },
             "sScriptComponent" : {
                "scripts" : [
                   {
@@ -186,9 +199,9 @@
                   "z" : 0
                },
                "scale" : {
-                  "x" : 0.76041638851165771,
-                  "y" : 0.76041638851165771,
-                  "z" : 0.76041638851165771
+                  "x" : 0.47145819664001465,
+                  "y" : 0.47145816683769226,
+                  "z" : 0.47145819664001465
                }
             },
             "sTypeComponent" : {
@@ -196,7 +209,7 @@
             }
          },
          "name" : "PLAYER",
-         "tag" : ""
+         "tag" : "Player"
       },
       {
          "components" : {

@@ -11,6 +11,8 @@
 
 #include <Game/Scripts/Health.hpp>
 
+class GameManager;
+
 class Player final : public BaseScript, public Health
 {
 public:
@@ -22,6 +24,9 @@ private:
     void checkBuildableZone();
     void movement(float elapsedTime);
     void handleShoot();
+
+    void blockPlayerOnTopLayer(float dt);
+    void blockPlayer(const glm::vec3& playerPos);
 
     float buildableRadius;
 
@@ -41,8 +46,12 @@ private:
     glm::vec3 _direction;
     sTransformComponent* _transform;
     sRenderComponent* _render;
+    sRigidBodyComponent* _rigidBody;
     bool _buildEnabled;
     int _damage;
+    float _speed;
+
+    GameManager* _gameManager{nullptr};
 };
 
 REGISTER_SCRIPT(Player);
