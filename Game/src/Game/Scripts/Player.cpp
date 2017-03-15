@@ -15,6 +15,7 @@
 #include <Game/Scripts/Projectile.hpp>
 #include <Game/Scripts/Tile.hpp>
 #include <Game/Scripts/Player.hpp>
+#include <Game/Scripts/WaveManager.hpp>
 
 void Player::death()
 {
@@ -53,6 +54,7 @@ void Player::start()
         }
 
         _gameManager = scriptComponent->getScript<GameManager>("GameManager");
+        _waveManager = scriptComponent->getScript<WaveManager>("WaveManager");
     }
 
     //LOG_DEBUG("BORN");
@@ -71,8 +73,7 @@ void Player::update(float dt)
     this->handleShoot();
 
     // Player is on top layer
-    // TODO: Change this check
-    if (_transform->getPos().y != 16.250f)
+    if (!_waveManager->isWaiting())
     {
         this->blockPlayerOnTopLayer(dt);
     }

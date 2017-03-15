@@ -17,9 +17,7 @@ public:
 public:
     void    start() override final;
     void    update(float dt) override final;
-
-    int     getWaves() const;
-    void    setWaves(int waves);
+    bool    isWaiting();
 
 private:
     void    startWave(uint32_t wave);
@@ -34,6 +32,7 @@ private:
     int _currentWave{-1};
 
     ProgressBar _progressBar;
+    bool    _waiting{false};
 };
 
 REGISTER_SCRIPT(WaveManager);

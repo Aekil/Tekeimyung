@@ -12,6 +12,7 @@
 #include <Game/Scripts/Health.hpp>
 
 class GameManager;
+class WaveManager;
 
 class Player final : public BaseScript, public Health
 {
@@ -51,6 +52,7 @@ private:
     int _damage;
     float _speed;
 
+    WaveManager* _waveManager{nullptr};
     GameManager* _gameManager{nullptr};
 };
 

@@ -45,14 +45,9 @@ void        WaveManager::update(float dt)
     }
 }
 
-int         WaveManager::getWaves() const
+bool    WaveManager::isWaiting()
 {
-    return (this->_waves);
-}
-
-void        WaveManager::setWaves(int waves)
-{
-    this->_waves = waves;
+    return (_waiting);
 }
 
 void    WaveManager::startWave(uint32_t wave)
@@ -111,6 +106,7 @@ void    WaveManager::handleStartWave()
     if (_currentWave >= _waves)
         return;
     startWave(_currentWave);
+    _waiting = false;
 
     Entity* player = em->getEntityByTag("Player");
     if (!player)
@@ -127,6 +123,7 @@ void    WaveManager::handleEndWave()
     auto em = EntityFactory::getBindedEntityManager();
     _progressBar.currentProgress = _progressBar.maxProgress;
     _progressBar.display(true);
+    _waiting = true;
 
     Entity* player = em->getEntityByTag("Player");
     if (!player)
