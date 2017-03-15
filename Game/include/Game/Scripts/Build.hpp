@@ -26,9 +26,15 @@ private:
     sTransformComponent* _transform;
     sRenderComponent* _render;
     std::vector<std::string> _buildableItems;
+    std::vector<std::string> _layersBlock;
     bool _buildEnabled;
     float _buildableRadius;
     int _currentIdx = 0;
+    int _layer = 0;
+    bool _buildSecondTP = false;
+
+    Entity* firstTp;
+    glm::vec3 _firstTpPos;
 };
 
 REGISTER_SCRIPT(Build);

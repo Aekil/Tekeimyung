@@ -1,22 +1,33 @@
 {
    "components" : {
+      "sBoxColliderComponent" : {
+         "isTrigger" : false,
+         "pos" : {
+            "x" : 0,
+            "y" : 6.25,
+            "z" : 0
+         },
+         "size" : {
+            "x" : 2.5999999046325684,
+            "y" : 1.3500000238418579,
+            "z" : 2.5999999046325684
+         }
+      },
       "sNameComponent" : {
-         "name" : "PLAYER"
+         "name" : "TP_FIRST"
       },
       "sRenderComponent" : {
          "animated" : false,
          "animations" : [],
          "color" : {
             "a" : 1,
-            "b" : 1,
-            "g" : 1,
+            "b" : 0,
+            "g" : 0.49803921580314636,
             "r" : 1
          },
-         "geometry" : null,
          "ignore_raycast" : false,
-         "materials" : [ "_01 - Default", "_02 - Default" ],
-         "model" : "resources/models/characters/character.DAE",
-         "texture" : "",
+         "materials" : [ "_01 - Default" ],
+         "model" : "resources/models/blocks/block.DAE",
          "type" : "MESH"
       },
       "sRigidBodyComponent" : {
@@ -33,38 +44,29 @@
          }
       },
       "sScriptComponent" : {
-         "class" : [ "Player", "Build" ]
-      },
-      "sSphereColliderComponent" : {
-         "isTrigger" : false,
-         "pos" : {
-            "x" : 0,
-            "y" : 15,
-            "z" : 0
-         },
-         "radius" : 1.7999999523162842
+         "class" : [ "Teleport" ]
       },
       "sTransformComponent" : {
          "pos" : {
-            "x" : 147,
-            "y" : 16.25,
-            "z" : 31
+            "x" : 200,
+            "y" : 12.5,
+            "z" : 175
          },
          "rotation" : {
             "x" : 0,
-            "y" : -89.958938598632813,
+            "y" : 0,
             "z" : 0
          },
          "scale" : {
-            "x" : 0.76041638851165771,
-            "y" : 0.76041638851165771,
-            "z" : 0.76041638851165771
+            "x" : 1,
+            "y" : 0.10000000149011612,
+            "z" : 1
          }
       },
       "sTypeComponent" : {
-         "type" : "CHARACTER"
+         "type" : "TILE_WALKABLE"
       }
    },
-   "name" : "PLAYER",
-   "tag" : "Player"
+   "name" : "TP_FIRST",
+   "tag" : ""
 }

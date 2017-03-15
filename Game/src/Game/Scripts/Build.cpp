@@ -9,6 +9,7 @@
 
 #include <Game/Scripts/Build.hpp>
 #include <Game/Scripts/Tile.hpp>
+#include <Game/Scripts/Teleport.hpp>
 
 void Build::start()
 {
@@ -16,6 +17,12 @@ void Build::start()
     this->_buildableItems.push_back("TRAP_NEEDLE");
     this->_buildableItems.push_back("TRAP_CUTTER");
     this->_buildableItems.push_back("TRAP_FIRE");
+    this->_buildableItems.push_back("TP_FIRST");
+    this->_buildableItems.push_back("TP_SECOND");
+    
+    this->_layersBlock.push_back("BlockBrown");
+    this->_layersBlock.push_back("BlockGreen");
+
     this->_buildEnabled = false;
     this->_buildableRadius = 5.7f;
     this->_currentIdx = 0;
@@ -40,15 +47,31 @@ void Build::buildInput()
         {
             auto& position = this->_tile->getComponent<sTransformComponent>()->getPos();
 
-            this->Instantiate(this->_buildableItems[this->_currentIdx], glm::vec3(position.x, position.y + 12.5f, position.z));
+            auto entity = this->Instantiate(this->_buildableItems[this->_currentIdx], glm::vec3(position.x, position.y + 12.5f, position.z));
+            
+            if (this->_buildableItems[this->_currentIdx] == "TP_FIRST")
+            {
+                this->_buildSecondTP = true;
+                this->_currentIdx = this->_buildableItems.size() - 1;
+                this->_firstTpPos = glm::vec3(position.x, position.y + 12.5f, position.z);
+                this->firstTp = entity;
+            }
+            else if (this->_buildableItems[this->_currentIdx] == "TP_SECOND")
+            {
+                this->_buildSecondTP = false;
+                this->_currentIdx = 0;
+
+                entity->getComponent<sScriptComponent>()->getScript<Teleport>("Teleport")->setTPPos(this->_firstTpPos);
+                this->firstTp->getComponent<sScriptComponent>()->getScript<Teleport>("Teleport")->setTPPos(glm::vec3(position.x, position.y + 12.5f, position.z));
+            }
         }
     }
 
-    if (this->_buildEnabled && this->mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_2] == Mouse::eButtonState::CLICK_PRESSED)
+    if (this->_buildEnabled && this->mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_2] == Mouse::eButtonState::CLICK_PRESSED && !this->_buildSecondTP)
     {
         this->_currentIdx++;
 
-        if (this->_currentIdx >= this->_buildableItems.size())
+        if (this->_currentIdx >= this->_buildableItems.size() - 1)
             this->_currentIdx = 0;
 
         if (this->_tile != nullptr && this->_preview != nullptr)
@@ -62,7 +85,20 @@ void Build::buildInput()
         }
     }
 
-    if (this->keyboard[Keyboard::eKey::B] == Keyboard::eKeyState::KEY_PRESSED)
+    if (this->keyboard[Keyboard::eKey::O] == Keyboard::eKeyState::KEY_PRESSED)
+    {
+        this->_layer++;
+        if (this->_layer > 1)
+            this->_layer = 1;
+    }
+    if (this->keyboard[Keyboard::eKey::L] == Keyboard::eKeyState::KEY_PRESSED)
+    {
+        this->_layer--;
+        if (this->_layer < 0)
+            this->_layer = 0;
+    }
+
+    if (this->keyboard[Keyboard::eKey::B] == Keyboard::eKeyState::KEY_PRESSED && !this->_buildSecondTP)
         this->_buildEnabled = !this->_buildEnabled;
 }
 
@@ -75,7 +111,7 @@ void Build::setTile(const Entity* tile)
             this->Destroy(this->_preview);
             this->_preview = nullptr;
         }
-        
+
         this->_tile = tile;
 
         if (this->_tile != nullptr && this->_tile->getComponent<sScriptComponent>()->getScript<Tile>("Tile")->isBuildable())
@@ -92,7 +128,8 @@ void Build::checkBuildableZone()
 {
     auto em = EntityFactory::getBindedEntityManager();
 
-    const auto& tiles = em->getEntitiesByTag("BlockBrown");
+    const auto& tiles = em->getEntitiesByTag(this->_layersBlock[this->_layer]);
+
     for (auto &tile : tiles)
     {
         auto box = tile->getComponent<sBoxColliderComponent>();
