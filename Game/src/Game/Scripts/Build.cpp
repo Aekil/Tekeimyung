@@ -53,6 +53,8 @@ void Build::buildInput()
             auto& position = this->_tile->getComponent<sTransformComponent>()->getPos();
 
             auto entity = this->Instantiate(this->_buildableItems[_layer][this->_currentIdx], glm::vec3(position.x, position.y + 12.5f, position.z));
+            auto previewRenderer = entity->getComponent<sRenderComponent>();
+            previewRenderer->ignoreRaycast = true;
 
             if (this->_buildableItems[_layer][this->_currentIdx] == "TP_FIRST")
             {
