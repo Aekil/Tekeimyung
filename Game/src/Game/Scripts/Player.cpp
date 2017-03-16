@@ -25,7 +25,6 @@ void Player::start()
 {
     setHealth(200);
     setMaxHealth(200);
-    this->buildableRadius = 5.7f;
     this->_transform = this->getComponent<sTransformComponent>();
     this->_render = this->getComponent<sRenderComponent>();
     this->_rigidBody = this->getComponent<sRigidBodyComponent>();

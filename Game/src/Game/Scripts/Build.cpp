@@ -29,7 +29,7 @@ void Build::start()
     this->_layersBlock.push_back("BlockGreen");
 
     this->_buildEnabled = false;
-    this->_buildableRadius = 5.7f;
+    this->_buildableRadius = 7.7f;
     this->_currentIdx = 0;
     this->_tile = nullptr;
     this->_preview = nullptr;
