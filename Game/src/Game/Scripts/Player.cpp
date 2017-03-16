@@ -183,24 +183,14 @@ void Player::blockPlayer(const glm::vec3& playerPos)
 
 void Player::onHoverEnter()
 {
-    auto renderComponent = this->getComponent<sRenderComponent>();
-
-    renderComponent->color = glm::vec4(1.0f, 1.0f, 0.0f, 0.5f);
 }
 
 void Player::onHoverExit()
 {
-    auto renderComponent = this->getComponent<sRenderComponent>();
-
-    renderComponent->color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
 void Player::onCollisionEnter(Entity* entity)
 {
-    if (entity->getComponent<sNameComponent>()->value == "TRAP_NEEDLE")
-    {
-        this->takeDamage(25);
-    }
 }
 
 void Player::onCollisionExit(Entity* entity)
