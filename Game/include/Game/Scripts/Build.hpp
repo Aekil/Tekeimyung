@@ -26,7 +26,7 @@ private:
 
     sTransformComponent* _transform;
     sRenderComponent* _render;
-    std::vector<std::string> _buildableItems;
+    std::vector<std::vector<std::string>> _buildableItems;
     std::vector<std::string> _layersBlock;
     bool _buildEnabled;
     float _buildableRadius;
