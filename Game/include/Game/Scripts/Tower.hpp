@@ -19,6 +19,7 @@ public:
 private:
     bool isInRange(Entity* entity);
     void shootTarget(Entity* target);
+    Entity* getClosestEnemy();
 
 private:
     uint32_t    _targetId;

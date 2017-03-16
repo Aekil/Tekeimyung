@@ -32,7 +32,12 @@
          "type" : "MESH"
       },
       "sScriptComponent" : {
-         "class" : [ "Tile" ]
+         "class" : [ "Tile" ],
+         "scripts" : [
+            {
+               "name" : "Tile"
+            }
+         ]
       },
       "sTransformComponent" : {
          "pos" : {
@@ -56,5 +61,5 @@
       }
    },
    "name" : "BLOCK_GREEN",
-   "tag" : ""
+   "tag" : "BlockGreen"
 }

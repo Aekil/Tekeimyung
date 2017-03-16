@@ -4,7 +4,12 @@
          "name" : "GAME_MANAGER"
       },
       "sScriptComponent" : {
-         "class" : [ "GameManager" ]
+         "class" : [ "GameManager" ],
+         "scripts" : [
+            {
+               "name" : "GameManager"
+            }
+         ]
       },
       "sTransformComponent" : {
          "pos" : {
@@ -28,5 +33,5 @@
       }
    },
    "name" : "GAME_MANAGER",
-   "tag" : ""
+   "tag" : "GameManager"
 }

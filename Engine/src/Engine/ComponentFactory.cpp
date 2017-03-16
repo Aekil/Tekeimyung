@@ -1201,7 +1201,30 @@ sComponent* ComponentFactory<sScriptComponent>::loadFromJson(const std::string& 
 
     component = new sScriptComponent();
 
-    component->scriptNames = json.getStringVec("class", {});
+    auto scripts = json.get()["scripts"];
+    if (scripts.size() > 0 && scripts.type() != Json::ValueType::arrayValue)
+    {
+        LOG_ERROR("%s::sScriptComponent loadFromJson error: scripts is not an array", entityType.c_str());
+        return (component);
+    }
+
+    for (const auto& script: scripts)
+    {
+        // Load animation
+        JsonValue scriptJson(script);
+        std::string scriptName = scriptJson.getString("name", "");
+
+        auto scriptInstance = ScriptFactory::create(scriptName);
+        if (!scriptInstance)
+        {
+            LOG_ERROR("%s::sScriptComponent loadFromJson error: script \"%s\" does not exists", entityType.c_str(), scriptName.c_str());
+            continue;
+        }
+
+        scriptInstance->loadFromJson(scriptJson);
+
+        component->scripts.push_back(std::move(scriptInstance));
+    }
 
     return component;
 }
@@ -1211,7 +1234,16 @@ JsonValue&    ComponentFactory<sScriptComponent>::saveToJson(const std::string& 
     JsonValue& json = toJson ? *toJson : _componentsJson[entityType];
     const sScriptComponent* component = static_cast<const sScriptComponent*>(savedComponent ? savedComponent : _components[entityType]);
 
-    json.setStringVec("class", component->scriptNames);
+    std::vector<JsonValue> scriptsJson;
+    for (const auto& script: component->scripts)
+    {
+        JsonValue scriptJson = script->saveToJson();
+        scriptJson.setString("name", script->getName());
+        scriptsJson.push_back(scriptJson);
+    }
+
+
+    json.setValueVec("scripts", scriptsJson);
 
     return (json);
 }
@@ -1238,12 +1270,14 @@ bool    ComponentFactory<sScriptComponent>::updateEditor(const std::string& enti
         for (auto script: ScriptFactory::getScriptsNames())
         {
             // Entity does not have this script
-            if (std::find(component->scriptNames.cbegin(), component->scriptNames.cend(), script) == component->scriptNames.cend())
+            if (!component->hasScript(script))
             {
                 // Script button pressed, add it to the entity
                 if (ImGui::Button(script))
                 {
-                    component->scriptNames.push_back(script);
+                    auto scriptInstance = ScriptFactory::create(script);
+                    scriptInstance->setEntity(entity);
+                    component->scripts.push_back(std::move(scriptInstance));
                 }
             }
         }
@@ -1252,28 +1286,38 @@ bool    ComponentFactory<sScriptComponent>::updateEditor(const std::string& enti
 
     // Scripts list
     ImGui::BeginChild("Scripts", ImVec2(0, 100), true);
-    for (auto& script: component->scriptNames)
+    for (auto& script: component->scripts)
     {
-        if (ImGui::Selectable(script.c_str(), component->selectedScript == script))
+        if (ImGui::Selectable(script->getName().c_str(), component->selectedScript == script.get()))
         {
-            component->selectedScript = script;
+            component->selectedScript = script.get();
         }
     }
     ImGui::EndChild();
 
-    if (component->selectedScript.size() == 0)
+    if (!component->selectedScript)
         return (changed);
-
-    ImGui::Text("\n");
-    ImGui::Text("%s script options\n", component->selectedScript.c_str());
 
     // Delete script
     if (ImGui::Button("Delete"))
     {
-        auto& eraseIt = std::remove(component->scriptNames.begin(), component->scriptNames.end(), component->selectedScript);
-        component->scriptNames.erase(eraseIt);
+        uint32_t i = 0;
+        // Find script index in scripts vector
+        for (const auto& script: component->scripts)
+        {
+            if (script.get() == component->selectedScript)
+                break;
+            i++;
+        }
+        component->scripts.erase(component->scripts.begin() + i);
+        component->selectedScript = nullptr;
         return (true);
     }
+
+    ImGui::Text("\n");
+    ImGui::Text("%s script options\n--------------------\n", component->selectedScript->getName().c_str());
+
+    component->selectedScript->updateEditor();
 
     return (changed);
 }
@@ -1293,6 +1337,8 @@ sComponent* ComponentFactory<sUiComponent>::loadFromJson(const std::string& enti
     component->layer = json.getInt("layer", 0);
     component->horizontalAlignment = EnumManager<eHorizontalAlignment>::stringToEnum(json.getString("horizontal_alignment", "MIDDLE"));
     component->verticalAlignment = EnumManager<eVerticalAlignment>::stringToEnum(json.getString("vertical_alignment", "MIDDLE"));
+    component->percentageSize = json.getBool("percentage_size", false);
+    component->size = json.getVec2f("size", {0.1f, 0.1f});
 
     return component;
 }
@@ -1307,6 +1353,8 @@ JsonValue&    ComponentFactory<sUiComponent>::saveToJson(const std::string& enti
     json.setInt("layer", component->layer);
     json.setString("horizontal_alignment", EnumManager<eHorizontalAlignment>::enumToString(component->horizontalAlignment));
     json.setString("vertical_alignment", EnumManager<eVerticalAlignment>::enumToString(component->verticalAlignment));
+    json.setBool("percentage_size", component->percentageSize);
+    json.setVec2f("size", component->size);
 
     return (json);
 }
@@ -1326,8 +1374,28 @@ bool    ComponentFactory<sUiComponent>::updateEditor(const std::string& entityTy
 
     changed |= Helper::updateComboEnum<eHorizontalAlignment>("Horizontal alignment", component->horizontalAlignment);
     changed |= Helper::updateComboEnum<eVerticalAlignment>("Vertical alignment", component->verticalAlignment);
-    changed |= ImGui::InputFloat("horizontal offset", &component->offset.x, 1.0f, ImGuiInputTextFlags_AllowTabInput);
-    changed |= ImGui::InputFloat("vertical offset", &component->offset.y, 1.0f, ImGuiInputTextFlags_AllowTabInput);
+    changed |= ImGui::InputFloat("Horizontal offset", &component->offset.x, 1.0f, ImGuiInputTextFlags_AllowTabInput);
+    changed |= ImGui::InputFloat("Vertical offset", &component->offset.y, 1.0f, ImGuiInputTextFlags_AllowTabInput);
+    changed |= ImGui::Checkbox("Percentage size", &component->percentageSize);
+
+    if (component->percentageSize)
+    {
+        if (ImGui::InputFloat("vertical size", &component->size.x, 0.05f, ImGuiInputTextFlags_AllowTabInput))
+        {
+            changed = true;
+            // Set size.x between 0 and 1
+            component->size.x = std::min(component->size.x, 1.0f);
+            component->size.x = std::max(component->size.x, 0.0f);
+        }
+
+        if (ImGui::InputFloat("horizontal size", &component->size.y, 0.05f, ImGuiInputTextFlags_AllowTabInput))
+        {
+            changed = true;
+            // Set size.y between 0 and 1
+            component->size.y = std::min(component->size.y, 1.0f);
+            component->size.y = std::max(component->size.y, 0.0f);
+        }
+    }
 
     if (changed)
     {

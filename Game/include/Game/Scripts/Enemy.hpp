@@ -15,15 +15,20 @@ class Enemy final : public BaseScript, public Health
 {
 public:
     Enemy() = default;
-    ~Enemy() = default;
+    ~Enemy() override final = default;
 
 public:
     void start() override final;
     void update(float dt) override final;
+    void onCollisionEnter(Entity* entity) override final;
     void death() override final;
     bool takeDamage(int damage) override final;
 
     void setPath(const std::vector<glm::vec3>& path);
+
+    bool updateEditor() override final;
+    JsonValue saveToJson() override final;
+    void loadFromJson(const JsonValue& json) override final;
 
 private:
     Entity* _healthBarEmpty;

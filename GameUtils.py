@@ -4,7 +4,7 @@ import sys
 import getopt
 
 def use():
-    print('GameUtils.py --element=system|scripts --name=scriptName --author=Simon AMBROISE')
+    print('GameUtils.py --element=system|script --name=scriptName --author=Simon AMBROISE')
 
 def main(argv):
     element = ''

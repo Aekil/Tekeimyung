@@ -19,7 +19,12 @@
          "type" : "MESH"
       },
       "sScriptComponent" : {
-         "class" : [ "TrapCutter" ]
+         "class" : [ "TrapCutter" ],
+         "scripts" : [
+            {
+               "name" : "TrapCutter"
+            }
+         ]
       },
       "sSphereColliderComponent" : {
          "isTrigger" : false,

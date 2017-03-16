@@ -18,6 +18,7 @@
 
 #include <ECS/Component.hh>
 
+#include <Engine/Core/ScriptFactory.hpp>
 #include <Engine/Window/Keyboard.hpp>
 #include <Engine/Graphics/Camera.hpp>
 #include <Engine/Graphics/Light.hpp>
@@ -417,6 +418,8 @@ virtual void update(sUiComponent* component)
     this->horizontalAlignment = component->horizontalAlignment;
     this->verticalAlignment = component->verticalAlignment;
     this->offset = component->offset;
+    this->percentageSize = component->percentageSize;
+    this->size = component->size;
     this->layer = component->layer;
     this->needUpdate = component->needUpdate;
 }
@@ -429,8 +432,11 @@ virtual void update(sComponent* component)
 eHorizontalAlignment    horizontalAlignment = eHorizontalAlignment::MIDDLE;
 eVerticalAlignment      verticalAlignment = eVerticalAlignment::MIDDLE;
 glm::vec2               offset{0.0f, 0.0f}; // Percentage offset
+bool                    percentageSize{false}; // Use percentage for ui size
+glm::vec2               size{0.1f, 0.1f}; // Percentage size
 int                     layer{0}; // Layer used for UI ordering
 bool                    needUpdate = true;
+
 END_COMPONENT(sUiComponent)
 
 
@@ -504,7 +510,17 @@ virtual sComponent*     clone()
 
 virtual void            update(sScriptComponent* component)
 {
-    this->scriptNames = component->scriptNames;
+    for (auto& script: component->scripts)
+    {
+        JsonValue json = script->saveToJson();
+
+        auto scriptInstance = ScriptFactory::create(script->getName());
+
+        // Little trick to update the component ._.
+        scriptInstance->loadFromJson(json);
+
+        this->scripts.push_back(std::move(scriptInstance));
+    }
 }
 
 virtual void            update(sComponent* component)
@@ -512,21 +528,35 @@ virtual void            update(sComponent* component)
     update(static_cast<sScriptComponent*>(component));
 }
 
+bool                    hasScript(const char* name)
+{
+    for (const auto& script: scripts)
+    {
+        if (script->getName() == name)
+        {
+            return (true);
+        }
+    }
+    return (false);
+}
+
 BaseScript*             getScript(const char* name)
 {
     uint32_t i = 0;
-    for (const auto& scriptName: scriptNames)
+    for (const auto& script: scripts)
     {
-        if (scriptName == name)
+        if (script->getName() == name)
         {
-            BaseScript* script = scriptInstances[i].get();
+            if (!script->getEntity())
+                script->setEntity(entity);
+
             // If the user need the script before it's initialized, auto initialized it
             if (!script->isInitialized)
             {
                 script->start();
                 script->isInitialized = true;
             }
-            return script;
+            return (script.get());
         }
         i++;
     }
@@ -543,10 +573,9 @@ T*             getScript(const char* name)
     return nullptr;
 }
 
-std::vector<std::unique_ptr<BaseScript> > scriptInstances;
-std::vector<std::string> scriptNames;
+std::vector<std::unique_ptr<BaseScript> > scripts;
 
-std::string selectedScript; // Only used for editor
+BaseScript* selectedScript{nullptr}; // Only used for editor
 END_COMPONENT(sScriptComponent)
 
 START_COMPONENT(sLightComponent)

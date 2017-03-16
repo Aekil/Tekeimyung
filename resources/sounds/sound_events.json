@@ -24,15 +24,15 @@
       {
          "name" : "ENEMY_DYING",
          "sound" : {
-            "name" : "explosion.mp3",
-            "path" : "resources/sounds/sfx/explosion.mp3"
+            "name" : "enemy_explosion.wav",
+            "path" : "resources/sounds/sfx/enemy_explosion.wav"
          }
       },
       {
          "name" : "TOWER_SHOOT",
          "sound" : {
-            "name" : "laser_shoot1.wav",
-            "path" : "resources/sounds/sfx/laser_shoot1.wav"
+            "name" : "laser_shoot2.wav",
+            "path" : "resources/sounds/sfx/laser_shoot2.wav"
          }
       },
       {

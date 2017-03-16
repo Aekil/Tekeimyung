@@ -32,7 +32,12 @@
          "type" : "MESH"
       },
       "sScriptComponent" : {
-         "class" : [ "Tile" ]
+         "class" : [ "Tile" ],
+         "scripts" : [
+            {
+               "name" : "Tile"
+            }
+         ]
       },
       "sTransformComponent" : {
          "pos" : {

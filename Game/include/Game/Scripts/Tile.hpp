@@ -5,6 +5,7 @@
 #pragma once
 
 #include <Engine/Core/ScriptFactory.hpp>
+#include <Engine/Graphics/Material.hpp>
 
 class Tile final : public BaseScript
 {
@@ -21,18 +22,13 @@ public:
     void onHoverExit() override final;
 
     void setBuildable(bool);
-
+    bool isBuildable();
 private:
-    void displayPreview();
-    void destroyPreview();
-
-private:
-    Entity* preview = nullptr;
-    std::vector<std::string> buildableItems;
-    int currentIdx = 0;
-    bool m_buildable = false;
+    bool _buildable = false;
 
     sRenderComponent* _render;
+    Material* _renderMaterial;
+    Material* _buildMaterial;
 };
 
 REGISTER_SCRIPT(Tile);

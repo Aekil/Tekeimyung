@@ -89,7 +89,7 @@ bool    CollisionSystem::isColliding(Entity *firstEntity, Entity *secondEntity)
             secondSphereCollider->pos + secondTransform->getPos(),
             secondSphereCollider->radius * std::max({ secondTransform->getScale().x, secondTransform->getScale().y, secondTransform->getScale().z }) * SIZE_UNIT,
             firstBoxCollider->pos + firstTransform->getPos(),
-            glm::vec3(firstBoxCollider->size.x * firstTransform->getScale().x, firstBoxCollider->size.y * firstTransform->getScale().y * SIZE_UNIT, firstBoxCollider->size.z * firstTransform->getScale().z)
+            glm::vec3(firstBoxCollider->size.x * firstTransform->getScale().x, firstBoxCollider->size.y * firstTransform->getScale().y, firstBoxCollider->size.z * firstTransform->getScale().z)
         ));
     }
 
@@ -102,7 +102,7 @@ bool    CollisionSystem::isColliding(Entity *firstEntity, Entity *secondEntity)
             sphereCollider->pos + firstTransform->getPos(),
             sphereCollider->radius * std::max({ firstTransform->getScale().x, firstTransform->getScale().y, firstTransform->getScale().z }) * SIZE_UNIT,
             boxCollider->pos + secondTransform->getPos(),
-            glm::vec3(boxCollider->size.x * secondTransform->getScale().x, boxCollider->size.y * secondTransform->getScale().y * SIZE_UNIT, boxCollider->size.z * secondTransform->getScale().z)
+            glm::vec3(boxCollider->size.x * secondTransform->getScale().x, boxCollider->size.y * secondTransform->getScale().y, boxCollider->size.z * secondTransform->getScale().z)
         ));
     }
 

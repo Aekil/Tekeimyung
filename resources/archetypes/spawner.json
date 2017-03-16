@@ -19,7 +19,44 @@
          "type" : "MESH"
       },
       "sScriptComponent" : {
-         "class" : [ "Spawner" ]
+         "class" : [ "Spawner" ],
+         "scripts" : [
+            {
+               "configs" : [
+                  {
+                     "associated_wave" : 0,
+                     "spawnable_entities" : [
+                        {
+                           "amount" : 1,
+                           "spawn_time" : 1.5,
+                           "type" : "ENEMY"
+                        }
+                     ]
+                  },
+                  {
+                     "associated_wave" : 1,
+                     "spawnable_entities" : [
+                        {
+                           "amount" : 1,
+                           "spawn_time" : 1.5,
+                           "type" : "ENEMY"
+                        }
+                     ]
+                  },
+                  {
+                     "associated_wave" : 2,
+                     "spawnable_entities" : [
+                        {
+                           "amount" : 1,
+                           "spawn_time" : 1.5,
+                           "type" : "ENEMY"
+                        }
+                     ]
+                  }
+               ],
+               "name" : "Spawner"
+            }
+         ]
       },
       "sTransformComponent" : {
          "pos" : {
@@ -43,5 +80,5 @@
       }
    },
    "name" : "SPAWNER",
-   "tag" : ""
+   "tag" : "Spawner"
 }

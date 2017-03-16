@@ -5,6 +5,7 @@
 #pragma once
 
 # include <vector>
+# include <Engine/Graphics/Material.hpp>
 # include <Engine/Graphics/Model.hpp>
 # include <Engine/Graphics/MeshInstance.hpp>
 # include <Engine/Graphics/BufferPool.hpp>
@@ -25,6 +26,7 @@ public:
     BufferPool::SubBuffer*      getBuffer() const;
     BufferPool::SubBuffer*      getBuffer(BufferPool* bufferPool);
     void                        setBuffer(BufferPool::SubBuffer* buffer);
+    void                        setMaterial(Material* material);
 
 private:
     Model*                      _model;

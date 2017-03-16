@@ -17,8 +17,26 @@
          "model" : "resources/models/buildings/geometric_castle.DAE",
          "type" : "MESH"
       },
+      "sRigidBodyComponent" : {
+         "collisions_enabled" : true,
+         "gravity" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "velocity" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         }
+      },
       "sScriptComponent" : {
-         "class" : [ "Castle" ]
+         "class" : [ "Castle" ],
+         "scripts" : [
+            {
+               "name" : "Castle"
+            }
+         ]
       },
       "sSphereColliderComponent" : {
          "isTrigger" : false,
@@ -51,5 +69,5 @@
       }
    },
    "name" : "CASTLE",
-   "tag" : ""
+   "tag" : "Castle"
 }
