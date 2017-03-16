@@ -28,10 +28,6 @@ void Castle::onCollisionEnter(Entity* entity)
         sScriptComponent* script = entity->getComponent<sScriptComponent>();
         Enemy* enemy = script ? script->getScript<Enemy>("Enemy") : nullptr;
         enemy->death();
-        Entity* explosion = Instantiate("ENEMY_EXPLOSION");
-        sTransformComponent* explosionTransform = explosion->getComponent<sTransformComponent>();
-        sTransformComponent* targetTransform = entity->getComponent<sTransformComponent>();
-        explosionTransform->setPos(targetTransform->getPos());
     }
 }
 

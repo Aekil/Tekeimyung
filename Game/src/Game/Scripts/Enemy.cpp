@@ -3,6 +3,7 @@
 */
 
 #include <Engine/Components.hh>
+#include <Engine/EntityFactory.hpp>
 
 #include <Game/Scripts/Enemy.hpp>
 
@@ -46,6 +47,12 @@ void    Enemy::onCollisionEnter(Entity* entity)
 
 void Enemy::death()
 {
+    EntityManager* em = EntityFactory::getBindedEntityManager();
+
+    Entity* explosion = Instantiate("ENEMY_EXPLOSION");
+    sTransformComponent* explosionTransform = explosion->getComponent<sTransformComponent>();
+    sTransformComponent* entityTransform = entity->getComponent<sTransformComponent>();
+    explosionTransform->setPos(entityTransform->getPos());
     this->Destroy();
 }
 
