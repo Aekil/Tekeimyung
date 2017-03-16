@@ -85,3 +85,10 @@ void    ModelInstance::setBuffer(BufferPool::SubBuffer* buffer)
     _buffer = buffer;
 }
 
+void    ModelInstance::setMaterial(Material* material)
+{
+    for (auto& meshInstance: _meshsInstances)
+    {
+        meshInstance->setMaterial(material);
+    }
+}

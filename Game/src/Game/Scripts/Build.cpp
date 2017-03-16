@@ -87,19 +87,6 @@ void Build::buildInput()
         }
     }
 
-    if (this->keyboard[Keyboard::eKey::O] == Keyboard::eKeyState::KEY_PRESSED)
-    {
-        this->_layer++;
-        if (this->_layer > 1)
-            this->_layer = 1;
-    }
-    if (this->keyboard[Keyboard::eKey::L] == Keyboard::eKeyState::KEY_PRESSED)
-    {
-        this->_layer--;
-        if (this->_layer < 0)
-            this->_layer = 0;
-    }
-
     if (this->keyboard[Keyboard::eKey::B] == Keyboard::eKeyState::KEY_PRESSED && !this->_buildSecondTP)
         this->_buildEnabled = !this->_buildEnabled;
 }
@@ -126,6 +113,11 @@ void Build::setTile(const Entity* tile)
     }
 }
 
+void Build::setLayer(int layer)
+{
+    _layer = layer;
+}
+
 void Build::checkBuildableZone()
 {
     auto em = EntityFactory::getBindedEntityManager();
@@ -138,7 +130,6 @@ void Build::checkBuildableZone()
         if (box != nullptr)
         {
             auto pos = tile->getComponent<sTransformComponent>()->getPos();
-            auto render = tile->getComponent<sRenderComponent>();
             auto scriptComponent = tile->getComponent<sScriptComponent>();
 
             if (!scriptComponent)
@@ -148,7 +139,6 @@ void Build::checkBuildableZone()
             if (!tile)
                 continue;
 
-            render->color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
             tile->setBuildable(false);
 
             if (!_buildEnabled)
@@ -157,8 +147,27 @@ void Build::checkBuildableZone()
             if (Collisions::sphereVSAABB(_transform->getPos(), this->_buildableRadius * SIZE_UNIT, box->pos + pos, glm::vec3(box->size.x * SIZE_UNIT, box->size.y * SIZE_UNIT, box->size.z * SIZE_UNIT)))
             {
                 tile->setBuildable(true);
-                render->color = glm::vec4(1.0f, 0.0f, 1.0f, 1.0f);
             }
+        }
+    }
+
+    const auto& tilesOtherLayer = em->getEntitiesByTag(this->_layersBlock[this->_layer == 1 ? 0 : 1]);
+
+    for (auto &tile : tilesOtherLayer)
+    {
+        auto box = tile->getComponent<sBoxColliderComponent>();
+        if (box != nullptr)
+        {
+            auto scriptComponent = tile->getComponent<sScriptComponent>();
+
+            if (!scriptComponent)
+                continue;
+
+            Tile* tile = scriptComponent->getScript<Tile>("Tile");
+            if (!tile)
+                continue;
+
+            tile->setBuildable(false);
         }
     }
 }

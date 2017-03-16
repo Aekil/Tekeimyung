@@ -4,6 +4,7 @@
 
 #include <Engine/EntityFactory.hpp>
 
+#include <Game/Scripts/Build.hpp>
 #include <Game/Scripts/Spawner.hpp>
 #include <Game/Scripts/WaveManager.hpp>
 
@@ -15,6 +16,27 @@ void        WaveManager::start()
     _progressBar.currentProgress = 0.0f;
     _progressBar.init("TIMER_BAR_EMPTY", "TIMER_BAR");
     _progressBar.display(false);
+
+    // Get Player
+    {
+        auto em = EntityFactory::getBindedEntityManager();
+        Entity* player = em->getEntityByTag("Player");
+        if (!player)
+        {
+            LOG_WARN("Can't find entity with Player tag");
+            return;
+        }
+
+        auto scriptComponent = player->getComponent<sScriptComponent>();
+
+        if (!scriptComponent)
+        {
+            LOG_WARN("Can't find scriptComponent on Player entity");
+            return;
+        }
+
+        _playerBuild = scriptComponent->getScript<Build>("Build");
+    }
 }
 
 void        WaveManager::update(float dt)
@@ -116,6 +138,7 @@ void    WaveManager::handleStartWave()
     }
     sTransformComponent* playerTransform = player->getComponent<sTransformComponent>();
     playerTransform->setPos({96.0f, 22.5f, 116.0f});
+    _playerBuild->setLayer(1);
 }
 
 void    WaveManager::handleEndWave()
@@ -133,4 +156,5 @@ void    WaveManager::handleEndWave()
     }
     sTransformComponent* playerTransform = player->getComponent<sTransformComponent>();
     playerTransform->setPos({65.0f, 16.250f, 33.0f});
+    _playerBuild->setLayer(0);
 }

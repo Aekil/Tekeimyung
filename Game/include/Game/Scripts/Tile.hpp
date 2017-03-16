@@ -5,6 +5,7 @@
 #pragma once
 
 #include <Engine/Core/ScriptFactory.hpp>
+#include <Engine/Graphics/Material.hpp>
 
 class Tile final : public BaseScript
 {
@@ -26,6 +27,8 @@ private:
     bool _buildable = false;
 
     sRenderComponent* _render;
+    Material* _renderMaterial;
+    Material* _buildMaterial;
 };
 
 REGISTER_SCRIPT(Tile);

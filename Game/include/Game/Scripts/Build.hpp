@@ -15,6 +15,7 @@ public:
     virtual void start() override final;
     virtual void update(float dt) override final;
     void setTile(const Entity*);
+    void setLayer(int layer);
 
 private:
     void checkBuildableZone();

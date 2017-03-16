@@ -8,6 +8,8 @@
 #include    <Engine/Core/ScriptFactory.hpp>
 #include    <Game/Scripts/ProgressBar.hpp>
 
+class Build;
+
 class       WaveManager final : public BaseScript
 {
 public:
@@ -33,6 +35,8 @@ private:
 
     ProgressBar _progressBar;
     bool    _waiting{false};
+
+    Build* _playerBuild;
 };
 
 REGISTER_SCRIPT(WaveManager);
