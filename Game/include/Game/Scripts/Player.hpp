@@ -22,7 +22,6 @@ public:
 
 private:
     void updateDirection();
-    void checkBuildableZone();
     void movement(float elapsedTime);
     void handleShoot();
 

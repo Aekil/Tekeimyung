@@ -8,12 +8,10 @@
 #include <Engine/EntityFactory.hpp>
 #include <Engine/Graphics/Camera.hpp>
 #include <Engine/Graphics/Renderer.hpp>
-#include <Engine/Physics/Collisions.hpp>
 #include <Engine/Physics/Physics.hpp>
 
 #include <Game/Scripts/GameManager.hpp>
 #include <Game/Scripts/Projectile.hpp>
-#include <Game/Scripts/Tile.hpp>
 #include <Game/Scripts/Player.hpp>
 #include <Game/Scripts/WaveManager.hpp>
 
@@ -62,15 +60,9 @@ void Player::start()
 
 void Player::update(float dt)
 {
-    if (this->keyboard[Keyboard::eKey::B] ==  Keyboard::eKeyState::KEY_PRESSED)
-    {
-        _buildEnabled = !_buildEnabled;
-    }
-
     this->updateDirection();
-    this->checkBuildableZone();
     this->movement(dt);
-    this->handleShoot();
+    //this->handleShoot();
 
     // Player is on top layer
     if (_waveManager && !_waveManager->isWaiting())
@@ -87,7 +79,6 @@ void Player::updateDirection()
     if (!camera)
         return;
 
-
     Ray ray = camera->screenPosToRay((float)cursor.getX(), (float)cursor.getY());
     float hitDistance;
 
@@ -95,42 +86,6 @@ void Player::updateDirection()
     {
         glm::vec3 target = ray.getPoint(hitDistance);
         _direction = glm::normalize(target - _transform->getPos());
-    }
-}
-
-void Player::checkBuildableZone()
-{
-    auto em = EntityFactory::getBindedEntityManager();
-
-    const auto& tiles = em->getEntitiesByTag("BlockBrown");
-    for (auto &tile : tiles)
-    {
-        auto box = tile->getComponent<sBoxColliderComponent>();
-        if (box != nullptr)
-        {
-            auto pos = tile->getComponent<sTransformComponent>()->getPos();
-            auto render = tile->getComponent<sRenderComponent>();
-            auto scriptComponent = tile->getComponent<sScriptComponent>();
-
-            if (!scriptComponent)
-                continue;
-
-            Tile* tile = scriptComponent->getScript<Tile>("Tile");
-            if (!tile)
-                continue;
-
-            render->color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-            tile->setBuildable(false);
-
-            if (!_buildEnabled)
-                continue;
-
-            if (Collisions::sphereVSAABB(_transform->getPos(), this->buildableRadius * SIZE_UNIT, box->pos + pos, glm::vec3(box->size.x * SIZE_UNIT, box->size.y * SIZE_UNIT, box->size.z * SIZE_UNIT)))
-            {
-                tile->setBuildable(true);
-                render->color = glm::vec4(1.0f, 0.0f, 1.0f, 1.0f);
-            }
-        }
     }
 }
 
@@ -238,7 +193,6 @@ void Player::onHoverExit()
 
 void Player::onCollisionEnter(Entity* entity)
 {
-    //LOG_DEBUG("onCollisionEnter Player, anyang.");
     if (entity->getComponent<sNameComponent>()->value == "TRAP_NEEDLE")
     {
         this->takeDamage(25);
@@ -247,5 +201,4 @@ void Player::onCollisionEnter(Entity* entity)
 
 void Player::onCollisionExit(Entity* entity)
 {
-    //LOG_DEBUG("onCollisionExit Player, bisous.");
 }
