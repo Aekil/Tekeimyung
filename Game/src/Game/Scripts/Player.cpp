@@ -175,6 +175,10 @@ void Player::blockPlayer(const glm::vec3& playerPos)
             _rigidBody->velocity = glm::vec3(0.0f);
         }
     }
+    else if (mapPos.x < 0 || mapPos.y < 0)
+    {
+        _rigidBody->velocity = glm::vec3(0.0f);
+    }
 }
 
 void Player::onHoverEnter()
