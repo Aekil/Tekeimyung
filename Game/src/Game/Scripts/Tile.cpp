@@ -23,10 +23,13 @@ void Tile::update(float dt)
 
 void Tile::onHoverEnter()
 {
-    auto em = EntityFactory::getBindedEntityManager();
+    if (_buildable)
+    {
+        auto em = EntityFactory::getBindedEntityManager();
 
-    auto buildScript = em->getEntityByTag("Player")->getComponent<sScriptComponent>()->getScript<Build>("Build");
-    buildScript->setTile(this->entity);
+        auto buildScript = em->getEntityByTag("Player")->getComponent<sScriptComponent>()->getScript<Build>("Build");
+        buildScript->setTile(this->entity);
+    }
 }
 
 void Tile::onHoverExit()
