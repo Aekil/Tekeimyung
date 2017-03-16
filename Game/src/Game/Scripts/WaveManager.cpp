@@ -7,6 +7,7 @@
 #include <Game/Scripts/Build.hpp>
 #include <Game/Scripts/Spawner.hpp>
 #include <Game/Scripts/WaveManager.hpp>
+#include <Game/Scripts/Enemy.hpp>
 
 void        WaveManager::start()
 {
@@ -42,6 +43,9 @@ void        WaveManager::start()
 void        WaveManager::update(float dt)
 {
     if (_currentWave >= _waves)
+        return;
+
+    if (checkGameOver())
         return;
 
     if (_progressBar.currentProgress > 0.0f ||
@@ -119,6 +123,17 @@ bool    WaveManager::checkEndWave()
     return (endWave);
 }
 
+bool    WaveManager::checkGameOver()
+{
+    auto em = EntityFactory::getBindedEntityManager();
+    if (em->getEntityByTag("Castle"))
+        return (false);
+
+    handleGameOver();
+
+    return (true);
+}
+
 void    WaveManager::handleStartWave()
 {
     auto em = EntityFactory::getBindedEntityManager();
@@ -157,4 +172,34 @@ void    WaveManager::handleEndWave()
     sTransformComponent* playerTransform = player->getComponent<sTransformComponent>();
     playerTransform->setPos({65.0f, 16.250f, 33.0f});
     _playerBuild->setLayer(0);
+}
+
+void    WaveManager::handleGameOver()
+{
+    auto em = EntityFactory::getBindedEntityManager();
+
+    // Game over, destroy all enemies
+    const auto& enemies = em->getEntitiesByTag("Enemy");
+    for (auto& enemy: enemies)
+    {
+        auto scriptComponent = enemy->getComponent<sScriptComponent>();
+
+        if (!scriptComponent)
+        {
+            em->destroyEntityRegister(enemy);
+            continue;
+        }
+
+        Enemy* enemyScript = scriptComponent->getScript<Enemy>("Enemy");
+        if (!enemyScript)
+        {
+            em->destroyEntityRegister(enemy);
+            continue;
+        }
+
+        enemyScript->death();
+    }
+
+    _currentWave = _waves;
+    _progressBar.display(false);
 }

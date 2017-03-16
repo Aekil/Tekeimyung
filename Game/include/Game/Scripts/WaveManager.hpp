@@ -24,9 +24,11 @@ public:
 private:
     void    startWave(uint32_t wave);
     bool    checkEndWave();
+    bool    checkGameOver();
 
     void    handleStartWave();
     void    handleEndWave();
+    void    handleGameOver();
 
 private:
     int     _waves;
