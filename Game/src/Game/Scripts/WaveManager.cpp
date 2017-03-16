@@ -13,7 +13,7 @@ void        WaveManager::start()
 {
     auto em = EntityFactory::getBindedEntityManager();
     this->_waves = 4;
-    _progressBar.maxProgress = 30.0f;
+    _progressBar.maxProgress = 15.0f;
     _progressBar.currentProgress = 0.0f;
     _progressBar.init("TIMER_BAR_EMPTY", "TIMER_BAR");
     _progressBar.display(false);
