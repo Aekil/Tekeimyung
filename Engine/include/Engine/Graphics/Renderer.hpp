@@ -8,11 +8,13 @@
 #include <glm/mat4x4.hpp>
 
 #include <Engine/Graphics/Camera.hpp>
+#include <Engine/Graphics/Framebuffer.hpp>
 #include <Engine/Graphics/Light.hpp>
 #include <Engine/Graphics/Material.hpp>
 #include <Engine/Graphics/ModelInstance.hpp>
 #include <Engine/Graphics/RenderQueue.hpp>
 #include <Engine/Graphics/ShaderProgram.hpp>
+#include <Engine/Graphics/Texture.hpp>
 
 class Renderer
 {
@@ -25,7 +27,12 @@ public:
     bool                                initialize();
     void                                onWindowResize();
 
+    Camera*                             getCurrentCamera();
+    void                                setCurrentCamera(Camera* camera);
+
     void                                render(Camera* camera, RenderQueue& renderQueue);
+
+private:
     void                                renderOpaqueObjects(std::vector<sRenderableMesh>& meshs,
                                                             uint32_t meshsNb,
                                                             std::vector<Light*>& lights,
@@ -35,8 +42,7 @@ public:
                                                                 std::vector<Light*>& lights,
                                                                 uint32_t lightsNb);
 
-    Camera*                             getCurrentCamera();
-    void                                setCurrentCamera(Camera* camera);
+    bool                                setupFrameBuffer();
 
 private:
     // One ShaderProgram for each possible permutation
@@ -55,4 +61,8 @@ private:
 
     // Used for UI
     Light                               _UILight;
+
+    Framebuffer                         _frameBuffer;
+    std::unique_ptr<Texture>            _colorAttachment;
+    std::unique_ptr<Texture>            _depthAttachment;
 };

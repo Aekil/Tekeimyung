@@ -75,6 +75,8 @@ bool    Renderer::initialize()
             shaderProgram.attachShader(GL_FRAGMENT_SHADER, "resources/shaders/shader.frag", options);
             shaderProgram.link();
         }
+
+        onWindowResize();
     }
     catch(const Exception& e)
     {
@@ -82,7 +84,6 @@ bool    Renderer::initialize()
         return (false);
     }
 
-    onWindowResize();
 
     // Enable depth buffer
     glEnable(GL_DEPTH_TEST);
@@ -101,6 +102,21 @@ void    Renderer::onWindowResize()
 {
     _UICamera.updateViewport();
     _UICamera.updateUBO();
+
+    if (!setupFrameBuffer())
+    {
+        EXCEPT(InternalErrorException, "Failed to setup frame buffer");
+    }
+}
+
+Camera* Renderer::getCurrentCamera()
+{
+    return (_currentCamera);
+}
+
+void    Renderer::setCurrentCamera(Camera* camera)
+{
+    _currentCamera = camera;
 }
 
 void    Renderer::render(Camera* camera, RenderQueue& renderQueue)
@@ -340,12 +356,29 @@ void    Renderer::renderTransparentObjects(std::vector<sRenderableMesh>& meshs,
     }
 }
 
-Camera* Renderer::getCurrentCamera()
+bool    Renderer::setupFrameBuffer()
 {
-    return (_currentCamera);
-}
+    GLsizei windowBufferWidth = (GLsizei)GameWindow::getInstance()->getBufferWidth();
+    GLsizei windowBufferHeight = (GLsizei)GameWindow::getInstance()->getBufferHeight();
+    bool complete = false;
 
-void    Renderer::setCurrentCamera(Camera* camera)
-{
-    _currentCamera = camera;
+    _colorAttachment = Texture::create(windowBufferWidth, windowBufferHeight);
+    _depthAttachment = Texture::create(windowBufferWidth,
+                                        windowBufferHeight,
+                                        GL_DEPTH24_STENCIL8,
+                                        GL_DEPTH_STENCIL,
+                                        GL_UNSIGNED_INT_24_8);
+
+    _frameBuffer.bind(GL_DRAW_FRAMEBUFFER);
+    // Setup framebuffer
+    {
+        _frameBuffer.removeColorAttachments();
+        _frameBuffer.addColorAttachment(*_colorAttachment);
+        _frameBuffer.setDepthAttachment(*_depthAttachment);
+
+        complete = _frameBuffer.isComplete();
+    }
+    _frameBuffer.unBind(GL_DRAW_FRAMEBUFFER);
+
+    return (complete);
 }

@@ -35,6 +35,11 @@ void    Framebuffer::use(GLenum target) const
     }
 }
 
+void    Framebuffer::removeColorAttachments()
+{
+    _colorAttachments.clear();
+}
+
 void    Framebuffer::addColorAttachment(Texture& texture)
 {
     GLuint colorAttachment = GL_COLOR_ATTACHMENT0 + (GLuint)_colorAttachments.size();

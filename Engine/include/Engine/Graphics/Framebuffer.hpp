@@ -19,6 +19,8 @@ public:
     void                        unBind(GLenum target) const;
     void                        use(GLenum target) const;
 
+    void                        removeColorAttachments();
+
     void                        addColorAttachment(Texture& texture);
     void                        setDepthAttachment(Texture& texture);
 

@@ -12,7 +12,15 @@
 
 #include <Engine/Graphics/Texture.hpp>
 
-Texture::Texture(): _data(nullptr), _comp(0) {}
+Texture::Texture(): _comp(0)
+{
+    glGenTextures(1, &_texture);
+}
+
+Texture::Texture(int width, int height): _width(width), _height(height), _comp(0)
+{
+    glGenTextures(1, &_texture);
+}
 
 Texture::~Texture()
 {
@@ -21,6 +29,23 @@ Texture::~Texture()
         // Free image data
         STBI_FREE(_data);
     }
+
+    glDeleteTextures(1, &_texture);
+}
+
+std::unique_ptr<Texture>    Texture::create(GLsizei width, GLsizei height, GLint internalFormat, GLint format, GLenum type, GLint filter, GLint wrap)
+{
+    std::unique_ptr<Texture> texture = std::make_unique<Texture>(width, height);
+
+    texture->bind();
+    glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, 800, 600, 0, format, type, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap);
+    texture->unBind();
+
+    return (std::move(texture));
 }
 
 bool    Texture::loadFromFile(const std::string &fileName)
@@ -32,14 +57,11 @@ bool    Texture::loadFromFile(const std::string &fileName)
 
     if (_data == nullptr)
     {
-         EXCEPT(FileNotFoundException, "Failed to load texture \"%s\"", fileName.c_str());
+        EXCEPT(FileNotFoundException, "Failed to load texture \"%s\"", fileName.c_str());
     }
 
-    // Create one texture object
-    glGenTextures(1, &_texture);
-
     // Use texture
-    glBindTexture(GL_TEXTURE_2D, _texture);
+    bind();
 
     // Define texture filter
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -51,7 +73,7 @@ bool    Texture::loadFromFile(const std::string &fileName)
     glGenerateMipmap(GL_TEXTURE_2D);
 
     // Unuse texture
-    glBindTexture(GL_TEXTURE_2D, 0);
+    unBind();
 
     return (true);
 }

@@ -6,6 +6,7 @@
 
 #include <GL/glew.h>
 #include <string>
+#include <memory>
 
 #include <Engine/Utils/Resource.hpp>
 
@@ -21,7 +22,16 @@ public:
 
 public:
     Texture();
+    Texture(int width, int height);
     ~Texture();
+
+    static std::unique_ptr<Texture>         create(GLsizei width,
+                                            GLsizei height,
+                                            GLint internalFormat = GL_RGB,
+                                            GLint format = GL_RGB,
+                                            GLenum type = GL_UNSIGNED_BYTE,
+                                            GLint filter = GL_LINEAR,
+                                            GLint wrap = GL_CLAMP_TO_EDGE);
 
     bool                                    loadFromFile(const std::string& fileName) override final;
 
