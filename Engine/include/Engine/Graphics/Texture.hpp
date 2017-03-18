@@ -27,8 +27,8 @@ public:
 
     static std::unique_ptr<Texture>         create(GLsizei width,
                                             GLsizei height,
-                                            GLint internalFormat = GL_RGB,
-                                            GLint format = GL_RGB,
+                                            GLint internalFormat = GL_RGBA,
+                                            GLint format = GL_RGBA,
                                             GLenum type = GL_UNSIGNED_BYTE,
                                             GLint filter = GL_LINEAR,
                                             GLint wrap = GL_CLAMP_TO_EDGE);

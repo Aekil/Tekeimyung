@@ -43,39 +43,7 @@ bool    Renderer::initialize()
 {
     try
     {
-        std::vector<std::vector<Material::eOption> > permutations = {
-            { },
-            { Material::eOption::TEXTURE_AMBIENT },
-            { Material::eOption::TEXTURE_DIFFUSE },
-            { Material::eOption::FACE_CAMERA },
-
-            { Material::eOption::TEXTURE_AMBIENT,
-                Material::eOption::TEXTURE_DIFFUSE },
-            { Material::eOption::TEXTURE_AMBIENT,
-                Material::eOption::FACE_CAMERA },
-            { Material::eOption::TEXTURE_DIFFUSE,
-                Material::eOption::FACE_CAMERA },
-
-            { Material::eOption::TEXTURE_AMBIENT,
-                Material::eOption::TEXTURE_DIFFUSE,
-                Material::eOption::FACE_CAMERA }
-        };
-
-        for (const auto& options: permutations)
-        {
-            int optionFlag = 0;
-            for (auto option: options)
-            {
-                optionFlag |= option;
-            }
-
-            auto& shaderProgram = _shaderPrograms[optionFlag];
-            shaderProgram.setOptions(optionFlag);
-            shaderProgram.attachShader(GL_VERTEX_SHADER, "resources/shaders/shader.vert", options);
-            shaderProgram.attachShader(GL_FRAGMENT_SHADER, "resources/shaders/shader.frag", options);
-            shaderProgram.link();
-        }
-
+        setupShaderPrograms();
         onWindowResize();
     }
     catch(const Exception& e)
@@ -121,8 +89,32 @@ void    Renderer::setCurrentCamera(Camera* camera)
 
 void    Renderer::render(Camera* camera, RenderQueue& renderQueue)
 {
+    // First pass
+    {
+        // All the renders will use the color attachments and the depth buffer of the framebuffer
+        _frameBuffer.use(GL_FRAMEBUFFER);
 
+        // Clear frame buffer
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        sceneRenderPass(camera, renderQueue);
+        _frameBuffer.unBind(GL_FRAMEBUFFER);
+    }
+
+    // Second pass
+    {
+        // Clear window screen
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        glDisable(GL_DEPTH_TEST);
+        finalBlendingPass(camera);
+        glEnable(GL_DEPTH_TEST);
+        _currentShaderProgram = nullptr;
+    }
+}
+
+void    Renderer::sceneRenderPass(Camera* camera, RenderQueue& renderQueue)
+{
     // Scene objects
     {
         if (camera)
@@ -196,7 +188,27 @@ void    Renderer::render(Camera* camera, RenderQueue& renderQueue)
 
     // Disable blending for opaque objects
     glDisable(GL_BLEND);
+}
 
+void    Renderer::finalBlendingPass(Camera* camera)
+{
+    _finalBlendingShaderProgram.use();
+    glUniform1i(_finalBlendingShaderProgram.getUniformLocation("sceneTexture"), 0);
+
+    _colorAttachment->bind();
+    _finalBlendingPlane.bind();
+
+    glViewport((uint32_t)_UICamera.getViewport().offset.x,
+                (uint32_t)_UICamera.getViewport().offset.y,
+                (uint32_t)_UICamera.getViewport().extent.width,
+                (uint32_t)_UICamera.getViewport().extent.height);
+
+    glDrawElements(GL_TRIANGLES,
+                6,
+                GL_UNSIGNED_INT,
+                0);
+
+    _colorAttachment->unBind();
 }
 
 bool sortOpaque(const sRenderableMesh& lhs, const sRenderableMesh& rhs)
@@ -369,7 +381,7 @@ bool    Renderer::setupFrameBuffer()
                                         GL_DEPTH_STENCIL,
                                         GL_UNSIGNED_INT_24_8);
 
-    _frameBuffer.bind(GL_DRAW_FRAMEBUFFER);
+    _frameBuffer.bind(GL_FRAMEBUFFER);
     // Setup framebuffer
     {
         _frameBuffer.removeColorAttachments();
@@ -378,7 +390,77 @@ bool    Renderer::setupFrameBuffer()
 
         complete = _frameBuffer.isComplete();
     }
-    _frameBuffer.unBind(GL_DRAW_FRAMEBUFFER);
+    _frameBuffer.unBind(GL_FRAMEBUFFER);
 
     return (complete);
+}
+
+void    Renderer::setupShaderPrograms()
+{
+    // Init scene render programs
+    // We create shader permutations for each material option
+    // It will activate/deactivate preprocessor conditions in the shaders
+    {
+        std::vector<std::vector<Material::eOption> > permutations = {
+            { },
+            { Material::eOption::TEXTURE_AMBIENT },
+            { Material::eOption::TEXTURE_DIFFUSE },
+            { Material::eOption::FACE_CAMERA },
+
+            { Material::eOption::TEXTURE_AMBIENT,
+                Material::eOption::TEXTURE_DIFFUSE },
+            { Material::eOption::TEXTURE_AMBIENT,
+                Material::eOption::FACE_CAMERA },
+            { Material::eOption::TEXTURE_DIFFUSE,
+                Material::eOption::FACE_CAMERA },
+
+            { Material::eOption::TEXTURE_AMBIENT,
+                Material::eOption::TEXTURE_DIFFUSE,
+                Material::eOption::FACE_CAMERA }
+        };
+
+
+        for (const auto& options: permutations)
+        {
+            int optionFlag = 0;
+            for (auto option: options)
+            {
+                optionFlag |= option;
+            }
+
+            auto& shaderProgram = _shaderPrograms[optionFlag];
+            shaderProgram.setOptions(optionFlag);
+            shaderProgram.attachShader(GL_VERTEX_SHADER, "resources/shaders/shader.vert", options);
+            shaderProgram.attachShader(GL_FRAGMENT_SHADER, "resources/shaders/shader.frag", options);
+            shaderProgram.link();
+        }
+    }
+
+    // Init shader program of final blending
+    {
+        _finalBlendingShaderProgram.attachShader(GL_VERTEX_SHADER, "resources/shaders/shader-final-blending.vert");
+        _finalBlendingShaderProgram.attachShader(GL_FRAGMENT_SHADER, "resources/shaders/shader-final-blending.frag");
+        _finalBlendingShaderProgram.link();
+    }
+
+    // Init buffer containing the plane vertices used for final blending
+    {
+       Vertex vertexs[] {
+            //1. pos
+            //2. color
+            //3. normal
+            //4. texture uv
+            {glm::vec3(-1.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(0.0f, 1.0f)},  // Top Left
+            {glm::vec3(1.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(1.0f, 1.0f)},  // Top Right
+            {glm::vec3(-1.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(0.0f, 0.0f)},  // Bottom Left
+            {glm::vec3(1.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(1.0f, 0.0f)}  // Bottom Right
+        };
+
+        GLuint indices[] = {
+            0, 2, 3,
+            3, 1, 0
+        };
+
+        _finalBlendingPlane.updateData(vertexs, 4, indices, 6);
+    }
 }

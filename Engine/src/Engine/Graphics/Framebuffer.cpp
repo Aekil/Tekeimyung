@@ -29,7 +29,7 @@ void    Framebuffer::use(GLenum target) const
     bind(target);
 
     // Specify the color attachments to be used in fragment shader
-    if (target == GL_DRAW_FRAMEBUFFER)
+    if (target == GL_DRAW_FRAMEBUFFER || target == GL_FRAMEBUFFER)
     {
         glDrawBuffers((GLsizei)_colorAttachments.size(), _colorAttachments.data());
     }

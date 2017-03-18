@@ -38,11 +38,11 @@ std::unique_ptr<Texture>    Texture::create(GLsizei width, GLsizei height, GLint
     std::unique_ptr<Texture> texture = std::make_unique<Texture>(width, height);
 
     texture->bind();
-    glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, 800, 600, 0, format, type, NULL);
+    glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, type, NULL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap);
+/*    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap);*/
     texture->unBind();
 
     return (std::move(texture));

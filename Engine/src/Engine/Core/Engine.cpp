@@ -100,9 +100,6 @@ bool    Engine::run(int ac, char** av, std::shared_ptr<GameState> startGameState
             auto &&currentState = _gameStateManager.getCurrentState();
             currentState->bindEntityManager();
 
-            // Clear color buffer
-            glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
             ImGui_ImplGlfwGL3_NewFrame();
             {
                 ImGuizmo::BeginFrame();

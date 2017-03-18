@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <memory>
 #include <unordered_map>
 #include <glm/mat4x4.hpp>
 
@@ -33,6 +34,8 @@ public:
     void                                render(Camera* camera, RenderQueue& renderQueue);
 
 private:
+    void                                sceneRenderPass(Camera* camera, RenderQueue& renderQueue);
+    void                                finalBlendingPass(Camera* camera);
     void                                renderOpaqueObjects(std::vector<sRenderableMesh>& meshs,
                                                             uint32_t meshsNb,
                                                             std::vector<Light*>& lights,
@@ -43,11 +46,17 @@ private:
                                                                 uint32_t lightsNb);
 
     bool                                setupFrameBuffer();
+    void                                setupShaderPrograms();
 
 private:
     // One ShaderProgram for each possible permutation
     std::unordered_map<int, ShaderProgram> _shaderPrograms;
     ShaderProgram*                      _currentShaderProgram{nullptr};
+
+    ShaderProgram                       _finalBlendingShaderProgram;
+    // Buffer containing the plane vertices used for final blending
+    // Should fit the size of the screen
+    Buffer                              _finalBlendingPlane;
 
 
     // Singleton instance
