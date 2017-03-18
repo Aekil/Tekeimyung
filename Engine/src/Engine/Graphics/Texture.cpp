@@ -62,6 +62,11 @@ void    Texture::bind(GLenum unit) const
     glBindTexture(GL_TEXTURE_2D, _texture);
 }
 
+void    Texture::unBind() const
+{
+    glBindTexture(GL_TEXTURE_2D, 0);
+}
+
 unsigned int    Texture::getWidth() const
 {
     return _width;
@@ -80,4 +85,9 @@ unsigned char*  Texture::getData() const
 int     Texture::getComponentsNumber() const
 {
     return _comp;
+}
+
+GLuint  Texture::getNative()
+{
+    return (_texture);
 }

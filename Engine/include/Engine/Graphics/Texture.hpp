@@ -22,14 +22,17 @@ public:
 public:
     Texture();
     ~Texture();
+
     bool                                    loadFromFile(const std::string& fileName) override final;
 
-    void                                    bind(GLenum unit) const;
+    void                                    bind(GLenum unit = GL_TEXTURE0) const;
+    void                                    unBind() const;
 
     unsigned int                            getWidth() const;
     unsigned int                            getHeight() const;
     unsigned char*                          getData() const;
     int                                     getComponentsNumber() const;
+    GLuint                                  getNative();
 
     static Resource::eType      getResourceType() { return Resource::eType::TEXTURE; }
 
@@ -37,7 +40,7 @@ private:
     GLuint                                  _texture;
     int                                     _width;
     int                                     _height;
-    unsigned char*                          _data;
+    unsigned char*                          _data{nullptr};
 
     // Components number
     int                                     _comp;
