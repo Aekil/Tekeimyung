@@ -30,11 +30,6 @@
                            "amount" : 1,
                            "spawn_time" : 1.5,
                            "type" : "ENEMY"
-                        },
-                        {
-                           "amount" : 1,
-                           "spawn_time" : 3,
-                           "type" : "ENEMY_TANK"
                         }
                      ]
                   },
@@ -42,9 +37,9 @@
                      "associated_wave" : 1,
                      "spawnable_entities" : [
                         {
-                           "amount" : 3,
+                           "amount" : 1,
                            "spawn_time" : 1.5,
-                           "type" : "ENEMY_SPEED"
+                           "type" : "ENEMY"
                         }
                      ]
                   },
@@ -52,29 +47,9 @@
                      "associated_wave" : 2,
                      "spawnable_entities" : [
                         {
-                           "amount" : 2,
+                           "amount" : 1,
                            "spawn_time" : 1.5,
-                           "type" : "ENEMY_TANK"
-                        }
-                     ]
-                  },
-                  {
-                     "associated_wave" : 3,
-                     "spawnable_entities" : [
-                        {
-                           "amount" : 5,
-                           "spawn_time" : 1,
                            "type" : "ENEMY"
-                        },
-                        {
-                           "amount" : 5,
-                           "spawn_time" : 0.5,
-                           "type" : "ENEMY_SPEED"
-                        },
-                        {
-                           "amount" : 5,
-                           "spawn_time" : 3,
-                           "type" : "ENEMY_TANK"
                         }
                      ]
                   }
