@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #pragma once
 
 #include <GL/glew.h>
@@ -18,15 +22,16 @@ public:
 public:
     Texture();
     ~Texture();
-    void                                    loadFromFile (const std::string& fileName);
+    bool                                    loadFromFile(const std::string& fileName) override final;
 
-    void                                    setUnit(GLenum unit);
-    void                                    bind() const;
+    void                                    bind(GLenum unit) const;
 
     unsigned int                            getWidth() const;
     unsigned int                            getHeight() const;
     unsigned char*                          getData() const;
     int                                     getComponentsNumber() const;
+
+    static Resource::eType      getResourceType() { return Resource::eType::TEXTURE; }
 
 private:
     GLuint                                  _texture;
@@ -40,6 +45,10 @@ private:
     GLenum                                  _unit;
 };
 
+
+inline int operator~(const Texture::eType& rhs) {
+    return (~static_cast<int>(rhs));
+}
 
 inline int operator|(int& lhs, const Texture::eType& rhs) {
     return (lhs | static_cast<int>(rhs));

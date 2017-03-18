@@ -1,104 +1,126 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #pragma once
 
+#include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
+#include <glm/mat4x4.hpp>
 
-#include <Engine/Graphics/UniformBuffer.hpp>
+#include <Engine/Graphics/Ray.hpp>
 #include <Engine/Graphics/ShaderProgram.hpp>
+#include <Engine/Graphics/Transform.hpp>
+#include <Engine/Graphics/UniformBuffer.hpp>
+#include <Engine/Utils/Helper.hpp>
 
-class Camera
+#define PROJECTION_TYPES(PROCESS)\
+    PROCESS(PERSPECTIVE)\
+    PROCESS(ORTHOGRAPHIC_3D)\
+    PROCESS(ORTHOGRAPHIC_2D)\
+
+class Camera: public Transform
 {
 public:
-    typedef struct
+    struct sConstants
     {
         glm::mat4       proj;
         glm::mat4       view;
         glm::vec3       pos;
-        int             freezeRotations;
+        float           padding;
         // Target
         glm::vec3       dir;
-    }                   Constants;
-
-    typedef struct
-    {
-        float           left;
-        float           right;
-        float           top;
-        float           bottom;
-    }                   sScreen;
-
-    enum class eProj: uint8_t
-    {
-        PERSPECTIVE = 0,
-        ORTHOGRAPHIC_3D = 1,
-        ORTHOGRAPHIC_2D = 2
     };
+
+    struct sViewport
+    {
+        struct sOffset
+        {
+            float           x;
+            float           y;
+        } offset;
+        struct sExtent
+        {
+            float           width;
+            float           height;
+        } extent;
+    };
+
+    REGISTER_ENUM(eProj, uint8_t, PROJECTION_TYPES)
 
 public:
     Camera();
     ~Camera();
 
-    bool                needUpdate() const;
-
-    const glm::vec3&    getPos() const;
-    const glm::mat4&    getView() const;
-    const glm::mat4&    getProj() const;
+    const glm::mat4&    getView();
+    const glm::mat4&    getProj();
     float               getAspect() const;
     float               getFov() const;
+    float               getFar() const;
+    float               getNear() const;
     eProj               getProjType() const;
+    float               getProjSize() const;
+    const sViewport&    getViewportRect() const;
+    const sViewport&    getViewport() const;
 
     void                setFov(float fov);
-    void                setAspect(float aspect);
     void                setNear(float near);
     void                setFar(float far);
-    void                setDir(const glm::vec3& dir);
-    void                setScreen(const sScreen& screen);
+    void                setViewportRect(const sViewport& viewportRect);
     void                setProjType(eProj projType);
-
-    void                translate(const glm::vec3& pos);
-    void                zoom(float amount);
-    void                setZoom(float amount);
+    void                setProjSize(float projSize);
 
     void                lookAt(const glm::vec3& pos, const glm::vec3& target, const glm::vec3& up);
 
-    void                update(const ShaderProgram& shaderProgram, float elapsedTime);
-    void                updateUboData(UniformBuffer& ubo, bool forceUpdate = false);
+    void                updateViewport();
+    void                updateUBO();
+    UniformBuffer&      getUBO();
+
     void                freezeRotations(bool freeze);
+
+    Ray                 screenPosToRay(float posX, float posY);
 
     static void         setInstance(Camera* instance);
     static Camera*      getInstance();
 
-private:
-    Camera::Constants   _constants;
+    // Size of visible ortho projection
+    glm::vec3           getVisibleAreaSize(const glm::vec3& projSize) const;
 
+private:
+    void                updateProj();
+    void                updateView();
+
+private:
+    sConstants          _constants;
+
+
+    UniformBuffer       _ubo;
+
+    // Update proj/view if true
     bool                _needUpdateView;
     bool                _needUpdateProj;
-    bool                _needUpdateUbo;
 
-    /*
-    ** Projection
-    */
     // Field of view
     float               _fov;
-    // Aspect ratio. Ex: 1920/1080
-    float               _aspect;
     // Near clipping plane
     float               _near;
     // Far clipping plane
     float               _far;
 
-    float               _zoom;
+    // Projection size for ORTHOGRAPHIC_3D
+    float               _projSize;
 
-    sScreen             _screen;
+    // Viewport values between 0 and 1
+    sViewport           _viewportRect;
+    // Viewport real values
+    sViewport           _viewport;
 
     eProj               _projType;
 
-    /*
-    ** View
-    */
-    // Up vector
-    glm::vec3           _up;
-
-    glm::vec3           _windowBufferSize;
-
     static Camera*      _instance;
+
+    glm::mat4           _proj;
+    glm::mat4           _view;
 };
+
+REGISTER_ENUM_MANAGER(Camera::eProj, PROJECTION_TYPES)

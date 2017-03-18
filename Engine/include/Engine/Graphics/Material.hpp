@@ -1,36 +1,136 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #pragma once
 
 #include <assimp/scene.h>
-#include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
 #include <unordered_map>
 
-#include <Engine/Graphics/ShaderProgram.hpp>
 #include <Engine/Graphics/UniformBuffer.hpp>
 #include <Engine/Graphics/Texture.hpp>
+#include <Engine/Utils/Resource.hpp>
+#include <Engine/Utils/Helper.hpp>
 
-class Material
+#define MAT_OPTIONS(PROCESS)                    \
+    PROCESS(TEXTURE_AMBIENT, 1)                 \
+    PROCESS(TEXTURE_DIFFUSE, 2)                 \
+    PROCESS(FACE_CAMERA, 4)                     \
+
+#define BLENDING_MODES(PROCESS)                 \
+    PROCESS(GL_ZERO)                            \
+    PROCESS(GL_ONE)                             \
+    PROCESS(GL_SRC_COLOR)                       \
+    PROCESS(GL_ONE_MINUS_SRC_COLOR)             \
+    PROCESS(GL_DST_COLOR)                       \
+    PROCESS(GL_ONE_MINUS_DST_COLOR)             \
+    PROCESS(GL_SRC_ALPHA)                       \
+    PROCESS(GL_ONE_MINUS_SRC_ALPHA)             \
+    PROCESS(GL_DST_ALPHA)                       \
+    PROCESS(GL_ONE_MINUS_DST_ALPHA)             \
+
+#define GENERATE_BLEND_STRING(ENUM) #ENUM,
+#define GENERATE_BLEND_CONDITION_STRING(ENUM)   \
+    if (blendEnum == ENUM)                      \
+        return #ENUM;
+
+#define GENERATE_BLEND_CONDITION_ENUM(ENUM)     \
+    if (blendString == #ENUM)                    \
+        return ENUM;
+
+class Material final: public Resource
 {
 public:
-    typedef struct
+    struct sMaterialData
     {
         glm::vec4       ambient;
         glm::vec4       diffuse;
-        int             texturesTypes;
-    }                   Constants;
+    };
+
+    REGISTER_ENUM(eOption, uint8_t, MAT_OPTIONS)
 
 public:
-    Material();
+    Material(bool isModelMaterial = true);
+    Material(const Material& material);
     ~Material() {}
 
-    bool                loadFromAssimp(aiMaterial* material, const std::string& path);
-    void                bind(const ShaderProgram& shaderProgram);
+    Material&           operator=(const Material& material);
+
+    static Material*    loadFromAssimp(aiMaterial* assimpMaterial, const std::string& path);
+    void                bind();
+
+    bool                isModelMaterial() const;
+
+    void                setTexture(Texture::eType type, Texture* texture);
+    Texture*            getTexture(Texture::eType type) const;
+
+    bool                loadFromFile(const std::string& fileName) override final;
+
+    static Resource::eType      getResourceType() { return Resource::eType::MATERIAL; }
+
+    static GLenum       getBlendEnumFromString(const std::string& blendString);
+    static const char*  getBlendStringFromEnum(GLenum blendEnum);
+    static std::vector<const char*>& getBlendModes();
+
+    const glm::vec4&    getAmbient() const;
+    const glm::vec4&    getDiffuse() const;
+    int                 isFacingCamera() const;
+
+    void                setAmbient(const glm::vec4& ambient);
+    void                setDiffuse(const glm::vec4& diffuse);
+    void                isFacingCamera(bool faceCamera);
+
+    int                 getOptions();
+
+private:
+    void                needUpdate();
 
 public:
-    Constants           _constants;
+    bool                wireframe{false};
+    bool                transparent{false};
+    GLenum              srcBlend;
+    GLenum              dstBlend;
+
+private:
+    sMaterialData       _data;
     UniformBuffer       _ubo;
 
     // Need to update ubo data
     bool                _needUpdate;
+    bool                _optionsFlagDirty;
 
+    glm::vec4           _ambient;
+    glm::vec4           _diffuse;
+    int                 _faceCamera;
+
+    int                 _options;
+
+private:
     std::unordered_map<Texture::eType, Texture*> _textures;
+
+private:
+    bool                _isModelMaterial;
 };
+
+REGISTER_ENUM_MANAGER(Material::eOption, MAT_OPTIONS)
+
+inline int operator~(const Material::eOption& rhs) {
+    return (~static_cast<int>(rhs));
+}
+
+inline int operator|(int& lhs, const Material::eOption& rhs) {
+    return (lhs | static_cast<int>(rhs));
+}
+
+inline int& operator|=(int& lhs, const Material::eOption& rhs) {
+    return (lhs = (lhs | static_cast<int>(rhs)));
+}
+
+inline int operator&(int& lhs, const Material::eOption& rhs) {
+    return (lhs & static_cast<int>(rhs));
+}
+
+inline int& operator&=(int& lhs, const Material::eOption& rhs) {
+    return (lhs = (lhs & static_cast<int>(rhs)));
+}

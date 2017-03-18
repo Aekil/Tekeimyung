@@ -1,9 +1,15 @@
+/**
+* @Author   Mathieu Chassara
+*/
+
 #pragma once
 
 #include <string>
 #include <Engine/Utils/Helper.hpp>
 
-#if defined(_DEBUG)
+// NDEBUG is defined for non-debug builds
+// RELEASE_WITH_DEBUG is defined for RelWithDebInfo build (See CMakelists.txt in root directory)
+#if !defined(NDEBUG) || defined(RELEASE_WITH_DEBUG)
     #define ENGINE_DEBUG true
 
     #if defined(_MSC_VER)
@@ -17,8 +23,6 @@
         if (expression == false && Debug::engineAssert(expression, Helper::formatMessage(format, ## __VA_ARGS__), __FILE__, FUNCTION, __LINE__) == false) \
             std::abort();
 #else
-    #define ENGINE_DEBUG false
-
     #define ASSERT(expression, format, ...)
 #endif
 

@@ -1,3 +1,7 @@
+/**
+* @Author   Julien Chardon
+*/
+
 #pragma once
 
 #include <memory>
@@ -12,37 +16,33 @@
 
 #define ENABLE_COLOR            true
 
-#define FMT_MSG(format, ...)    (Helper::formatMessage(format, ## __VA_ARGS__))
-
-#define ADD_MONITORING_VAR      \
-                                private: \
-                                    uint16_t        _monitoringKey;
-
 #define ABS(x)                  ((x) < 0 ? -(x) : (x))
 #define TIME_DIFF_RATIO         (0.03)
 
 typedef struct sMonitoring
 {
-    std::string         name;
+    const char*         name;
     float               timeSec;
     float               avgTimeSec;
     float               oldAvg;
     uint32_t            nbEntities;
     std::vector<float>  timeLogs;
+    uint8_t             dirty = 0; // This flag let us know if the data is initialized
 }                       tMonitoring;
 
 class MonitoringDebugWindow : public DebugWindow
 {
 public:
-    MonitoringDebugWindow(const glm::vec2& pos = glm::vec2(0, 650), const glm::vec2& size = glm::vec2(450, 300));
+    MonitoringDebugWindow(const glm::vec2& pos = glm::vec2(900, 80), const glm::vec2& size = glm::vec2(450, 300));
     virtual ~MonitoringDebugWindow();
 
     static std::shared_ptr<MonitoringDebugWindow>   getInstance();
 
-    virtual void                                    build(float elapsedTime);
+    void                                            build(std::shared_ptr<GameState> gameState, float elapsedTime) override final;
 
-    uint16_t                                        registerSystem(std::string name);
-    void                                            updateSystem(uint16_t key, float timeSec, uint32_t nbEntities);
+    void                                            updateSystem(uint16_t key, float timeSec, uint32_t nbEntities, const char* name);
+
+    GENERATE_ID(MonitoringDebugWindow);
 
 private:
     float                                           calcTimeAverage(std::vector<float> timeLogs);

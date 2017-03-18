@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #pragma once
 
 #include <array>
@@ -9,29 +13,21 @@
 
 #include <Engine/Window/IInputEvent.hpp>
 #include <Engine/Core/GameState.hpp>
-#include <Engine/Graphics/Camera.hpp>
 
-#include <Game/EntityFactory.hpp>
-#include <Game/Map.hpp>
+#include <Engine/EntityFactory.hpp>
+#include <Engine/Utils/EventSound.hpp>
 
-START_GAMESTATE(PlayState)
+START_GAMESTATE(PlayState, "Game")
  public:
-    virtual ~PlayState();
+    ~PlayState();
 
-    virtual void                        onEnter();
-    virtual bool                        init();
-    virtual bool                        update(float elapsedTime);
-
-    void                                initCamera();
-    void                                initEntities();
-    void                                addSystems();
+    void                                onEnter();
+    void                                setupSystems() override final;
+    bool                                init();
+    bool                                update(float elapsedTime);
 
 private:
-    void                                updateCameraInputs(float elapsedTime);
-
-private:
-    Map*                                _map;
     std::pair <Keyboard::eKey, IInputEvent *>    _pair;
 
-    Camera                              _camera;
+    tEventSound*                        _backgroundMusic = nullptr;
 END_GAMESTATE(PlayState)

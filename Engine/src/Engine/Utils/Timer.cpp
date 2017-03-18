@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #include <GLFW/glfw3.h>
 
 #include <Engine/Utils/Timer.hpp>

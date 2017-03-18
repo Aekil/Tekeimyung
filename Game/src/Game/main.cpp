@@ -1,46 +1,77 @@
-//#pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
+/**
+* @Author   Guillaume Labey
+*/
+
+#pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
 
 #include <iostream>
 
-#include <Engine/Utils/Exception.hpp>
-#include <Engine/Utils/RessourceManager.hpp>
+#include <Engine/BasicState.hpp>
 #include <Engine/Core/Engine.hpp>
+#include <Engine/EntityFactory.hpp>
+#include <Engine/Utils/Exception.hpp>
+#include <Engine/Utils/EventSound.hpp>
+#include <Engine/Utils/LevelLoader.hpp>
+#include <Engine/Utils/Logger.hpp>
+#include <Engine/Utils/ResourceManager.hpp>
+#include <Engine/Utils/Debug.hpp>
 
-#include <Game/EntityFactory.hpp>
-#include <Game/GameStates/PlayState.hpp>
 #include <Game/GameStates/ConfirmExitState.hpp>
+#include <Game/GameStates/HowToPlayState.hpp>
+#include <Game/GameStates/OptionsMenuState.hpp>
+#include <Game/GameStates/PauseState.hpp>
+#include <Game/GameStates/PlayState.hpp>
 
 void    windowCloseHandler(void* data)
 {
     Engine* engine = static_cast<Engine*>(data);
+    auto& gameStateManager = engine->getGameStateManager();
 
-    engine->getGameStateManager().addState<ConfirmExitState>();
+    // Only add ConfirmExitState if not already in the states
+    if (gameStateManager.getCurrentState() &&
+        gameStateManager.getCurrentState()->getId() != ConfirmExitState::identifier)
+    {
+        gameStateManager.addState<ConfirmExitState>();
+    }
 }
 
-int     main()
+int     main(int ac, char** av)
 {
     Engine engine;
     auto &&gameStateManager = engine.getGameStateManager();
-
     try
     {
         if (!engine.init())
             return (1);
 
+        // Load textures, models & sounds
+        ResourceManager::getInstance()->loadResources("resources");
+
+        // Load geometries: plane, sphere, box, circle
+        GeometryFactory::initGeometries();
+
         // Load entities after engine initialization to have logs
         EntityFactory::loadDirectory(ARCHETYPES_LOCATION);
-        // Load textures and models
-        RessourceManager::getInstance()->loadResources("resources");
+
+        // Load levels
+        LevelLoader::getInstance()->loadDirectory(LEVELS_DIRECTORY);
+        REGISTER_GAMESTATE(ConfirmExitState);
+        REGISTER_GAMESTATE(HowToPlayState);
+        REGISTER_GAMESTATE(OptionsMenuState);
+        REGISTER_GAMESTATE(PauseState);
+        REGISTER_GAMESTATE(PlayState);
+
+        EventSound::loadEvents();
         GameWindow::getInstance()->registerCloseHandler(windowCloseHandler, &engine);
 
-        if (!gameStateManager.addState<PlayState>())
-            return (1);
-        else if (!engine.run())
+        std::shared_ptr<PlayState> playState = std::make_shared<PlayState>(&gameStateManager);
+
+        if (!engine.run(ac, av, playState))
             return (1);
     }
     catch(const Exception& e)
     {
-        std::cerr << e.what() << std::endl;
+        LOG_ERROR("ERROR: %s", e.what());
     }
 
     engine.stop();

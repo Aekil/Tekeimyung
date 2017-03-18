@@ -1,0 +1,73 @@
+{
+   "components" : {
+      "sNameComponent" : {
+         "name" : "CASTLE"
+      },
+      "sRenderComponent" : {
+         "animated" : false,
+         "animations" : [],
+         "color" : {
+            "a" : 1,
+            "b" : 1,
+            "g" : 1,
+            "r" : 1
+         },
+         "ignore_raycast" : false,
+         "materials" : [ "DefaultMaterial" ],
+         "model" : "resources/models/buildings/geometric_castle.DAE",
+         "type" : "MESH"
+      },
+      "sRigidBodyComponent" : {
+         "collisions_enabled" : true,
+         "gravity" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "velocity" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         }
+      },
+      "sScriptComponent" : {
+         "class" : [ "Castle" ],
+         "scripts" : [
+            {
+               "name" : "Castle"
+            }
+         ]
+      },
+      "sSphereColliderComponent" : {
+         "isTrigger" : false,
+         "pos" : {
+            "x" : 0,
+            "y" : 18.75,
+            "z" : 0
+         },
+         "radius" : 3.8499999046325684
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 200,
+            "y" : 12.5,
+            "z" : -25
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "scale" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         }
+      },
+      "sTypeComponent" : {
+         "type" : "TILE_NOT_WALKABLE"
+      }
+   },
+   "name" : "CASTLE",
+   "tag" : "Castle"
+}

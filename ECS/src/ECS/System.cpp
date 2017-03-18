@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #include <algorithm>
 
 #include <ECS/System.hpp>
@@ -13,9 +17,9 @@ bool    System::init()
 
 void    System::forEachEntity(EntityManager& em, std::function<void(Entity* entity)> callback)
 {
-    for (auto &&entityId : _entities)
+    for (uint32_t idx = 0; idx < this->_entities.size(); idx++)
     {
-        Entity* entity = em.getEntity(entityId);
+        Entity* entity = em.getEntity(this->_entities[idx]);
         if (entity)
             callback(entity);
     }
@@ -27,6 +31,11 @@ void    System::forEachEntity(EntityManager& em, std::function<void(Entity* enti
 uint32_t    System::getId() const
 {
     return (_id);
+}
+
+uint32_t    System::getEntitiesNb() const
+{
+    return ((uint32_t)_entities.size());
 }
 
 bool    System::hasDependency(sComponent* component) const

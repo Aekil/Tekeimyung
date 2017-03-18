@@ -1,11 +1,18 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #pragma once
 
-
-#include <Engine/Graphics/ShaderProgram.hpp>
-#include <Engine/Graphics/Model.hpp>
-#include <Engine/Graphics/Camera.hpp>
-
+#include <unordered_map>
 #include <glm/mat4x4.hpp>
+
+#include <Engine/Graphics/Camera.hpp>
+#include <Engine/Graphics/Light.hpp>
+#include <Engine/Graphics/Material.hpp>
+#include <Engine/Graphics/ModelInstance.hpp>
+#include <Engine/Graphics/RenderQueue.hpp>
+#include <Engine/Graphics/ShaderProgram.hpp>
 
 class Renderer
 {
@@ -16,23 +23,36 @@ public:
     static std::shared_ptr<Renderer>    getInstance();
 
     bool                                initialize();
+    void                                onWindowResize();
 
-    void                                render(Camera* camera, std::shared_ptr<Model> model,
-                                            const glm::vec4& modelColor, const glm::mat4& modelTransform);
+    void                                render(Camera* camera, RenderQueue& renderQueue);
+    void                                renderOpaqueObjects(std::vector<sRenderableMesh>& meshs,
+                                                            uint32_t meshsNb,
+                                                            std::vector<Light*>& lights,
+                                                            uint32_t lightsNb);
+    void                                renderTransparentObjects(std::vector<sRenderableMesh>& meshs,
+                                                                uint32_t meshsNb,
+                                                                std::vector<Light*>& lights,
+                                                                uint32_t lightsNb);
 
-    ShaderProgram&                      getShaderProgram();
     Camera*                             getCurrentCamera();
     void                                setCurrentCamera(Camera* camera);
 
 private:
-    ShaderProgram                       _shaderProgram;
+    // One ShaderProgram for each possible permutation
+    std::unordered_map<int, ShaderProgram> _shaderPrograms;
+    ShaderProgram*                      _currentShaderProgram{nullptr};
 
 
     // Singleton instance
     static std::shared_ptr<Renderer>    _instance;
 
-
-    UniformBuffer                       _cameraUbo;
-
     Camera*                             _currentCamera;
+    Camera                              _UICamera;
+
+    // Used when there is no light
+    Light                               _defaultLight;
+
+    // Used for UI
+    Light                               _UILight;
 };

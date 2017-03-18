@@ -1,3 +1,8 @@
+/**
+* @Author   Mathieu Stefani
+* Code link: https://gist.github.com/oktal/5573082
+*/
+
 #pragma once
 
 #include <cstddef>

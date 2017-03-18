@@ -1,0 +1,58 @@
+{
+   "components" : {
+      "sNameComponent" : {
+         "name" : "TRAP_CUTTER"
+      },
+      "sRenderComponent" : {
+         "animated" : true,
+         "animations" : [],
+         "color" : {
+            "a" : 1,
+            "b" : 1,
+            "g" : 1,
+            "r" : 1
+         },
+         "ignore_raycast" : false,
+         "materials" : [ "Material #26", "Material #26" ],
+         "model" : "resources/models/traps/trap_cutter.DAE",
+         "texture" : "",
+         "type" : "MESH"
+      },
+      "sScriptComponent" : {
+         "class" : [ "TrapCutter" ],
+         "scripts" : [
+            {
+               "name" : "TrapCutter"
+            }
+         ]
+      },
+      "sSphereColliderComponent" : {
+         "isTrigger" : false,
+         "pos" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "radius" : 0.070000000298023224
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 125,
+            "y" : 25,
+            "z" : 125
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "scale" : {
+            "x" : 25,
+            "y" : 25,
+            "z" : 25
+         }
+      }
+   },
+   "name" : "TRAP_CUTTER",
+   "tag" : ""
+}

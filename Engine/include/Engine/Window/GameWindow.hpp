@@ -1,3 +1,7 @@
+/**
+* @Author   Mathieu Chassara
+*/
+
 #pragma once
 
 #include <memory>
@@ -31,9 +35,6 @@ public:
 	Keyboard&							getKeyboard();
     Mouse&                              getMouse();
 
-    void                                setViewport(const glm::ivec4& viewport);
-    const glm::ivec4                    getViewport() const;
-
     void                                maximize();
     void                                toggleFullscreen();
     void                                setRunning(bool running);
@@ -53,11 +54,14 @@ public:
 
     Timer&                              getTimer();
 
+    void                                handleResize(int width, int height);
+
     void                                handleClose(GLFWwindow* window);
     void                                registerCloseHandler(void (*closeHandler)(void*), void* data = nullptr);
 
 private:
     static void                         closeCallback(GLFWwindow* window);
+    static void                         sizeCallback(GLFWwindow* window, int width, int height);
     static void                         focusCallback(GLFWwindow* window, int focused);
     static void                         posCallback(GLFWwindow* window, int xpos, int ypos);
 
@@ -89,8 +93,6 @@ private:
     int                                 _screenHeight;
     int                                 _bufferWidth;
     int                                 _bufferHeight;
-
-    glm::ivec4                          _viewport;
 
     std::string                         _title;
     bool                                _fullscreen;

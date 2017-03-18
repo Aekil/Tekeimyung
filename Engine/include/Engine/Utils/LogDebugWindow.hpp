@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #pragma once
 
 #include <Engine/Utils/Logger.hpp>
@@ -11,7 +15,9 @@ public:
     LogDebugWindow(std::shared_ptr<Logger> logger, const glm::vec2& pos, const glm::vec2& size);
     virtual ~LogDebugWindow();
 
-    virtual void        build(float elapsedTime);
+    void        build(std::shared_ptr<GameState> gameState, float elapsedTime) override final;
+
+    GENERATE_ID(LogDebugWindow);
 
 private:
     std::shared_ptr<Logger> _logger;

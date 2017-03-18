@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #pragma once
 
 #include <vector>
@@ -6,11 +10,18 @@
 #include <ECS/Component.hh>
 
 class EntityManager;
+class EntityPool;
 
 class Entity
 {
-public:
+friend EntityManager;
+friend EntityPool;
+
+private:
+    Entity() {}
     Entity(EntityManager* em, uint32_t id_): id(id_), _em(em) {}
+
+public:
     ~Entity() {}
 
     bool operator==(uint32_t id_);
@@ -34,6 +45,7 @@ public:
 
     sComponent*                     getComponent(size_t componentHashCode) const;
     std::vector<sComponent*>&       getComponents();
+    const std::vector<sComponent*>& getComponents() const;
 
     void                            removeComponent(sComponent* component);
 
@@ -46,10 +58,15 @@ public:
         return (hasComponent(componentType::identifier));
     }
 
+    void                            setTag(const std::string& tag);
+    const std::string&              getTag() const;
+
 public:
     uint32_t                        id;
     std::vector<sComponent*>        _components;
+    bool                            _free;
 
 private:
+    std::string                     _tag;
     EntityManager*                  _em;
 };

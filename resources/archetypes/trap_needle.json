@@ -1,0 +1,88 @@
+{
+   "components" : {
+      "sNameComponent" : {
+         "name" : "TRAP_NEEDLE"
+      },
+      "sRenderComponent" : {
+         "animated" : true,
+         "animations" : [
+            {
+               "layer" : "DEFAULT",
+               "name" : "scale animation",
+               "params" : [
+                  {
+                     "frames" : [
+                        {
+                           "easing" : "EASE_IN",
+                           "time" : 1,
+                           "value" : {
+                              "x" : 0,
+                              "y" : 25,
+                              "z" : 0
+                           }
+                        },
+                        {
+                           "easing" : "EASE_OUT",
+                           "time" : 2,
+                           "value" : {
+                              "x" : 0,
+                              "y" : 0,
+                              "z" : 0
+                           }
+                        }
+                     ],
+                     "name" : "scale"
+                  }
+               ]
+            }
+         ],
+         "color" : {
+            "a" : 1,
+            "b" : 1,
+            "g" : 1,
+            "r" : 1
+         },
+         "ignore_raycast" : false,
+         "materials" : [ "Material #26", "Material #26" ],
+         "model" : "resources/models/traps/trap_needle.DAE",
+         "texture" : "",
+         "type" : "MESH"
+      },
+      "sScriptComponent" : {
+         "class" : [ "TrapNeedle" ],
+         "scripts" : [
+            {
+               "name" : "TrapNeedle"
+            }
+         ]
+      },
+      "sSphereColliderComponent" : {
+         "isTrigger" : false,
+         "pos" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "radius" : 0.070000000298023224
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 125,
+            "y" : 25,
+            "z" : 125
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "scale" : {
+            "x" : 25,
+            "y" : 4.9999961853027344,
+            "z" : 25
+         }
+      }
+   },
+   "name" : "TRAP_NEEDLE",
+   "tag" : ""
+}

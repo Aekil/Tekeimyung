@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #pragma once
 
 # include <vector>
@@ -5,14 +9,20 @@
 
 # include <Engine/Graphics/Buffer.hpp>
 # include <Engine/Graphics/Material.hpp>
-# include <Engine/Graphics/Skeleton.hpp>
+
+class Model;
 
 class Mesh {
 public:
-    Mesh();
+    Mesh(Model* model);
     virtual ~Mesh();
 
-    virtual bool                    loadFromAssimp(Skeleton& skeleton, aiMesh *mesh);
+    virtual bool                    loadFromAssimp(aiMesh *mesh);
+    Material*                       getMaterial() const;
+    void                            setMaterial(Material* material);
+
+    Model*                          getModel() const;
+
 
 public:
     std::vector<Vertex>             vertexs;
@@ -21,10 +31,8 @@ public:
     uint32_t                        offset;
     uint32_t                        idxOffset;
 
-    // Material
-    Material                        material;
-
 private:
-    void                            loadBones(Skeleton& skeleton, aiMesh *mesh);
-    void                            addVertexBonesInfos(uint32_t vertexId, float weight, uint32_t boneId);
+    // Material
+    Material*                       _material;
+    Model*                          _model;
 };

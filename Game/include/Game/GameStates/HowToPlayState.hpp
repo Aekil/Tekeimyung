@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #pragma once
 
 #include <Engine/Core/GameState.hpp>
@@ -5,21 +9,12 @@
 #include <ECS/System.hpp>
 #include <ECS/World.hpp>
 
-START_GAMESTATE(HowToPlayState)
+START_GAMESTATE(HowToPlayState, "HowToPlay")
  public:
-    virtual ~HowToPlayState();
+    ~HowToPlayState();
 
-    virtual void                        onEnter();
-    virtual bool                        init();
-    virtual bool                        update(float elapsedTime);
-
-    void                                initCamera();
-    void                                initMenu();
-
-    Entity*                             createButton(eArchetype type, const glm::vec2& pos);
-    void                                handleButtons();
-private:
-    Camera                              _camera;
-
-    Entity*                             _returnButton = nullptr;
+    void                                onEnter() override final;
+    void                                setupSystems() override final;
+    bool                                init() override final;
+    bool                                update(float elapsedTime) override final;
 END_GAMESTATE(HowToPlayState)

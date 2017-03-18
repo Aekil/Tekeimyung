@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #include <Engine/Core/GameStateManager.hpp>
 
 GameStateManager::GameStateManager() {}
@@ -10,7 +14,10 @@ void    GameStateManager::removeCurrentState()
     {
         _states.pop_back();
         if (hasStates())
+        {
+            _states.back()->bindEntityManager();
             _states.back()->onEnter();
+        }
     }
 }
 

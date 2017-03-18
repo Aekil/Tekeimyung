@@ -1,3 +1,7 @@
+/**
+* @Author   Mathieu Chassara
+*/
+
 #pragma once
 
 #include    <ECS/System.hpp>
@@ -5,29 +9,21 @@
 
 #include    <Engine/Core/GameState.hpp>
 
-#include    <Game/EntityFactory.hpp>
+#include    <Engine/EntityFactory.hpp>
 
-START_GAMESTATE(OptionsMenuState)
+START_GAMESTATE(OptionsMenuState, "Options")
  public:
-     virtual        ~OptionsMenuState();
+     ~OptionsMenuState();
 
-     virtual void   onEnter();
-     virtual bool   init();
-     virtual bool   update(float elapsedTime);
+    void            onEnter() override final;
+    void            setupSystems() override final;
+    bool            init() override final;
+    bool            update(float elapsedTime) override final;
 
-     void           initCamera();
-
-     Entity*        createButton(eArchetype type, const glm::vec2& pos);
-     void           handleButtons();
+    bool            handleButtons();
 
 private:
-    System*         _playstateRenderSystem;
-    World*          _playstateWorld;
-
-    Camera          _camera;
-
     Entity*         _toggleWindowModeButton = nullptr;
-    Entity*         _returnButton = nullptr;
 
     void            createToggleWindowModeButton();
 END_GAMESTATE(OptionsMenuState)

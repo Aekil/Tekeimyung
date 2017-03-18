@@ -1,0 +1,109 @@
+{
+   "entities" : [
+      {
+         "components" : {
+            "sButtonComponent" : {
+               "action" : "NONE",
+               "action_level" : ""
+            },
+            "sNameComponent" : {
+               "name" : "BUTTON_TOGGLE_FULLSCREEN"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 1
+               },
+               "ignore_raycast" : false,
+               "materials" : [ "button_toogle_fullscreen.mat" ],
+               "model" : "resources/models/default.DAE",
+               "type" : "PLANE"
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 660,
+                  "y" : 478.5,
+                  "z" : 0
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 60,
+                  "y" : 6,
+                  "z" : 6
+               }
+            },
+            "sUiComponent" : {
+               "horizontal_alignment" : "MIDDLE",
+               "offset" : {
+                  "x" : 0,
+                  "y" : 0
+               },
+               "vertical_alignment" : "MIDDLE"
+            }
+         },
+         "name" : "BUTTON_TOGGLE_FULLSCREEN",
+         "tag" : ""
+      },
+      {
+         "components" : {
+            "sButtonComponent" : {
+               "action" : "REMOVE_CURRENT_LEVEL",
+               "action_level" : ""
+            },
+            "sNameComponent" : {
+               "name" : "BUTTON_RETURN"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 1
+               },
+               "ignore_raycast" : false,
+               "materials" : [ "button_return.mat" ],
+               "model" : "resources/models/default.DAE",
+               "type" : "PLANE"
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 835,
+                  "y" : 386.97000122070313,
+                  "z" : 0
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 25,
+                  "y" : 6,
+                  "z" : 6
+               }
+            },
+            "sUiComponent" : {
+               "horizontal_alignment" : "MIDDLE",
+               "offset" : {
+                  "x" : 0,
+                  "y" : -9
+               },
+               "vertical_alignment" : "MIDDLE"
+            }
+         },
+         "name" : "BUTTON_RETURN",
+         "tag" : ""
+      }
+   ],
+   "name" : "Options"
+}

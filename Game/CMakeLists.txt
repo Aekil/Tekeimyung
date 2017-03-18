@@ -1,3 +1,6 @@
+#	@Author   Guillaume Labey
+#	@Author   Mathieu Chassara
+
 cmake_minimum_required(VERSION 3.0)
 set(EXECUTABLE_NAME "game")
 project(${EXECUTABLE_NAME})
@@ -46,7 +49,7 @@ ENDIF()
 add_definitions(-DGLEW_STATIC)
 
 # Create executable
-add_executable(${EXECUTABLE_NAME} ${source_files} ${jsoncpp_source_files} ${include_files})
+add_executable(${EXECUTABLE_NAME} ${source_files} ${include_files})
 
 
 # Link libraries with executable

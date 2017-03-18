@@ -1,44 +1,142 @@
 {
    "components" : {
-      "sAIComponent" : {},
-      "sDirectionComponent" : {
-         "speed" : 1,
-         "x" : 1,
-         "y" : 0
+      "sBoxColliderComponent" : {
+         "isTrigger" : false,
+         "pos" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "size" : {
+            "x" : 1.1000000238418579,
+            "y" : 1.1000000238418579,
+            "z" : 1.1000000238418579
+         }
       },
-      "sPositionComponent" : {
-         "x" : 19.989999771118164,
-         "y" : 6,
-         "z" : 1.5
+      "sNameComponent" : {
+         "name" : "ENEMY"
       },
       "sRenderComponent" : {
+         "animated" : false,
+         "animations" : [
+            {
+               "layer" : "MOVE_LAYER",
+               "name" : "rotation_enemy",
+               "params" : [
+                  {
+                     "frames" : [
+                        {
+                           "easing" : "NONE",
+                           "time" : 1.5,
+                           "value" : {
+                              "x" : 0,
+                              "y" : 0,
+                              "z" : 360
+                           }
+                        }
+                     ],
+                     "name" : "rotation"
+                  }
+               ]
+            },
+            {
+               "layer" : "HIT_LAYER",
+               "name" : "hit",
+               "params" : [
+                  {
+                     "frames" : [
+                        {
+                           "easing" : "EASE_IN",
+                           "time" : 0.5,
+                           "value" : {
+                              "w" : 1,
+                              "x" : 1,
+                              "y" : 0,
+                              "z" : 0
+                           }
+                        },
+                        {
+                           "easing" : "EASE_OUT",
+                           "time" : 1,
+                           "value" : {
+                              "w" : 1,
+                              "x" : 1,
+                              "y" : 0,
+                              "z" : 1
+                           }
+                        }
+                     ],
+                     "name" : "color"
+                  }
+               ]
+            }
+         ],
          "color" : {
             "a" : 1,
-            "b" : 0.78431373834609985,
-            "g" : 0.31372550129890442,
+            "b" : 1.0023009777069092,
+            "g" : 0,
             "r" : 1
+         },
+         "geometry" : null,
+         "ignore_raycast" : false,
+         "materials" : [ "geometry_default.mat" ],
+         "model" : "resources/models/characters/enemy.DAE",
+         "texture" : "",
+         "type" : "BOX"
+      },
+      "sRigidBodyComponent" : {
+         "collisions_enabled" : true,
+         "gravity" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "velocity" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
          }
+      },
+      "sScriptComponent" : {
+         "class" : [ "Enemy" ],
+         "scripts" : [
+            {
+               "health" : 150,
+               "name" : "Enemy",
+               "speed" : 40
+            }
+         ]
+      },
+      "sSphereColliderComponent" : {
+         "isTrigger" : false,
+         "pos" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "radius" : 1
       },
       "sTransformComponent" : {
          "pos" : {
-            "x" : 499.75,
+            "x" : 213.03327941894531,
             "y" : 18.75,
-            "z" : 150
+            "z" : 100
          },
          "rotation" : {
             "x" : 0,
-            "y" : -30,
+            "y" : 3.0517578125e-05,
             "z" : 0
          },
          "scale" : {
-            "x" : 0.59999990463256836,
-            "y" : 0.80000013113021851,
-            "z" : 0.80000132322311401
+            "x" : 0.71669149398803711,
+            "y" : 0.91669178009033203,
+            "z" : 0.91669297218322754
          }
       },
       "sTypeComponent" : {
          "type" : "CHARACTER"
       }
    },
-   "name" : "ENEMY"
+   "name" : "ENEMY",
+   "tag" : "Enemy"
 }

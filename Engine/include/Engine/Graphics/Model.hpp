@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #pragma once
 
 # include <cstdint>
@@ -9,26 +13,31 @@
 # include <Engine/Graphics/Mesh.hpp>
 # include <Engine/Graphics/Buffer.hpp>
 # include <Engine/Graphics/ShaderProgram.hpp>
-# include <Engine/Graphics/Skeleton.hpp>
 # include <Engine/Utils/Resource.hpp>
 
 #define BUFFER_OFFSET(bytes) ((GLubyte*) NULL + (bytes))
 
-class Model: public Resource {
+class Model: public Resource
+{
 public:
     Model();
     ~Model();
 
-    bool                        loadFromFile(const std::string &file);
+    bool                        loadFromFile(const std::string &fileName) override;
 
     uint32_t                    getVertexsSize() const;
     uint32_t                    getIndicesSize() const;
-    const std::vector<std::shared_ptr<Mesh> > &getMeshs() const;
+    const std::vector<std::unique_ptr<Mesh> > &getMeshs() const;
     const glm::vec3&            getSize() const;
     const glm::vec3&            getMin() const;
     const glm::vec3&            getMax() const;
 
-    void                        draw(const ShaderProgram& shaderProgram, const glm::vec4& color, const glm::mat4 transform) const;
+    static Resource::eType      getResourceType() { return Resource::eType::MODEL; }
+
+    const Buffer&               getBuffer() const;
+    GLuint                      getPrimitiveType() const;
+
+    virtual bool                isGeometry() const;
 
 protected:
     void                        initVertexData();
@@ -39,11 +48,9 @@ protected:
 private:
     void                        transformVertices(aiScene* scene, aiNode* node);
     void                        computeSceneNodeAbsoluteTransform(aiNode* node);
-    const aiNodeAnim*           getNodeAnim(const aiScene* scene, const std::string& name);
-    void                        updateBonesTransforms(const aiScene* scene, aiNode* node, const glm::mat4& parentTransform, float test);
 
 protected:
-    std::vector<std::shared_ptr<Mesh> >   _meshs;
+    std::vector<std::unique_ptr<Mesh> >   _meshs;
 
     // Vertices raw buffers
     Vertex*                             _vertexData;
@@ -51,9 +58,6 @@ protected:
 
     // OpenGL Buffers
     Buffer                              _buffer;
-
-    // Model skeleton used for animations
-    Skeleton                            _skeleton;
 
     aiScene*                            _scene;
     Assimp::Importer                    _importer;

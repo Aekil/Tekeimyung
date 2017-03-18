@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 template <typename T>
 ParamAnimation<T>::ParamAnimation(const std::string& name, T* param, eInterpolationType type):
                                 IParamAnimation(name), _currentKeyFrame(0), _type(type), _elapsedTime(0.0f), _lastKeyTime(0.0f), _lastFrameId(0)

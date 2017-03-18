@@ -1,0 +1,209 @@
+{
+   "entities" : [
+      {
+         "components" : {
+            "sNameComponent" : {
+               "name" : "QUIT_CONFIRM_POPUP"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 1
+               },
+               "ignore_raycast" : false,
+               "materials" : [ "quit_confirm_popup.mat" ],
+               "model" : "resources/models/default.DAE",
+               "type" : "PLANE"
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 745,
+                  "y" : 384.5,
+                  "z" : -1
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 43,
+                  "y" : 24.799999237060547,
+                  "z" : 1
+               }
+            },
+            "sUiComponent" : {
+               "horizontal_alignment" : "MIDDLE",
+               "layer" : 1,
+               "offset" : {
+                  "x" : 0,
+                  "y" : 0
+               },
+               "vertical_alignment" : "MIDDLE"
+            }
+         },
+         "name" : "QUIT_CONFIRM_POPUP",
+         "tag" : ""
+      },
+      {
+         "components" : {
+            "sNameComponent" : {
+               "name" : "QUIT_CONFIRM_TEXT"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 1
+               },
+               "ignore_raycast" : false,
+               "materials" : [ "quit_confirm_text.mat" ],
+               "model" : "resources/models/default.DAE",
+               "type" : "PLANE"
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 770,
+                  "y" : 581.030029296875,
+                  "z" : -0
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 38,
+                  "y" : 3.7999999523162842,
+                  "z" : 1
+               }
+            },
+            "sUiComponent" : {
+               "horizontal_alignment" : "MIDDLE",
+               "layer" : 0,
+               "offset" : {
+                  "x" : 0,
+                  "y" : 9
+               },
+               "vertical_alignment" : "MIDDLE"
+            }
+         },
+         "name" : "QUIT_CONFIRM_TEXT",
+         "tag" : ""
+      },
+      {
+         "components" : {
+            "sButtonComponent" : {
+               "action" : "REMOVE_CURRENT_LEVEL",
+               "action_level" : ""
+            },
+            "sNameComponent" : {
+               "name" : "BUTTON_CONFIRM_NO"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 1
+               },
+               "ignore_raycast" : false,
+               "materials" : [ "button_confirm_no.mat" ],
+               "model" : "resources/models/default.DAE",
+               "type" : "PLANE"
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 996.79998779296875,
+                  "y" : 478.5,
+                  "z" : -0
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 8,
+                  "y" : 6,
+                  "z" : 6
+               }
+            },
+            "sUiComponent" : {
+               "horizontal_alignment" : "MIDDLE",
+               "layer" : 0,
+               "offset" : {
+                  "x" : 4,
+                  "y" : 0
+               },
+               "vertical_alignment" : "MIDDLE"
+            }
+         },
+         "name" : "BUTTON_CONFIRM_NO",
+         "tag" : ""
+      },
+      {
+         "components" : {
+            "sButtonComponent" : {
+               "action" : "NONE",
+               "action_level" : ""
+            },
+            "sNameComponent" : {
+               "name" : "BUTTON_CONFIRM_YES"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 1
+               },
+               "ignore_raycast" : false,
+               "materials" : [ "button_confirm_yes.mat" ],
+               "model" : "resources/models/default.DAE",
+               "type" : "PLANE"
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 833.20001220703125,
+                  "y" : 478.5,
+                  "z" : -0
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 10,
+                  "y" : 6,
+                  "z" : 1
+               }
+            },
+            "sUiComponent" : {
+               "horizontal_alignment" : "MIDDLE",
+               "layer" : 0,
+               "offset" : {
+                  "x" : -4,
+                  "y" : 0
+               },
+               "vertical_alignment" : "MIDDLE"
+            }
+         },
+         "name" : "BUTTON_CONFIRM_YES",
+         "tag" : ""
+      }
+   ],
+   "name" : "ConfirmExit"
+}

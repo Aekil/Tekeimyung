@@ -1,3 +1,7 @@
+/**
+* @Author   Mathieu Chassara
+*/
+
 // Define this flag before time.h to use secure versions of localtime and asctime on Windows
 #define __STDC_WANT_LIB_EXT1__ 1
 #include <ctime>
@@ -93,7 +97,7 @@ void    Logger::log(Logger::eLogLevel level, const std::string& message)
             " - " << getLevelToString(level) <<
             "]\t" << message << std::endl;
     }
-
+    
     _log.append("%s\n", message.c_str());
 }
 

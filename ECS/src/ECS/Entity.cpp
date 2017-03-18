@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #include <ECS/EntityManager.hpp>
 
 #include <ECS/Entity.hpp>
@@ -14,6 +18,7 @@ bool Entity::operator==(Entity &entity)
 
 void    Entity::addComponent(sComponent* component)
 {
+    component->entity = this;
     _components.push_back(component);
     _em->notifyEntityNewComponent(this, component);
 }
@@ -32,6 +37,11 @@ sComponent* Entity::getComponent(size_t componentHashCode) const
 }
 
 std::vector<sComponent*>&   Entity::getComponents()
+{
+    return _components;
+}
+
+const std::vector<sComponent*>&   Entity::getComponents() const
 {
     return _components;
 }
@@ -61,4 +71,16 @@ bool    Entity::hasComponent(size_t componentHashCode) const
     }
 
     return (false);
+}
+
+void    Entity::setTag(const std::string& tag)
+{
+    _em->removeEntityFromTagGroup(this, _tag);
+    _tag = tag;
+    _em->addEntityToTagGroup(this, _tag);
+}
+
+const std::string&  Entity::getTag() const
+{
+    return _tag;
 }

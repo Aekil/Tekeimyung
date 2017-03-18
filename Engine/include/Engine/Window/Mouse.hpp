@@ -1,3 +1,7 @@
+/**
+* @Author   Mathieu Chassara
+*/
+
 #pragma once
 
 #include <unordered_map>
@@ -17,8 +21,8 @@ public:
     {
         UNKNOWN = -1,                           // Unknown      button
         MOUSE_BUTTON_1 = 0,                     // Left click   button, according to the mapping below
-        MOUSE_BUTTON_2,                         // Middle click button, according to the mapping below
-        MOUSE_BUTTON_3,                         // Right click  button, according to the mapping below
+        MOUSE_BUTTON_2,                         // Right click button, according to the mapping below
+        MOUSE_BUTTON_3,                         // Middle click  button, according to the mapping below
         MOUSE_BUTTON_4,                         // ???          button
         MOUSE_BUTTON_5,                         // ???          button
         MOUSE_BUTTON_6,                         // ???          button

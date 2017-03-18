@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #pragma once
 
 #include <vector>
@@ -12,13 +16,14 @@ public:
     World();
     ~World();
 
-    EntityManager*          getEntityManager();
-    std::vector<System*>&   getSystems();
+    EntityManager*                          getEntityManager();
+    std::vector<std::unique_ptr<System> >&  getSystems();
 
     template<typename T, typename... Args>
     void                    addSystem(Args... args)
     {
-        _systems.push_back(new T(args...));
+        std::unique_ptr<System> system_ = std::make_unique<T>(args...);
+        _systems.push_back(std::move(system_));
     }
 
     template<typename T>
@@ -26,11 +31,11 @@ public:
     {
         uint32_t id = T::identifier;
 
-        for (auto system_: _systems)
+        for (auto& system_: _systems)
         {
             if (system_->getId() == id)
             {
-                return (static_cast<T*>(system_));
+                return (static_cast<T*>(system_.get()));
             }
         }
 
@@ -39,9 +44,10 @@ public:
 
     void                        notifyEntityNewComponent(Entity* entity, sComponent* component);
     void                        notifyEntityRemovedComponent(Entity* entity, sComponent* component);
+    void                        notifyEntityCreated(Entity* entity);
     void                        notifyEntityDeleted(Entity* entity);
 
 private:
-    std::shared_ptr<EntityManager>  _entityManager;
-    std::vector<System*>    _systems;
+    std::unique_ptr<EntityManager>          _entityManager;
+    std::vector<std::unique_ptr<System> >    _systems;
 };

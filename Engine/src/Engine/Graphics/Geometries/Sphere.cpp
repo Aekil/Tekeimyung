@@ -1,13 +1,20 @@
+/**
+* @Author   Guillaume Labey
+*/
+
+#include <Engine/Utils/Debug.hpp>
+#include <Engine/Utils/ResourceManager.hpp>
+
 #include <Engine/Graphics/Geometries/Sphere.hpp>
 
 Sphere::Sphere(Sphere::sInfo& info): Geometry(Geometry::eType::SPHERE)
 {
-    float radius = SIZE_UNIT;
-    uint32_t rings = static_cast<uint32_t>(SIZE_UNIT * 3.0f);
-    uint32_t sectors = static_cast<uint32_t>(SIZE_UNIT * 3.0f);
+    float radius = info.radius;
+    uint32_t rings = static_cast<uint32_t>(info.radius * 3.0f);
+    uint32_t sectors = static_cast<uint32_t>(info.radius * 3.0f);
 
     // Sphere mesh
-    std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
+    std::unique_ptr<Mesh> mesh = std::make_unique<Mesh>(this);
 
     float const R = 1.0f / (float)(rings - 1);
     float const S = 1.0f / (float)(sectors - 1);
@@ -22,7 +29,7 @@ Sphere::Sphere(Sphere::sInfo& info): Geometry(Geometry::eType::SPHERE)
 
             Vertex vertex;
 
-            vertex.uv = glm::vec2(s * S, r * R);
+            vertex.uv = -glm::vec2(s * S, r * R);
             vertex.pos = glm::vec3(x, y, z) * radius;
             vertex.normal = glm::vec3(x, y, z);
             vertex.color = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -46,13 +53,12 @@ Sphere::Sphere(Sphere::sInfo& info): Geometry(Geometry::eType::SPHERE)
 
 
     // Sphere material
-    Material material;
-    material._constants.ambient = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-    material._constants.diffuse = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-    mesh->material = material;
+    Material* material = ResourceManager::getInstance()->getResource<Material>("geometry_default.mat");
+    ASSERT(material != nullptr, "geometry_default.mat should exists");
+    mesh->setMaterial(material);
 
     // Add plane to meshs list
-    _meshs.push_back(mesh);
+    _meshs.push_back(std::move(mesh));
 
     initVertexData();
     initIndexData();

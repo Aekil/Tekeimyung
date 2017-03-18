@@ -1,0 +1,58 @@
+{
+   "components" : {
+      "sNameComponent" : {
+         "name" : "HEALTH_EMPTY"
+      },
+      "sRenderComponent" : {
+         "animated" : false,
+         "animations" : [],
+         "color" : {
+            "a" : 1,
+            "b" : 1,
+            "g" : 1,
+            "r" : 1
+         },
+         "ignore_raycast" : false,
+         "materials" : [ "geometry_default.mat" ],
+         "model" : "resources/models/default.DAE",
+         "texture" : "",
+         "type" : "PLANE"
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 710,
+            "y" : 458.5,
+            "z" : 0
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "scale" : {
+            "x" : 3.5,
+            "y" : 0.40000000596046448,
+            "z" : 1
+         }
+      },
+      "sTypeComponent" : {
+         "type" : "TILE_WALKABLE"
+      },
+      "sUiComponent" : {
+         "horizontal_alignment" : "NONE",
+         "layer" : 1,
+         "offset" : {
+            "x" : 0,
+            "y" : 0
+         },
+         "percentage_size" : false,
+         "size" : {
+            "x" : 0.10000000149011612,
+            "y" : 0.10000000149011612
+         },
+         "vertical_alignment" : "NONE"
+      }
+   },
+   "name" : "HEALTH_EMPTY",
+   "tag" : ""
+}

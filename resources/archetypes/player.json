@@ -1,77 +1,77 @@
 {
    "components" : {
-      "sDirectionComponent" : {
-         "speed" : 1,
-         "x" : 0,
-         "y" : 0
-      },
-      "sInputComponent" : {
-         "down" : "K",
-         "left" : "J",
-         "right" : "L",
-         "up" : "I"
-      },
-      "sPlayerComponent" : {
-         "range" : 2,
-         "range_color" : {
-            "a" : 1,
-            "b" : 1,
-            "g" : 0.79607844352722168,
-            "r" : 1
-         }
-      },
-      "sPositionComponent" : {
-         "x" : 9,
-         "y" : 5,
-         "z" : 1
+      "sNameComponent" : {
+         "name" : "PLAYER"
       },
       "sRenderComponent" : {
          "animated" : false,
          "animations" : [],
          "color" : {
             "a" : 1,
-            "b" : 0.98333263397216797,
-            "g" : 0.98333263397216797,
+            "b" : 1,
+            "g" : 1,
             "r" : 1
          },
          "geometry" : null,
+         "ignore_raycast" : false,
+         "materials" : [ "_01 - Default", "_02 - Default" ],
          "model" : "resources/models/characters/character.DAE",
          "texture" : "",
          "type" : "MESH"
       },
-      "sResolutionComponent" : {
-         "onCollisionEnter" : "onCollisionEnterPlayer",
-         "onCollisionExit" : "onCollisionExitPlayer"
+      "sRigidBodyComponent" : {
+         "collisions_enabled" : true,
+         "gravity" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "velocity" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         }
+      },
+      "sScriptComponent" : {
+         "scripts" : [
+            {
+               "name" : "Player"
+            },
+            {
+               "name" : "Build"
+            }
+         ]
       },
       "sSphereColliderComponent" : {
          "isTrigger" : false,
          "pos" : {
-            "x" : 0,
-            "y" : 7.9999990463256836,
-            "z" : 0
+            "x" : -0.10001659393310547,
+            "y" : 15,
+            "z" : 7.5000085830688477
          },
-         "radius" : 0.89999997615814209
+         "radius" : 5.349998950958252
       },
       "sTransformComponent" : {
          "pos" : {
-            "x" : 225.00003051757813,
-            "y" : 12.500007629394531,
-            "z" : 125.00090789794922
+            "x" : 199.26182556152344,
+            "y" : 16.25,
+            "z" : -2.1741812229156494
          },
          "rotation" : {
             "x" : 0,
-            "y" : -84.007659912109375,
+            "y" : -89.958930969238281,
             "z" : 0
          },
          "scale" : {
-            "x" : 1.0416662693023682,
-            "y" : 1.0416662693023682,
-            "z" : 1.0416662693023682
+            "x" : 0.47145819664001465,
+            "y" : 0.47145816683769226,
+            "z" : 0.47145819664001465
          }
       },
       "sTypeComponent" : {
          "type" : "CHARACTER"
       }
    },
-   "name" : "PLAYER"
+   "name" : "PLAYER",
+   "tag" : "Player"
 }

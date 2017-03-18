@@ -1,13 +1,18 @@
+/**
+* @Author   Guillaume Labey
+*/
+
+#include <algorithm>
 #include <Engine/Utils/Logger.hpp>
 
 #include <Engine/Graphics/Animator.hpp>
 
-Animator::Animator(): _currentAnimation(nullptr) {}
+Animator::Animator() {}
 
-Animator::Animator(const Animator& rhs): _currentAnimation(nullptr)
+Animator::Animator(const Animator& rhs)
 {
     _animations.clear();
-    _currentAnimation = nullptr;
+    //_currentAnimation = nullptr;
 
     uint32_t nbAnimations = (uint32_t)rhs.getAnimations().size();
     for (uint32_t i = 0; i < nbAnimations; ++i)
@@ -22,7 +27,7 @@ Animator::~Animator() {}
 Animator&   Animator::operator=(const Animator& rhs)
 {
     _animations.clear();
-    _currentAnimation = nullptr;
+    //_currentAnimation = nullptr;
 
     uint32_t nbAnimations = (uint32_t)rhs.getAnimations().size();
     for (uint32_t i = 0; i < nbAnimations; ++i)
@@ -41,12 +46,8 @@ void    Animator::addAnimation(AnimationPtr animation)
 
 void    Animator::removeAnimation(AnimationPtr animation)
 {
-    if (animation == _currentAnimation)
-    {
-        stop();
-        update(0);
-        _currentAnimation = nullptr;
-    }
+    animation->reset();
+    animation->update(0);
 
     _animations.erase(std::find(_animations.begin(), _animations.end(), animation));
 }
@@ -55,6 +56,157 @@ void    Animator::removeAnimation(const std::string& name)
 {
     AnimationPtr animation = getAnimation(name);
     removeAnimation(animation);
+}
+
+const std::vector<AnimationPtr>&    Animator::getAnimations() const
+{
+    return (_animations);
+}
+
+uint32_t    Animator::getAnimationsNb() const
+{
+    return ((uint32_t)_animations.size());
+}
+
+bool    Animator::play(const std::string& name, bool loop, bool stopSameLayer)
+{
+    AnimationPtr animation = getAnimation(name);
+
+    if (!animation)
+    {
+        LOG_WARN("Can't play animation \"%s\": this animation doesn not exist", name.c_str());
+        return (false);
+    }
+
+    // Stop all animations on the same layer
+    if (stopSameLayer)
+    {
+        sAnimationLayer* playedLayer = getPlayedLayer(animation->getLayer());
+        if (playedLayer)
+        {
+            for (auto& layerAnimation: playedLayer->animations)
+            {
+                layerAnimation->reset();
+                layerAnimation->update(0);
+            }
+
+            playedLayer->animations.clear();
+        }
+    }
+    else if (isPlaying(animation))
+    {
+        removePlayedAnimation(animation);
+    }
+
+    // Set new played animation
+    _playedLayers[animation->getLayer()].animations.push_back(animation);
+    animation->reset();
+    animation->isLoop(loop);
+
+    return (true);
+}
+
+bool    Animator::playQueued(const std::string& name, bool loop)
+{
+    return (play(name, loop, false));
+}
+
+bool    Animator::stop(const std::string& name)
+{
+    AnimationPtr animation = getAnimation(name);
+
+    if (!animation)
+    {
+        LOG_WARN("Can't stop animation \"%s\": this animation doesn not exist", name.c_str());
+        return (false);
+    }
+
+    if (isPlaying(animation))
+    {
+        removePlayedAnimation(animation);
+    }
+    return (true);
+}
+
+bool    Animator::isPlaying(const std::string& name) const
+{
+    AnimationPtr animation = getAnimation(name);
+    if (!animation)
+        return (false);
+
+    return isPlaying(animation);
+}
+
+bool    Animator::isPlaying(AnimationPtr animation) const
+{
+    for (const auto& playedLayer: _playedLayers)
+    {
+        auto& layerAnimations = playedLayer.second.animations;
+        if (playedLayer.first == animation->getLayer() &&
+            std::find(layerAnimations.cbegin(), layerAnimations.cend(), animation) != layerAnimations.cend())
+        {
+            return (true);
+        }
+    }
+
+    return (false);
+}
+
+bool    Animator::isPlaying() const
+{
+    return (_playedLayers.size() != 0);
+}
+
+void    Animator::reset()
+{
+    for (const auto& playedLayer: _playedLayers)
+    {
+        for (auto& animation: playedLayer.second.animations)
+        {
+            animation->reset();
+            animation->update(0);
+        }
+    }
+    _playedLayers.clear();
+}
+
+void    Animator::update(float elapsedTime)
+{
+    auto& playedLayer = _playedLayers.begin();
+    for (playedLayer; playedLayer != _playedLayers.end();)
+    {
+        auto& layer = playedLayer->second;
+        AnimationPtr animation = layer.animations[layer.currentAnimation];
+
+        // The animation is finished
+        if (animation->update(elapsedTime))
+        {
+            // Remove the animation from the played layer if there is no loop
+            if (!animation->isLoop())
+            {
+                layer.animations.erase(layer.animations.begin() + layer.currentAnimation);
+                layer.currentAnimation = std::min(layer.currentAnimation, (uint32_t)layer.animations.size() - 1);
+            }
+            else
+            {
+                layer.currentAnimation++;
+                if (layer.currentAnimation >= layer.animations.size())
+                {
+                    layer.currentAnimation = 0;
+                }
+            }
+        }
+
+        // Remove layer from played layers
+        if (layer.animations.size() == 0)
+        {
+            _playedLayers.erase(playedLayer++);
+        }
+        else
+        {
+            ++playedLayer;
+        }
+    }
 }
 
 AnimationPtr    Animator::getAnimation(const std::string& name) const
@@ -68,88 +220,34 @@ AnimationPtr    Animator::getAnimation(const std::string& name) const
     return (nullptr);
 }
 
-const std::vector<AnimationPtr>&    Animator::getAnimations() const
+Animator::sAnimationLayer*  Animator::getPlayedLayer(const std::string& layer)
 {
-    return (_animations);
+    auto& animationLayer = _playedLayers.find(layer);
+    if (animationLayer == _playedLayers.end())
+        return (nullptr);
+
+    return &animationLayer->second;
 }
 
-std::vector<AnimationPtr>&  Animator::getAnimations()
+void    Animator::removePlayedLayer(const std::string& layer)
 {
-    return (_animations);
+    _playedLayers.erase(layer);
 }
 
-uint32_t    Animator::getAnimationsNb() const
+void    Animator::removePlayedAnimation(AnimationPtr animation)
 {
-    return ((uint32_t)_animations.size());
-}
+    sAnimationLayer* playedLayer = getPlayedLayer(animation->getLayer());
+    ASSERT(playedLayer != nullptr, "A played animation should be on a layer");
 
-bool    Animator::play(const std::string& name, bool loop)
-{
-    if (_currentAnimation &&
-        _currentAnimation->getName() == name && // The animation is already playing
-        _currentAnimation->isPlaying() &&
-        _currentAnimation->isLoop() == loop) // The animation loop did not change
-        return (true);
+    auto& layerAnimation = std::find(playedLayer->animations.cbegin(), playedLayer->animations.cend(), animation);
+    ASSERT(layerAnimation != playedLayer->animations.end(), "The animation should be on the layer list");
 
-    // Get new animation pointer
-    AnimationPtr animation = getAnimation(name);
+    animation->reset();
+    animation->update(0);
 
-    // The animation does not exist
-    if (!animation)
+    playedLayer->animations.erase(layerAnimation);
+    if (playedLayer->animations.size() == 0)
     {
-        LOG_INFO("Can't play animation \"%s\": this animation doesn not exist", name.c_str());
-        return (false);
+        removePlayedLayer(animation->getLayer());
     }
-
-    // An animation is already playing, reset it to reset transforms
-    if (_currentAnimation)
-    {
-        _currentAnimation->reset();
-        _currentAnimation->update(0);
-    }
-
-    // Set new played animation
-    _currentAnimation = animation;
-    _currentAnimation->reset();
-    _currentAnimation->isLoop(loop);
-
-    return (true);
-}
-
-bool    Animator::isPlaying(const std::string& name) const
-{
-    return (_currentAnimation &&
-        _currentAnimation->getName() == name &&
-        _currentAnimation->isPlaying());
-}
-
-bool    Animator::isPlaying() const
-{
-    return (_currentAnimation != nullptr &&
-        _currentAnimation->isPlaying());
-}
-
-AnimationPtr    Animator::getCurrentAnimation() const
-{
-    return (_currentAnimation);
-}
-
-void    Animator::reset()
-{
-    if (_currentAnimation)
-        _currentAnimation->reset();
-}
-
-void    Animator::stop()
-{
-    reset();
-    update(0);
-    _currentAnimation = nullptr;
-}
-
-
-void    Animator::update(float elapsedTime)
-{
-    if (_currentAnimation)
-        _currentAnimation->update(elapsedTime);
 }

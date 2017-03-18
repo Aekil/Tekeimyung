@@ -1,5 +1,8 @@
 {
    "components" : {
+      "sNameComponent" : {
+         "name" : "EMITTER_WATER"
+      },
       "sParticleEmitterComponent" : {
          "angle" : 25.161001205444336,
          "angle_variance" : 0,
@@ -10,28 +13,17 @@
                "g" : 0.47058823704719543,
                "r" : 0.78431373834609985
             },
-            "finish_variance" : {
-               "a" : 0,
-               "b" : 0,
-               "g" : 0,
-               "r" : 0
-            },
             "start" : {
                "a" : 0.60000002384185791,
                "b" : 0,
                "g" : 0.30196079611778259,
                "r" : 0.70980393886566162
-            },
-            "start_variance" : {
-               "a" : 0,
-               "b" : 0,
-               "g" : 0,
-               "r" : 0
             }
          },
          "emitter_life" : 0,
          "life" : 80,
          "life_variance" : 30,
+         "max_particles" : 50,
          "rate" : 0,
          "size" : {
             "finish" : 0.18800000846385956,
@@ -44,21 +36,18 @@
          "speed_variance" : 17.204000473022461,
          "texture" : "resources/sprites/particles/particle_circle.png"
       },
-      "sPositionComponent" : {
-         "x" : 12,
-         "y" : 5,
-         "z" : 1
-      },
       "sRenderComponent" : {
          "animated" : false,
          "animations" : [
             {
+               "layer" : "DEFAULT",
                "name" : "rotation animation",
                "params" : [
                   {
                      "frames" : [
                         {
-                           "duration" : 2,
+                           "easing" : "NONE",
+                           "time" : 1,
                            "value" : {
                               "x" : 0,
                               "y" : 360,
@@ -77,6 +66,8 @@
             "g" : 0,
             "r" : 1
          },
+         "ignore_raycast" : false,
+         "materials" : [ "geometry_default.mat" ],
          "model" : "resources/models/default.DAE",
          "texture" : "",
          "type" : "BOX"
@@ -102,5 +93,6 @@
          "type" : "OBJECT"
       }
    },
-   "name" : "EMITTER_WATER"
+   "name" : "EMITTER_WATER",
+   "tag" : ""
 }

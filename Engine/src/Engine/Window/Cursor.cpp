@@ -1,3 +1,7 @@
+/**
+* @Author   Mathieu Chassara
+*/
+
 #include <Engine/Window/Cursor.hpp>
 
 Cursor::Cursor() : _entered(false), _xPos(0.0), _yPos(0.0) {}

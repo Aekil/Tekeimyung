@@ -1,10 +1,15 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #include <Engine/Graphics/Animation.hpp>
 
-Animation::Animation(const std::string& name): _name(name), _loop(true), _isPlaying(false) {}
+Animation::Animation(const std::string& name, const std::string& layer): _name(name), _layer(layer), _loop(true), _isPlaying(false) {}
 
 Animation::Animation(const Animation& rhs)
 {
     _name = rhs.getName();
+    _layer = rhs.getLayer();
     _loop = rhs.isLoop();
     _isPlaying = rhs.isPlaying();
 
@@ -18,6 +23,7 @@ Animation::~Animation() {}
 
 void    Animation::addParamAnimation(IParamAnimationPtr paramAnimation)
 {
+    isPlaying(true);
     paramAnimation->reset();
     _paramsAnimations.push_back(paramAnimation);
 }
@@ -49,7 +55,7 @@ IParamAnimationPtr  Animation::getParamAnimation(const std::string& name)
     return (nullptr);
 }
 
-void    Animation::update(float elapsedTime)
+bool    Animation::update(float elapsedTime)
 {
     _isPlaying = false;
     for (auto paramAnimation: _paramsAnimations)
@@ -60,7 +66,12 @@ void    Animation::update(float elapsedTime)
     }
 
     if (!_isPlaying && _loop)
+    {
         reset();
+        return (true);
+    }
+
+    return (!_isPlaying);
 }
 
 void    Animation::reset()
@@ -82,6 +93,16 @@ void    Animation::setName(const std::string& name)
     _name = name;
 }
 
+const std::string&  Animation::getLayer() const
+{
+    return (_layer);
+}
+
+void    Animation::setLayer(const std::string& layer)
+{
+    _layer = layer;
+}
+
 bool    Animation::isLoop() const
 {
     return (_loop);
@@ -95,6 +116,11 @@ void    Animation::isLoop(bool isLoop)
 bool    Animation::isPlaying() const
 {
     return (_isPlaying);
+}
+
+void    Animation::isPlaying(bool isPlaying)
+{
+    _isPlaying = isPlaying;
 }
 
 std::vector<IParamAnimationPtr >& Animation::getParamsAnimations()

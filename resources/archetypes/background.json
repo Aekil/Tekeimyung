@@ -1,5 +1,8 @@
 {
    "components" : {
+      "sNameComponent" : {
+         "name" : "BACKGROUND"
+      },
       "sRenderComponent" : {
          "animated" : false,
          "animations" : [],
@@ -9,6 +12,8 @@
             "g" : 0.49019607901573181,
             "r" : 0.26274511218070984
          },
+         "ignore_raycast" : false,
+         "materials" : [ "geometry_default.mat" ],
          "model" : "resources/models/default.DAE",
          "texture" : "",
          "type" : "PLANE"
@@ -29,7 +34,22 @@
             "y" : 101.69999694824219,
             "z" : 1
          }
+      },
+      "sUiComponent" : {
+         "horizontal_alignment" : "MIDDLE",
+         "layer" : 0,
+         "offset" : {
+            "x" : 0,
+            "y" : 0
+         },
+         "percentage_size" : false,
+         "size" : {
+            "x" : 0.10000000149011612,
+            "y" : 0.10000000149011612
+         },
+         "vertical_alignment" : "MIDDLE"
       }
    },
-   "name" : "BACKGROUND"
+   "name" : "BACKGROUND",
+   "tag" : ""
 }

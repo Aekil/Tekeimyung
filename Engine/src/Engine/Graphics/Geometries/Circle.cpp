@@ -1,13 +1,20 @@
+/**
+* @Author   Guillaume Labey
+*/
+
+#include <Engine/Utils/Debug.hpp>
+#include <Engine/Utils/ResourceManager.hpp>
+
 #include <Engine/Graphics/Geometries/Circle.hpp>
 
 Circle::Circle(Circle::sInfo& info): Geometry(Geometry::eType::CIRCLE)
 {
-    float outerRadius = SIZE_UNIT;
-    float innerRadius = SIZE_UNIT / 2.0f;
+    float outerRadius = info.outerRadius;
+    float innerRadius = info.innerRadius / 2.0f;
     uint32_t numSegments = 360;
 
     // Circle mesh
-    std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
+    std::unique_ptr<Mesh> mesh = std::make_unique<Mesh>(this);
 
 
     for (uint32_t i = 0; i <= numSegments; ++i)
@@ -27,21 +34,20 @@ Circle::Circle(Circle::sInfo& info): Geometry(Geometry::eType::CIRCLE)
         outerVertex.normal = glm::vec3(0.0f, 1.0f, 0.0f);
         outerVertex.color = glm::vec3(0.0f, 0.0f, 0.0f);
 
-        mesh->vertexs.push_back(innerVertex);
         mesh->vertexs.push_back(outerVertex);
+        mesh->vertexs.push_back(innerVertex);
         mesh->indices.push_back(i * 2);
         mesh->indices.push_back(i * 2 + 1);
     }
 
 
     // Circle material
-    Material material;
-    material._constants.ambient = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-    material._constants.diffuse = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-    mesh->material = material;
+    Material* material = ResourceManager::getInstance()->getResource<Material>("geometry_default.mat");
+    ASSERT(material != nullptr, "geometry_default.mat should exists");
+    mesh->setMaterial(material);
 
     // Add plane to meshs list
-    _meshs.push_back(mesh);
+    _meshs.push_back(std::move(mesh));
 
     initVertexData();
     initIndexData();

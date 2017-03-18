@@ -1,9 +1,20 @@
 {
    "components" : {
-      "sPositionComponent" : {
-         "x" : 2,
-         "y" : 3,
-         "z" : 0
+      "sBoxColliderComponent" : {
+         "isTrigger" : false,
+         "pos" : {
+            "x" : 4.76837158203125e-06,
+            "y" : 6.25,
+            "z" : 7.62939453125e-06
+         },
+         "size" : {
+            "x" : 2.6000027656555176,
+            "y" : 1.3500049114227295,
+            "z" : 2.6000032424926758
+         }
+      },
+      "sNameComponent" : {
+         "name" : "BLOCK_GREEN"
       },
       "sRenderComponent" : {
          "animated" : false,
@@ -14,16 +25,25 @@
             "g" : 1,
             "r" : 1
          },
+         "ignore_raycast" : false,
+         "materials" : [ "MAT_Green" ],
          "model" : "resources/models/blocks/block_green.DAE",
          "texture" : "",
          "type" : "MESH"
       },
-      "sTileComponent" : null,
+      "sScriptComponent" : {
+         "class" : [ "Tile" ],
+         "scripts" : [
+            {
+               "name" : "Tile"
+            }
+         ]
+      },
       "sTransformComponent" : {
          "pos" : {
             "x" : 50,
-            "y" : 0,
-            "z" : 75
+            "y" : 12.5,
+            "z" : 175
          },
          "rotation" : {
             "x" : 0,
@@ -40,5 +60,6 @@
          "type" : "TILE_WALKABLE"
       }
    },
-   "name" : "BLOCK_GREEN"
+   "name" : "BLOCK_GREEN",
+   "tag" : "BlockGreen"
 }
