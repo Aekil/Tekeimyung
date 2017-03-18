@@ -31,6 +31,8 @@ public:
     Camera*                             getCurrentCamera();
     void                                setCurrentCamera(Camera* camera);
 
+    void                                beginFrame();
+    void                                endFrame();
     void                                render(Camera* camera, RenderQueue& renderQueue);
 
 private:

@@ -3,6 +3,9 @@
 */
 
 #include <iostream>
+#include <imgui.h>
+#include <imgui_impl_glfw_gl3.h>
+#include <ImGuizmo.h>
 #include <algorithm>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -87,6 +90,31 @@ void    Renderer::setCurrentCamera(Camera* camera)
     _currentCamera = camera;
 }
 
+void    Renderer::beginFrame()
+{
+    // Clear window screen
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    _frameBuffer.use(GL_FRAMEBUFFER);
+
+    // Clear frame buffer
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    _frameBuffer.unBind(GL_FRAMEBUFFER);
+
+    ImGui_ImplGlfwGL3_NewFrame();
+    ImGuizmo::BeginFrame();
+}
+
+void    Renderer::endFrame()
+{
+    // Display imgui windows
+    ImGui::Render();
+
+    // Display screen
+    GameWindow::getInstance()->display();
+}
+
 void    Renderer::render(Camera* camera, RenderQueue& renderQueue)
 {
     // First pass
@@ -94,18 +122,12 @@ void    Renderer::render(Camera* camera, RenderQueue& renderQueue)
         // All the renders will use the color attachments and the depth buffer of the framebuffer
         _frameBuffer.use(GL_FRAMEBUFFER);
 
-        // Clear frame buffer
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
         sceneRenderPass(camera, renderQueue);
         _frameBuffer.unBind(GL_FRAMEBUFFER);
     }
 
     // Second pass
     {
-        // Clear window screen
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
         glDisable(GL_DEPTH_TEST);
         finalBlendingPass(camera);
         glEnable(GL_DEPTH_TEST);
