@@ -73,12 +73,12 @@ void main()
 {
     vec4 color = CalcFragColor(fragNormal);
 
-    outFragColor = material.ambient;
+    outFragColor = color;
 
     float brightness = dot(outFragColor.rgb, vec3(0.2126f, 0.7152f, 0.0722f));
 
     #ifdef BLOOM
-        outBrightColor = outFragColor * brightness;
+        outBrightColor = outFragColor;
     #else
         outBrightColor = vec4(0.0f);
     #endif

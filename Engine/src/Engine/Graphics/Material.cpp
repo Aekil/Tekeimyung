@@ -27,6 +27,7 @@ Material::Material(const Material& material)
     _diffuse = material._diffuse;
     _ambient = material._ambient;
     _faceCamera = material._faceCamera;
+    _bloom = material._bloom;
     srcBlend = material.srcBlend;
     dstBlend = material.dstBlend;
     _textures = material._textures;
@@ -40,6 +41,7 @@ Material&   Material::operator=(const Material& material)
     _diffuse = material._diffuse;
     _ambient = material._ambient;
     _faceCamera = material._faceCamera;
+    _bloom = material._bloom;
     srcBlend = material.srcBlend;
     dstBlend = material.dstBlend;
     _textures = material._textures;

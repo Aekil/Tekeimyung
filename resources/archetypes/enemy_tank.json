@@ -78,7 +78,7 @@
             "r" : 1
          },
          "ignore_raycast" : false,
-         "materials" : [ "geometry_default.mat" ],
+         "materials" : [ "enemy.mat" ],
          "model" : "resources/models/characters/enemy.DAE",
          "type" : "TRAPEZE"
       },

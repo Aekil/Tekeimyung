@@ -56,9 +56,10 @@ private:
     ShaderProgram*                      _currentShaderProgram{nullptr};
 
     ShaderProgram                       _finalBlendingShaderProgram;
-    // Buffer containing the plane vertices used for final blending
+    ShaderProgram                       _blurShaderProgram;
+    // Buffer containing the plane vertices used for final blending and blur
     // Should fit the size of the screen
-    Buffer                              _finalBlendingPlane;
+    Buffer                              _screenPlane;
 
 
     // Singleton instance
@@ -74,6 +75,9 @@ private:
     Light                               _UILight;
 
     Framebuffer                         _frameBuffer;
+    // Ping-pong frame buffers and color attachments
+    Framebuffer                         _blurFrameBuffers[2];
+    std::unique_ptr<Texture> _blurColorAttachments[2];
 
     std::unique_ptr<Texture>            _sceneColorAttachment;
     std::unique_ptr<Texture>            _sceneBrightColorAttachment;
