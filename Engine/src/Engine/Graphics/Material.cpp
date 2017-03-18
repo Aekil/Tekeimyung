@@ -14,8 +14,6 @@ Material::Material(bool isModelMaterial): _isModelMaterial(isModelMaterial)
 {
     _diffuse = {1.0f, 1.0f, 1.0f, 1.0f};
     _ambient = {1.0f, 1.0f, 1.0f, 1.0f};
-    _faceCamera = 0;
-    _options = 0;
     srcBlend = GL_SRC_ALPHA;
     dstBlend = GL_ONE_MINUS_SRC_ALPHA;
     _textures[Texture::eType::AMBIENT] = nullptr;
@@ -29,7 +27,6 @@ Material::Material(const Material& material)
     _diffuse = material._diffuse;
     _ambient = material._ambient;
     _faceCamera = material._faceCamera;
-    _options = 0;
     srcBlend = material.srcBlend;
     dstBlend = material.dstBlend;
     _textures = material._textures;
@@ -43,7 +40,6 @@ Material&   Material::operator=(const Material& material)
     _diffuse = material._diffuse;
     _ambient = material._ambient;
     _faceCamera = material._faceCamera;
-    _options = 0;
     srcBlend = material.srcBlend;
     dstBlend = material.dstBlend;
     _textures = material._textures;
@@ -159,7 +155,8 @@ bool        Material::loadFromFile(const std::string& fileName)
 
     _ambient = parsed.getColor4f("ambient", {0.3f, 0.3f, 0.3f, 1.0f});
     _diffuse = parsed.getColor4f("diffuse", {1.0f, 1.0f, 1.0f, 1.0f});
-    _faceCamera = parsed.getBool("face_camera", false) ? 1 : 0;
+    _faceCamera = parsed.getBool("face_camera", false);
+    _bloom = parsed.getBool("bloom", false);
     transparent = parsed.getBool("transparent", false);
     wireframe = parsed.getBool("wireframe", false);
     srcBlend = Material::getBlendEnumFromString(parsed.getString("src_blend", "GL_SRC_ALPHA"));
@@ -224,9 +221,14 @@ const glm::vec4&    Material::getDiffuse() const
     return (_diffuse);
 }
 
-int     Material::isFacingCamera() const
+bool     Material::isFacingCamera() const
 {
     return (_faceCamera);
+}
+
+bool     Material::hasBloom() const
+{
+    return (_bloom);
 }
 
 void    Material::setAmbient(const glm::vec4& ambient)
@@ -244,18 +246,28 @@ void    Material::setDiffuse(const glm::vec4& diffuse)
 void    Material::isFacingCamera(bool faceCamera)
 {
     _faceCamera = faceCamera;
+    needUpdate();
+}
+
+void    Material::hasBloom(bool bloom)
+{
+    _bloom = bloom;
+    needUpdate();
 }
 
 int     Material::getOptions()
 {
     if (_optionsFlagDirty)
     {
+        _options = 0;
         if (_faceCamera)
             _options |= eOption::FACE_CAMERA;
         if (_textures[Texture::eType::AMBIENT] != nullptr)
             _options |= eOption::TEXTURE_AMBIENT;
         if (_textures[Texture::eType::DIFFUSE] != nullptr)
             _options |= eOption::TEXTURE_DIFFUSE;
+        if (_bloom)
+            _options |= eOption::BLOOM;
 
         _optionsFlagDirty = false;
     }

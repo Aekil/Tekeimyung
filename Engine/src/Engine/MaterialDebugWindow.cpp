@@ -126,10 +126,15 @@ void    MaterialDebugWindow::displayMaterialsProperties()
             }
         }
 
-        bool faceCamera = _selectedMaterial->isFacingCamera() ? true : false;
+        bool faceCamera = _selectedMaterial->isFacingCamera();
         if (ImGui::Checkbox("Face camera", &faceCamera))
         {
-            _selectedMaterial->isFacingCamera(faceCamera == true ? 1 : 0);
+            _selectedMaterial->isFacingCamera(faceCamera);
+        }
+        bool bloom = _selectedMaterial->hasBloom();
+        if (ImGui::Checkbox("Bloom", &bloom))
+        {
+            _selectedMaterial->hasBloom(bloom);
         }
         ImGui::Checkbox("Transparent", &_selectedMaterial->transparent);
         ImGui::Checkbox("Wireframe", &_selectedMaterial->wireframe);
@@ -234,7 +239,8 @@ void    MaterialDebugWindow::saveMaterials()
 
             json.setColor4f("ambient", material->getAmbient());
             json.setColor4f("diffuse", material->getDiffuse());
-            json.setBool("face_camera", material->isFacingCamera() ? true : false);
+            json.setBool("face_camera", material->isFacingCamera());
+            json.setBool("bloom", material->hasBloom());
             json.setBool("transparent", material->transparent);
             json.setBool("wireframe", material->wireframe);
             json.setString("src_blend", Material::getBlendStringFromEnum(material->srcBlend));

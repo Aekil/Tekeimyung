@@ -74,6 +74,9 @@ private:
     Light                               _UILight;
 
     Framebuffer                         _frameBuffer;
-    std::unique_ptr<Texture>            _colorAttachment;
+
+    std::unique_ptr<Texture>            _sceneColorAttachment;
+    std::unique_ptr<Texture>            _sceneBrightColorAttachment;
+
     std::unique_ptr<Texture>            _depthAttachment;
 };

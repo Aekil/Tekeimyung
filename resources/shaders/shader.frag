@@ -5,7 +5,8 @@ layout (location = 1) in vec2 fragTexCoords;
 layout (location = 2) in vec3 fragPos;
 layout (location = 3) flat in uint instanceID;
 
-out vec4 outFragColor;
+layout (location = 0) out vec4 outFragColor;
+layout (location = 1) out vec4 outBrightColor;
 
 uniform sampler2D AmbientTexture;
 uniform sampler2D DiffuseTexture;
@@ -14,8 +15,6 @@ layout (std140, binding = 0) uniform materialUniformBlock
 {
     vec4    ambient;
     vec4    diffuse;
-    int     texturesTypes;
-    int     faceCamera;
 } material;
 
 
@@ -74,5 +73,13 @@ void main()
 {
     vec4 color = CalcFragColor(fragNormal);
 
-    outFragColor = color;
+    outFragColor = material.ambient;
+
+    float brightness = dot(outFragColor.rgb, vec3(0.2126f, 0.7152f, 0.0722f));
+
+    #ifdef BLOOM
+        outBrightColor = outFragColor * brightness;
+    #else
+        outBrightColor = vec4(0.0f);
+    #endif
 }

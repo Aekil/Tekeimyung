@@ -217,7 +217,7 @@ void    Renderer::finalBlendingPass()
     _finalBlendingShaderProgram.use();
     glUniform1i(_finalBlendingShaderProgram.getUniformLocation("sceneTexture"), 0);
 
-    _colorAttachment->bind();
+    _sceneColorAttachment->bind();
     _finalBlendingPlane.bind();
 
     GLsizei windowBufferWidth = (GLsizei)GameWindow::getInstance()->getBufferWidth();
@@ -233,7 +233,7 @@ void    Renderer::finalBlendingPass()
                 GL_UNSIGNED_INT,
                 0);
 
-    _colorAttachment->unBind();
+    _sceneColorAttachment->unBind();
 }
 
 bool sortOpaque(const sRenderableMesh& lhs, const sRenderableMesh& rhs)
@@ -399,7 +399,8 @@ bool    Renderer::setupFrameBuffer()
     GLsizei windowBufferHeight = (GLsizei)GameWindow::getInstance()->getBufferHeight();
     bool complete = false;
 
-    _colorAttachment = Texture::create(windowBufferWidth, windowBufferHeight);
+    _sceneColorAttachment = Texture::create(windowBufferWidth, windowBufferHeight);
+    _sceneBrightColorAttachment = Texture::create(windowBufferWidth, windowBufferHeight);
     _depthAttachment = Texture::create(windowBufferWidth,
                                         windowBufferHeight,
                                         GL_DEPTH24_STENCIL8,
@@ -410,7 +411,8 @@ bool    Renderer::setupFrameBuffer()
     // Setup framebuffer
     {
         _frameBuffer.removeColorAttachments();
-        _frameBuffer.addColorAttachment(*_colorAttachment);
+        _frameBuffer.addColorAttachment(*_sceneColorAttachment);
+        _frameBuffer.addColorAttachment(*_sceneBrightColorAttachment);
         _frameBuffer.setDepthAttachment(*_depthAttachment);
 
         complete = _frameBuffer.isComplete();
@@ -431,17 +433,31 @@ void    Renderer::setupShaderPrograms()
             { Material::eOption::TEXTURE_AMBIENT },
             { Material::eOption::TEXTURE_DIFFUSE },
             { Material::eOption::FACE_CAMERA },
+            { Material::eOption::BLOOM },
 
             { Material::eOption::TEXTURE_AMBIENT,
                 Material::eOption::TEXTURE_DIFFUSE },
             { Material::eOption::TEXTURE_AMBIENT,
                 Material::eOption::FACE_CAMERA },
+            { Material::eOption::TEXTURE_AMBIENT,
+                Material::eOption::BLOOM },
             { Material::eOption::TEXTURE_DIFFUSE,
                 Material::eOption::FACE_CAMERA },
+            { Material::eOption::TEXTURE_DIFFUSE,
+                Material::eOption::BLOOM },
 
             { Material::eOption::TEXTURE_AMBIENT,
                 Material::eOption::TEXTURE_DIFFUSE,
-                Material::eOption::FACE_CAMERA }
+                Material::eOption::FACE_CAMERA },
+            { Material::eOption::TEXTURE_AMBIENT,
+                Material::eOption::TEXTURE_DIFFUSE,
+                Material::eOption::BLOOM },
+            { Material::eOption::TEXTURE_AMBIENT,
+                Material::eOption::FACE_CAMERA,
+                Material::eOption::BLOOM },
+            { Material::eOption::TEXTURE_DIFFUSE,
+                Material::eOption::FACE_CAMERA,
+                Material::eOption::BLOOM }
         };
 
 

@@ -14,8 +14,6 @@ layout (std140, binding = 0) uniform materialUniformBlock
 {
     vec4    ambient;
     vec4    diffuse;
-    int     texturesTypes;
-    int     faceCamera;
 } material;
 
 layout (std140, binding = 1) uniform cameraUniformBlock
