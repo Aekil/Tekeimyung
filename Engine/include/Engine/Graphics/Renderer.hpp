@@ -37,6 +37,7 @@ public:
 
 private:
     void                                sceneRenderPass(Camera* camera, RenderQueue& renderQueue);
+    void                                bloomPass();
     void                                finalBlendingPass();
     void                                renderOpaqueObjects(std::vector<sRenderableMesh>& meshs,
                                                             uint32_t meshsNb,
@@ -77,7 +78,8 @@ private:
     Framebuffer                         _frameBuffer;
     // Ping-pong frame buffers and color attachments
     Framebuffer                         _blurFrameBuffers[2];
-    std::unique_ptr<Texture> _blurColorAttachments[2];
+    std::unique_ptr<Texture>            _blurColorAttachments[2];
+    Texture*                            _lastBlurColorAttachment{nullptr};
 
     std::unique_ptr<Texture>            _sceneColorAttachment;
     std::unique_ptr<Texture>            _sceneBrightColorAttachment;

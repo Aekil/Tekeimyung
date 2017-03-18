@@ -115,6 +115,15 @@ void    Renderer::beginFrame()
 
 void    Renderer::endFrame()
 {
+    // Apply bloom and then blend the scene with bloom texture
+    {
+        glDisable(GL_DEPTH_TEST);
+        bloomPass();
+        finalBlendingPass();
+        glEnable(GL_DEPTH_TEST);
+        _currentShaderProgram = nullptr;
+    }
+
     // Display imgui windows
     ImGui::Render();
 
@@ -124,22 +133,10 @@ void    Renderer::endFrame()
 
 void    Renderer::render(Camera* camera, RenderQueue& renderQueue)
 {
-    // First pass
-    {
-        // All the renders will use the color attachments and the depth buffer of the framebuffer
-        _frameBuffer.use(GL_FRAMEBUFFER);
-
-        sceneRenderPass(camera, renderQueue);
-        _frameBuffer.unBind(GL_FRAMEBUFFER);
-    }
-
-    // Second pass
-    {
-        glDisable(GL_DEPTH_TEST);
-        finalBlendingPass();
-        glEnable(GL_DEPTH_TEST);
-        _currentShaderProgram = nullptr;
-    }
+    // All the renders will use the color attachments and the depth buffer of the framebuffer
+    _frameBuffer.use(GL_FRAMEBUFFER);
+    sceneRenderPass(camera, renderQueue);
+    _frameBuffer.unBind(GL_FRAMEBUFFER);
 }
 
 void    Renderer::sceneRenderPass(Camera* camera, RenderQueue& renderQueue)
@@ -219,80 +216,76 @@ void    Renderer::sceneRenderPass(Camera* camera, RenderQueue& renderQueue)
     glDisable(GL_BLEND);
 }
 
-void    Renderer::finalBlendingPass()
+void    Renderer::bloomPass()
 {
     GLboolean horizontal = true;
-    // Apply blur
+    glViewport(0,
+                0,
+                (uint32_t)_blurColorAttachments[0]->getWidth(),
+                (uint32_t)_blurColorAttachments[0]->getHeight());
+
+    _blurShaderProgram.use();
+    glUniform1i(_blurShaderProgram.getUniformLocation("image"), 0);
+
+    bool firstPass = true;
+
+    for (uint32_t i = 0; i < 10; ++i)
     {
-        glViewport(0,
-                    0,
-                    (uint32_t)_blurColorAttachments[0]->getWidth(),
-                    (uint32_t)_blurColorAttachments[0]->getHeight());
+        _blurFrameBuffers[horizontal].use(GL_FRAMEBUFFER);
+        glUniform1i(_blurShaderProgram.getUniformLocation("horizontal"), horizontal);
 
-        _blurShaderProgram.use();
-        glUniform1i(_blurShaderProgram.getUniformLocation("image"), 0);
-
-        bool firstPass = true;
-
-        for (uint32_t i = 0; i < 10; ++i)
+        // Render the bright scene into the framebuffer for the first pass
+        // For the other passes, we alternate between the 2 framebuffers of the ping-pong framebuffers
+        if (firstPass)
         {
-            _blurFrameBuffers[horizontal].use(GL_FRAMEBUFFER);
-            glUniform1i(_blurShaderProgram.getUniformLocation("horizontal"), horizontal);
-
-            // Render the bright scene into the framebuffer for the first pass
-            // For the other passes, we alternate between the 2 framebuffers of the ping-pong framebuffers
-            if (firstPass)
-            {
-                firstPass = false;
-                _sceneBrightColorAttachment->bind();
-            }
-            else
-            {
-                _blurColorAttachments[!horizontal]->bind();
-            }
-
-            _screenPlane.bind();
-
-            glDrawElements(GL_TRIANGLES,
-                        6,
-                        GL_UNSIGNED_INT,
-                        0);
-
-            horizontal = !horizontal;
+            firstPass = false;
+            _sceneBrightColorAttachment->bind();
+        }
+        else
+        {
+            _blurColorAttachments[!horizontal]->bind();
         }
 
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    }
-
-    // Blend both blured image and base scene image
-    {
-        GLsizei windowBufferWidth = (GLsizei)GameWindow::getInstance()->getBufferWidth();
-        GLsizei windowBufferHeight = (GLsizei)GameWindow::getInstance()->getBufferHeight();
-
-        glViewport(0,
-                    0,
-                    (uint32_t)windowBufferWidth,
-                    (uint32_t)windowBufferHeight);
-
-        _finalBlendingShaderProgram.use();
-        glUniform1i(_finalBlendingShaderProgram.getUniformLocation("sceneTexture"), 0);
-        glUniform1i(_finalBlendingShaderProgram.getUniformLocation("sceneBloomTexture"), 1);
-
-        _sceneColorAttachment->bind();
-        // Attached the last rendered blur color attachment
-        _blurColorAttachments[!horizontal]->bind(GL_TEXTURE1);
         _screenPlane.bind();
-
 
         glDrawElements(GL_TRIANGLES,
                     6,
                     GL_UNSIGNED_INT,
                     0);
 
-        _sceneColorAttachment->unBind();
-        _blurColorAttachments[!horizontal]->bind();
+        horizontal = !horizontal;
     }
 
+    // Unbind framebuffer
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    _lastBlurColorAttachment = _blurColorAttachments[!horizontal].get();
+}
+
+void    Renderer::finalBlendingPass()
+{
+    GLsizei windowBufferWidth = (GLsizei)GameWindow::getInstance()->getBufferWidth();
+    GLsizei windowBufferHeight = (GLsizei)GameWindow::getInstance()->getBufferHeight();
+
+    glViewport(0,
+                0,
+                (uint32_t)windowBufferWidth,
+                (uint32_t)windowBufferHeight);
+
+    _finalBlendingShaderProgram.use();
+    glUniform1i(_finalBlendingShaderProgram.getUniformLocation("sceneTexture"), 0);
+    glUniform1i(_finalBlendingShaderProgram.getUniformLocation("sceneBloomTexture"), 1);
+
+    _sceneColorAttachment->bind();
+    // Attached the last rendered blur color attachment
+    _lastBlurColorAttachment->bind(GL_TEXTURE1);
+    _screenPlane.bind();
+
+
+    glDrawElements(GL_TRIANGLES,
+                6,
+                GL_UNSIGNED_INT,
+                0);
 }
 
 bool sortOpaque(const sRenderableMesh& lhs, const sRenderableMesh& rhs)
