@@ -37,7 +37,7 @@ public:
 
 private:
     void                                sceneRenderPass(Camera* camera, RenderQueue& renderQueue);
-    void                                finalBlendingPass(Camera* camera);
+    void                                finalBlendingPass();
     void                                renderOpaqueObjects(std::vector<sRenderableMesh>& meshs,
                                                             uint32_t meshsNb,
                                                             std::vector<Light*>& lights,

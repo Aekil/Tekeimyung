@@ -129,7 +129,7 @@ void    Renderer::render(Camera* camera, RenderQueue& renderQueue)
     // Second pass
     {
         glDisable(GL_DEPTH_TEST);
-        finalBlendingPass(camera);
+        finalBlendingPass();
         glEnable(GL_DEPTH_TEST);
         _currentShaderProgram = nullptr;
     }
@@ -152,14 +152,14 @@ void    Renderer::sceneRenderPass(Camera* camera, RenderQueue& renderQueue)
                 lightsNb = 1;
             }
 
-            // Set viewport
+            camera->updateViewport();
+            camera->updateUBO();
+            camera->getUBO().bind();
+
             glViewport((uint32_t)camera->getViewport().offset.x,
                         (uint32_t)camera->getViewport().offset.y,
                         (uint32_t)camera->getViewport().extent.width,
                         (uint32_t)camera->getViewport().extent.height);
-
-            camera->updateUBO();
-            camera->getUBO().bind();
 
             renderOpaqueObjects(renderQueue.getOpaqueMeshs(), renderQueue.getOpaqueMeshsNb(), lights, lightsNb);
 
@@ -212,7 +212,7 @@ void    Renderer::sceneRenderPass(Camera* camera, RenderQueue& renderQueue)
     glDisable(GL_BLEND);
 }
 
-void    Renderer::finalBlendingPass(Camera* camera)
+void    Renderer::finalBlendingPass()
 {
     _finalBlendingShaderProgram.use();
     glUniform1i(_finalBlendingShaderProgram.getUniformLocation("sceneTexture"), 0);
@@ -220,10 +220,13 @@ void    Renderer::finalBlendingPass(Camera* camera)
     _colorAttachment->bind();
     _finalBlendingPlane.bind();
 
-    glViewport((uint32_t)_UICamera.getViewport().offset.x,
-                (uint32_t)_UICamera.getViewport().offset.y,
-                (uint32_t)_UICamera.getViewport().extent.width,
-                (uint32_t)_UICamera.getViewport().extent.height);
+    GLsizei windowBufferWidth = (GLsizei)GameWindow::getInstance()->getBufferWidth();
+    GLsizei windowBufferHeight = (GLsizei)GameWindow::getInstance()->getBufferHeight();
+
+    glViewport(0,
+                0,
+                (uint32_t)windowBufferWidth,
+                (uint32_t)windowBufferHeight);
 
     glDrawElements(GL_TRIANGLES,
                 6,
