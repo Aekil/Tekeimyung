@@ -17,7 +17,9 @@ public:
     {
         NONE = 0,
         DIFFUSE = 1,
-        AMBIENT = 2
+        AMBIENT = 2,
+        BLOOM = 3,
+        BLOOM_ALPHA = 4
     };
 
 public:

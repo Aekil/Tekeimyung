@@ -18,6 +18,7 @@
     PROCESS(TEXTURE_DIFFUSE, 2)                 \
     PROCESS(FACE_CAMERA, 4)                     \
     PROCESS(BLOOM, 8)                           \
+    PROCESS(TEXTURE_BLOOM, 16)                  \
 
 #define BLENDING_MODES(PROCESS)                 \
     PROCESS(GL_ZERO)                            \

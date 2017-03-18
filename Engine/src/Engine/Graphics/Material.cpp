@@ -18,6 +18,8 @@ Material::Material(bool isModelMaterial): _isModelMaterial(isModelMaterial)
     dstBlend = GL_ONE_MINUS_SRC_ALPHA;
     _textures[Texture::eType::AMBIENT] = nullptr;
     _textures[Texture::eType::DIFFUSE] = nullptr;
+    _textures[Texture::eType::BLOOM] = nullptr;
+    _textures[Texture::eType::BLOOM_ALPHA] = nullptr;
     _ubo.init(sizeof(sMaterialData));
     needUpdate();
 }
@@ -129,6 +131,13 @@ void    Material::bind()
         _textures[Texture::eType::AMBIENT]->bind(GL_TEXTURE0);
     if (options & eOption::TEXTURE_DIFFUSE)
         _textures[Texture::eType::DIFFUSE]->bind(GL_TEXTURE1);
+    if (options & eOption::TEXTURE_BLOOM)
+    {
+        _textures[Texture::eType::BLOOM]->bind(GL_TEXTURE2);
+
+        if (_textures[Texture::eType::BLOOM_ALPHA] != nullptr)
+            _textures[Texture::eType::BLOOM_ALPHA]->bind(GL_TEXTURE3);
+    }
 }
 
 bool    Material::isModelMaterial() const
@@ -183,6 +192,26 @@ bool        Material::loadFromFile(const std::string& fileName)
         {
             Texture* texture = ResourceManager::getInstance()->getOrLoadResource<Texture>(texturePath);
             setTexture(Texture::eType::DIFFUSE, texture);
+        }
+    }
+
+    // Bloom texture
+    {
+        std::string texturePath = textures.getString("bloom", "");
+        if (texturePath.size() != 0)
+        {
+            Texture* texture = ResourceManager::getInstance()->getOrLoadResource<Texture>(texturePath);
+            setTexture(Texture::eType::BLOOM, texture);
+        }
+    }
+
+    // Bloom texture alpha
+    {
+        std::string texturePath = textures.getString("bloom_alpha", "");
+        if (texturePath.size() != 0)
+        {
+            Texture* texture = ResourceManager::getInstance()->getOrLoadResource<Texture>(texturePath);
+            setTexture(Texture::eType::BLOOM_ALPHA, texture);
         }
     }
 
@@ -268,6 +297,8 @@ int     Material::getOptions()
             _options |= eOption::TEXTURE_AMBIENT;
         if (_textures[Texture::eType::DIFFUSE] != nullptr)
             _options |= eOption::TEXTURE_DIFFUSE;
+        if (_textures[Texture::eType::BLOOM] != nullptr)
+            _options |= eOption::TEXTURE_BLOOM;
         if (_bloom)
             _options |= eOption::BLOOM;
 

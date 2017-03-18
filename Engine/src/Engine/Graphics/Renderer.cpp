@@ -333,6 +333,8 @@ void    Renderer::renderOpaqueObjects(std::vector<sRenderableMesh>& meshs,
                 // Must be the same unit as material textures. See Material::loadFromAssimp
                 glUniform1i(_currentShaderProgram->getUniformLocation("AmbientTexture"), 0);
                 glUniform1i(_currentShaderProgram->getUniformLocation("DiffuseTexture"), 1);
+                glUniform1i(_currentShaderProgram->getUniformLocation("BloomTexture"), 2);
+                glUniform1i(_currentShaderProgram->getUniformLocation("BloomTextureAlpha"), 3);
             }
 
             // Bind buffer
@@ -410,6 +412,8 @@ void    Renderer::renderTransparentObjects(std::vector<sRenderableMesh>& meshs,
                 // Must be the same unit as material textures. See Material::loadFromAssimp
                 glUniform1i(_currentShaderProgram->getUniformLocation("AmbientTexture"), 0);
                 glUniform1i(_currentShaderProgram->getUniformLocation("DiffuseTexture"), 1);
+                glUniform1i(_currentShaderProgram->getUniformLocation("BloomTexture"), 2);
+                glUniform1i(_currentShaderProgram->getUniformLocation("BloomTextureAlpha"), 3);
             }
 
             // Change blend mode
@@ -461,8 +465,16 @@ bool    Renderer::setupFrameBuffer()
 
     // Setup scene framebuffer
     {
-        _sceneColorAttachment = Texture::create(windowBufferWidth, windowBufferHeight);
-        _sceneBrightColorAttachment = Texture::create(windowBufferWidth, windowBufferHeight);
+        _sceneColorAttachment = Texture::create(windowBufferWidth,
+                                                windowBufferHeight,
+                                                GL_RGBA16F,
+                                                GL_RGBA,
+                                                GL_FLOAT);
+        _sceneBrightColorAttachment = Texture::create(windowBufferWidth,
+                                                windowBufferHeight,
+                                                GL_RGBA16F,
+                                                GL_RGBA,
+                                                GL_FLOAT);
         _depthAttachment = Texture::create(windowBufferWidth,
                                             windowBufferHeight,
                                             GL_DEPTH24_STENCIL8,
@@ -484,9 +496,15 @@ bool    Renderer::setupFrameBuffer()
     // then we blur the first framebuffer into the second one, then we blur the second one into the first, and so on
     {
         _blurColorAttachments[0] = Texture::create(static_cast<GLsizei>(windowBufferWidth),
-                                                    static_cast<GLsizei>(windowBufferHeight));
+                                                    static_cast<GLsizei>(windowBufferHeight),
+                                                    GL_RGBA16F,
+                                                    GL_RGBA,
+                                                    GL_FLOAT);
         _blurColorAttachments[1] = Texture::create(static_cast<GLsizei>(windowBufferWidth),
-                                                    static_cast<GLsizei>(windowBufferHeight));
+                                                    static_cast<GLsizei>(windowBufferHeight),
+                                                    GL_RGBA16F,
+                                                    GL_RGBA,
+                                                    GL_FLOAT);
 
         // First frame buffer
         _blurFrameBuffers[0].bind(GL_FRAMEBUFFER);
@@ -515,37 +533,39 @@ void    Renderer::setupShaderPrograms()
     // It will activate/deactivate preprocessor conditions in the shaders
     {
         std::vector<std::vector<Material::eOption> > permutations = {
-            { },
+            {  },
             { Material::eOption::TEXTURE_AMBIENT },
             { Material::eOption::TEXTURE_DIFFUSE },
             { Material::eOption::FACE_CAMERA },
             { Material::eOption::BLOOM },
+            { Material::eOption::TEXTURE_BLOOM },
+            { Material::eOption::TEXTURE_AMBIENT, Material::eOption::TEXTURE_DIFFUSE },
+            { Material::eOption::TEXTURE_AMBIENT, Material::eOption::FACE_CAMERA },
+            { Material::eOption::TEXTURE_AMBIENT, Material::eOption::BLOOM },
+            { Material::eOption::TEXTURE_AMBIENT, Material::eOption::TEXTURE_BLOOM },
+            { Material::eOption::TEXTURE_DIFFUSE, Material::eOption::FACE_CAMERA },
+            { Material::eOption::TEXTURE_DIFFUSE, Material::eOption::BLOOM },
+            { Material::eOption::TEXTURE_DIFFUSE, Material::eOption::TEXTURE_BLOOM },
+            { Material::eOption::FACE_CAMERA, Material::eOption::BLOOM },
+            { Material::eOption::FACE_CAMERA, Material::eOption::TEXTURE_BLOOM },
+            { Material::eOption::BLOOM, Material::eOption::TEXTURE_BLOOM },
+            { Material::eOption::TEXTURE_AMBIENT, Material::eOption::TEXTURE_DIFFUSE, Material::eOption::FACE_CAMERA },
+            { Material::eOption::TEXTURE_AMBIENT, Material::eOption::TEXTURE_DIFFUSE, Material::eOption::BLOOM },
+            { Material::eOption::TEXTURE_AMBIENT, Material::eOption::TEXTURE_DIFFUSE, Material::eOption::TEXTURE_BLOOM },
+            { Material::eOption::TEXTURE_AMBIENT, Material::eOption::FACE_CAMERA, Material::eOption::BLOOM },
+            { Material::eOption::TEXTURE_AMBIENT, Material::eOption::FACE_CAMERA, Material::eOption::TEXTURE_BLOOM },
+            { Material::eOption::TEXTURE_AMBIENT, Material::eOption::BLOOM, Material::eOption::TEXTURE_BLOOM },
+            { Material::eOption::TEXTURE_DIFFUSE, Material::eOption::FACE_CAMERA, Material::eOption::BLOOM },
+            { Material::eOption::TEXTURE_DIFFUSE, Material::eOption::FACE_CAMERA, Material::eOption::TEXTURE_BLOOM },
+            { Material::eOption::TEXTURE_DIFFUSE, Material::eOption::BLOOM, Material::eOption::TEXTURE_BLOOM },
+            { Material::eOption::FACE_CAMERA, Material::eOption::BLOOM, Material::eOption::TEXTURE_BLOOM },
+            { Material::eOption::TEXTURE_AMBIENT, Material::eOption::TEXTURE_DIFFUSE, Material::eOption::FACE_CAMERA, Material::eOption::BLOOM },
+            { Material::eOption::TEXTURE_AMBIENT, Material::eOption::TEXTURE_DIFFUSE, Material::eOption::FACE_CAMERA, Material::eOption::TEXTURE_BLOOM },
+            { Material::eOption::TEXTURE_AMBIENT, Material::eOption::TEXTURE_DIFFUSE, Material::eOption::BLOOM, Material::eOption::TEXTURE_BLOOM },
+            { Material::eOption::TEXTURE_AMBIENT, Material::eOption::FACE_CAMERA, Material::eOption::BLOOM, Material::eOption::TEXTURE_BLOOM },
+            { Material::eOption::TEXTURE_DIFFUSE, Material::eOption::FACE_CAMERA, Material::eOption::BLOOM, Material::eOption::TEXTURE_BLOOM },
+            { Material::eOption::TEXTURE_AMBIENT, Material::eOption::TEXTURE_DIFFUSE, Material::eOption::FACE_CAMERA, Material::eOption::BLOOM, Material::eOption::TEXTURE_BLOOM }
 
-            { Material::eOption::TEXTURE_AMBIENT,
-                Material::eOption::TEXTURE_DIFFUSE },
-            { Material::eOption::TEXTURE_AMBIENT,
-                Material::eOption::FACE_CAMERA },
-            { Material::eOption::TEXTURE_AMBIENT,
-                Material::eOption::BLOOM },
-            { Material::eOption::TEXTURE_DIFFUSE,
-                Material::eOption::FACE_CAMERA },
-            { Material::eOption::TEXTURE_DIFFUSE,
-                Material::eOption::BLOOM },
-            { Material::eOption::FACE_CAMERA,
-                Material::eOption::BLOOM },
-
-            { Material::eOption::TEXTURE_AMBIENT,
-                Material::eOption::TEXTURE_DIFFUSE,
-                Material::eOption::FACE_CAMERA },
-            { Material::eOption::TEXTURE_AMBIENT,
-                Material::eOption::TEXTURE_DIFFUSE,
-                Material::eOption::BLOOM },
-            { Material::eOption::TEXTURE_AMBIENT,
-                Material::eOption::FACE_CAMERA,
-                Material::eOption::BLOOM },
-            { Material::eOption::TEXTURE_DIFFUSE,
-                Material::eOption::FACE_CAMERA,
-                Material::eOption::BLOOM }
         };
 
 

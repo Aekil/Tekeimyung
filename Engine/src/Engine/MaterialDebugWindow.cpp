@@ -80,11 +80,6 @@ void    MaterialDebugWindow::displayMaterialsProperties()
 
     if (_selectedMaterial != nullptr)
     {
-        Texture* ambientTexture = _selectedMaterial->getTexture(Texture::eType::AMBIENT);
-        Texture* diffuseTexture = _selectedMaterial->getTexture(Texture::eType::DIFFUSE);
-        std::string ambientTextureName = ambientTexture ? ambientTexture->getId() : "";
-        std::string diffuseTextureName = diffuseTexture ? diffuseTexture->getId() : "";
-
         // Ambient
         {
             glm::vec4 ambient = _selectedMaterial->getAmbient();
@@ -103,26 +98,81 @@ void    MaterialDebugWindow::displayMaterialsProperties()
             }
         }
 
-        if (Helper::updateComboString("Ambient texture", ResourceManager::getInstance()->getResourcesNames<Texture>(), ambientTextureName))
+        // Ambient texture
         {
-            // Empty choice
-            if (ambientTextureName.size() == 0)
-                _selectedMaterial->setTexture(Texture::eType::AMBIENT, nullptr);
-            else
+            Texture* texture = _selectedMaterial->getTexture(Texture::eType::AMBIENT);
+            std::string textureName = texture ? texture->getId() : "";
+
+            if (Helper::updateComboString("Ambient", ResourceManager::getInstance()->getResourcesNames<Texture>(), textureName))
             {
-                ambientTexture = ResourceManager::getInstance()->getResource<Texture>(ambientTextureName);
-                _selectedMaterial->setTexture(Texture::eType::AMBIENT, ambientTexture);
+                // Empty choice
+                if (textureName.size() == 0)
+                    _selectedMaterial->setTexture(Texture::eType::AMBIENT, nullptr);
+                else
+                {
+                    texture = ResourceManager::getInstance()->getResource<Texture>(textureName);
+                    _selectedMaterial->setTexture(Texture::eType::AMBIENT, texture);
+                }
             }
         }
-        if (Helper::updateComboString("Diffuse texture", ResourceManager::getInstance()->getResourcesNames<Texture>(), diffuseTextureName))
+
+        // Diffuse texture
         {
-            // Empty choice
-            if (diffuseTextureName.size() == 0)
-                _selectedMaterial->setTexture(Texture::eType::DIFFUSE, nullptr);
-            else
+            Texture* texture = _selectedMaterial->getTexture(Texture::eType::DIFFUSE);
+            std::string textureName = texture ? texture->getId() : "";
+
+            if (Helper::updateComboString("Diffuse", ResourceManager::getInstance()->getResourcesNames<Texture>(), textureName))
             {
-                diffuseTexture = ResourceManager::getInstance()->getResource<Texture>(diffuseTextureName);
-                _selectedMaterial->setTexture(Texture::eType::DIFFUSE, diffuseTexture);
+                // Empty choice
+                if (textureName.size() == 0)
+                    _selectedMaterial->setTexture(Texture::eType::DIFFUSE, nullptr);
+                else
+                {
+                    texture = ResourceManager::getInstance()->getResource<Texture>(textureName);
+                    _selectedMaterial->setTexture(Texture::eType::DIFFUSE, texture);
+                }
+            }
+        }
+
+        // Bloom texture
+        {
+            if (_selectedMaterial->hasBloom())
+            {
+                Texture* texture = _selectedMaterial->getTexture(Texture::eType::BLOOM);
+                std::string textureName = texture ? texture->getId() : "";
+
+                if (Helper::updateComboString("Bloom", ResourceManager::getInstance()->getResourcesNames<Texture>(), textureName))
+                {
+                    // Empty choice
+                    if (textureName.size() == 0)
+                        _selectedMaterial->setTexture(Texture::eType::BLOOM, nullptr);
+                    else
+                    {
+                        texture = ResourceManager::getInstance()->getResource<Texture>(textureName);
+                        _selectedMaterial->setTexture(Texture::eType::BLOOM, texture);
+                    }
+                }
+            }
+        }
+
+        // Bloom texture alpha
+        {
+            if (_selectedMaterial->hasBloom())
+            {
+                Texture* texture = _selectedMaterial->getTexture(Texture::eType::BLOOM_ALPHA);
+                std::string textureName = texture ? texture->getId() : "";
+
+                if (Helper::updateComboString("Bloom alpha", ResourceManager::getInstance()->getResourcesNames<Texture>(), textureName))
+                {
+                    // Empty choice
+                    if (textureName.size() == 0)
+                        _selectedMaterial->setTexture(Texture::eType::BLOOM_ALPHA, nullptr);
+                    else
+                    {
+                        texture = ResourceManager::getInstance()->getResource<Texture>(textureName);
+                        _selectedMaterial->setTexture(Texture::eType::BLOOM_ALPHA, texture);
+                    }
+                }
             }
         }
 
@@ -261,6 +311,22 @@ void    MaterialDebugWindow::saveMaterials()
             else
             {
                 texturesJson.setString("diffuse", "");
+            }
+            if (material->getTexture(Texture::eType::BLOOM))
+            {
+                texturesJson.setString("bloom", material->getTexture(Texture::eType::BLOOM)->getPath());
+            }
+            else
+            {
+                texturesJson.setString("bloom", "");
+            }
+            if (material->getTexture(Texture::eType::BLOOM_ALPHA))
+            {
+                texturesJson.setString("bloom_alpha", material->getTexture(Texture::eType::BLOOM_ALPHA)->getPath());
+            }
+            else
+            {
+                texturesJson.setString("bloom_alpha", "");
             }
 
             json.setValue("textures", texturesJson);
