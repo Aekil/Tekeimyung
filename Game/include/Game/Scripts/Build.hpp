@@ -25,7 +25,7 @@ private:
 
     sTransformComponent* _transform;
     sRenderComponent* _render;
-    std::vector<std::string> _buildableItems;
+    std::map<std::string, std::vector<std::string>> _buildableItems;
     bool _buildEnabled;
     float _buildableRadius;
     int _currentIdx = 0;
