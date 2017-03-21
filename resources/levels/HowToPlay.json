@@ -21,8 +21,8 @@
             },
             "sTransformComponent" : {
                "pos" : {
-                  "x" : 0,
-                  "y" : 0,
+                  "x" : 960,
+                  "y" : 508.5,
                   "z" : -1
                },
                "rotation" : {
@@ -42,6 +42,11 @@
                "offset" : {
                   "x" : 0,
                   "y" : 0
+               },
+               "percentage_size" : true,
+               "size" : {
+                  "x" : 1,
+                  "y" : 1
                },
                "vertical_alignment" : "MIDDLE"
             }
@@ -70,9 +75,9 @@
             },
             "sTransformComponent" : {
                "pos" : {
-                  "x" : 460,
-                  "y" : 183.5,
-                  "z" : -0
+                  "x" : 921.5999755859375,
+                  "y" : 508.5,
+                  "z" : 0
                },
                "rotation" : {
                   "x" : 0,
@@ -80,8 +85,8 @@
                   "z" : 0
                },
                "scale" : {
-                  "x" : 100,
-                  "y" : 65,
+                  "x" : 105.59999847412109,
+                  "y" : 71.189994812011719,
                   "z" : 0.0010000000474974513
                }
             },
@@ -89,8 +94,13 @@
                "horizontal_alignment" : "MIDDLE",
                "layer" : 0,
                "offset" : {
-                  "x" : 0,
+                  "x" : -2,
                   "y" : 0
+               },
+               "percentage_size" : true,
+               "size" : {
+                  "x" : 0.55000001192092896,
+                  "y" : 0.69999998807907104
                },
                "vertical_alignment" : "MIDDLE"
             }
@@ -123,9 +133,9 @@
             },
             "sTransformComponent" : {
                "pos" : {
-                  "x" : 835,
-                  "y" : 203.91000366210938,
-                  "z" : -0
+                  "x" : 960,
+                  "y" : 233.91000366210938,
+                  "z" : 0
                },
                "rotation" : {
                   "x" : 0,
@@ -133,8 +143,8 @@
                   "z" : 0
                },
                "scale" : {
-                  "x" : 25,
-                  "y" : 6,
+                  "x" : 19.200000762939453,
+                  "y" : 5.0850000381469727,
                   "z" : 6
                }
             },
@@ -144,6 +154,11 @@
                "offset" : {
                   "x" : 0,
                   "y" : -27
+               },
+               "percentage_size" : true,
+               "size" : {
+                  "x" : 0.10000000149011612,
+                  "y" : 0.05000000074505806
                },
                "vertical_alignment" : "MIDDLE"
             }

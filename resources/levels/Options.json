@@ -25,8 +25,8 @@
             },
             "sTransformComponent" : {
                "pos" : {
-                  "x" : 660,
-                  "y" : 478.5,
+                  "x" : 960,
+                  "y" : 539.010009765625,
                   "z" : 0
                },
                "rotation" : {
@@ -35,16 +35,22 @@
                   "z" : 0
                },
                "scale" : {
-                  "x" : 60,
-                  "y" : 6,
+                  "x" : 76.800003051757813,
+                  "y" : 7.1190004348754883,
                   "z" : 6
                }
             },
             "sUiComponent" : {
                "horizontal_alignment" : "MIDDLE",
+               "layer" : 0,
                "offset" : {
                   "x" : 0,
-                  "y" : 0
+                  "y" : 3
+               },
+               "percentage_size" : true,
+               "size" : {
+                  "x" : 0.40000003576278687,
+                  "y" : 0.070000000298023224
                },
                "vertical_alignment" : "MIDDLE"
             }
@@ -77,8 +83,8 @@
             },
             "sTransformComponent" : {
                "pos" : {
-                  "x" : 835,
-                  "y" : 386.97000122070313,
+                  "x" : 960,
+                  "y" : 457.64999389648438,
                   "z" : 0
                },
                "rotation" : {
@@ -87,16 +93,22 @@
                   "z" : 0
                },
                "scale" : {
-                  "x" : 25,
-                  "y" : 6,
+                  "x" : 28.799999237060547,
+                  "y" : 6.1020002365112305,
                   "z" : 6
                }
             },
             "sUiComponent" : {
                "horizontal_alignment" : "MIDDLE",
+               "layer" : 0,
                "offset" : {
                   "x" : 0,
-                  "y" : -9
+                  "y" : -5
+               },
+               "percentage_size" : true,
+               "size" : {
+                  "x" : 0.15000000596046448,
+                  "y" : 0.059999998658895493
                },
                "vertical_alignment" : "MIDDLE"
             }
