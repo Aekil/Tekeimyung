@@ -144,16 +144,6 @@ void    WaveManager::handleStartWave()
         return;
     startWave(_currentWave);
     _waiting = false;
-
-    Entity* player = em->getEntityByTag("Player");
-    if (!player)
-    {
-        LOG_WARN("Can't find entity with tag Player");
-        return;
-    }
-    sTransformComponent* playerTransform = player->getComponent<sTransformComponent>();
-    playerTransform->setPos({96.0f, 22.5f, 116.0f});
-    _playerBuild->setLayer(1);
 }
 
 void    WaveManager::handleEndWave()
@@ -162,16 +152,6 @@ void    WaveManager::handleEndWave()
     _progressBar.currentProgress = _progressBar.maxProgress;
     _progressBar.display(true);
     _waiting = true;
-
-    Entity* player = em->getEntityByTag("Player");
-    if (!player)
-    {
-        LOG_WARN("Can't find entity with tag Player");
-        return;
-    }
-    sTransformComponent* playerTransform = player->getComponent<sTransformComponent>();
-    playerTransform->setPos({65.0f, 16.250f, 33.0f});
-    _playerBuild->setLayer(0);
 }
 
 void    WaveManager::handleGameOver()

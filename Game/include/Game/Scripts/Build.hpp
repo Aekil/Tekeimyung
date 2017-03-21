@@ -15,7 +15,6 @@ public:
     virtual void start() override final;
     virtual void update(float dt) override final;
     void setTile(const Entity*);
-    void setLayer(int layer);
 
 private:
     void checkBuildableZone();
@@ -26,12 +25,10 @@ private:
 
     sTransformComponent* _transform;
     sRenderComponent* _render;
-    std::vector<std::vector<std::string>> _buildableItems;
-    std::vector<std::string> _layersBlock;
+    std::vector<std::string> _buildableItems;
     bool _buildEnabled;
     float _buildableRadius;
     int _currentIdx = 0;
-    int _layer = 0;
     bool _buildSecondTP = false;
 
     Entity* firstTp;

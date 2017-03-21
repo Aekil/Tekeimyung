@@ -18,7 +18,6 @@
 void Player::death()
 {
     this->Destroy();
-    //LOG_DEBUG("I'm dead now");
 }
 
 void Player::start()
@@ -62,13 +61,7 @@ void Player::update(float dt)
 {
     this->updateDirection();
     this->movement(dt);
-    //this->handleShoot();
-
-    // Player is on top layer
-    if (_waveManager && !_waveManager->isWaiting())
-    {
-        this->blockPlayerOnTopLayer(dt);
-    }
+    this->handleShoot();
 }
 
 void Player::updateDirection()
@@ -127,7 +120,7 @@ void Player::movement(float elapsedTime)
 
 void Player::handleShoot()
 {
-    if (mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_1] == Mouse::eButtonState::CLICK_PRESSED)
+    if (mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_1] == Mouse::eButtonState::CLICK_MAINTAINED)
     {
         Entity*                 bullet;
         sScriptComponent*       bulletScripts;
@@ -150,41 +143,6 @@ void Player::handleShoot()
             SoundManager::getInstance()->playSound(_shootSound->soundID);
         }
 #endif
-    }
-}
-
-void Player::blockPlayerOnTopLayer(float dt)
-{
-    glm::vec3 playerPos = _transform->getPos();
-    playerPos.x += (_rigidBody->velocity.x * dt);
-    playerPos.z += (_rigidBody->velocity.z * dt);
-
-    float modelSize = _render->getModel()->getSize().x / 2.0f;
-
-    blockPlayer(playerPos);
-    blockPlayer(playerPos + glm::vec3(modelSize, 0.0f, 0.0f));
-    blockPlayer(playerPos + glm::vec3(0.0f, 0.0f, modelSize));
-}
-
-void Player::blockPlayer(const glm::vec3& playerPos)
-{
-    glm::ivec2 mapPos;
-    mapPos.x = static_cast<int>(std::ceil(playerPos.x) / 25.0f);
-    mapPos.y = static_cast<int>(playerPos.z / 25.0f);
-
-    if (mapPos.x >= 0 &&
-        mapPos.x < _gameManager->mapSize &&
-        mapPos.y >= 0 &&
-        mapPos.y < _gameManager->mapSize)
-    {
-        if (_gameManager->secondLayerPattern[mapPos.x][mapPos.y] != 1)
-        {
-            _rigidBody->velocity = glm::vec3(0.0f);
-        }
-    }
-    else if (mapPos.x < 0 || mapPos.y < 0)
-    {
-        _rigidBody->velocity = glm::vec3(0.0f);
     }
 }
 

@@ -26,8 +26,8 @@ private:
     void movement(float elapsedTime);
     void handleShoot();
 
-    void blockPlayerOnTopLayer(float dt);
-    void blockPlayer(const glm::vec3& playerPos);
+    //void blockPlayerOnTopLayer(float dt);
+    //void blockPlayer(const glm::vec3& playerPos);
 
     float buildableRadius;
 

@@ -13,20 +13,16 @@
 
 void Build::start()
 {
-    this->_buildableItems.resize(2);
-
     // Layer 0
-    this->_buildableItems[0].push_back("TRAP_NEEDLE");
-    this->_buildableItems[0].push_back("TRAP_CUTTER");
-    this->_buildableItems[0].push_back("TRAP_FIRE");
+    this->_buildableItems.push_back("TRAP_NEEDLE");
+    this->_buildableItems.push_back("TRAP_CUTTER");
+    this->_buildableItems.push_back("TRAP_FIRE");
 
     // Layer 1
-    this->_buildableItems[1].push_back("TOWER_FIRE");
-    this->_buildableItems[1].push_back("TP_FIRST");
-    this->_buildableItems[1].push_back("TP_SECOND");
-
-    this->_layersBlock.push_back("BlockBrown");
-    this->_layersBlock.push_back("BlockGreen");
+    this->_buildableItems.push_back("BLOCK_GREEN");
+    this->_buildableItems.push_back("TOWER_FIRE");
+    this->_buildableItems.push_back("TP_FIRST");
+    this->_buildableItems.push_back("TP_SECOND");
 
     this->_buildEnabled = false;
     this->_buildableRadius = 7.7f;
@@ -52,18 +48,18 @@ void Build::buildInput()
         {
             auto& position = this->_tile->getComponent<sTransformComponent>()->getPos();
 
-            auto entity = this->Instantiate(this->_buildableItems[_layer][this->_currentIdx], glm::vec3(position.x, position.y + 12.5f, position.z));
+            auto entity = this->Instantiate(this->_buildableItems[this->_currentIdx], glm::vec3(position.x, position.y + 12.5f, position.z));
             auto previewRenderer = entity->getComponent<sRenderComponent>();
             previewRenderer->ignoreRaycast = true;
 
-            if (this->_buildableItems[_layer][this->_currentIdx] == "TP_FIRST")
+            if (this->_buildableItems[this->_currentIdx] == "TP_FIRST")
             {
                 this->_buildSecondTP = true;
-                this->_currentIdx = static_cast<int>(this->_buildableItems[_layer].size() - 1);
+                this->_currentIdx = static_cast<int>(this->_buildableItems.size() - 1);
                 this->_firstTpPos = glm::vec3(position.x, position.y + 12.5f, position.z);
                 this->firstTp = entity;
             }
-            else if (this->_buildableItems[_layer][this->_currentIdx] == "TP_SECOND")
+            else if (this->_buildableItems[this->_currentIdx] == "TP_SECOND")
             {
                 this->_buildSecondTP = false;
                 this->_currentIdx = 0;
@@ -80,8 +76,7 @@ void Build::buildInput()
     {
         this->_currentIdx++;
 
-        if ((_layer == 1 && this->_currentIdx >= this->_buildableItems[_layer].size() - 1) ||
-            _layer == 0 && this->_currentIdx >= this->_buildableItems[_layer].size())
+        if (this->_currentIdx >= this->_buildableItems.size() - 1)
             this->_currentIdx = 0;
 
         if (this->_tile != nullptr && this->_preview != nullptr)
@@ -89,7 +84,7 @@ void Build::buildInput()
             this->Destroy(this->_preview);
 
             auto& position = this->_tile->getComponent<sTransformComponent>()->getPos();
-            this->_preview = this->Instantiate(this->_buildableItems[_layer][this->_currentIdx], glm::vec3(position.x, position.y + 12.5f, position.z));
+            this->_preview = this->Instantiate(this->_buildableItems[this->_currentIdx], glm::vec3(position.x, position.y + 12.5f, position.z));
             auto previewRenderer = this->_preview->getComponent<sRenderComponent>();
             previewRenderer->ignoreRaycast = true;
         }
@@ -121,24 +116,18 @@ void Build::setTile(const Entity* tile)
         if (this->_tile != nullptr && this->_tile->getComponent<sScriptComponent>()->getScript<Tile>("Tile")->isBuildable())
         {
             auto& position = this->_tile->getComponent<sTransformComponent>()->getPos();
-            this->_preview = this->Instantiate(this->_buildableItems[_layer][this->_currentIdx], glm::vec3(position.x, position.y + 12.5f, position.z));
+            this->_preview = this->Instantiate(this->_buildableItems[this->_currentIdx], glm::vec3(position.x, position.y + 12.5f, position.z));
             auto previewRenderer = this->_preview->getComponent<sRenderComponent>();
             previewRenderer->ignoreRaycast = true;
         }
     }
 }
 
-void Build::setLayer(int layer)
-{
-    _layer = layer;
-    _currentIdx = 0;
-}
-
 void Build::checkBuildableZone()
 {
     auto em = EntityFactory::getBindedEntityManager();
 
-    const auto& tiles = em->getEntitiesByTag(this->_layersBlock[this->_layer]);
+    const auto& tiles = em->getEntitiesByTag("BlockBrown");
 
     for (auto &tile : tiles)
     {
@@ -164,26 +153,6 @@ void Build::checkBuildableZone()
             {
                 tile->setBuildable(true);
             }
-        }
-    }
-
-    const auto& tilesOtherLayer = em->getEntitiesByTag(this->_layersBlock[this->_layer == 1 ? 0 : 1]);
-
-    for (auto &tile : tilesOtherLayer)
-    {
-        auto box = tile->getComponent<sBoxColliderComponent>();
-        if (box != nullptr)
-        {
-            auto scriptComponent = tile->getComponent<sScriptComponent>();
-
-            if (!scriptComponent)
-                continue;
-
-            Tile* tile = scriptComponent->getScript<Tile>("Tile");
-            if (!tile)
-                continue;
-
-            tile->setBuildable(false);
         }
     }
 }
