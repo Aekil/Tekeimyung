@@ -168,3 +168,8 @@ void Player::onCollisionEnter(Entity* entity)
 void Player::onCollisionExit(Entity* entity)
 {
 }
+
+void Player::addExperience(int xp)
+{
+    this->_experience += xp;
+}

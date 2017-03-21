@@ -40,6 +40,8 @@ public:
     void onCollisionEnter(Entity* entity) override final;
     void onCollisionExit(Entity* entity) override final;
 
+    void addExperience(int);
+
 private:
     glm::vec3 _direction;
     sTransformComponent* _transform;

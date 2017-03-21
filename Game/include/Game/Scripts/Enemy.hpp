@@ -47,6 +47,8 @@ private:
     tEventSound* _earningCoins = nullptr;
 
     float _speed;
+
+    int _experienceEarned;
 };
 
 REGISTER_SCRIPT(Enemy);

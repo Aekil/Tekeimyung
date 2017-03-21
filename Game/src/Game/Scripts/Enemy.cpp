@@ -7,6 +7,8 @@
 
 #include <Game/Scripts/Enemy.hpp>
 
+#include <Game/Scripts/Player.hpp>
+
 void Enemy::start()
 {
     this->_render = getComponent<sRenderComponent>();
@@ -56,6 +58,11 @@ void Enemy::death()
     sTransformComponent* entityTransform = entity->getComponent<sTransformComponent>();
     explosionTransform->setPos(entityTransform->getPos());
     this->Destroy();
+
+    auto player = em->getEntityByTag("Player");
+
+    player->getComponent<sScriptComponent>()->getScript<Player>("Player")->addExperience(this->_experienceEarned);
+
 #if (ENABLE_SOUND)
     if (_dyingSound->soundID != -1 && !SoundManager::getInstance()->isSoundPlaying(_dyingSound->soundID))
     {
@@ -95,6 +102,13 @@ bool Enemy::updateEditor()
         changed = true;
     }
 
+    if (ImGui::InputInt("Experience earned", &this->_experienceEarned, 10, ImGuiInputTextFlags_AllowTabInput))
+    {
+        if (this->_experienceEarned < 0)
+            this->_experienceEarned = 0;
+        changed = true;
+    }
+
     return (changed);
 }
 
@@ -104,6 +118,7 @@ JsonValue Enemy::saveToJson()
 
     json.setFloat("speed", _speed);
     json.setUInt("health", getMaxHealth());
+    json.setUInt("experience_earned", this->_experienceEarned);
 
     return (json);
 }
@@ -112,4 +127,5 @@ void    Enemy::loadFromJson(const JsonValue& json)
 {
     _speed = json.getFloat("speed", 50.0f);
     setMaxHealth(json.getUInt("health", 150));
+    this->_experienceEarned = json.getUInt("experience_earned", 20);
 }
