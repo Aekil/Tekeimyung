@@ -5,8 +5,8 @@
 
 void Castle::start()
 {
-    setHealth(300);
-    setMaxHealth(300);
+    setHealth(600000);
+    setMaxHealth(600000);
 
     this->_render = getComponent<sRenderComponent>();
     this->_transform = getComponent<sTransformComponent>();

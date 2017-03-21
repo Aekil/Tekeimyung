@@ -26,13 +26,9 @@ private:
     sTransformComponent* _transform;
     sRenderComponent* _render;
     std::map<std::string, std::vector<std::string>> _buildableItems;
+    std::map<std::string, int> _currentIdx;
     bool _buildEnabled;
     float _buildableRadius;
-    int _currentIdx = 0;
-    bool _buildSecondTP = false;
-
-    Entity* firstTp;
-    glm::vec3 _firstTpPos;
 };
 
 REGISTER_SCRIPT(Build);

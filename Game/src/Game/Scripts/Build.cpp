@@ -22,12 +22,12 @@ void Build::start()
     // BlockGreen
     this->_buildableItems["BlockGreen"].push_back("TOWER_FIRE");
 
-    //this->_buildableItems.push_back("TP_FIRST");
-    //this->_buildableItems.push_back("TP_SECOND");
+    this->_currentIdx["BlockGreen"] = 0;
+    this->_currentIdx["BlockBrown"] = 0;
 
     this->_buildEnabled = false;
     this->_buildableRadius = 7.7f;
-    this->_currentIdx = 0;
+
     this->_tile = nullptr;
     this->_preview = nullptr;
 
@@ -49,49 +49,35 @@ void Build::buildInput()
         {
             auto& position = this->_tile->getComponent<sTransformComponent>()->getPos();
 
-            auto entity = this->Instantiate(this->_buildableItems[this->_tile->getTag()][this->_currentIdx], glm::vec3(position.x, position.y + 12.5f, position.z));
-            auto previewRenderer = entity->getComponent<sRenderComponent>();
-            previewRenderer->ignoreRaycast = true;
+            auto entity = this->Instantiate(this->_buildableItems[this->_tile->getTag()][this->_currentIdx[this->_tile->getTag()]], glm::vec3(position.x, position.y + 12.5f, position.z));
 
-            if (this->_buildableItems[this->_tile->getTag()][this->_currentIdx] == "TP_FIRST")
+            if (entity->getTag() != "BlockGreen")
             {
-                this->_buildSecondTP = true;
-                this->_currentIdx = static_cast<int>(this->_buildableItems.size() - 1);
-                this->_firstTpPos = glm::vec3(position.x, position.y + 12.5f, position.z);
-                this->firstTp = entity;
-            }
-            else if (this->_buildableItems[this->_tile->getTag()][this->_currentIdx] == "TP_SECOND")
-            {
-                this->_buildSecondTP = false;
-                this->_currentIdx = 0;
-
-                entity->getComponent<sScriptComponent>()->getScript<Teleport>("Teleport")->setTPPos(this->_firstTpPos);
-                entity->getComponent<sScriptComponent>()->getScript<Teleport>("Teleport")->setActivity(false);
-                this->firstTp->getComponent<sScriptComponent>()->getScript<Teleport>("Teleport")->setTPPos(glm::vec3(position.x, position.y + 12.5f, position.z));
-                this->firstTp->getComponent<sScriptComponent>()->getScript<Teleport>("Teleport")->setActivity(true);
+                auto previewRenderer = entity->getComponent<sRenderComponent>();
+                previewRenderer->ignoreRaycast = true;
             }
         }
     }
 
-    if (this->_buildEnabled && this->mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_2] == Mouse::eButtonState::CLICK_PRESSED && !this->_buildSecondTP)
+    if (this->_buildEnabled && this->mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_2] == Mouse::eButtonState::CLICK_PRESSED)
     {
-        this->_currentIdx++;
+        this->_currentIdx[this->_tile->getTag()]++;
 
-        if (this->_currentIdx >= this->_buildableItems[this->_tile->getTag()].size())
-            this->_currentIdx = 0;
+        if (this->_currentIdx[this->_tile->getTag()] >= this->_buildableItems[this->_tile->getTag()].size())
+            this->_currentIdx[this->_tile->getTag()] = 0;
 
         if (this->_tile != nullptr && this->_preview != nullptr)
         {
             this->Destroy(this->_preview);
 
             auto& position = this->_tile->getComponent<sTransformComponent>()->getPos();
-            this->_preview = this->Instantiate(this->_buildableItems[this->_tile->getTag()][this->_currentIdx], glm::vec3(position.x, position.y + 12.5f, position.z));
+            this->_preview = this->Instantiate(this->_buildableItems[this->_tile->getTag()][this->_currentIdx[this->_tile->getTag()]], glm::vec3(position.x, position.y + 12.5f, position.z));
             auto previewRenderer = this->_preview->getComponent<sRenderComponent>();
             previewRenderer->ignoreRaycast = true;
         }
     }
 
-    if (this->keyboard[Keyboard::eKey::B] == Keyboard::eKeyState::KEY_PRESSED && !this->_buildSecondTP)
+    if (this->keyboard[Keyboard::eKey::B] == Keyboard::eKeyState::KEY_PRESSED)
     {
         this->_buildEnabled = !this->_buildEnabled;
         if (!this->_buildEnabled && this->_preview)
@@ -117,7 +103,7 @@ void Build::setTile(const Entity* tile)
         if (this->_tile != nullptr && this->_tile->getComponent<sScriptComponent>()->getScript<Tile>("Tile")->isBuildable())
         {
             auto& position = this->_tile->getComponent<sTransformComponent>()->getPos();
-            this->_preview = this->Instantiate(this->_buildableItems[this->_tile->getTag()][this->_currentIdx], glm::vec3(position.x, position.y + 12.5f, position.z));
+            this->_preview = this->Instantiate(this->_buildableItems[this->_tile->getTag()][this->_currentIdx[this->_tile->getTag()]], glm::vec3(position.x, position.y + 12.5f, position.z));
             auto previewRenderer = this->_preview->getComponent<sRenderComponent>();
             previewRenderer->ignoreRaycast = true;
         }
