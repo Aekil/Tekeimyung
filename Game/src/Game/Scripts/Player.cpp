@@ -172,4 +172,6 @@ void Player::onCollisionExit(Entity* entity)
 void Player::addExperience(int xp)
 {
     this->_experience += xp;
+
+    LOG_DEBUG("%d", this->_experience);
 }

@@ -1,0 +1,26 @@
+{
+   "ambient" : {
+      "a" : 1,
+      "b" : 0,
+      "g" : 0,
+      "r" : 0
+   },
+   "bloom" : true,
+   "diffuse" : {
+      "a" : 1,
+      "b" : 0,
+      "g" : 0.23921568691730499,
+      "r" : 0
+   },
+   "dst_blend" : "GL_ONE_MINUS_SRC_ALPHA",
+   "face_camera" : false,
+   "src_blend" : "GL_SRC_ALPHA",
+   "textures" : {
+      "ambient" : "resources/sprites/cube_green_glow.png",
+      "bloom" : "resources/sprites/cube_green_glow.png",
+      "bloom_alpha" : "resources/sprites/cube_glow_alpha.png",
+      "diffuse" : "resources/sprites/cube_green_glow.png"
+   },
+   "transparent" : false,
+   "wireframe" : false
+}

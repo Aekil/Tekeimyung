@@ -98,6 +98,7 @@
       "sScriptComponent" : {
          "scripts" : [
             {
+               "experience_earned" : 25,
                "health" : 220,
                "name" : "Enemy",
                "speed" : 25

@@ -99,6 +99,7 @@
          "class" : [ "Enemy" ],
          "scripts" : [
             {
+               "experience_earned" : 30,
                "health" : 120,
                "name" : "Enemy",
                "speed" : 60
