@@ -24,10 +24,7 @@ public:
 private:
     void updateDirection();
     void movement(float elapsedTime);
-    void handleShoot();
-
-    //void blockPlayerOnTopLayer(float dt);
-    //void blockPlayer(const glm::vec3& playerPos);
+    void handleShoot(float dt);
 
     float buildableRadius;
 
@@ -52,6 +49,9 @@ private:
     int _damage;
     float _speed;
     tEventSound* _shootSound = nullptr;
+    int _experience = 0;
+    float _fireRate = 0.5f;
+    float _elapsedTime = 0.0f;
 
     WaveManager* _waveManager{nullptr};
     GameManager* _gameManager{nullptr};

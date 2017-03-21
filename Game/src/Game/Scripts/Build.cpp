@@ -43,23 +43,20 @@ void Build::update(float dt)
 
 void Build::buildInput()
 {
-    if (this->_buildEnabled && this->mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_1] == Mouse::eButtonState::CLICK_PRESSED)
+    if (this->_buildEnabled && this->mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_1] == Mouse::eButtonState::CLICK_PRESSED && this->_tile != nullptr)
     {
-        if (this->_tile != nullptr)
+        auto& position = this->_tile->getComponent<sTransformComponent>()->getPos();
+
+        auto entity = this->Instantiate(this->_buildableItems[this->_tile->getTag()][this->_currentIdx[this->_tile->getTag()]], glm::vec3(position.x, position.y + 12.5f, position.z));
+
+        if (entity->getTag() != "BlockGreen")
         {
-            auto& position = this->_tile->getComponent<sTransformComponent>()->getPos();
-
-            auto entity = this->Instantiate(this->_buildableItems[this->_tile->getTag()][this->_currentIdx[this->_tile->getTag()]], glm::vec3(position.x, position.y + 12.5f, position.z));
-
-            if (entity->getTag() != "BlockGreen")
-            {
-                auto previewRenderer = entity->getComponent<sRenderComponent>();
-                previewRenderer->ignoreRaycast = true;
-            }
+            auto previewRenderer = entity->getComponent<sRenderComponent>();
+            previewRenderer->ignoreRaycast = true;
         }
     }
 
-    if (this->_buildEnabled && this->mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_2] == Mouse::eButtonState::CLICK_PRESSED)
+    if (this->_buildEnabled && this->mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_2] == Mouse::eButtonState::CLICK_PRESSED && this->_tile != nullptr)
     {
         this->_currentIdx[this->_tile->getTag()]++;
 

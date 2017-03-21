@@ -61,7 +61,7 @@ void Player::update(float dt)
 {
     this->updateDirection();
     this->movement(dt);
-    this->handleShoot();
+    this->handleShoot(dt);
 }
 
 void Player::updateDirection()
@@ -75,7 +75,7 @@ void Player::updateDirection()
     Ray ray = camera->screenPosToRay((float)cursor.getX(), (float)cursor.getY());
     float hitDistance;
 
-    if (Physics::raycastPlane(ray, {0.0f, 1.0f, 0.0f}, {0.0f, _transform->getPos().y, 0.0f}, hitDistance))
+    if (Physics::raycastPlane(ray, { 0.0f, 1.0f, 0.0f }, { 0.0f, _transform->getPos().y, 0.0f }, hitDistance))
     {
         glm::vec3 target = ray.getPoint(hitDistance);
         _direction = glm::normalize(target - _transform->getPos());
@@ -118,31 +118,38 @@ void Player::movement(float elapsedTime)
     }
 }
 
-void Player::handleShoot()
+void Player::handleShoot(float dt)
 {
-    if (mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_1] == Mouse::eButtonState::CLICK_MAINTAINED)
+    this->_elapsedTime += dt;
+
+    if (this->_elapsedTime > this->_fireRate)
     {
-        Entity*                 bullet;
-        sScriptComponent*       bulletScripts;
-        Projectile*             projectileScript;
-
-        bullet = Instantiate("PLAYER_BULLET");
-        bulletScripts = bullet->getComponent<sScriptComponent>();
-        projectileScript = bulletScripts->getScript<Projectile>("Projectile");
-
-        projectileScript->_projectileTransform->setPos(_transform->getPos());
-
-        projectileScript->_projectileTransform->translate(glm::vec3(0.0f, -((_render->getModel()->getMin().y * _transform->getScale().y) / 2.0f), 0.0f));
-
-        projectileScript->_damage = _damage;
-        projectileScript->followDirection({_direction.x, 0.0f, _direction.z});
-
-#if (ENABLE_SOUND)
-        if (_shootSound->soundID != -1 && !SoundManager::getInstance()->isSoundPlaying(_shootSound->soundID))
+        this->_elapsedTime = 0;
+        
+        if (mouse.isPressed(Mouse::eButton::MOUSE_BUTTON_1))
         {
-            SoundManager::getInstance()->playSound(_shootSound->soundID);
+            Entity*                 bullet;
+            sScriptComponent*       bulletScripts;
+            Projectile*             projectileScript;
+
+            bullet = Instantiate("PLAYER_BULLET");
+            bulletScripts = bullet->getComponent<sScriptComponent>();
+            projectileScript = bulletScripts->getScript<Projectile>("Projectile");
+
+            projectileScript->_projectileTransform->setPos(_transform->getPos());
+
+            projectileScript->_projectileTransform->translate(glm::vec3(0.0f, -((_render->getModel()->getMin().y * _transform->getScale().y) / 2.0f), 0.0f));
+
+            projectileScript->_damage = _damage;
+            projectileScript->followDirection({ _direction.x, 0.0f, _direction.z });
+
+            #if (ENABLE_SOUND)
+            if (_shootSound->soundID != -1 && !SoundManager::getInstance()->isSoundPlaying(_shootSound->soundID))
+            {
+                SoundManager::getInstance()->playSound(_shootSound->soundID);
+            }
+            #endif
         }
-#endif
     }
 }
 

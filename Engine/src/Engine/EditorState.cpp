@@ -178,7 +178,7 @@ void    EditorState::handleObjectSelection()
     if (mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_1] == Mouse::eButtonState::CLICK_PRESSED)
     {
         Entity* selectedEntity;
-        auto& cursor = mouse.getCursor();
+        auto& cursor = mouse.getCursor();   
 
         Ray ray = _camera.screenPosToRay((float)cursor.getX(), (float)cursor.getY());
         Physics::raycast(ray, &selectedEntity);
