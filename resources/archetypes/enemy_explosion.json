@@ -46,7 +46,7 @@
             "r" : 1
          },
          "ignore_raycast" : false,
-         "materials" : [ "particles_explosion.mat" ],
+         "materials" : [ "cube_green.mat" ],
          "model" : "resources/models/characters/enemy.DAE",
          "texture" : "",
          "type" : "BOX"

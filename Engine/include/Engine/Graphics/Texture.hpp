@@ -32,8 +32,11 @@ public:
                                             GLint internalFormat = GL_RGBA,
                                             GLint format = GL_RGBA,
                                             GLenum type = GL_UNSIGNED_BYTE,
-                                            GLint filter = GL_LINEAR,
-                                            GLint wrap = GL_CLAMP_TO_EDGE);
+                                            uint32_t mipmapLevels = 1,
+                                            GLint minFilter = GL_LINEAR,
+                                            GLint maxFilter = GL_LINEAR,
+                                            GLint wrapS = GL_CLAMP_TO_EDGE,
+                                            GLint wrapT = GL_CLAMP_TO_EDGE);
 
     bool                                    loadFromFile(const std::string& fileName) override final;
 
@@ -45,6 +48,8 @@ public:
     unsigned char*                          getData() const;
     int                                     getComponentsNumber() const;
     GLuint                                  getNative();
+
+    void                                    generateMipmaps(uint32_t levels);
 
     static Resource::eType      getResourceType() { return Resource::eType::TEXTURE; }
 

@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <array>
 #include <memory>
 #include <unordered_map>
 #include <glm/mat4x4.hpp>
@@ -57,6 +58,7 @@ private:
     ShaderProgram*                      _currentShaderProgram{nullptr};
 
     ShaderProgram                       _finalBlendingShaderProgram;
+    ShaderProgram                       _hdrShaderProgram;
     ShaderProgram                       _blurShaderProgram;
     // Buffer containing the plane vertices used for final blending and blur
     // Should fit the size of the screen
@@ -76,13 +78,9 @@ private:
     Light                               _UILight;
 
     Framebuffer                         _frameBuffer;
-    // Ping-pong frame buffers and color attachments
-    Framebuffer                         _blurFrameBuffers[2];
-    std::unique_ptr<Texture>            _blurColorAttachments[2];
-    Texture*                            _lastBlurColorAttachment{nullptr};
 
-    std::unique_ptr<Texture>            _sceneColorAttachment;
-    std::unique_ptr<Texture>            _sceneBrightColorAttachment;
+    // We have one frame buffer and two color attachments for each blur kernel size
+    std::vector<std::array<Framebuffer, 2>>   _blurFramebuffers;
 
     std::unique_ptr<Texture>            _depthAttachment;
 };

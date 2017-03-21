@@ -33,16 +33,28 @@ Texture::~Texture()
     glDeleteTextures(1, &_texture);
 }
 
-std::unique_ptr<Texture>    Texture::create(GLsizei width, GLsizei height, GLint internalFormat, GLint format, GLenum type, GLint filter, GLint wrap)
+std::unique_ptr<Texture>    Texture::create(GLsizei width,
+                                GLsizei height, GLint internalFormat,
+                                GLint format,
+                                GLenum type,
+                                uint32_t mipmapLevels,
+                                GLint minFilter,
+                                GLint maxFilter,
+                                GLint wrapS,
+                                GLint wrapT)
 {
     std::unique_ptr<Texture> texture = std::make_unique<Texture>(width, height);
 
     texture->bind();
-    glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, type, NULL);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap);
+    for (uint32_t i = 0; i < mipmapLevels; ++i)
+    {
+        glTexImage2D(GL_TEXTURE_2D, i, internalFormat, width, height, 0, format, type, NULL);
+    }
+    glGenerateMipmap(GL_TEXTURE_2D);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilter);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, maxFilter);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapS);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapT);
     texture->unBind();
 
     return (std::move(texture));

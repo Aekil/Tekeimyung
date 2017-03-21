@@ -15,22 +15,29 @@ public:
     Framebuffer();
     ~Framebuffer();
 
+    Framebuffer(Framebuffer&& framebuffer);
+    Framebuffer& operator=(Framebuffer&& framebuffer);
+
     void                        bind(GLenum target) const;
     void                        unBind(GLenum target) const;
     void                        use(GLenum target) const;
 
     void                        removeColorAttachments();
 
-    void                        addColorAttachment(Texture& texture);
-    void                        setDepthAttachment(Texture& texture);
+    void                        addColorAttachment(std::unique_ptr<Texture> texture);
+    void                        setDepthAttachment(std::unique_ptr<Texture> texture);
 
     bool                        isComplete() const;
 
+    const std::vector<std::unique_ptr<Texture> >& getColorAttachments() const;
+
 private:
-    void                        setAttachment(GLuint attachment, Texture& texture);
+    void                        setAttachment(GLuint attachmentId, std::unique_ptr<Texture>& texture);
 
 private:
     GLuint                      _fbo;
 
-    std::vector<GLuint>         _colorAttachments;
+    std::vector<std::unique_ptr<Texture> > _colorAttachments;
+    std::vector<GLuint >        _colorAttachmentsIds;
+    std::unique_ptr<Texture>    _depthStencilAttachment{nullptr};
 };

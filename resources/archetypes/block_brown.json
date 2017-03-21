@@ -21,12 +21,12 @@
          "animations" : [],
          "color" : {
             "a" : 1,
-            "b" : 1,
-            "g" : 1,
-            "r" : 1
+            "b" : 0,
+            "g" : 0,
+            "r" : 0
          },
          "ignore_raycast" : false,
-         "materials" : [ "MAT_Brown" ],
+         "materials" : [ "geometry_default.mat" ],
          "model" : "resources/models/blocks/block_brown.DAE",
          "texture" : "",
          "type" : "MESH"

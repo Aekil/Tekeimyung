@@ -27,13 +27,13 @@
                      "associated_wave" : 0,
                      "spawnable_entities" : [
                         {
-                           "amount" : 1,
-                           "spawn_time" : 1.5,
+                           "amount" : 3,
+                           "spawn_time" : 1,
                            "type" : "ENEMY"
                         },
                         {
-                           "amount" : 1,
-                           "spawn_time" : 3,
+                           "amount" : 3,
+                           "spawn_time" : 1.5,
                            "type" : "ENEMY_TANK"
                         }
                      ]
