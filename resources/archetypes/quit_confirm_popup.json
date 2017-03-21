@@ -20,8 +20,8 @@
       },
       "sTransformComponent" : {
          "pos" : {
-            "x" : 745,
-            "y" : 384.5,
+            "x" : 960,
+            "y" : 508.5,
             "z" : -1
          },
          "rotation" : {
@@ -30,22 +30,22 @@
             "z" : 0
          },
          "scale" : {
-            "x" : 43,
-            "y" : 24.799999237060547,
+            "x" : 48,
+            "y" : 20.340000152587891,
             "z" : 1
          }
       },
       "sUiComponent" : {
          "horizontal_alignment" : "MIDDLE",
-         "layer" : 0,
+         "layer" : 1,
          "offset" : {
             "x" : 0,
             "y" : 0
          },
-         "percentage_size" : false,
+         "percentage_size" : true,
          "size" : {
-            "x" : 0.10000000149011612,
-            "y" : 0.10000000149011612
+            "x" : 0.25,
+            "y" : 0.20000000298023224
          },
          "vertical_alignment" : "MIDDLE"
       }

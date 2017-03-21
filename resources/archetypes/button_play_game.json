@@ -1,0 +1,8 @@
+{
+   "components" : {
+      "sNameComponent" : {
+         "name" : "BUTTON_PLAY_GAME"
+      }
+   },
+   "name" : "BUTTON_PLAY_GAME"
+}
