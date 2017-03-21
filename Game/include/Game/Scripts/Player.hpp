@@ -27,6 +27,7 @@ private:
     void handleShoot(float dt);
 
     float buildableRadius;
+    void levelUp();
 
 public:
     void start() override final;
@@ -54,6 +55,8 @@ private:
     int _experience = 0;
     float _fireRate = 0.5f;
     float _elapsedTime = 0.0f;
+    int _nextLevelUp = 100;
+    int _level = 0;
 
     WaveManager* _waveManager{nullptr};
     GameManager* _gameManager{nullptr};
