@@ -182,6 +182,4 @@ void Player::levelUp()
     this->_nextLevelUp += 250;
 
     this->_level++;
-
-    LOG_DEBUG("%d", this->_level);
 }
