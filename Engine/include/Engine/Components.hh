@@ -475,6 +475,8 @@ BufferPool::SubBuffer*  getBuffer(BufferPool* bufferPool)
 }
 
 Text text;
+eHorizontalAlignment    horizontalAlignment = eHorizontalAlignment::MIDDLE;
+eVerticalAlignment      verticalAlignment = eVerticalAlignment::MIDDLE;
 glm::vec2 offset; // Offset to align text
 
 private:

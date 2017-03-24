@@ -1500,6 +1500,11 @@ bool    ComponentFactory<sTextComponent>::updateEditor(const std::string& entity
         }
     }
 
+    // Editr alignment
+    {
+        changed |= Helper::updateComboEnum<eHorizontalAlignment>("Horizontal alignment", component->horizontalAlignment);
+        changed |= Helper::updateComboEnum<eVerticalAlignment>("Vertical alignment", component->verticalAlignment);
+    }
     if (changed)
     {
         sUiComponent* uiComp = component->entity->getComponent<sUiComponent>();
