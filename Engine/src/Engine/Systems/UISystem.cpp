@@ -106,6 +106,7 @@ void    UISystem::handleAlignment(EntityManager& em, Entity* entity, bool forceU
             glm::vec3 pos = transform->getPos();
             pos.x += windowWidth * ui->offset.x / 100.0f;
             pos.y += windowHeight * ui->offset.y / 100.0f;
+            pos.z = 0.0f;
             transform->setPos(pos);
         }
     }

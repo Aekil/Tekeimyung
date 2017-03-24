@@ -10,6 +10,7 @@
 #include <Engine/Graphics/Light.hpp>
 #include <Engine/Graphics/MeshInstance.hpp>
 #include <Engine/Graphics/ModelInstance.hpp>
+#include <Engine/Graphics/UI/Text.hpp>
 #include <Engine/Graphics/UniformBuffer.hpp>
 #include <Engine/Utils/Logger.hpp>
 
@@ -33,6 +34,15 @@ struct sRenderableMesh {
     int layer;
 };
 
+struct sRenderableText {
+    Text text;
+
+    // Layer to sort UI
+    int layer;
+
+    glm::vec2 pos;
+};
+
 class RenderQueue {
 public:
     RenderQueue() = default;
@@ -48,6 +58,9 @@ public:
                                                 uint32_t uboOffset = 0,
                                                 uint32_t uboSize = 0,
                                                 uint32_t instancesNb = 0);
+    void                            addText(const Text& text,
+                                                int layer,
+                                                const glm::vec2& pos);
     void                            addLight(Light* light);
     void                            clear();
 
@@ -62,6 +75,9 @@ public:
 
     std::vector<sRenderableMesh>& getUITransparentMeshs();
     uint32_t getUITransparentMeshsNb() const;
+
+    std::vector<sRenderableText>& getTexts();
+    uint32_t getTextsNb() const;
 
     std::vector<Light*>& getLights();
     uint32_t getLightsNb() const;
@@ -78,6 +94,9 @@ private:
 
     std::vector<sRenderableMesh>    _uiTransparentMeshs{MAX_RENDERABLE_MESHS};// TODO: Change static size
     uint32_t                        _uiTransparentMeshsNb{0};
+
+    std::vector<sRenderableText>    _texts{MAX_RENDERABLE_MESHS};// TODO: Change static size
+    uint32_t                        _textsNb{0};
 
     std::vector<Light*>             _lights{MAX_LIGHTS};// TODO: Change static size
     uint32_t                        _lightsNb{0};

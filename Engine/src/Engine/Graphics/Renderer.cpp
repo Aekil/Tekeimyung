@@ -7,9 +7,11 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <Engine/Graphics/UI/Font.hpp>
 #include <Engine/Graphics/Material.hpp>
 #include <Engine/Utils/Exception.hpp>
 #include <Engine/Utils/Logger.hpp>
+#include <Engine/Utils/ResourceManager.hpp>
 #include <Engine/Window/GameWindow.hpp>
 
 #include <Engine/Graphics/Renderer.hpp>
@@ -75,6 +77,7 @@ bool    Renderer::initialize()
             shaderProgram.attachShader(GL_FRAGMENT_SHADER, "resources/shaders/shader.frag", options);
             shaderProgram.link();
         }
+        initTextRendering();
     }
     catch(const Exception& e)
     {
@@ -107,7 +110,7 @@ void    Renderer::render(Camera* camera, RenderQueue& renderQueue)
 {
 
 
-    // Scene objects
+    // Render scene objects
     {
         if (camera)
         {
@@ -153,7 +156,7 @@ void    Renderer::render(Camera* camera, RenderQueue& renderQueue)
     // Disable blending for opaque objects
     glDisable(GL_BLEND);
 
-    // UI objects
+    // Render UI objects
     {
         // Use this light for UI
         std::vector<Light*> lights = {&_UILight};
@@ -168,10 +171,19 @@ void    Renderer::render(Camera* camera, RenderQueue& renderQueue)
 
         renderOpaqueObjects(renderQueue.getUIOpaqueMeshs(), renderQueue.getUIOpaqueMeshsNb(), lights, 1);
 
+
         // Enable blend to blend transparent ojects and particles
         glEnable(GL_BLEND);
         renderTransparentObjects(renderQueue.getUITransparentMeshs(), renderQueue.getUITransparentMeshsNb(), lights, 1);
+    }
 
+    // Render texts
+    {
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        _currentShaderProgram = &_textShaderProgram;
+        _currentShaderProgram->use();
+        glUniform1i(_currentShaderProgram->getUniformLocation("textImage"), 0);
+        renderTexts(renderQueue.getTexts(), renderQueue.getTextsNb());
     }
 
     // Enable depth buffer write and depth test for non-UI objects
@@ -340,6 +352,69 @@ void    Renderer::renderTransparentObjects(std::vector<sRenderableMesh>& meshs,
     }
 }
 
+void    Renderer::renderTexts(std::vector<sRenderableText>& texts,
+                                uint32_t textsNb)
+{
+    if (textsNb == 0)
+        return;
+
+    _UILight.bind();
+
+    for (uint32_t i = 0; i < textsNb; ++i)
+    {
+        auto& renderText = texts[i];
+        auto& text = renderText.text;
+
+        //material->bind();
+        //renderableMesh.ubo->bind(renderableMesh.uboOffset, renderableMesh.uboSize);
+        Font* font = ResourceManager::getInstance()->getResource<Font>("resources/fonts/arial.ttf");
+        float fontScale = (float)text.getSize() / 200.0f;
+        ASSERT(font != nullptr, "FAIL")
+        glm::vec2 pos = renderText.pos;
+        _textUBO.update((void*)&text.getColor(), sizeof(glm::vec4), sizeof(glm::mat4));
+
+        for (uint32_t j = 0; j < text.getContent().size(); ++j)
+        {
+            char c = text.getContent()[j];
+            if (c == '\n')
+            {
+                pos.x = renderText.pos.x;
+                pos.y -= text.getSize();
+                continue;
+            }
+
+            auto char_ = font->getChar(c);
+            if (!char_)
+                continue;
+
+            glm::mat4 translate = glm::translate(glm::mat4(1.0f), {
+                pos.x + (char_->bearing.x * fontScale),
+                pos.y - (char_->texture.getHeight() - char_->bearing.y) * fontScale,
+                0.0f
+            });
+            glm::mat4 scale = glm::scale(glm::mat4(1.0f), {
+                char_->texture.getWidth() * fontScale,
+                char_->texture.getHeight() * fontScale,
+                1.0f
+            });
+
+            //glm::mat4 transform = glm::mat4(1.0f);
+            glm::mat4 transform = translate * scale;
+            _textUBO.update(&transform, sizeof(glm::mat4), 0);
+            _textUBO.bind();
+            _textPlane.bind();
+            char_->texture.bind();
+
+            glDrawElements(GL_TRIANGLES,
+                            6,
+                            GL_UNSIGNED_INT,
+                            0);
+            pos.x += (char_->advance >> 6) * fontScale;
+        }
+
+    }
+}
+
 Camera* Renderer::getCurrentCamera()
 {
     return (_currentCamera);
@@ -348,4 +423,39 @@ Camera* Renderer::getCurrentCamera()
 void    Renderer::setCurrentCamera(Camera* camera)
 {
     _currentCamera = camera;
+}
+
+void    Renderer::initTextRendering()
+{
+    // Set alignment to 1 because fonts textures pixels only used 1 byte
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+    _textShaderProgram.attachShader(GL_VERTEX_SHADER, "resources/shaders/shader.vert", {});
+    _textShaderProgram.attachShader(GL_FRAGMENT_SHADER, "resources/shaders/shader-text.frag", {});
+    _textShaderProgram.link();
+
+    // Init text plane buffer
+    {
+       Vertex vertexs[] {
+            //1. pos
+            //2. color
+            //3. normal
+            //4. texture uv
+            {glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(0.0f, 0.0f)},  // Top Left
+            {glm::vec3(1.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(1.0f, 0.0f)},  // Top Right
+            {glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(0.0f, 1.0f)},  // Bottom Left
+            {glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(1.0f, 1.0f)}  // Bottom Right
+        };
+
+        GLuint indices[] = {
+            0, 2, 3,
+            3, 1, 0
+        };
+
+        _textPlane.updateData(vertexs, 4, indices, 6);
+    }
+
+    _textUBO.init((uint32_t)(sizeof(glm::mat4) + sizeof(glm::vec4)),
+                    GL_SHADER_STORAGE_BUFFER);
+    _textUBO.setBindingPoint(3);
 }

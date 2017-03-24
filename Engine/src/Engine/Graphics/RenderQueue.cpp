@@ -65,6 +65,16 @@ void    RenderQueue::addUIModel(ModelInstance* modelInstance,
     }
 }
 
+void    RenderQueue::addText(const Text& text,
+                                int layer,
+                                const glm::vec2& pos)
+{
+    sRenderableText renderableText = { text, layer, pos };
+    CHECK_QUEUE_NOT_FULL(_textsNb);
+    _texts[_textsNb] = renderableText;
+    ++_textsNb;
+}
+
 void    RenderQueue::addLight(Light* light)
 {
     if (_lightsNb >= MAX_LIGHTS)
@@ -90,6 +100,9 @@ void    RenderQueue::clear()
 
     std::memset(_uiTransparentMeshs.data(), 0, _uiTransparentMeshsNb * sizeof(void*));
     _uiTransparentMeshsNb = 0;
+
+    std::memset(_texts.data(), 0, _textsNb * sizeof(void*));
+    _textsNb = 0;
 
     std::memset(_lights.data(), 0, _lightsNb * sizeof(void*));
     _lightsNb = 0;}
@@ -132,6 +145,16 @@ std::vector<sRenderableMesh>& RenderQueue::getUITransparentMeshs()
 uint32_t    RenderQueue::getUITransparentMeshsNb() const
 {
     return (_uiTransparentMeshsNb);
+}
+
+std::vector<sRenderableText>& RenderQueue::getTexts()
+{
+    return (_texts);
+}
+
+uint32_t    RenderQueue::getTextsNb() const
+{
+    return (_textsNb);
 }
 
 std::vector<Light*>& RenderQueue::getLights()

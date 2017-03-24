@@ -16,6 +16,7 @@
 #include <Engine/Utils/ResourceManager.hpp>
 #include <Engine/Systems/UISystem.hpp>
 #include <Engine/Graphics/Renderer.hpp>
+#include <Engine/Graphics/UI/Font.hpp>
 #include <Engine/Core/ScriptFactory.hpp>
 #include <Engine/EntityFactory.hpp>
 #include <Engine/ComponentFactory.hpp>
@@ -1400,6 +1401,77 @@ bool    ComponentFactory<sUiComponent>::updateEditor(const std::string& entityTy
     if (changed)
     {
         component->needUpdate = true;
+    }
+
+    return (changed);
+}
+
+
+/*
+** sTextComponent
+*/
+
+sComponent* ComponentFactory<sTextComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
+{
+    sTextComponent*  component;
+
+    component = new sTextComponent();
+
+    component->text.setContent(json.getString("content", ""));
+    component->text.setColor(json.getColor4f("color", {1.0f, 1.0f, 1.0f, 1.0f}));
+    component->text.setSize(json.getUInt("size", 10));
+
+    return component;
+}
+
+JsonValue&    ComponentFactory<sTextComponent>::saveToJson(const std::string& entityType, const sComponent* savedComponent, JsonValue* toJson)
+{
+    JsonValue& json = toJson ? *toJson : _componentsJson[entityType];
+    const sTextComponent* component = static_cast<const sTextComponent*>(savedComponent ? savedComponent : _components[entityType]);
+
+
+    json.setString("content", component->text.getContent());
+    json.setColor4f("color", component->text.getColor());
+    json.setUInt("size", component->text.getSize());
+
+    if (component->text.getFont())
+    {
+        json.setString("font_name", component->text.getFont()->getName());
+    }
+
+    return (json);
+}
+
+bool    ComponentFactory<sTextComponent>::updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity)
+{
+    sTextComponent* component = static_cast<sTextComponent*>(entityComponent ? entityComponent : _components[entityType]);
+    *savedComponent = component;
+    bool changed = false;
+
+    // Edit text content
+    {
+        std::vector<char> textVec(component->text.getContent().cbegin(), component->text.getContent().cend());
+        textVec.push_back(0);
+        textVec.resize(64);
+
+        if (ImGui::InputTextMultiline("Text", textVec.data(), textVec.size()))
+        {
+            component->text.setContent(textVec.data());
+            changed = true;
+        }
+    }
+
+    // Edit text size
+    {
+        int textSize = component->text.getSize();
+        if (ImGui::InputInt("Size", &textSize))
+        {
+            changed = true;
+
+            textSize = std::max(textSize, 0);
+            textSize = std::min(textSize, 200);
+            component->text.setSize(textSize);
+        }
     }
 
     return (changed);
