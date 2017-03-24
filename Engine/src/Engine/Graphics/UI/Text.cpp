@@ -8,7 +8,7 @@ Text::Text(const Text& text)
 {
     _font = text._font;
     _content = text._content;
-    _size = text._size;
+    _fontSize = text._fontSize;
     _color = text._color;
 }
 
@@ -16,7 +16,7 @@ Text& Text::operator=(const Text& text)
 {
     _font = text._font;
     _content = text._content;
-    _size = text._size;
+    _fontSize = text._fontSize;
     _color = text._color;
 
     return (*this);
@@ -32,9 +32,9 @@ const std::string&  Text::getContent() const
     return (_content);
 }
 
-uint32_t    Text::getSize() const
+uint32_t    Text::getFontSize() const
 {
-    return (_size);
+    return (_fontSize);
 }
 
 const glm::vec4&    Text::getColor() const
@@ -52,9 +52,9 @@ void    Text::setContent(const std::string& content)
     _content = content;
 }
 
-void    Text::setSize(uint32_t size)
+void    Text::setFontSize(uint32_t fontSize)
 {
-    _size = size;
+    _fontSize = fontSize;
 }
 
 void    Text::setColor(const glm::vec4& color)

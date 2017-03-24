@@ -20,17 +20,17 @@ public:
 
     const Font*         getFont() const;
     const std::string&  getContent() const;
-    uint32_t            getSize() const;
+    uint32_t            getFontSize() const;
     const glm::vec4&    getColor() const;
 
     void                setFont(Font* font);
     void                setContent(const std::string& content);
-    void                setSize(uint32_t size);
+    void                setFontSize(uint32_t fontSize);
     void                setColor(const glm::vec4& color);
 
 private:
     Font*               _font{nullptr};
     std::string         _content;
-    uint32_t            _size{10};
+    uint32_t            _fontSize{10};
     glm::vec4           _color{1.0f};
 };

@@ -1419,7 +1419,7 @@ sComponent* ComponentFactory<sTextComponent>::loadFromJson(const std::string& en
 
     component->text.setContent(json.getString("content", ""));
     component->text.setColor(json.getColor4f("color", {1.0f, 1.0f, 1.0f, 1.0f}));
-    component->text.setSize(json.getUInt("size", 10));
+    component->text.setFontSize(json.getUInt("font_size", 10));
 
     return component;
 }
@@ -1432,7 +1432,7 @@ JsonValue&    ComponentFactory<sTextComponent>::saveToJson(const std::string& en
 
     json.setString("content", component->text.getContent());
     json.setColor4f("color", component->text.getColor());
-    json.setUInt("size", component->text.getSize());
+    json.setUInt("font_size", component->text.getFontSize());
 
     if (component->text.getFont())
     {
@@ -1463,14 +1463,14 @@ bool    ComponentFactory<sTextComponent>::updateEditor(const std::string& entity
 
     // Edit text size
     {
-        int textSize = component->text.getSize();
-        if (ImGui::InputInt("Size", &textSize))
+        int textSize = component->text.getFontSize();
+        if (ImGui::InputInt("Font size", &textSize))
         {
             changed = true;
 
             textSize = std::max(textSize, 0);
             textSize = std::min(textSize, 200);
-            component->text.setSize(textSize);
+            component->text.setFontSize(textSize);
         }
     }
 
