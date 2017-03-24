@@ -475,6 +475,7 @@ BufferPool::SubBuffer*  getBuffer(BufferPool* bufferPool)
 }
 
 Text text;
+glm::vec2 offset; // Offset to align text
 
 private:
 BufferPool::SubBuffer* _buffer{nullptr};

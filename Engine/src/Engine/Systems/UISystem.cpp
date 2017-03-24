@@ -109,7 +109,23 @@ void    UISystem::handleAlignment(EntityManager& em, Entity* entity, bool forceU
             pos.z = 0.0f;
             transform->setPos(pos);
         }
+
+        // Text
+        {
+            sTextComponent* textComp = entity->getComponent<sTextComponent>();
+            if (textComp)
+            {
+                alignText(textComp, size);
+            }
+        }
     }
 
     ui->needUpdate = false;
+}
+
+void    UISystem::alignText(sTextComponent* textComp, const glm::vec3& uiSize)
+{
+    // Center text
+    textComp->offset.x = -textComp->text.getSize().x / 2.0f;
+    textComp->offset.y = textComp->text.getSize().y / 2.0f;
 }

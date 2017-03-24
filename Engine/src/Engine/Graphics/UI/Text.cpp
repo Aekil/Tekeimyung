@@ -1,3 +1,4 @@
+#include <Engine/Graphics/UI/Font.hpp>
 #include <Engine/Graphics/UI/Text.hpp>
 
 Text::Text() {}
@@ -42,6 +43,42 @@ const glm::vec4&    Text::getColor() const
     return (_color);
 }
 
+const glm::vec2&    Text::getSize()
+{
+    if (_needUpdateSize)
+    {
+        _needUpdateSize = false;
+        float fontScale = (float)_fontSize / 200.0f;
+        float size_x = 0.0f;
+        _size = {0.0f, _fontSize};
+
+        for (uint32_t j = 0; j < _content.size(); ++j)
+        {
+            char c = _content[j];
+            if (c == '\n')
+            {
+                _size.y += _fontSize;
+                if (size_x > _size.x)
+                    _size.x = size_x;
+                size_x = 0.0f;
+                continue;
+            }
+
+            auto char_ = _font->getChar(c);
+            if (!char_)
+                continue;
+
+
+            size_x += (char_->advance >> 6) * fontScale;
+        }
+
+        if (size_x > _size.x)
+            _size.x = size_x;
+    }
+
+    return (_size);
+}
+
 void    Text::setFont(Font* font)
 {
     _font = font;
@@ -50,11 +87,13 @@ void    Text::setFont(Font* font)
 void    Text::setContent(const std::string& content)
 {
     _content = content;
+    _needUpdateSize = true;
 }
 
 void    Text::setFontSize(uint32_t fontSize)
 {
     _fontSize = fontSize;
+    _needUpdateSize = true;
 }
 
 void    Text::setColor(const glm::vec4& color)

@@ -369,6 +369,7 @@ void    Renderer::renderTexts(std::vector<sRenderableText>& texts,
         float fontScale = (float)text.getFontSize() / 200.0f;
         ASSERT(font != nullptr, "Text should have font")
         glm::vec2 pos = renderText.pos;
+        pos.y -= text.getFontSize();
         _textUBO.update((void*)&text.getColor(), sizeof(glm::vec4), sizeof(glm::mat4));
 
         for (uint32_t j = 0; j < text.getContent().size(); ++j)
@@ -387,7 +388,7 @@ void    Renderer::renderTexts(std::vector<sRenderableText>& texts,
 
             glm::mat4 translate = glm::translate(glm::mat4(1.0f), {
                 pos.x + (char_->bearing.x * fontScale),
-                pos.y - (char_->texture.getHeight() - char_->bearing.y) * fontScale,
+                pos.y + (char_->bearing.y) * fontScale,
                 0.0f
             });
             glm::mat4 scale = glm::scale(glm::mat4(1.0f), {
@@ -439,10 +440,10 @@ void    Renderer::initTextRendering()
             //2. color
             //3. normal
             //4. texture uv
-            {glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(0.0f, 0.0f)},  // Top Left
-            {glm::vec3(1.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(1.0f, 0.0f)},  // Top Right
-            {glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(0.0f, 1.0f)},  // Bottom Left
-            {glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(1.0f, 1.0f)}  // Bottom Right
+            {glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(0.0f, 0.0f)},  // Top Left
+            {glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(1.0f, 0.0f)},  // Top Right
+            {glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(0.0f, 1.0f)},  // Bottom Left
+            {glm::vec3(1.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(1.0f, 1.0f)}  // Bottom Right
         };
 
         GLuint indices[] = {

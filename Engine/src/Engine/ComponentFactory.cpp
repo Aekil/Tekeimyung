@@ -1479,15 +1479,14 @@ bool    ComponentFactory<sTextComponent>::updateEditor(const std::string& entity
         int textSize = component->text.getFontSize();
         if (ImGui::InputInt("Font size", &textSize))
         {
-            changed = true;
-
             textSize = std::max(textSize, 0);
             textSize = std::min(textSize, 200);
             component->text.setFontSize(textSize);
+            changed = true;
         }
     }
 
-    // Editor font name
+    // Edit font name
     {
         std::string fontName = component->text.getFont()->getId();
         if (Helper::updateComboString("Font name", ResourceManager::getInstance()->getResourcesNames<Font>(), fontName))
@@ -1497,6 +1496,16 @@ bool    ComponentFactory<sTextComponent>::updateEditor(const std::string& entity
             ASSERT(font != nullptr, "The font \"%s\" should be loaded", fontName.c_str());
 
             component->text.setFont(font);
+            changed = true;
+        }
+    }
+
+    if (changed)
+    {
+        sUiComponent* uiComp = component->entity->getComponent<sUiComponent>();
+        if (uiComp)
+        {
+            uiComp->needUpdate = true;
         }
     }
 
