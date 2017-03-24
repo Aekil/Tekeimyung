@@ -34,7 +34,7 @@ public:
 
     bool                        loadFromFile(const std::string &fileName) override;
 
-    sChar*                      getChar(char c);
+    const sChar*                getChar(char c) const;
     const std::string&          getName() const;
 
     static Resource::eType      getResourceType() { return Resource::eType::FONT; }
@@ -43,5 +43,4 @@ private:
     FT_Face                     _face;
     bool                        _loaded{false};
     std::vector<sChar>          _chars;
-    std::string                 _name;
 };

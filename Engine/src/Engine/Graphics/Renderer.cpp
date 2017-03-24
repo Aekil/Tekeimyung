@@ -365,11 +365,9 @@ void    Renderer::renderTexts(std::vector<sRenderableText>& texts,
         auto& renderText = texts[i];
         auto& text = renderText.text;
 
-        //material->bind();
-        //renderableMesh.ubo->bind(renderableMesh.uboOffset, renderableMesh.uboSize);
-        Font* font = ResourceManager::getInstance()->getResource<Font>("resources/fonts/arial.ttf");
+        const Font* font = text.getFont();
         float fontScale = (float)text.getFontSize() / 200.0f;
-        ASSERT(font != nullptr, "FAIL")
+        ASSERT(font != nullptr, "Text should have font")
         glm::vec2 pos = renderText.pos;
         _textUBO.update((void*)&text.getColor(), sizeof(glm::vec4), sizeof(glm::mat4));
 

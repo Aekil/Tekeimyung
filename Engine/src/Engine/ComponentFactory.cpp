@@ -1421,6 +1421,19 @@ sComponent* ComponentFactory<sTextComponent>::loadFromJson(const std::string& en
     component->text.setColor(json.getColor4f("color", {1.0f, 1.0f, 1.0f, 1.0f}));
     component->text.setFontSize(json.getUInt("font_size", 10));
 
+    // Load text font
+    {
+        std::string fontName = json.getString("font_name", "arial.ttf");
+        Font* font = ResourceManager::getInstance()->getResource<Font>(fontName);
+
+        if (!font)
+        {
+            EXCEPT(InternalErrorException, "Failed to get font resource \"%s\"", fontName.c_str());
+        }
+
+        component->text.setFont(font);
+    }
+
     return component;
 }
 
@@ -1436,7 +1449,7 @@ JsonValue&    ComponentFactory<sTextComponent>::saveToJson(const std::string& en
 
     if (component->text.getFont())
     {
-        json.setString("font_name", component->text.getFont()->getName());
+        json.setString("font_name", component->text.getFont()->getId());
     }
 
     return (json);
@@ -1471,6 +1484,19 @@ bool    ComponentFactory<sTextComponent>::updateEditor(const std::string& entity
             textSize = std::max(textSize, 0);
             textSize = std::min(textSize, 200);
             component->text.setFontSize(textSize);
+        }
+    }
+
+    // Editor font name
+    {
+        std::string fontName = component->text.getFont()->getId();
+        if (Helper::updateComboString("Font name", ResourceManager::getInstance()->getResourcesNames<Font>(), fontName))
+        {
+            Font* font = ResourceManager::getInstance()->getResource<Font>(fontName);
+
+            ASSERT(font != nullptr, "The font \"%s\" should be loaded", fontName.c_str());
+
+            component->text.setFont(font);
         }
     }
 

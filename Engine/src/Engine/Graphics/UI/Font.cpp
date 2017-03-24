@@ -18,7 +18,6 @@ bool    Font::loadFromFile(const std::string &fileName)
 {
     static std::unique_ptr<FT_Library> library = nullptr;
     int error;
-    _name = fileName;
 
     if (!library)
     {
@@ -64,14 +63,9 @@ bool    Font::loadFromFile(const std::string &fileName)
     return (true);
 }
 
-Font::sChar*   Font::getChar(char c)
+const Font::sChar*   Font::getChar(char c) const
 {
     if (c >= _chars.size())
         return (nullptr);
     return (&_chars[c]);
-}
-
-const std::string&  Font::getName() const
-{
-    return (_name);
 }
