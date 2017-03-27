@@ -14,16 +14,6 @@ void GameManager::start()
         }
     }
 
-    /*for (int x = 0; x < this->mapSize; x++)
-    {
-        for (int z = 0; z < this->mapSize; z++)
-        {
-            if (this->secondLayerPattern[x][z] == 1) {
-                this->Instantiate("BLOCK_GREEN", glm::vec3(x * 25, 12.5, z * 25));
-            }
-        }
-    }*/
-
     for (auto& layerPath: layerPaths)
     {
         std::vector<glm::vec3> path;

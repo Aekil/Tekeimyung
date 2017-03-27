@@ -11,6 +11,7 @@
 #include <Engine/Core/ScriptFactory.hpp>
 
 #include <Game/Scripts/Health.hpp>
+#include <Game/Attibutes/Attribute.hpp>
 
 class GameManager;
 class WaveManager;
@@ -58,8 +59,12 @@ private:
     int _nextLevelUp = 100;
     int _level = 0;
 
+    std::map<std::string, Attribute*> _attributes;
+
     WaveManager* _waveManager{nullptr};
     GameManager* _gameManager{nullptr};
+
+    std::vector<std::pair<std::string, double>> _levelUpReward;
 };
 
 REGISTER_SCRIPT(Player);

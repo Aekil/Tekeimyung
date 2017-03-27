@@ -22,6 +22,11 @@ void Player::death()
 
 void Player::start()
 {
+    this->_levelUpReward.push_back(std::make_pair<std::string, double>("FireRate", -25.0 / 100.0));
+    this->_levelUpReward.push_back(std::make_pair<std::string, double>("FireRate", -25.0 / 100.0));
+
+    this->_attributes["FireRate"] = new Attribute(1.0);
+
     setHealth(200);
     setMaxHealth(200);
     this->_transform = this->getComponent<sTransformComponent>();
@@ -122,7 +127,7 @@ void Player::handleShoot(float dt)
 {
     this->_elapsedTime += dt;
 
-    if (this->_elapsedTime > this->_fireRate)
+    if (this->_elapsedTime > this->_attributes["FireRate"]->getFinalValue())
     {
         this->_elapsedTime = 0;
         
@@ -179,7 +184,13 @@ void Player::addExperience(int xp)
 
 void Player::levelUp()
 {
+    LOG_DEBUG("LEVEL UP ");
+
     this->_nextLevelUp += 250;
 
     this->_level++;
+
+    std::pair<std::string, double> reward = this->_levelUpReward[this->_level];
+
+    this->_attributes[reward.first]->addBonus(Bonus(reward.second));
 }
