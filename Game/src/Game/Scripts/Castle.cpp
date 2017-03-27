@@ -5,8 +5,8 @@
 
 void Castle::start()
 {
-    setHealth(300);
-    setMaxHealth(300);
+    setHealth(4200);
+    setMaxHealth(4200);
 
     this->_render = getComponent<sRenderComponent>();
     this->_transform = getComponent<sTransformComponent>();
@@ -23,7 +23,7 @@ void Castle::onCollisionEnter(Entity* entity)
     if (entity->getTag() == "Enemy")
     {
         //LOG_DEBUG("Damage done");
-        this->takeDamage(150);
+        this->takeDamage(200);
 
         sScriptComponent* script = entity->getComponent<sScriptComponent>();
         Enemy* enemy = script ? script->getScript<Enemy>("Enemy") : nullptr;
