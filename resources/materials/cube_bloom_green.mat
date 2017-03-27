@@ -1,22 +1,22 @@
 {
    "ambient" : {
-      "a" : 1,
+      "a" : 0,
       "b" : 0,
       "g" : 0,
       "r" : 0
    },
    "diffuse" : {
-      "a" : 1,
+      "a" : 0,
       "b" : 0,
-      "g" : 0.23921568691730499,
+      "g" : 0,
       "r" : 0
    },
    "dst_blend" : "GL_ONE_MINUS_SRC_ALPHA",
    "face_camera" : false,
    "src_blend" : "GL_SRC_ALPHA",
    "textures" : {
-      "ambient" : "resources/sprites/cube_green_glow.png",
-      "diffuse" : "resources/sprites/cube_green_glow.png"
+      "ambient" : "resources/sprites/cube_bloom_green.png",
+      "diffuse" : "resources/sprites/cube_bloom_green.png"
    },
    "transparent" : false,
    "wireframe" : false

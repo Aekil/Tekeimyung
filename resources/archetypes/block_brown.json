@@ -26,8 +26,8 @@
             "r" : 1
          },
          "ignore_raycast" : false,
-         "materials" : [ "MAT_Brown" ],
-         "model" : "resources/models/blocks/block_brown.DAE",
+         "materials" : [ "cube_bloom_cyan.mat" ],
+         "model" : "resources/models/blocks/block.DAE",
          "texture" : "",
          "type" : "MESH"
       },
