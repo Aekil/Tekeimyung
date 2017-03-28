@@ -129,14 +129,14 @@ void Player::handleShoot(float dt)
 
     if (this->_elapsedTime > this->_attributes["FireRate"]->getFinalValue())
     {
-        this->_elapsedTime = 0;
-        
+
         if (mouse.isPressed(Mouse::eButton::MOUSE_BUTTON_1))
         {
             Entity*                 bullet;
             sScriptComponent*       bulletScripts;
             Projectile*             projectileScript;
 
+            this->_elapsedTime = 0;
             bullet = Instantiate("PLAYER_BULLET");
             bulletScripts = bullet->getComponent<sScriptComponent>();
             projectileScript = bulletScripts->getScript<Projectile>("Projectile");
