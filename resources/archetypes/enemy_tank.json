@@ -98,7 +98,7 @@
       "sScriptComponent" : {
          "scripts" : [
             {
-               "health" : 220,
+               "health" : 300,
                "name" : "Enemy",
                "speed" : 25
             }
