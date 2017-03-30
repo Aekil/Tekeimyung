@@ -154,6 +154,7 @@ void Build::setLayer(int layer)
 {
     _layer = layer;
     _currentIdx = 0;
+    _buildSecondTP = false;
 }
 
 void Build::checkBuildableZone()
