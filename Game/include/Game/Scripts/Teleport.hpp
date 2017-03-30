@@ -24,6 +24,8 @@ public:
 private:
     glm::vec3 _tpPos;
     bool _enable{false};
+
+    bool _init{false};
 };
 
 REGISTER_SCRIPT(Teleport);
