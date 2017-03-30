@@ -41,6 +41,7 @@
       },
       {
          "components" : {
+            "sDynamicComponent" : null,
             "sNameComponent" : {
                "name" : "PLAYER"
             },

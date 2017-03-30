@@ -8,5 +8,4 @@
 
 void Trap::onCollisionEnter(Entity* entity)
 {
-
 }

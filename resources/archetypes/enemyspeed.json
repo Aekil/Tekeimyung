@@ -134,7 +134,8 @@
       },
       "sTypeComponent" : {
          "type" : "CHARACTER"
-      }
+      },
+      "sDynamicComponent" : null
    },
    "name" : "ENEMY_SPEED",
    "tag" : "Enemy"

@@ -53,18 +53,19 @@ private:
     int _damage;
     float _speed;
     tEventSound* _shootSound = nullptr;
+
     int _experience = 0;
     float _fireRate = 0.5f;
     float _elapsedTime = 0.0f;
     int _nextLevelUp = 100;
-    int _level = 0;
+    int _level = 1;
 
     std::map<std::string, Attribute*> _attributes;
 
-    WaveManager* _waveManager{nullptr};
-    GameManager* _gameManager{nullptr};
+    WaveManager* _waveManager{ nullptr };
+    GameManager* _gameManager{ nullptr };
 
-    std::vector<std::pair<std::string, double>> _levelUpReward;
+    std::map<int, std::pair<std::string, double>> _levelUpReward;
 };
 
 REGISTER_SCRIPT(Player);

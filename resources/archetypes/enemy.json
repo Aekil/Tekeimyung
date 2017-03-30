@@ -136,7 +136,8 @@
       },
       "sTypeComponent" : {
          "type" : "CHARACTER"
-      }
+      },
+      "sDynamicComponent" : null
    },
    "name" : "ENEMY",
    "tag" : "Enemy"

@@ -631,3 +631,23 @@ std::unique_ptr<ModelInstance> _cameraView = nullptr;
 // so we can't use a model from GeometryFactory and just scale it
 std::unique_ptr<Geometry> _cameraPerspective = nullptr;
 END_COMPONENT(sCameraComponent)
+
+
+START_COMPONENT(sDynamicComponent)
+virtual sComponent* clone()
+{
+    sDynamicComponent* component = new sDynamicComponent();
+    component->update(this);
+
+    return (component);
+}
+
+virtual void update(sDynamicComponent* component)
+{
+}
+
+virtual void update(sComponent* component)
+{
+    update(static_cast<sDynamicComponent*>(component));
+}
+END_COMPONENT(sDynamicComponent)

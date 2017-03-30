@@ -22,8 +22,8 @@ void Player::death()
 
 void Player::start()
 {
-    this->_levelUpReward.push_back(std::make_pair<std::string, double>("FireRate", -25.0 / 100.0));
-    this->_levelUpReward.push_back(std::make_pair<std::string, double>("FireRate", -25.0 / 100.0));
+    this->_levelUpReward[2] = std::make_pair<std::string, double>("FireRate", -25.0 / 100.0);
+    this->_levelUpReward[3] = std::make_pair<std::string, double>("FireRate", -25.0 / 100.0);
 
     this->_attributes["FireRate"] = new Attribute(1.0);
 
@@ -184,7 +184,7 @@ void Player::addExperience(int xp)
 
 void Player::levelUp()
 {
-    LOG_DEBUG("LEVEL UP ");
+    LOG_DEBUG("Level up");
 
     this->_nextLevelUp += 250;
 

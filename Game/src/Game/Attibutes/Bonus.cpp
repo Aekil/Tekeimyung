@@ -4,7 +4,6 @@
 
 Bonus::Bonus(double baseValue) : _value(baseValue)
 {
-    LOG_DEBUG("%f", baseValue);
 }
 
 Bonus::~Bonus()

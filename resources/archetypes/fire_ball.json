@@ -114,7 +114,8 @@
       },
       "sTypeComponent" : {
          "type" : "OBJECT"
-      }
+      },
+      "sDynamicComponent" : null
    },
    "name" : "FIRE_BALL",
    "tag" : "Projectile"
