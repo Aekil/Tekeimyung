@@ -15,5 +15,11 @@ void Trap::onCollisionEnter(Entity* entity)
         Enemy* enemy = script ? script->getScript<Enemy>("Enemy") : nullptr;
 
         enemy->takeDamage(this->damage);
+        this->usage--;
+
+        if (this->usage <= 0)
+        {
+            this->Destroy();
+        }
     }
 }
