@@ -59,6 +59,10 @@ public:
     void                                handleClose(GLFWwindow* window);
     void                                registerCloseHandler(void (*closeHandler)(void*), void* data = nullptr);
 
+    GameStateManager*                   getGameStateManager() const
+    {
+        return (this->_gameStateManager);
+    }
 private:
     static void                         closeCallback(GLFWwindow* window);
     static void                         sizeCallback(GLFWwindow* window, int width, int height);
@@ -83,7 +87,6 @@ private:
                                                     GLenum severity, GLsizei length,
                                                     const GLchar* message, const void* userParam);
     void                                initDebugOutput();
-
 private:
     GLFWmonitor*                        _monitor;
     GLFWwindow*                         _window;

@@ -3,6 +3,7 @@
 */
 
 #include <Engine/EntityFactory.hpp>
+#include <Engine/Utils/LevelLoader.hpp>
 
 #include <Game/Scripts/Build.hpp>
 #include <Game/Scripts/Spawner.hpp>
@@ -67,6 +68,13 @@ void        WaveManager::update(float dt)
         if (_currentWave + 1 < _waves)
         {
             handleEndWave();
+        }
+        else
+        {
+            auto    gameStateManager = GameWindow::getInstance()->getGameStateManager();
+            auto    defeatState = LevelLoader::getInstance()->createLevelState("WinScreen", gameStateManager);
+
+            gameStateManager->addState(defeatState);
         }
     }
 }
