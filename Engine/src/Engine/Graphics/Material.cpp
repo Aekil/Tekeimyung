@@ -140,6 +140,8 @@ bool    Material::isModelMaterial() const
 
 void    Material::setTexture(Texture::eType type, Texture* texture)
 {
+    _optionsFlagDirty = true;
+    getOptions();
     _textures[type] = texture;
     needUpdate();
 }
@@ -250,6 +252,7 @@ int     Material::getOptions()
 {
     if (_optionsFlagDirty)
     {
+        _options = 0;
         if (_faceCamera)
             _options |= eOption::FACE_CAMERA;
         if (_textures[Texture::eType::AMBIENT] != nullptr)
