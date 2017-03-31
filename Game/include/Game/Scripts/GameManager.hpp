@@ -7,12 +7,6 @@
 #include <Engine/Core/BaseScript.hpp>
 #include <Engine/Core/ScriptFactory.hpp>
 
-struct sModifier
-{
-    std::string attribute;
-    int value;
-};
-
 class GameManager final : public BaseScript
 {
 public:
@@ -82,7 +76,6 @@ public:
     // Store paths based on tiles real position
     std::vector<std::vector<glm::vec3>> paths;
 
-    std::map<std::string, std::vector<sModifier>> _upgradeLevelsByArchetype;
 public:
     void start() override final;
     void update(float dt) override final;
