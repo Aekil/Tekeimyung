@@ -41,10 +41,12 @@ void    CollisionSystem::update(EntityManager &em, float elapsedTime)
 
                         if (rigidBody->collisionsEnabled && colliding)
                         {
-                            if ((*it)->getComponent<sSphereColliderComponent>() != nullptr && !(*it)->getComponent<sSphereColliderComponent>()->isTrigger
+                            if (((*it)->getComponent<sSphereColliderComponent>() != nullptr && !(*it)->getComponent<sSphereColliderComponent>()->isTrigger
                                 || (*it)->getComponent<sBoxColliderComponent>() != nullptr && !(*it)->getComponent<sBoxColliderComponent>()->isTrigger)
+                                && ((entity->getComponent<sSphereColliderComponent>() != nullptr && !entity->getComponent<sSphereColliderComponent>()->isTrigger)
+                                    || entity->getComponent<sBoxColliderComponent>() != nullptr && !entity->getComponent<sBoxColliderComponent>()->isTrigger))
                             {
-                                //LOG_DEBUG("NOT TRIGGER");
+                                rigidBody->velocity = glm::vec3(0.0f);
                             }
 
                             if (rigidBody->collisions.find((*it)->id) == rigidBody->collisions.end() || rigidBody->collisions[(*it)->id] == eCollisionState::NO_COLLISION)
