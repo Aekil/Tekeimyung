@@ -50,8 +50,6 @@ private:
     sRenderComponent* _render;
     sRigidBodyComponent* _rigidBody;
     bool _buildEnabled;
-    int _damage;
-    float _speed;
     tEventSound* _shootSound = nullptr;
 
     int _experience = 0;

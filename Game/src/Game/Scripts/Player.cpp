@@ -26,6 +26,8 @@ void Player::start()
     this->_levelUpReward[3] = std::make_pair<std::string, double>("FireRate", -25.0 / 100.0);
 
     this->_attributes["FireRate"] = new Attribute(1.0);
+    this->_attributes["Speed"] = new Attribute(80.0f);
+    this->_attributes["Damage"] = new Attribute(20.0f);
 
     setHealth(200);
     setMaxHealth(200);
@@ -33,8 +35,6 @@ void Player::start()
     this->_render = this->getComponent<sRenderComponent>();
     this->_rigidBody = this->getComponent<sRigidBodyComponent>();
     _buildEnabled = false;
-    _damage = 20;
-    _speed = 80.0f;
     _shootSound = EventSound::getEventByEventType(eEventSound::PLAYER_SHOOT);
 
     // Get GameManager
@@ -106,19 +106,19 @@ void Player::movement(float elapsedTime)
     {
         if (KB_P(Keyboard::eKey::S))
         {
-            _rigidBody->velocity += glm::vec3(_speed, 0.0f, _speed);
+            _rigidBody->velocity += glm::vec3(this->_attributes["Speed"]->getFinalValue(), 0.0f, this->_attributes["Speed"]->getFinalValue());
         }
         if (KB_P(Keyboard::eKey::Z))
         {
-            _rigidBody->velocity += glm::vec3(-_speed, 0.0f, -_speed);
+            _rigidBody->velocity += glm::vec3(-this->_attributes["Speed"]->getFinalValue(), 0.0f, -this->_attributes["Speed"]->getFinalValue());
         }
         if (KB_P(Keyboard::eKey::Q))
         {
-            _rigidBody->velocity += glm::vec3(-_speed, 0.0f, _speed);
+            _rigidBody->velocity += glm::vec3(-this->_attributes["Speed"]->getFinalValue(), 0.0f, this->_attributes["Speed"]->getFinalValue());
         }
         if (KB_P(Keyboard::eKey::D))
         {
-            _rigidBody->velocity += glm::vec3(_speed, 0.0f, -_speed);
+            _rigidBody->velocity += glm::vec3(this->_attributes["Speed"]->getFinalValue(), 0.0f, -this->_attributes["Speed"]->getFinalValue());
         }
     }
 }
@@ -129,7 +129,6 @@ void Player::handleShoot(float dt)
 
     if (this->_elapsedTime > this->_attributes["FireRate"]->getFinalValue())
     {
-
         if (mouse.isPressed(Mouse::eButton::MOUSE_BUTTON_1))
         {
             Entity*                 bullet;
@@ -145,7 +144,7 @@ void Player::handleShoot(float dt)
 
             projectileScript->_projectileTransform->translate(glm::vec3(0.0f, -((_render->getModel()->getMin().y * _transform->getScale().y) / 2.0f), 0.0f));
 
-            projectileScript->_damage = _damage;
+            projectileScript->_damage = this->_attributes["Damage"]->getFinalValue();
             projectileScript->followDirection({ _direction.x, 0.0f, _direction.z });
 
             #if (ENABLE_SOUND)
@@ -184,8 +183,6 @@ void Player::addExperience(int xp)
 
 void Player::levelUp()
 {
-    LOG_DEBUG("Level up");
-
     this->_nextLevelUp += 250;
 
     this->_level++;
