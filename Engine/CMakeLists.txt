@@ -12,8 +12,6 @@ file(GLOB_RECURSE imgui_source_files ${CMAKE_SOURCE_DIR}/external/imgui/*.cpp*)
 file(GLOB_RECURSE imGuizmo_source_files ${CMAKE_SOURCE_DIR}/external/imGuizmo/*.cpp*)
 file(GLOB_RECURSE jsoncpp_source_files ${CMAKE_SOURCE_DIR}/external/jsoncpp/*.cpp)
 
-#file(GLOB_RECURSE fmod_source_files ${CMAKE_SOURCE_DIR}/external/fmod/lib/*.cs*)
-#file(GLOB_RECURSE fmt_source_files ${CMAKE_SOURCE_DIR}/external/fmt/*.cc*)
 
 # Group source files into the Visual Studio tree structure
 message(STATUS "Grouping source files in the tree structure... (from ${CMAKE_CURRENT_SOURCE_DIR})")
@@ -34,14 +32,6 @@ source_group_files(${imgui_source_files})
 # Group ImGuizmo source files into the Visual Studio tree structure
 message(STATUS "Grouping ImGuizmo source files in the tree structure... (from ${CMAKE_CURRENT_SOURCE_DIR})")
 source_group_files(${imGuizmo_source_files})
-
-# Group FMOD source files into the Visual Studio tree structure
-#message(STATUS "Grouping FMOD source files in the tree structure... (from ${CMAKE_CURRENT_SOURCE_DIR})")
-#source_group_files(${fmod_source_files})
-
-# Group fmt source files into the Visual Studio tree structure
-#message(STATUS "Grouping fmt source files in the tree structure... (from ${CMAKE_CURRENT_SOURCE_DIR})")
-#source_group_files(${fmt_source_files})
 
 # add ECS includes with ECS_INCLUDE_DIRS
 include_directories(${ECS_INCLUDE_DIRS})
@@ -72,6 +62,17 @@ IF (WIN32)
 ENDIF()
 
 IF (WIN32)
+#Set Freetype directory and library on Windows
+  set(FREETYPE_INCLUDE_DIR_freetype2 ${CMAKE_SOURCE_DIR}/external/freetype/include/freetype2)
+  set(FREETYPE_LIBRARIES ${CMAKE_SOURCE_DIR}/external/freetype/lib/freetype.lib)
+  #find_library(Freetype REQUIRED)
+  ELSE()
+    find_library(Freetype REQUIRED)
+ENDIF()
+
+
+
+IF (WIN32)
 #Set FMOD directory and library on Windows
   set(FMOD_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/external/fmod/inc)
     find_library(FMOD_LIBRARY fmodL64_vc PATHS ${CMAKE_SOURCE_DIR}/external/fmod/lib)
@@ -90,6 +91,7 @@ include_directories(${CMAKE_SOURCE_DIR}/external/stb_image/)
 include_directories(${CMAKE_SOURCE_DIR}/external/imgui/)
 include_directories(${CMAKE_SOURCE_DIR}/external/imGuizmo/)
 include_directories(${CMAKE_SOURCE_DIR}/external/jsoncpp)
+include_directories(${FREETYPE_INCLUDE_DIR_freetype2})
 
 # Include dirent only for windows
 # Linux have his own header
@@ -106,7 +108,7 @@ IF (WIN32)
 ENDIF()
 
 # Link libraries with executable
-target_link_libraries(${EXECUTABLE_NAME} ECS ${GLFW_LIBRARY} ${GLEW_LIBRARY} ${OPENGL_gl_LIBRARY} ${FMOD_LIBRARY} ${assimp})
+target_link_libraries(${EXECUTABLE_NAME} ECS ${GLFW_LIBRARY} ${GLEW_LIBRARY} ${OPENGL_gl_LIBRARY} ${FMOD_LIBRARY} ${assimp} ${FREETYPE_LIBRARIES})
 
 
 # Store include dir into variable and share it with other projects through cache

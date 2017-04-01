@@ -13,6 +13,7 @@
 #include <Engine/Utils/Exception.hpp>
 #include <Engine/Utils/Logger.hpp>
 #include <Engine/Window/GameWindow.hpp>
+#include <Engine/Graphics/UI/Font.hpp>
 #include <Engine/Graphics/Geometries/Trapeze.hpp>
 #include <Engine/Graphics/Renderer.hpp>
 
@@ -314,11 +315,19 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
 
                 BufferPool::SubBuffer* buffer = getModelBuffer(transform, render);
                 sUiComponent* uiComponent = entity->getComponent<sUiComponent>();
+                sTextComponent* textComponent = entity->getComponent<sTextComponent>();
 
                 if (uiComponent)
                     _renderQueue.addUIModel(model, buffer->ubo, uiComponent->layer, buffer->offset, buffer->size, uiComponent->layer);
                 else
                     _renderQueue.addModel(model, buffer->ubo, buffer->offset, buffer->size);
+
+                if (textComponent)
+                {
+                    _renderQueue.addText(textComponent->text,
+                                        uiComponent ? uiComponent->layer : 0,
+                                        glm::vec2(transform->getPos().x, transform->getPos().y) + textComponent->offset);
+                }
 
                 addCollidersToRenderQueue(entity, transform);
             }
@@ -401,10 +410,9 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
             Renderer::getInstance()->render(nullptr, _renderQueue);
         }
     }
-
 }
 
-BufferPool::SubBuffer*  RenderingSystem::getModelBuffer(sTransformComponent* transform, sRenderComponent* render)
+BufferPool::SubBuffer*  RenderingSystem::getModelBuffer(sTransformComponent* transform,sRenderComponent* render)
 {
     BufferPool::SubBuffer* buffer = render->getModelInstance()->getBuffer(_bufferPool.get());
 

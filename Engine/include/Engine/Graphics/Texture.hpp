@@ -23,8 +23,19 @@ public:
     Texture();
     ~Texture();
     bool                                    loadFromFile(const std::string& fileName) override final;
+    void                                    load(GLsizei width,
+                                                GLsizei height,
+                                                GLint internalFormat = GL_RGBA,
+                                                GLint format = GL_RGBA,
+                                                GLenum type = GL_UNSIGNED_BYTE,
+                                                unsigned char* data = nullptr,
+                                                GLint minFilter = GL_LINEAR,
+                                                GLint maxFilter = GL_LINEAR,
+                                                GLint wrapS = GL_CLAMP_TO_EDGE,
+                                                GLint wrapT = GL_CLAMP_TO_EDGE);
 
-    void                                    bind(GLenum unit) const;
+    void                                    bind(GLenum unit = GL_TEXTURE0) const;
+    void                                    unBind() const;
 
     unsigned int                            getWidth() const;
     unsigned int                            getHeight() const;
@@ -38,6 +49,7 @@ private:
     int                                     _width;
     int                                     _height;
     unsigned char*                          _data;
+    bool                                    _stbData{false};
 
     // Components number
     int                                     _comp;

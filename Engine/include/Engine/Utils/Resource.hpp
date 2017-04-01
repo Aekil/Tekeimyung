@@ -15,7 +15,8 @@ public:
         MATERIAL = 1,
         GEOMETRY = 2,
         FILE = 3,
-        TEXTURE = 4
+        TEXTURE = 4,
+        FONT = 5
     };
 
 public:

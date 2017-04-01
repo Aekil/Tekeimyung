@@ -58,21 +58,23 @@ struct EnumManager
     if (enumString == #ENUM)                        \
         return TmpEnum::ENUM;
 
-#define CHOOSE_FUNC(arg1, arg2, arg3, ...) arg3
+#define CHOOSE_FUNC(arg1, arg2, ...) arg2
+#define CHOOSE_FUNC2(arg1, arg2, arg3, ...) arg3
+#define CHOOSE_FUNC3(arg1, arg2, arg3, arg4, ...) arg4
 
-#define GENERATE_ENUM(...) EXPEND(CHOOSE_FUNC(__VA_ARGS__,\
+#define GENERATE_ENUM(...) EXPEND(CHOOSE_FUNC2(__VA_ARGS__,\
                                             GENERATE_ENUM_2,\
                                             GENERATE_ENUM_1,\
                                             )(__VA_ARGS__))
-#define GENERATE_STRING(...) EXPEND(CHOOSE_FUNC(__VA_ARGS__,\
+#define GENERATE_STRING(...) EXPEND(CHOOSE_FUNC2(__VA_ARGS__,\
                                             GENERATE_STRING_2,\
                                             GENERATE_STRING_1,\
                                             )(__VA_ARGS__))
-#define GENERATE_CONDITION_STRING(...) EXPEND(CHOOSE_FUNC(__VA_ARGS__,\
+#define GENERATE_CONDITION_STRING(...) EXPEND(CHOOSE_FUNC2(__VA_ARGS__,\
                                                 GENERATE_CONDITION_STRING_2,\
                                                 GENERATE_CONDITION_STRING_1,\
                                                 )(__VA_ARGS__))
-#define GENERATE_CONDITION_ENUM(...) EXPEND(CHOOSE_FUNC(__VA_ARGS__,\
+#define GENERATE_CONDITION_ENUM(...) EXPEND(CHOOSE_FUNC2(__VA_ARGS__,\
                                                 GENERATE_CONDITION_ENUM_2,\
                                                 GENERATE_CONDITION_ENUM_1,\
                                                 )(__VA_ARGS__))

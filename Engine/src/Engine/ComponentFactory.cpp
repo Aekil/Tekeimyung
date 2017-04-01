@@ -16,6 +16,7 @@
 #include <Engine/Utils/ResourceManager.hpp>
 #include <Engine/Systems/UISystem.hpp>
 #include <Engine/Graphics/Renderer.hpp>
+#include <Engine/Graphics/UI/Font.hpp>
 #include <Engine/Core/ScriptFactory.hpp>
 #include <Engine/EntityFactory.hpp>
 #include <Engine/ComponentFactory.hpp>
@@ -1400,6 +1401,117 @@ bool    ComponentFactory<sUiComponent>::updateEditor(const std::string& entityTy
     if (changed)
     {
         component->needUpdate = true;
+    }
+
+    return (changed);
+}
+
+
+/*
+** sTextComponent
+*/
+
+sComponent* ComponentFactory<sTextComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
+{
+    sTextComponent*  component;
+
+    component = new sTextComponent();
+
+    component->text.setContent(json.getString("content", ""));
+    component->text.setColor(json.getColor4f("color", {1.0f, 1.0f, 1.0f, 1.0f}));
+    component->text.setFontSize(json.getUInt("font_size", 10));
+
+    // Load text font
+    {
+        std::string fontName = json.getString("font_name", "arial.ttf");
+        Font* font = ResourceManager::getInstance()->getResource<Font>(fontName);
+
+        if (!font)
+        {
+            EXCEPT(InternalErrorException, "Failed to get font resource \"%s\"", fontName.c_str());
+        }
+
+        component->text.setFont(font);
+    }
+
+    return component;
+}
+
+JsonValue&    ComponentFactory<sTextComponent>::saveToJson(const std::string& entityType, const sComponent* savedComponent, JsonValue* toJson)
+{
+    JsonValue& json = toJson ? *toJson : _componentsJson[entityType];
+    const sTextComponent* component = static_cast<const sTextComponent*>(savedComponent ? savedComponent : _components[entityType]);
+
+
+    json.setString("content", component->text.getContent());
+    json.setColor4f("color", component->text.getColor());
+    json.setUInt("font_size", component->text.getFontSize());
+
+    if (component->text.getFont())
+    {
+        json.setString("font_name", component->text.getFont()->getId());
+    }
+
+    return (json);
+}
+
+bool    ComponentFactory<sTextComponent>::updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity)
+{
+    sTextComponent* component = static_cast<sTextComponent*>(entityComponent ? entityComponent : _components[entityType]);
+    *savedComponent = component;
+    bool changed = false;
+
+    // Edit text content
+    {
+        std::vector<char> textVec(component->text.getContent().cbegin(), component->text.getContent().cend());
+        textVec.push_back(0);
+        textVec.resize(64);
+
+        if (ImGui::InputTextMultiline("Text", textVec.data(), textVec.size()))
+        {
+            component->text.setContent(textVec.data());
+            changed = true;
+        }
+    }
+
+    // Edit text size
+    {
+        int textSize = component->text.getFontSize();
+        if (ImGui::InputInt("Font size", &textSize))
+        {
+            textSize = std::max(textSize, 0);
+            textSize = std::min(textSize, 200);
+            component->text.setFontSize(textSize);
+            changed = true;
+        }
+    }
+
+    // Edit font name
+    {
+        std::string fontName = component->text.getFont()->getId();
+        if (Helper::updateComboString("Font name", ResourceManager::getInstance()->getResourcesNames<Font>(), fontName))
+        {
+            Font* font = ResourceManager::getInstance()->getResource<Font>(fontName);
+
+            ASSERT(font != nullptr, "The font \"%s\" should be loaded", fontName.c_str());
+
+            component->text.setFont(font);
+            changed = true;
+        }
+    }
+
+    // Editr alignment
+    {
+        changed |= Helper::updateComboEnum<eHorizontalAlignment>("Horizontal alignment", component->horizontalAlignment);
+        changed |= Helper::updateComboEnum<eVerticalAlignment>("Vertical alignment", component->verticalAlignment);
+    }
+    if (changed)
+    {
+        sUiComponent* uiComp = component->entity->getComponent<sUiComponent>();
+        if (uiComp)
+        {
+            uiComp->needUpdate = true;
+        }
     }
 
     return (changed);
