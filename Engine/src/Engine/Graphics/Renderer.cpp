@@ -180,10 +180,10 @@ void    Renderer::render(Camera* camera, RenderQueue& renderQueue)
     // Render texts
     {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        _currentShaderProgram = &_textShaderProgram;
-        _currentShaderProgram->use();
-        glUniform1i(_currentShaderProgram->getUniformLocation("textImage"), 0);
+        _textShaderProgram.use();
+        glUniform1i(_textShaderProgram.getUniformLocation("textImage"), 0);
         renderTexts(renderQueue.getTexts(), renderQueue.getTextsNb());
+        _currentShaderProgram = nullptr;
     }
 
     // Enable depth buffer write and depth test for non-UI objects
