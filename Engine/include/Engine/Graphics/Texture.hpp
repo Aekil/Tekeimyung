@@ -31,8 +31,8 @@ public:
                                                 unsigned char* data = nullptr,
                                                 GLint minFilter = GL_LINEAR,
                                                 GLint maxFilter = GL_LINEAR,
-                                                GLint wrapS = GL_CLAMP_TO_EDGE,
-                                                GLint wrapT = GL_CLAMP_TO_EDGE);
+                                                GLint wrapS = GL_REPEAT,
+                                                GLint wrapT = GL_REPEAT);
 
     void                                    bind(GLenum unit = GL_TEXTURE0) const;
     void                                    unBind() const;

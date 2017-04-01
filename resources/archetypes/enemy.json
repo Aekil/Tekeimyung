@@ -73,13 +73,13 @@
          ],
          "color" : {
             "a" : 1,
-            "b" : 0,
-            "g" : 0,
+            "b" : 1,
+            "g" : 1,
             "r" : 1
          },
          "geometry" : null,
          "ignore_raycast" : false,
-         "materials" : [ "geometry_default.mat" ],
+         "materials" : [ "cube_brown.mat" ],
          "model" : "resources/models/characters/enemy.DAE",
          "texture" : "",
          "type" : "BOX"

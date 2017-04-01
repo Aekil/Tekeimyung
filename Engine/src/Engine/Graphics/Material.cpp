@@ -140,8 +140,6 @@ bool    Material::isModelMaterial() const
 
 void    Material::setTexture(Texture::eType type, Texture* texture)
 {
-    _optionsFlagDirty = true;
-    getOptions();
     _textures[type] = texture;
     needUpdate();
 }
