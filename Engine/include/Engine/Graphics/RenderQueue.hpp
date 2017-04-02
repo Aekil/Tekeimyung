@@ -42,6 +42,10 @@ public:
                                                 uint32_t uboOffset = 0,
                                                 uint32_t uboSize = 0,
                                                 uint32_t instancesNb = 0);
+    void                            addMesh(MeshInstance* meshInstance, UniformBuffer* ubo,
+                                                uint32_t uboOffset = 0,
+                                                uint32_t uboSize = 0,
+                                                uint32_t instancesNb = 0);
     void                            addUIModel(ModelInstance* modelInstance,
                                                 UniformBuffer* ubo,
                                                 int layer,

@@ -23,6 +23,7 @@
 
 bool RenderingSystem::_displayAllColliders = false;
 std::unique_ptr<BufferPool> RenderingSystem::_bufferPool = nullptr;
+std::unique_ptr<BufferPool> RenderingSystem::_batchesBufferPool = nullptr;
 
 RenderingSystem::RenderingSystem(std::unordered_map<uint32_t, sEmitter*>* particleEmitters):
                                 _particleEmitters(particleEmitters)
@@ -32,12 +33,24 @@ RenderingSystem::RenderingSystem(std::unordered_map<uint32_t, sEmitter*>* partic
     if (!_bufferPool)
     {
         _bufferPool = std::make_unique<BufferPool>(50,
-                                    (uint32_t)(sizeof(glm::mat4) + sizeof(glm::vec4)),
+                                    static_cast<uint32_t>(sizeof(glm::mat4) + sizeof(glm::vec4)),
+                                    GL_SHADER_STORAGE_BUFFER);
+    }
+    if (!_batchesBufferPool)
+    {
+        _batchesBufferPool = std::make_unique<BufferPool>(1,
+                                    static_cast<uint32_t>(sizeof(glm::mat4) + sizeof(glm::vec4)) * INSTANCING_MAX,
                                     GL_SHADER_STORAGE_BUFFER);
     }
 }
 
-RenderingSystem::~RenderingSystem() {}
+RenderingSystem::~RenderingSystem()
+{
+    for (auto& batch: _batches)
+    {
+        batch.buffer->free();
+    }
+}
 
 void    RenderingSystem::attachCamera(Camera* camera)
 {
@@ -290,6 +303,11 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
 {
    _renderQueue.clear();
 
+    for (auto& batch: _batches)
+    {
+        batch.buffer->free();
+    }
+    _batches.clear();
     auto &&keyboard = GameWindow::getInstance()->getKeyboard();
 
     if (keyboard.getStateMap()[Keyboard::eKey::C] == Keyboard::eKeyState::KEY_PRESSED)
@@ -312,13 +330,17 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
                     transform->needUpdate();
                 }
 
-                BufferPool::SubBuffer* buffer = getModelBuffer(transform, render);
                 sUiComponent* uiComponent = entity->getComponent<sUiComponent>();
 
                 if (uiComponent)
+                {
+                    BufferPool::SubBuffer* buffer = getModelBuffer(transform, render);
                     _renderQueue.addUIModel(model, buffer->ubo, uiComponent->layer, buffer->offset, buffer->size);
+                }
                 else
-                    _renderQueue.addModel(model, buffer->ubo, buffer->offset, buffer->size);
+                {
+                    addBatch(transform, render);
+                }
 
                 addCollidersToRenderQueue(entity, transform);
             }
@@ -354,6 +376,11 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
             _renderQueue.addLight(&lightComp->light);
         }
     }
+
+   for (auto& batch: _batches)
+   {
+        _renderQueue.addMesh(batch.meshInstance, batch.buffer->ubo, 0, batch.buffer->size, batch.instances);
+   }
 
     // Add cameras views to render queue
     {
@@ -401,7 +428,42 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
             Renderer::getInstance()->render(nullptr, _renderQueue);
         }
     }
+}
 
+void    RenderingSystem::addBatch(sTransformComponent* transform, sRenderComponent* render)
+{
+    auto&& model = render->getModelInstance();
+    auto& meshsInstances = model->getMeshsInstances();
+    for (auto& meshInstance: meshsInstances)
+    {
+        auto material = meshInstance->getMaterial();
+        auto mesh = meshInstance->getMesh();
+        sBatch* batch = nullptr;
+        for (auto& batch_: _batches)
+        {
+            if (batch_.mesh == mesh &&
+                batch_.material == material &&
+                batch_.instances < INSTANCING_MAX)
+            {
+                batch = &batch_;
+                break;
+            }
+        }
+        if (batch == nullptr)
+        {
+            _batches.push_back({});
+            batch = &_batches.back();
+            batch->buffer = _batchesBufferPool->allocate();
+            batch->material = material;
+            batch->mesh = mesh;
+            batch->meshInstance = meshInstance.get();
+        }
+        uint32_t offset = batch->instances * (sizeof(glm::vec4) + sizeof(glm::mat4));
+        auto transform_ = transform->getTransform();
+        batch->buffer->ubo->update((void*)&transform_, sizeof(glm::mat4), offset);
+        batch->buffer->ubo->update((void*)&render->color, sizeof(glm::vec4), offset + sizeof(glm::mat4));
+        batch->instances++;
+    }
 }
 
 BufferPool::SubBuffer*  RenderingSystem::getModelBuffer(sTransformComponent* transform, sRenderComponent* render)

@@ -4,7 +4,6 @@
 
 #include <Engine/Graphics/ModelInstance.hpp>
 
-
 ModelInstance::ModelInstance(Model* model) : _model(model)
 {
     uint32_t i = 0;

@@ -24,12 +24,6 @@ Texture::Texture(int width, int height): _width(width), _height(height), _comp(0
 
 Texture::~Texture()
 {
-    if (_data)
-    {
-        // Free image data
-        STBI_FREE(_data);
-    }
-
     glDeleteTextures(1, &_texture);
 }
 
@@ -37,7 +31,6 @@ std::unique_ptr<Texture>    Texture::create(GLsizei width,
                                 GLsizei height, GLint internalFormat,
                                 GLint format,
                                 GLenum type,
-                                uint32_t mipmapLevels,
                                 GLint minFilter,
                                 GLint maxFilter,
                                 GLint wrapS,
@@ -46,10 +39,7 @@ std::unique_ptr<Texture>    Texture::create(GLsizei width,
     std::unique_ptr<Texture> texture = std::make_unique<Texture>(width, height);
 
     texture->bind();
-    for (uint32_t i = 0; i < mipmapLevels; ++i)
-    {
-        glTexImage2D(GL_TEXTURE_2D, i, internalFormat, width, height, 0, format, type, NULL);
-    }
+    glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, type, NULL);
     glGenerateMipmap(GL_TEXTURE_2D);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilter);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, maxFilter);
@@ -86,6 +76,8 @@ bool    Texture::loadFromFile(const std::string &fileName)
 
     // Unuse texture
     unBind();
+
+    STBI_FREE(_data);
 
     return (true);
 }

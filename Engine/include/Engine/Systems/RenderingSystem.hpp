@@ -17,7 +17,25 @@
 #include <Engine/Components.hh>
 #include <Engine/Systems/ParticleSystem.hpp>
 
+#define INSTANCING_MAX 400
+
 START_SYSTEM(RenderingSystem)
+    struct sBatch {
+        ~sBatch()
+        {
+/*            if (buffer != nullptr)
+            {
+                _bufferPool->free(buffer);
+            }*/
+        }
+
+        BufferPool::SubBuffer* buffer{nullptr};
+        uint32_t instances{0};
+        Material* material{nullptr};
+        Mesh* mesh{nullptr};
+        MeshInstance* meshInstance{nullptr};
+    };
+
 public:
     RenderingSystem(std::unordered_map<uint32_t, sEmitter*>* particleEmitters);
     ~RenderingSystem() override final;
@@ -35,6 +53,7 @@ private:
     void                                    addCameraViewOrthoGraphicToRenderQueue(sCameraComponent* cameraComp, sTransformComponent* transform);
     void                                    addCameraViewToRenderQueue(sCameraComponent* cameraComp, sTransformComponent* transform);
 
+    void                                    addBatch(sTransformComponent* transform, sRenderComponent* render);
     BufferPool::SubBuffer*                  getModelBuffer(sTransformComponent* transform, sRenderComponent* render);
     void                                    updateModelBuffer(BufferPool::SubBuffer* buffer, const glm::mat4& transform, const glm::vec4& color);
 
@@ -45,6 +64,9 @@ private:
 
     static bool _displayAllColliders;
     static std::unique_ptr<BufferPool>          _bufferPool;
+    static std::unique_ptr<BufferPool>          _batchesBufferPool;
+
+    std::vector<sBatch> _batches;
 
     // A camera can be attached to the RenderSystem
     // If no camera is attached, it will use the camera of an entity with sCameraComponent

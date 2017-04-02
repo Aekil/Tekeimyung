@@ -32,7 +32,6 @@ public:
                                             GLint internalFormat = GL_RGBA,
                                             GLint format = GL_RGBA,
                                             GLenum type = GL_UNSIGNED_BYTE,
-                                            uint32_t mipmapLevels = 1,
                                             GLint minFilter = GL_LINEAR,
                                             GLint maxFilter = GL_LINEAR,
                                             GLint wrapS = GL_CLAMP_TO_EDGE,
