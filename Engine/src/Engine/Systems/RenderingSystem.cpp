@@ -316,7 +316,7 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
                 sUiComponent* uiComponent = entity->getComponent<sUiComponent>();
 
                 if (uiComponent)
-                    _renderQueue.addUIModel(model, buffer->ubo, uiComponent->layer, buffer->offset, buffer->size, uiComponent->layer);
+                    _renderQueue.addUIModel(model, buffer->ubo, uiComponent->layer, buffer->offset, buffer->size);
                 else
                     _renderQueue.addModel(model, buffer->ubo, buffer->offset, buffer->size);
 
