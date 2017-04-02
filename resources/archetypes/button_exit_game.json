@@ -2,10 +2,10 @@
    "components" : {
       "sButtonComponent" : {
          "action" : "ADD_LEVEL",
-         "action_level" : "Game"
+         "action_level" : "ConfirmExit"
       },
       "sNameComponent" : {
-         "name" : "BUTTON_PLAY_GAME"
+         "name" : "BUTTON_EXIT_GAME"
       },
       "sRenderComponent" : {
          "animated" : false,
@@ -17,14 +17,14 @@
             "r" : 1
          },
          "ignore_raycast" : false,
-         "materials" : [ "button_play_game.mat" ],
+         "materials" : [ "button_exit_game.mat" ],
          "model" : "resources/models/default.DAE",
          "type" : "PLANE"
       },
       "sTransformComponent" : {
          "pos" : {
             "x" : 960,
-            "y" : 630.53997802734375,
+            "y" : 305.10000610351563,
             "z" : 0
          },
          "rotation" : {
@@ -35,7 +35,7 @@
          "scale" : {
             "x" : 30,
             "y" : 7.1999526023864746,
-            "z" : 1.0000195503234863
+            "z" : 1
          }
       },
       "sUiComponent" : {
@@ -43,7 +43,7 @@
          "layer" : 0,
          "offset" : {
             "x" : 0,
-            "y" : 12
+            "y" : -20
          },
          "percentage_size" : true,
          "size" : {
@@ -53,6 +53,6 @@
          "vertical_alignment" : "MIDDLE"
       }
    },
-   "name" : "BUTTON_PLAY_GAME",
+   "name" : "BUTTON_EXIT_GAME",
    "tag" : ""
 }

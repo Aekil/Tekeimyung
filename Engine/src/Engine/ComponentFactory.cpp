@@ -1381,7 +1381,7 @@ bool    ComponentFactory<sUiComponent>::updateEditor(const std::string& entityTy
 
     if (component->percentageSize)
     {
-        if (ImGui::InputFloat("vertical size", &component->size.x, 0.05f, ImGuiInputTextFlags_AllowTabInput))
+        if (ImGui::InputFloat("Horizontal size", &component->size.x, 0.05f, ImGuiInputTextFlags_AllowTabInput))
         {
             changed = true;
             // Set size.x between 0 and 1
@@ -1389,7 +1389,7 @@ bool    ComponentFactory<sUiComponent>::updateEditor(const std::string& entityTy
             component->size.x = std::max(component->size.x, 0.0f);
         }
 
-        if (ImGui::InputFloat("horizontal size", &component->size.y, 0.05f, ImGuiInputTextFlags_AllowTabInput))
+        if (ImGui::InputFloat("Vertical size", &component->size.y, 0.05f, ImGuiInputTextFlags_AllowTabInput))
         {
             changed = true;
             // Set size.y between 0 and 1

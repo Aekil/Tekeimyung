@@ -1,15 +1,15 @@
 {
    "ambient" : {
       "a" : 1,
-      "b" : 0.30000001192092896,
-      "g" : 0.30000001192092896,
-      "r" : 0.30000001192092896
+      "b" : 1,
+      "g" : 1,
+      "r" : 1
    },
    "diffuse" : {
-      "a" : 0,
-      "b" : 0,
-      "g" : 0,
-      "r" : 0
+      "a" : 1,
+      "b" : 1,
+      "g" : 1,
+      "r" : 1
    },
    "dst_blend" : "GL_ONE_MINUS_SRC_ALPHA",
    "face_camera" : false,
@@ -18,6 +18,6 @@
       "ambient" : "resources/sprites/buttons/button_toggle_fullscreen.png",
       "diffuse" : ""
    },
-   "transparent" : false,
+   "transparent" : true,
    "wireframe" : false
 }

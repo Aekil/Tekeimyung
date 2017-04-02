@@ -23,7 +23,7 @@ Renderer::Renderer(): _currentCamera(nullptr)
     _defaultLight.setDirection({-1.0f, -0.3f, 0.3f});
 
     _UILight.setDirection({0.0f, 0.0f, 1.0f});
-    _UILight.setAmbient({0.8f, 0.8f, 0.8f});
+    _UILight.setAmbient({1.0f, 1.0f, 1.0f});
     _UILight.setDiffuse({0.0f, 0.0f, 0.0f});
 
     _UICamera.setProjType(Camera::eProj::ORTHOGRAPHIC_2D);

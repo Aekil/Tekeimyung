@@ -15,7 +15,7 @@
    "face_camera" : false,
    "src_blend" : "GL_SRC_ALPHA",
    "textures" : {
-      "ambient" : "resources/sprites/buttons/button_how_to_play.png",
+      "ambient" : "resources/sprites/buttons/button_back_to_menu.png",
       "diffuse" : ""
    },
    "transparent" : true,
