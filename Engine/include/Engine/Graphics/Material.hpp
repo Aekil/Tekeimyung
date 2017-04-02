@@ -102,7 +102,7 @@ private:
 
     // Need to update ubo data
     bool                _needUpdate;
-    bool                _optionsFlagDirty;
+    bool                _optionsFlagDirty{true};
 
     glm::vec4           _ambient;
     glm::vec4           _diffuse;
