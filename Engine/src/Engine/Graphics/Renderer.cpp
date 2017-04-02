@@ -259,7 +259,7 @@ void    Renderer::bloomPass()
             (float)horizontalColorAttachment->getWidth(),
             (float)horizontalColorAttachment->getHeight());
 
-        for (uint32_t j = 0; j < 3; ++j)
+        for (uint32_t j = 0; j < 1; ++j)
         {
             // Horizontal pass
             {
