@@ -63,6 +63,7 @@ virtual void update(sRenderComponent* component)
     this->_animator = component->_animator;
     this->_display = component->_display;
     this->ignoreRaycast = component->ignoreRaycast;
+    this->dynamic = component->dynamic;
 }
 
 virtual void update(sComponent* component)
@@ -109,6 +110,7 @@ Animator                _animator;
 Geometry::eType type;
 bool                    _display = true;
 bool                    ignoreRaycast = false;
+bool                    dynamic = false;
 
 glm::vec4 color;
 

@@ -45,6 +45,7 @@
             "g" : 1,
             "r" : 1
          },
+         "dynamic" : true,
          "ignore_raycast" : false,
          "materials" : [ "cube_green.mat" ],
          "model" : "resources/models/characters/enemy.DAE",

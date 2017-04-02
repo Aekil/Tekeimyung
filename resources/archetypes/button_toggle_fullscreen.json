@@ -16,6 +16,7 @@
             "g" : 1,
             "r" : 1
          },
+         "dynamic" : false,
          "ignore_raycast" : false,
          "materials" : [ "button_toogle_fullscreen.mat" ],
          "model" : "resources/models/default.DAE",

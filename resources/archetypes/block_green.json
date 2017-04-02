@@ -25,6 +25,7 @@
             "g" : 1,
             "r" : 1
          },
+         "dynamic" : false,
          "ignore_raycast" : false,
          "materials" : [ "cube_green.mat" ],
          "model" : "resources/models/blocks/block_green.DAE",
@@ -47,7 +48,7 @@
          },
          "rotation" : {
             "x" : 0,
-            "y" : -0,
+            "y" : 0,
             "z" : 0
          },
          "scale" : {

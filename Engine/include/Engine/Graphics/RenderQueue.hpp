@@ -32,6 +32,8 @@ struct sRenderableMesh {
 
     // Layer to sort UI
     int layer;
+
+    bool dynamic;
 };
 
 struct sRenderableText {
@@ -51,11 +53,13 @@ public:
     void                            addModel(ModelInstance* modelInstance, UniformBuffer* ubo,
                                                 uint32_t uboOffset = 0,
                                                 uint32_t uboSize = 0,
-                                                uint32_t instancesNb = 0);
+                                                uint32_t instancesNb = 0,
+                                                bool dynamic = false);
     void                            addMesh(MeshInstance* meshInstance, UniformBuffer* ubo,
                                                 uint32_t uboOffset = 0,
                                                 uint32_t uboSize = 0,
-                                                uint32_t instancesNb = 0);
+                                                uint32_t instancesNb = 0,
+                                                bool dynamic = false);
     void                            addUIModel(ModelInstance* modelInstance,
                                                 UniformBuffer* ubo,
                                                 int layer,

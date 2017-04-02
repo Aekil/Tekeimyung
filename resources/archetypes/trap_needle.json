@@ -55,6 +55,7 @@
             "g" : 1,
             "r" : 1
          },
+         "dynamic" : false,
          "ignore_raycast" : false,
          "materials" : [ "Material #26", "Material #26" ],
          "model" : "resources/models/traps/trap_needle.DAE",

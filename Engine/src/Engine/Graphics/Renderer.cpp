@@ -105,6 +105,13 @@ void    Renderer::beginFrame()
 
     _frameBuffer.unBind(GL_FRAMEBUFFER);
 
+    _transparencyFrameBuffer.use(GL_FRAMEBUFFER);
+
+    // Clear frame buffer
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    _transparencyFrameBuffer.unBind(GL_FRAMEBUFFER);
+
     for (auto& blurFramebuffer: _blurFramebuffers)
     {
         for (auto& framebuffer: blurFramebuffer)
@@ -143,7 +150,9 @@ void    Renderer::render(Camera* camera, RenderQueue& renderQueue)
     // All the renders will use the color attachments and the depth buffer of the framebuffer
     _frameBuffer.use(GL_FRAMEBUFFER);
     sceneRenderPass(camera, renderQueue);
-    _frameBuffer.unBind(GL_FRAMEBUFFER);
+    _transparencyFrameBuffer.use(GL_FRAMEBUFFER);
+    transparencyPass(camera, renderQueue);
+    _transparencyFrameBuffer.unBind(GL_FRAMEBUFFER);
 }
 
 void    Renderer::sceneRenderPass(Camera* camera, RenderQueue& renderQueue)
@@ -230,6 +239,204 @@ void    Renderer::sceneRenderPass(Camera* camera, RenderQueue& renderQueue)
 
     // Disable blending for opaque objects
     glDisable(GL_BLEND);
+}
+
+// The transparency is dynamic objects transparency when behind static objects
+void    Renderer::transparencyPass(Camera* camera, RenderQueue& renderQueue)
+{
+    if (!camera)
+        return;
+
+    glm::vec4 blackColor;
+    glm::vec4 transparencyColor(1.0, 0.647, 0.0, 1.0);
+    _transparencyShaderProgram.use();
+    _currentShaderProgram = nullptr;
+
+    camera->getUBO().bind();
+
+    glViewport((uint32_t)camera->getViewport().offset.x,
+                (uint32_t)camera->getViewport().offset.y,
+                (uint32_t)camera->getViewport().extent.width,
+                (uint32_t)camera->getViewport().extent.height);
+
+    glUniform4fv(_transparencyShaderProgram.getUniformLocation("color"), 1, glm::value_ptr(blackColor));
+
+    // First pass
+    // We render all the static objects in the transparency frame buffer
+    // We set the color to black because we only want to fill the depth buffer
+    {
+        // Opaque objects
+        {
+            auto& meshs = renderQueue.getOpaqueMeshs();
+            uint32_t meshsNb = renderQueue.getOpaqueMeshsNb();
+            for (uint32_t i = 0; i < meshsNb; ++i)
+            {
+                auto& renderableMesh = meshs[i];
+                Mesh* mesh = renderableMesh.meshInstance->getMesh();
+
+                // Render only static objects
+                if (renderableMesh.dynamic)
+                    continue;
+
+                // Bind buffer
+                mesh->getModel()->getBuffer().bind();
+
+                renderableMesh.ubo->bind(renderableMesh.uboOffset, renderableMesh.uboSize);
+
+                GLuint primitive = mesh->getModel()->getPrimitiveType();
+
+                // Draw to screen
+                if (renderableMesh.instancesNb > 0)
+                {
+                    glDrawElementsInstanced(primitive,
+                                    (GLuint)mesh->indices.size(),
+                                    GL_UNSIGNED_INT,
+                                    BUFFER_OFFSET((GLuint)mesh->idxOffset * sizeof(GLuint)),
+                                    renderableMesh.instancesNb);
+                }
+                else
+                {
+                    glDrawElements(primitive,
+                                    (GLuint)mesh->indices.size(),
+                                    GL_UNSIGNED_INT,
+                                    BUFFER_OFFSET((GLuint)mesh->idxOffset * sizeof(GLuint)));
+                }
+            }
+        }
+
+        // Transparent objects
+        {
+            auto& meshs = renderQueue.getTransparentMeshs();
+            uint32_t meshsNb = renderQueue.getTransparentMeshsNb();
+            for (uint32_t i = 0; i < meshsNb; ++i)
+            {
+                auto& renderableMesh = meshs[i];
+                Mesh* mesh = renderableMesh.meshInstance->getMesh();
+
+                // Render only static objects
+                if (renderableMesh.dynamic)
+                    continue;
+
+                // Bind buffer
+                mesh->getModel()->getBuffer().bind();
+
+                renderableMesh.ubo->bind(renderableMesh.uboOffset, renderableMesh.uboSize);
+
+                GLuint primitive = mesh->getModel()->getPrimitiveType();
+
+                // Draw to screen
+                if (renderableMesh.instancesNb > 0)
+                {
+                    glDrawElementsInstanced(primitive,
+                                    (GLuint)mesh->indices.size(),
+                                    GL_UNSIGNED_INT,
+                                    BUFFER_OFFSET((GLuint)mesh->idxOffset * sizeof(GLuint)),
+                                    renderableMesh.instancesNb);
+                }
+                else
+                {
+                    glDrawElements(primitive,
+                                    (GLuint)mesh->indices.size(),
+                                    GL_UNSIGNED_INT,
+                                    BUFFER_OFFSET((GLuint)mesh->idxOffset * sizeof(GLuint)));
+                }
+            }
+        }
+
+    }
+
+    // Second pass
+    // We render only dynamic objects that are behind the static objects into the transparency buffer
+    {
+        // Disable depth write and change depth function to render only objects behind actual depth
+        glDepthFunc(GL_GREATER);
+        glDepthMask(GL_FALSE);
+
+        glUniform4fv(_transparencyShaderProgram.getUniformLocation("color"), 1, glm::value_ptr(transparencyColor));
+
+        // Opaque objects
+        {
+            auto& meshs = renderQueue.getOpaqueMeshs();
+            uint32_t meshsNb = renderQueue.getOpaqueMeshsNb();
+            for (uint32_t i = 0; i < meshsNb; ++i)
+            {
+                auto& renderableMesh = meshs[i];
+                Mesh* mesh = renderableMesh.meshInstance->getMesh();
+
+                // Render only dynamic objects
+                if (!renderableMesh.dynamic)
+                    continue;
+
+                // Bind buffer
+                mesh->getModel()->getBuffer().bind();
+
+                renderableMesh.ubo->bind(renderableMesh.uboOffset, renderableMesh.uboSize);
+
+                GLuint primitive = mesh->getModel()->getPrimitiveType();
+
+                // Draw to screen
+                if (renderableMesh.instancesNb > 0)
+                {
+                    glDrawElementsInstanced(primitive,
+                                    (GLuint)mesh->indices.size(),
+                                    GL_UNSIGNED_INT,
+                                    BUFFER_OFFSET((GLuint)mesh->idxOffset * sizeof(GLuint)),
+                                    renderableMesh.instancesNb);
+                }
+                else
+                {
+                    glDrawElements(primitive,
+                                    (GLuint)mesh->indices.size(),
+                                    GL_UNSIGNED_INT,
+                                    BUFFER_OFFSET((GLuint)mesh->idxOffset * sizeof(GLuint)));
+                }
+            }
+        }
+
+        // Transparent objects
+        {
+            auto& meshs = renderQueue.getTransparentMeshs();
+            uint32_t meshsNb = renderQueue.getTransparentMeshsNb();
+            for (uint32_t i = 0; i < meshsNb; ++i)
+            {
+                auto& renderableMesh = meshs[i];
+                Mesh* mesh = renderableMesh.meshInstance->getMesh();
+
+                // Render only dynamic objects
+                if (!renderableMesh.dynamic)
+                    continue;
+
+                // Bind buffer
+                mesh->getModel()->getBuffer().bind();
+
+                renderableMesh.ubo->bind(renderableMesh.uboOffset, renderableMesh.uboSize);
+
+                GLuint primitive = mesh->getModel()->getPrimitiveType();
+
+                // Draw to screen
+                if (renderableMesh.instancesNb > 0)
+                {
+                    glDrawElementsInstanced(primitive,
+                                    (GLuint)mesh->indices.size(),
+                                    GL_UNSIGNED_INT,
+                                    BUFFER_OFFSET((GLuint)mesh->idxOffset * sizeof(GLuint)),
+                                    renderableMesh.instancesNb);
+                }
+                else
+                {
+                    glDrawElements(primitive,
+                                    (GLuint)mesh->indices.size(),
+                                    GL_UNSIGNED_INT,
+                                    BUFFER_OFFSET((GLuint)mesh->idxOffset * sizeof(GLuint)));
+                }
+            }
+        }
+
+        // Reset depth buffer function/write
+        glDepthFunc(GL_LEQUAL);
+        glDepthMask(GL_TRUE);
+    }
+
 }
 
 void    Renderer::bloomPass()
@@ -342,15 +549,20 @@ void    Renderer::finalBlendingPass()
                     0);
     }
     _frameBuffer.getColorAttachments()[0]->bind();
-    _screenPlane.bind();
 
     glDrawElements(GL_TRIANGLES,
                 6,
                 GL_UNSIGNED_INT,
                 0);
 
-    glDisable(GL_BLEND);
+    _transparencyFrameBuffer.getColorAttachments()[0]->bind();
+    glDrawElements(GL_TRIANGLES,
+                6,
+                GL_UNSIGNED_INT,
+                0);
 
+
+    glDisable(GL_BLEND);
 }
 
 bool sortOpaque(const sRenderableMesh& lhs, const sRenderableMesh& rhs)
@@ -582,16 +794,17 @@ bool    Renderer::setupFrameBuffer()
     GLsizei windowBufferHeight = (GLsizei)GameWindow::getInstance()->getBufferHeight();
     bool complete = true;
 
-
     // Setup scene framebuffer
     {
         _frameBuffer.bind(GL_FRAMEBUFFER);
         _frameBuffer.removeColorAttachments();
+        // Scene color attachment
         _frameBuffer.addColorAttachment(Texture::create(windowBufferWidth,
                                                 windowBufferHeight,
                                                 GL_RGBA16F,
                                                 GL_RGBA,
                                                 GL_FLOAT));
+        // Bright scene color attachment (used for glow)
         _frameBuffer.addColorAttachment(Texture::create(windowBufferWidth,
                                                 windowBufferHeight,
                                                 GL_RGBA16F,
@@ -661,6 +874,24 @@ bool    Renderer::setupFrameBuffer()
                 complete = complete && framebuffer.isComplete();
             }
         }
+    }
+
+    // Setup transparency frame buffer
+    {
+        _transparencyFrameBuffer.bind(GL_FRAMEBUFFER);
+        _transparencyFrameBuffer.removeColorAttachments();
+        // Scene color attachment
+        _transparencyFrameBuffer.addColorAttachment(Texture::create(windowBufferWidth,
+                                                windowBufferHeight,
+                                                GL_RGBA16F,
+                                                GL_RGBA,
+                                                GL_FLOAT));
+        _transparencyFrameBuffer.setDepthAttachment(GL_DEPTH_COMPONENT,
+                                        windowBufferWidth,
+                                        windowBufferHeight);
+
+        complete = _transparencyFrameBuffer.isComplete();
+        _transparencyFrameBuffer.unBind(GL_FRAMEBUFFER);
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -746,6 +977,13 @@ void    Renderer::setupShaderPrograms()
         _hdrShaderProgram.attachShader(GL_VERTEX_SHADER, "resources/shaders/shader-single-plane.vert");
         _hdrShaderProgram.attachShader(GL_FRAGMENT_SHADER, "resources/shaders/shader-hdr.frag");
         _hdrShaderProgram.link();
+    }
+
+    // Init shader program of transparency (When dynamic objects are behind static objects)
+    {
+        _transparencyShaderProgram.attachShader(GL_VERTEX_SHADER, "resources/shaders/shader.vert");
+        _transparencyShaderProgram.attachShader(GL_FRAGMENT_SHADER, "resources/shaders/shader-transparency.frag");
+        _transparencyShaderProgram.link();
     }
 
     // Init buffer containing the plane vertices used for final blending

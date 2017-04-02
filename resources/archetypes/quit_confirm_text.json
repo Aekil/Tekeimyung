@@ -12,6 +12,7 @@
             "g" : 1,
             "r" : 1
          },
+         "dynamic" : false,
          "ignore_raycast" : false,
          "materials" : [ "quit_confirm_text.mat" ],
          "model" : "resources/models/default.DAE",

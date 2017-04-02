@@ -12,6 +12,7 @@
             "g" : 1,
             "r" : 1
          },
+         "dynamic" : false,
          "geometry" : null,
          "ignore_raycast" : false,
          "materials" : [ "_01 - Default", "_02 - Default" ],

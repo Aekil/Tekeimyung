@@ -39,6 +39,7 @@ public:
 
 private:
     void                                sceneRenderPass(Camera* camera, RenderQueue& renderQueue);
+    void                                transparencyPass(Camera* camera, RenderQueue& renderQueue);
     void                                bloomPass();
     void                                finalBlendingPass();
     void                                renderOpaqueObjects(std::vector<sRenderableMesh>& meshs,
@@ -70,6 +71,7 @@ private:
     ShaderProgram                       _finalBlendingShaderProgram;
     ShaderProgram                       _hdrShaderProgram;
     ShaderProgram                       _blurShaderProgram;
+    ShaderProgram                       _transparencyShaderProgram;
     // Buffer containing the plane vertices used for final blending and blur
     // Should fit the size of the screen
     Buffer                              _screenPlane;
@@ -88,9 +90,8 @@ private:
     Light                               _UILight;
 
     Framebuffer                         _frameBuffer;
+    Framebuffer                         _transparencyFrameBuffer;
 
     // We have one frame buffer and two color attachments for each blur kernel size
     std::vector<std::array<Framebuffer, 2>>   _blurFramebuffers;
-
-    std::unique_ptr<Texture>            _depthAttachment;
 };

@@ -34,6 +34,7 @@ START_SYSTEM(RenderingSystem)
         Material* material{nullptr};
         Mesh* mesh{nullptr};
         MeshInstance* meshInstance{nullptr};
+        bool dynamic{false};
     };
 
 public:

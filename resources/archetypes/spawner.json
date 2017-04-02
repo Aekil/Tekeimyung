@@ -12,6 +12,7 @@
             "g" : 1,
             "r" : 1
          },
+         "dynamic" : false,
          "ignore_raycast" : false,
          "materials" : [ "_01 - Default" ],
          "model" : "resources/models/blocks/block.DAE",

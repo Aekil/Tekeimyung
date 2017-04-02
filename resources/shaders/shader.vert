@@ -10,12 +10,6 @@ layout (location = 1) out vec2 fragTexCoords;
 layout (location = 2) out vec3 fragPos;
 layout (location = 3) flat out uint instanceID;
 
-layout (std140, binding = 0) uniform materialUniformBlock
-{
-    vec4    ambient;
-    vec4    diffuse;
-} material;
-
 layout (std140, binding = 1) uniform cameraUniformBlock
 {
     mat4 proj;
