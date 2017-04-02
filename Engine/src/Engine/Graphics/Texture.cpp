@@ -12,20 +12,42 @@
 
 #include <Engine/Graphics/Texture.hpp>
 
-Texture::Texture(): _data(nullptr), _comp(0)
+Texture::Texture(): _comp(0)
 {
-    // Create one texture object
+    glGenTextures(1, &_texture);
+}
+
+Texture::Texture(int width, int height): _width(width), _height(height), _comp(0)
+{
     glGenTextures(1, &_texture);
 }
 
 Texture::~Texture()
 {
-    if (_data && _stbData)
-    {
-        // Free image data
-        STBI_FREE(_data);
-    }
     glDeleteTextures(1, &_texture);
+}
+
+std::unique_ptr<Texture>    Texture::create(GLsizei width,
+                                GLsizei height, GLint internalFormat,
+                                GLint format,
+                                GLenum type,
+                                GLint minFilter,
+                                GLint maxFilter,
+                                GLint wrapS,
+                                GLint wrapT)
+{
+    std::unique_ptr<Texture> texture = std::make_unique<Texture>(width, height);
+
+    texture->bind();
+    glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, type, NULL);
+    glGenerateMipmap(GL_TEXTURE_2D);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilter);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, maxFilter);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapS);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapT);
+    texture->unBind();
+
+    return (std::move(texture));
 }
 
 bool    Texture::loadFromFile(const std::string &fileName)
@@ -37,11 +59,11 @@ bool    Texture::loadFromFile(const std::string &fileName)
 
     if (data == nullptr)
     {
-         EXCEPT(FileNotFoundException, "Failed to load texture \"%s\"", fileName.c_str());
+        EXCEPT(FileNotFoundException, "Failed to load texture \"%s\"", fileName.c_str());
     }
 
     load(_width, _height, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, data);
-    _stbData = true;
+    STBI_FREE(data);
 
     return (true);
 }
@@ -73,7 +95,10 @@ void    Texture::load(GLsizei width,
     // Generate image mipmap levels
     glGenerateMipmap(GL_TEXTURE_2D);
 
+    // Unuse texture
     unBind();
+
+    _data = nullptr;
 }
 
 void    Texture::bind(GLenum unit) const
@@ -105,4 +130,9 @@ unsigned char*  Texture::getData() const
 int     Texture::getComponentsNumber() const
 {
     return _comp;
+}
+
+GLuint  Texture::getNative()
+{
+    return (_texture);
 }

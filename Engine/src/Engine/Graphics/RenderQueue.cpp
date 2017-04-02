@@ -16,22 +16,31 @@ void    RenderQueue::addModel(ModelInstance* modelInstance,
 
     for (auto& meshInstance: meshsInstances)
     {
-        Material *material = meshInstance->getMaterial();
-        ASSERT(material != nullptr, "A mesh should have a material");
+        addMesh(meshInstance.get(), ubo, uboOffset, uboSize, instancesNb);
+    }
+}
 
-        sRenderableMesh renderableMesh = { meshInstance.get(), ubo, uboOffset, uboSize, instancesNb, 0 };
-        if (material->transparent)
-        {
-            CHECK_QUEUE_NOT_FULL(_transparentMeshsNb);
-            _transparentMeshs[_transparentMeshsNb] = renderableMesh;
-            ++_transparentMeshsNb;
-        }
-        else
-        {
-            CHECK_QUEUE_NOT_FULL(_opaqueMeshsNb);
-            _opaqueMeshs[_opaqueMeshsNb] = renderableMesh;
-            ++_opaqueMeshsNb;
-        }
+void    RenderQueue::addMesh(MeshInstance* meshInstance,
+                                UniformBuffer* ubo,
+                                uint32_t uboOffset,
+                                uint32_t uboSize,
+                                uint32_t instancesNb)
+{
+    Material *material = meshInstance->getMaterial();
+    ASSERT(material != nullptr, "A mesh should have a material");
+
+    sRenderableMesh renderableMesh = { meshInstance, ubo, uboOffset, uboSize, instancesNb, 0 };
+    if (material->transparent)
+    {
+        CHECK_QUEUE_NOT_FULL(_transparentMeshsNb);
+        _transparentMeshs[_transparentMeshsNb] = renderableMesh;
+        ++_transparentMeshsNb;
+    }
+    else
+    {
+        CHECK_QUEUE_NOT_FULL(_opaqueMeshsNb);
+        _opaqueMeshs[_opaqueMeshsNb] = renderableMesh;
+        ++_opaqueMeshsNb;
     }
 }
 

@@ -5,6 +5,7 @@
       "g" : 1,
       "r" : 1
    },
+   "bloom" : false,
    "diffuse" : {
       "a" : 1,
       "b" : 1,

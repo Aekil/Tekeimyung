@@ -34,6 +34,29 @@ Camera::Camera(): _needUpdateView(true), _needUpdateProj(true), _fov(45.0f),
 
 Camera::~Camera() {}
 
+Camera::Camera(const Camera& camera)
+{
+    _viewportRect = camera._viewportRect;
+    _viewport = camera._viewport;
+    _projSize = camera._projSize;
+    _fov = camera._fov;
+    _near = camera._near;
+    _far = camera._far;
+    _projType = camera._projType;
+}
+
+Camera& Camera::operator=(const Camera& camera)
+{
+    _viewportRect = camera._viewportRect;
+    _viewport = camera._viewport;
+    _projSize = camera._projSize;
+    _fov = camera._fov;
+    _near = camera._near;
+    _far = camera._far;
+    _projType = camera._projType;
+    return (*this);
+}
+
 const glm::mat4&    Camera::getView()
 {
     if (_needUpdateView)

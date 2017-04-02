@@ -9,10 +9,7 @@ uniform float gamma = 2.2f;
 void main()
 {
     vec3 color = texture(image, fragTexCoords).rgb;
+    vec3 mapped = color / (color + vec3(1.0));
 
-    //color = pow(color, vec3(1.0f / gamma));
-    // Reinhard tone mapping
-    //vec3 mapped = hdrColor / (hdrColor + vec3(1.0));
-
-    outFragColor = vec4(color, 1.0f);
+    outFragColor = vec4(mapped, 1.0f);
 }

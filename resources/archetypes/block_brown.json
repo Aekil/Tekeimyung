@@ -26,8 +26,8 @@
             "r" : 1
          },
          "ignore_raycast" : false,
-         "materials" : [ "cube_bloom_cyan.mat" ],
-         "model" : "resources/models/blocks/block.DAE",
+         "materials" : [ "cube_brown.mat" ],
+         "model" : "resources/models/blocks/block_brown.DAE",
          "texture" : "",
          "type" : "MESH"
       },
@@ -47,7 +47,7 @@
          },
          "rotation" : {
             "x" : 0,
-            "y" : 0,
+            "y" : -0,
             "z" : 0
          },
          "scale" : {
