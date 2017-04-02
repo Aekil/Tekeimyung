@@ -12,109 +12,189 @@
 #include <Engine/Utils/Debug.hpp>
 #include <Engine/Utils/Logger.hpp>
 
+#include <Engine/Window/VideoMode.hpp>
 #include <Engine/Window/GameWindow.hpp>
 
 std::shared_ptr<GameWindow> GameWindow::_instance;
 
-GameWindow::GameWindow(GameStateManager* gameStateManager, const char *title) :
-    _bufferWidth(0), _bufferHeight(0), _fullscreen(false),
-    _title(title), _monitor(nullptr), _window(nullptr), _running(false), _gameStateManager(gameStateManager),
-    _lostFocus(false), _closeHandler(nullptr) {}
+GameWindow::GameWindow(GameStateManager* gameStateManager, const char *title)
+{
+    this->_bufferWidth = 0;
+    this->_bufferHeight = 0;
+    this->_title = title;
+    this->_glfwMonitors = nullptr;
+    this->_glfwMonitorsCount = 0;
+    this->_glfwWindow = nullptr;
+    this->_running = false;
+    this->_gameStateManager = gameStateManager;
+    this->_lostFocus = false;
+    this->_closeHandler = nullptr;
+}
 
 GameWindow::~GameWindow() {}
 
-bool    GameWindow::initialize()
+bool        GameWindow::initialize()
 {
-    GLFWmonitor*        monitor = nullptr;
-    const GLFWvidmode*  vidmode = nullptr;
-    int width = 0, height = 0;
+    GLFWmonitor*    primaryMonitor;
+    VideoMode       monitorVideoMode;
 
-    // Initializing GLFW.
+    //  Initializing GLFW.
     if (glfwInit() == GLFW_FALSE)
     {
         LOG_ERROR("Could not initialize GLFW properly.");
-        //std::cerr << "Could not initialize GLFW properly." << std::endl;
         return (false);
     }
 
-    // Retrieving the primary monitor.
-    _monitor = glfwGetPrimaryMonitor();
-    if (_monitor == nullptr)
+    this->_glfwMonitors = glfwGetMonitors(&this->_glfwMonitorsCount);
+    if (this->_glfwMonitors == nullptr)
     {
-        LOG_ERROR("Could not retrieve the primary monitor properly.");
-        //std::cerr << "Could not retrieve the primary monitor properly." << std::endl;
+        LOG_ERROR("Could not retrieve the connected monitors properly.");
         glfwTerminate();
         return (false);
     }
 
-    // Retrieving the video mode.
-    vidmode = glfwGetVideoMode(_monitor);
-    glfwWindowHint(GLFW_RED_BITS, vidmode->redBits);
-    glfwWindowHint(GLFW_GREEN_BITS, vidmode->greenBits);
-    glfwWindowHint(GLFW_BLUE_BITS, vidmode->blueBits);
-    glfwWindowHint(GLFW_REFRESH_RATE, vidmode->refreshRate);
-    _screenWidth = vidmode->width;
-    _screenHeight = vidmode->height;
+    //  Retrieving the primary monitor.
+    ASSERT(this->_glfwMonitorsCount > 0, "Monitors' count should be greater than 0.");
+    primaryMonitor = this->_glfwMonitors[0];
+
+    monitorVideoMode = VideoMode(glfwGetVideoMode(primaryMonitor));
+    glfwWindowHint(GLFW_RED_BITS, monitorVideoMode.getRedBits());
+    glfwWindowHint(GLFW_GREEN_BITS, monitorVideoMode.getGreenBits());
+    glfwWindowHint(GLFW_BLUE_BITS, monitorVideoMode.getBlueBits());
+    glfwWindowHint(GLFW_REFRESH_RATE, monitorVideoMode.getRefreshRate());
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    // Creating a GLFW window.
-    if (_fullscreen == true)
-        monitor = _monitor;
-    else
-    {
-        glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
-        monitor = nullptr;
-    }
-    _window = glfwCreateWindow(_screenWidth, _screenHeight, _title.c_str(), monitor, nullptr);
-    if (_window == nullptr)
+    //  By default, we initialize the game window as maximized windowed mode.
+    glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
+
+    this->_glfwWindow = glfwCreateWindow(monitorVideoMode.getWidth(),
+                                         monitorVideoMode.getHeight(),
+                                         this->_title.c_str(), 
+                                         nullptr, 
+                                         nullptr);
+
+    if (this->_glfwWindow == nullptr)
     {
         LOG_ERROR("Could not initialize the window properly.");
-        //std::cerr << "Could not initialize the window properly." << std::endl;
         glfwTerminate();
         return (false);
     }
 
-    glfwMakeContextCurrent(_window);
-    glfwGetFramebufferSize(_window, &_bufferWidth, &_bufferHeight);
+    glfwMakeContextCurrent(this->_glfwWindow);
+    glfwGetFramebufferSize(this->_glfwWindow, &this->_bufferWidth, &this->_bufferHeight);
     glfwSwapInterval(0);
 
     // Initializing Glew.
     glewExperimental = GL_TRUE;
     if (glewInit() != GLEW_OK) {
         LOG_ERROR("Failed to initialize glew properly.");
-        //std::cerr << "Failed to initialize glew properly." << std::endl;
         glfwTerminate();
         return (false);
     }
 
-    registerEvents();
-    ImGui_ImplGlfwGL3_Init(_window, false);
+    this->registerEvents();
+    ImGui_ImplGlfwGL3_Init(this->_glfwWindow, false);
 
-    setRunning(true);
+    this->setRunning(true);
 
-    #if defined(ENGINE_DEBUG)
-        initDebugOutput();
-    #endif
+#if defined(ENGINE_DEBUG)
+    this->initDebugOutput();
+#endif
 
     return (true);
 }
 
+//bool    GameWindow::initialize()
+//{
+//    GLFWmonitor*        monitor = nullptr;
+//    const GLFWvidmode*  vidmode = nullptr;
+//    int width = 0, height = 0;
+//
+//    // Initializing GLFW.
+//    if (glfwInit() == GLFW_FALSE)
+//    {
+//        LOG_ERROR("Could not initialize GLFW properly.");
+//        return (false);
+//    }
+//
+//    // Retrieving the primary monitor.
+//    _monitor = glfwGetPrimaryMonitor();
+//    if (_monitor == nullptr)
+//    {
+//        LOG_ERROR("Could not retrieve the primary monitor properly.");
+//        glfwTerminate();
+//        return (false);
+//    }
+//
+//    // Retrieving the video mode.
+//    vidmode = glfwGetVideoMode(_monitor);
+//    glfwWindowHint(GLFW_RED_BITS, vidmode->redBits);
+//    glfwWindowHint(GLFW_GREEN_BITS, vidmode->greenBits);
+//    glfwWindowHint(GLFW_BLUE_BITS, vidmode->blueBits);
+//    glfwWindowHint(GLFW_REFRESH_RATE, vidmode->refreshRate);
+//    _screenWidth = vidmode->width;
+//    _screenHeight = vidmode->height;
+//
+//    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+//    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+//    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+//
+//    // Creating a GLFW window.
+//    if (_fullscreen == true)
+//        monitor = _monitor;
+//    else
+//    {
+//        glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
+//        monitor = nullptr;
+//    }
+//    _window = glfwCreateWindow(_screenWidth, _screenHeight, _title.c_str(), monitor, nullptr);
+//    if (_window == nullptr)
+//    {
+//        LOG_ERROR("Could not initialize the window properly.");
+//        glfwTerminate();
+//        return (false);
+//    }
+//
+//    glfwMakeContextCurrent(_window);
+//    glfwGetFramebufferSize(_window, &_bufferWidth, &_bufferHeight);
+//    glfwSwapInterval(0);
+//
+//    // Initializing Glew.
+//    glewExperimental = GL_TRUE;
+//    if (glewInit() != GLEW_OK) {
+//        LOG_ERROR("Failed to initialize glew properly.");
+//        glfwTerminate();
+//        return (false);
+//    }
+//
+//    this->registerEvents();
+//    ImGui_ImplGlfwGL3_Init(_window, false);
+//
+//    this->setRunning(true);
+//
+//    #if defined(ENGINE_DEBUG)
+//        this->initDebugOutput();
+//    #endif
+//
+//    return (true);
+//}
+
 void	GameWindow::registerEvents()
 {
-	glfwSetWindowUserPointer(_window, this);
-    glfwSetKeyCallback(_window, GameWindow::keyCallback);
-    glfwSetCharCallback(_window, GameWindow::charCallback);
-    glfwSetMouseButtonCallback(_window, GameWindow::buttonCallback);
-    glfwSetCursorEnterCallback(_window, GameWindow::cursorEnterCallback);
-    glfwSetCursorPosCallback(_window, GameWindow::cursorPositionCallback);
-    glfwSetScrollCallback(_window, GameWindow::scrollCallback);
-    glfwSetWindowFocusCallback(_window, GameWindow::focusCallback);
-    glfwSetWindowPosCallback(_window, GameWindow::posCallback);
-    glfwSetWindowCloseCallback(_window, GameWindow::closeCallback);
-    glfwSetWindowSizeCallback(_window, GameWindow::sizeCallback);
+	glfwSetWindowUserPointer(this->_glfwWindow, this);
+    glfwSetKeyCallback(this->_glfwWindow, GameWindow::keyCallback);
+    glfwSetCharCallback(this->_glfwWindow, GameWindow::charCallback);
+    glfwSetMouseButtonCallback(this->_glfwWindow, GameWindow::buttonCallback);
+    glfwSetCursorEnterCallback(this->_glfwWindow, GameWindow::cursorEnterCallback);
+    glfwSetCursorPosCallback(this->_glfwWindow, GameWindow::cursorPositionCallback);
+    glfwSetScrollCallback(this->_glfwWindow, GameWindow::scrollCallback);
+    glfwSetWindowFocusCallback(this->_glfwWindow, GameWindow::focusCallback);
+    glfwSetWindowPosCallback(this->_glfwWindow, GameWindow::posCallback);
+    glfwSetWindowCloseCallback(this->_glfwWindow, GameWindow::closeCallback);
+    glfwSetWindowSizeCallback(this->_glfwWindow, GameWindow::sizeCallback);
 }
 
 void APIENTRY   GameWindow::debugOutput(GLenum source, GLenum type, GLenum id,
@@ -229,7 +309,7 @@ bool            GameWindow::isFullscreen() const
 {
     GLFWmonitor*    monitor = nullptr;
 
-    monitor = glfwGetWindowMonitor(_window);
+    monitor = glfwGetWindowMonitor(this->_glfwWindow);
     return (monitor != nullptr);
 }
 
@@ -250,39 +330,68 @@ Mouse&      GameWindow::getMouse()
 
 void    GameWindow::maximize()
 {
-    glfwMaximizeWindow(_window);
+    glfwMaximizeWindow(_glfwWindow);
 }
 
 void    GameWindow::toggleFullscreen()
 {
-    const GLFWvidmode*  vidmode = nullptr;
     GLFWmonitor*        monitor = nullptr;
-    int                 refreshRate = 0;
+    VideoMode           videoMode;
 
-    monitor = glfwGetWindowMonitor(_window);
+    monitor = glfwGetWindowMonitor(this->_glfwWindow);
+
+    //  If the game window is currently in fullscreen mode, set it to windowed mode.
+    //  Otherwise, set it in fullscreen mode.
     if (monitor != nullptr)
     {
-        vidmode = glfwGetVideoMode(monitor);
-        _screenWidth = vidmode->width;
-        _screenHeight = vidmode->height;
-        refreshRate = vidmode->refreshRate;
+        videoMode = VideoMode(glfwGetVideoMode(monitor));
+        glfwWindowHint(GLFW_RED_BITS, videoMode.getRedBits());
+        glfwWindowHint(GLFW_GREEN_BITS, videoMode.getGreenBits());
+        glfwWindowHint(GLFW_BLUE_BITS, videoMode.getBlueBits());
+        glfwWindowHint(GLFW_REFRESH_RATE, videoMode.getRefreshRate());
         glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
-        glfwSetWindowMonitor(_window, nullptr, 0, 0, _screenWidth, _screenHeight, refreshRate);
-        glfwGetFramebufferSize(_window, &_bufferWidth, &_bufferHeight);
-        handleResize(_bufferWidth, _bufferHeight);
-        LOG_INFO("Toggled windowed mode.");
+        glfwSetWindowMonitor(this->_glfwWindow, nullptr,
+                             0, 0, videoMode.getWidth(), videoMode.getHeight(),
+                             videoMode.getRefreshRate());
     }
     else
     {
-        vidmode = glfwGetVideoMode(_monitor);
-        _screenWidth = vidmode->width;
-        _screenHeight = vidmode->height;
-        refreshRate = vidmode->refreshRate;
-        glfwSetWindowMonitor(_window, _monitor, 0, 0, _screenWidth, _screenHeight, refreshRate);
-        glfwGetFramebufferSize(_window, &_bufferWidth, &_bufferHeight);
-        handleResize(_bufferWidth, _bufferHeight);
-        LOG_INFO("Toggled fullscreen mode.");
+        monitor = this->_glfwMonitors[0];
+        videoMode = VideoMode(glfwGetVideoMode(monitor));
+        glfwSetWindowMonitor(this->_glfwWindow, monitor,
+                             0, 0, videoMode.getWidth(), videoMode.getHeight(),
+                             videoMode.getRefreshRate());
     }
+
+    glfwGetFramebufferSize(this->_glfwWindow, &this->_bufferWidth, &this->_bufferHeight);
+    this->handleResize(this->_bufferWidth, this->_bufferHeight);
+    //if (monitor != nullptr)
+    //{
+    //    vidmode = glfwGetVideoMode(monitor);
+    //    _screenWidth = vidmode->width;
+    //    _screenHeight = vidmode->height;
+    //    refreshRate = vidmode->refreshRate;
+    //    glfwWindowHint(GLFW_RED_BITS, monitorVideoMode.getRedBits());
+    //    glfwWindowHint(GLFW_GREEN_BITS, monitorVideoMode.getGreenBits());
+    //    glfwWindowHint(GLFW_BLUE_BITS, monitorVideoMode.getBlueBits());
+    //    glfwWindowHint(GLFW_REFRESH_RATE, monitorVideoMode.getRefreshRate());
+    //    glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
+    //    glfwSetWindowMonitor(this->_glfwWindow, nullptr, 0, 0, this->_screenWidth, this->_screenHeight, refreshRate);
+    //    glfwGetFramebufferSize(this->_glfwWindow, &_bufferWidth, &_bufferHeight);
+    //    handleResize(_bufferWidth, _bufferHeight);
+    //    LOG_DEBUG("Toggled windowed mode.");
+    //}
+    //else
+    //{
+    //    vidmode = glfwGetVideoMode(_monitor);
+    //    _screenWidth = vidmode->width;
+    //    _screenHeight = vidmode->height;
+    //    refreshRate = vidmode->refreshRate;
+    //    glfwSetWindowMonitor(this->_glfwWindow, _monitor, 0, 0, _screenWidth, _screenHeight, refreshRate);
+    //    glfwGetFramebufferSize(this->_glfwWindow, &_bufferWidth, &_bufferHeight);
+    //    handleResize(_bufferWidth, _bufferHeight);
+    //    LOG_DEBUG("Toggled fullscreen mode.");
+    //}
 }
 
 void    GameWindow::setRunning(bool running)
@@ -297,7 +406,7 @@ void    GameWindow::setInstance(std::shared_ptr<GameWindow> instance)
 
 bool    GameWindow::isCursorVisible() const
 {
-    return (glfwGetInputMode(_window, GLFW_CURSOR) == GLFW_CURSOR_NORMAL);
+    return (glfwGetInputMode(this->_glfwWindow, GLFW_CURSOR) == GLFW_CURSOR_NORMAL);
 }
 
 void        GameWindow::setCursorVisible(bool visible)
@@ -305,18 +414,18 @@ void        GameWindow::setCursorVisible(bool visible)
     int     visibleValue;
 
     visibleValue = visible ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_HIDDEN;
-    glfwSetInputMode(_window, GLFW_CURSOR, visibleValue);
+    glfwSetInputMode(this->_glfwWindow, GLFW_CURSOR, visibleValue);
 }
 
 bool    GameWindow::isRunning() const
 {
     //return (_running);
-    return (glfwWindowShouldClose(_window) == GLFW_FALSE);
+    return (glfwWindowShouldClose(this->_glfwWindow) == GLFW_FALSE);
 }
 
 void    GameWindow::display()
 {
-    glfwSwapBuffers(_window);
+    glfwSwapBuffers(this->_glfwWindow);
 }
 
 void    GameWindow::pollEvents()
@@ -328,14 +437,14 @@ void    GameWindow::close()
 {
     //glfwSetWindowShouldClose(_window, 0);
     ImGui_ImplGlfwGL3_Shutdown();
-    glfwDestroyWindow(_window);
+    glfwDestroyWindow(this->_glfwWindow);
     glfwTerminate();
 }
 
 void    GameWindow::shutdown()
 {
     ImGui_ImplGlfwGL3_Shutdown();
-    glfwDestroyWindow(_window);
+    glfwDestroyWindow(this->_glfwWindow);
     glfwTerminate();
 }
 
@@ -646,4 +755,9 @@ void    GameWindow::registerCloseHandler(void (*closeHandler)(void*), void* data
 {
     _closeHandler = closeHandler;
     _closeHandlerData = data;
+}
+
+GLFWwindow* GameWindow::getWindow() const
+{
+    return (this->_glfwWindow);
 }

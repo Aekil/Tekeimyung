@@ -12,6 +12,7 @@
 
 #include <Engine/Core/GameStateManager.hpp>
 #include <Engine/Window/Keyboard.hpp>
+#include <Engine/Window/Monitor.hpp>
 #include <Engine/Window/Mouse.hpp>
 #include <Engine/Utils/Timer.hpp>
 
@@ -59,6 +60,8 @@ public:
     void                                handleClose(GLFWwindow* window);
     void                                registerCloseHandler(void (*closeHandler)(void*), void* data = nullptr);
 
+    GLFWwindow*                         getWindow() const;
+
     GameStateManager*                   getGameStateManager() const
     {
         return (this->_gameStateManager);
@@ -88,8 +91,10 @@ private:
                                                     const GLchar* message, const void* userParam);
     void                                initDebugOutput();
 private:
-    GLFWmonitor*                        _monitor;
-    GLFWwindow*                         _window;
+    GLFWmonitor**                       _glfwMonitors;
+    int                                 _glfwMonitorsCount;
+
+    GLFWwindow*                         _glfwWindow;
     bool                                _running;
 
     int                                 _screenWidth;
@@ -98,7 +103,6 @@ private:
     int                                 _bufferHeight;
 
     std::string                         _title;
-    bool                                _fullscreen;
 
     static std::shared_ptr<GameWindow>  _instance;
 	Keyboard							_keyboard;

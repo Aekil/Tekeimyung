@@ -9,7 +9,7 @@
 
 class Engine;
 
-class MenuBarDebugWindow: public DebugWindow
+class MenuBarDebugWindow : public DebugWindow
 {
 friend Engine;
 
@@ -27,6 +27,7 @@ private:
     void                displayLevelsMenu();
     void                displayPlayStopMenu();
     void                displayDebugMenu();
+    void                displayResolutionMenu();
 
     void                displaySaveAsPopup();
     void                displayLoadPopup();

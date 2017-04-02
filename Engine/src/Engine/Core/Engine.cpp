@@ -19,6 +19,7 @@
 #include <Engine/Utils/Logger.hpp>
 #include <Engine/Utils/MonitoringDebugWindow.hpp>
 #include <Engine/Utils/OverlayDebugWindow.hpp>
+#include <Engine/ScreenResDebugWindow.hpp>
 #include <Engine/Utils/Timer.hpp>
 
 #include <Engine/Core/Engine.hpp>
@@ -127,6 +128,7 @@ bool    Engine::run(int ac, char** av, std::shared_ptr<GameState> startGameState
                 }
             }
 
+            ImGui::ShowTestWindow();
 
             // Display imgui windows
             ImGui::Render();
@@ -186,6 +188,7 @@ bool    Engine::initDebugWindows(int ac, char** av)
                                         glm::vec2(450, 200));
         addDebugWindow<LogDebugWindow>(Logger::getInstance(), glm::vec2(0, 430), glm::vec2(300, 200));
         addDebugWindow<MonitoringDebugWindow>(MonitoringDebugWindow::getInstance());
+        //addDebugWindow<ScreenResDebugWindow>();
 
         // Handle command line for MenuBarDebugWindow
         if (ac >= 2)

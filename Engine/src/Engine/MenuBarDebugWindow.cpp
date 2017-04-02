@@ -23,19 +23,20 @@ void    MenuBarDebugWindow::build(std::shared_ptr<GameState> gameState, float el
         ImGui::End();
         return;
     }
+
     // Set Window params
     ImGui::SetWindowPos(ImVec2(_pos.x, _pos.y), ImGuiSetCond_Always);
 
     EntityManager* em = gameState->getWorld().getEntityManager();
 
-    if (ImGui::BeginMenuBar())
+    if (ImGui::BeginMainMenuBar())
     {
-        displayLevelsMenu();
-        displayPlayStopMenu();
-        displayDebugMenu();
-        ImGui::EndMenuBar();
+        this->displayLevelsMenu();
+        this->displayPlayStopMenu();
+        this->displayDebugMenu();
+        //this->displayResolutionMenu();
+        ImGui::EndMainMenuBar();
     }
-
 
     ImGui::End();
 }
@@ -167,6 +168,25 @@ void    MenuBarDebugWindow::displayDebugMenu()
         {
             _engine->toggleDebugWindowsDisplay(false);
         }
+
+        ImGui::EndMenu();
+    }
+}
+
+void    MenuBarDebugWindow::displayResolutionMenu()
+{
+    if (ImGui::BeginMenu("Screen resolutions"), false)
+    {
+        GLFWwindow*     window;
+        GLFWmonitor*    monitor;
+        int             vidModesCount;
+
+        window = GameWindow::getInstance()->getWindow();
+        ASSERT(window != nullptr, "GLFWwindow* should not be null and should exist at this moment.");
+        monitor = glfwGetWindowMonitor(window);
+        //ASSERT(monitor != nullptr, "GLFWwindow's monitor should exist at this moment.");
+
+        //const GLFWvidmode*  vidModes = glfwGetVideoModes(monitor, &vidModesCount);
 
         ImGui::EndMenu();
     }
