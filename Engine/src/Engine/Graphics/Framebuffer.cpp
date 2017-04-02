@@ -11,6 +11,11 @@ Framebuffer::Framebuffer()
 
 Framebuffer::~Framebuffer()
 {
+    if (_hasDepthBuffer)
+    {
+        glDeleteRenderbuffers(1, &_depthBuffer);
+    }
+
     glDeleteFramebuffers(1, &_fbo);
 }
 
@@ -19,7 +24,8 @@ Framebuffer::Framebuffer(Framebuffer&& framebuffer)
     _fbo = framebuffer._fbo;
     _colorAttachments = std::move(framebuffer._colorAttachments);
     _colorAttachmentsIds = framebuffer._colorAttachmentsIds;
-    _depthStencilAttachment = std::move(framebuffer._depthStencilAttachment);
+    _depthBuffer = framebuffer._depthBuffer;
+    _hasDepthBuffer = framebuffer._hasDepthBuffer;
 }
 
 Framebuffer& Framebuffer::operator=(Framebuffer&& framebuffer)
@@ -27,7 +33,8 @@ Framebuffer& Framebuffer::operator=(Framebuffer&& framebuffer)
     _fbo = framebuffer._fbo;
     _colorAttachments = std::move(framebuffer._colorAttachments);
     _colorAttachmentsIds = framebuffer._colorAttachmentsIds;
-    _depthStencilAttachment = std::move(framebuffer._depthStencilAttachment);
+    _depthBuffer = framebuffer._depthBuffer;
+    _hasDepthBuffer = framebuffer._hasDepthBuffer;
     return (*this);
 }
 
@@ -68,9 +75,20 @@ void    Framebuffer::addColorAttachment(std::unique_ptr<Texture> texture)
     _colorAttachments.push_back(std::move(texture));
 }
 
-void    Framebuffer::setDepthAttachment(std::unique_ptr<Texture> texture)
+void    Framebuffer::setDepthAttachment(GLenum internalformat, GLsizei width, GLsizei height)
 {
-    setAttachment(GL_DEPTH_STENCIL_ATTACHMENT, texture);
+    bind(GL_FRAMEBUFFER);
+
+    if (!_hasDepthBuffer)
+    {
+        glGenRenderbuffers(1, &_depthBuffer);
+        _hasDepthBuffer = true;
+    }
+
+
+    glBindRenderbuffer(GL_RENDERBUFFER, _depthBuffer);
+    glRenderbufferStorage(GL_RENDERBUFFER, internalformat, width, height);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, _depthBuffer);
 }
 
 void    Framebuffer::setAttachment(GLuint attachmentId, std::unique_ptr<Texture>& texture)

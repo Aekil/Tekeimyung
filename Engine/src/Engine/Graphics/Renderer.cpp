@@ -523,11 +523,9 @@ bool    Renderer::setupFrameBuffer()
                                                 GL_RGBA16F,
                                                 GL_RGBA,
                                                 GL_FLOAT));
-        _frameBuffer.setDepthAttachment(Texture::create(windowBufferWidth,
-                                            windowBufferHeight,
-                                            GL_DEPTH24_STENCIL8,
-                                            GL_DEPTH_STENCIL,
-                                            GL_UNSIGNED_INT_24_8));
+        _frameBuffer.setDepthAttachment(GL_DEPTH_COMPONENT,
+                                        windowBufferWidth,
+                                        windowBufferHeight);
 
         complete = _frameBuffer.isComplete();
         _frameBuffer.unBind(GL_FRAMEBUFFER);
@@ -591,19 +589,6 @@ bool    Renderer::setupFrameBuffer()
                 complete = complete && framebuffer.isComplete();
             }
         }
-
-        // Init a frame buffer for each blur attachment
-/*        for (auto& blurFramebuffer: _blurFramebuffers)
-        {
-            uint32_t i = 0;
-            for (auto& framebuffer: blurFramebuffer.fbos)
-            {
-                framebuffer.bind(GL_FRAMEBUFFER);
-                framebuffer.removeColorAttachments();
-                framebuffer.addColorAttachment(*blurFramebuffer.colorAttachments[i]);
-                ++i;
-            }
-        }*/
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);

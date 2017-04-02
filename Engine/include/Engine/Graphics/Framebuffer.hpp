@@ -25,7 +25,7 @@ public:
     void                        removeColorAttachments();
 
     void                        addColorAttachment(std::unique_ptr<Texture> texture);
-    void                        setDepthAttachment(std::unique_ptr<Texture> texture);
+    void                        setDepthAttachment(GLenum internalformat, GLsizei width, GLsizei height);
 
     bool                        isComplete() const;
 
@@ -39,5 +39,7 @@ private:
 
     std::vector<std::unique_ptr<Texture> > _colorAttachments;
     std::vector<GLuint >        _colorAttachmentsIds;
-    std::unique_ptr<Texture>    _depthStencilAttachment{nullptr};
+    GLuint                      _depthBuffer;
+
+    bool                        _hasDepthBuffer{false};
 };
