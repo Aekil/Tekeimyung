@@ -605,9 +605,7 @@ bool    Renderer::setupFrameBuffer()
         _frameBuffer.unBind(GL_FRAMEBUFFER);
     }
 
-    // Setup ping-pong framebuffers
-    // With ping-pong rendering, we render the scene in the first framebuffer,
-    // then we blur the first framebuffer into the second one, then we blur the second one into the first, and so on
+    // Setup blur framebuffers
     {
         _blurFramebuffers.resize(3);
 
