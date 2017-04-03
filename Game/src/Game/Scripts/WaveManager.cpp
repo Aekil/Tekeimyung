@@ -3,6 +3,7 @@
 */
 
 #include <Engine/EntityFactory.hpp>
+#include <Engine/Utils/LevelLoader.hpp>
 
 #include <Game/Scripts/Build.hpp>
 #include <Game/Scripts/Spawner.hpp>
@@ -12,7 +13,7 @@
 void        WaveManager::start()
 {
     auto em = EntityFactory::getBindedEntityManager();
-    this->_waves = 4;
+    this->_waves = 12;
     _progressBar.maxProgress = 15.0f;
     _progressBar.currentProgress = 0.0f;
     _progressBar.init("TIMER_BAR_EMPTY", "TIMER_BAR");
@@ -67,6 +68,13 @@ void        WaveManager::update(float dt)
         if (_currentWave + 1 < _waves)
         {
             handleEndWave();
+        }
+        else
+        {
+            auto    gameStateManager = GameWindow::getInstance()->getGameStateManager();
+            auto    defeatState = LevelLoader::getInstance()->createLevelState("WinScreen", gameStateManager);
+
+            gameStateManager->addState(defeatState);
         }
     }
 }

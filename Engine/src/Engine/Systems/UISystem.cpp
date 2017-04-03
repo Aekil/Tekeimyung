@@ -106,9 +106,54 @@ void    UISystem::handleAlignment(EntityManager& em, Entity* entity, bool forceU
             glm::vec3 pos = transform->getPos();
             pos.x += windowWidth * ui->offset.x / 100.0f;
             pos.y += windowHeight * ui->offset.y / 100.0f;
+            pos.z = 0.0f;
             transform->setPos(pos);
+        }
+
+        // Text
+        {
+            sTextComponent* textComp = entity->getComponent<sTextComponent>();
+            if (textComp)
+            {
+                alignText(textComp, size);
+            }
         }
     }
 
     ui->needUpdate = false;
+}
+
+void    UISystem::alignText(sTextComponent* textComp, const glm::vec3& uiSize)
+{
+    // Horizontal alignments
+    {
+        if (textComp->horizontalAlignment == eHorizontalAlignment::LEFT)
+        {
+            textComp->offset.x = -uiSize.x / 2.0f;
+        }
+        else if (textComp->horizontalAlignment == eHorizontalAlignment::MIDDLE)
+        {
+            textComp->offset.x = -textComp->text.getSize().x / 2.0f;
+        }
+        else if (textComp->horizontalAlignment == eHorizontalAlignment::RIGHT)
+        {
+            textComp->offset.x = (uiSize.x / 2.0f) - textComp->text.getSize().x;
+        }
+    }
+
+    // Vertical alignments
+    {
+        if (textComp->verticalAlignment == eVerticalAlignment::TOP)
+        {
+            textComp->offset.y = uiSize.y / 2.0f;
+        }
+        else if (textComp->verticalAlignment == eVerticalAlignment::MIDDLE)
+        {
+            textComp->offset.y = textComp->text.getSize().y / 2.0f;
+        }
+        else if (textComp->verticalAlignment == eVerticalAlignment::BOTTOM)
+        {
+            textComp->offset.y = (-uiSize.y / 2.0f) + textComp->text.getSize().y;
+        }
+    }
 }

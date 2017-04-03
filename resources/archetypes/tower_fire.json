@@ -12,6 +12,7 @@
             "g" : 1,
             "r" : 1
          },
+         "dynamic" : false,
          "ignore_raycast" : false,
          "materials" : [ "MAT_LightBrown", "MAT_Brown", "Mat_LightRed" ],
          "model" : "resources/models/buildings/tower_fire.DAE",

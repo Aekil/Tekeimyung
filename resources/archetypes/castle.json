@@ -12,6 +12,7 @@
             "g" : 1,
             "r" : 1
          },
+         "dynamic" : false,
          "ignore_raycast" : false,
          "materials" : [ "DefaultMaterial" ],
          "model" : "resources/models/buildings/geometric_castle.DAE",

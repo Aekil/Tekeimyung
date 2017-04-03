@@ -20,4 +20,5 @@ public:
 
 private:
     void                                handleAlignment(EntityManager& em, Entity* entity, bool forceUpdate = false);
+    void                                alignText(sTextComponent* textComp, const glm::vec3& uiSize);
 END_SYSTEM(UISystem)

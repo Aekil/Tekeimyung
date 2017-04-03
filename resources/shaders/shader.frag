@@ -5,17 +5,18 @@ layout (location = 1) in vec2 fragTexCoords;
 layout (location = 2) in vec3 fragPos;
 layout (location = 3) flat in uint instanceID;
 
-out vec4 outFragColor;
+layout (location = 0) out vec4 outFragColor;
+layout (location = 1) out vec4 outBrightColor;
 
 uniform sampler2D AmbientTexture;
 uniform sampler2D DiffuseTexture;
+uniform sampler2D BloomTexture;
+uniform sampler2D BloomTextureAlpha;
 
 layout (std140, binding = 0) uniform materialUniformBlock
 {
     vec4    ambient;
     vec4    diffuse;
-    int     texturesTypes;
-    int     faceCamera;
 } material;
 
 
@@ -75,4 +76,17 @@ void main()
     vec4 color = CalcFragColor(fragNormal);
 
     outFragColor = color;
+
+    #ifdef BLOOM
+        #ifdef TEXTURE_BLOOM
+            vec4 bloomTextureColor = texture(BloomTexture, fragTexCoords);
+            vec4 bloomTextureAlpha = texture(BloomTextureAlpha, fragTexCoords);
+
+            outBrightColor = bloomTextureColor * bloomTextureAlpha;
+        #else
+            outBrightColor = outFragColor;
+        #endif
+    #else
+        outBrightColor = vec4(0.0f);
+    #endif
 }

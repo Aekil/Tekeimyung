@@ -6,6 +6,8 @@
 
 #include <Engine/Core/ScriptFactory.hpp>
 
+class GameManager;
+
 class Build : public BaseScript
 {
 public:
@@ -19,6 +21,10 @@ public:
 private:
     void checkBuildableZone();
     void buildInput();
+
+    bool isSameIsland(float x, float y) const;
+    bool isTile(int x, int y) const;
+
 private:
     const Entity* _tile;
     Entity* _preview;

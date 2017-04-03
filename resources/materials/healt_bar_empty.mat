@@ -1,0 +1,23 @@
+{
+   "ambient" : {
+      "a" : 0.76470589637756348,
+      "b" : 0.22352941334247589,
+      "g" : 0,
+      "r" : 0.63529413938522339
+   },
+   "diffuse" : {
+      "a" : 0.78431373834609985,
+      "b" : 0.22352941334247589,
+      "g" : 0,
+      "r" : 0.63137257099151611
+   },
+   "dst_blend" : "GL_ONE_MINUS_SRC_ALPHA",
+   "face_camera" : false,
+   "src_blend" : "GL_SRC_ALPHA",
+   "textures" : {
+      "ambient" : "",
+      "diffuse" : ""
+   },
+   "transparent" : false,
+   "wireframe" : false
+}

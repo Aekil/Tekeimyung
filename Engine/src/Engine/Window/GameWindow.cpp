@@ -53,6 +53,7 @@ bool    GameWindow::initialize()
     glfwWindowHint(GLFW_GREEN_BITS, vidmode->greenBits);
     glfwWindowHint(GLFW_BLUE_BITS, vidmode->blueBits);
     glfwWindowHint(GLFW_REFRESH_RATE, vidmode->refreshRate);
+    glfwWindowHint(GLFW_RESIZABLE, false);
     _screenWidth = vidmode->width;
     _screenHeight = vidmode->height;
 

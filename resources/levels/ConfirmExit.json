@@ -3,60 +3,6 @@
       {
          "components" : {
             "sNameComponent" : {
-               "name" : "QUIT_CONFIRM_POPUP"
-            },
-            "sRenderComponent" : {
-               "animated" : false,
-               "animations" : [],
-               "color" : {
-                  "a" : 1,
-                  "b" : 1,
-                  "g" : 1,
-                  "r" : 1
-               },
-               "ignore_raycast" : false,
-               "materials" : [ "quit_confirm_popup.mat" ],
-               "model" : "resources/models/default.DAE",
-               "type" : "PLANE"
-            },
-            "sTransformComponent" : {
-               "pos" : {
-                  "x" : 960,
-                  "y" : 508.5,
-                  "z" : -1
-               },
-               "rotation" : {
-                  "x" : 0,
-                  "y" : 0,
-                  "z" : 0
-               },
-               "scale" : {
-                  "x" : 48,
-                  "y" : 20.340000152587891,
-                  "z" : 1
-               }
-            },
-            "sUiComponent" : {
-               "horizontal_alignment" : "MIDDLE",
-               "layer" : 1,
-               "offset" : {
-                  "x" : 0,
-                  "y" : 0
-               },
-               "percentage_size" : true,
-               "size" : {
-                  "x" : 0.25,
-                  "y" : 0.20000000298023224
-               },
-               "vertical_alignment" : "MIDDLE"
-            }
-         },
-         "name" : "QUIT_CONFIRM_POPUP",
-         "tag" : ""
-      },
-      {
-         "components" : {
-            "sNameComponent" : {
                "name" : "QUIT_CONFIRM_TEXT"
             },
             "sRenderComponent" : {
@@ -76,7 +22,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 960,
-                  "y" : 564.43499755859375,
+                  "y" : 610.20001220703125,
                   "z" : 0
                },
                "rotation" : {
@@ -85,8 +31,8 @@
                   "z" : 0
                },
                "scale" : {
-                  "x" : 42.239997863769531,
-                  "y" : 4.576500415802002,
+                  "x" : 60,
+                  "y" : 7.1999526023864746,
                   "z" : 1
                }
             },
@@ -95,12 +41,12 @@
                "layer" : 0,
                "offset" : {
                   "x" : 0,
-                  "y" : 5.5
+                  "y" : 10
                },
                "percentage_size" : true,
                "size" : {
-                  "x" : 0.2199999988079071,
-                  "y" : 0.045000001788139343
+                  "x" : 0.3125,
+                  "y" : 0.070795997977256775
                },
                "vertical_alignment" : "MIDDLE"
             }
@@ -133,8 +79,8 @@
             },
             "sTransformComponent" : {
                "pos" : {
-                  "x" : 1075.199951171875,
-                  "y" : 467.82000732421875,
+                  "x" : 844.79998779296875,
+                  "y" : 508.5,
                   "z" : 0
                },
                "rotation" : {
@@ -143,8 +89,8 @@
                   "z" : 0
                },
                "scale" : {
-                  "x" : 9.6000003814697266,
-                  "y" : 5.0850000381469727,
+                  "x" : 15,
+                  "y" : 7.1999526023864746,
                   "z" : 6
                }
             },
@@ -152,13 +98,13 @@
                "horizontal_alignment" : "MIDDLE",
                "layer" : 0,
                "offset" : {
-                  "x" : 6,
-                  "y" : -4
+                  "x" : -6,
+                  "y" : 0
                },
                "percentage_size" : true,
                "size" : {
-                  "x" : 0.05000000074505806,
-                  "y" : 0.05000000074505806
+                  "x" : 0.078125,
+                  "y" : 0.070795997977256775
                },
                "vertical_alignment" : "MIDDLE"
             }
@@ -191,8 +137,8 @@
             },
             "sTransformComponent" : {
                "pos" : {
-                  "x" : 844.79998779296875,
-                  "y" : 467.82000732421875,
+                  "x" : 1075.199951171875,
+                  "y" : 508.5,
                   "z" : 0
                },
                "rotation" : {
@@ -201,8 +147,8 @@
                   "z" : 0
                },
                "scale" : {
-                  "x" : 9.6000003814697266,
-                  "y" : 5.0850000381469727,
+                  "x" : 15,
+                  "y" : 7.1999526023864746,
                   "z" : 1
                }
             },
@@ -210,13 +156,13 @@
                "horizontal_alignment" : "MIDDLE",
                "layer" : 0,
                "offset" : {
-                  "x" : -6,
-                  "y" : -4
+                  "x" : 6,
+                  "y" : 0
                },
                "percentage_size" : true,
                "size" : {
-                  "x" : 0.05000000074505806,
-                  "y" : 0.05000000074505806
+                  "x" : 0.078125,
+                  "y" : 0.070795997977256775
                },
                "vertical_alignment" : "MIDDLE"
             }

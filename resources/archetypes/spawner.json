@@ -12,6 +12,7 @@
             "g" : 1,
             "r" : 1
          },
+         "dynamic" : false,
          "ignore_raycast" : false,
          "materials" : [ "_01 - Default" ],
          "model" : "resources/models/blocks/block.DAE",
@@ -28,7 +29,7 @@
                      "spawnable_entities" : [
                         {
                            "amount" : 1,
-                           "spawn_time" : 1.5,
+                           "spawn_time" : 3,
                            "type" : "ENEMY"
                         }
                      ]
@@ -50,6 +51,171 @@
                            "amount" : 1,
                            "spawn_time" : 1.5,
                            "type" : "ENEMY"
+                        },
+                        {
+                           "amount" : 1,
+                           "spawn_time" : 3,
+                           "type" : "ENEMY_SPEED"
+                        }
+                     ]
+                  },
+                  {
+                     "associated_wave" : 3,
+                     "spawnable_entities" : [
+                        {
+                           "amount" : 2,
+                           "spawn_time" : 1.5,
+                           "type" : "ENEMY"
+                        },
+                        {
+                           "amount" : 1,
+                           "spawn_time" : 3,
+                           "type" : "ENEMY_SPEED"
+                        }
+                     ]
+                  },
+                  {
+                     "associated_wave" : 4,
+                     "spawnable_entities" : [
+                        {
+                           "amount" : 2,
+                           "spawn_time" : 1.5,
+                           "type" : "ENEMY"
+                        },
+                        {
+                           "amount" : 2,
+                           "spawn_time" : 3,
+                           "type" : "ENEMY_SPEED"
+                        }
+                     ]
+                  },
+                  {
+                     "associated_wave" : 5,
+                     "spawnable_entities" : [
+                        {
+                           "amount" : 3,
+                           "spawn_time" : 1.5,
+                           "type" : "ENEMY"
+                        },
+                        {
+                           "amount" : 2,
+                           "spawn_time" : 3,
+                           "type" : "ENEMY_SPEED"
+                        }
+                     ]
+                  },
+                  {
+                     "associated_wave" : 6,
+                     "spawnable_entities" : [
+                        {
+                           "amount" : 3,
+                           "spawn_time" : 1.5,
+                           "type" : "ENEMY"
+                        },
+                        {
+                           "amount" : 3,
+                           "spawn_time" : 3,
+                           "type" : "ENEMY_SPEED"
+                        }
+                     ]
+                  },
+                  {
+                     "associated_wave" : 7,
+                     "spawnable_entities" : [
+                        {
+                           "amount" : 3,
+                           "spawn_time" : 1.5,
+                           "type" : "ENEMY"
+                        },
+                        {
+                           "amount" : 3,
+                           "spawn_time" : 3,
+                           "type" : "ENEMY_SPEED"
+                        },
+                        {
+                           "amount" : 1,
+                           "spawn_time" : 2.5,
+                           "type" : "ENEMY_TANK"
+                        }
+                     ]
+                  },
+                  {
+                     "associated_wave" : 8,
+                     "spawnable_entities" : [
+                        {
+                           "amount" : 4,
+                           "spawn_time" : 0,
+                           "type" : "ENEMY"
+                        },
+                        {
+                           "amount" : 4,
+                           "spawn_time" : 0,
+                           "type" : "ENEMY_SPEED"
+                        },
+                        {
+                           "amount" : 1,
+                           "spawn_time" : 2.5,
+                           "type" : "ENEMY_TANK"
+                        }
+                     ]
+                  },
+                  {
+                     "associated_wave" : 9,
+                     "spawnable_entities" : [
+                        {
+                           "amount" : 4,
+                           "spawn_time" : 1.5,
+                           "type" : "ENEMY"
+                        },
+                        {
+                           "amount" : 4,
+                           "spawn_time" : 3,
+                           "type" : "ENEMY_SPEED"
+                        },
+                        {
+                           "amount" : 2,
+                           "spawn_time" : 4,
+                           "type" : "ENEMY_TANK"
+                        }
+                     ]
+                  },
+                  {
+                     "associated_wave" : 10,
+                     "spawnable_entities" : [
+                        {
+                           "amount" : 5,
+                           "spawn_time" : 1.5,
+                           "type" : "ENEMY"
+                        },
+                        {
+                           "amount" : 5,
+                           "spawn_time" : 3,
+                           "type" : "ENEMY_SPEED"
+                        },
+                        {
+                           "amount" : 2,
+                           "spawn_time" : 4,
+                           "type" : "ENEMY_TANK"
+                        }
+                     ]
+                  },
+                  {
+                     "associated_wave" : 11,
+                     "spawnable_entities" : [
+                        {
+                           "amount" : 5,
+                           "spawn_time" : 1.5,
+                           "type" : "ENEMY"
+                        },
+                        {
+                           "amount" : 5,
+                           "spawn_time" : 3,
+                           "type" : "ENEMY_SPEED"
+                        },
+                        {
+                           "amount" : 3,
+                           "spawn_time" : 4,
+                           "type" : "ENEMY_TANK"
                         }
                      ]
                   }

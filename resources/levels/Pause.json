@@ -26,7 +26,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 960,
-                  "y" : 600.030029296875,
+                  "y" : 671.219970703125,
                   "z" : 0
                },
                "rotation" : {
@@ -35,8 +35,8 @@
                   "z" : 0
                },
                "scale" : {
-                  "x" : 38.400001525878906,
-                  "y" : 5.0850000381469727,
+                  "x" : 30,
+                  "y" : 7.1999526023864746,
                   "z" : 6
                }
             },
@@ -45,12 +45,12 @@
                "layer" : 0,
                "offset" : {
                   "x" : 0,
-                  "y" : 9
+                  "y" : 16
                },
                "percentage_size" : true,
                "size" : {
-                  "x" : 0.20000000298023224,
-                  "y" : 0.05000000074505806
+                  "x" : 0.15625,
+                  "y" : 0.070795997977256775
                },
                "vertical_alignment" : "MIDDLE"
             }
@@ -84,7 +84,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 960,
-                  "y" : 508.5,
+                  "y" : 589.8599853515625,
                   "z" : 0
                },
                "rotation" : {
@@ -93,8 +93,8 @@
                   "z" : 0
                },
                "scale" : {
-                  "x" : 38.400001525878906,
-                  "y" : 5.0850009918212891,
+                  "x" : 30,
+                  "y" : 7.1999526023864746,
                   "z" : 6
                }
             },
@@ -103,12 +103,12 @@
                "layer" : 0,
                "offset" : {
                   "x" : 0,
-                  "y" : 0
+                  "y" : 8
                },
                "percentage_size" : true,
                "size" : {
-                  "x" : 0.20000000298023224,
-                  "y" : 0.050000008195638657
+                  "x" : 0.15625,
+                  "y" : 0.070795997977256775
                },
                "vertical_alignment" : "MIDDLE"
             }
@@ -142,7 +142,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 960,
-                  "y" : 416.97000122070313,
+                  "y" : 508.5,
                   "z" : 0
                },
                "rotation" : {
@@ -151,8 +151,8 @@
                   "z" : 0
                },
                "scale" : {
-                  "x" : 28.799999237060547,
-                  "y" : 5.0850000381469727,
+                  "x" : 30,
+                  "y" : 7.1999526023864746,
                   "z" : 6
                }
             },
@@ -161,12 +161,12 @@
                "layer" : 0,
                "offset" : {
                   "x" : 0,
-                  "y" : -9
+                  "y" : 0
                },
                "percentage_size" : true,
                "size" : {
-                  "x" : 0.15000000596046448,
-                  "y" : 0.05000000074505806
+                  "x" : 0.15625,
+                  "y" : 0.070795997977256775
                },
                "vertical_alignment" : "MIDDLE"
             }
@@ -177,11 +177,101 @@
       {
          "components" : {
             "sButtonComponent" : {
+               "action" : "NONE",
+               "action_level" : ""
+            },
+            "sNameComponent" : {
+               "name" : "BUTTON_BACK_TO_MENU"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [
+                  {
+                     "layer" : "DEFAULT",
+                     "name" : "fading",
+                     "params" : [
+                        {
+                           "frames" : [
+                              {
+                                 "easing" : "NONE",
+                                 "time" : 1,
+                                 "value" : {
+                                    "w" : 0.35294118523597717,
+                                    "x" : 1,
+                                    "y" : 1,
+                                    "z" : 1
+                                 }
+                              },
+                              {
+                                 "easing" : "NONE",
+                                 "time" : 2,
+                                 "value" : {
+                                    "w" : 1,
+                                    "x" : 1,
+                                    "y" : 1,
+                                    "z" : 1
+                                 }
+                              }
+                           ],
+                           "name" : "color"
+                        }
+                     ]
+                  }
+               ],
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 1
+               },
+               "ignore_raycast" : false,
+               "materials" : [ "button_back_to_menu.mat" ],
+               "model" : "resources/models/traps/trap_needle.DAE",
+               "type" : "PLANE"
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 960,
+                  "y" : 386.45999145507813,
+                  "z" : 0
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 30,
+                  "y" : 7.1999998092651367,
+                  "z" : 0
+               }
+            },
+            "sUiComponent" : {
+               "horizontal_alignment" : "MIDDLE",
+               "layer" : 0,
+               "offset" : {
+                  "x" : 0,
+                  "y" : -12
+               },
+               "percentage_size" : true,
+               "size" : {
+                  "x" : 0.15625,
+                  "y" : 0.070796459913253784
+               },
+               "vertical_alignment" : "MIDDLE"
+            }
+         },
+         "name" : "BUTTON_BACK_TO_MENU",
+         "tag" : ""
+      },
+      {
+         "components" : {
+            "sButtonComponent" : {
                "action" : "ADD_LEVEL",
                "action_level" : "ConfirmExit"
             },
             "sNameComponent" : {
-               "name" : "BUTTON_QUIT"
+               "name" : "BUTTON_EXIT_GAME"
             },
             "sRenderComponent" : {
                "animated" : false,
@@ -193,14 +283,14 @@
                   "r" : 1
                },
                "ignore_raycast" : false,
-               "materials" : [ "button_quit.mat" ],
+               "materials" : [ "button_exit_game.mat" ],
                "model" : "resources/models/default.DAE",
                "type" : "PLANE"
             },
             "sTransformComponent" : {
                "pos" : {
                   "x" : 960,
-                  "y" : 325.44000244140625,
+                  "y" : 305.10000610351563,
                   "z" : 0
                },
                "rotation" : {
@@ -209,9 +299,9 @@
                   "z" : 0
                },
                "scale" : {
-                  "x" : 28.799999237060547,
-                  "y" : 5.0850009918212891,
-                  "z" : 6
+                  "x" : 30,
+                  "y" : 7.1999526023864746,
+                  "z" : 1
                }
             },
             "sUiComponent" : {
@@ -219,17 +309,17 @@
                "layer" : 0,
                "offset" : {
                   "x" : 0,
-                  "y" : -18
+                  "y" : -20
                },
                "percentage_size" : true,
                "size" : {
-                  "x" : 0.15000000596046448,
-                  "y" : 0.050000008195638657
+                  "x" : 0.15625,
+                  "y" : 0.070795997977256775
                },
                "vertical_alignment" : "MIDDLE"
             }
          },
-         "name" : "BUTTON_QUIT",
+         "name" : "BUTTON_EXIT_GAME",
          "tag" : ""
       }
    ],

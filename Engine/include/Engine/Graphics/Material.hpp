@@ -17,6 +17,8 @@
     PROCESS(TEXTURE_AMBIENT, 1)                 \
     PROCESS(TEXTURE_DIFFUSE, 2)                 \
     PROCESS(FACE_CAMERA, 4)                     \
+    PROCESS(BLOOM, 8)                           \
+    PROCESS(TEXTURE_BLOOM, 16)                  \
 
 #define BLENDING_MODES(PROCESS)                 \
     PROCESS(GL_ZERO)                            \
@@ -75,11 +77,13 @@ public:
 
     const glm::vec4&    getAmbient() const;
     const glm::vec4&    getDiffuse() const;
-    int                 isFacingCamera() const;
+    bool                isFacingCamera() const;
+    bool                hasBloom() const;
 
     void                setAmbient(const glm::vec4& ambient);
     void                setDiffuse(const glm::vec4& diffuse);
     void                isFacingCamera(bool faceCamera);
+    void                hasBloom(bool bloom);
 
     int                 getOptions();
 
@@ -98,13 +102,14 @@ private:
 
     // Need to update ubo data
     bool                _needUpdate;
-    bool                _optionsFlagDirty;
+    bool                _optionsFlagDirty{true};
 
     glm::vec4           _ambient;
     glm::vec4           _diffuse;
-    int                 _faceCamera;
+    bool                _faceCamera{false};
+    bool                _bloom{false};
 
-    int                 _options;
+    int                 _options{0};
 
 private:
     std::unordered_map<Texture::eType, Texture*> _textures;

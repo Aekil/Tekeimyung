@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <vector>
 
+#include <Engine/Graphics/UI/Font.hpp>
 #include <Engine/Graphics/Geometries/Geometry.hpp>
 #include <Engine/Graphics/Material.hpp>
 #include <Engine/Graphics/Model.hpp>
@@ -78,6 +79,10 @@ void    ResourceManager::loadResources(const std::string& directory)
             else if (std::find(soundsExtensions.cbegin(), soundsExtensions.cend(), extension) != soundsExtensions.cend())
             {
                 loadSound(basename, file);
+            }
+            else if (extension == "ttf")
+            {
+                loadResource<Font>(file);
             }
         }
     }
@@ -233,12 +238,14 @@ template Texture*  ResourceManager::getOrLoadResource<Texture>(const std::string
 template Geometry*  ResourceManager::getOrLoadResource<Geometry>(const std::string& path);
 template Material*  ResourceManager::getOrLoadResource<Material>(const std::string& path);
 template File*  ResourceManager::getOrLoadResource<File>(const std::string& path);
+template Font*  ResourceManager::getOrLoadResource<Font>(const std::string& path);
 
 template Model*  ResourceManager::getResource<Model>(const std::string& path);
 template Texture*  ResourceManager::getResource<Texture>(const std::string& path);
 template Geometry*  ResourceManager::getResource<Geometry>(const std::string& path);
 template Material*  ResourceManager::getResource<Material>(const std::string& path);
 template File*  ResourceManager::getResource<File>(const std::string& path);
+template Font*  ResourceManager::getResource<Font>(const std::string& path);
 
 template Model*  ResourceManager::registerResource<Model>(std::unique_ptr<Model> resource, const std::string& path);
 template Texture*  ResourceManager::registerResource<Texture>(std::unique_ptr<Texture> resource, const std::string& path);
@@ -251,3 +258,4 @@ template File*  ResourceManager::getOrCreateResource<File>(const std::string& pa
 template std::vector<const char*>&  ResourceManager::getResourcesNames<Model>();
 template std::vector<const char*>&  ResourceManager::getResourcesNames<Texture>();
 template std::vector<const char*>&  ResourceManager::getResourcesNames<Material>();
+template std::vector<const char*>&  ResourceManager::getResourcesNames<Font>();

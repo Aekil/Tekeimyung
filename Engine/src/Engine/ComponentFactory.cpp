@@ -16,6 +16,7 @@
 #include <Engine/Utils/ResourceManager.hpp>
 #include <Engine/Systems/UISystem.hpp>
 #include <Engine/Graphics/Renderer.hpp>
+#include <Engine/Graphics/UI/Font.hpp>
 #include <Engine/Core/ScriptFactory.hpp>
 #include <Engine/EntityFactory.hpp>
 #include <Engine/ComponentFactory.hpp>
@@ -105,6 +106,7 @@ sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& 
     component->modelFile = json.getString("model", "resources/models/default.DAE");
     component->color = json.getColor4f("color", { 1.0f, 1.0f, 1.0f, 1.0f });
     component->ignoreRaycast = json.getBool("ignore_raycast", false);
+    component->dynamic = json.getBool("dynamic", false);
 
     std::string geometryName = json.getString("type", "MESH");
     component->type = EnumManager<Geometry::eType>::stringToEnum(geometryName);
@@ -243,6 +245,7 @@ JsonValue&    ComponentFactory<sRenderComponent>::saveToJson(const std::string& 
     json.setColor4f("color", component->color);
     json.setString("type", EnumManager<Geometry::eType>::enumToString(component->type));
     json.setBool("ignore_raycast", component->ignoreRaycast);
+    json.setBool("dynamic", component->dynamic);
 
     // Save animations
     {
@@ -342,6 +345,7 @@ bool    ComponentFactory<sRenderComponent>::updateEditor(const std::string& enti
 
     changed |= ImGui::ColorEdit4("color", glm::value_ptr(component->color));
     changed |= ImGui::Checkbox("Ignore mouse raycast", &component->ignoreRaycast);
+    changed |= ImGui::Checkbox("Dynamic", &component->dynamic);
     typeChanged |= Helper::updateComboEnum<Geometry::eType>("Model type", component->type);
 
     if (component->type == Geometry::eType::MESH)
@@ -1380,7 +1384,7 @@ bool    ComponentFactory<sUiComponent>::updateEditor(const std::string& entityTy
 
     if (component->percentageSize)
     {
-        if (ImGui::InputFloat("vertical size", &component->size.x, 0.05f, ImGuiInputTextFlags_AllowTabInput))
+        if (ImGui::InputFloat("Horizontal size", &component->size.x, 0.05f, ImGuiInputTextFlags_AllowTabInput))
         {
             changed = true;
             // Set size.x between 0 and 1
@@ -1388,7 +1392,7 @@ bool    ComponentFactory<sUiComponent>::updateEditor(const std::string& entityTy
             component->size.x = std::max(component->size.x, 0.0f);
         }
 
-        if (ImGui::InputFloat("horizontal size", &component->size.y, 0.05f, ImGuiInputTextFlags_AllowTabInput))
+        if (ImGui::InputFloat("Vertical size", &component->size.y, 0.05f, ImGuiInputTextFlags_AllowTabInput))
         {
             changed = true;
             // Set size.y between 0 and 1
@@ -1400,6 +1404,127 @@ bool    ComponentFactory<sUiComponent>::updateEditor(const std::string& entityTy
     if (changed)
     {
         component->needUpdate = true;
+    }
+
+    return (changed);
+}
+
+
+/*
+** sTextComponent
+*/
+
+sComponent* ComponentFactory<sTextComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
+{
+    sTextComponent*  component;
+
+    component = new sTextComponent();
+
+    component->text.setContent(json.getString("content", ""));
+    component->text.setColor(json.getColor4f("color", {1.0f, 1.0f, 1.0f, 1.0f}));
+    component->text.setFontSize(json.getUInt("font_size", 10));
+
+    // Load text font
+    {
+        std::string fontName = json.getString("font_name", "arial.ttf");
+        Font* font = ResourceManager::getInstance()->getResource<Font>(fontName);
+
+        if (!font)
+        {
+            EXCEPT(InternalErrorException, "Failed to get font resource \"%s\"", fontName.c_str());
+        }
+
+        component->text.setFont(font);
+    }
+
+    return component;
+}
+
+JsonValue&    ComponentFactory<sTextComponent>::saveToJson(const std::string& entityType, const sComponent* savedComponent, JsonValue* toJson)
+{
+    JsonValue& json = toJson ? *toJson : _componentsJson[entityType];
+    const sTextComponent* component = static_cast<const sTextComponent*>(savedComponent ? savedComponent : _components[entityType]);
+
+
+    json.setString("content", component->text.getContent());
+    json.setColor4f("color", component->text.getColor());
+    json.setUInt("font_size", component->text.getFontSize());
+
+    if (component->text.getFont())
+    {
+        json.setString("font_name", component->text.getFont()->getId());
+    }
+
+    return (json);
+}
+
+bool    ComponentFactory<sTextComponent>::updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity)
+{
+    sTextComponent* component = static_cast<sTextComponent*>(entityComponent ? entityComponent : _components[entityType]);
+    *savedComponent = component;
+    bool changed = false;
+
+    // Edit text content
+    {
+        std::vector<char> textVec(component->text.getContent().cbegin(), component->text.getContent().cend());
+        textVec.push_back(0);
+        textVec.resize(64);
+
+        if (ImGui::InputTextMultiline("Text", textVec.data(), textVec.size()))
+        {
+            component->text.setContent(textVec.data());
+            changed = true;
+        }
+    }
+
+    // Edit text size
+    {
+        int textSize = component->text.getFontSize();
+        if (ImGui::InputInt("Font size", &textSize))
+        {
+            textSize = std::max(textSize, 0);
+            textSize = std::min(textSize, 200);
+            component->text.setFontSize(textSize);
+            changed = true;
+        }
+    }
+
+    // Edit text color
+    {
+        glm::vec4 color = component->text.getColor();
+        if (ImGui::ColorEdit4("Color", glm::value_ptr(color)))
+        {
+            component->text.setColor(color);
+        }
+    }
+
+    // Edit font name
+    {
+        std::string fontName = component->text.getFont()->getId();
+        if (Helper::updateComboString("Font name", ResourceManager::getInstance()->getResourcesNames<Font>(), fontName))
+        {
+            Font* font = ResourceManager::getInstance()->getResource<Font>(fontName);
+
+            ASSERT(font != nullptr, "The font \"%s\" should be loaded", fontName.c_str());
+
+            component->text.setFont(font);
+            changed = true;
+        }
+    }
+
+    // Edit alignment
+    {
+        changed |= Helper::updateComboEnum<eHorizontalAlignment>("Horizontal alignment", component->horizontalAlignment);
+        changed |= Helper::updateComboEnum<eVerticalAlignment>("Vertical alignment", component->verticalAlignment);
+    }
+
+    if (changed)
+    {
+        sUiComponent* uiComp = component->entity->getComponent<sUiComponent>();
+        if (uiComp)
+        {
+            uiComp->needUpdate = true;
+        }
     }
 
     return (changed);

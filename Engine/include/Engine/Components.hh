@@ -31,6 +31,7 @@
 #include <Engine/Graphics/Geometries/Sphere.hpp>
 #include <Engine/Graphics/Animator.hpp>
 #include <Engine/Graphics/Transform.hpp>
+#include <Engine/Graphics/UI/Text.hpp>
 #include <Engine/Graphics/UniformBuffer.hpp>
 #include <Engine/Utils/Helper.hpp>
 #include <Engine/Utils/ResourceManager.hpp>
@@ -62,6 +63,7 @@ virtual void update(sRenderComponent* component)
     this->_animator = component->_animator;
     this->_display = component->_display;
     this->ignoreRaycast = component->ignoreRaycast;
+    this->dynamic = component->dynamic;
 }
 
 virtual void update(sComponent* component)
@@ -108,6 +110,7 @@ Animator                _animator;
 Geometry::eType type;
 bool                    _display = true;
 bool                    ignoreRaycast = false;
+bool                    dynamic = false;
 
 glm::vec4 color;
 
@@ -438,6 +441,49 @@ int                     layer{0}; // Layer used for UI ordering
 bool                    needUpdate = true;
 
 END_COMPONENT(sUiComponent)
+
+
+START_COMPONENT(sTextComponent)
+virtual sComponent* clone()
+{
+    sTextComponent* component = new sTextComponent();
+    component->update(this);
+
+    return (component);
+}
+
+virtual void update(sTextComponent* component)
+{
+    this->text = component->text;
+}
+
+virtual void update(sComponent* component)
+{
+    update(static_cast<sTextComponent*>(component));
+}
+
+BufferPool::SubBuffer*  getBuffer() const
+{
+    return (_buffer);
+}
+
+BufferPool::SubBuffer*  getBuffer(BufferPool* bufferPool)
+{
+    if (!_buffer)
+    {
+        _buffer = bufferPool->allocate();
+    }
+    return (_buffer);
+}
+
+Text text;
+eHorizontalAlignment    horizontalAlignment = eHorizontalAlignment::MIDDLE;
+eVerticalAlignment      verticalAlignment = eVerticalAlignment::MIDDLE;
+glm::vec2 offset; // Offset to align text
+
+private:
+BufferPool::SubBuffer* _buffer{nullptr};
+END_COMPONENT(sTextComponent)
 
 
 #define BUTTON_ACTION(PROCESS)              \

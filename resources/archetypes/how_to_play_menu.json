@@ -12,6 +12,7 @@
             "g" : 1,
             "r" : 1
          },
+         "dynamic" : false,
          "ignore_raycast" : false,
          "materials" : [ "how_to_play_menu.mat" ],
          "model" : "resources/models/default.DAE",

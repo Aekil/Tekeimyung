@@ -5,31 +5,30 @@ out vec4 outFragColor;
 uniform sampler2D image;
 
 uniform bool horizontal;
+uniform vec2 targetSize;
 
 // Gaussian blur weights for a 21x21 kernel: http://dev.theomader.com/gaussian-kernel-calculator/
-uniform float weight[5] = float[] (0.1784, 0.210431, 0.222338, 0.210431, 0.1784);
+uniform float weight[11] = float[] (0.035822, 0.05879, 0.086425, 0.113806, 0.13424, 0.141836, 0.13424, 0.113806, 0.086425, 0.05879, 0.035822);
 
 void main()
 {
-    vec2 pixelSize = 1.0 / textureSize(image, 0); // Size of a single texel
     vec4 result = vec4(0.0f, 0.0f, 0.0f, 0.0f);
-    //vec2 pixelSize = 1.0f / vec2(1920.0, 1017.0);
+    vec2 pixelSize = 1.0f / targetSize;
 
     if (horizontal)
     {
-        for (int i = -2; i <= 2; ++i)
+        for (int i = -5; i <= 5; ++i)
         {
-            result += texture(image, fragTexCoords + vec2(pixelSize.x * i, 0.0)) * weight[i + 2];
-        }
-        outFragColor = result;
-     }
-    else
-    {
-        for (int i = -2; i <= 2; ++i)
-        {
-            result += texture(image, fragTexCoords + vec2(0.0, pixelSize.y * i)) * weight[i + 2];
+            result += texture(image, fragTexCoords + vec2(pixelSize.x * i, 0.0)) * weight[i + 5];
         }
         outFragColor = result;
     }
-    //outFragColor = texture(image, fragTexCoords);
+    else
+    {
+        for (int i = -5; i <= 5; ++i)
+        {
+            result += texture(image, fragTexCoords + vec2(0.0, pixelSize.y * i)) * weight[i + 5];
+        }
+        outFragColor = result;
+    }
 }

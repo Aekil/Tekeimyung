@@ -10,6 +10,7 @@
 #include <Game/Scripts/Build.hpp>
 #include <Game/Scripts/Tile.hpp>
 #include <Game/Scripts/Teleport.hpp>
+#include <Game/Scripts/GameManager.hpp>
 
 void Build::start()
 {
@@ -33,6 +34,27 @@ void Build::start()
 
     this->_transform = this->getComponent<sTransformComponent>();
     this->_render = this->getComponent<sRenderComponent>();
+
+    // Get GameManager
+    {
+        auto em = EntityFactory::getBindedEntityManager();
+        Entity* gameManager = em->getEntityByTag("GameManager");
+        if (!gameManager)
+        {
+            LOG_WARN("Can't find entity with GameManager tag");
+            return;
+        }
+
+        auto scriptComponent = gameManager->getComponent<sScriptComponent>();
+
+        if (!scriptComponent)
+        {
+            LOG_WARN("Can't find scriptComponent on GameManager entity");
+            return;
+        }
+
+        _gameManager = scriptComponent->getScript<GameManager>("GameManager");
+    }
 }
 
 void Build::update(float dt)
@@ -121,6 +143,7 @@ void Build::checkBuildableZone()
         {
             auto pos = tile->getComponent<sTransformComponent>()->getPos();
             auto scriptComponent = tile->getComponent<sScriptComponent>();
+            auto transform = tile->getComponent<sTransformComponent>();
 
             if (!scriptComponent)
                 continue;
@@ -131,7 +154,10 @@ void Build::checkBuildableZone()
 
             tile->setBuildable(false);
 
-            if (!_buildEnabled)
+            if (!_buildEnabled ||
+                (this->_layer == 1 &&
+                    this->_buildableItems[_layer][this->_currentIdx] != "TP_SECOND" &&
+                    !isSameIsland(transform->getPos().x, transform->getPos().z)))
                 continue;
 
             if (Collisions::sphereVSAABB(_transform->getPos(), this->_buildableRadius * SIZE_UNIT, box->pos + pos, glm::vec3(box->size.x * SIZE_UNIT, box->size.y * SIZE_UNIT, box->size.z * SIZE_UNIT)))
@@ -167,4 +193,53 @@ void Build::checkBuildableZone()
             }
         }
     }
+}
+
+bool    Build::isSameIsland(float x, float y) const
+{
+    glm::ivec2 buildPos{
+        buildPos.x = static_cast<int>(std::ceil(x) / 25.0f),
+        buildPos.y = static_cast<int>(y / 25.0f)
+    };
+    glm::ivec2 playerPos{
+        playerPos.x = static_cast<int>(std::ceil(_transform->getPos().x) / 25.0f),
+        playerPos.y = static_cast<int>(_transform->getPos().z / 25.0f)
+    };
+    glm::ivec2 direction = buildPos - playerPos;
+    direction.x = std::min(direction.x, 1);
+    direction.x = std::max(direction.x, -1);
+    direction.y = std::min(direction.y, 1);
+    direction.y = std::max(direction.y, -1);
+
+    while (playerPos.x != buildPos.x ||
+        playerPos.y != buildPos.y)
+    {
+        while (playerPos.y != buildPos.y)
+        {
+            if (!isTile(playerPos.x, playerPos.y))
+                return (false);
+            playerPos.y += direction.y;
+        }
+        if (!isTile(playerPos.x, playerPos.y))
+            return (false);
+        playerPos.x += direction.x;
+    }
+    return (true);
+}
+
+bool    Build::isTile(int x, int y) const
+{
+    if (x < 0 ||
+        x >= _gameManager->mapSize ||
+        y < 0 ||
+        y >= _gameManager->mapSize)
+    {
+        return (true);
+    }
+    if (_gameManager->secondLayerPattern[x][y] != 1)
+    {
+        return (false);
+    }
+
+    return (true);
 }

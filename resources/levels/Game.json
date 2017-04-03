@@ -41,7 +41,6 @@
       },
       {
          "components" : {
-            "sDynamicComponent" : null,
             "sNameComponent" : {
                "name" : "PLAYER"
             },
@@ -54,6 +53,7 @@
                   "g" : 0.98333263397216797,
                   "r" : 1
                },
+               "dynamic" : true,
                "ignore_raycast" : false,
                "materials" : [ "_01 - Default", "_02 - Default" ],
                "model" : "resources/models/characters/character.DAE",
@@ -129,6 +129,7 @@
                   "g" : 1,
                   "r" : 1
                },
+               "dynamic" : false,
                "ignore_raycast" : false,
                "materials" : [ "DefaultMaterial" ],
                "model" : "resources/models/buildings/geometric_castle.DAE",
