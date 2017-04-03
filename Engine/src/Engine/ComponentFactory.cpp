@@ -1489,6 +1489,15 @@ bool    ComponentFactory<sTextComponent>::updateEditor(const std::string& entity
         }
     }
 
+    // Edit text color
+    {
+        glm::vec4 color = component->text.getColor();
+        if (ImGui::ColorEdit4("Color", glm::value_ptr(color)))
+        {
+            component->text.setColor(color);
+        }
+    }
+
     // Edit font name
     {
         std::string fontName = component->text.getFont()->getId();
@@ -1503,11 +1512,12 @@ bool    ComponentFactory<sTextComponent>::updateEditor(const std::string& entity
         }
     }
 
-    // Editr alignment
+    // Edit alignment
     {
         changed |= Helper::updateComboEnum<eHorizontalAlignment>("Horizontal alignment", component->horizontalAlignment);
         changed |= Helper::updateComboEnum<eVerticalAlignment>("Vertical alignment", component->verticalAlignment);
     }
+
     if (changed)
     {
         sUiComponent* uiComp = component->entity->getComponent<sUiComponent>();
