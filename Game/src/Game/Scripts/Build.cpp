@@ -117,7 +117,7 @@ void Build::buildInput()
         }
     }
 
-    if (this->keyboard[Keyboard::eKey::B] == Keyboard::eKeyState::KEY_PRESSED && !this->_buildSecondTP)
+    if (this->keyboard[Keyboard::eKey::E] == Keyboard::eKeyState::KEY_PRESSED && !this->_buildSecondTP)
     {
         this->_buildEnabled = !this->_buildEnabled;
         if (!this->_buildEnabled && this->_preview)
