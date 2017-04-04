@@ -11,9 +11,6 @@ void GameManager::start()
                 this->firstLayerEntities[x][z] = this->Instantiate("BLOCK_BROWN", glm::vec3(x * 25, 0, z * 25));
             else if (this->firstLayerPattern[x][z] == 2)
                 this->firstLayerEntities[x][z] = this->Instantiate("SPAWNER", glm::vec3(x * 25, 0, z * 25));
-            else if (this->firstLayerPattern[x][z] > 3)
-            {
-                this->firstLayerEntities[x][z] == this->Instantiate("INVISIBLE_BLOCK", glm::vec3(x * 25, 0, z * 25));
             }
         }
     }

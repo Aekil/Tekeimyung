@@ -15,9 +15,9 @@ HomeScreenState::~HomeScreenState() {}
 
 void    HomeScreenState::onEnter()
 {
-    sRenderComponent*   renderComponent = this->_playGameButton->getComponent<sRenderComponent>();
+    sRenderComponent*   renderComponent = this->_buttonHowToPlay->getComponent<sRenderComponent>();
 
-    renderComponent->_animator.play("color_fading", true);
+    renderComponent->_animator.play("fading", true);
 }
 
 void    HomeScreenState::setupSystems()
@@ -30,13 +30,7 @@ void    HomeScreenState::setupSystems()
 
 bool    HomeScreenState::init()
 {
-    this->createPlayGameButton();
+    //  Retrieving the "How to Play" button in order to play its animation.
+    this->_buttonHowToPlay = EntityFactory::createOrGetEntity("BUTTON_HOW_TO_PLAY");
     return (true);
-}
-
-void    HomeScreenState::createPlayGameButton()
-{
-    std::string buttonArchetype = "BUTTON_PLAY_GAME";
-
-    this->_playGameButton = EntityFactory::createOrGetEntity(buttonArchetype);
 }

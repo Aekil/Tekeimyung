@@ -10,10 +10,11 @@
                "animations" : [],
                "color" : {
                   "a" : 1,
-                  "b" : 0.26666668057441711,
-                  "g" : 0.49019607901573181,
-                  "r" : 0.26274511218070984
+                  "b" : 0.058823529630899429,
+                  "g" : 0.058823529630899429,
+                  "r" : 0.058823529630899429
                },
+               "dynamic" : false,
                "ignore_raycast" : false,
                "materials" : [ "geometry_default.mat" ],
                "model" : "resources/models/default.DAE",
@@ -22,8 +23,8 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 960,
-                  "y" : 508.5,
-                  "z" : -1
+                  "y" : 529,
+                  "z" : 0
                },
                "rotation" : {
                   "x" : 0,
@@ -32,7 +33,7 @@
                },
                "scale" : {
                   "x" : 192,
-                  "y" : 101.69999694824219,
+                  "y" : 105.80000305175781,
                   "z" : 1
                }
             },
@@ -68,6 +69,7 @@
                   "g" : 1,
                   "r" : 1
                },
+               "dynamic" : false,
                "ignore_raycast" : false,
                "materials" : [ "how_to_play_menu.mat" ],
                "model" : "resources/models/default.DAE",
@@ -76,7 +78,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 921.5999755859375,
-                  "y" : 508.5,
+                  "y" : 529,
                   "z" : 0
                },
                "rotation" : {
@@ -86,7 +88,7 @@
                },
                "scale" : {
                   "x" : 105.59999847412109,
-                  "y" : 71.189994812011719,
+                  "y" : 74.05999755859375,
                   "z" : 0.0010000000474974513
                }
             },
@@ -126,6 +128,7 @@
                   "g" : 1,
                   "r" : 1
                },
+               "dynamic" : false,
                "ignore_raycast" : false,
                "materials" : [ "button_return.mat" ],
                "model" : "resources/models/default.DAE",
@@ -134,7 +137,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 960,
-                  "y" : 233.91000366210938,
+                  "y" : 243.33999633789063,
                   "z" : 0
                },
                "rotation" : {
@@ -144,7 +147,7 @@
                },
                "scale" : {
                   "x" : 19.200000762939453,
-                  "y" : 5.0850000381469727,
+                  "y" : 5.2899999618530273,
                   "z" : 6
                }
             },

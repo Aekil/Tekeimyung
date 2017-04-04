@@ -14,7 +14,7 @@
          },
          "dynamic" : false,
          "ignore_raycast" : false,
-         "materials" : [ "_01 - Default" ],
+         "materials" : [ "bloom_red.mat" ],
          "model" : "resources/models/blocks/block.DAE",
          "texture" : "",
          "type" : "MESH"

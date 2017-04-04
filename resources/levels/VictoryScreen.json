@@ -1,0 +1,265 @@
+{
+   "entities" : [
+      {
+         "components" : {
+            "sNameComponent" : {
+               "name" : "BACKGROUND"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 1,
+                  "b" : 0.019607843831181526,
+                  "g" : 0.019607843831181526,
+                  "r" : 0.019607843831181526
+               },
+               "dynamic" : false,
+               "ignore_raycast" : true,
+               "materials" : [ "geometry_default.mat" ],
+               "model" : "resources/models/default.DAE",
+               "type" : "PLANE"
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 960,
+                  "y" : 508.5,
+                  "z" : 0
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 192,
+                  "y" : 101.69999694824219,
+                  "z" : 1
+               }
+            },
+            "sUiComponent" : {
+               "horizontal_alignment" : "MIDDLE",
+               "layer" : 1,
+               "offset" : {
+                  "x" : 0,
+                  "y" : 0
+               },
+               "percentage_size" : true,
+               "size" : {
+                  "x" : 1,
+                  "y" : 1
+               },
+               "vertical_alignment" : "MIDDLE"
+            }
+         },
+         "name" : "BACKGROUND",
+         "tag" : ""
+      },
+      {
+         "components" : {
+            "sButtonComponent" : {
+               "action" : "REPLACE_CURRENT_LEVEL",
+               "action_level" : "HomeScreen"
+            },
+            "sNameComponent" : {
+               "name" : "BUTTON_BACK_TO_MENU"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 1
+               },
+               "dynamic" : false,
+               "ignore_raycast" : false,
+               "materials" : [ "button_back_to_menu.mat" ],
+               "model" : "resources/models/traps/trap_needle.DAE",
+               "type" : "PLANE"
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 960,
+                  "y" : 264.41998291015625,
+                  "z" : 0
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 30,
+                  "y" : 7.1999998092651367,
+                  "z" : 0
+               }
+            },
+            "sUiComponent" : {
+               "horizontal_alignment" : "MIDDLE",
+               "layer" : 0,
+               "offset" : {
+                  "x" : 0,
+                  "y" : -24
+               },
+               "percentage_size" : true,
+               "size" : {
+                  "x" : 0.15625,
+                  "y" : 0.070796459913253784
+               },
+               "vertical_alignment" : "MIDDLE"
+            }
+         },
+         "name" : "BUTTON_BACK_TO_MENU",
+         "tag" : ""
+      },
+      {
+         "components" : {
+            "sButtonComponent" : {
+               "action" : "REPLACE_CURRENT_LEVEL",
+               "action_level" : "Game"
+            },
+            "sNameComponent" : {
+               "name" : "BUTTON_TRY_AGAIN_GREEN"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [
+                  {
+                     "layer" : "DEFAULT",
+                     "name" : "fading",
+                     "params" : [
+                        {
+                           "frames" : [
+                              {
+                                 "easing" : "NONE",
+                                 "time" : 0.75,
+                                 "value" : {
+                                    "w" : 0.47058823704719543,
+                                    "x" : 1,
+                                    "y" : 1,
+                                    "z" : 1
+                                 }
+                              },
+                              {
+                                 "easing" : "NONE",
+                                 "time" : 1.25,
+                                 "value" : {
+                                    "w" : 1,
+                                    "x" : 1,
+                                    "y" : 1,
+                                    "z" : 1
+                                 }
+                              }
+                           ],
+                           "name" : "color"
+                        }
+                     ]
+                  }
+               ],
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 1
+               },
+               "dynamic" : false,
+               "ignore_raycast" : false,
+               "materials" : [ "button_try_again_green.mat" ],
+               "model" : "resources/models/default.DAE",
+               "type" : "PLANE"
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 960,
+                  "y" : 345.77999877929688,
+                  "z" : 0
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 30,
+                  "y" : 7.1999526023864746,
+                  "z" : 1
+               }
+            },
+            "sUiComponent" : {
+               "horizontal_alignment" : "MIDDLE",
+               "layer" : 0,
+               "offset" : {
+                  "x" : 0,
+                  "y" : -16
+               },
+               "percentage_size" : true,
+               "size" : {
+                  "x" : 0.15625,
+                  "y" : 0.070795997977256775
+               },
+               "vertical_alignment" : "MIDDLE"
+            }
+         },
+         "name" : "BUTTON_TRY_AGAIN_GREEN",
+         "tag" : ""
+      },
+      {
+         "components" : {
+            "sNameComponent" : {
+               "name" : "TEXT_VICTORY"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 1
+               },
+               "dynamic" : false,
+               "ignore_raycast" : false,
+               "materials" : [ "text_victory.mat" ],
+               "model" : "resources/models/default.DAE",
+               "type" : "PLANE"
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 960,
+                  "y" : 671.219970703125,
+                  "z" : 0
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 79.999870300292969,
+                  "y" : 13.559965133666992,
+                  "z" : 1
+               }
+            },
+            "sUiComponent" : {
+               "horizontal_alignment" : "MIDDLE",
+               "layer" : 0,
+               "offset" : {
+                  "x" : 0,
+                  "y" : 16
+               },
+               "percentage_size" : true,
+               "size" : {
+                  "x" : 0.41666600108146667,
+                  "y" : 0.1333329975605011
+               },
+               "vertical_alignment" : "MIDDLE"
+            }
+         },
+         "name" : "TEXT_VICTORY",
+         "tag" : ""
+      }
+   ],
+   "name" : "VictoryScreen"
+}

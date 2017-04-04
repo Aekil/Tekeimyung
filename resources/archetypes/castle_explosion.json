@@ -17,7 +17,7 @@
                "a" : 1,
                "b" : 0,
                "g" : 0,
-               "r" : 1
+               "r" : 0.43137255311012268
             }
          },
          "emitter_life" : 5,
@@ -46,7 +46,7 @@
          },
          "dynamic" : false,
          "ignore_raycast" : false,
-         "materials" : [ "DefaultMaterial" ],
+         "materials" : [ "bloom_red.mat" ],
          "model" : "resources/models/buildings/geometric_castle.DAE",
          "type" : "MESH"
       },

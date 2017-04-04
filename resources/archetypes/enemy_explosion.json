@@ -12,13 +12,13 @@
                "a" : 0,
                "b" : 0,
                "g" : 0,
-               "r" : 1
+               "r" : 0
             },
             "start" : {
                "a" : 1,
                "b" : 0,
                "g" : 0,
-               "r" : 1
+               "r" : 0.43137255311012268
             }
          },
          "emitter_life" : 0.64500004053115845,
@@ -48,7 +48,7 @@
          },
          "dynamic" : true,
          "ignore_raycast" : false,
-         "materials" : [ "cube_green.mat" ],
+         "materials" : [ "bloom_red.mat" ],
          "model" : "resources/models/characters/enemy.DAE",
          "texture" : "",
          "type" : "BOX"
