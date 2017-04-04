@@ -12,8 +12,9 @@
             "g" : 1,
             "r" : 1
          },
+         "dynamic" : false,
          "ignore_raycast" : false,
-         "materials" : [ "geometry_default.mat" ],
+         "materials" : [ "healt_bar_empty.mat" ],
          "model" : "resources/models/default.DAE",
          "texture" : "",
          "type" : "PLANE"
@@ -40,10 +41,15 @@
       },
       "sUiComponent" : {
          "horizontal_alignment" : "NONE",
-         "layer" : 0,
+         "layer" : 1,
          "offset" : {
             "x" : 0,
             "y" : 0
+         },
+         "percentage_size" : false,
+         "size" : {
+            "x" : 0.10000000149011612,
+            "y" : 0.10000000149011612
          },
          "vertical_alignment" : "NONE"
       }

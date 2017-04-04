@@ -5,6 +5,7 @@
       "g" : 0.30000001192092896,
       "r" : 0.30000001192092896
    },
+   "bloom" : false,
    "diffuse" : {
       "a" : 0,
       "b" : 0,
@@ -16,6 +17,8 @@
    "src_blend" : "GL_SRC_ALPHA",
    "textures" : {
       "ambient" : "resources/sprites/buttons/icon_selected.png",
+      "bloom" : "",
+      "bloom_alpha" : "",
       "diffuse" : ""
    },
    "transparent" : true,

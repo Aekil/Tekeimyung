@@ -13,12 +13,13 @@
 void Tower::start()
 {
     _targetId = 0;
-    _fireRate = 2.5f;
+    _fireRate = 1.2f;
     _lastShotTime = _fireRate;
     _towerTransform = entity->getComponent<sTransformComponent>();
     _towerRender = entity->getComponent<sRenderComponent>();
-    _range = 22.0f;
-    _damage = 50;
+    _range = 4.2f;
+    _damage = 125;
+    _towershootSound = EventSound::getEventByEventType(eEventSound::TOWER_SHOOT);
 }
 
 void Tower::update(float dt)
@@ -26,18 +27,12 @@ void Tower::update(float dt)
     EntityManager* em = EntityFactory::getBindedEntityManager();
     _lastShotTime += dt;
 
-    if (!_targetId)
+    if (!_targetId && _lastShotTime >= _fireRate)
     {
-        const auto& enemies = em->getEntitiesByTag("Enemy");
-        for (auto &enemy : enemies)
+        Entity* enemy = getClosestEnemy();
+        if (enemy)
         {
-            if (isInRange(enemy) &&
-                _lastShotTime >= _fireRate)
-            {
-                _targetId = enemy->id;
-                shootTarget(enemy);
-                break;
-            }
+            shootTarget(enemy);
         }
         return;
     }
@@ -82,5 +77,37 @@ void Tower::shootTarget(Entity* target)
     projectileScript->_damage = _damage;
     projectileScript->followTarget(target);
 
+#if (ENABLE_SOUND)
+    if (_towershootSound->soundID != -1 && !SoundManager::getInstance()->isSoundPlaying(_towershootSound->soundID))
+    {
+        SoundManager::getInstance()->playSound(_towershootSound->soundID);
+    }
+#endif
+
     _lastShotTime = 0.0f;
+}
+
+Entity* Tower::getClosestEnemy()
+{
+    Entity* closestEnemy = nullptr;
+    float closestDistance = 0.0f;
+    EntityManager* em = EntityFactory::getBindedEntityManager();
+    const auto& enemies = em->getEntitiesByTag("Enemy");
+
+    for (auto &enemy : enemies)
+    {
+        sTransformComponent* enemyTransform = enemy->getComponent<sTransformComponent>();
+        float distance = glm::distance(enemyTransform->getPos(), _towerTransform->getPos());
+        if (!closestEnemy ||
+            distance < closestDistance)
+        {
+            closestDistance = distance;
+            closestEnemy = enemy;
+        }
+    }
+
+    if (closestEnemy && isInRange(closestEnemy))
+        return (closestEnemy);
+
+    return (nullptr);
 }

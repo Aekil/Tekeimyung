@@ -16,6 +16,17 @@ public:
     void update(float dt) override final;
     void onCollisionEnter(Entity* entity) override final;
     void death() override final;
+
+private:
+    Entity*                 _healthBarEmpty;
+    sTransformComponent*    _healthBarEmptyTransform;
+
+    Entity*                 _healthBar;
+    sTransformComponent*    _healthBarTransform;
+
+    sTransformComponent*    _transform;
+    sRenderComponent*       _render;
+    sRenderComponent*       _healthRender;
 };
 
 REGISTER_SCRIPT(Castle);

@@ -1,0 +1,269 @@
+{
+   "entities" : [
+      {
+         "components" : {
+            "sButtonComponent" : {
+               "action" : "ADD_LEVEL",
+               "action_level" : "Game"
+            },
+            "sNameComponent" : {
+               "name" : "BUTTON_PLAY_GAME"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 1
+               },
+               "ignore_raycast" : false,
+               "materials" : [ "button_play_game.mat" ],
+               "model" : "resources/models/default.DAE",
+               "type" : "PLANE"
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 960,
+                  "y" : 630.53997802734375,
+                  "z" : 0
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 30,
+                  "y" : 7.1999526023864746,
+                  "z" : 1.0000195503234863
+               }
+            },
+            "sUiComponent" : {
+               "horizontal_alignment" : "MIDDLE",
+               "layer" : 0,
+               "offset" : {
+                  "x" : 0,
+                  "y" : 12
+               },
+               "percentage_size" : true,
+               "size" : {
+                  "x" : 0.15625,
+                  "y" : 0.070795997977256775
+               },
+               "vertical_alignment" : "MIDDLE"
+            }
+         },
+         "name" : "BUTTON_PLAY_GAME",
+         "tag" : ""
+      },
+      {
+         "components" : {
+            "sButtonComponent" : {
+               "action" : "ADD_LEVEL",
+               "action_level" : "HowToPlay"
+            },
+            "sNameComponent" : {
+               "name" : "BUTTON_HOW_TO_PLAY"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [
+                  {
+                     "layer" : "DEFAULT",
+                     "name" : "fading",
+                     "params" : [
+                        {
+                           "frames" : [
+                              {
+                                 "easing" : "NONE",
+                                 "time" : 0.75,
+                                 "value" : {
+                                    "w" : 0.47058823704719543,
+                                    "x" : 1,
+                                    "y" : 1,
+                                    "z" : 1
+                                 }
+                              },
+                              {
+                                 "easing" : "NONE",
+                                 "time" : 1.25,
+                                 "value" : {
+                                    "w" : 1,
+                                    "x" : 1,
+                                    "y" : 1,
+                                    "z" : 1
+                                 }
+                              }
+                           ],
+                           "name" : "color"
+                        }
+                     ]
+                  }
+               ],
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 1
+               },
+               "ignore_raycast" : false,
+               "materials" : [ "button_how_to_play.mat" ],
+               "model" : "resources/models/default.DAE",
+               "type" : "PLANE"
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 960,
+                  "y" : 549.17999267578125,
+                  "z" : 0
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 30,
+                  "y" : 7.1999526023864746,
+                  "z" : 6
+               }
+            },
+            "sUiComponent" : {
+               "horizontal_alignment" : "MIDDLE",
+               "layer" : 0,
+               "offset" : {
+                  "x" : 0,
+                  "y" : 4
+               },
+               "percentage_size" : true,
+               "size" : {
+                  "x" : 0.15625,
+                  "y" : 0.070795997977256775
+               },
+               "vertical_alignment" : "MIDDLE"
+            }
+         },
+         "name" : "BUTTON_HOW_TO_PLAY",
+         "tag" : ""
+      },
+      {
+         "components" : {
+            "sButtonComponent" : {
+               "action" : "ADD_LEVEL",
+               "action_level" : "Options"
+            },
+            "sNameComponent" : {
+               "name" : "BUTTON_OPTIONS"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 1
+               },
+               "ignore_raycast" : false,
+               "materials" : [ "button_options.mat" ],
+               "model" : "resources/models/default.DAE",
+               "type" : "PLANE"
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 960,
+                  "y" : 467.82000732421875,
+                  "z" : 0
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 30,
+                  "y" : 7.1999526023864746,
+                  "z" : 6
+               }
+            },
+            "sUiComponent" : {
+               "horizontal_alignment" : "MIDDLE",
+               "layer" : 0,
+               "offset" : {
+                  "x" : 0,
+                  "y" : -4
+               },
+               "percentage_size" : true,
+               "size" : {
+                  "x" : 0.15625,
+                  "y" : 0.070795997977256775
+               },
+               "vertical_alignment" : "MIDDLE"
+            }
+         },
+         "name" : "BUTTON_OPTIONS",
+         "tag" : ""
+      },
+      {
+         "components" : {
+            "sButtonComponent" : {
+               "action" : "ADD_LEVEL",
+               "action_level" : "ConfirmExit"
+            },
+            "sNameComponent" : {
+               "name" : "BUTTON_QUIT"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 1
+               },
+               "ignore_raycast" : false,
+               "materials" : [ "button_quit.mat" ],
+               "model" : "resources/models/default.DAE",
+               "type" : "PLANE"
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 960,
+                  "y" : 386.45999145507813,
+                  "z" : 0
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 30,
+                  "y" : 7.1999526023864746,
+                  "z" : 6
+               }
+            },
+            "sUiComponent" : {
+               "horizontal_alignment" : "MIDDLE",
+               "layer" : 0,
+               "offset" : {
+                  "x" : 0,
+                  "y" : -12
+               },
+               "percentage_size" : true,
+               "size" : {
+                  "x" : 0.15625,
+                  "y" : 0.070795997977256775
+               },
+               "vertical_alignment" : "MIDDLE"
+            }
+         },
+         "name" : "BUTTON_QUIT",
+         "tag" : ""
+      }
+   ],
+   "name" : "HomeScreen"
+}

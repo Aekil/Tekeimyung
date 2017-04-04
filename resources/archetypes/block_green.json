@@ -25,18 +25,24 @@
             "g" : 1,
             "r" : 1
          },
+         "dynamic" : false,
          "ignore_raycast" : false,
-         "materials" : [ "MAT_Green" ],
+         "materials" : [ "cube_green.mat" ],
          "model" : "resources/models/blocks/block_green.DAE",
          "texture" : "",
          "type" : "MESH"
       },
       "sScriptComponent" : {
-         "class" : [ "Tile" ]
+         "class" : [ "Tile" ],
+         "scripts" : [
+            {
+               "name" : "Tile"
+            }
+         ]
       },
       "sTransformComponent" : {
          "pos" : {
-            "x" : 50,
+            "x" : 58.589900970458984,
             "y" : 12.5,
             "z" : 175
          },
@@ -56,5 +62,5 @@
       }
    },
    "name" : "BLOCK_GREEN",
-   "tag" : ""
+   "tag" : "BlockGreen"
 }

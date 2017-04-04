@@ -16,6 +16,7 @@
             "g" : 1,
             "r" : 1
          },
+         "dynamic" : false,
          "ignore_raycast" : false,
          "materials" : [ "button_return.mat" ],
          "model" : "resources/models/default.DAE",
@@ -24,8 +25,8 @@
       },
       "sTransformComponent" : {
          "pos" : {
-            "x" : 835,
-            "y" : 386.97000122070313,
+            "x" : 960,
+            "y" : 447.48001098632813,
             "z" : 0
          },
          "rotation" : {
@@ -34,8 +35,8 @@
             "z" : 0
          },
          "scale" : {
-            "x" : 25,
-            "y" : 6,
+            "x" : 30,
+            "y" : 7.1999526023864746,
             "z" : 6
          }
       },
@@ -44,7 +45,12 @@
          "layer" : 0,
          "offset" : {
             "x" : 0,
-            "y" : -9
+            "y" : -6
+         },
+         "percentage_size" : true,
+         "size" : {
+            "x" : 0.15625,
+            "y" : 0.070795997977256775
          },
          "vertical_alignment" : "MIDDLE"
       }

@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <Engine/Utils/EventSound.hpp>
 #include <Engine/Core/ScriptFactory.hpp>
 
 class Tower final : public BaseScript
@@ -18,6 +19,7 @@ public:
 private:
     bool isInRange(Entity* entity);
     void shootTarget(Entity* target);
+    Entity* getClosestEnemy();
 
 private:
     uint32_t    _targetId;
@@ -25,6 +27,8 @@ private:
     float       _lastShotTime;
     float       _range;
     int         _damage;
+
+    tEventSound* _towershootSound = nullptr;
 
     sTransformComponent* _towerTransform;
     sRenderComponent* _towerRender;

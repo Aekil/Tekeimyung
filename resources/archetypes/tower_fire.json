@@ -1,18 +1,5 @@
 {
    "components" : {
-      "sBoxColliderComponent" : {
-         "isTrigger" : false,
-         "pos" : {
-            "x" : 1.239776611328125e-05,
-            "y" : 35.316265106201172,
-            "z" : 8.58306884765625e-06
-         },
-         "size" : {
-            "x" : 3.0040912628173828,
-            "y" : 7.1632537841796875,
-            "z" : 2.9386253356933594
-         }
-      },
       "sNameComponent" : {
          "name" : "TOWER_FIRE"
       },
@@ -25,31 +12,24 @@
             "g" : 1,
             "r" : 1
          },
+         "dynamic" : false,
          "ignore_raycast" : false,
          "materials" : [ "MAT_LightBrown", "MAT_Brown", "Mat_LightRed" ],
          "model" : "resources/models/buildings/tower_fire.DAE",
          "texture" : "",
          "type" : "MESH"
       },
-      "sRigidBodyComponent" : {
-         "collisions_enabled" : true,
-         "gravity" : {
-            "x" : 0,
-            "y" : 0,
-            "z" : 0
-         },
-         "velocity" : {
-            "x" : 0,
-            "y" : 0,
-            "z" : 0
-         }
-      },
       "sScriptComponent" : {
-         "class" : [ "Tower" ]
+         "class" : [ "Tower" ],
+         "scripts" : [
+            {
+               "name" : "Tower"
+            }
+         ]
       },
       "sTransformComponent" : {
          "pos" : {
-            "x" : 150,
+            "x" : 250,
             "y" : 12.5,
             "z" : 300
          },

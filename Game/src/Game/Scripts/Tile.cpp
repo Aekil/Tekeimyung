@@ -4,83 +4,57 @@
 
 #include <Engine/Components.hh>
 
+#include <Engine/EntityFactory.hpp>
+#include <Engine/Utils/ResourceManager.hpp>
+
 #include <Game/Scripts/Tile.hpp>
+#include <Game/Scripts/Build.hpp>
 
 void Tile::start()
 {
-    buildableItems.push_back("TOWER_FIRE");
-    buildableItems.push_back("TRAP_NEEDLE");
-    buildableItems.push_back("TRAP_CUTTER");
-    buildableItems.push_back("TRAP_FIRE");
     _render = this->getComponent<sRenderComponent>();
+    _renderMaterial = _render->getModelInstance()->getMeshsInstances()[0]->getMaterial();
+    _buildMaterial = ResourceManager::getInstance()->getResource<Material>("build.mat");
 }
 
 void Tile::update(float dt)
 {
-    if (this->m_buildable && this->onHover && this->mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_1] == Mouse::eButtonState::CLICK_PRESSED)
-    {
-        auto& position = this->getComponent<sTransformComponent>()->getPos();
-
-        this->Instantiate(this->buildableItems[this->currentIdx], glm::vec3(position.x, position.y + 12.5f, position.z));
-    }
-
-    if (this->mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_2] == Mouse::eButtonState::CLICK_PRESSED)
-    {
-        this->currentIdx++;
-
-        if (this->currentIdx >= this->buildableItems.size())
-            this->currentIdx = 0;
-    }
-
-    if (!this->m_buildable && this->preview != nullptr)
-    {
-        destroyPreview();
-    }
-    else if (this->m_buildable &&
-        this->preview == nullptr &&
-        this->onHover)
-    {
-        displayPreview();
-    }
 }
 
 void Tile::onHoverEnter()
 {
-    if (this->m_buildable)
+    if (_buildable)
     {
-        displayPreview();
-    }
+        auto em = EntityFactory::getBindedEntityManager();
 
-    _render->color = glm::vec4(0.5f, 0.5f, 0.5f, 1.0f);
-    this->onHover = true;
+        auto buildScript = em->getEntityByTag("Player")->getComponent<sScriptComponent>()->getScript<Build>("Build");
+        buildScript->setTile(this->entity);
+    }
 }
 
 void Tile::onHoverExit()
 {
-    if (this->preview != nullptr)
-    {
-        destroyPreview();
-    }
+    auto em = EntityFactory::getBindedEntityManager();
 
-    _render->color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-    this->onHover = false;
+    auto buildScript = em->getEntityByTag("Player")->getComponent<sScriptComponent>()->getScript<Build>("Build");
+    buildScript->setTile(nullptr);
 }
 
 void Tile::setBuildable(bool buildable)
 {
-    this->m_buildable = buildable;
+    this->_buildable = buildable;
+
+    if (_buildable == true)
+    {
+        _render->getModelInstance()->setMaterial(_buildMaterial);
+    }
+    else
+    {
+        _render->getModelInstance()->setMaterial(_renderMaterial);
+    }
 }
 
-void Tile::displayPreview()
+bool Tile::isBuildable()
 {
-    auto& position = this->getComponent<sTransformComponent>()->getPos();
-    this->preview = this->Instantiate(this->buildableItems[this->currentIdx], glm::vec3(position.x, position.y + 12.5f, position.z));
-    auto previewRenderer = this->preview->getComponent<sRenderComponent>();
-    previewRenderer->ignoreRaycast = true;
-}
-
-void Tile::destroyPreview()
-{
-    this->Destroy(this->preview);
-    this->preview = nullptr;
+    return this->_buildable;
 }

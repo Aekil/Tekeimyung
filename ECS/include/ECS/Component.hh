@@ -7,6 +7,8 @@
 #include <cstdint>
 #include <ECS/crc32.hh>
 
+class Entity;
+
 struct sComponent
 {
     sComponent() {}
@@ -16,6 +18,7 @@ struct sComponent
     virtual sComponent* clone() = 0;
     virtual void        update(sComponent* component) = 0;
     uint32_t id;
+    Entity* entity{nullptr};
 };
 
 

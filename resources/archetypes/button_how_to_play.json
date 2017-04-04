@@ -9,13 +9,46 @@
       },
       "sRenderComponent" : {
          "animated" : false,
-         "animations" : [],
+         "animations" : [
+            {
+               "layer" : "DEFAULT",
+               "name" : "fading",
+               "params" : [
+                  {
+                     "frames" : [
+                        {
+                           "easing" : "NONE",
+                           "time" : 0.75,
+                           "value" : {
+                              "w" : 0.47058823704719543,
+                              "x" : 1,
+                              "y" : 1,
+                              "z" : 1
+                           }
+                        },
+                        {
+                           "easing" : "NONE",
+                           "time" : 1.25,
+                           "value" : {
+                              "w" : 1,
+                              "x" : 1,
+                              "y" : 1,
+                              "z" : 1
+                           }
+                        }
+                     ],
+                     "name" : "color"
+                  }
+               ]
+            }
+         ],
          "color" : {
             "a" : 1,
             "b" : 1,
             "g" : 1,
             "r" : 1
          },
+         "dynamic" : false,
          "ignore_raycast" : false,
          "materials" : [ "button_how_to_play.mat" ],
          "model" : "resources/models/default.DAE",
@@ -24,8 +57,8 @@
       },
       "sTransformComponent" : {
          "pos" : {
-            "x" : 760,
-            "y" : 478.5,
+            "x" : 960,
+            "y" : 549.17999267578125,
             "z" : 0
          },
          "rotation" : {
@@ -34,8 +67,8 @@
             "z" : 0
          },
          "scale" : {
-            "x" : 40,
-            "y" : 6,
+            "x" : 30,
+            "y" : 7.1999526023864746,
             "z" : 6
          }
       },
@@ -44,7 +77,12 @@
          "layer" : 0,
          "offset" : {
             "x" : 0,
-            "y" : 0
+            "y" : 4
+         },
+         "percentage_size" : true,
+         "size" : {
+            "x" : 0.15625,
+            "y" : 0.070795997977256775
          },
          "vertical_alignment" : "MIDDLE"
       }

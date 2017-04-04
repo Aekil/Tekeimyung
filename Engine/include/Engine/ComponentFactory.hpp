@@ -30,6 +30,7 @@
     PROCESS(sButtonComponent),\
     PROCESS(sScriptComponent),\
     PROCESS(sUiComponent),\
+    PROCESS(sTextComponent),\
     PROCESS(sLightComponent),\
     PROCESS(sCameraComponent)
 
@@ -352,6 +353,22 @@ class ComponentFactory<sUiComponent> final: public BaseComponentFactory<sUiCompo
 {
 public:
     char* getTypeName() override final { return "sUiComponent"; }
+    sComponent* loadFromJson(const std::string& entityType, const JsonValue& json) override final;
+    JsonValue&  saveToJson(const std::string& entityType, const sComponent* savedComponent = nullptr, JsonValue* toJson = nullptr) override final;
+
+    bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity) override final;
+};
+
+
+/*
+** sTextComponent
+*/
+
+template <>
+class ComponentFactory<sTextComponent> final: public BaseComponentFactory<sTextComponent>
+{
+public:
+    char* getTypeName() override final { return "sTextComponent"; }
     sComponent* loadFromJson(const std::string& entityType, const JsonValue& json) override final;
     JsonValue&  saveToJson(const std::string& entityType, const sComponent* savedComponent = nullptr, JsonValue* toJson = nullptr) override final;
 

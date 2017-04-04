@@ -5,6 +5,7 @@
       "g" : 0.30000001192092896,
       "r" : 0.30000001192092896
    },
+   "bloom" : false,
    "diffuse" : {
       "a" : 1,
       "b" : 1,
@@ -16,6 +17,8 @@
    "src_blend" : "GL_SRC_ALPHA",
    "textures" : {
       "ambient" : "",
+      "bloom" : "",
+      "bloom_alpha" : "",
       "diffuse" : ""
    },
    "transparent" : true,

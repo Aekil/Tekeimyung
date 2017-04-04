@@ -10,28 +10,39 @@ void    RenderQueue::addModel(ModelInstance* modelInstance,
                                 UniformBuffer* ubo,
                                 uint32_t uboOffset,
                                 uint32_t uboSize,
-                                uint32_t instancesNb)
+                                uint32_t instancesNb,
+                                bool dynamic)
 {
     auto& meshsInstances = modelInstance->getMeshsInstances();
 
     for (auto& meshInstance: meshsInstances)
     {
-        Material *material = meshInstance->getMaterial();
-        ASSERT(material != nullptr, "A mesh should have a material");
+        addMesh(meshInstance.get(), ubo, uboOffset, uboSize, instancesNb, dynamic);
+    }
+}
 
-        sRenderableMesh renderableMesh = { meshInstance.get(), ubo, uboOffset, uboSize, instancesNb, 0 };
-        if (material->transparent)
-        {
-            CHECK_QUEUE_NOT_FULL(_transparentMeshsNb);
-            _transparentMeshs[_transparentMeshsNb] = renderableMesh;
-            ++_transparentMeshsNb;
-        }
-        else
-        {
-            CHECK_QUEUE_NOT_FULL(_opaqueMeshsNb);
-            _opaqueMeshs[_opaqueMeshsNb] = renderableMesh;
-            ++_opaqueMeshsNb;
-        }
+void    RenderQueue::addMesh(MeshInstance* meshInstance,
+                                UniformBuffer* ubo,
+                                uint32_t uboOffset,
+                                uint32_t uboSize,
+                                uint32_t instancesNb,
+                                bool dynamic)
+{
+    Material *material = meshInstance->getMaterial();
+    ASSERT(material != nullptr, "A mesh should have a material");
+
+    sRenderableMesh renderableMesh = { meshInstance, ubo, uboOffset, uboSize, instancesNb, 0, dynamic };
+    if (material->transparent)
+    {
+        CHECK_QUEUE_NOT_FULL(_transparentMeshsNb);
+        _transparentMeshs[_transparentMeshsNb] = renderableMesh;
+        ++_transparentMeshsNb;
+    }
+    else
+    {
+        CHECK_QUEUE_NOT_FULL(_opaqueMeshsNb);
+        _opaqueMeshs[_opaqueMeshsNb] = renderableMesh;
+        ++_opaqueMeshsNb;
     }
 }
 
@@ -49,7 +60,7 @@ void    RenderQueue::addUIModel(ModelInstance* modelInstance,
         Material *material = meshInstance->getMaterial();
         ASSERT(material != nullptr, "A mesh should have a material");
 
-        sRenderableMesh renderableMesh = { meshInstance.get(), ubo, uboOffset, uboSize, instancesNb, layer };
+        sRenderableMesh renderableMesh = { meshInstance.get(), ubo, uboOffset, uboSize, instancesNb, layer, false };
         if (material->transparent)
         {
             CHECK_QUEUE_NOT_FULL(_uiTransparentMeshsNb);
@@ -63,6 +74,16 @@ void    RenderQueue::addUIModel(ModelInstance* modelInstance,
             ++_uiOpaqueMeshsNb;
         }
     }
+}
+
+void    RenderQueue::addText(const Text& text,
+                                int layer,
+                                const glm::vec2& pos)
+{
+    sRenderableText renderableText = { text, layer, pos };
+    CHECK_QUEUE_NOT_FULL(_textsNb);
+    _texts[_textsNb] = renderableText;
+    ++_textsNb;
 }
 
 void    RenderQueue::addLight(Light* light)
@@ -90,6 +111,9 @@ void    RenderQueue::clear()
 
     std::memset(_uiTransparentMeshs.data(), 0, _uiTransparentMeshsNb * sizeof(void*));
     _uiTransparentMeshsNb = 0;
+
+    std::memset(_texts.data(), 0, _textsNb * sizeof(void*));
+    _textsNb = 0;
 
     std::memset(_lights.data(), 0, _lightsNb * sizeof(void*));
     _lightsNb = 0;}
@@ -132,6 +156,16 @@ std::vector<sRenderableMesh>& RenderQueue::getUITransparentMeshs()
 uint32_t    RenderQueue::getUITransparentMeshsNb() const
 {
     return (_uiTransparentMeshsNb);
+}
+
+std::vector<sRenderableText>& RenderQueue::getTexts()
+{
+    return (_texts);
+}
+
+uint32_t    RenderQueue::getTextsNb() const
+{
+    return (_textsNb);
 }
 
 std::vector<Light*>& RenderQueue::getLights()

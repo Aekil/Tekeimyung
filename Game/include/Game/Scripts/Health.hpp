@@ -5,37 +5,27 @@
 #pragma once
 
 #include <glm/vec3.hpp>
-
-struct sTransformComponent;
-struct sRenderComponent;
-class Entity;
+#include <Game/Scripts/ProgressBar.hpp>
 
 class Health
 {
 public:
-    Health();
-    virtual ~Health();
+    Health() = default;
+    virtual ~Health() = default;
 
 public:
     virtual bool takeDamage(int damage);
+    int getHealth() const;
+    int getMaxHealth() const;
+    void setHealth(int health);
+    void setMaxHealth(int maxHealth);
 
 protected:
-    int health;
-    int maxHealth;
     virtual void death() = 0;
-    void init(sTransformComponent* transform, sRenderComponent* render);
+    void init(sRenderComponent* render);
     void update(sTransformComponent* transform);
 
 private:
-    Entity* _healthBarEmpty;
-    sTransformComponent* _healthBarEmptyTransform;
-
-    Entity* _healthBar;
-    sTransformComponent* _healthBarTransform;
-
-    sRenderComponent* _healthRender;
-
-    glm::vec3 _objCenter;
-
-    float _maxScale;
+    glm::vec3           _objCenter;
+    ProgressBar         _progressBar;
 };

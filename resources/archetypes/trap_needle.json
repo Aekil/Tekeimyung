@@ -1,5 +1,18 @@
 {
    "components" : {
+      "sBoxColliderComponent" : {
+         "isTrigger" : false,
+         "pos" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "size" : {
+            "x" : 0.10000000149011612,
+            "y" : 0.20000000298023224,
+            "z" : 0.10000000149011612
+         }
+      },
       "sNameComponent" : {
          "name" : "TRAP_NEEDLE"
       },
@@ -42,29 +55,39 @@
             "g" : 1,
             "r" : 1
          },
+         "dynamic" : false,
          "ignore_raycast" : false,
          "materials" : [ "Material #26", "Material #26" ],
          "model" : "resources/models/traps/trap_needle.DAE",
          "texture" : "",
          "type" : "MESH"
       },
-      "sScriptComponent" : {
-         "class" : [ "TrapNeedle" ]
-      },
-      "sSphereColliderComponent" : {
-         "isTrigger" : false,
-         "pos" : {
+      "sRigidBodyComponent" : {
+         "collisions_enabled" : true,
+         "gravity" : {
             "x" : 0,
             "y" : 0,
             "z" : 0
          },
-         "radius" : 0.070000000298023224
+         "velocity" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         }
+      },
+      "sScriptComponent" : {
+         "class" : [ "TrapNeedle" ],
+         "scripts" : [
+            {
+               "name" : "TrapNeedle"
+            }
+         ]
       },
       "sTransformComponent" : {
          "pos" : {
-            "x" : 125,
-            "y" : 25,
-            "z" : 125
+            "x" : 213,
+            "y" : 9.6113967895507813,
+            "z" : 69.909828186035156
          },
          "rotation" : {
             "x" : 0,

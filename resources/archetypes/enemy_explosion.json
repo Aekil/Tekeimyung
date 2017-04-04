@@ -9,13 +9,13 @@
          "color" : {
             "finish" : {
                "a" : 0,
-               "b" : 1,
+               "b" : 0,
                "g" : 0,
                "r" : 1
             },
             "start" : {
                "a" : 1,
-               "b" : 1,
+               "b" : 0,
                "g" : 0,
                "r" : 1
             }
@@ -41,12 +41,13 @@
          "animations" : [],
          "color" : {
             "a" : 1,
-            "b" : 1.0039216279983521,
+            "b" : 1,
             "g" : 1,
             "r" : 1
          },
+         "dynamic" : true,
          "ignore_raycast" : false,
-         "materials" : [ "particles_explosion.mat" ],
+         "materials" : [ "cube_green.mat" ],
          "model" : "resources/models/characters/enemy.DAE",
          "texture" : "",
          "type" : "BOX"

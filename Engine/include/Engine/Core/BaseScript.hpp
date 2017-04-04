@@ -4,11 +4,13 @@
 
 #pragma once
 
+#include <string>
 #include <glm/vec3.hpp>
 
 #include <ECS/Entity.hpp>
 
 #include <Engine/Utils/Logger.hpp>
+#include <Engine/Utils/JsonValue.hpp>
 
 #include <Engine/Window/GameWindow.hpp>
 
@@ -28,7 +30,15 @@ public:
     virtual void onHoverEnter() {};
     virtual void onHoverExit() {};
 
+    virtual bool updateEditor() { return (false); }
+    virtual JsonValue saveToJson() { return (JsonValue()); };
+    virtual void loadFromJson(const JsonValue& json) {}
+
     void setEntity(Entity* entity);
+    Entity* getEntity();
+
+    const std::string& getName() const;
+    void setName(const std::string& name);
 
 public:
     bool isInitialized;
@@ -46,7 +56,11 @@ protected:
 
     virtual Entity* Instantiate(std::string, glm::vec3 pos = glm::vec3(0,0,0));
 
+    virtual const std::vector<Entity*>& GetEntitiesByTag(const std::string& tag);
     virtual void Destroy();
     virtual void Destroy(Entity*);
+
+private:
+    std::string _name;
 };
 

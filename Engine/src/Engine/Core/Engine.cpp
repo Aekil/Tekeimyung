@@ -3,9 +3,6 @@
 */
 
 #include <iostream>
-#include <imgui.h>
-#include <imgui_impl_glfw_gl3.h>
-#include <ImGuizmo.h>
 
 #include <Engine/MenuBarDebugWindow.hpp>
 #include <Engine/EditorState.hpp>
@@ -100,39 +97,27 @@ bool    Engine::run(int ac, char** av, std::shared_ptr<GameState> startGameState
             auto &&currentState = _gameStateManager.getCurrentState();
             currentState->bindEntityManager();
 
-            // Clear color buffer
-            glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            _renderer->beginFrame();
 
-            ImGui_ImplGlfwGL3_NewFrame();
+            // Update state before debug windows because it can remove
+            // states (So we don't want the removed state to update)
+            if (currentState->update(elapsedTime) == false)
             {
-                ImGuizmo::BeginFrame();
-                {
-                    // Update state before debug windows because it can remove
-                    // states (So we don't want the removed state to update)
-                    if (currentState->update(elapsedTime) == false)
-                    {
-                        _gameStateManager.removeCurrentState();
-                        auto &&currentState = _gameStateManager.getCurrentState();
-                    }
+                _gameStateManager.removeCurrentState();
+                auto &&currentState = _gameStateManager.getCurrentState();
+            }
 
-                    // Update debug windows
-                    if (_gameStateManager.hasStates())
-                    {
-                        for (auto&& debugWindow: _debugWindows)
-                        {
-                            if (debugWindow->isDisplayed())
-                                debugWindow->build(currentState, elapsedTime);
-                        }
-                    }
+            // Update debug windows
+            if (_gameStateManager.hasStates())
+            {
+                for (auto&& debugWindow: _debugWindows)
+                {
+                    if (debugWindow->isDisplayed())
+                        debugWindow->build(currentState, elapsedTime);
                 }
             }
 
-
-            // Display imgui windows
-            ImGui::Render();
-
-            // Display screen
-            GameWindow::getInstance()->display();
+            _renderer->endFrame();
         }
     }
     return (true);

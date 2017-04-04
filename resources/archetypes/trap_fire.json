@@ -1,5 +1,18 @@
 {
    "components" : {
+      "sBoxColliderComponent" : {
+         "isTrigger" : false,
+         "pos" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "size" : {
+            "x" : 0.10000000149011612,
+            "y" : 0.10790646076202393,
+            "z" : 0.10000000149011612
+         }
+      },
       "sNameComponent" : {
          "name" : "TRAP_FIRE"
       },
@@ -12,29 +25,39 @@
             "g" : 1,
             "r" : 1
          },
+         "dynamic" : false,
          "ignore_raycast" : false,
          "materials" : [ "Material #26" ],
          "model" : "resources/models/traps/trap_fire.DAE",
          "texture" : "",
          "type" : "MESH"
       },
-      "sScriptComponent" : {
-         "class" : [ "TrapFire" ]
-      },
-      "sSphereColliderComponent" : {
-         "isTrigger" : false,
-         "pos" : {
+      "sRigidBodyComponent" : {
+         "collisions_enabled" : true,
+         "gravity" : {
             "x" : 0,
             "y" : 0,
             "z" : 0
          },
-         "radius" : 0.070000000298023224
+         "velocity" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         }
+      },
+      "sScriptComponent" : {
+         "class" : [ "TrapFire" ],
+         "scripts" : [
+            {
+               "name" : "TrapFire"
+            }
+         ]
       },
       "sTransformComponent" : {
          "pos" : {
-            "x" : 125,
-            "y" : 25,
-            "z" : 125
+            "x" : 213,
+            "y" : 10.183353424072266,
+            "z" : 79.962081909179688
          },
          "rotation" : {
             "x" : 0,

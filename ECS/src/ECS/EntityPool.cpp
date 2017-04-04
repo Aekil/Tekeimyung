@@ -56,7 +56,8 @@ void EntityPool::free(Entity* entity)
     uint32_t chunkNb = entityId / _entitiesPerChunk;
     entity->_free = true;
 
-    _chunks[chunkNb]->freeEntities.push_back(entityId % _entitiesPerChunk);
+    auto& chunk = _chunks[chunkNb];
+    chunk->freeEntities.insert(chunk->freeEntities.begin(), entityId % _entitiesPerChunk);
 }
 
 Entity* EntityPool::getEntity(uint32_t entityId)

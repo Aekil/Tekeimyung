@@ -18,6 +18,7 @@
 
 #include <ECS/Component.hh>
 
+#include <Engine/Core/ScriptFactory.hpp>
 #include <Engine/Window/Keyboard.hpp>
 #include <Engine/Graphics/Camera.hpp>
 #include <Engine/Graphics/Light.hpp>
@@ -30,6 +31,7 @@
 #include <Engine/Graphics/Geometries/Sphere.hpp>
 #include <Engine/Graphics/Animator.hpp>
 #include <Engine/Graphics/Transform.hpp>
+#include <Engine/Graphics/UI/Text.hpp>
 #include <Engine/Graphics/UniformBuffer.hpp>
 #include <Engine/Utils/Helper.hpp>
 #include <Engine/Utils/ResourceManager.hpp>
@@ -61,6 +63,7 @@ virtual void update(sRenderComponent* component)
     this->_animator = component->_animator;
     this->_display = component->_display;
     this->ignoreRaycast = component->ignoreRaycast;
+    this->dynamic = component->dynamic;
 }
 
 virtual void update(sComponent* component)
@@ -107,6 +110,7 @@ Animator                _animator;
 Geometry::eType type;
 bool                    _display = true;
 bool                    ignoreRaycast = false;
+bool                    dynamic = false;
 
 glm::vec4 color;
 
@@ -417,6 +421,8 @@ virtual void update(sUiComponent* component)
     this->horizontalAlignment = component->horizontalAlignment;
     this->verticalAlignment = component->verticalAlignment;
     this->offset = component->offset;
+    this->percentageSize = component->percentageSize;
+    this->size = component->size;
     this->layer = component->layer;
     this->needUpdate = component->needUpdate;
 }
@@ -429,9 +435,55 @@ virtual void update(sComponent* component)
 eHorizontalAlignment    horizontalAlignment = eHorizontalAlignment::MIDDLE;
 eVerticalAlignment      verticalAlignment = eVerticalAlignment::MIDDLE;
 glm::vec2               offset{0.0f, 0.0f}; // Percentage offset
+bool                    percentageSize{false}; // Use percentage for ui size
+glm::vec2               size{0.1f, 0.1f}; // Percentage size
 int                     layer{0}; // Layer used for UI ordering
 bool                    needUpdate = true;
+
 END_COMPONENT(sUiComponent)
+
+
+START_COMPONENT(sTextComponent)
+virtual sComponent* clone()
+{
+    sTextComponent* component = new sTextComponent();
+    component->update(this);
+
+    return (component);
+}
+
+virtual void update(sTextComponent* component)
+{
+    this->text = component->text;
+}
+
+virtual void update(sComponent* component)
+{
+    update(static_cast<sTextComponent*>(component));
+}
+
+BufferPool::SubBuffer*  getBuffer() const
+{
+    return (_buffer);
+}
+
+BufferPool::SubBuffer*  getBuffer(BufferPool* bufferPool)
+{
+    if (!_buffer)
+    {
+        _buffer = bufferPool->allocate();
+    }
+    return (_buffer);
+}
+
+Text text;
+eHorizontalAlignment    horizontalAlignment = eHorizontalAlignment::MIDDLE;
+eVerticalAlignment      verticalAlignment = eVerticalAlignment::MIDDLE;
+glm::vec2 offset; // Offset to align text
+
+private:
+BufferPool::SubBuffer* _buffer{nullptr};
+END_COMPONENT(sTextComponent)
 
 
 #define BUTTON_ACTION(PROCESS)              \
@@ -504,7 +556,17 @@ virtual sComponent*     clone()
 
 virtual void            update(sScriptComponent* component)
 {
-    this->scriptNames = component->scriptNames;
+    for (auto& script: component->scripts)
+    {
+        JsonValue json = script->saveToJson();
+
+        auto scriptInstance = ScriptFactory::create(script->getName());
+
+        // Little trick to update the component ._.
+        scriptInstance->loadFromJson(json);
+
+        this->scripts.push_back(std::move(scriptInstance));
+    }
 }
 
 virtual void            update(sComponent* component)
@@ -512,21 +574,35 @@ virtual void            update(sComponent* component)
     update(static_cast<sScriptComponent*>(component));
 }
 
+bool                    hasScript(const char* name)
+{
+    for (const auto& script: scripts)
+    {
+        if (script->getName() == name)
+        {
+            return (true);
+        }
+    }
+    return (false);
+}
+
 BaseScript*             getScript(const char* name)
 {
     uint32_t i = 0;
-    for (const auto& scriptName: scriptNames)
+    for (const auto& script: scripts)
     {
-        if (scriptName == name)
+        if (script->getName() == name)
         {
-            BaseScript* script = scriptInstances[i].get();
+            if (!script->getEntity())
+                script->setEntity(entity);
+
             // If the user need the script before it's initialized, auto initialized it
             if (!script->isInitialized)
             {
                 script->start();
                 script->isInitialized = true;
             }
-            return script;
+            return (script.get());
         }
         i++;
     }
@@ -543,10 +619,9 @@ T*             getScript(const char* name)
     return nullptr;
 }
 
-std::vector<std::unique_ptr<BaseScript> > scriptInstances;
-std::vector<std::string> scriptNames;
+std::vector<std::unique_ptr<BaseScript> > scripts;
 
-std::string selectedScript; // Only used for editor
+BaseScript* selectedScript{nullptr}; // Only used for editor
 END_COMPONENT(sScriptComponent)
 
 START_COMPONENT(sLightComponent)

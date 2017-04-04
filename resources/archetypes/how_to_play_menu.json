@@ -12,6 +12,7 @@
             "g" : 1,
             "r" : 1
          },
+         "dynamic" : false,
          "ignore_raycast" : false,
          "materials" : [ "how_to_play_menu.mat" ],
          "model" : "resources/models/default.DAE",
@@ -20,8 +21,8 @@
       },
       "sTransformComponent" : {
          "pos" : {
-            "x" : 460,
-            "y" : 183.5,
+            "x" : 921.5999755859375,
+            "y" : 508.5,
             "z" : 0
          },
          "rotation" : {
@@ -30,8 +31,8 @@
             "z" : 0
          },
          "scale" : {
-            "x" : 100,
-            "y" : 65,
+            "x" : 105.59999847412109,
+            "y" : 71.189994812011719,
             "z" : 0.0010000000474974513
          }
       },
@@ -39,8 +40,13 @@
          "horizontal_alignment" : "MIDDLE",
          "layer" : 0,
          "offset" : {
-            "x" : 0,
+            "x" : -2,
             "y" : 0
+         },
+         "percentage_size" : true,
+         "size" : {
+            "x" : 0.55000001192092896,
+            "y" : 0.69999998807907104
          },
          "vertical_alignment" : "MIDDLE"
       }

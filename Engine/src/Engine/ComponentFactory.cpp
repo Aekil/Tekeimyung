@@ -16,6 +16,7 @@
 #include <Engine/Utils/ResourceManager.hpp>
 #include <Engine/Systems/UISystem.hpp>
 #include <Engine/Graphics/Renderer.hpp>
+#include <Engine/Graphics/UI/Font.hpp>
 #include <Engine/Core/ScriptFactory.hpp>
 #include <Engine/EntityFactory.hpp>
 #include <Engine/ComponentFactory.hpp>
@@ -105,6 +106,7 @@ sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& 
     component->modelFile = json.getString("model", "resources/models/default.DAE");
     component->color = json.getColor4f("color", { 1.0f, 1.0f, 1.0f, 1.0f });
     component->ignoreRaycast = json.getBool("ignore_raycast", false);
+    component->dynamic = json.getBool("dynamic", false);
 
     std::string geometryName = json.getString("type", "MESH");
     component->type = EnumManager<Geometry::eType>::stringToEnum(geometryName);
@@ -243,6 +245,7 @@ JsonValue&    ComponentFactory<sRenderComponent>::saveToJson(const std::string& 
     json.setColor4f("color", component->color);
     json.setString("type", EnumManager<Geometry::eType>::enumToString(component->type));
     json.setBool("ignore_raycast", component->ignoreRaycast);
+    json.setBool("dynamic", component->dynamic);
 
     // Save animations
     {
@@ -342,6 +345,7 @@ bool    ComponentFactory<sRenderComponent>::updateEditor(const std::string& enti
 
     changed |= ImGui::ColorEdit4("color", glm::value_ptr(component->color));
     changed |= ImGui::Checkbox("Ignore mouse raycast", &component->ignoreRaycast);
+    changed |= ImGui::Checkbox("Dynamic", &component->dynamic);
     typeChanged |= Helper::updateComboEnum<Geometry::eType>("Model type", component->type);
 
     if (component->type == Geometry::eType::MESH)
@@ -1201,7 +1205,30 @@ sComponent* ComponentFactory<sScriptComponent>::loadFromJson(const std::string& 
 
     component = new sScriptComponent();
 
-    component->scriptNames = json.getStringVec("class", {});
+    auto scripts = json.get()["scripts"];
+    if (scripts.size() > 0 && scripts.type() != Json::ValueType::arrayValue)
+    {
+        LOG_ERROR("%s::sScriptComponent loadFromJson error: scripts is not an array", entityType.c_str());
+        return (component);
+    }
+
+    for (const auto& script: scripts)
+    {
+        // Load animation
+        JsonValue scriptJson(script);
+        std::string scriptName = scriptJson.getString("name", "");
+
+        auto scriptInstance = ScriptFactory::create(scriptName);
+        if (!scriptInstance)
+        {
+            LOG_ERROR("%s::sScriptComponent loadFromJson error: script \"%s\" does not exists", entityType.c_str(), scriptName.c_str());
+            continue;
+        }
+
+        scriptInstance->loadFromJson(scriptJson);
+
+        component->scripts.push_back(std::move(scriptInstance));
+    }
 
     return component;
 }
@@ -1211,7 +1238,16 @@ JsonValue&    ComponentFactory<sScriptComponent>::saveToJson(const std::string& 
     JsonValue& json = toJson ? *toJson : _componentsJson[entityType];
     const sScriptComponent* component = static_cast<const sScriptComponent*>(savedComponent ? savedComponent : _components[entityType]);
 
-    json.setStringVec("class", component->scriptNames);
+    std::vector<JsonValue> scriptsJson;
+    for (const auto& script: component->scripts)
+    {
+        JsonValue scriptJson = script->saveToJson();
+        scriptJson.setString("name", script->getName());
+        scriptsJson.push_back(scriptJson);
+    }
+
+
+    json.setValueVec("scripts", scriptsJson);
 
     return (json);
 }
@@ -1238,12 +1274,14 @@ bool    ComponentFactory<sScriptComponent>::updateEditor(const std::string& enti
         for (auto script: ScriptFactory::getScriptsNames())
         {
             // Entity does not have this script
-            if (std::find(component->scriptNames.cbegin(), component->scriptNames.cend(), script) == component->scriptNames.cend())
+            if (!component->hasScript(script))
             {
                 // Script button pressed, add it to the entity
                 if (ImGui::Button(script))
                 {
-                    component->scriptNames.push_back(script);
+                    auto scriptInstance = ScriptFactory::create(script);
+                    scriptInstance->setEntity(entity);
+                    component->scripts.push_back(std::move(scriptInstance));
                 }
             }
         }
@@ -1252,28 +1290,38 @@ bool    ComponentFactory<sScriptComponent>::updateEditor(const std::string& enti
 
     // Scripts list
     ImGui::BeginChild("Scripts", ImVec2(0, 100), true);
-    for (auto& script: component->scriptNames)
+    for (auto& script: component->scripts)
     {
-        if (ImGui::Selectable(script.c_str(), component->selectedScript == script))
+        if (ImGui::Selectable(script->getName().c_str(), component->selectedScript == script.get()))
         {
-            component->selectedScript = script;
+            component->selectedScript = script.get();
         }
     }
     ImGui::EndChild();
 
-    if (component->selectedScript.size() == 0)
+    if (!component->selectedScript)
         return (changed);
-
-    ImGui::Text("\n");
-    ImGui::Text("%s script options\n", component->selectedScript.c_str());
 
     // Delete script
     if (ImGui::Button("Delete"))
     {
-        auto& eraseIt = std::remove(component->scriptNames.begin(), component->scriptNames.end(), component->selectedScript);
-        component->scriptNames.erase(eraseIt);
+        uint32_t i = 0;
+        // Find script index in scripts vector
+        for (const auto& script: component->scripts)
+        {
+            if (script.get() == component->selectedScript)
+                break;
+            i++;
+        }
+        component->scripts.erase(component->scripts.begin() + i);
+        component->selectedScript = nullptr;
         return (true);
     }
+
+    ImGui::Text("\n");
+    ImGui::Text("%s script options\n--------------------\n", component->selectedScript->getName().c_str());
+
+    component->selectedScript->updateEditor();
 
     return (changed);
 }
@@ -1293,6 +1341,8 @@ sComponent* ComponentFactory<sUiComponent>::loadFromJson(const std::string& enti
     component->layer = json.getInt("layer", 0);
     component->horizontalAlignment = EnumManager<eHorizontalAlignment>::stringToEnum(json.getString("horizontal_alignment", "MIDDLE"));
     component->verticalAlignment = EnumManager<eVerticalAlignment>::stringToEnum(json.getString("vertical_alignment", "MIDDLE"));
+    component->percentageSize = json.getBool("percentage_size", false);
+    component->size = json.getVec2f("size", {0.1f, 0.1f});
 
     return component;
 }
@@ -1307,6 +1357,8 @@ JsonValue&    ComponentFactory<sUiComponent>::saveToJson(const std::string& enti
     json.setInt("layer", component->layer);
     json.setString("horizontal_alignment", EnumManager<eHorizontalAlignment>::enumToString(component->horizontalAlignment));
     json.setString("vertical_alignment", EnumManager<eVerticalAlignment>::enumToString(component->verticalAlignment));
+    json.setBool("percentage_size", component->percentageSize);
+    json.setVec2f("size", component->size);
 
     return (json);
 }
@@ -1326,12 +1378,153 @@ bool    ComponentFactory<sUiComponent>::updateEditor(const std::string& entityTy
 
     changed |= Helper::updateComboEnum<eHorizontalAlignment>("Horizontal alignment", component->horizontalAlignment);
     changed |= Helper::updateComboEnum<eVerticalAlignment>("Vertical alignment", component->verticalAlignment);
-    changed |= ImGui::InputFloat("horizontal offset", &component->offset.x, 1.0f, ImGuiInputTextFlags_AllowTabInput);
-    changed |= ImGui::InputFloat("vertical offset", &component->offset.y, 1.0f, ImGuiInputTextFlags_AllowTabInput);
+    changed |= ImGui::InputFloat("Horizontal offset", &component->offset.x, 1.0f, ImGuiInputTextFlags_AllowTabInput);
+    changed |= ImGui::InputFloat("Vertical offset", &component->offset.y, 1.0f, ImGuiInputTextFlags_AllowTabInput);
+    changed |= ImGui::Checkbox("Percentage size", &component->percentageSize);
+
+    if (component->percentageSize)
+    {
+        if (ImGui::InputFloat("Horizontal size", &component->size.x, 0.05f, ImGuiInputTextFlags_AllowTabInput))
+        {
+            changed = true;
+            // Set size.x between 0 and 1
+            component->size.x = std::min(component->size.x, 1.0f);
+            component->size.x = std::max(component->size.x, 0.0f);
+        }
+
+        if (ImGui::InputFloat("Vertical size", &component->size.y, 0.05f, ImGuiInputTextFlags_AllowTabInput))
+        {
+            changed = true;
+            // Set size.y between 0 and 1
+            component->size.y = std::min(component->size.y, 1.0f);
+            component->size.y = std::max(component->size.y, 0.0f);
+        }
+    }
 
     if (changed)
     {
         component->needUpdate = true;
+    }
+
+    return (changed);
+}
+
+
+/*
+** sTextComponent
+*/
+
+sComponent* ComponentFactory<sTextComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
+{
+    sTextComponent*  component;
+
+    component = new sTextComponent();
+
+    component->text.setContent(json.getString("content", ""));
+    component->text.setColor(json.getColor4f("color", {1.0f, 1.0f, 1.0f, 1.0f}));
+    component->text.setFontSize(json.getUInt("font_size", 10));
+
+    // Load text font
+    {
+        std::string fontName = json.getString("font_name", "arial.ttf");
+        Font* font = ResourceManager::getInstance()->getResource<Font>(fontName);
+
+        if (!font)
+        {
+            EXCEPT(InternalErrorException, "Failed to get font resource \"%s\"", fontName.c_str());
+        }
+
+        component->text.setFont(font);
+    }
+
+    return component;
+}
+
+JsonValue&    ComponentFactory<sTextComponent>::saveToJson(const std::string& entityType, const sComponent* savedComponent, JsonValue* toJson)
+{
+    JsonValue& json = toJson ? *toJson : _componentsJson[entityType];
+    const sTextComponent* component = static_cast<const sTextComponent*>(savedComponent ? savedComponent : _components[entityType]);
+
+
+    json.setString("content", component->text.getContent());
+    json.setColor4f("color", component->text.getColor());
+    json.setUInt("font_size", component->text.getFontSize());
+
+    if (component->text.getFont())
+    {
+        json.setString("font_name", component->text.getFont()->getId());
+    }
+
+    return (json);
+}
+
+bool    ComponentFactory<sTextComponent>::updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity)
+{
+    sTextComponent* component = static_cast<sTextComponent*>(entityComponent ? entityComponent : _components[entityType]);
+    *savedComponent = component;
+    bool changed = false;
+
+    // Edit text content
+    {
+        std::vector<char> textVec(component->text.getContent().cbegin(), component->text.getContent().cend());
+        textVec.push_back(0);
+        textVec.resize(64);
+
+        if (ImGui::InputTextMultiline("Text", textVec.data(), textVec.size()))
+        {
+            component->text.setContent(textVec.data());
+            changed = true;
+        }
+    }
+
+    // Edit text size
+    {
+        int textSize = component->text.getFontSize();
+        if (ImGui::InputInt("Font size", &textSize))
+        {
+            textSize = std::max(textSize, 0);
+            textSize = std::min(textSize, 200);
+            component->text.setFontSize(textSize);
+            changed = true;
+        }
+    }
+
+    // Edit text color
+    {
+        glm::vec4 color = component->text.getColor();
+        if (ImGui::ColorEdit4("Color", glm::value_ptr(color)))
+        {
+            component->text.setColor(color);
+        }
+    }
+
+    // Edit font name
+    {
+        std::string fontName = component->text.getFont()->getId();
+        if (Helper::updateComboString("Font name", ResourceManager::getInstance()->getResourcesNames<Font>(), fontName))
+        {
+            Font* font = ResourceManager::getInstance()->getResource<Font>(fontName);
+
+            ASSERT(font != nullptr, "The font \"%s\" should be loaded", fontName.c_str());
+
+            component->text.setFont(font);
+            changed = true;
+        }
+    }
+
+    // Edit alignment
+    {
+        changed |= Helper::updateComboEnum<eHorizontalAlignment>("Horizontal alignment", component->horizontalAlignment);
+        changed |= Helper::updateComboEnum<eVerticalAlignment>("Vertical alignment", component->verticalAlignment);
+    }
+
+    if (changed)
+    {
+        sUiComponent* uiComp = component->entity->getComponent<sUiComponent>();
+        if (uiComp)
+        {
+            uiComp->needUpdate = true;
+        }
     }
 
     return (changed);

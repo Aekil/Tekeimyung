@@ -19,4 +19,5 @@ public:
 
 protected:
     int damage;
+    int usage{5};
 };

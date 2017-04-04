@@ -2,9 +2,20 @@
 * @Author   Guillaume Labey
 */
 
+#include <algorithm>
+
 #include <ECS/EntityManager.hpp>
 
 #include <ECS/Entity.hpp>
+
+Entity::~Entity()
+{
+    std::for_each(_components.begin(), _components.end(), [this](sComponent* component)
+    {
+        delete component;
+    });
+    _components.clear();
+}
 
 bool Entity::operator==(uint32_t id_)
 {
@@ -18,6 +29,7 @@ bool Entity::operator==(Entity &entity)
 
 void    Entity::addComponent(sComponent* component)
 {
+    component->entity = this;
     _components.push_back(component);
     _em->notifyEntityNewComponent(this, component);
 }

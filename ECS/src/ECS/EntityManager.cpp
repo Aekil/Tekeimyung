@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include <random>
+#include <iostream>
 
 #include <ECS/World.hpp>
 #include <ECS/EntityManager.hpp>
@@ -38,7 +39,14 @@ void    EntityManager::destroyEntity(Entity* entity)
     entity->_components.clear();
 
     removeEntityFromTagGroup(entity, entity->getTag());
-    _entities.erase(std::find(_entities.cbegin(), _entities.cend(), entity));
+
+    auto entityIt = std::find(_entities.cbegin(), _entities.cend(), entity);
+    if (entityIt == _entities.cend())
+    {
+        std::cerr << "Warning: Attempt to delete entity " << entity->id << " which is already deleted" << std::endl;
+        return;
+    }
+    _entities.erase(entityIt);
 
     _entityPool->free(entity);
 }
@@ -92,6 +100,18 @@ std::vector<Entity*>& EntityManager::getEntities()
 const std::vector<Entity*>& EntityManager::getEntitiesByTag(const std::string& tag)
 {
     return (_entitiesTagGroups[tag]);
+}
+
+Entity* EntityManager::getEntityByTag(const std::string& tag)
+{
+    const auto& tagGroup = _entitiesTagGroups[tag];
+
+    if (tagGroup.size() > 0)
+    {
+        return (tagGroup[0]);
+    }
+
+    return (nullptr);
 }
 
 Entity* EntityManager::getEntity(uint32_t id) const

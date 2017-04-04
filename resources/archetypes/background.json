@@ -8,10 +8,11 @@
          "animations" : [],
          "color" : {
             "a" : 1,
-            "b" : 0.26666668057441711,
-            "g" : 0.49019607901573181,
-            "r" : 0.26274511218070984
+            "b" : 0.058823529630899429,
+            "g" : 0.058823529630899429,
+            "r" : 0.058823529630899429
          },
+         "dynamic" : false,
          "ignore_raycast" : false,
          "materials" : [ "geometry_default.mat" ],
          "model" : "resources/models/default.DAE",
@@ -20,9 +21,9 @@
       },
       "sTransformComponent" : {
          "pos" : {
-            "x" : 0,
-            "y" : 0,
-            "z" : -1
+            "x" : 960,
+            "y" : 529,
+            "z" : 0
          },
          "rotation" : {
             "x" : 0,
@@ -31,16 +32,21 @@
          },
          "scale" : {
             "x" : 192,
-            "y" : 101.69999694824219,
+            "y" : 105.80000305175781,
             "z" : 1
          }
       },
       "sUiComponent" : {
          "horizontal_alignment" : "MIDDLE",
-         "layer" : 0,
+         "layer" : 1,
          "offset" : {
             "x" : 0,
             "y" : 0
+         },
+         "percentage_size" : true,
+         "size" : {
+            "x" : 1,
+            "y" : 1
          },
          "vertical_alignment" : "MIDDLE"
       }

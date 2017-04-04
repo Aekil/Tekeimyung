@@ -1,0 +1,58 @@
+{
+   "components" : {
+      "sNameComponent" : {
+         "name" : "TIMER_BAR_EMPTY"
+      },
+      "sRenderComponent" : {
+         "animated" : false,
+         "animations" : [],
+         "color" : {
+            "a" : 1,
+            "b" : 1,
+            "g" : 1,
+            "r" : 1
+         },
+         "dynamic" : false,
+         "ignore_raycast" : false,
+         "materials" : [ "healt_bar_empty.mat" ],
+         "model" : "resources/models/default.DAE",
+         "type" : "PLANE"
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 960,
+            "y" : 978.86248779296875,
+            "z" : 0
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "scale" : {
+            "x" : 76.800003051757813,
+            "y" : 1.5255000591278076,
+            "z" : 1
+         }
+      },
+      "sTypeComponent" : {
+         "type" : "TILE_WALKABLE"
+      },
+      "sUiComponent" : {
+         "horizontal_alignment" : "MIDDLE",
+         "layer" : 1,
+         "offset" : {
+            "x" : 0,
+            "y" : -3
+         },
+         "percentage_size" : false,
+         "size" : {
+            "x" : 0.10000000149011612,
+            "y" : 0.10000000149011612
+         },
+         "vertical_alignment" : "TOP"
+      }
+   },
+   "name" : "TIMER_BAR_EMPTY",
+   "tag" : ""
+}

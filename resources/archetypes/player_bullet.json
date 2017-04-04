@@ -44,6 +44,7 @@
             "g" : 1,
             "r" : 1
          },
+         "dynamic" : false,
          "ignore_raycast" : false,
          "materials" : [ "particle_circle.mat" ],
          "model" : "resources/models/default.DAE",
@@ -64,7 +65,12 @@
          }
       },
       "sScriptComponent" : {
-         "class" : [ "Projectile" ]
+         "class" : [ "Projectile" ],
+         "scripts" : [
+            {
+               "name" : "Projectile"
+            }
+         ]
       },
       "sSphereColliderComponent" : {
          "isTrigger" : false,

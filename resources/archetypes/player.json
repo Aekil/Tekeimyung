@@ -8,10 +8,11 @@
          "animations" : [],
          "color" : {
             "a" : 1,
-            "b" : 0.98333263397216797,
-            "g" : 0.98333263397216797,
+            "b" : 1,
+            "g" : 1,
             "r" : 1
          },
+         "dynamic" : false,
          "geometry" : null,
          "ignore_raycast" : false,
          "materials" : [ "_01 - Default", "_02 - Default" ],
@@ -33,32 +34,39 @@
          }
       },
       "sScriptComponent" : {
-         "class" : [ "Player" ]
+         "scripts" : [
+            {
+               "name" : "Player"
+            },
+            {
+               "name" : "Build"
+            }
+         ]
       },
       "sSphereColliderComponent" : {
          "isTrigger" : false,
          "pos" : {
-            "x" : 0,
+            "x" : -0.10001659393310547,
             "y" : 15,
-            "z" : 0
+            "z" : 7.5000085830688477
          },
-         "radius" : 1.7999999523162842
+         "radius" : 5.349998950958252
       },
       "sTransformComponent" : {
          "pos" : {
-            "x" : 65,
+            "x" : 199.26182556152344,
             "y" : 16.25,
-            "z" : 33
+            "z" : -2.1741812229156494
          },
          "rotation" : {
             "x" : 0,
-            "y" : -84.007659912109375,
+            "y" : -89.958930969238281,
             "z" : 0
          },
          "scale" : {
-            "x" : 0.76041638851165771,
-            "y" : 0.76041638851165771,
-            "z" : 0.76041638851165771
+            "x" : 0.47145819664001465,
+            "y" : 0.47145816683769226,
+            "z" : 0.47145819664001465
          }
       },
       "sTypeComponent" : {
@@ -66,5 +74,5 @@
       }
    },
    "name" : "PLAYER",
-   "tag" : ""
+   "tag" : "Player"
 }

@@ -12,7 +12,13 @@ public:
     {
         const Creators_t::const_iterator iter = static_creators().find(id);
 
-        return (iter == static_creators().end() ? nullptr : (*iter->second)()); // if found, execute the creator function pointer
+        // if found, execute the creator function pointer
+        if (iter == static_creators().end())
+            return (nullptr);
+        auto& script = (*iter->second)();
+        script->setName(id);
+
+        return (std::move(script));
     }
 
     typedef std::unique_ptr<BaseScript> Creator_t(); // function pointer to create Object

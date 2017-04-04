@@ -25,14 +25,20 @@
             "g" : 1,
             "r" : 1
          },
+         "dynamic" : false,
          "ignore_raycast" : false,
-         "materials" : [ "MAT_Brown" ],
+         "materials" : [ "cube_brown.mat" ],
          "model" : "resources/models/blocks/block_brown.DAE",
          "texture" : "",
          "type" : "MESH"
       },
       "sScriptComponent" : {
-         "class" : [ "Tile" ]
+         "class" : [ "Tile" ],
+         "scripts" : [
+            {
+               "name" : "Tile"
+            }
+         ]
       },
       "sTransformComponent" : {
          "pos" : {

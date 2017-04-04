@@ -4,7 +4,6 @@
 
 #include <Engine/Graphics/ModelInstance.hpp>
 
-
 ModelInstance::ModelInstance(Model* model) : _model(model)
 {
     uint32_t i = 0;
@@ -85,3 +84,10 @@ void    ModelInstance::setBuffer(BufferPool::SubBuffer* buffer)
     _buffer = buffer;
 }
 
+void    ModelInstance::setMaterial(Material* material)
+{
+    for (auto& meshInstance: _meshsInstances)
+    {
+        meshInstance->setMaterial(material);
+    }
+}
