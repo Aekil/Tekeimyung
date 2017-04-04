@@ -8,6 +8,7 @@
 #include <Game/Scripts/Build.hpp>
 #include <Game/Scripts/Spawner.hpp>
 #include <Game/Scripts/WaveManager.hpp>
+#include <Game/Scripts/GameManager.hpp>
 #include <Game/Scripts/Enemy.hpp>
 
 void        WaveManager::start()
@@ -160,6 +161,28 @@ void    WaveManager::handleEndWave()
     _progressBar.currentProgress = _progressBar.maxProgress;
     _progressBar.display(true);
     _waiting = true;
+
+    if (this->_currentWave == 0)
+    {
+        Entity* gameManager = em->getEntityByTag("GameManager");
+        if (!gameManager)
+        {
+            LOG_WARN("Can't find entity with GameManager tag");
+            return;
+        }
+
+        auto scriptComponent = gameManager->getComponent<sScriptComponent>();
+
+        if (!scriptComponent)
+        {
+            LOG_WARN("Can't find scriptComponent on GameManager entity");
+            return;
+        }
+
+        auto gameManagerScript = scriptComponent->getScript<GameManager>("GameManager");
+
+        gameManagerScript->displayMapParts(4);
+    }
 }
 
 void    WaveManager::handleGameOver()

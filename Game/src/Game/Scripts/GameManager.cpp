@@ -18,6 +18,7 @@ void GameManager::start()
                 entity->getComponent<sRenderComponent>()->_display = false;
 
                 this->firstLayerEntities[x][z] = entity;
+                this->_mapParts[this->firstLayerPattern[x][z]].push_back(entity);
             }
         }
     }
@@ -48,5 +49,16 @@ void GameManager::update(float dt)
         {
             em->destroyEntityRegister(projectile);
         }
+    }
+}
+
+void GameManager::displayMapParts(int part)
+{
+    auto mapParts = this->_mapParts[part];
+
+    for (auto& mapPart : mapParts)
+    {
+        auto render = mapPart->getComponent<sRenderComponent>();
+        render->_display = true;
     }
 }
