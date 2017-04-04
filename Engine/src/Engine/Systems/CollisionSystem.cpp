@@ -47,7 +47,7 @@ void    CollisionSystem::update(EntityManager &em, float elapsedTime)
                                     || entity->getComponent<sBoxColliderComponent>() != nullptr && !entity->getComponent<sBoxColliderComponent>()->isTrigger))
                             {
                                 rigidBody->velocity = glm::vec3(0.0f);
-                            }
+                            } 
 
                             if (rigidBody->collisions.find((*it)->id) == rigidBody->collisions.end() || rigidBody->collisions[(*it)->id] == eCollisionState::NO_COLLISION)
                             {
