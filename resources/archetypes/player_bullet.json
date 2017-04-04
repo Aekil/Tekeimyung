@@ -1,5 +1,6 @@
 {
    "components" : {
+      "sDynamicComponent" : null,
       "sNameComponent" : {
          "name" : "PLAYER_BULLET"
       },
@@ -73,7 +74,7 @@
          ]
       },
       "sSphereColliderComponent" : {
-         "isTrigger" : false,
+         "isTrigger" : true,
          "pos" : {
             "x" : 2,
             "y" : 9,
@@ -100,8 +101,7 @@
       },
       "sTypeComponent" : {
          "type" : "OBJECT"
-      },
-      "sDynamicComponent" : null
+      }
    },
    "name" : "PLAYER_BULLET",
    "tag" : "Projectile"

@@ -1,5 +1,6 @@
 {
    "components" : {
+      "sDynamicComponent" : null,
       "sNameComponent" : {
          "name" : "TOWER_FIRE"
       },
@@ -46,8 +47,7 @@
       },
       "sTypeComponent" : {
          "type" : "TILE_NOT_WALKABLE"
-      },
-      "sDynamicComponent" : null
+      }
    },
    "name" : "TOWER_FIRE",
    "tag" : ""

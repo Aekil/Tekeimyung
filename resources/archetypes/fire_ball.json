@@ -1,5 +1,6 @@
 {
    "components" : {
+      "sDynamicComponent" : null,
       "sNameComponent" : {
          "name" : "FIRE_BALL"
       },
@@ -115,8 +116,7 @@
       },
       "sTypeComponent" : {
          "type" : "OBJECT"
-      },
-      "sDynamicComponent" : null
+      }
    },
    "name" : "FIRE_BALL",
    "tag" : "Projectile"

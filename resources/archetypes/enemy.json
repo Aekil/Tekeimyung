@@ -13,6 +13,7 @@
             "z" : 1.1000000238418579
          }
       },
+      "sDynamicComponent" : null,
       "sNameComponent" : {
          "name" : "ENEMY"
       },
@@ -137,8 +138,7 @@
       },
       "sTypeComponent" : {
          "type" : "CHARACTER"
-      },
-      "sDynamicComponent" : null
+      }
    },
    "name" : "ENEMY",
    "tag" : "Enemy"

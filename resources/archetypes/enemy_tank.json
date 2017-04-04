@@ -99,6 +99,7 @@
       "sScriptComponent" : {
          "scripts" : [
             {
+               "experience_earned" : 20,
                "health" : 300,
                "name" : "Enemy",
                "speed" : 25
@@ -133,7 +134,8 @@
       },
       "sTypeComponent" : {
          "type" : "CHARACTER"
-      }
+      },
+      "sDynamicComponent" : null
    },
    "name" : "ENEMY_TANK",
    "tag" : "Enemy"
