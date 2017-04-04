@@ -72,8 +72,7 @@
       },
       "sTypeComponent" : {
          "type" : "CHARACTER"
-      },
-      "sDynamicComponent" : null
+      }
    },
    "name" : "ENEMY_EXPLOSION",
    "tag" : ""
