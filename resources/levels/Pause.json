@@ -18,6 +18,7 @@
                   "g" : 1,
                   "r" : 1
                },
+               "dynamic" : false,
                "ignore_raycast" : false,
                "materials" : [ "button_resume.mat" ],
                "model" : "resources/models/default.DAE",
@@ -26,7 +27,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 960,
-                  "y" : 671.219970703125,
+                  "y" : 697.6199951171875,
                   "z" : 0
                },
                "rotation" : {
@@ -36,7 +37,7 @@
                },
                "scale" : {
                   "x" : 30,
-                  "y" : 7.1999526023864746,
+                  "y" : 7.4831366539001465,
                   "z" : 6
                }
             },
@@ -76,6 +77,7 @@
                   "g" : 1,
                   "r" : 1
                },
+               "dynamic" : false,
                "ignore_raycast" : false,
                "materials" : [ "button_how_to_play.mat" ],
                "model" : "resources/models/default.DAE",
@@ -84,7 +86,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 960,
-                  "y" : 589.8599853515625,
+                  "y" : 613.05999755859375,
                   "z" : 0
                },
                "rotation" : {
@@ -94,7 +96,7 @@
                },
                "scale" : {
                   "x" : 30,
-                  "y" : 7.1999526023864746,
+                  "y" : 7.4831366539001465,
                   "z" : 6
                }
             },
@@ -134,6 +136,7 @@
                   "g" : 1,
                   "r" : 1
                },
+               "dynamic" : false,
                "ignore_raycast" : false,
                "materials" : [ "button_options.mat" ],
                "model" : "resources/models/default.DAE",
@@ -142,7 +145,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 960,
-                  "y" : 508.5,
+                  "y" : 528.5,
                   "z" : 0
                },
                "rotation" : {
@@ -152,7 +155,7 @@
                },
                "scale" : {
                   "x" : 30,
-                  "y" : 7.1999526023864746,
+                  "y" : 7.4831366539001465,
                   "z" : 6
                }
             },
@@ -177,8 +180,8 @@
       {
          "components" : {
             "sButtonComponent" : {
-               "action" : "NONE",
-               "action_level" : ""
+               "action" : "ADD_LEVEL",
+               "action_level" : "ConfirmBackToMenu"
             },
             "sNameComponent" : {
                "name" : "BUTTON_BACK_TO_MENU"
@@ -224,6 +227,7 @@
                   "g" : 1,
                   "r" : 1
                },
+               "dynamic" : false,
                "ignore_raycast" : false,
                "materials" : [ "button_back_to_menu.mat" ],
                "model" : "resources/models/traps/trap_needle.DAE",
@@ -232,7 +236,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 960,
-                  "y" : 386.45999145507813,
+                  "y" : 401.66000366210938,
                   "z" : 0
                },
                "rotation" : {
@@ -242,7 +246,7 @@
                },
                "scale" : {
                   "x" : 30,
-                  "y" : 7.1999998092651367,
+                  "y" : 7.4831857681274414,
                   "z" : 0
                }
             },
@@ -282,6 +286,7 @@
                   "g" : 1,
                   "r" : 1
                },
+               "dynamic" : false,
                "ignore_raycast" : false,
                "materials" : [ "button_exit_game.mat" ],
                "model" : "resources/models/default.DAE",
@@ -290,7 +295,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 960,
-                  "y" : 305.10000610351563,
+                  "y" : 317.10000610351563,
                   "z" : 0
                },
                "rotation" : {
@@ -300,7 +305,7 @@
                },
                "scale" : {
                   "x" : 30,
-                  "y" : 7.1999526023864746,
+                  "y" : 7.4831366539001465,
                   "z" : 1
                }
             },

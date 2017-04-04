@@ -27,7 +27,7 @@ void    OptionsMenuState::setupSystems()
 
 bool            OptionsMenuState::init()
 {
-    createToggleWindowModeButton();
+    this->createToggleWindowModeButton();
     return (true);
 }
 
@@ -36,7 +36,7 @@ bool        OptionsMenuState::update(float elapsedTime)
     auto    &&keyboard = GameWindow::getInstance()->getKeyboard();
 
     // Display the previous states
-    renderPreviousStates({PlayState::identifier});
+    this->renderPreviousStates({PlayState::identifier});
 
     bool    success = GameState::update(elapsedTime);
 
@@ -67,7 +67,7 @@ bool                    OptionsMenuState::handleButtons()
         (mouseClicked && toggleWindowMode->hovered))
     {
         GameWindow::getInstance()->toggleFullscreen();
-        createToggleWindowModeButton();
+        this->createToggleWindowModeButton();
     }
 
     return (true);
@@ -84,16 +84,16 @@ void                    OptionsMenuState::createToggleWindowModeButton()
                        "BUTTON_TOGGLE_FULLSCREEN");
 
     // Create the button for the first time
-    if (!_toggleWindowModeButton)
+    if (!this->_toggleWindowModeButton)
     {
-        _toggleWindowModeButton = EntityFactory::createOrGetEntity(buttonArchetype);
+        this->_toggleWindowModeButton = EntityFactory::createOrGetEntity(buttonArchetype);
     }
     // Change the button render
     else
     {
         Entity* newButton = EntityFactory::createEntity(buttonArchetype);
         sRenderComponent* newButtonRender = newButton->getComponent<sRenderComponent>();
-        sRenderComponent* toggleWindowModeButtonRender = _toggleWindowModeButton->getComponent<sRenderComponent>();
+        sRenderComponent* toggleWindowModeButtonRender = this->_toggleWindowModeButton->getComponent<sRenderComponent>();
 
         toggleWindowModeButtonRender->update(newButtonRender);
         _world.getEntityManager()->destroyEntity(newButton);

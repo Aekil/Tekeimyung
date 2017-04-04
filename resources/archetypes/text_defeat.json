@@ -1,0 +1,55 @@
+{
+   "components" : {
+      "sNameComponent" : {
+         "name" : "TEXT_DEFEAT"
+      },
+      "sRenderComponent" : {
+         "animated" : false,
+         "animations" : [],
+         "color" : {
+            "a" : 1,
+            "b" : 1,
+            "g" : 1,
+            "r" : 1
+         },
+         "dynamic" : false,
+         "ignore_raycast" : false,
+         "materials" : [ "text_defeat.mat" ],
+         "model" : "resources/models/default.DAE",
+         "type" : "PLANE"
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 960,
+            "y" : 671.219970703125,
+            "z" : 0
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "scale" : {
+            "x" : 79.999870300292969,
+            "y" : 13.559965133666992,
+            "z" : 1
+         }
+      },
+      "sUiComponent" : {
+         "horizontal_alignment" : "MIDDLE",
+         "layer" : 0,
+         "offset" : {
+            "x" : 0,
+            "y" : 16
+         },
+         "percentage_size" : true,
+         "size" : {
+            "x" : 0.41666600108146667,
+            "y" : 0.1333329975605011
+         },
+         "vertical_alignment" : "MIDDLE"
+      }
+   },
+   "name" : "TEXT_DEFEAT",
+   "tag" : ""
+}

@@ -13,7 +13,6 @@ START_GAMESTATE(HomeScreenState, "HomeScreen")
      bool            init() override final;
 
 private:
-    Entity*         _playGameButton = nullptr;
+    Entity*         _buttonHowToPlay = nullptr;
 
-    void            createPlayGameButton();
 END_GAMESTATE(HomeScreenState)

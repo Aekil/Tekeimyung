@@ -16,8 +16,10 @@
    "face_camera" : false,
    "src_blend" : "GL_SRC_ALPHA",
    "textures" : {
-      "ambient" : "resources/sprites/cube_bloom_dark_red.png",
-      "diffuse" : "resources/sprites/cube_bloom_dark_red.png"
+      "ambient" : "resources/sprites/textures/bloom_dark_red.png",
+      "bloom" : "",
+      "bloom_alpha" : "",
+      "diffuse" : "resources/sprites/textures/bloom_dark_red.png"
    },
    "transparent" : true,
    "wireframe" : false

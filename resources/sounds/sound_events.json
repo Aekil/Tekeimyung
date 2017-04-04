@@ -8,13 +8,6 @@
          }
       },
       {
-         "name" : "COUNTDOWN_WAVE",
-         "sound" : {
-            "name" : "countdown_wave.mp3",
-            "path" : "resources/sounds/sfx/countdown_wave.mp3"
-         }
-      },
-      {
          "name" : "BUILD",
          "sound" : {
             "name" : "building.mp3",

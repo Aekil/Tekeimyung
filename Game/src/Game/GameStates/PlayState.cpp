@@ -37,12 +37,8 @@ void    PlayState::setupSystems()
 
 bool    PlayState::init()
 {
-    EntityManager* em = _world.getEntityManager();
-
     _pair = std::make_pair(Keyboard::eKey::F, new HandleFullscreenEvent());
-
     _backgroundMusic = EventSound::getEventByEventType(eEventSound::BACKGROUND);
-
     return (true);
 }
 
