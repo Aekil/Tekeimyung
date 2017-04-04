@@ -8,9 +8,16 @@ void GameManager::start()
         for (int z = 0; z < this->mapSizeZ; z++)
         {
             if (this->firstLayerPattern[x][z] == 1)
-                this->firstLayerEntities[x][z] = this->Instantiate("BLOCK_BROWN", glm::vec3(x * 25, 0, z * 25));
+                this->firstLayerEntities[x][z] = this->Instantiate("TILE_FLOOR", glm::vec3(x * 25, 0, z * 25));
             else if (this->firstLayerPattern[x][z] == 2)
                 this->firstLayerEntities[x][z] = this->Instantiate("SPAWNER", glm::vec3(x * 25, 0, z * 25));
+            else if (this->firstLayerPattern[x][z] > 3)
+            {
+                auto entity = this->Instantiate("TILE_FLOOR", glm::vec3(x * 25, 0, z * 25));
+
+                entity->getComponent<sRenderComponent>()->_display = false;
+
+                this->firstLayerEntities[x][z] = entity;
             }
         }
     }
@@ -23,7 +30,6 @@ void GameManager::start()
             Entity* tile = this->firstLayerEntities[tileIndex.y][tileIndex.x];
             sTransformComponent* tileTransform = tile->getComponent<sTransformComponent>();
             path.push_back(tileTransform->getPos());
-
         }
         this->paths.push_back(path);
     }

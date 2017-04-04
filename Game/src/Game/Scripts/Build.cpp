@@ -13,17 +13,17 @@
 
 void Build::start()
 {
-    // BlockBrown
-    this->_buildableItems["BlockBrown"].push_back("TRAP_NEEDLE");
-    this->_buildableItems["BlockBrown"].push_back("TRAP_CUTTER");
-    this->_buildableItems["BlockBrown"].push_back("TRAP_FIRE");
-    this->_buildableItems["BlockBrown"].push_back("BLOCK_GREEN");
+    // TileFloor
+    this->_buildableItems["TileFloor"].push_back("TRAP_NEEDLE");
+    this->_buildableItems["TileFloor"].push_back("TRAP_CUTTER");
+    this->_buildableItems["TileFloor"].push_back("TRAP_FIRE");
+    this->_buildableItems["TileFloor"].push_back("TILE_BASE_TURRET");
 
-    // BlockGreen
-    this->_buildableItems["BlockGreen"].push_back("TOWER_FIRE");
+    // TileBaseTurret
+    this->_buildableItems["TileBaseTurret"].push_back("TOWER_FIRE");
 
-    this->_currentIdx["BlockGreen"] = 0;
-    this->_currentIdx["BlockBrown"] = 0;
+    this->_currentIdx["TileBaseTurret"] = 0;
+    this->_currentIdx["TileFloor"] = 0;
 
     this->_buildEnabled = false;
     this->_buildableRadius = 7.7f;
@@ -49,7 +49,7 @@ void Build::buildInput()
 
         auto entity = this->Instantiate(this->_buildableItems[this->_tile->getTag()][this->_currentIdx[this->_tile->getTag()]], glm::vec3(position.x, position.y + 12.5f, position.z));
 
-        if (entity->getTag() != "BlockGreen")
+        if (entity->getTag() != "TileBaseTurret")
         {
             auto previewRenderer = entity->getComponent<sRenderComponent>();
             previewRenderer->ignoreRaycast = true;
@@ -74,7 +74,7 @@ void Build::buildInput()
         }
     }
 
-    if (this->keyboard[Keyboard::eKey::B] == Keyboard::eKeyState::KEY_PRESSED)
+    if (this->keyboard[Keyboard::eKey::E] == Keyboard::eKeyState::KEY_PRESSED)
     {
         this->_buildEnabled = !this->_buildEnabled;
         if (!this->_buildEnabled && this->_preview)
@@ -111,8 +111,8 @@ void Build::checkBuildableZone()
 {
     auto em = EntityFactory::getBindedEntityManager();
 
-    const auto& tilesBrown = em->getEntitiesByTag("BlockBrown");
-    const auto& tilesGreen = em->getEntitiesByTag("BlockGreen");
+    const auto& tilesBrown = em->getEntitiesByTag("TileFloor");
+    const auto& tilesGreen = em->getEntitiesByTag("TileBaseTurret");
 
     for (auto &tile : tilesBrown)
     {

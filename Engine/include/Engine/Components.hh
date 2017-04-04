@@ -116,6 +116,7 @@ glm::vec4 color;
 
 // Last color since ubo update
 glm::vec4 lastColor;
+
 END_COMPONENT(sRenderComponent)
 
 

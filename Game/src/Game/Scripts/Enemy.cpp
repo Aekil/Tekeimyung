@@ -77,8 +77,6 @@ void Enemy::death()
 
 bool Enemy::takeDamage(int damage)
 {
-    LOG_DEBUG("PUTAIN DE DAMAGE DANS TA GUEULE FILS DE QUATIN IMMORALE");
-
     this->_render->_animator.play("hit", false);
     return (Health::takeDamage(damage));
 }
