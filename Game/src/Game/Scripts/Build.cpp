@@ -26,8 +26,8 @@ void Build::start()
     this->_buildableItems[1].push_back("TP_FIRST");
     this->_buildableItems[1].push_back("TP_SECOND");
 
-    this->_layersBlock.push_back("BlockBrown");
-    this->_layersBlock.push_back("BlockGreen");
+    this->_layersBlock.push_back("TileFloor");
+    this->_layersBlock.push_back("TileBaseTurret");
 
     this->_buildEnabled = false;
     this->_buildableRadius = 7.7f;
