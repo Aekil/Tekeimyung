@@ -17,7 +17,7 @@ void Tower::start()
     _lastShotTime = _fireRate;
     _towerTransform = entity->getComponent<sTransformComponent>();
     _towerRender = entity->getComponent<sRenderComponent>();
-    _range = 4.2f;
+    _range = 6.0f;
     _damage = 125;
     _towershootSound = EventSound::getEventByEventType(eEventSound::TOWER_SHOOT);
 }

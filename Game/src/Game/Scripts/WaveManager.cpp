@@ -5,6 +5,8 @@
 #include <Engine/EntityFactory.hpp>
 #include <Engine/Utils/LevelLoader.hpp>
 
+#include <Game/GameStates/VictoryScreenState.hpp>
+#include <Game/GameStates/DefeatScreenState.hpp>
 #include <Game/Scripts/Build.hpp>
 #include <Game/Scripts/Spawner.hpp>
 #include <Game/Scripts/WaveManager.hpp>
@@ -72,9 +74,8 @@ void        WaveManager::update(float dt)
         else
         {
             auto    gameStateManager = GameWindow::getInstance()->getGameStateManager();
-            auto    defeatState = LevelLoader::getInstance()->createLevelState("WinScreen", gameStateManager);
-
-            gameStateManager->addState(defeatState);
+            
+            gameStateManager->addState<VictoryScreenState>();
         }
     }
 }
@@ -194,7 +195,8 @@ void    WaveManager::handleEndWave()
 
 void    WaveManager::handleGameOver()
 {
-    auto em = EntityFactory::getBindedEntityManager();
+    auto    em = EntityFactory::getBindedEntityManager();
+    auto    gameStateManager = GameWindow::getInstance()->getGameStateManager();
 
     // Game over, destroy all enemies
     const auto& enemies = em->getEntitiesByTag("Enemy");
@@ -220,4 +222,5 @@ void    WaveManager::handleGameOver()
 
     _currentWave = _waves;
     _progressBar.display(false);
+    gameStateManager->addState<DefeatScreenState>();
 }
