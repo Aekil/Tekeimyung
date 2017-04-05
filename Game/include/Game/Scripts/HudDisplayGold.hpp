@@ -7,8 +7,6 @@
 #include <Engine/Core/BaseScript.hpp>
 #include <Engine/Core/ScriptFactory.hpp>
 
-#include <Game/Scripts/GoldManager.hpp>
-
 class HudDisplayGold : public BaseScript
 {
 public:
