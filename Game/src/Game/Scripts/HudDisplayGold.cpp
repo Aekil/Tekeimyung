@@ -24,23 +24,27 @@ void HudDisplayGold::update(float dt)
     }*/
     // update every frame, unless we can call update after every gold transaction
     EntityManager*  em = EntityFactory::getBindedEntityManager();
-    const auto&     gameManager = em->getEntityByTag("GameManager");
 
-    if (em != nullptr && gameManager != nullptr)
+    if (em != nullptr)
     {
-        const auto&         goldDisplay = em->getEntityByTag("HudDisplayGold");
+        const auto&     gameManager = em->getEntityByTag("GameManager");
 
-        if (goldDisplay != nullptr)
+        if (gameManager != nullptr)
         {
-            sScriptComponent*   scriptComp = gameManager->getComponent<sScriptComponent>();
-            GoldManager*        goldManager = scriptComp->getScript<GoldManager>("GoldManager");
-            int                 golds = goldManager->getGolds();
+            const auto&         goldDisplay = em->getEntityByTag("HudDisplayGold");
 
-            sTextComponent* textComp = goldDisplay->getComponent<sTextComponent>();
-            char goldsText[20];
-            sprintf_s(goldsText, "%dGolds", golds);
-            textComp->text.setContent(goldsText);
+            if (goldDisplay != nullptr)
+            {
+                sScriptComponent*   scriptComp = gameManager->getComponent<sScriptComponent>();
+                GoldManager*        goldManager = scriptComp->getScript<GoldManager>("GoldManager");
+                int                 golds = goldManager->getGolds();
+
+                sTextComponent* textComp = goldDisplay->getComponent<sTextComponent>();
+                char goldsText[20];
+                sprintf_s(goldsText, "%d Golds", golds);
+                textComp->text.setContent(goldsText);
+            }
+
         }
-
     }
 }
