@@ -359,6 +359,82 @@
          },
          "name" : "HUD_DISPLAY_GOLD",
          "tag" : "HudDisplayGold"
+      },
+      {
+         "components" : {
+            "sNameComponent" : {
+               "name" : "HUD_DISPLAY_WAVE"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 0,
+                  "b" : 0,
+                  "g" : 0,
+                  "r" : 0
+               },
+               "dynamic" : false,
+               "ignore_raycast" : false,
+               "materials" : [ "MAT_Default" ],
+               "model" : "resources/models/default.DAE",
+               "type" : "MESH"
+            },
+            "sScriptComponent" : {
+               "scripts" : [
+                  {
+                     "name" : "HudDisplayWave"
+                  }
+               ]
+            },
+            "sTextComponent" : {
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 0
+               },
+               "content" : "x/x waves",
+               "font_name" : "moonhouse.ttf",
+               "font_size" : 22
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 1382.0579833984375,
+                  "y" : 992.32794189453125,
+                  "z" : 0
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 19.200000762939453,
+                  "y" : 10.180000305175781,
+                  "z" : 1
+               }
+            },
+            "sTypeComponent" : {
+               "type" : "TILE_WALKABLE"
+            },
+            "sUiComponent" : {
+               "horizontal_alignment" : "RIGHT",
+               "layer" : 0,
+               "offset" : {
+                  "x" : -5,
+                  "y" : 15
+               },
+               "percentage_size" : false,
+               "size" : {
+                  "x" : 0.10000000149011612,
+                  "y" : 0.10000000149011612
+               },
+               "vertical_alignment" : "TOP"
+            }
+         },
+         "name" : "HUD_DISPLAY_WAVE",
+         "tag" : "HudDisplayWave"
       }
    ],
    "name" : "Game"

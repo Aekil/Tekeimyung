@@ -21,6 +21,9 @@ public:
     void    update(float dt) override final;
     bool    isWaiting();
 
+    int     getCurrentWave() const;
+    int     getNbWaves() const;
+
 private:
     void    startWave(uint32_t wave);
     bool    checkEndWave();

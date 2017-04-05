@@ -84,6 +84,16 @@ bool    WaveManager::isWaiting()
     return (_waiting);
 }
 
+int     WaveManager::getCurrentWave() const
+{
+    return (_currentWave);
+}
+
+int     WaveManager::getNbWaves() const
+{
+    return (_waves);
+}
+
 void    WaveManager::startWave(uint32_t wave)
 {
     auto em = EntityFactory::getBindedEntityManager();
