@@ -13,7 +13,7 @@
             "r" : 1
          },
          "dynamic" : false,
-         "ignore_raycast" : false,
+         "ignore_raycast" : true,
          "materials" : [ "MAT_LightBrown", "MAT_Brown", "Mat_LightRed" ],
          "model" : "resources/models/buildings/tower_fire.DAE",
          "texture" : "",
@@ -30,8 +30,8 @@
       "sTransformComponent" : {
          "pos" : {
             "x" : 250,
-            "y" : 12.5,
-            "z" : 300
+            "y" : 25,
+            "z" : 175
          },
          "rotation" : {
             "x" : 0,
@@ -39,9 +39,9 @@
             "z" : 0
          },
          "scale" : {
-            "x" : 1,
-            "y" : 1,
-            "z" : 1
+            "x" : 0.5,
+            "y" : 0.5,
+            "z" : 0.5
          }
       },
       "sTypeComponent" : {
