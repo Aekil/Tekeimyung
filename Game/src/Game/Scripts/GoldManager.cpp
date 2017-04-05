@@ -23,22 +23,22 @@ void GoldManager::update(float dt)
     }
 }
 
-inline int GoldManager::getGolds() const
+int GoldManager::getGolds() const
 {
     return (_golds);
 }
 
-inline void GoldManager::setGolds(int newGoldAmount)
+void GoldManager::setGolds(int newGoldAmount)
 {
     secureSetGolds(newGoldAmount);
 }
 
-inline void GoldManager::addGolds(int addedGolds)
+void GoldManager::addGolds(int addedGolds)
 {
     secureSetGolds(_golds + addedGolds);
 }
 
-inline bool GoldManager::removeGolds(int removedGolds)
+void GoldManager::removeGolds(int removedGolds)
 {
     secureSetGolds(_golds - removedGolds);
 }

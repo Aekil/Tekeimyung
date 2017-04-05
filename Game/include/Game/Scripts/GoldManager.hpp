@@ -28,7 +28,7 @@ public:
 
     void    setGolds(int newGoldAmount);
     void    addGolds(int addedGolds);
-    bool    removeGolds(int removedGolds);
+    void    removeGolds(int removedGolds);
 
 private:
     void    secureSetGolds(int futureValue);
