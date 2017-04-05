@@ -14,7 +14,7 @@
          },
          "dynamic" : false,
          "ignore_raycast" : false,
-         "materials" : [ "quit_confirm_popup.mat" ],
+         "materials" : [ "geometry_default.mat" ],
          "model" : "resources/models/default.DAE",
          "texture" : "",
          "type" : "PLANE"

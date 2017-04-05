@@ -8,6 +8,12 @@
          "scripts" : [
             {
                "name" : "GameManager"
+            },
+            {
+               "name" : "WaveManager"
+            },
+            {
+               "name" : "GoldManager"
             }
          ]
       },
