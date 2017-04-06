@@ -7,6 +7,8 @@
 #include <Engine/Core/BaseScript.hpp>
 #include <Engine/Core/ScriptFactory.hpp>
 
+#define GOLD_MANAGER_TAG            "GoldManager"
+
 #define MAX_AMOUNT_OF_GOLD          1000000 // $$$ \o/ $$$
 #define STARTING_AMOUNT_OF_GOLD     200
 

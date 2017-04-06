@@ -7,6 +7,10 @@
 #include <Engine/Core/BaseScript.hpp>
 #include <Engine/Core/ScriptFactory.hpp>
 
+#define HUD_DISPLAY_GOLD_TAG    "HudDisplayGold"
+
+#define MAX_SIZE_TEXT_GOLDS     15
+
 class HudDisplayGold : public BaseScript
 {
 public:
@@ -17,7 +21,9 @@ public:
     void    update(float dt);
 
 private:
-
+    EntityManager*  _em;
+    const Entity*   _gameManager;
+    const Entity*   _goldHudDisplay;
 };
 
 REGISTER_SCRIPT(HudDisplayGold);
