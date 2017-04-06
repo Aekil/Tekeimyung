@@ -24,8 +24,8 @@
       },
       "sTransformComponent" : {
          "pos" : {
-            "x" : 40,
-            "y" : 30,
+            "x" : 960,
+            "y" : 509,
             "z" : 0
          },
          "rotation" : {
@@ -40,7 +40,7 @@
          }
       },
       "sUiComponent" : {
-         "horizontal_alignment" : "LEFT",
+         "horizontal_alignment" : "MIDDLE",
          "layer" : 0,
          "offset" : {
             "x" : 0,
@@ -51,7 +51,7 @@
             "x" : 0.10000000149011612,
             "y" : 0.10000000149011612
          },
-         "vertical_alignment" : "BOTTOM"
+         "vertical_alignment" : "MIDDLE"
       }
    },
    "name" : "CAMERA_PREVIEW",
