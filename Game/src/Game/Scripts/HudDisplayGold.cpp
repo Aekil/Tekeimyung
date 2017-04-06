@@ -4,47 +4,33 @@
 
 #include <Engine/EntityFactory.hpp>
 
+#include <Game/Scripts/GameManager.hpp>
 #include <Game/Scripts/GoldManager.hpp>
 
 #include <Game/Scripts/HudDisplayGold.hpp>
 
 void HudDisplayGold::start()
 {
+    _em = EntityFactory::getBindedEntityManager();
+    if (_em != nullptr)
+    {
+        _gameManager = _em->getEntityByTag(GAME_MANAGER_TAG);
+        if (_gameManager != nullptr)
+            _goldHudDisplay = _em->getEntityByTag(HUD_DISPLAY_GOLD_TAG);
+    }
 }
 
 void HudDisplayGold::update(float dt)
 {
-    /*static float elapsedTime = 0;
-
-    elapsedTime += dt;
-    if (elapsedTime >= GOLD_TIMER)
+    if (_gameManager != nullptr && _goldHudDisplay != nullptr)
     {
-        
-        elapsedTime -= GOLD_TIMER;
-    }*/
-    // update every frame, unless we can call update after every gold transaction
-    EntityManager*  em = EntityFactory::getBindedEntityManager();
+        sScriptComponent*   scriptComp = _gameManager->getComponent<sScriptComponent>();
+        GoldManager*        goldManager = scriptComp->getScript<GoldManager>(GOLD_MANAGER_TAG);
+        sTextComponent*     textComp = _goldHudDisplay->getComponent<sTextComponent>();
+        char                goldsText[MAX_SIZE_TEXT_GOLDS];
+        int                 golds = goldManager->getGolds();
 
-    if (em != nullptr)
-    {
-        const auto&     gameManager = em->getEntityByTag("GameManager");
-
-        if (gameManager != nullptr)
-        {
-            const auto&         goldDisplay = em->getEntityByTag("HudDisplayGold");
-
-            if (goldDisplay != nullptr)
-            {
-                sScriptComponent*   scriptComp = gameManager->getComponent<sScriptComponent>();
-                GoldManager*        goldManager = scriptComp->getScript<GoldManager>("GoldManager");
-                int                 golds = goldManager->getGolds();
-
-                sTextComponent* textComp = goldDisplay->getComponent<sTextComponent>();
-                char goldsText[20];
-                sprintf_s(goldsText, "%d Golds", golds);
-                textComp->text.setContent(goldsText);
-            }
-
-        }
+        sprintf_s(goldsText, "%d Golds", golds);
+        textComp->text.setContent(goldsText);
     }
 }

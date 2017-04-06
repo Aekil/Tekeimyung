@@ -8,6 +8,8 @@
 #include    <Engine/Core/ScriptFactory.hpp>
 #include    <Game/Scripts/ProgressBar.hpp>
 
+#define WAVE_MANAGER_TAG    "WaveManager"
+
 class Build;
 
 class       WaveManager final : public BaseScript

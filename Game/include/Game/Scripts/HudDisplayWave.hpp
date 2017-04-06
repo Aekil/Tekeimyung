@@ -7,6 +7,10 @@
 #include <Engine/Core/BaseScript.hpp>
 #include <Engine/Core/ScriptFactory.hpp>
 
+#define HUD_DISPLAY_WAVE_TAG    "HudDisplayWave"
+
+#define MAX_SIZE_TEXT_WAVES     15
+
 class HudDisplayWave : public BaseScript
 {
 public:
@@ -17,7 +21,9 @@ public:
     void    update(float dt);
 
 private:
-
+    EntityManager*  _em;
+    const Entity*   _gameManager;
+    const Entity*   _waveHudDisplay;
 };
 
 REGISTER_SCRIPT(HudDisplayWave);

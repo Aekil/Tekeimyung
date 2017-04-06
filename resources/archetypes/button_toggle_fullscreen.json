@@ -7,26 +7,10 @@
       "sNameComponent" : {
          "name" : "BUTTON_TOGGLE_FULLSCREEN"
       },
-      "sRenderComponent" : {
-         "animated" : false,
-         "animations" : [],
-         "color" : {
-            "a" : 1,
-            "b" : 1,
-            "g" : 1,
-            "r" : 1
-         },
-         "dynamic" : false,
-         "ignore_raycast" : false,
-         "materials" : [ "button_toogle_fullscreen.mat" ],
-         "model" : "resources/models/default.DAE",
-         "texture" : "resources/sprites/buttons/button_toggle_fullscreen.png",
-         "type" : "PLANE"
-      },
       "sTransformComponent" : {
          "pos" : {
             "x" : 960,
-            "y" : 539.010009765625,
+            "y" : 539.53997802734375,
             "z" : 0
          },
          "rotation" : {
@@ -36,7 +20,7 @@
          },
          "scale" : {
             "x" : 30,
-            "y" : 7.1999526023864746,
+            "y" : 7.2070326805114746,
             "z" : 6
          }
       },

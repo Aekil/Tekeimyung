@@ -1,16 +1,16 @@
 {
    "components" : {
       "sNameComponent" : {
-         "name" : "HUD_DISPLAY_WAVE"
+         "name" : "ADVERT_TEXT"
       },
       "sRenderComponent" : {
          "animated" : false,
          "animations" : [],
          "color" : {
-            "a" : 0,
-            "b" : 0,
-            "g" : 0,
-            "r" : 0
+            "a" : 1,
+            "b" : 1,
+            "g" : 1,
+            "r" : 1
          },
          "dynamic" : false,
          "ignore_raycast" : false,
@@ -18,28 +18,21 @@
          "model" : "resources/models/default.DAE",
          "type" : "MESH"
       },
-      "sScriptComponent" : {
-         "scripts" : [
-            {
-               "name" : "HudDisplayWave"
-            }
-         ]
-      },
       "sTextComponent" : {
          "color" : {
             "a" : 1,
-            "b" : 1,
-            "g" : 1,
-            "r" : 0
+            "b" : 0.19607843458652496,
+            "g" : 0.19607843458652496,
+            "r" : 0.78431373834609985
          },
-         "content" : "x/x waves",
-         "font_name" : "moonhouse.ttf",
-         "font_size" : 22
+         "content" : "(No options available now, sorry)",
+         "font_name" : "arial.ttf",
+         "font_size" : 25
       },
       "sTransformComponent" : {
          "pos" : {
-            "x" : 1420.4580078125,
-            "y" : 992.32794189453125,
+            "x" : 960,
+            "y" : 559.9000244140625,
             "z" : 0
          },
          "rotation" : {
@@ -48,8 +41,8 @@
             "z" : 0
          },
          "scale" : {
-            "x" : 19.200000762939453,
-            "y" : 10.180000305175781,
+            "x" : 1,
+            "y" : 1,
             "z" : 1
          }
       },
@@ -57,20 +50,20 @@
          "type" : "TILE_WALKABLE"
       },
       "sUiComponent" : {
-         "horizontal_alignment" : "RIGHT",
+         "horizontal_alignment" : "MIDDLE",
          "layer" : 0,
          "offset" : {
-            "x" : -3,
-            "y" : 15
+            "x" : 0,
+            "y" : 5
          },
          "percentage_size" : false,
          "size" : {
             "x" : 0.10000000149011612,
             "y" : 0.10000000149011612
          },
-         "vertical_alignment" : "TOP"
+         "vertical_alignment" : "MIDDLE"
       }
    },
-   "name" : "HUD_DISPLAY_WAVE",
-   "tag" : "HudDisplayWave"
+   "name" : "ADVERT_TEXT",
+   "tag" : ""
 }
