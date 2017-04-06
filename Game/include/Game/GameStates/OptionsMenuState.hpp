@@ -23,7 +23,9 @@ START_GAMESTATE(OptionsMenuState, "Options")
     bool            handleButtons();
 
 private:
-    Entity*         _toggleWindowModeButton = nullptr;
+    Entity*         _buttonToggleWindowed = nullptr;
+    Entity*         _buttonToggleFullscreen = nullptr;
+    Entity*         _buttonCurrentWindowMode = nullptr;
 
-    void            createToggleWindowModeButton();
+    void            createOrGetButtons();
 END_GAMESTATE(OptionsMenuState)

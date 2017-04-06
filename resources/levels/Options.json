@@ -3,50 +3,6 @@
       {
          "components" : {
             "sButtonComponent" : {
-               "action" : "NONE",
-               "action_level" : ""
-            },
-            "sNameComponent" : {
-               "name" : "BUTTON_TOGGLE_FULLSCREEN"
-            },
-            "sTransformComponent" : {
-               "pos" : {
-                  "x" : 960,
-                  "y" : 539.53997802734375,
-                  "z" : 0
-               },
-               "rotation" : {
-                  "x" : 0,
-                  "y" : 0,
-                  "z" : 0
-               },
-               "scale" : {
-                  "x" : 30,
-                  "y" : 7.2070326805114746,
-                  "z" : 6
-               }
-            },
-            "sUiComponent" : {
-               "horizontal_alignment" : "MIDDLE",
-               "layer" : 0,
-               "offset" : {
-                  "x" : 0,
-                  "y" : 3
-               },
-               "percentage_size" : true,
-               "size" : {
-                  "x" : 0.15625,
-                  "y" : 0.070795997977256775
-               },
-               "vertical_alignment" : "MIDDLE"
-            }
-         },
-         "name" : "BUTTON_TOGGLE_FULLSCREEN",
-         "tag" : ""
-      },
-      {
-         "components" : {
-            "sButtonComponent" : {
                "action" : "REMOVE_CURRENT_LEVEL",
                "action_level" : ""
             },
