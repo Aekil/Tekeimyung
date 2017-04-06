@@ -1,0 +1,55 @@
+{
+   "components" : {
+      "sNameComponent" : {
+         "name" : "BUTTON_TOGGLE_FULLSCREEN_DISABLED"
+      },
+      "sRenderComponent" : {
+         "animated" : false,
+         "animations" : [],
+         "color" : {
+            "a" : 0.62745100259780884,
+            "b" : 0.098039217293262482,
+            "g" : 0.098039217293262482,
+            "r" : 0.098039217293262482
+         },
+         "dynamic" : false,
+         "ignore_raycast" : false,
+         "materials" : [ "button_toogle_fullscreen.mat" ],
+         "model" : "resources/models/default.DAE",
+         "type" : "PLANE"
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 960,
+            "y" : 549.17999267578125,
+            "z" : 0
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "scale" : {
+            "x" : 30,
+            "y" : 7.1999526023864746,
+            "z" : 1
+         }
+      },
+      "sUiComponent" : {
+         "horizontal_alignment" : "MIDDLE",
+         "layer" : 0,
+         "offset" : {
+            "x" : 0,
+            "y" : 4
+         },
+         "percentage_size" : true,
+         "size" : {
+            "x" : 0.15625,
+            "y" : 0.070795997977256775
+         },
+         "vertical_alignment" : "MIDDLE"
+      }
+   },
+   "name" : "BUTTON_TOGGLE_FULLSCREEN_DISABLED",
+   "tag" : ""
+}
