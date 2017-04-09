@@ -11,7 +11,46 @@
                      "name" : "GameManager"
                   },
                   {
-                     "name" : "WaveManager"
+                     "map_parts" : [
+                        {
+                           "map_part" : 1
+                        },
+                        {
+                           "map_part" : 2
+                        },
+                        {
+                           "map_part" : -1
+                        },
+                        {
+                           "map_part" : -1
+                        },
+                        {
+                           "map_part" : -1
+                        },
+                        {
+                           "map_part" : -1
+                        },
+                        {
+                           "map_part" : -1
+                        },
+                        {
+                           "map_part" : -1
+                        },
+                        {
+                           "map_part" : -1
+                        },
+                        {
+                           "map_part" : -1
+                        },
+                        {
+                           "map_part" : -1
+                        },
+                        {
+                           "map_part" : -1
+                        }
+                     ],
+                     "name" : "WaveManager",
+                     "waves" : 12
                   }
                ]
             },
