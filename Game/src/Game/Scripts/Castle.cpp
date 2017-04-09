@@ -24,7 +24,6 @@ void Castle::onCollisionEnter(Entity* entity)
 {
     if (entity->getTag() == "Enemy")
     {
-        //LOG_DEBUG("Damage done");
         this->takeDamage(200);
 
         sScriptComponent* script = entity->getComponent<sScriptComponent>();
@@ -35,14 +34,9 @@ void Castle::onCollisionEnter(Entity* entity)
 
 void Castle::death()
 {
-    auto    gameStateManager = GameWindow::getInstance()->getGameStateManager();
-    auto    defeatState = LevelLoader::getInstance()->createLevelState("LossScreen", gameStateManager);
-
     //Entity* explosion = Instantiate("CASTLE_EXPLOSION");
     //sTransformComponent* explosionTransform = explosion->getComponent<sTransformComponent>();
     //explosionTransform->setPos(this->_transform->getPos());
 
     this->Destroy();
-    gameStateManager->addState(defeatState);
-    LOG_DEBUG("GAME OVER");
 }

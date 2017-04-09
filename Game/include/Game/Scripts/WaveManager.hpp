@@ -8,6 +8,8 @@
 #include    <Engine/Core/ScriptFactory.hpp>
 #include    <Game/Scripts/ProgressBar.hpp>
 
+#define WAVE_MANAGER_TAG    "WaveManager"
+
 class Build;
 
 class       WaveManager final : public BaseScript
@@ -20,6 +22,9 @@ public:
     void    start() override final;
     void    update(float dt) override final;
     bool    isWaiting();
+
+    int     getCurrentWave() const;
+    int     getNbWaves() const;
 
     bool updateEditor() override final;
     JsonValue saveToJson() override final;

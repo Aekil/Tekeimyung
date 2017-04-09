@@ -19,7 +19,11 @@
          "type" : "MESH"
       },
       "sScriptComponent" : {
-         "scripts" : []
+         "scripts" : [
+            {
+               "name" : "HudDisplayGold"
+            }
+         ]
       },
       "sTextComponent" : {
          "color" : {

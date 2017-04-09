@@ -5,6 +5,8 @@
 #include <Engine/Components.hh>
 #include <Engine/EntityFactory.hpp>
 
+#include <Game/Scripts/GoldManager.hpp>
+
 #include <Game/Scripts/Enemy.hpp>
 
 #include <Game/Scripts/Player.hpp>
@@ -58,6 +60,13 @@ void Enemy::death()
     sTransformComponent* entityTransform = entity->getComponent<sTransformComponent>();
     explosionTransform->setPos(entityTransform->getPos());
     this->Destroy();
+
+    // Add golds for enemy dying
+    const auto& gameManager = em->getEntityByTag("GameManager");
+    sScriptComponent* scriptComp = gameManager->getComponent<sScriptComponent>();
+    GoldManager* goldManager = scriptComp->getScript<GoldManager>("GoldManager");
+    goldManager->addGolds(10); // arbitrary number which needs to be replaced depending on the enemy archetype
+
 
     auto player = em->getEntityByTag("Player");
 

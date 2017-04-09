@@ -277,3 +277,11 @@ void WaveManager::loadFromJson(const JsonValue& json)
         this->_mapParts[idx++] = value.getInt("map_part", -1);
     }
 }
+int     WaveManager::getCurrentWave() const
+{
+    return (_currentWave);
+}
+int     WaveManager::getNbWaves() const
+{
+    return (_waves);
+}

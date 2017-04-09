@@ -7,6 +7,8 @@
 #include <Engine/Core/BaseScript.hpp>
 #include <Engine/Core/ScriptFactory.hpp>
 
+#define GAME_MANAGER_TAG    "GameManager"
+
 class GameManager final : public BaseScript
 {
 public:
