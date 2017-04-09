@@ -168,7 +168,7 @@ void    WaveManager::handleEndWave()
     _progressBar.display(true);
     _waiting = true;
 
-    if (this->_mapParts[this->_currentWave])
+    if (this->_mapParts[this->_currentWave] != -1)
     {
         Entity* gameManager = em->getEntityByTag("GameManager");
         if (!gameManager)
