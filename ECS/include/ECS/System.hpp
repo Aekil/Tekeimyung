@@ -31,6 +31,7 @@ public:
     uint32_t                            getEntitiesNb() const;
 
     bool                                hasDependency(sComponent* component) const;
+    bool                                hasDependencyDisabled(Entity* entity) const;
     bool                                entityMatchDependencies(Entity* entity) const;
 
     virtual bool                        onEntityNewComponent(Entity* entity, sComponent* component);

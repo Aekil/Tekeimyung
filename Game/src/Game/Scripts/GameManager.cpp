@@ -9,16 +9,26 @@ void GameManager::start()
         {
             if (this->firstLayerPattern[x][z] == 1)
                 this->firstLayerEntities[x][z] = this->Instantiate("TILE_FLOOR", glm::vec3(x * 25, 0, z * 25));
-            else if (this->firstLayerPattern[x][z] == 2)
+            else if (this->firstLayerPattern[x][z] == 2 && this->firstLayerPattern[x][z - 1] < 3)
                 this->firstLayerEntities[x][z] = this->Instantiate("SPAWNER", glm::vec3(x * 25, 0, z * 25));
             else if (this->firstLayerPattern[x][z] > 3)
             {
                 auto entity = this->Instantiate("TILE_FLOOR", glm::vec3(x * 25, 0, z * 25));
 
-                entity->getComponent<sRenderComponent>()->_display = false;
+                entity->getComponent<sRenderComponent>()->enabled = false;
 
                 this->firstLayerEntities[x][z] = entity;
                 this->_mapParts[this->firstLayerPattern[x][z]].push_back(entity);
+            }
+            else if (this->firstLayerPattern[x][z] == 2 && this->firstLayerPattern[x][z - 1] > 3)
+            {
+                auto entity = this->Instantiate("SPAWNER", glm::vec3(x * 25, 0, z * 25));
+
+                entity->getComponent<sRenderComponent>()->enabled = false;
+                entity->getComponent<sScriptComponent>()->enabled = false;
+
+                this->firstLayerEntities[x][z] = entity;
+                this->_mapParts[this->firstLayerPattern[x][z - 1]].push_back(entity);
             }
         }
     }
@@ -59,6 +69,8 @@ void GameManager::displayMapParts(int part)
     for (auto& mapPart : mapParts)
     {
         auto render = mapPart->getComponent<sRenderComponent>();
-        render->_display = true;
+        render->enabled = true;
+        auto script = mapPart->getComponent<sScriptComponent>();
+        script->enabled = true;
     }
 }

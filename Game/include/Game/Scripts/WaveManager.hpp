@@ -21,6 +21,10 @@ public:
     void    update(float dt) override final;
     bool    isWaiting();
 
+    bool updateEditor() override final;
+    JsonValue saveToJson() override final;
+    void loadFromJson(const JsonValue& json) override final;
+
 private:
     void    startWave(uint32_t wave);
     bool    checkEndWave();
@@ -37,8 +41,10 @@ private:
 
     ProgressBar _progressBar;
     bool    _waiting{false};
-
+    
     Build* _playerBuild;
+
+    std::vector<int> _mapParts;
 };
 
 REGISTER_SCRIPT(WaveManager);

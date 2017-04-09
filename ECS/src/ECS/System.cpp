@@ -20,6 +20,10 @@ void    System::forEachEntity(EntityManager& em, std::function<void(Entity* enti
     for (uint32_t idx = 0; idx < this->_entities.size(); idx++)
     {
         Entity* entity = em.getEntity(this->_entities[idx]);
+
+        if (this->hasDependencyDisabled(entity))
+            continue;
+
         if (entity)
             callback(entity);
     }
@@ -36,6 +40,17 @@ uint32_t    System::getId() const
 uint32_t    System::getEntitiesNb() const
 {
     return ((uint32_t)_entities.size());
+}
+
+bool    System::hasDependencyDisabled(Entity* entity) const
+{
+    for (auto componentHash : _components)
+    {
+        if (!entity->getComponent(componentHash)->enabled)
+            return (true);
+    }
+
+    return (false);
 }
 
 bool    System::hasDependency(sComponent* component) const

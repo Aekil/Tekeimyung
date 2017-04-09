@@ -15,6 +15,9 @@ void        WaveManager::start()
 {
     auto em = EntityFactory::getBindedEntityManager();
     this->_waves = 12;
+
+    this->_mapParts.resize(this->_waves);
+
     _progressBar.maxProgress = 15.0f;
     _progressBar.currentProgress = 0.0f;
     _progressBar.init("TIMER_BAR_EMPTY", "TIMER_BAR");
@@ -121,8 +124,11 @@ bool    WaveManager::checkEndWave()
             LOG_WARN("Can't find scriptComponent on Spawner entity");
             continue;
         }
+        if (!scriptComponent->enabled)
+            continue;
 
         auto spawnerScript = scriptComponent->getScript<Spawner>("Spawner");
+
         if (!spawnerScript->checkEndWave())
         {
             endWave = false;
@@ -162,7 +168,7 @@ void    WaveManager::handleEndWave()
     _progressBar.display(true);
     _waiting = true;
 
-    if (this->_currentWave == 0)
+    if (this->_mapParts[this->_currentWave])
     {
         Entity* gameManager = em->getEntityByTag("GameManager");
         if (!gameManager)
@@ -181,7 +187,7 @@ void    WaveManager::handleEndWave()
 
         auto gameManagerScript = scriptComponent->getScript<GameManager>("GameManager");
 
-        gameManagerScript->displayMapParts(4);
+        gameManagerScript->displayMapParts(this->_mapParts[this->_currentWave]);
     }
 }
 
@@ -191,7 +197,7 @@ void    WaveManager::handleGameOver()
 
     // Game over, destroy all enemies
     const auto& enemies = em->getEntitiesByTag("Enemy");
-    for (auto& enemy: enemies)
+    for (auto& enemy : enemies)
     {
         auto scriptComponent = enemy->getComponent<sScriptComponent>();
 
@@ -213,4 +219,61 @@ void    WaveManager::handleGameOver()
 
     _currentWave = _waves;
     _progressBar.display(false);
+}
+
+bool WaveManager::updateEditor()
+{
+    ImGui::Text("Waves number");
+
+    ImGui::InputInt("Max", &(this->_waves));
+
+    ImGui::Text("Wave/MapPart");
+
+    for (int idx = 0; idx < this->_mapParts.size(); idx++) {
+        ImGui::PushID(idx);
+        ImGui::InputInt("Map Part", &(this->_mapParts[idx]));
+        ImGui::PopID();
+    }
+
+    return true;
+}
+
+JsonValue WaveManager::saveToJson()
+{
+    JsonValue json;
+    std::vector<JsonValue> configsJson;
+
+    for (auto& mapPart : this->_mapParts)
+    {
+        JsonValue configJson;
+
+        configJson.setInt("map_part", mapPart);
+        configsJson.push_back(configJson);
+    }
+
+    json.setValueVec("map_parts", configsJson);
+    json.setInt("waves", this->_waves);
+    return (json);
+}
+
+void WaveManager::loadFromJson(const JsonValue& json)
+{
+    this->_waves = json.getUInt("waves", 0);
+
+    this->_mapParts.resize(this->_waves);
+
+    auto mapParts = json.get()["map_parts"];
+    if (mapParts.size() > 0 && mapParts.type() != Json::ValueType::arrayValue)
+    {
+        LOG_ERROR("WaveManager::loadFromJson error: configs is not an array");
+        return;
+    }
+
+    int idx = 0;
+    for (const auto& mapPart : mapParts)
+    {
+        JsonValue value(mapPart);
+
+        this->_mapParts[idx++] = value.getInt("map_part", -1);
+    }
 }
