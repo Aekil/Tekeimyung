@@ -17,14 +17,14 @@ public:
         struct sEntity
         {
             std::string name;
-            uint32_t spawnAmount{0};
-            float   timeUntilNextSpawn{0};
+            uint32_t spawnAmount{ 0 };
+            float   timeUntilNextSpawn{ 0 };
 
-            float elapsedTime{0};
-            float spawnedNb{0};
+            float elapsedTime{ 0 };
+            float spawnedNb{ 0 };
         };
         std::vector<sEntity> spawnableEntities;
-        uint32_t associatedWave{0};
+        uint32_t associatedWave{ 0 };
 
         std::vector<uint32_t> spawnedEntities;
 
@@ -55,11 +55,11 @@ private:
     Entity* _parent;
     std::vector<sConfig> _configs;
 
-    uint32_t _selectedConfig{0};
+    uint32_t _selectedConfig{ 0 };
 
     std::vector<sConfig*> _currentWaves;
 
-    GameManager* _gameManager{nullptr};
+    GameManager* _gameManager{ nullptr };
     sTransformComponent* _transform;
 
     std::vector<glm::vec3> _closestPath;
