@@ -18,6 +18,6 @@ public:
         return this->_attributes[attributeName]->getFinalValue();
     };
 
-private:
+protected:
     std::map<std::string, Attribute*> _attributes;
 };

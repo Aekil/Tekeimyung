@@ -18,6 +18,8 @@ public:
 public:
     virtual void fire();
     virtual void reload();
+    void start() override final;
+    void update(float dt) override final;
 };
 
 REGISTER_SCRIPT(LaserWeapon);
