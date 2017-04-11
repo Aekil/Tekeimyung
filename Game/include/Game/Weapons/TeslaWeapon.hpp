@@ -4,22 +4,15 @@
 
 #pragma once
 
-#include <Engine/Core/BaseScript.hpp>
-#include <Engine/Core/ScriptFactory.hpp>
-
 #include <Game/Weapons/IWeapon.hpp>
 
-class TeslaWeapon final : public BaseScript, public IWeapon
+class TeslaWeapon final : public IWeapon
 {
 public:
-    TeslaWeapon() = default;
+    TeslaWeapon();
     ~TeslaWeapon() = default;
 
 public:
-    virtual void fire();
+    virtual void fire(sTransformComponent* playerTransform, sRenderComponent* playerRender, glm::vec3 playerDirection);
     virtual void reload();
-    void start() override final;
-    void update(float dt) override final;
 };
-
-REGISTER_SCRIPT(TeslaWeapon);

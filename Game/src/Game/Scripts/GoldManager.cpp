@@ -8,7 +8,8 @@
 
 void GoldManager::start()
 {
-    _golds = STARTING_AMOUNT_OF_GOLD;
+    this->_golds = STARTING_AMOUNT_OF_GOLD;
+    LOG_DEBUG("%d", this->_golds);
 }
 
 void GoldManager::update(float dt)
@@ -25,7 +26,7 @@ void GoldManager::update(float dt)
 
 int GoldManager::getGolds() const
 {
-    return (_golds);
+    return (this->_golds);
 }
 
 void GoldManager::setGolds(int newGoldAmount)
@@ -35,26 +36,26 @@ void GoldManager::setGolds(int newGoldAmount)
 
 void GoldManager::addGolds(int addedGolds)
 {
-    secureSetGolds(_golds + addedGolds);
+    secureSetGolds(this->_golds + addedGolds);
 }
 
 void GoldManager::removeGolds(int removedGolds)
 {
-    secureSetGolds(_golds - removedGolds);
+    secureSetGolds(this->_golds - removedGolds);
 }
 
 void GoldManager::secureSetGolds(int futureValue)
 {
     if (futureValue > MAX_AMOUNT_OF_GOLD)
     {
-        _golds = MAX_AMOUNT_OF_GOLD;
+        this->_golds = MAX_AMOUNT_OF_GOLD;
         LOG_WARN(WARN_STR_GOLD_LIMITS);
     }
     else if (futureValue < 0)
     {
-        _golds = 0;
+        this->_golds = 0;
         LOG_WARN(WARN_STR_GOLD_LIMITS);
     }
     else
-        _golds = futureValue;
+        this->_golds = futureValue;
 }

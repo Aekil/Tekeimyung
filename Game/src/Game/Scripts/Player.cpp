@@ -14,6 +14,7 @@
 #include <Game/Scripts/Projectile.hpp>
 #include <Game/Scripts/Player.hpp>
 #include <Game/Scripts/WaveManager.hpp>
+#include <Game/Weapons/DefaultWeapon.hpp>
 
 void Player::death()
 {
@@ -22,20 +23,20 @@ void Player::death()
 
 void Player::start()
 {
+    this->_weapons.push_back(new DefaultWeapon());
+
     this->_levelUpReward[2] = std::make_pair<std::string, double>("FireRate", -25.0 / 100.0);
     this->_levelUpReward[3] = std::make_pair<std::string, double>("FireRate", -25.0 / 100.0);
 
-    this->_attributes["FireRate"] = new Attribute(1.0);
     this->_attributes["Speed"] = new Attribute(80.0f);
-    this->_attributes["Damage"] = new Attribute(20.0f);
 
     setHealth(200);
     setMaxHealth(200);
+
     this->_transform = this->getComponent<sTransformComponent>();
     this->_render = this->getComponent<sRenderComponent>();
     this->_rigidBody = this->getComponent<sRigidBodyComponent>();
     _buildEnabled = false;
-    _shootSound = EventSound::getEventByEventType(eEventSound::PLAYER_SHOOT);
 
     // Get GameManager
     {
@@ -58,8 +59,6 @@ void Player::start()
         _gameManager = scriptComponent->getScript<GameManager>("GameManager");
         _waveManager = scriptComponent->getScript<WaveManager>("WaveManager");
     }
-
-    //LOG_DEBUG("BORN");
 }
 
 void Player::update(float dt)
@@ -127,32 +126,12 @@ void Player::handleShoot(float dt)
 {
     this->_elapsedTime += dt;
 
-    if (this->_elapsedTime > this->_attributes["FireRate"]->getFinalValue())
+    if (this->_elapsedTime > this->_weapons[this->_actualWeapon]->getAttributes("FireRate"))
     {
         if (mouse.isPressed(Mouse::eButton::MOUSE_BUTTON_1))
         {
-            Entity*                 bullet;
-            sScriptComponent*       bulletScripts;
-            Projectile*             projectileScript;
-
+            this->_weapons[this->_actualWeapon]->fire(this->_transform, this->_render, this->_direction);
             this->_elapsedTime = 0;
-            bullet = Instantiate("PLAYER_BULLET");
-            bulletScripts = bullet->getComponent<sScriptComponent>();
-            projectileScript = bulletScripts->getScript<Projectile>("Projectile");
-
-            projectileScript->_projectileTransform->setPos(_transform->getPos());
-
-            projectileScript->_projectileTransform->translate(glm::vec3(0.0f, -((_render->getModel()->getMin().y * _transform->getScale().y) / 2.0f), 0.0f));
-
-            projectileScript->_damage = this->_attributes["Damage"]->getFinalValue();
-            projectileScript->followDirection({ _direction.x, 0.0f, _direction.z });
-
-            #if (ENABLE_SOUND)
-            if (_shootSound->soundID != -1 && !SoundManager::getInstance()->isSoundPlaying(_shootSound->soundID))
-            {
-                SoundManager::getInstance()->playSound(_shootSound->soundID);
-            }
-            #endif
         }
     }
 }
@@ -189,5 +168,5 @@ void Player::levelUp()
 
     std::pair<std::string, double> reward = this->_levelUpReward[this->_level];
 
-    this->_attributes[reward.first]->addBonus(Bonus(reward.second));
+    //this->_attributes[reward.first]->addModifier(Modifier(reward.second));
 }

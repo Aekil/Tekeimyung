@@ -13,6 +13,16 @@ Attribute::~Attribute()
 {
 }
 
+void Attribute::addModifier(Modifier modifier)
+{
+    this->_modifiers.push_back(modifier);
+}
+
+void Attribute::removeModifier(Modifier modifier)
+{
+    this->_modifiers.erase(std::remove(this->_modifiers.begin(), this->_modifiers.end(), modifier), this->_modifiers.end());
+}
+
 void Attribute::addBonus(Bonus bonus)
 {
     this->_bonuses.push_back(bonus);
@@ -27,14 +37,22 @@ void Attribute::calculateValue()
 {
     this->_finalValue = this->_baseValue;
 
-    double bonusMultiplier = 0.0;
+    int bonusTotal = 0;
 
     for (auto bonus : this->_bonuses)
     {
-        bonusMultiplier += bonus.getValue();
+        bonusTotal += bonus.getValue();
     }
 
-    this->_finalValue *= (1.0f + bonusMultiplier);
+    double modifierMultiplier = 0.0;
+
+    for (auto modifier : this->_modifiers)
+    {
+        modifierMultiplier += modifier.getValue();
+    }
+
+    this->_finalValue += bonusTotal;
+    this->_finalValue *= (1.0f + modifierMultiplier);
 }
 
 double Attribute::getFinalValue()
@@ -42,4 +60,20 @@ double Attribute::getFinalValue()
     this->calculateValue();
 
     return this->_finalValue;
+}
+
+void Attribute::clearAll()
+{
+    this->clearAllBonuses();
+    this->clearAllModifiers();
+}
+
+void Attribute::clearAllBonuses()
+{
+    this->_bonuses.clear();
+}
+
+void Attribute::clearAllModifiers()
+{
+    this->_modifiers.clear();
 }

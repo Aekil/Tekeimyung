@@ -4,22 +4,15 @@
 
 #pragma once
 
-#include <Engine/Core/BaseScript.hpp>
-#include <Engine/Core/ScriptFactory.hpp>
-
 #include <Game/Weapons/IWeapon.hpp>
 
-class LaserWeapon final : public BaseScript, public IWeapon
+class LaserWeapon final : public IWeapon
 {
 public:
-    LaserWeapon() = default;
+    LaserWeapon();
     ~LaserWeapon() = default;
 
 public:
-    virtual void fire();
+    virtual void fire(sTransformComponent* playerTransform, sRenderComponent* playerRender, glm::vec3 playerDirection);
     virtual void reload();
-    void start() override final;
-    void update(float dt) override final;
 };
-
-REGISTER_SCRIPT(LaserWeapon);

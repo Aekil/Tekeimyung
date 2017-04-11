@@ -12,6 +12,7 @@
 
 #include <Game/Scripts/Health.hpp>
 #include <Game/Attibutes/Attribute.hpp>
+#include <Game/Weapons/IWeapon.hpp>
 
 class GameManager;
 class WaveManager;
@@ -50,15 +51,15 @@ private:
     sRenderComponent* _render;
     sRigidBodyComponent* _rigidBody;
     bool _buildEnabled;
-    tEventSound* _shootSound = nullptr;
 
     int _experience = 0;
-    float _fireRate = 0.5f;
     float _elapsedTime = 0.0f;
     int _nextLevelUp = 100;
     int _level = 1;
+    int _actualWeapon = 0;
 
     std::map<std::string, Attribute*> _attributes;
+    std::vector<IWeapon*> _weapons;
 
     WaveManager* _waveManager{ nullptr };
     GameManager* _gameManager{ nullptr };

@@ -7,12 +7,12 @@
 class Bonus
 {
 private:
-    double _value;
+    int _value;
 
 public:
-    Bonus(double);
+    Bonus(int);
     ~Bonus();
-    double getValue() const;
+    int getValue() const;
 
     inline bool operator==(const Bonus& rhs) const
     {

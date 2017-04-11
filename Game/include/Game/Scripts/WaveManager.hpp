@@ -42,11 +42,11 @@ private:
 private:
     int     _waves;
     float   _timeBeforeWaveStarts;
-    int _currentWave{-1};
+    int _currentWave{ -1 };
 
     ProgressBar _progressBar;
-    bool    _waiting{false};
-    
+    bool    _waiting{ false };
+
     Build* _playerBuild;
 
     std::vector<int> _mapParts;
