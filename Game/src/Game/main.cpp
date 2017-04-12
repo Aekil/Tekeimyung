@@ -21,6 +21,9 @@
 #include <Game/GameStates/OptionsMenuState.hpp>
 #include <Game/GameStates/PauseState.hpp>
 #include <Game/GameStates/PlayState.hpp>
+#include <Game/GameStates/HomeScreenState.hpp>
+#include <Game/GameStates/VictoryScreenState.hpp>
+#include <Game/GameStates/DefeatScreenState.hpp>
 
 void    windowCloseHandler(void* data)
 {
@@ -60,16 +63,25 @@ int     main(int ac, char** av)
         REGISTER_GAMESTATE(OptionsMenuState);
         REGISTER_GAMESTATE(PauseState);
         REGISTER_GAMESTATE(PlayState);
+        REGISTER_GAMESTATE(HomeScreenState);
+        REGISTER_GAMESTATE(VictoryScreenState);
+        REGISTER_GAMESTATE(DefeatScreenState);
 
         EventSound::loadEvents();
         GameWindow::getInstance()->registerCloseHandler(windowCloseHandler, &engine);
 
-        std::shared_ptr<PlayState> playState = std::make_shared<PlayState>(&gameStateManager);
+        //  Before, we were playing the PlayState at first, now we have to play the HomeScreenState !
+        //  std::shared_ptr<PlayState> playState = std::make_shared<PlayState>(&gameStateManager);
+        //
+        //  if (!engine.run(ac, av, playState))
+        //      return (1);
 
-        if (!engine.run(ac, av, playState))
+        std::shared_ptr<HomeScreenState>    homeScreenState = std::make_shared<HomeScreenState>(&gameStateManager);
+
+        if (!engine.run(ac, av, homeScreenState))
             return (1);
     }
-    catch(const Exception& e)
+    catch (const Exception& e)
     {
         LOG_ERROR("ERROR: %s", e.what());
     }

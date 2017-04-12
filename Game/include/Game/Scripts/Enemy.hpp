@@ -7,6 +7,7 @@
 #include <glm/vec3.hpp>
 
 #include <Engine/Core/ScriptFactory.hpp>
+#include <Engine/Utils/EventSound.hpp>
 
 #include <Game/Scripts/Health.hpp>
 
@@ -41,6 +42,9 @@ private:
 
     std::vector<glm::vec3> _path;
     uint32_t _pathProgress{0};
+
+    tEventSound* _dyingSound = nullptr;
+    tEventSound* _earningCoins = nullptr;
 
     float _speed;
 };

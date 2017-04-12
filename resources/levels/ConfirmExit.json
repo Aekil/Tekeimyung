@@ -3,55 +3,6 @@
       {
          "components" : {
             "sNameComponent" : {
-               "name" : "QUIT_CONFIRM_POPUP"
-            },
-            "sRenderComponent" : {
-               "animated" : false,
-               "animations" : [],
-               "color" : {
-                  "a" : 1,
-                  "b" : 1,
-                  "g" : 1,
-                  "r" : 1
-               },
-               "ignore_raycast" : false,
-               "materials" : [ "quit_confirm_popup.mat" ],
-               "model" : "resources/models/default.DAE",
-               "type" : "PLANE"
-            },
-            "sTransformComponent" : {
-               "pos" : {
-                  "x" : 745,
-                  "y" : 384.5,
-                  "z" : -1
-               },
-               "rotation" : {
-                  "x" : 0,
-                  "y" : 0,
-                  "z" : 0
-               },
-               "scale" : {
-                  "x" : 43,
-                  "y" : 24.799999237060547,
-                  "z" : 1
-               }
-            },
-            "sUiComponent" : {
-               "horizontal_alignment" : "MIDDLE",
-               "layer" : 1,
-               "offset" : {
-                  "x" : 0,
-                  "y" : 0
-               },
-               "vertical_alignment" : "MIDDLE"
-            }
-         },
-         "name" : "QUIT_CONFIRM_POPUP",
-         "tag" : ""
-      },
-      {
-         "components" : {
-            "sNameComponent" : {
                "name" : "QUIT_CONFIRM_TEXT"
             },
             "sRenderComponent" : {
@@ -63,6 +14,7 @@
                   "g" : 1,
                   "r" : 1
                },
+               "dynamic" : false,
                "ignore_raycast" : false,
                "materials" : [ "quit_confirm_text.mat" ],
                "model" : "resources/models/default.DAE",
@@ -70,9 +22,9 @@
             },
             "sTransformComponent" : {
                "pos" : {
-                  "x" : 770,
-                  "y" : 581.030029296875,
-                  "z" : -0
+                  "x" : 960,
+                  "y" : 569.52001953125,
+                  "z" : 0
                },
                "rotation" : {
                   "x" : 0,
@@ -80,8 +32,8 @@
                   "z" : 0
                },
                "scale" : {
-                  "x" : 38,
-                  "y" : 3.7999999523162842,
+                  "x" : 60,
+                  "y" : 7.1999526023864746,
                   "z" : 1
                }
             },
@@ -90,7 +42,12 @@
                "layer" : 0,
                "offset" : {
                   "x" : 0,
-                  "y" : 9
+                  "y" : 6
+               },
+               "percentage_size" : true,
+               "size" : {
+                  "x" : 0.3125,
+                  "y" : 0.070795997977256775
                },
                "vertical_alignment" : "MIDDLE"
             }
@@ -116,6 +73,7 @@
                   "g" : 1,
                   "r" : 1
                },
+               "dynamic" : false,
                "ignore_raycast" : false,
                "materials" : [ "button_confirm_no.mat" ],
                "model" : "resources/models/default.DAE",
@@ -123,9 +81,9 @@
             },
             "sTransformComponent" : {
                "pos" : {
-                  "x" : 996.79998779296875,
-                  "y" : 478.5,
-                  "z" : -0
+                  "x" : 844.79998779296875,
+                  "y" : 447.48001098632813,
+                  "z" : 0
                },
                "rotation" : {
                   "x" : 0,
@@ -133,8 +91,8 @@
                   "z" : 0
                },
                "scale" : {
-                  "x" : 8,
-                  "y" : 6,
+                  "x" : 15,
+                  "y" : 7.1999526023864746,
                   "z" : 6
                }
             },
@@ -142,8 +100,13 @@
                "horizontal_alignment" : "MIDDLE",
                "layer" : 0,
                "offset" : {
-                  "x" : 4,
-                  "y" : 0
+                  "x" : -6,
+                  "y" : -6
+               },
+               "percentage_size" : true,
+               "size" : {
+                  "x" : 0.078125,
+                  "y" : 0.070795997977256775
                },
                "vertical_alignment" : "MIDDLE"
             }
@@ -169,6 +132,7 @@
                   "g" : 1,
                   "r" : 1
                },
+               "dynamic" : false,
                "ignore_raycast" : false,
                "materials" : [ "button_confirm_yes.mat" ],
                "model" : "resources/models/default.DAE",
@@ -176,9 +140,9 @@
             },
             "sTransformComponent" : {
                "pos" : {
-                  "x" : 833.20001220703125,
-                  "y" : 478.5,
-                  "z" : -0
+                  "x" : 1075.199951171875,
+                  "y" : 447.48001098632813,
+                  "z" : 0
                },
                "rotation" : {
                   "x" : 0,
@@ -186,8 +150,8 @@
                   "z" : 0
                },
                "scale" : {
-                  "x" : 10,
-                  "y" : 6,
+                  "x" : 15,
+                  "y" : 7.1999526023864746,
                   "z" : 1
                }
             },
@@ -195,13 +159,73 @@
                "horizontal_alignment" : "MIDDLE",
                "layer" : 0,
                "offset" : {
-                  "x" : -4,
-                  "y" : 0
+                  "x" : 6,
+                  "y" : -6
+               },
+               "percentage_size" : true,
+               "size" : {
+                  "x" : 0.078125,
+                  "y" : 0.070795997977256775
                },
                "vertical_alignment" : "MIDDLE"
             }
          },
          "name" : "BUTTON_CONFIRM_YES",
+         "tag" : ""
+      },
+      {
+         "components" : {
+            "sNameComponent" : {
+               "name" : "BACKGROUND_POPUP"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 1
+               },
+               "dynamic" : false,
+               "ignore_raycast" : true,
+               "materials" : [ "texture_popup_background.mat" ],
+               "model" : "resources/models/default.DAE",
+               "type" : "PLANE"
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 960,
+                  "y" : 508.5,
+                  "z" : 0
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 75.999931335449219,
+                  "y" : 40.256214141845703,
+                  "z" : 1
+               }
+            },
+            "sUiComponent" : {
+               "horizontal_alignment" : "MIDDLE",
+               "layer" : 1,
+               "offset" : {
+                  "x" : 0,
+                  "y" : 0
+               },
+               "percentage_size" : true,
+               "size" : {
+                  "x" : 0.39583298563957214,
+                  "y" : 0.39583298563957214
+               },
+               "vertical_alignment" : "MIDDLE"
+            }
+         },
+         "name" : "BACKGROUND_POPUP",
          "tag" : ""
       }
    ],

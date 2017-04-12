@@ -90,10 +90,10 @@ bool    GameWindow::initialize()
         return (false);
     }
 
-    registerEvents();
+    this->registerEvents();
     ImGui_ImplGlfwGL3_Init(_window, false);
 
-    setRunning(true);
+    this->setRunning(true);
 
     #if defined(ENGINE_DEBUG)
         initDebugOutput();

@@ -1,5 +1,18 @@
 {
    "components" : {
+      "sBoxColliderComponent" : {
+         "isTrigger" : false,
+         "pos" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "size" : {
+            "x" : 0.10000000149011612,
+            "y" : 0.10000000149011612,
+            "z" : 0.10000000149011612
+         }
+      },
       "sNameComponent" : {
          "name" : "TRAP_CUTTER"
       },
@@ -12,11 +25,25 @@
             "g" : 1,
             "r" : 1
          },
+         "dynamic" : false,
          "ignore_raycast" : false,
          "materials" : [ "Material #26", "Material #26" ],
          "model" : "resources/models/traps/trap_cutter.DAE",
          "texture" : "",
          "type" : "MESH"
+      },
+      "sRigidBodyComponent" : {
+         "collisions_enabled" : true,
+         "gravity" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "velocity" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         }
       },
       "sScriptComponent" : {
          "class" : [ "TrapCutter" ],
@@ -26,20 +53,11 @@
             }
          ]
       },
-      "sSphereColliderComponent" : {
-         "isTrigger" : false,
-         "pos" : {
-            "x" : 0,
-            "y" : 0,
-            "z" : 0
-         },
-         "radius" : 0.070000000298023224
-      },
       "sTransformComponent" : {
          "pos" : {
-            "x" : 125,
-            "y" : 25,
-            "z" : 125
+            "x" : 213,
+            "y" : 10.20948600769043,
+            "z" : 74.804588317871094
          },
          "rotation" : {
             "x" : 0,

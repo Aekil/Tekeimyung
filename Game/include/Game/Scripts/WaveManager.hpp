@@ -8,6 +8,10 @@
 #include    <Engine/Core/ScriptFactory.hpp>
 #include    <Game/Scripts/ProgressBar.hpp>
 
+#define WAVE_MANAGER_TAG    "WaveManager"
+
+class Build;
+
 class       WaveManager final : public BaseScript
 {
 public:
@@ -19,12 +23,17 @@ public:
     void    update(float dt) override final;
     bool    isWaiting();
 
+    int     getCurrentWave() const;
+    int     getNbWaves() const;
+
 private:
     void    startWave(uint32_t wave);
     bool    checkEndWave();
+    bool    checkGameOver();
 
     void    handleStartWave();
     void    handleEndWave();
+    void    handleGameOver();
 
 private:
     int     _waves;
@@ -33,6 +42,8 @@ private:
 
     ProgressBar _progressBar;
     bool    _waiting{false};
+
+    Build* _playerBuild;
 };
 
 REGISTER_SCRIPT(WaveManager);

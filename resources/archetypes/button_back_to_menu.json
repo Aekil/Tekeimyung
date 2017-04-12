@@ -1,0 +1,59 @@
+{
+   "components" : {
+      "sButtonComponent" : {
+         "action" : "REPLACE_CURRENT_LEVEL",
+         "action_level" : "HomeScreen"
+      },
+      "sNameComponent" : {
+         "name" : "BUTTON_BACK_TO_MENU"
+      },
+      "sRenderComponent" : {
+         "animated" : false,
+         "animations" : [],
+         "color" : {
+            "a" : 1,
+            "b" : 1,
+            "g" : 1,
+            "r" : 1
+         },
+         "dynamic" : false,
+         "ignore_raycast" : false,
+         "materials" : [ "button_back_to_menu.mat" ],
+         "model" : "resources/models/traps/trap_needle.DAE",
+         "type" : "PLANE"
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 960,
+            "y" : 264.41998291015625,
+            "z" : 0
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "scale" : {
+            "x" : 30,
+            "y" : 7.1999998092651367,
+            "z" : 0
+         }
+      },
+      "sUiComponent" : {
+         "horizontal_alignment" : "MIDDLE",
+         "layer" : 0,
+         "offset" : {
+            "x" : 0,
+            "y" : -24
+         },
+         "percentage_size" : true,
+         "size" : {
+            "x" : 0.15625,
+            "y" : 0.070796459913253784
+         },
+         "vertical_alignment" : "MIDDLE"
+      }
+   },
+   "name" : "BUTTON_BACK_TO_MENU",
+   "tag" : ""
+}

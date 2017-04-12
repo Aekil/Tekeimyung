@@ -1,0 +1,76 @@
+{
+   "components" : {
+      "sNameComponent" : {
+         "name" : "CASTLE_EXPLOSION"
+      },
+      "sParticleEmitterComponent" : {
+         "angle" : 180.00001525878906,
+         "angle_variance" : 180.00001525878906,
+         "color" : {
+            "finish" : {
+               "a" : 0,
+               "b" : 0,
+               "g" : 0,
+               "r" : 0
+            },
+            "start" : {
+               "a" : 1,
+               "b" : 0,
+               "g" : 0,
+               "r" : 0.43137255311012268
+            }
+         },
+         "emitter_life" : 5,
+         "life" : 60,
+         "life_variance" : 0,
+         "max_particles" : 210,
+         "rate" : 0,
+         "size" : {
+            "finish" : 0.13400000333786011,
+            "finish_variance" : 0,
+            "start" : 0.48400002717971802,
+            "start_variance" : 0
+         },
+         "speed" : 40.860000610351563,
+         "speed_variance" : 20.430000305175781,
+         "texture" : ""
+      },
+      "sRenderComponent" : {
+         "animated" : false,
+         "animations" : [],
+         "color" : {
+            "a" : 1,
+            "b" : 1.0039216279983521,
+            "g" : 1,
+            "r" : 1
+         },
+         "dynamic" : false,
+         "ignore_raycast" : false,
+         "materials" : [ "bloom_red.mat" ],
+         "model" : "resources/models/buildings/geometric_castle.DAE",
+         "type" : "MESH"
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 150.1849365234375,
+            "y" : 104.28929901123047,
+            "z" : 193.3328857421875
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : 3.0517578125e-05,
+            "z" : 0
+         },
+         "scale" : {
+            "x" : 0.71669149398803711,
+            "y" : 0.91669178009033203,
+            "z" : 0.91669297218322754
+         }
+      },
+      "sTypeComponent" : {
+         "type" : "CHARACTER"
+      }
+   },
+   "name" : "CASTLE_EXPLOSION",
+   "tag" : ""
+}

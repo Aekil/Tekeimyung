@@ -10,10 +10,11 @@
                "animations" : [],
                "color" : {
                   "a" : 1,
-                  "b" : 0.26666668057441711,
-                  "g" : 0.49019607901573181,
-                  "r" : 0.26274511218070984
+                  "b" : 0.058823529630899429,
+                  "g" : 0.058823529630899429,
+                  "r" : 0.058823529630899429
                },
+               "dynamic" : false,
                "ignore_raycast" : false,
                "materials" : [ "geometry_default.mat" ],
                "model" : "resources/models/default.DAE",
@@ -21,9 +22,9 @@
             },
             "sTransformComponent" : {
                "pos" : {
-                  "x" : 0,
-                  "y" : 0,
-                  "z" : -1
+                  "x" : 960,
+                  "y" : 508.5,
+                  "z" : 0
                },
                "rotation" : {
                   "x" : 0,
@@ -42,6 +43,11 @@
                "offset" : {
                   "x" : 0,
                   "y" : 0
+               },
+               "percentage_size" : true,
+               "size" : {
+                  "x" : 1,
+                  "y" : 1
                },
                "vertical_alignment" : "MIDDLE"
             }
@@ -63,16 +69,17 @@
                   "g" : 1,
                   "r" : 1
                },
+               "dynamic" : false,
                "ignore_raycast" : false,
-               "materials" : [ "how_to_play_menu.mat" ],
+               "materials" : [ "texture_how_to_play.mat" ],
                "model" : "resources/models/default.DAE",
                "type" : "PLANE"
             },
             "sTransformComponent" : {
                "pos" : {
-                  "x" : 460,
-                  "y" : 183.5,
-                  "z" : -0
+                  "x" : 960,
+                  "y" : 549.17999267578125,
+                  "z" : 0
                },
                "rotation" : {
                   "x" : 0,
@@ -80,8 +87,8 @@
                   "z" : 0
                },
                "scale" : {
-                  "x" : 100,
-                  "y" : 65,
+                  "x" : 102.39994049072266,
+                  "y" : 84.749977111816406,
                   "z" : 0.0010000000474974513
                }
             },
@@ -90,7 +97,12 @@
                "layer" : 0,
                "offset" : {
                   "x" : 0,
-                  "y" : 0
+                  "y" : 4
+               },
+               "percentage_size" : true,
+               "size" : {
+                  "x" : 0.53333300352096558,
+                  "y" : 0.83333307504653931
                },
                "vertical_alignment" : "MIDDLE"
             }
@@ -116,6 +128,7 @@
                   "g" : 1,
                   "r" : 1
                },
+               "dynamic" : false,
                "ignore_raycast" : false,
                "materials" : [ "button_return.mat" ],
                "model" : "resources/models/default.DAE",
@@ -123,9 +136,9 @@
             },
             "sTransformComponent" : {
                "pos" : {
-                  "x" : 835,
-                  "y" : 203.91000366210938,
-                  "z" : -0
+                  "x" : 960,
+                  "y" : 142.3800048828125,
+                  "z" : 0
                },
                "rotation" : {
                   "x" : 0,
@@ -133,8 +146,8 @@
                   "z" : 0
                },
                "scale" : {
-                  "x" : 25,
-                  "y" : 6,
+                  "x" : 30,
+                  "y" : 7.1999526023864746,
                   "z" : 6
                }
             },
@@ -143,7 +156,12 @@
                "layer" : 0,
                "offset" : {
                   "x" : 0,
-                  "y" : -27
+                  "y" : -36
+               },
+               "percentage_size" : true,
+               "size" : {
+                  "x" : 0.15625,
+                  "y" : 0.070795997977256775
                },
                "vertical_alignment" : "MIDDLE"
             }

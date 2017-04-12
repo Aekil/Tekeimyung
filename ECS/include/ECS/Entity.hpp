@@ -22,7 +22,7 @@ private:
     Entity(EntityManager* em, uint32_t id_): id(id_), _em(em) {}
 
 public:
-    ~Entity() {}
+    ~Entity();
 
     bool operator==(uint32_t id_);
     bool operator==(Entity &entity);

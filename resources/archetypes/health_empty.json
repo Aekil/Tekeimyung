@@ -12,8 +12,9 @@
             "g" : 1,
             "r" : 1
          },
+         "dynamic" : false,
          "ignore_raycast" : false,
-         "materials" : [ "geometry_default.mat" ],
+         "materials" : [ "healt_bar_empty.mat" ],
          "model" : "resources/models/default.DAE",
          "texture" : "",
          "type" : "PLANE"

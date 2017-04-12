@@ -1,12 +1,14 @@
 #include <Engine/Components.hh>
+#include <Engine/BasicState.hpp>
+#include <Engine/Utils/LevelLoader.hpp>
 
 #include <Game/Scripts/Enemy.hpp>
 #include <Game/Scripts/Castle.hpp>
 
 void Castle::start()
 {
-    setHealth(300);
-    setMaxHealth(300);
+    setHealth(4200);
+    setMaxHealth(4200);
 
     this->_render = getComponent<sRenderComponent>();
     this->_transform = getComponent<sTransformComponent>();
@@ -22,25 +24,19 @@ void Castle::onCollisionEnter(Entity* entity)
 {
     if (entity->getTag() == "Enemy")
     {
-        //LOG_DEBUG("Damage done");
-        this->takeDamage(150);
+        this->takeDamage(200);
 
         sScriptComponent* script = entity->getComponent<sScriptComponent>();
         Enemy* enemy = script ? script->getScript<Enemy>("Enemy") : nullptr;
         enemy->death();
-        Entity* explosion = Instantiate("ENEMY_EXPLOSION");
-        sTransformComponent* explosionTransform = explosion->getComponent<sTransformComponent>();
-        sTransformComponent* targetTransform = entity->getComponent<sTransformComponent>();
-        explosionTransform->setPos(targetTransform->getPos());
     }
 }
 
 void Castle::death()
 {
-    Entity* explosion = Instantiate("CASTLE_EXPLOSION");
-    sTransformComponent* explosionTransform = explosion->getComponent<sTransformComponent>();
-    explosionTransform->setPos(this->_transform->getPos());
+    //Entity* explosion = Instantiate("CASTLE_EXPLOSION");
+    //sTransformComponent* explosionTransform = explosion->getComponent<sTransformComponent>();
+    //explosionTransform->setPos(this->_transform->getPos());
 
     this->Destroy();
-    LOG_DEBUG("GAME OVER");
 }

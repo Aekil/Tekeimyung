@@ -1,0 +1,233 @@
+{
+   "entities" : [
+      {
+         "components" : {
+            "sButtonComponent" : {
+               "action" : "REMOVE_CURRENT_LEVEL",
+               "action_level" : ""
+            },
+            "sNameComponent" : {
+               "name" : "BUTTON_CONFIRM_NO"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 1
+               },
+               "dynamic" : false,
+               "ignore_raycast" : false,
+               "materials" : [ "button_confirm_no.mat" ],
+               "model" : "resources/models/default.DAE",
+               "type" : "PLANE"
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 844.79998779296875,
+                  "y" : 447.48001098632813,
+                  "z" : 0
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 15,
+                  "y" : 7.1999526023864746,
+                  "z" : 6
+               }
+            },
+            "sUiComponent" : {
+               "horizontal_alignment" : "MIDDLE",
+               "layer" : 0,
+               "offset" : {
+                  "x" : -6,
+                  "y" : -6
+               },
+               "percentage_size" : true,
+               "size" : {
+                  "x" : 0.078125,
+                  "y" : 0.070795997977256775
+               },
+               "vertical_alignment" : "MIDDLE"
+            }
+         },
+         "name" : "BUTTON_CONFIRM_NO",
+         "tag" : ""
+      },
+      {
+         "components" : {
+            "sButtonComponent" : {
+               "action" : "REPLACE_CURRENT_LEVEL",
+               "action_level" : "HomeScreen"
+            },
+            "sNameComponent" : {
+               "name" : "BUTTON_CONFIRM_YES"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 1
+               },
+               "dynamic" : false,
+               "ignore_raycast" : false,
+               "materials" : [ "button_confirm_yes.mat" ],
+               "model" : "resources/models/default.DAE",
+               "type" : "PLANE"
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 1075.199951171875,
+                  "y" : 447.48001098632813,
+                  "z" : 0
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 15,
+                  "y" : 7.1999526023864746,
+                  "z" : 1
+               }
+            },
+            "sUiComponent" : {
+               "horizontal_alignment" : "MIDDLE",
+               "layer" : 0,
+               "offset" : {
+                  "x" : 6,
+                  "y" : -6
+               },
+               "percentage_size" : true,
+               "size" : {
+                  "x" : 0.078125,
+                  "y" : 0.070795997977256775
+               },
+               "vertical_alignment" : "MIDDLE"
+            }
+         },
+         "name" : "BUTTON_CONFIRM_YES",
+         "tag" : ""
+      },
+      {
+         "components" : {
+            "sNameComponent" : {
+               "name" : "MESSAGE_PROGRESS_LOST_WARNING"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 1
+               },
+               "dynamic" : false,
+               "ignore_raycast" : false,
+               "materials" : [ "message_progress_lost_warning.mat" ],
+               "model" : "resources/models/default.DAE",
+               "type" : "PLANE"
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 960,
+                  "y" : 569.52001953125,
+                  "z" : 0
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 60,
+                  "y" : 7.1999526023864746,
+                  "z" : 1
+               }
+            },
+            "sUiComponent" : {
+               "horizontal_alignment" : "MIDDLE",
+               "layer" : 0,
+               "offset" : {
+                  "x" : 0,
+                  "y" : 6
+               },
+               "percentage_size" : true,
+               "size" : {
+                  "x" : 0.3125,
+                  "y" : 0.070795997977256775
+               },
+               "vertical_alignment" : "MIDDLE"
+            }
+         },
+         "name" : "MESSAGE_PROGRESS_LOST_WARNING",
+         "tag" : ""
+      },
+      {
+         "components" : {
+            "sNameComponent" : {
+               "name" : "BACKGROUND_POPUP"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 1
+               },
+               "dynamic" : false,
+               "ignore_raycast" : true,
+               "materials" : [ "texture_popup_background.mat" ],
+               "model" : "resources/models/default.DAE",
+               "type" : "PLANE"
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 960,
+                  "y" : 508.5,
+                  "z" : 0
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 75.999931335449219,
+                  "y" : 40.256214141845703,
+                  "z" : 1
+               }
+            },
+            "sUiComponent" : {
+               "horizontal_alignment" : "MIDDLE",
+               "layer" : 1,
+               "offset" : {
+                  "x" : 0,
+                  "y" : 0
+               },
+               "percentage_size" : true,
+               "size" : {
+                  "x" : 0.39583298563957214,
+                  "y" : 0.39583298563957214
+               },
+               "vertical_alignment" : "MIDDLE"
+            }
+         },
+         "name" : "BACKGROUND_POPUP",
+         "tag" : ""
+      }
+   ],
+   "name" : "ConfirmBackToMenu"
+}

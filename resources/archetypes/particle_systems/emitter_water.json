@@ -66,6 +66,7 @@
             "g" : 0,
             "r" : 1
          },
+         "dynamic" : false,
          "ignore_raycast" : false,
          "materials" : [ "geometry_default.mat" ],
          "model" : "resources/models/default.DAE",

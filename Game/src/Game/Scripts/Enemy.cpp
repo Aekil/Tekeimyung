@@ -3,6 +3,9 @@
 */
 
 #include <Engine/Components.hh>
+#include <Engine/EntityFactory.hpp>
+
+#include <Game/Scripts/GoldManager.hpp>
 
 #include <Game/Scripts/Enemy.hpp>
 
@@ -13,6 +16,8 @@ void Enemy::start()
     setHealth(getMaxHealth());
     this->_transform = getComponent<sTransformComponent>();
     Health::init(_render);
+    _dyingSound = EventSound::getEventByEventType(eEventSound::ENEMY_DYING);
+    _earningCoins = EventSound::getEventByEventType(eEventSound::EARN_COINS_FROM_ENEMY);
 }
 
 void Enemy::update(float dt)
@@ -46,7 +51,30 @@ void    Enemy::onCollisionEnter(Entity* entity)
 
 void Enemy::death()
 {
+    EntityManager* em = EntityFactory::getBindedEntityManager();
+
+    Entity* explosion = Instantiate("ENEMY_EXPLOSION");
+    sTransformComponent* explosionTransform = explosion->getComponent<sTransformComponent>();
+    sTransformComponent* entityTransform = entity->getComponent<sTransformComponent>();
+    explosionTransform->setPos(entityTransform->getPos());
     this->Destroy();
+
+    // Add golds for enemy dying
+    const auto& gameManager = em->getEntityByTag("GameManager");
+    sScriptComponent* scriptComp = gameManager->getComponent<sScriptComponent>();
+    GoldManager* goldManager = scriptComp->getScript<GoldManager>("GoldManager");
+    goldManager->addGolds(10); // arbitrary number which needs to be replaced depending on the enemy archetype
+
+#if (ENABLE_SOUND)
+    if (_dyingSound->soundID != -1 && !SoundManager::getInstance()->isSoundPlaying(_dyingSound->soundID))
+    {
+        SoundManager::getInstance()->playSound(_dyingSound->soundID);
+    }
+    if (_earningCoins->soundID != -1 && !SoundManager::getInstance()->isSoundPlaying(_earningCoins->soundID))
+    {
+        SoundManager::getInstance()->playSound(_earningCoins->soundID);
+    }
+#endif
 }
 
 bool Enemy::takeDamage(int damage)

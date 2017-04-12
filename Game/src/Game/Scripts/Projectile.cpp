@@ -52,16 +52,7 @@ void Projectile::onCollisionEnter(Entity* entity)
             return;
         }
 
-        if (enemy->takeDamage(_damage))
-        {
-            EntityManager* em = EntityFactory::getBindedEntityManager();
-            Entity* target = entity;
-
-            Entity* explosion = Instantiate("ENEMY_EXPLOSION");
-            sTransformComponent* explosionTransform = explosion->getComponent<sTransformComponent>();
-            sTransformComponent* targetTransform = target->getComponent<sTransformComponent>();
-            explosionTransform->setPos(targetTransform->getPos());
-        }
+        enemy->takeDamage(_damage);
         destroyProjectile();
     }
 }

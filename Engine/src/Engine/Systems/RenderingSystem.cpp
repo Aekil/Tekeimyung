@@ -13,6 +13,7 @@
 #include <Engine/Utils/Exception.hpp>
 #include <Engine/Utils/Logger.hpp>
 #include <Engine/Window/GameWindow.hpp>
+#include <Engine/Graphics/UI/Font.hpp>
 #include <Engine/Graphics/Geometries/Trapeze.hpp>
 #include <Engine/Graphics/Renderer.hpp>
 
@@ -23,6 +24,7 @@
 
 bool RenderingSystem::_displayAllColliders = false;
 std::unique_ptr<BufferPool> RenderingSystem::_bufferPool = nullptr;
+std::unique_ptr<BufferPool> RenderingSystem::_batchesBufferPool = nullptr;
 
 RenderingSystem::RenderingSystem(std::unordered_map<uint32_t, sEmitter*>* particleEmitters):
                                 _particleEmitters(particleEmitters)
@@ -32,12 +34,24 @@ RenderingSystem::RenderingSystem(std::unordered_map<uint32_t, sEmitter*>* partic
     if (!_bufferPool)
     {
         _bufferPool = std::make_unique<BufferPool>(50,
-                                    (uint32_t)(sizeof(glm::mat4) + sizeof(glm::vec4)),
+                                    static_cast<uint32_t>(sizeof(glm::mat4) + sizeof(glm::vec4)),
+                                    GL_SHADER_STORAGE_BUFFER);
+    }
+    if (!_batchesBufferPool)
+    {
+        _batchesBufferPool = std::make_unique<BufferPool>(1,
+                                    static_cast<uint32_t>(sizeof(glm::mat4) + sizeof(glm::vec4)) * INSTANCING_MAX,
                                     GL_SHADER_STORAGE_BUFFER);
     }
 }
 
-RenderingSystem::~RenderingSystem() {}
+RenderingSystem::~RenderingSystem()
+{
+    for (auto& batch: _batches)
+    {
+        batch.buffer->free();
+    }
+}
 
 void    RenderingSystem::attachCamera(Camera* camera)
 {
@@ -290,6 +304,11 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
 {
    _renderQueue.clear();
 
+    for (auto& batch: _batches)
+    {
+        batch.buffer->free();
+    }
+    _batches.clear();
     auto &&keyboard = GameWindow::getInstance()->getKeyboard();
 
     if (keyboard.getStateMap()[Keyboard::eKey::C] == Keyboard::eKeyState::KEY_PRESSED)
@@ -312,13 +331,25 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
                     transform->needUpdate();
                 }
 
-                BufferPool::SubBuffer* buffer = getModelBuffer(transform, render);
                 sUiComponent* uiComponent = entity->getComponent<sUiComponent>();
+                sTextComponent* textComponent = entity->getComponent<sTextComponent>();
 
                 if (uiComponent)
-                    _renderQueue.addUIModel(model, buffer->ubo, uiComponent->layer, buffer->offset, buffer->size, uiComponent->layer);
+                {
+                    BufferPool::SubBuffer* buffer = getModelBuffer(transform, render);
+                    _renderQueue.addUIModel(model, buffer->ubo, uiComponent->layer, buffer->offset, buffer->size);
+                }
                 else
-                    _renderQueue.addModel(model, buffer->ubo, buffer->offset, buffer->size);
+                {
+                    addBatch(transform, render);
+                }
+
+                if (textComponent)
+                {
+                    _renderQueue.addText(textComponent->text,
+                                        uiComponent ? uiComponent->layer : 0,
+                                        glm::vec2(transform->getPos().x, transform->getPos().y) + textComponent->offset);
+                }
 
                 addCollidersToRenderQueue(entity, transform);
             }
@@ -354,6 +385,11 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
             _renderQueue.addLight(&lightComp->light);
         }
     }
+
+   for (auto& batch: _batches)
+   {
+        _renderQueue.addMesh(batch.meshInstance, batch.buffer->ubo, 0, batch.buffer->size, batch.instances, batch.dynamic);
+   }
 
     // Add cameras views to render queue
     {
@@ -401,10 +437,48 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
             Renderer::getInstance()->render(nullptr, _renderQueue);
         }
     }
-
 }
 
-BufferPool::SubBuffer*  RenderingSystem::getModelBuffer(sTransformComponent* transform, sRenderComponent* render)
+void    RenderingSystem::addBatch(sTransformComponent* transform, sRenderComponent* render)
+{
+    auto&& model = render->getModelInstance();
+    auto& meshsInstances = model->getMeshsInstances();
+    for (auto& meshInstance: meshsInstances)
+    {
+        auto material = meshInstance->getMaterial();
+        auto mesh = meshInstance->getMesh();
+        bool dynamic = render->dynamic;
+        sBatch* batch = nullptr;
+        for (auto& batch_: _batches)
+        {
+            if (batch_.mesh == mesh &&
+                batch_.material == material &&
+                batch_.dynamic == dynamic &&
+                batch_.instances < INSTANCING_MAX)
+            {
+                batch = &batch_;
+                break;
+            }
+        }
+        if (batch == nullptr)
+        {
+            _batches.push_back({});
+            batch = &_batches.back();
+            batch->buffer = _batchesBufferPool->allocate();
+            batch->material = material;
+            batch->mesh = mesh;
+            batch->meshInstance = meshInstance.get();
+            batch->dynamic = dynamic;
+        }
+        uint32_t offset = batch->instances * (sizeof(glm::vec4) + sizeof(glm::mat4));
+        auto transform_ = transform->getTransform();
+        batch->buffer->ubo->update((void*)&transform_, sizeof(glm::mat4), offset);
+        batch->buffer->ubo->update((void*)&render->color, sizeof(glm::vec4), offset + sizeof(glm::mat4));
+        batch->instances++;
+    }
+}
+
+BufferPool::SubBuffer*  RenderingSystem::getModelBuffer(sTransformComponent* transform,sRenderComponent* render)
 {
     BufferPool::SubBuffer* buffer = render->getModelInstance()->getBuffer(_bufferPool.get());
 

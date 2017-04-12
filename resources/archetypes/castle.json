@@ -12,8 +12,9 @@
             "g" : 1,
             "r" : 1
          },
+         "dynamic" : false,
          "ignore_raycast" : false,
-         "materials" : [ "DefaultMaterial" ],
+         "materials" : [ "bloom_green.mat" ],
          "model" : "resources/models/buildings/geometric_castle.DAE",
          "type" : "MESH"
       },
@@ -69,5 +70,5 @@
       }
    },
    "name" : "CASTLE",
-   "tag" : ""
+   "tag" : "Castle"
 }

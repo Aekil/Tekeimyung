@@ -6,6 +6,7 @@
 
 #include <glm/vec3.hpp>
 
+#include <Engine/Utils/EventSound.hpp>
 #include <Engine/Core/BaseScript.hpp>
 #include <Engine/Core/ScriptFactory.hpp>
 
@@ -22,7 +23,6 @@ public:
 
 private:
     void updateDirection();
-    void checkBuildableZone();
     void movement(float elapsedTime);
     void handleShoot();
 
@@ -51,6 +51,7 @@ private:
     bool _buildEnabled;
     int _damage;
     float _speed;
+    tEventSound* _shootSound = nullptr;
 
     WaveManager* _waveManager{nullptr};
     GameManager* _gameManager{nullptr};

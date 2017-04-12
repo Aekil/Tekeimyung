@@ -73,13 +73,14 @@
          ],
          "color" : {
             "a" : 1,
-            "b" : 1.0023009777069092,
-            "g" : 0,
+            "b" : 1,
+            "g" : 1,
             "r" : 1
          },
+         "dynamic" : true,
          "geometry" : null,
          "ignore_raycast" : false,
-         "materials" : [ "geometry_default.mat" ],
+         "materials" : [ "enemy.mat" ],
          "model" : "resources/models/characters/enemy.DAE",
          "texture" : "",
          "type" : "BOX"
@@ -128,9 +129,9 @@
             "z" : 0
          },
          "scale" : {
-            "x" : 0.71669149398803711,
-            "y" : 0.91669178009033203,
-            "z" : 0.91669297218322754
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
          }
       },
       "sTypeComponent" : {

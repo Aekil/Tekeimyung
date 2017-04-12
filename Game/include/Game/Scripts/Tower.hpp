@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <Engine/Utils/EventSound.hpp>
 #include <Engine/Core/ScriptFactory.hpp>
 
 class Tower final : public BaseScript
@@ -26,6 +27,8 @@ private:
     float       _lastShotTime;
     float       _range;
     int         _damage;
+
+    tEventSound* _towershootSound = nullptr;
 
     sTransformComponent* _towerTransform;
     sRenderComponent* _towerRender;

@@ -278,7 +278,7 @@ void    Spawner::spawnEntities(sConfig* waveConfig, float dt)
     for (auto& entity: waveConfig->spawnableEntities)
     {
         entity.elapsedTime += dt;
-        if ((!entity.spawnedNb || entity.elapsedTime >= entity.timeUntilNextSpawn) && // First spawn or timeUntilNextSpawn
+        if ((/*!entity.spawnedNb || */entity.elapsedTime >= entity.timeUntilNextSpawn) && // First spawn or timeUntilNextSpawn
             entity.spawnedNb < entity.spawnAmount)
         {
             entity.elapsedTime = 0.0f;

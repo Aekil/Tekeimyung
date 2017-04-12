@@ -10,7 +10,7 @@ void GameManager::start()
             if (this->firstLayerPattern[x][z] == 1)
                 this->firstLayerEntities[x][z] = this->Instantiate("SPAWNER", glm::vec3(x * 25, 0, z * 25));
             else
-                this->firstLayerEntities[x][z] = this->Instantiate("BLOCK_BROWN", glm::vec3(x * 25, 0, z * 25));
+                this->firstLayerEntities[x][z] = this->Instantiate("TILE_FLOOR", glm::vec3(x * 25, 0, z * 25));
         }
     }
 
@@ -19,7 +19,7 @@ void GameManager::start()
         for (int z = 0; z < this->mapSize; z++)
         {
             if (this->secondLayerPattern[x][z] == 1) {
-                this->Instantiate("BLOCK_GREEN", glm::vec3(x * 25, 12.5, z * 25));
+                this->Instantiate("TILE_BASE_TURRET", glm::vec3(x * 25, 12.5, z * 25));
             }
         }
     }
