@@ -27,7 +27,7 @@ void    OptionsMenuState::setupSystems()
 
 bool            OptionsMenuState::init()
 {
-    this->createOrGetButtons();
+    //this->createOrGetButtons();
     return (true);
 }
 
@@ -41,7 +41,7 @@ bool        OptionsMenuState::update(float elapsedTime)
     bool    success = GameState::update(elapsedTime);
 
     // Quit the state
-    if (!handleButtons() ||
+    if (/*!handleButtons() ||*/
         keyboard.getStateMap()[Keyboard::eKey::ESCAPE] == Keyboard::eKeyState::KEY_PRESSED)
     {
         return (false);
