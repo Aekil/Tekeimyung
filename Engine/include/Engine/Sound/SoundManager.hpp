@@ -10,7 +10,11 @@
 #include <fmod_common.h>
 #include <fmod_errors.h>
 
-#define ENABLE_SOUND        true
+#if defined (ENGINE_DEBUG)
+    #define ENABLE_SOUND    false
+#else
+    #define ENABLE_SOUND    true
+#endif
 
 #define SOUNDS_DIRECTORY    "resources/sounds"
 

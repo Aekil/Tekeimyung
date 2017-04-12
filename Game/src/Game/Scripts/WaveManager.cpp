@@ -2,6 +2,8 @@
 ** Author : Mathieu CHASSARA
 */
 
+#include <limits>
+
 #include <Engine/EntityFactory.hpp>
 #include <Engine/Utils/LevelLoader.hpp>
 
@@ -14,69 +16,49 @@
 
 void        WaveManager::start()
 {
-    auto em = EntityFactory::getBindedEntityManager();
-    this->_waves = 12;
-    _progressBar.maxProgress = 15.0f;
-    _progressBar.currentProgress = 0.0f;
-    _progressBar.init("TIMER_BAR_EMPTY", "TIMER_BAR");
-    _progressBar.display(false);
+    auto    em = EntityFactory::getBindedEntityManager();
 
-    // Get Player
-    {
-        auto em = EntityFactory::getBindedEntityManager();
-        Entity* player = em->getEntityByTag("Player");
-        if (!player)
-        {
-            LOG_WARN("Can't find entity with Player tag");
-            return;
-        }
-
-        auto scriptComponent = player->getComponent<sScriptComponent>();
-
-        if (!scriptComponent)
-        {
-            LOG_WARN("Can't find scriptComponent on Player entity");
-            return;
-        }
-
-        _playerBuild = scriptComponent->getScript<Build>("Build");
-    }
+    this->_state = WaveManager::eState::STARTING;
+    this->_progressBar.currentProgress = 0.0f;
+    this->_progressBar.maxProgress = 5.0f;
+    this->_progressBar.init("TIMER_BAR_EMPTY", "TIMER_BAR");
+    this->_progressBar.display(false);
 }
 
 void        WaveManager::update(float dt)
 {
-    if (_currentWave >= _waves)
-        return;
-
-    if (checkGameOver())
-        return;
-
-    if (_progressBar.currentProgress > 0.0f ||
-        _currentWave == -1)
+    switch (this->_state)
     {
-        _progressBar.currentProgress -= dt;
-        _progressBar.update();
-
-        if (_progressBar.currentProgress <= 0.0f)
-        {
-            handleStartWave();
-        }
-        return;
-    }
-
-    // All spawners entities are dead
-    if (checkEndWave())
-    {
-        if (_currentWave + 1 < _waves)
-        {
-            handleEndWave();
-        }
-        else
-        {
-            auto    gameStateManager = GameWindow::getInstance()->getGameStateManager();
-            
-            gameStateManager->addState<VictoryScreenState>();
-        }
+        case eState::STARTING:
+            LOG_DEBUG("WaveManager's state: %s", "STARTING");
+            this->_state = eState::PENDING_WAVE;
+            break;
+        case eState::PENDING_WAVE:
+            this->updateProgressBar(dt);
+            if (this->_progressBar.currentProgress <= 0.0f)
+            {
+                this->_progressBar.display(false);
+                this->startWave(this->_currentWave + 1);
+                this->_state = eState::ONGOING_WAVE;
+                LOG_DEBUG("WaveManager's state: %s", "ONGOING_WAVE");
+            }
+            break;
+        case eState::ONGOING_WAVE:
+            if (this->checkBoardState(dt) == true)
+            {
+                this->_state = eState::PENDING_WAVE;
+                this->_progressBar.currentProgress = this->_progressBar.maxProgress;
+                this->_progressBar.display(true);
+                LOG_DEBUG("WaveManager's state: %s", "PENDING_WAVE");
+            }
+            break;
+        case eState::ENDING:
+            LOG_DEBUG("WaveManager's state: %s", "ENDING");
+            this->_state = eState::ENDED;
+            break;
+        case eState::ENDED:
+            LOG_DEBUG("WaveManager's state: %s", "ENDED");
+            break;
     }
 }
 
@@ -95,15 +77,15 @@ int     WaveManager::getNbWaves() const
     return (_waves);
 }
 
-void    WaveManager::startWave(uint32_t wave)
+void            WaveManager::startWave(uint32_t wave)
 {
-    auto em = EntityFactory::getBindedEntityManager();
+    auto        em = EntityFactory::getBindedEntityManager();
     const auto& spawners = em->getEntitiesByTag("Spawner");
-    LOG_INFO("START WAVE %d", (int)wave);
 
+    this->_currentWave = wave;
     for (auto &spawner : spawners)
     {
-        auto scriptComponent = spawner->getComponent<sScriptComponent>();
+        auto    scriptComponent = spawner->getComponent<sScriptComponent>();
 
         if (!scriptComponent)
         {
@@ -111,51 +93,63 @@ void    WaveManager::startWave(uint32_t wave)
             return;
         }
 
-        auto spawnerScript = scriptComponent->getScript<Spawner>("Spawner");
-        spawnerScript->startWave(wave);
+        auto    spawnerScript = scriptComponent->getScript<Spawner>("Spawner");
+        
+        if (!spawnerScript)
+        {
+            LOG_WARN("Entities with tag \"Spawner\" should have a \"Spawner\" script attached");
+            return;
+        }
+
+        spawnerScript->triggerSpawnerConfigs(this->_currentWave);
     }
+}
+
+bool    WaveManager::checkBoardState(float deltaTime)
+{
+    return (this->checkEndWave());
 }
 
 bool    WaveManager::checkEndWave()
 {
-    auto em = EntityFactory::getBindedEntityManager();
+    auto        em = EntityFactory::getBindedEntityManager();
     const auto& spawners = em->getEntitiesByTag("Spawner");
-    bool endWave = true;
 
     for (auto &spawner : spawners)
     {
-        auto scriptComponent = spawner->getComponent<sScriptComponent>();
+        auto    scriptComponent = spawner->getComponent<sScriptComponent>();
 
         if (!scriptComponent)
         {
-            LOG_WARN("Can't find scriptComponent on Spawner entity");
+            LOG_WARN("Can't find sScriptComponent on Spawner entity");
             continue;
         }
 
-        auto spawnerScript = scriptComponent->getScript<Spawner>("Spawner");
-        if (!spawnerScript->checkEndWave())
-        {
-            endWave = false;
-        }
+        auto    spawnerScript = scriptComponent->getScript<Spawner>("Spawner");
+
+        if (spawnerScript->isReadyForNextWave() == false)
+            return (false);
+        else
+            spawnerScript->clearSpawnerConfigs();
     }
-
-    return (endWave);
-}
-
-bool    WaveManager::checkGameOver()
-{
-    auto em = EntityFactory::getBindedEntityManager();
-    if (em->getEntityByTag("Castle"))
-        return (false);
-
-    handleGameOver();
 
     return (true);
 }
 
-void    WaveManager::handleStartWave()
+bool        WaveManager::checkGameOver()
 {
-    auto em = EntityFactory::getBindedEntityManager();
+    auto    em = EntityFactory::getBindedEntityManager();
+    
+    if (em->getEntityByTag("Castle") != nullptr)
+        return (false);
+
+    this->handleGameOver();
+    return (true);
+}
+
+void        WaveManager::handleStartWave()
+{
+    auto    em = EntityFactory::getBindedEntityManager();
 
     _progressBar.display(false);
     ++_currentWave;
@@ -163,16 +157,43 @@ void    WaveManager::handleStartWave()
         return;
     startWave(_currentWave);
     _waiting = false;
+}
 
+void        WaveManager::updatePlayerState(bool teleport, unsigned int layer)
+{
+    auto    em = EntityFactory::getBindedEntityManager();
     Entity* player = em->getEntityByTag("Player");
+
     if (!player)
     {
-        LOG_WARN("Can't find entity with tag Player");
+        LOG_WARN("Could not find entity with tag \"%s\"", "Player");
         return;
     }
-    sTransformComponent* playerTransform = player->getComponent<sTransformComponent>();
-    playerTransform->setPos({96.0f, 22.5f, 116.0f});
-    _playerBuild->setLayer(1);
+
+    if (teleport == true)
+    {
+        sTransformComponent*    playerTransform = player->getComponent<sTransformComponent>();
+
+        playerTransform->setPos({ 96.0f, 22.5f, 116.0f });
+    }
+
+    auto    scriptComponent = player->getComponent<sScriptComponent>();
+
+    if (!scriptComponent)
+    {
+        LOG_WARN("Could not find sScriptComponent on entity \"%s\"", player->getComponent<sNameComponent>()->value.c_str());
+        return;
+    }
+
+    Build*  buildScript = scriptComponent->getScript<Build>("Build");
+
+    if (buildScript == nullptr)
+    {
+        LOG_WARN("Could not find \"Build\" script on entity \"%s\"", player->getComponent<sNameComponent>()->value.c_str());
+        return;
+    }
+    
+    buildScript->setLayer(layer);
 }
 
 void    WaveManager::handleEndWave()
@@ -182,15 +203,7 @@ void    WaveManager::handleEndWave()
     _progressBar.display(true);
     _waiting = true;
 
-    Entity* player = em->getEntityByTag("Player");
-    if (!player)
-    {
-        LOG_WARN("Can't find entity with tag Player");
-        return;
-    }
-    sTransformComponent* playerTransform = player->getComponent<sTransformComponent>();
-    playerTransform->setPos({65.0f, 16.250f, 33.0f});
-    _playerBuild->setLayer(0);
+    this->updatePlayerState(false, 0);
 }
 
 void    WaveManager::handleGameOver()
@@ -198,11 +211,12 @@ void    WaveManager::handleGameOver()
     auto    em = EntityFactory::getBindedEntityManager();
     auto    gameStateManager = GameWindow::getInstance()->getGameStateManager();
 
-    // Game over, destroy all enemies
+    //  Game over, destroy all enemies
     const auto& enemies = em->getEntitiesByTag("Enemy");
-    for (auto& enemy: enemies)
+
+    for (auto& enemy : enemies)
     {
-        auto scriptComponent = enemy->getComponent<sScriptComponent>();
+        auto    scriptComponent = enemy->getComponent<sScriptComponent>();
 
         if (!scriptComponent)
         {
@@ -210,7 +224,8 @@ void    WaveManager::handleGameOver()
             continue;
         }
 
-        Enemy* enemyScript = scriptComponent->getScript<Enemy>("Enemy");
+        Enemy*  enemyScript = scriptComponent->getScript<Enemy>("Enemy");
+
         if (!enemyScript)
         {
             em->destroyEntityRegister(enemy);
@@ -220,7 +235,48 @@ void    WaveManager::handleGameOver()
         enemyScript->death();
     }
 
-    _currentWave = _waves;
-    _progressBar.display(false);
+    //this->_currentWave = this->_waves;
+    this->_progressBar.display(false);
     gameStateManager->addState<DefeatScreenState>();
+}
+
+bool            WaveManager::updateEditor()
+{
+    bool        changed = false;
+    int         wavesMax = (int) this->_waves;
+
+
+    ImGui::BeginGroup();
+    if (ImGui::InputInt("Number of waves", &wavesMax, 1, 100, ImGuiInputTextFlags_CharsNoBlank))
+    {
+        wavesMax = wavesMax < 0 ? 0 : wavesMax;
+        wavesMax = wavesMax > std::numeric_limits<unsigned int>::max() ? std::numeric_limits<unsigned int>::max() : wavesMax;
+        this->_waves = wavesMax;
+        changed |= true;
+    }
+    ImGui::EndGroup();
+
+    return (changed);
+}
+
+JsonValue       WaveManager::saveToJson()
+{
+    JsonValue   waveManagerJson;
+
+    waveManagerJson.setUInt("waves_max", this->_waves);
+    return (waveManagerJson);
+}
+
+void                WaveManager::loadFromJson(const JsonValue& json)
+{
+    unsigned int    wavesMax = json.getUInt("waves_max", 0);
+
+    this->_waves = wavesMax;
+}
+
+void    WaveManager::updateProgressBar(float deltaTime)
+{
+    this->_progressBar.currentProgress -= deltaTime;
+    this->_progressBar.currentProgress = std::max(0.0f, this->_progressBar.currentProgress);
+    this->_progressBar.update();
 }

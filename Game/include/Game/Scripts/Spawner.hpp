@@ -5,7 +5,7 @@
 #pragma once
 
 #include    <Engine/Core/ScriptFactory.hpp>
-#include <glm/vec3.hpp>
+#include    <glm/vec3.hpp>
 
 class GameManager;
 
@@ -17,19 +17,23 @@ public:
         struct sEntity
         {
             std::string name;
-            uint32_t spawnAmount{0};
-            float   timeUntilNextSpawn{0};
+            uint32_t    spawnAmount = 0;
+            float       timeUntilNextSpawn = 0.0f;
 
-            float elapsedTime{0};
-            float spawnedNb{0};
+            float       elapsedTime = 0.0f;
+            uint32_t    amountSpawned = 0;
         };
-        std::vector<sEntity> spawnableEntities;
-        uint32_t associatedWave{0};
 
-        std::vector<uint32_t> spawnedEntities;
+        std::vector<sEntity>    spawnableEntities;
+        uint32_t                associatedWave = 0;
 
-        void updateSpawnedEntities(); // Remove dead entities from sEntity::spawnedEntities
-        bool allEntitiesSpawned();
+        std::vector<uint32_t>   spawnedEntities;
+
+        //  Remove dead entities from sEntity::spawnedEntities
+        void    updateSpawnedEntities();
+
+        bool    areAllEntitiesSpawned();
+        bool    areAllSpawnedEntitiesDead();
     };
 
 public:
@@ -39,30 +43,39 @@ public:
     void    start() override final;
     void    update(float dt) override final;
 
-    bool updateEditor() override final;
-    JsonValue saveToJson() override final;
-    void loadFromJson(const JsonValue& json) override final;
+    //  Json serialization & ImGui edition.
+    bool        updateEditor() override final;
+    JsonValue   saveToJson() override final;
+    void        loadFromJson(const JsonValue& json) override final;
 
-    void startWave(uint32_t waveNb);
-    bool checkEndWave();
+    bool        isActive() const;
+    void        setActive(bool active);
+
+    void        triggerSpawnerConfigs(uint32_t currentWave);
+    void        clearSpawnerConfigs();
+    bool        isReadyForNextWave();
 
 private:
-    std::vector<glm::vec3> getClosestPath() const;
+    //  All the entities will follow the closest path from the Spawner to the Castle
+    std::vector<glm::vec3>  getClosestPath() const;
+
     Entity* spawnEntity(const std::string& entityName);
-    void spawnEntities(sConfig* waveConfig, float dt);
+    void    spawnEntitiesFromConfig(sConfig* waveConfig, float dt);
 
 private:
-    Entity* _parent;
-    std::vector<sConfig> _configs;
+    Entity*                 _parent;
+    std::vector<sConfig>    _configs;
 
-    uint32_t _selectedConfig{0};
+    bool                    _active;
+    std::vector<sConfig*>   _currentConfigs;
 
-    std::vector<sConfig*> _currentWaves;
+    GameManager*            _gameManager = nullptr;
+    sTransformComponent*    _transform = nullptr;
 
-    GameManager* _gameManager{nullptr};
-    sTransformComponent* _transform;
+    std::vector<glm::vec3>  _closestPath;
 
-    std::vector<glm::vec3> _closestPath;
+    //  ImGui selection index
+    uint32_t                _selectedConfig = 0;
 };
 
 REGISTER_SCRIPT(Spawner);

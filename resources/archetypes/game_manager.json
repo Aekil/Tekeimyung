@@ -4,13 +4,13 @@
          "name" : "GAME_MANAGER"
       },
       "sScriptComponent" : {
-         "class" : [ "GameManager" ],
          "scripts" : [
             {
                "name" : "GameManager"
             },
             {
-               "name" : "WaveManager"
+               "name" : "WaveManager",
+               "waves_max" : 12
             },
             {
                "name" : "GoldManager"
