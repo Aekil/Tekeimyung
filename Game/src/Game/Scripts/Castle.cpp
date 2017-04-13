@@ -22,12 +22,12 @@ void Castle::update(float dt)
 
 void Castle::onCollisionEnter(Entity* entity)
 {
-    if (entity->getTag() == "Enemy")
+    if (entity->getTag() == ENEMY_TAG)
     {
         this->takeDamage(DMG_FOR_EACH_ENEMY);
 
         sScriptComponent* script = entity->getComponent<sScriptComponent>();
-        Enemy* enemy = script ? script->getScript<Enemy>("Enemy") : nullptr;
+        Enemy* enemy = script ? script->getScript<Enemy>(ENEMY_TAG) : nullptr;
         enemy->remove();
     }
 }

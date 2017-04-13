@@ -11,6 +11,8 @@
 
 #include <Game/Scripts/Health.hpp>
 
+#define ENEMY_TAG   "Enemy"
+
 class Enemy final : public BaseScript, public Health
 {
 public:
