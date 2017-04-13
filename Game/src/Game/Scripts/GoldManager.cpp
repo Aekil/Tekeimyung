@@ -9,7 +9,6 @@
 void GoldManager::start()
 {
     this->_golds = STARTING_AMOUNT_OF_GOLD;
-    LOG_DEBUG("%d", this->_golds);
 }
 
 void GoldManager::update(float dt)

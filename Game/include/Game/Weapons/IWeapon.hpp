@@ -20,6 +20,17 @@ public:
         return this->_attributes[attributeName]->getFinalValue();
     };
 
+    virtual void upgradeByLevel() = 0;
+
+    virtual void levelUp()
+    {
+        LOG_DEBUG("Weapon level up");
+        this->_level++;
+        this->upgradeByLevel();
+    }
+
 protected:
     std::map<std::string, Attribute*> _attributes;
+
+    int _level = 0;
 };

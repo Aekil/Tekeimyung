@@ -27,7 +27,7 @@ void Enemy::update(float dt)
     if (_path.size() > 0 &&
         _pathProgress < _path.size())
     {
-        glm::vec3 targetPos = {_path[_pathProgress].x, this->_transform->getPos().y, _path[_pathProgress].z};
+        glm::vec3 targetPos = { _path[_pathProgress].x, this->_transform->getPos().y, _path[_pathProgress].z };
         const glm::vec3& entityPos = this->_transform->getPos();
         glm::vec3 direction = glm::normalize(targetPos - entityPos);
 
@@ -49,6 +49,18 @@ void Enemy::update(float dt)
 
 void    Enemy::onCollisionEnter(Entity* entity)
 {
+    if (entity->getTag() == "ProjectileKnockBack")
+    {
+        EntityManager* em = EntityFactory::getBindedEntityManager();
+        const auto& player = em->getEntityByTag("Player");
+
+        glm::vec3 targetPos = { player->getComponent<sTransformComponent>()->getPos().x, this->_transform->getPos().y, player->getComponent<sTransformComponent>()->getPos().z };
+        const glm::vec3& entityPos = this->_transform->getPos();
+        glm::vec3 direction = glm::normalize(targetPos - entityPos);
+
+        direction *= -15;
+        _transform->translate(direction);
+    }
 }
 
 void Enemy::death()

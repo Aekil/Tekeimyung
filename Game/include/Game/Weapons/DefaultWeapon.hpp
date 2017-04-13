@@ -17,7 +17,9 @@ public:
 public:
     virtual void fire(sTransformComponent* playerTransform, sRenderComponent* playerRender, glm::vec3 playerDirection);
     virtual void reload();
+    virtual void upgradeByLevel();
 
 private:
+    std::string _tag;
     tEventSound* _shootSound = nullptr;
 };

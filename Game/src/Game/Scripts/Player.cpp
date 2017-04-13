@@ -120,6 +120,11 @@ void Player::movement(float elapsedTime)
             _rigidBody->velocity += glm::vec3(this->_attributes["Speed"]->getFinalValue(), 0.0f, -this->_attributes["Speed"]->getFinalValue());
         }
     }
+
+    if (this->keyboard.getStateMap()[Keyboard::eKey::L] == Keyboard::eKeyState::KEY_RELEASED)
+    {
+        this->_weapons[this->_actualWeapon]->levelUp();
+    }
 }
 
 void Player::handleShoot(float dt)
