@@ -22,6 +22,7 @@ public:
     void update(float dt) override final;
     void onCollisionEnter(Entity* entity) override final;
     void death() override final;
+    void remove();
     bool takeDamage(int damage) override final;
 
     void setPath(const std::vector<glm::vec3>& path);
@@ -45,6 +46,7 @@ private:
 
     tEventSound* _dyingSound = nullptr;
     tEventSound* _earningCoins = nullptr;
+    tEventSound* _hitCastle = nullptr; // could be put in Castle.hpp script
 
     float _speed;
 };

@@ -41,6 +41,13 @@
             "name" : "pickup_coin2.wav",
             "path" : "resources/sounds/sfx/pickup_coin2.wav"
          }
+      },
+      {
+         "name" : "ENEMY_HIT_CASTLE",
+         "sound" : {
+            "name" : "hit_castle.wav",
+            "path" : "resources/sounds/sfx/hit_castle.wav"
+         }
       }
    ]
 }
