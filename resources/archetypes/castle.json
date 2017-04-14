@@ -35,6 +35,8 @@
          "class" : [ "Castle" ],
          "scripts" : [
             {
+               "current_health" : 4400,
+               "max_health" : 4400,
                "name" : "Castle"
             }
          ]

@@ -65,7 +65,7 @@ void Player::update(float dt)
     //this->handleShoot();
 
     // Player is on top layer
-    if (_waveManager && !_waveManager->isWaiting())
+    if (_waveManager && _waveManager->getManagerState() == WaveManager::eState::ONGOING_WAVE)
     {
         this->blockPlayerOnTopLayer(dt);
     }

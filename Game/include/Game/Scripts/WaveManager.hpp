@@ -23,6 +23,13 @@ public:
         ENDING,
         ENDED
     };
+
+    enum class  eBoardState : int
+    {
+        IDLE = 0,
+        VICTORY,
+        DEFEAT
+    };
 public:
     WaveManager() = default;
     ~WaveManager() override final = default;
@@ -30,10 +37,10 @@ public:
 public:
     void    start() override final;
     void    update(float dt) override final;
-    bool    isWaiting();
 
     int     getCurrentWave() const;
     int     getNbWaves() const;
+    eState  getManagerState() const;
 
     //  Json serialization & ImGui edition.
 public:
@@ -44,9 +51,9 @@ public:
 private:
     void    startWave(uint32_t wave);
     bool    checkEndWave();
-    bool    checkGameOver();
+    bool    isGameOver();
+    void    end();
 
-    void    handleStartWave();
     void    handleEndWave();
     void    handleGameOver();
 
@@ -55,13 +62,13 @@ private:
     void    updateProgressBar(float deltaTime);
 
 private:
-    unsigned int        _waves;
-    float               _timeBeforeWaveStarts;
-    int                 _currentWave = 0;
-    WaveManager::eState _state;
+    unsigned int    _waves = 0;
+    float           _timeBeforeWaveStarts = 0.0f;
+    int             _currentWave = 0;
+    eState          _state;
+    eBoardState    _boardState;
 
-    ProgressBar         _progressBar;
-    bool    _waiting{ false };
+    ProgressBar    _progressBar;
 };
 
 REGISTER_SCRIPT(WaveManager);

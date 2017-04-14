@@ -19,6 +19,7 @@ void        WaveManager::start()
     auto    em = EntityFactory::getBindedEntityManager();
 
     this->_state = WaveManager::eState::STARTING;
+    this->_boardState = WaveManager::eBoardState::IDLE;
     this->_progressBar.currentProgress = 0.0f;
     this->_progressBar.maxProgress = 5.0f;
     this->_progressBar.init("TIMER_BAR_EMPTY", "TIMER_BAR");
@@ -38,6 +39,7 @@ void        WaveManager::update(float dt)
             if (this->_progressBar.currentProgress <= 0.0f)
             {
                 this->_progressBar.display(false);
+                this->updatePlayerState(true, 1);
                 this->startWave(this->_currentWave + 1);
                 this->_state = eState::ONGOING_WAVE;
                 LOG_DEBUG("WaveManager's state: %s", "ONGOING_WAVE");
@@ -47,24 +49,23 @@ void        WaveManager::update(float dt)
             if (this->checkBoardState(dt) == true)
             {
                 this->_state = eState::PENDING_WAVE;
+                this->updatePlayerState(false, 0);
                 this->_progressBar.currentProgress = this->_progressBar.maxProgress;
                 this->_progressBar.display(true);
                 LOG_DEBUG("WaveManager's state: %s", "PENDING_WAVE");
             }
+            if (this->_boardState != eBoardState::IDLE)
+                this->_state = eState::ENDING;
             break;
         case eState::ENDING:
             LOG_DEBUG("WaveManager's state: %s", "ENDING");
             this->_state = eState::ENDED;
+            this->end();
             break;
         case eState::ENDED:
             LOG_DEBUG("WaveManager's state: %s", "ENDED");
             break;
     }
-}
-
-bool    WaveManager::isWaiting()
-{
-    return (_waiting);
 }
 
 int     WaveManager::getCurrentWave() const
@@ -75,6 +76,11 @@ int     WaveManager::getCurrentWave() const
 int     WaveManager::getNbWaves() const
 {
     return (_waves);
+}
+
+WaveManager::eState WaveManager::getManagerState() const
+{
+    return (this->_state);
 }
 
 void            WaveManager::startWave(uint32_t wave)
@@ -107,6 +113,12 @@ void            WaveManager::startWave(uint32_t wave)
 
 bool    WaveManager::checkBoardState(float deltaTime)
 {
+    if (this->isGameOver() == true)
+    {
+        this->_boardState = eBoardState::DEFEAT;
+        return (false);
+    }
+
     return (this->checkEndWave());
 }
 
@@ -133,30 +145,36 @@ bool    WaveManager::checkEndWave()
             spawnerScript->clearSpawnerConfigs();
     }
 
+    if (this->_currentWave == this->_waves)
+        this->_boardState = eBoardState::VICTORY;
     return (true);
 }
 
-bool        WaveManager::checkGameOver()
+bool        WaveManager::isGameOver()
 {
     auto    em = EntityFactory::getBindedEntityManager();
-    
-    if (em->getEntityByTag("Castle") != nullptr)
-        return (false);
 
-    this->handleGameOver();
-    return (true);
+    return (em->getEntityByTag("Castle") == nullptr);
 }
 
-void        WaveManager::handleStartWave()
+void        WaveManager::end()
 {
-    auto    em = EntityFactory::getBindedEntityManager();
+    auto    gameStateManager = GameWindow::getInstance()->getGameStateManager();
 
-    _progressBar.display(false);
-    ++_currentWave;
-    if (_currentWave >= _waves)
-        return;
-    startWave(_currentWave);
-    _waiting = false;
+    switch (this->_boardState)
+    {
+        case eBoardState::IDLE:
+        case eBoardState::VICTORY:
+            gameStateManager->addState<VictoryScreenState>();
+            break;
+        case eBoardState::DEFEAT:
+            this->handleGameOver();
+            gameStateManager->addState<DefeatScreenState>();
+            break;
+        default:
+            LOG_WARN("The WaveManager should not end without VICTORY or DEFEAT board state !");
+            break;
+    }
 }
 
 void        WaveManager::updatePlayerState(bool teleport, unsigned int layer)
@@ -201,15 +219,11 @@ void    WaveManager::handleEndWave()
     auto em = EntityFactory::getBindedEntityManager();
     _progressBar.currentProgress = _progressBar.maxProgress;
     _progressBar.display(true);
-    _waiting = true;
-
-    this->updatePlayerState(false, 0);
 }
 
-void    WaveManager::handleGameOver()
+void        WaveManager::handleGameOver()
 {
     auto    em = EntityFactory::getBindedEntityManager();
-    auto    gameStateManager = GameWindow::getInstance()->getGameStateManager();
 
     //  Game over, destroy all enemies
     const auto& enemies = em->getEntitiesByTag("Enemy");
@@ -234,10 +248,6 @@ void    WaveManager::handleGameOver()
 
         enemyScript->death();
     }
-
-    //this->_currentWave = this->_waves;
-    this->_progressBar.display(false);
-    gameStateManager->addState<DefeatScreenState>();
 }
 
 bool            WaveManager::updateEditor()
