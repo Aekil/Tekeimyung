@@ -30,6 +30,7 @@ private:
 
     float buildableRadius;
     void levelUp();
+    void changeWeapon();
 
 public:
     void start() override final;

@@ -15,6 +15,7 @@
 #include <Game/Scripts/Player.hpp>
 #include <Game/Scripts/WaveManager.hpp>
 #include <Game/Weapons/DefaultWeapon.hpp>
+#include <Game/Weapons/TeslaWeapon.hpp>
 
 void Player::death()
 {
@@ -24,6 +25,7 @@ void Player::death()
 void Player::start()
 {
     this->_weapons.push_back(new DefaultWeapon());
+    this->_weapons.push_back(new TeslaWeapon());
 
     this->_levelUpReward[2] = std::make_pair<std::string, double>("FireRate", -25.0 / 100.0);
     this->_levelUpReward[3] = std::make_pair<std::string, double>("FireRate", -25.0 / 100.0);
@@ -66,6 +68,18 @@ void Player::update(float dt)
     this->updateDirection();
     this->movement(dt);
     this->handleShoot(dt);
+    this->changeWeapon();
+}
+
+void Player::changeWeapon()
+{
+    if (this->keyboard.getStateMap()[Keyboard::eKey::X] == Keyboard::eKeyState::KEY_RELEASED)
+    {
+        this->_actualWeapon++;
+
+        if (this->_actualWeapon >= this->_weapons.size())
+            this->_actualWeapon = 0;
+    } 
 }
 
 void Player::updateDirection()

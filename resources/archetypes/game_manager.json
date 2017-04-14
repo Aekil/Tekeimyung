@@ -10,7 +10,9 @@
                "name" : "GameManager"
             },
             {
-               "name" : "WaveManager"
+               "map_parts" : [],
+               "name" : "WaveManager",
+               "waves" : 0
             },
             {
                "name" : "GoldManager"

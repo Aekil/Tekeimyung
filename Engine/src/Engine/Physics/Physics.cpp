@@ -51,7 +51,7 @@ bool    Physics::raycast(const Ray& ray, Entity** hitEntity)
     return (nearestEntity != nullptr);
 }
 
-bool    Physics::raycastAll(const Ray& ray, std::vector<Entity*> hitEntities)
+bool    Physics::raycastAll(const Ray& ray, std::vector<Entity*>& hitEntities)
 {
     EntityManager* em = EntityFactory::getBindedEntityManager();
     for (Entity* entity: em->getEntities())

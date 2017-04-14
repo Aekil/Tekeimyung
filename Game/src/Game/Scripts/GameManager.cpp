@@ -9,22 +9,22 @@ void GameManager::start()
     {
         for (int z = 0; z < this->mapSizeZ; z++)
         {
-            if ((int)(this->firstLayerPattern[x][z] / 10) == 0)
+            if ((int)(this->firstLayerPattern[x][z] / LAYER_NUMBER) == 0)
             {
-                if ((int)(this->firstLayerPattern[x][z] % 10) == 1)
+                if ((int)(this->firstLayerPattern[x][z] % LAYER_NUMBER) == 1)
                     this->firstLayerEntities[x][z] = this->Instantiate("TILE_FLOOR", glm::vec3(x * 25, 0, z * 25));
-                else if ((int)(this->firstLayerPattern[x][z] % 10) == 2)
+                else if ((int)(this->firstLayerPattern[x][z] % LAYER_NUMBER) == 2)
                     this->firstLayerEntities[x][z] = this->Instantiate("SPAWNER", glm::vec3(x * 25, 0, z * 25));
             }
             else
             {
                 Entity* entity;
 
-                if ((int)(this->firstLayerPattern[x][z] % 10) == 1)
+                if ((int)(this->firstLayerPattern[x][z] % LAYER_NUMBER) == 1)
                 {
                     entity = this->Instantiate("TILE_FLOOR", glm::vec3(x * 25, 0, z * 25));
                 }
-                else if ((int)(this->firstLayerPattern[x][z] % 10) == 2)
+                else if ((int)(this->firstLayerPattern[x][z] % LAYER_NUMBER) == 2)
                 {
                     entity = this->Instantiate("SPAWNER", glm::vec3(x * 25, 0, z * 25));
 
@@ -34,7 +34,7 @@ void GameManager::start()
                 entity->getComponent<sRenderComponent>()->enabled = false;
 
                 this->firstLayerEntities[x][z] = entity;
-                this->_mapParts[(int)(this->firstLayerPattern[x][z] / 10)].push_back(entity);
+                this->_mapParts[(int)(this->firstLayerPattern[x][z] / LAYER_NUMBER)].push_back(entity);
             }
         }
     }
