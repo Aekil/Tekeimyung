@@ -145,7 +145,7 @@ void Player::handleShoot(float dt)
 {
     this->_elapsedTime += dt;
 
-    if (this->_elapsedTime > this->_weapons[this->_actualWeapon]->getAttributes("FireRate"))
+    if (this->_elapsedTime > this->_weapons[this->_actualWeapon]->getAttribute("FireRate"))
     {
         if (mouse.isPressed(Mouse::eButton::MOUSE_BUTTON_1))
         {

@@ -13,6 +13,6 @@ public:
     ~LaserWeapon() = default;
 
 public:
-    virtual void fire(sTransformComponent* playerTransform, sRenderComponent* playerRender, glm::vec3 playerDirection);
-    virtual void reload();
+    void fire(sTransformComponent* playerTransform, sRenderComponent* playerRender, glm::vec3 playerDirection) override final;
+    void reload() override final;
 };

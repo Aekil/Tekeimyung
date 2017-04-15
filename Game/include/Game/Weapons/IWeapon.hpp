@@ -15,7 +15,7 @@ class IWeapon
 public:
     virtual void fire(sTransformComponent* playerTransform, sRenderComponent* playerRender, glm::vec3 playerDirection) = 0;
     virtual void reload() = 0;
-    virtual double getAttributes(std::string attributeName)
+    virtual double getAttribute(std::string attributeName)
     {
         return this->_attributes[attributeName]->getFinalValue();
     };
