@@ -22,7 +22,7 @@ public:
     void update(float dt) override final;
     void onCollisionEnter(Entity* entity) override final;
     void death() override final;
-    bool takeDamage(int damage) override final;
+    bool takeDamage(double damage) override final;
 
     void setPath(const std::vector<glm::vec3>& path);
 

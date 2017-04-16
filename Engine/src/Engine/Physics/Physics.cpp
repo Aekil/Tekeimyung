@@ -38,7 +38,7 @@ bool    Physics::raycast(const Ray& ray, Entity** hitEntity)
         // Convert box collider to world position
         boxMin += transform->getPos();
         boxMax += transform->getPos();
-
+            
         float distance = Collisions::rayVSAABB(ray, boxMin, boxMax);
         if (distance != 0 && (nearestEntity == nullptr || distance <= nearestHitDist))
         {

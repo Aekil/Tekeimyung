@@ -14,8 +14,10 @@
 #include <Game/Scripts/Projectile.hpp>
 #include <Game/Scripts/Player.hpp>
 #include <Game/Scripts/WaveManager.hpp>
+
 #include <Game/Weapons/DefaultWeapon.hpp>
 #include <Game/Weapons/TeslaWeapon.hpp>
+#include <Game/Weapons/LaserWeapon.hpp>
 
 void Player::death()
 {
@@ -26,6 +28,7 @@ void Player::start()
 {
     this->_weapons.push_back(new DefaultWeapon());
     this->_weapons.push_back(new TeslaWeapon());
+    this->_weapons.push_back(new LaserWeapon());
 
     this->_levelUpReward[2] = std::make_pair<std::string, double>("FireRate", -25.0 / 100.0);
     this->_levelUpReward[3] = std::make_pair<std::string, double>("FireRate", -25.0 / 100.0);
@@ -79,6 +82,8 @@ void Player::changeWeapon()
 
         if (this->_actualWeapon >= this->_weapons.size())
             this->_actualWeapon = 0;
+
+        LOG_DEBUG("Actual weapon : %d", this->_actualWeapon);
     } 
 }
 

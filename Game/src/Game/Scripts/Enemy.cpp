@@ -96,7 +96,7 @@ void Enemy::death()
 #endif
 }
 
-bool Enemy::takeDamage(int damage)
+bool Enemy::takeDamage(double damage)
 {
     this->_render->_animator.play("hit", false);
     return (Health::takeDamage(damage));

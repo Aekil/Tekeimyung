@@ -13,7 +13,7 @@ public:
     ~TeslaWeapon() = default;
 
 public:
-    virtual void fire(sTransformComponent* playerTransform, sRenderComponent* playerRender, glm::vec3 playerDirection) override final;
-    virtual void reload() override final;
-    virtual void upgradeByLevel() override final;
+    void fire(sTransformComponent* playerTransform, sRenderComponent* playerRender, glm::vec3 playerDirection) override final;
+    void reload() override final;
+    void upgradeByLevel() override final;
 };

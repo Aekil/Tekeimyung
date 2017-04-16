@@ -13,7 +13,7 @@ DefaultWeapon::DefaultWeapon()
 {
     this->_tag = "Projectile";
     this->_attributes["FireRate"] = new Attribute(1.0);
-    this->_attributes["CurrentAmmo"] = new Attribute(100.0);
+    this->_attributes["Ammo"] = new Attribute(100.0);
     this->_attributes["Damage"] = new Attribute(35.0);
     this->_attributes["CriticalChance"] = new Attribute(5.0 / 100.0);
     this->_attributes["CriticalStrike"] = new Attribute(150.0 / 100.0);
@@ -58,9 +58,9 @@ void DefaultWeapon::fire(sTransformComponent* playerTransform, sRenderComponent*
     sScriptComponent*       bulletScripts;
     Projectile*             projectileScript;
 
-    this->_attributes["CurrentAmmo"]->addBonus(Bonus(-1));
+    this->_attributes["Ammo"]->addBonus(Bonus(-1));
 
-    if (this->_attributes["CurrentAmmo"]->getFinalValue() == 0)
+    if (this->_attributes["Ammo"]->getFinalValue() == 0)
         this->reload();
 
     bullet = EntityFactory::createEntity("PLAYER_BULLET");
@@ -77,8 +77,6 @@ void DefaultWeapon::fire(sTransformComponent* playerTransform, sRenderComponent*
     else
         projectileScript->_damage = this->_attributes["Damage"]->getFinalValue() * (1 + this->_attributes["CriticalStrike"]->getFinalValue());
 
-    LOG_DEBUG("%d", projectileScript->_damage);
-
     projectileScript->followDirection({ playerDirection.x, 0.0f, playerDirection.z });
 
 #if (ENABLE_SOUND)
@@ -91,5 +89,5 @@ void DefaultWeapon::fire(sTransformComponent* playerTransform, sRenderComponent*
 
 void DefaultWeapon::reload()
 {
-    this->_attributes["CurrentAmmo"]->clearAllBonuses();
+    this->_attributes["Ammo"]->clearAllBonuses();
 }

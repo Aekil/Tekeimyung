@@ -8,7 +8,7 @@
 #include <Engine/Window/GameWindow.hpp>
 #include <Game/Scripts/Health.hpp>
 
-bool Health::takeDamage(int damage)
+bool Health::takeDamage(double damage)
 {
     this->_progressBar.currentProgress -= damage;
 
