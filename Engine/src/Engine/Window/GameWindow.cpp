@@ -620,16 +620,19 @@ void    GameWindow::handleResize(int width, int height)
     if (_lostFocus)
         return;
 
-    _bufferWidth = width;
-    _bufferHeight = height;
-
-    // Handle window resize for menu systems
-    for (auto& gameState: _gameStateManager->getStates())
+    if (width && height)
     {
-        gameState->onWindowResize();
-    }
+        _bufferWidth = width;
+        _bufferHeight = height;
 
-    Renderer::getInstance()->onWindowResize();
+        // Handle window resize for menu systems
+        for (auto& gameState: _gameStateManager->getStates())
+        {
+            gameState->onWindowResize();
+        }
+
+        Renderer::getInstance()->onWindowResize();
+    }
 }
 
 void    GameWindow::handleClose(GLFWwindow* window)

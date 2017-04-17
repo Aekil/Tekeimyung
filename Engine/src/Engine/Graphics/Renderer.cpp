@@ -794,6 +794,11 @@ bool    Renderer::setupFrameBuffer()
     GLsizei windowBufferHeight = (GLsizei)GameWindow::getInstance()->getBufferHeight();
     bool complete = true;
 
+    if (!windowBufferWidth || !windowBufferHeight)
+    {
+        return (false);
+    }
+
     // Setup scene framebuffer
     {
         _frameBuffer.bind(GL_FRAMEBUFFER);
