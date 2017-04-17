@@ -145,7 +145,7 @@ void Player::handleShoot()
         projectileScript->followDirection({_direction.x, 0.0f, _direction.z});
 
 #if (ENABLE_SOUND)
-        if (_shootSound->soundID != -1 && !SoundManager::getInstance()->isSoundPlaying(_shootSound->soundID))
+        if (_shootSound->soundID != -1 /*&& !SoundManager::getInstance()->isSoundPlaying(_shootSound->soundID)*/)
         {
             SoundManager::getInstance()->playSound(_shootSound->soundID);
         }

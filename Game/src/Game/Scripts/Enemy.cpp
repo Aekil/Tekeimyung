@@ -69,11 +69,11 @@ void Enemy::death()
     goldManager->addGolds(10); // arbitrary number which needs to be replaced depending on the enemy archetype
 
 #if (ENABLE_SOUND)
-    if (_dyingSound->soundID != -1 && !SoundManager::getInstance()->isSoundPlaying(_dyingSound->soundID))
+    if (_dyingSound->soundID != -1 /*&& !SoundManager::getInstance()->isSoundPlaying(_dyingSound->soundID)*/)
     {
         SoundManager::getInstance()->playSound(_dyingSound->soundID);
     }
-    if (_earningCoins->soundID != -1 && !SoundManager::getInstance()->isSoundPlaying(_earningCoins->soundID))
+    if (_earningCoins->soundID != -1 /*&& !SoundManager::getInstance()->isSoundPlaying(_earningCoins->soundID)*/)
     {
         SoundManager::getInstance()->playSound(_earningCoins->soundID);
     }
@@ -85,7 +85,7 @@ void Enemy::remove()
 {
     this->Destroy();
 #if (ENABLE_SOUND) // can be put in Castle.cpp script (after calling this function)
-    if (_hitCastle->soundID != -1 && !SoundManager::getInstance()->isSoundPlaying(_hitCastle->soundID))
+    if (_hitCastle->soundID != -1 /*&& !SoundManager::getInstance()->isSoundPlaying(_hitCastle->soundID)*/)
     {
         SoundManager::getInstance()->playSound(_hitCastle->soundID);
     }

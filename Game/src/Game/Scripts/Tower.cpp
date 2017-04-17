@@ -78,7 +78,7 @@ void Tower::shootTarget(Entity* target)
     projectileScript->followTarget(target);
 
 #if (ENABLE_SOUND)
-    if (_towershootSound->soundID != -1 && !SoundManager::getInstance()->isSoundPlaying(_towershootSound->soundID))
+    if (_towershootSound->soundID != -1 /*&& !SoundManager::getInstance()->isSoundPlaying(_towershootSound->soundID)*/)
     {
         SoundManager::getInstance()->playSound(_towershootSound->soundID);
     }
