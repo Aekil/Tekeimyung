@@ -5,6 +5,11 @@
 
 #include <Game/Scripts/Health.hpp>
 
+#define CASTLE_TAG          "Castle"
+
+#define MAX_CASTLE_HEALTH   4200
+#define DMG_FOR_EACH_ENEMY  200
+
 class Castle final : public BaseScript, public Health
 {
 public:

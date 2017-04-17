@@ -11,6 +11,8 @@
 
 #include <Game/Scripts/Health.hpp>
 
+#define ENEMY_TAG   "Enemy"
+
 class Enemy final : public BaseScript, public Health
 {
 public:
@@ -22,6 +24,7 @@ public:
     void update(float dt) override final;
     void onCollisionEnter(Entity* entity) override final;
     void death() override final;
+    void remove();
     bool takeDamage(double damage) override final;
 
     void setPath(const std::vector<glm::vec3>& path);
@@ -45,6 +48,7 @@ private:
 
     tEventSound* _dyingSound = nullptr;
     tEventSound* _earningCoins = nullptr;
+    tEventSound* _hitCastle = nullptr; // could be put in Castle.hpp script
 
     float _speed;
 
