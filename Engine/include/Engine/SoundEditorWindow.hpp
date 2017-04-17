@@ -29,7 +29,7 @@ private:
 
     static std::string          _selectedSoundEventName;
 
-    /*void                        buildSoundEventDetails(tEventSound* soundEvent, int soundEventIndex);
-    void                        displaySoundProgressLength(tEventSound* soundEvent);*/
+    void                        buildSoundEventDetails(tEventSound* soundEvent, int soundEventIndex);
+    //void                        displaySoundProgressLength(tEventSound* soundEvent);
 };
 

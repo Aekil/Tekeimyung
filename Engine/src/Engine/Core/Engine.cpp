@@ -166,9 +166,9 @@ bool    Engine::initDebugWindows(int ac, char** av)
         addDebugWindow<MaterialDebugWindow>(glm::vec2(GameWindow::getInstance()->getBufferWidth() - 500,
                                                     GameWindow::getInstance()->getBufferHeight() - 300),
                                             glm::vec2(500, 300));
-        /*addDebugWindow<SoundEditorWindow>(glm::vec2(GameWindow::getInstance()->getBufferWidth() - 950,
+        addDebugWindow<SoundEditorWindow>(glm::vec2(GameWindow::getInstance()->getBufferWidth() - 950,
                                                     GameWindow::getInstance()->getBufferHeight() - 200),
-                                        glm::vec2(450, 200));*/
+                                        glm::vec2(450, 200));
         addDebugWindow<LogDebugWindow>(Logger::getInstance(), glm::vec2(0, 430), glm::vec2(300, 200));
         addDebugWindow<MonitoringDebugWindow>(MonitoringDebugWindow::getInstance());
 

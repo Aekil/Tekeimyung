@@ -79,8 +79,7 @@ bool    SoundManager::errorCheck()
 {
     if (_result != FMOD_OK)
     {
-        //if (_result != 30 )//&& _result != 3)
-            LOG_ERROR("FMOD error! (%d) : %s", _result, FMOD_ErrorString(_result));
+        LOG_ERROR("FMOD error! (%d) : %s", _result, FMOD_ErrorString(_result));
         //std::cerr << "FMOD error! (" << _result << ") " << FMOD_ErrorString(_result) << std::endl;
         return (true);
     }
@@ -121,7 +120,7 @@ int     SoundManager::registerSound(const std::string& name, eSoundType type)
             _sounds[i].type = type;
             _sounds[i].name = name;
             _sounds[i].id = i;
-            // Load music and default sound as streams
+
             if (type == eSoundType::BACKGROUND_SOUND /*|| type == eSoundType::NONE*/)
             {
                 //_sounds[i].type = eSoundType::BACKGROUND_SOUND;
@@ -149,18 +148,15 @@ int     SoundManager::registerSound(const std::string& name, eSoundType type)
 
 void    SoundManager::playSound(int id)
 {
-    // Out of range
-    if (id < 0 || id >= NB_MAX_SOUNDS)
+    if (id < 0 || id >= NB_MAX_SOUNDS) // Out of range
     {
         LOG_WARN("Sound id %d out of range in playSound(id)", id);
         return;
     }
 
-    // Play sound
     _result = _system->playSound(_sounds[id].sound, 0, false, &_sounds[id].channel);
     errorCheck();
 
-    // Add channel to array
     if (_sounds[id].channel == nullptr)
     {
         LOG_ERROR("Failed to play sound : channel handle is null");
@@ -237,9 +233,9 @@ bool    SoundManager::isSoundPlaying(int id)
     errorCheck();
 
     return (isPaused);
-}
+}*/
 
-unsigned int        SoundManager::getSoundCurrentPosition(int id)
+/*unsigned int        SoundManager::getSoundCurrentPosition(int id)
 {
     unsigned int    currentPosition;
 

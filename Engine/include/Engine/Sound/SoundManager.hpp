@@ -59,7 +59,6 @@ public:
     void                                    shutdown();
 
     bool                                    errorCheck();
-    //std::string                             getErrorString();
 
     void                                    freeSound(int id);
     int                                     registerSound(const std::string& name, eSoundType type/* = eSoundType::NONE*/);
@@ -70,7 +69,7 @@ public:
     void                                    stopSound(int id);*/
 
     bool                                    isSoundPlaying(int id);
-    /*bool                                    isSoundPaused(int id);*/
+    //bool                                    isSoundPaused(int id);
 
     /*unsigned int                            getSoundCurrentPosition(int id);
     unsigned int                            getSoundLength(int id);*/

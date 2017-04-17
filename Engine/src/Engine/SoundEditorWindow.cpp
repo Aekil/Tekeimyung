@@ -70,8 +70,8 @@ void    SoundEditorWindow::build(std::shared_ptr<GameState> gameState, float ela
 
         if (soundEvent == nullptr)
             LOG_WARN("Could not retrieve sound event by name (%s).", _selectedSoundEventName);
-        /*else
-            buildSoundEventDetails(soundEvent, soundEventIndex);*/
+        else
+            buildSoundEventDetails(soundEvent, soundEventIndex);
     }
 
     // when click on sound, create/link it and remember to display it side by the event
@@ -79,7 +79,7 @@ void    SoundEditorWindow::build(std::shared_ptr<GameState> gameState, float ela
     ImGui::End();
 }
 
-/*void        SoundEditorWindow::buildSoundEventDetails(tEventSound* soundEvent, int soundEventIndex)
+void        SoundEditorWindow::buildSoundEventDetails(tEventSound* soundEvent, int soundEventIndex)
 {
     auto    soundsStrings = ResourceManager::getInstance()->getSoundsStrings();
 
@@ -105,7 +105,7 @@ void    SoundEditorWindow::build(std::shared_ptr<GameState> gameState, float ela
             {
                 EventSound::removeEventSound(soundEventIndex);
             }
-            displaySoundProgressLength(soundEvent); // Here, we display a cool progress bar.
+            /*displaySoundProgressLength(soundEvent); // Here, we display a cool progress bar.
             ImGui::Separator();
             if (!SoundManager::getInstance()->isSoundPaused(soundEvent->soundID) &&
                 SoundManager::getInstance()->isSoundPlaying(soundEvent->soundID))
@@ -129,7 +129,7 @@ void    SoundEditorWindow::build(std::shared_ptr<GameState> gameState, float ela
                     else
                         SoundManager::getInstance()->resumeSound(soundEvent->soundID);
                 }
-            }
+            }*/
         }
 
         //  Building the pop-up that lists all the sounds available.
@@ -156,7 +156,7 @@ void    SoundEditorWindow::build(std::shared_ptr<GameState> gameState, float ela
     ImGui::EndGroup();
 }
 
-void                SoundEditorWindow::displaySoundProgressLength(tEventSound* soundEvent)
+/*void                SoundEditorWindow::displaySoundProgressLength(tEventSound* soundEvent)
 {
     tSoundInfos     soundInfos = SoundManager::getInstance()->getSoundInfos(soundEvent->soundID);
     char            buf[32];
