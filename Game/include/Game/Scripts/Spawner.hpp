@@ -4,8 +4,10 @@
 
 #pragma once
 
-#include    <Engine/Core/ScriptFactory.hpp>
 #include <glm/vec3.hpp>
+
+#include <Engine/Core/ScriptFactory.hpp>
+#include <Game/Scripts/Path.hpp>
 
 class GameManager;
 
@@ -47,7 +49,7 @@ public:
     bool checkEndWave();
 
 private:
-    std::vector<glm::vec3> getClosestPath() const;
+    std::vector<glm::vec3> getClosestPath();
     Entity* spawnEntity(const std::string& entityName);
     void spawnEntities(sConfig* waveConfig, float dt);
 
@@ -63,6 +65,8 @@ private:
     sTransformComponent* _transform;
 
     std::vector<glm::vec3> _closestPath;
+
+    Path                    _path;
 };
 
 REGISTER_SCRIPT(Spawner);

@@ -38,18 +38,6 @@ void GameManager::start()
             }
         }
     }
-
-    for (auto& layerPath : layerPaths)
-    {
-        std::vector<glm::vec3> path;
-        for (auto& tileIndex : layerPath)
-        {
-            Entity* tile = this->firstLayerEntities[tileIndex.y][tileIndex.x];
-            sTransformComponent* tileTransform = tile->getComponent<sTransformComponent>();
-            path.push_back(tileTransform->getPos());
-        }
-        this->paths.push_back(path);
-    }
 }
 
 void GameManager::update(float dt)

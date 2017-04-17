@@ -7,6 +7,7 @@
 
 #include <Game/Scripts/Enemy.hpp>
 #include <Game/Scripts/GameManager.hpp>
+#include <Game/Scripts/Path.hpp>
 #include <Game/Scripts/Spawner.hpp>
 #include <Game/Scripts/WaveManager.hpp>
 
@@ -224,29 +225,27 @@ bool    Spawner::checkEndWave()
     return (_currentWaves.size() == 0);
 }
 
-std::vector<glm::vec3> Spawner::getClosestPath() const
+std::vector<glm::vec3> Spawner::getClosestPath()
 {
-    if (!_gameManager ||
-        _gameManager->paths.size() == 0)
+    glm::ivec2 spawnerPos;
+    glm::ivec2 target(8, 0);
+    std::vector<glm::vec3> finalPath;
+
+    spawnerPos.x = static_cast<int>(std::ceil(_transform->getPos().x) / 25.0f);
+    spawnerPos.y = static_cast<int>(_transform->getPos().z / 25.0f);
+    std::vector<glm::ivec2> path = _path.goToTarget(spawnerPos,
+                                                    target,
+                                                    _gameManager->firstLayerPattern,
+                                                    glm::ivec2(_gameManager->mapSizeX, _gameManager->mapSizeZ));
+
+    for (glm::ivec2& pos: path)
     {
-        return (std::vector<glm::vec3>());
+        Entity* tile = _gameManager->firstLayerEntities[pos.x][pos.y];
+        sTransformComponent* tileTransform = tile->getComponent<sTransformComponent>();
+        finalPath.push_back(tileTransform->getPos());
     }
 
-    float closestDistance = 99999999999999.9f;
-    std::vector<glm::vec3> closestPath = _gameManager->paths[0];
-    for (auto path: _gameManager->paths)
-    {
-        if (path.size() == 0)
-            continue;
-        float distance = glm::distance(_transform->getPos(), path[0]);
-        if (distance < closestDistance)
-        {
-            closestPath = path;
-            closestDistance = distance;
-        }
-    }
-
-    return (closestPath);
+    return (finalPath);
 }
 
 Entity*    Spawner::spawnEntity(const std::string& entityName)
