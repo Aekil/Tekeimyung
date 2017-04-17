@@ -81,6 +81,12 @@ void    Renderer::onWindowResize()
     {
         EXCEPT(InternalErrorException, "Failed to setup frame buffer");
     }
+
+    // Update scissor
+    glScissor(0,
+            0,
+            (uint32_t)GameWindow::getInstance()->getBufferWidth(),
+            (uint32_t)GameWindow::getInstance()->getBufferHeight());
 }
 
 Camera* Renderer::getCurrentCamera()
