@@ -76,7 +76,7 @@ bool    SoundManager::errorCheck()
     if (_result != FMOD_OK)
     {
         //if (_result != 30 )//&& _result != 3)
-            //LOG_ERROR("FMOD error! (%d) : %s", _result, FMOD_ErrorString(_result));
+            LOG_ERROR("FMOD error! (%d) : %s", _result, FMOD_ErrorString(_result));
         //std::cerr << "FMOD error! (" << _result << ") " << FMOD_ErrorString(_result) << std::endl;
         return (false);
     }

@@ -20,8 +20,6 @@ public:
     SoundEditorWindow(const glm::vec2& pos = glm::vec2(800, 100), const glm::vec2& size = glm::vec2(450, 450));
     virtual ~SoundEditorWindow();
 
-    //static std::shared_ptr<SoundEditorWindow>   getInstance();
-
     void                        build(std::shared_ptr<GameState> gameState, float elapsedTime) override final;
 
     GENERATE_ID(SoundEditorWindow);
@@ -31,8 +29,7 @@ private:
 
     static std::string          _selectedSoundEventName;
 
-    void                        buildSoundEventDetails(tEventSound* soundEvent, int soundEventIndex);
-    void                        displaySoundProgressLength(tEventSound* soundEvent);
-    //static std::shared_ptr<SoundEditorWindow>   _soundEditorWindow;
+    /*void                        buildSoundEventDetails(tEventSound* soundEvent, int soundEventIndex);
+    void                        displaySoundProgressLength(tEventSound* soundEvent);*/
 };
 
