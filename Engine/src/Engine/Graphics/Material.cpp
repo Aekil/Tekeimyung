@@ -14,6 +14,7 @@ Material::Material(bool isModelMaterial): _isModelMaterial(isModelMaterial)
 {
     _diffuse = {1.0f, 1.0f, 1.0f, 1.0f};
     _ambient = {1.0f, 1.0f, 1.0f, 1.0f};
+    _bloom = {1.0f, 1.0f, 1.0f, 1.0f};
     srcBlend = GL_SRC_ALPHA;
     dstBlend = GL_ONE_MINUS_SRC_ALPHA;
     _textures[Texture::eType::AMBIENT] = nullptr;
@@ -28,8 +29,9 @@ Material::Material(const Material& material)
 {
     _diffuse = material._diffuse;
     _ambient = material._ambient;
-    _faceCamera = material._faceCamera;
     _bloom = material._bloom;
+    _faceCamera = material._faceCamera;
+    _hasBloom = material._hasBloom;
     srcBlend = material.srcBlend;
     dstBlend = material.dstBlend;
     _textures = material._textures;
@@ -42,8 +44,9 @@ Material&   Material::operator=(const Material& material)
 {
     _diffuse = material._diffuse;
     _ambient = material._ambient;
-    _faceCamera = material._faceCamera;
     _bloom = material._bloom;
+    _faceCamera = material._faceCamera;
+    _hasBloom = material._hasBloom;
     srcBlend = material.srcBlend;
     dstBlend = material.dstBlend;
     _textures = material._textures;
@@ -115,6 +118,7 @@ void    Material::bind()
     {
         _data.ambient = _ambient;
         _data.diffuse = _diffuse;
+        _data.bloom = _bloom;
 
         _ubo.update(&_data, sizeof(sMaterialData));
         _needUpdate = false;
@@ -132,12 +136,9 @@ void    Material::bind()
     if (options & eOption::TEXTURE_DIFFUSE)
         _textures[Texture::eType::DIFFUSE]->bind(GL_TEXTURE1);
     if (options & eOption::TEXTURE_BLOOM)
-    {
         _textures[Texture::eType::BLOOM]->bind(GL_TEXTURE2);
-
-        if (_textures[Texture::eType::BLOOM_ALPHA] != nullptr)
-            _textures[Texture::eType::BLOOM_ALPHA]->bind(GL_TEXTURE3);
-    }
+    if (options & eOption::TEXTURE_BLOOM_ALPHA)
+        _textures[Texture::eType::BLOOM_ALPHA]->bind(GL_TEXTURE3);
 }
 
 bool    Material::isModelMaterial() const
@@ -166,8 +167,9 @@ bool        Material::loadFromFile(const std::string& fileName)
 
     _ambient = parsed.getColor4f("ambient", {0.3f, 0.3f, 0.3f, 1.0f});
     _diffuse = parsed.getColor4f("diffuse", {1.0f, 1.0f, 1.0f, 1.0f});
+    _bloom = parsed.getColor4f("bloom_color", {1.0f, 1.0f, 1.0f, 1.0f});
     _faceCamera = parsed.getBool("face_camera", false);
-    _bloom = parsed.getBool("bloom", false);
+    _hasBloom = parsed.getBool("has_bloom", false);
     transparent = parsed.getBool("transparent", false);
     wireframe = parsed.getBool("wireframe", false);
     srcBlend = Material::getBlendEnumFromString(parsed.getString("src_blend", "GL_SRC_ALPHA"));
@@ -252,6 +254,11 @@ const glm::vec4&    Material::getDiffuse() const
     return (_diffuse);
 }
 
+const glm::vec4&    Material::getBloom() const
+{
+    return (_bloom);
+}
+
 bool     Material::isFacingCamera() const
 {
     return (_faceCamera);
@@ -259,7 +266,7 @@ bool     Material::isFacingCamera() const
 
 bool     Material::hasBloom() const
 {
-    return (_bloom);
+    return (_hasBloom);
 }
 
 void    Material::setAmbient(const glm::vec4& ambient)
@@ -274,6 +281,12 @@ void    Material::setDiffuse(const glm::vec4& diffuse)
     needUpdate();
 }
 
+void    Material::setBloom(const glm::vec4& bloom)
+{
+    _bloom = bloom;
+    needUpdate();
+}
+
 void    Material::isFacingCamera(bool faceCamera)
 {
     _faceCamera = faceCamera;
@@ -282,7 +295,7 @@ void    Material::isFacingCamera(bool faceCamera)
 
 void    Material::hasBloom(bool bloom)
 {
-    _bloom = bloom;
+    _hasBloom = bloom;
     needUpdate();
 }
 
@@ -299,7 +312,9 @@ int     Material::getOptions()
             _options |= eOption::TEXTURE_DIFFUSE;
         if (_textures[Texture::eType::BLOOM] != nullptr)
             _options |= eOption::TEXTURE_BLOOM;
-        if (_bloom)
+        if (_textures[Texture::eType::BLOOM_ALPHA] != nullptr)
+            _options |= eOption::TEXTURE_BLOOM_ALPHA;
+        if (_hasBloom)
             _options |= eOption::BLOOM;
 
         _optionsFlagDirty = false;

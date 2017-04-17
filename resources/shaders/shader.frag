@@ -17,6 +17,7 @@ layout (std140, binding = 0) uniform materialUniformBlock
 {
     vec4    ambient;
     vec4    diffuse;
+    vec4    bloom;
 } material;
 
 
@@ -78,14 +79,24 @@ void main()
     outFragColor = color;
 
     #ifdef BLOOM
+        vec4 brightColor = vec4(0.0);
+        // Use texture for bloom
         #ifdef TEXTURE_BLOOM
             vec4 bloomTextureColor = texture(BloomTexture, fragTexCoords);
+
+            brightColor = bloomTextureColor;
+        // Use color for bloom
+        #else
+            brightColor = material.bloom;
+        #endif
+
+        #ifdef TEXTURE_BLOOM_ALPHA
             vec4 bloomTextureAlpha = texture(BloomTextureAlpha, fragTexCoords);
 
-            outBrightColor = bloomTextureColor * bloomTextureAlpha;
-        #else
-            outBrightColor = outFragColor;
+            brightColor = brightColor * bloomTextureAlpha;
         #endif
+
+        outBrightColor = brightColor;
     #else
         outBrightColor = vec4(0.0f);
     #endif

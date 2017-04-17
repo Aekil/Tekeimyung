@@ -98,6 +98,18 @@ void    MaterialDebugWindow::displayMaterialsProperties()
             }
         }
 
+        // Bloom color
+        {
+            if (_selectedMaterial->hasBloom())
+            {
+                glm::vec4 bloom = _selectedMaterial->getBloom();
+                if (ImGui::ColorEdit4("Bloom", glm::value_ptr(bloom)))
+                {
+                    _selectedMaterial->setBloom(bloom);
+                }
+            }
+        }
+
         // Ambient texture
         {
             Texture* texture = _selectedMaterial->getTexture(Texture::eType::AMBIENT);
@@ -289,13 +301,15 @@ void    MaterialDebugWindow::saveMaterials()
 
             json.setColor4f("ambient", material->getAmbient());
             json.setColor4f("diffuse", material->getDiffuse());
+            json.setColor4f("bloom_color", material->getBloom());
             json.setBool("face_camera", material->isFacingCamera());
-            json.setBool("bloom", material->hasBloom());
+            json.setBool("has_bloom", material->hasBloom());
             json.setBool("transparent", material->transparent);
             json.setBool("wireframe", material->wireframe);
             json.setString("src_blend", Material::getBlendStringFromEnum(material->srcBlend));
             json.setString("dst_blend", Material::getBlendStringFromEnum(material->dstBlend));
 
+            // Ambient texture
             if (material->getTexture(Texture::eType::AMBIENT))
             {
                 texturesJson.setString("ambient", material->getTexture(Texture::eType::AMBIENT)->getPath());
@@ -304,6 +318,8 @@ void    MaterialDebugWindow::saveMaterials()
             {
                 texturesJson.setString("ambient", "");
             }
+
+            // Diffuse texture
             if (material->getTexture(Texture::eType::DIFFUSE))
             {
                 texturesJson.setString("diffuse", material->getTexture(Texture::eType::DIFFUSE)->getPath());
@@ -312,6 +328,8 @@ void    MaterialDebugWindow::saveMaterials()
             {
                 texturesJson.setString("diffuse", "");
             }
+
+            // Bloom texture
             if (material->getTexture(Texture::eType::BLOOM))
             {
                 texturesJson.setString("bloom", material->getTexture(Texture::eType::BLOOM)->getPath());
@@ -320,6 +338,8 @@ void    MaterialDebugWindow::saveMaterials()
             {
                 texturesJson.setString("bloom", "");
             }
+
+            // Bloom texture alpha
             if (material->getTexture(Texture::eType::BLOOM_ALPHA))
             {
                 texturesJson.setString("bloom_alpha", material->getTexture(Texture::eType::BLOOM_ALPHA)->getPath());
