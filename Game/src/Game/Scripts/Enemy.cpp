@@ -88,11 +88,11 @@ void Enemy::death()
     player->getComponent<sScriptComponent>()->getScript<Player>("Player")->addExperience(this->_experienceEarned);
 
 #if (ENABLE_SOUND)
-    if (_dyingSound->soundID != -1 /*&& !SoundManager::getInstance()->isSoundPlaying(_dyingSound->soundID)*/)
+    if (_dyingSound->soundID != -1)
     {
         SoundManager::getInstance()->playSound(_dyingSound->soundID);
     }
-    if (_earningCoins->soundID != -1 /*&& !SoundManager::getInstance()->isSoundPlaying(_earningCoins->soundID)*/)
+    if (_earningCoins->soundID != -1)
     {
         SoundManager::getInstance()->playSound(_earningCoins->soundID);
     }
@@ -104,7 +104,7 @@ void Enemy::remove()
 {
     this->Destroy();
 #if (ENABLE_SOUND) // can be put in Castle.cpp script (after calling this function)
-    if (_hitCastle->soundID != -1 /*&& !SoundManager::getInstance()->isSoundPlaying(_hitCastle->soundID)*/)
+    if (_hitCastle->soundID != -1)
     {
         SoundManager::getInstance()->playSound(_hitCastle->soundID);
     }
