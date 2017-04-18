@@ -23,6 +23,7 @@
     PROCESS(CIRCLE)\
     PROCESS(CONE)\
     PROCESS(TRAPEZE)\
+    PROCESS(CYLINDER)\
 
 class Geometry: public Model {
 public:
