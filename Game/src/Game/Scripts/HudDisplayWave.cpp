@@ -31,7 +31,7 @@ void HudDisplayWave::update(float dt)
         int                 nbWaves = waveManager->getNbWaves();
         int                 currentWave = waveManager->getCurrentWave();
 
-        sprintf_s(waveText, "%d/%d waves", currentWave + 1, nbWaves);
+        sprintf_s(waveText, "%d/%d waves", currentWave, nbWaves);
         textComp->text.setContent(waveText);
     }
 }

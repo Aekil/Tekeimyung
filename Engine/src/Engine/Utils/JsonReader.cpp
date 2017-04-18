@@ -17,14 +17,14 @@ bool    JsonReader::parse(const std::string& fileName, JsonValue& json)
 {
     LOG_INFO("Parsing json \"%s\"", fileName.c_str());
 
-    Json::Reader jsonReader;
-    Json::Value parsed;
+    Json::Reader    jsonReader;
+    Json::Value     parsed;
+    std::string     document;
 
-    std::string document = ResourceManager::getInstance()->getOrLoadResource<File>(fileName)->getContent();
-
+    document = ResourceManager::getInstance()->getOrLoadResource<File>(fileName)->getContent();
     if (!jsonReader.parse(document, parsed))
     {
-        std::cout << jsonReader.getFormattedErrorMessages() << std::endl;
+        LOG_ERROR(jsonReader.getFormattedErrorMessages().c_str());
         return (false);
     }
 

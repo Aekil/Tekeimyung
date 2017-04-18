@@ -13,50 +13,61 @@
 
 void Spawner::start()
 {
-    auto em = EntityFactory::getBindedEntityManager();
-    _transform = this->getComponent<sTransformComponent>();
+    auto    em = EntityFactory::getBindedEntityManager();
+
+    this->_transform = this->getComponent<sTransformComponent>();
 
     // Init closest path
     {
         Entity* gameManager = em->getEntityByTag("GameManager");
         if (!gameManager)
         {
-            LOG_WARN("Can't find entity with GameManager tag");
+            LOG_WARN("Could not find entity with tag \"%s\"", "GameManager");
             return;
         }
 
-        auto scriptComponent = gameManager->getComponent<sScriptComponent>();
+        auto    scriptComponent = gameManager->getComponent<sScriptComponent>();
 
         if (!scriptComponent)
         {
             LOG_WARN("Can't find scriptComponent on GameManager entity");
             return;
         }
-
-        _gameManager = scriptComponent->getScript<GameManager>("GameManager");
-        updateClosestPath();
+		
+        this->_gameManager = scriptComponent->getScript<GameManager>("GameManager");
+        this->updateClosestPath();
     }
 }
 
-void Spawner::update(float dt)
+/**
+    This function updates the Spawner every tick.
+    It updates each config currently hooked to the Spawner
+    and checks if all the configs have finished spawning their entities.
+
+    If yes, the Spawner is set as inactive and can no longer trigger the configs.
+    If no, the Spawner continues to update its configs.
+*/
+void    Spawner::update(float deltaTime)
 {
-    auto& it = _currentWaves.begin();
-    for (it; it != _currentWaves.end();)
-    {
-        sConfig* waveConfig = *it;
 
-        waveConfig->updateSpawnedEntities();
-        spawnEntities(waveConfig, dt);
+        auto&   it = this->_currentConfigs.begin();
 
-        if ((waveConfig->spawnedEntities.size() == 0 && // All spawned entities are dead
-            waveConfig->allEntitiesSpawned()) ||
-            waveConfig->spawnableEntities.size() == 0) // The spawner has not spawnable entities
+        for (it; it != this->_currentConfigs.end(); ++it)
+        {
+            Spawner::sConfig*   waveConfig = *it;
+
+            waveConfig->updateSpawnedEntities();
+            if (this->isActive() == true)
             {
-                it = _currentWaves.erase(it);
+                bool    hasFinished = true;
+                if (waveConfig->areAllEntitiesSpawned() == false)
+                {
+                    this->spawnEntitiesFromConfig(waveConfig, deltaTime);
+                    hasFinished = false;
+                }
+                this->setActive(!hasFinished);
             }
-        else
-            ++it;
-    }
+        }
 }
 
 bool Spawner::updateEditor()
@@ -207,23 +218,40 @@ void    Spawner::loadFromJson(const JsonValue& json)
     }
 }
 
-void    Spawner::startWave(uint32_t waveNb)
+bool    Spawner::isActive() const
 {
-    for (auto& config: _configs)
+    return (this->_active);
+}
+
+void    Spawner::setActive(bool active)
+{
+    this->_active = active;
+}
+
+/**
+    The Spawner retrieves all the configs associated to the currentWave,
+    then sets itself active.
+*/
+void    Spawner::triggerSpawnerConfigs(uint32_t currentWave)
+{
+    for (auto& config : _configs)
     {
         // TODO: Handle multiple wave configs for the same wave
-        if (config.associatedWave == waveNb)
+        if (config.associatedWave == currentWave)
         {
-            _currentWaves.push_back(&config);
+            this->_currentConfigs.push_back(&config);
             break;
         }
     }
+
+    this->setActive(true);
 }
 
-bool    Spawner::checkEndWave()
+void        Spawner::clearSpawnerConfigs()
 {
-    return (_currentWaves.size() == 0);
+    this->_currentConfigs.clear();
 }
+
 
 void    Spawner::updateClosestPath()
 {
@@ -237,22 +265,39 @@ void    Spawner::updateClosestPath()
     updateEnemiesPaths();
 }
 
+bool        Spawner::isReadyForNextWave()
+{
+    auto&   it = this->_currentConfigs.begin();
+
+    for (it; it != this->_currentConfigs.end(); ++it)
+    {
+        Spawner::sConfig*   waveConfig = *it;
+
+        if (waveConfig->areAllSpawnedEntitiesDead() == false)
+            return (false);
+    }
+
+    return (this->isActive() == false);
+}
+
 void    Spawner::setEnemyPath(Entity* enemy, const std::vector<glm::vec3>& path)
 {
     auto scriptComponent = enemy->getComponent<sScriptComponent>();
+
     if (!scriptComponent)
     {
         LOG_WARN("Can't find scriptComponent on entity");
         return;
     }
 
-    Enemy* enemyScript = scriptComponent->getScript<Enemy>("Enemy");
+    Enemy*  enemyScript = scriptComponent->getScript<Enemy>("Enemy");
 
     if (!enemyScript)
     {
         LOG_WARN("Can't find Enemy script on entity");
         return;
     }
+	
     enemyScript->setPath(path);
 }
 
@@ -278,7 +323,7 @@ void    Spawner::updateEnemiesPaths()
 {
     glm::ivec2 target(CASTLE_POS);
     auto em = EntityFactory::getBindedEntityManager();
-    for (sConfig* waveConfig: _currentWaves)
+    for (sConfig* waveConfig: _currentConfigs)
     {
         for (uint32_t entityId: waveConfig->spawnedEntities)
         {
@@ -308,51 +353,62 @@ Entity*    Spawner::spawnEntity(const std::string& entityName)
     return (enemy);
 }
 
-void    Spawner::spawnEntities(sConfig* waveConfig, float dt)
+void    Spawner::spawnEntitiesFromConfig(sConfig* waveConfig, float dt)
 {
-    for (auto& entity: waveConfig->spawnableEntities)
+    for (Spawner::sConfig::sEntity& entity : waveConfig->spawnableEntities)
     {
         entity.elapsedTime += dt;
-        if ((/*!entity.spawnedNb || */entity.elapsedTime >= entity.timeUntilNextSpawn) && // First spawn or timeUntilNextSpawn
-            entity.spawnedNb < entity.spawnAmount)
+        if (entity.amountSpawned < entity.spawnAmount &&
+            entity.elapsedTime >= entity.timeUntilNextSpawn)
         {
-            entity.elapsedTime = 0.0f;
-            entity.spawnedNb++;
-            Entity* spawnedEntity = spawnEntity(entity.name);
-            if (!spawnedEntity)
+            Entity* spawnedEntity = this->spawnEntity(entity.name);
+
+            if (spawnedEntity != nullptr)
             {
-                LOG_ERROR("Cannot spawn entity");
-                continue;
+                entity.elapsedTime = 0.0f;
+                entity.amountSpawned++;
             }
+            else
+                LOG_ERROR("Could not spawn entity from config \"%s\"", entity.name);
+
             waveConfig->spawnedEntities.push_back(spawnedEntity->id);
         }
     }
 }
 
+/**
+    This function updates the 'spawned entities' pool of a config by
+    removing the entities' ids by checking if they still exist in
+    the EntityManager or not.
+*/
 void    Spawner::sConfig::updateSpawnedEntities()
 {
-    auto em = EntityFactory::getBindedEntityManager();
-    auto& it = spawnedEntities.begin();
+    auto    em = EntityFactory::getBindedEntityManager();
+    auto&   it = spawnedEntities.begin();
+
     for (it; it != spawnedEntities.end();)
     {
-        uint32_t entityId = *it;
-        // The entity of the wave config is dead
-        if (!em->getEntity(entityId))
-        {
+        uint32_t    entityId = *it;
+
+        //  The entity of the wave config is dead
+        if (em->getEntity(entityId) == nullptr)
             it = spawnedEntities.erase(it);
-        }
         else
             ++it;
     }
 }
 
-bool Spawner::sConfig::allEntitiesSpawned()
+bool    Spawner::sConfig::areAllEntitiesSpawned()
 {
-    bool allSpawned = true;
-    for (auto& entity: spawnableEntities)
+    for (auto& entity : spawnableEntities)
     {
-        if (entity.spawnedNb != entity.spawnAmount)
-            allSpawned = false;
+        if (entity.amountSpawned < entity.spawnAmount)
+            return (false);
     }
-    return (allSpawned);
+    return (true);
+}
+
+bool    Spawner::sConfig::areAllSpawnedEntitiesDead()
+{
+    return (this->areAllEntitiesSpawned() && this->spawnedEntities.size() == 0);
 }
