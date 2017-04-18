@@ -86,6 +86,19 @@ void Build::updateSpawnersPaths(const glm::ivec2& tilePos)
         LOG_INFO("UPDATE SPAWNERS PATHS");
     }
 
+    for (int x = 0; x < _gameManager->mapSizeX; x++)
+    {
+        for (int z = 0; z < _gameManager->mapSizeZ; z++)
+        {
+            Entity* tile = _gameManager->firstLayerEntities[x][z];
+            if (tile)
+            {
+                sRenderComponent* tileRender = tile->getComponent<sRenderComponent>();
+                tileRender->color = glm::vec4(1.0f);
+            }
+        }
+    }
+
     // Clear spawners paths map before update
     std::memset(_gameManager->spawnersPaths,
                 0,
