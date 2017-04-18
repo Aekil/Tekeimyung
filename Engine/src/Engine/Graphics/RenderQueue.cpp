@@ -11,13 +11,14 @@ void    RenderQueue::addModel(ModelInstance* modelInstance,
                                 uint32_t uboOffset,
                                 uint32_t uboSize,
                                 uint32_t instancesNb,
-                                bool dynamic)
+                                bool dynamic,
+                                bool hideDynamic)
 {
     auto& meshsInstances = modelInstance->getMeshsInstances();
 
     for (auto& meshInstance: meshsInstances)
     {
-        addMesh(meshInstance.get(), ubo, uboOffset, uboSize, instancesNb, dynamic);
+        addMesh(meshInstance.get(), ubo, uboOffset, uboSize, instancesNb, dynamic, hideDynamic);
     }
 }
 
@@ -26,12 +27,13 @@ void    RenderQueue::addMesh(MeshInstance* meshInstance,
                                 uint32_t uboOffset,
                                 uint32_t uboSize,
                                 uint32_t instancesNb,
-                                bool dynamic)
+                                bool dynamic,
+                                bool hideDynamic)
 {
     Material *material = meshInstance->getMaterial();
     ASSERT(material != nullptr, "A mesh should have a material");
 
-    sRenderableMesh renderableMesh = { meshInstance, ubo, uboOffset, uboSize, instancesNb, 0, dynamic };
+    sRenderableMesh renderableMesh = { meshInstance, ubo, uboOffset, uboSize, instancesNb, 0, dynamic, hideDynamic };
     if (material->transparent)
     {
         CHECK_QUEUE_NOT_FULL(_transparentMeshsNb);
@@ -60,7 +62,7 @@ void    RenderQueue::addUIModel(ModelInstance* modelInstance,
         Material *material = meshInstance->getMaterial();
         ASSERT(material != nullptr, "A mesh should have a material");
 
-        sRenderableMesh renderableMesh = { meshInstance.get(), ubo, uboOffset, uboSize, instancesNb, layer, false };
+        sRenderableMesh renderableMesh = { meshInstance.get(), ubo, uboOffset, uboSize, instancesNb, layer, false, false };
         if (material->transparent)
         {
             CHECK_QUEUE_NOT_FULL(_uiTransparentMeshsNb);

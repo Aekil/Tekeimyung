@@ -84,7 +84,7 @@ void    RenderingSystem::addCollidersToRenderQueue(Entity* entity, sTransformCom
         BufferPool::SubBuffer* buffer = boxCollider->box->getBuffer(_bufferPool.get());
         updateModelBuffer(buffer, boxTransform, glm::vec4(0.87f, 1.0f, 1.0f, 0.1f));
 
-        _renderQueue.addModel(boxCollider->box.get(), buffer->ubo, buffer->offset, buffer->size);
+        _renderQueue.addModel(boxCollider->box.get(), buffer->ubo, buffer->offset, buffer->size, 0, false, true);
     }
     if (sphereCollider && sphereCollider->display &&
         (LevelEntitiesDebugWindow::getSelectedEntityId() == entity->id || _displayAllColliders))
@@ -107,7 +107,7 @@ void    RenderingSystem::addCollidersToRenderQueue(Entity* entity, sTransformCom
         BufferPool::SubBuffer* buffer = sphereCollider->sphere->getBuffer(_bufferPool.get());
         updateModelBuffer(buffer, sphereTransform, glm::vec4(0.87f, 1.0f, 1.0f, 0.1f));
 
-        _renderQueue.addModel(sphereCollider->sphere.get(), buffer->ubo, buffer->offset, buffer->size);
+        _renderQueue.addModel(sphereCollider->sphere.get(), buffer->ubo, buffer->offset, buffer->size, 0, false, true);
     }
 }
 

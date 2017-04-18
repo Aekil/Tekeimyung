@@ -281,7 +281,7 @@ void    Renderer::transparencyPass(Camera* camera, RenderQueue& renderQueue)
                 Mesh* mesh = renderableMesh.meshInstance->getMesh();
 
                 // Render only static objects
-                if (renderableMesh.dynamic)
+                if (renderableMesh.dynamic || renderableMesh.hideDynamic)
                     continue;
 
                 // Bind buffer
@@ -320,7 +320,7 @@ void    Renderer::transparencyPass(Camera* camera, RenderQueue& renderQueue)
                 Mesh* mesh = renderableMesh.meshInstance->getMesh();
 
                 // Render only static objects
-                if (renderableMesh.dynamic)
+                if (renderableMesh.dynamic || renderableMesh.hideDynamic)
                     continue;
 
                 // Bind buffer
