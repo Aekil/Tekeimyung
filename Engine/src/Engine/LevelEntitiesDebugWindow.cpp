@@ -60,8 +60,8 @@ void    LevelEntitiesDebugWindow::build(std::shared_ptr<GameState> gameState, fl
     // The entity has been deleted or none is selected
     if (!selectedEntity)
     {
-        selectedEntity = em->getEntities().front();
-        _selectedEntityId = selectedEntity->id;
+        ImGui::End();
+        return;
     }
 
     displayEntityDebug(em, selectedEntity);
