@@ -39,7 +39,7 @@ void        WaveManager::update(float dt)
             if (this->_progressBar.currentProgress <= 0.0f)
             {
                 this->_progressBar.display(false);
-                this->updatePlayerState(true, 1);
+                //this->updatePlayerState(true, 1);
                 this->startWave(this->_currentWave + 1);
                 this->_state = eState::ONGOING_WAVE;
                 LOG_DEBUG("WaveManager's state: %s", "ONGOING_WAVE");
@@ -49,7 +49,7 @@ void        WaveManager::update(float dt)
             if (this->checkBoardState(dt) == true)
             {
                 this->_state = eState::PENDING_WAVE;
-                this->updatePlayerState(false, 0);
+                //this->updatePlayerState(false, 0);
                 this->_progressBar.currentProgress = this->_progressBar.maxProgress;
                 this->_progressBar.display(true);
                 LOG_DEBUG("WaveManager's state: %s", "PENDING_WAVE");
@@ -177,42 +177,42 @@ void        WaveManager::end()
     }
 }
 
-void        WaveManager::updatePlayerState(bool teleport, unsigned int layer)
-{
-    auto    em = EntityFactory::getBindedEntityManager();
-    Entity* player = em->getEntityByTag("Player");
-
-    if (!player)
-    {
-        LOG_WARN("Could not find entity with tag \"%s\"", "Player");
-        return;
-    }
-
-    if (teleport == true)
-    {
-        sTransformComponent*    playerTransform = player->getComponent<sTransformComponent>();
-
-        playerTransform->setPos({ 96.0f, 22.5f, 116.0f });
-    }
-
-    auto    scriptComponent = player->getComponent<sScriptComponent>();
-
-    if (!scriptComponent)
-    {
-        LOG_WARN("Could not find sScriptComponent on entity \"%s\"", player->getComponent<sNameComponent>()->value.c_str());
-        return;
-    }
-
-    Build*  buildScript = scriptComponent->getScript<Build>("Build");
-
-    if (buildScript == nullptr)
-    {
-        LOG_WARN("Could not find \"Build\" script on entity \"%s\"", player->getComponent<sNameComponent>()->value.c_str());
-        return;
-    }
-    
-    buildScript->setLayer(layer);
-}
+//void        WaveManager::updatePlayerState(bool teleport, unsigned int layer)
+//{
+//    auto    em = EntityFactory::getBindedEntityManager();
+//    Entity* player = em->getEntityByTag("Player");
+//
+//    if (!player)
+//    {
+//        LOG_WARN("Could not find entity with tag \"%s\"", "Player");
+//        return;
+//    }
+//
+//    if (teleport == true)
+//    {
+//        sTransformComponent*    playerTransform = player->getComponent<sTransformComponent>();
+//
+//        playerTransform->setPos({ 96.0f, 22.5f, 116.0f });
+//    }
+//
+//    auto    scriptComponent = player->getComponent<sScriptComponent>();
+//
+//    if (!scriptComponent)
+//    {
+//        LOG_WARN("Could not find sScriptComponent on entity \"%s\"", player->getComponent<sNameComponent>()->value.c_str());
+//        return;
+//    }
+//
+//    Build*  buildScript = scriptComponent->getScript<Build>("Build");
+//
+//    if (buildScript == nullptr)
+//    {
+//        LOG_WARN("Could not find \"Build\" script on entity \"%s\"", player->getComponent<sNameComponent>()->value.c_str());
+//        return;
+//    }
+//    
+//    buildScript->setLayer(layer);
+//}
 
 void    WaveManager::handleEndWave()
 {

@@ -323,7 +323,7 @@ void    Spawner::updateEnemiesPaths()
 {
     glm::ivec2 target(CASTLE_POS);
     auto em = EntityFactory::getBindedEntityManager();
-    for (sConfig* waveConfig: _currentWaves)
+    for (sConfig* waveConfig: _currentConfigs)
     {
         for (uint32_t entityId: waveConfig->spawnedEntities)
         {

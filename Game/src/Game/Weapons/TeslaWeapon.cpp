@@ -15,9 +15,9 @@
 
 TeslaWeapon::TeslaWeapon()
 {
-    this->_attributes["FireRate"] = new Attribute(0.1f);
+    this->_attributes["FireRate"] = new Attribute(0.42f);
     this->_attributes["Ammo"] = new Attribute(100.0f);
-    this->_attributes["Damage"] = new Attribute(60.0f);
+    this->_attributes["Damage"] = new Attribute(12.0f);
     this->_attributes["MaxRange"] = new Attribute(35.0f);
     this->_attributes["HitAmount"] = new Attribute(2);
     this->_attributes["StunChance"] = new Attribute(0.0f);
@@ -87,6 +87,7 @@ void    TeslaWeapon::spreadLightning(Entity* hitEntity, unsigned int hitLeft, st
 
         float   nearestDistance = std::numeric_limits<float>::max();
         Entity* nearestEntity = nullptr;
+        Enemy*  nearestEnemy = nullptr;
 
         for (Entity* entity : enemies)
         {
@@ -116,6 +117,7 @@ void    TeslaWeapon::spreadLightning(Entity* hitEntity, unsigned int hitLeft, st
                                 {
                                     nearestDistance = distance;
                                     nearestEntity = entity;
+                                    nearestEnemy = enemyScript;
                                 }
                             }
                         }
@@ -127,6 +129,7 @@ void    TeslaWeapon::spreadLightning(Entity* hitEntity, unsigned int hitLeft, st
         if (nearestEntity != nullptr)
         {
             entitiesAlreadyHit.push_back(nearestEntity);
+            nearestEnemy->takeDamage(this->_attributes["Damage"]->getFinalValue());
             this->triggerLightningEffect(nearestEntity);
             this->spreadLightning(nearestEntity, hitLeft - 1, entitiesAlreadyHit);
         }
