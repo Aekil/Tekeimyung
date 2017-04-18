@@ -9,7 +9,6 @@
                "name" : "GameManager"
             },
             {
-               "map_parts" : [],
                "name" : "WaveManager",
                "waves_max" : 12
             },
