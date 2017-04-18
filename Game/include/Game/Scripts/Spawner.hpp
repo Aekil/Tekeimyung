@@ -9,6 +9,8 @@
 #include <Engine/Core/ScriptFactory.hpp>
 #include <Game/Scripts/Path.hpp>
 
+#define CASTLE_POS 8, 0
+
 class GameManager;
 
 class       Spawner final : public BaseScript
@@ -47,9 +49,12 @@ public:
 
     void startWave(uint32_t waveNb);
     bool checkEndWave();
+    void updateClosestPath();
 
 private:
-    std::vector<glm::vec3> getClosestPath();
+    void setEnemyPath(Entity* enemy, const std::vector<glm::vec3>& path);
+    void getPath(const glm::ivec2& from, const glm::ivec2& to, std::vector<glm::vec3>& savedPath);
+    void updateEnemiesPaths();
     Entity* spawnEntity(const std::string& entityName);
     void spawnEntities(sConfig* waveConfig, float dt);
 

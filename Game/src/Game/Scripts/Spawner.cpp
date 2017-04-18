@@ -34,7 +34,7 @@ void Spawner::start()
         }
 
         _gameManager = scriptComponent->getScript<GameManager>("GameManager");
-        _closestPath = getClosestPath();
+        updateClosestPath();
     }
 }
 
@@ -225,49 +225,85 @@ bool    Spawner::checkEndWave()
     return (_currentWaves.size() == 0);
 }
 
-std::vector<glm::vec3> Spawner::getClosestPath()
+void    Spawner::updateClosestPath()
 {
     glm::ivec2 spawnerPos;
-    glm::ivec2 target(8, 0);
-    std::vector<glm::vec3> finalPath;
+    glm::ivec2 target(CASTLE_POS);
 
     spawnerPos.x = static_cast<int>(std::ceil(_transform->getPos().x) / 25.0f);
     spawnerPos.y = static_cast<int>(_transform->getPos().z / 25.0f);
-    std::vector<glm::ivec2> path = _path.goToTarget(spawnerPos,
-                                                    target,
-                                                    _gameManager->firstLayerPattern,
-                                                    glm::ivec2(_gameManager->mapSizeX, _gameManager->mapSizeZ));
+    getPath(spawnerPos, target, _closestPath);
 
-    for (glm::ivec2& pos: path)
-    {
-        Entity* tile = _gameManager->firstLayerEntities[pos.x][pos.y];
-        sTransformComponent* tileTransform = tile->getComponent<sTransformComponent>();
-        finalPath.push_back(tileTransform->getPos());
-    }
-
-    return (finalPath);
+    updateEnemiesPaths();
 }
 
-Entity*    Spawner::spawnEntity(const std::string& entityName)
+void    Spawner::setEnemyPath(Entity* enemy, const std::vector<glm::vec3>& path)
 {
-    auto& pos = _transform->getPos();
-    Entity* enemy = this->Instantiate(entityName, glm::vec3(pos.x, 18.75, pos.z));
     auto scriptComponent = enemy->getComponent<sScriptComponent>();
-
     if (!scriptComponent)
     {
-        LOG_WARN("Can't find scriptComponent on %s entity", entityName.c_str());
-        return (enemy);
+        LOG_WARN("Can't find scriptComponent on entity");
+        return;
     }
 
     Enemy* enemyScript = scriptComponent->getScript<Enemy>("Enemy");
 
     if (!enemyScript)
     {
-        LOG_WARN("Can't find Enemy script on %s entity", entityName.c_str());
-        return (enemy);
+        LOG_WARN("Can't find Enemy script on entity");
+        return;
     }
-    enemyScript->setPath(_closestPath);
+    enemyScript->setPath(path);
+}
+
+void    Spawner::getPath(const glm::ivec2& from, const glm::ivec2& to, std::vector<glm::vec3>& savedPath)
+{
+    std::vector<glm::ivec2> path = _path.goToTarget(from,
+                                                    to,
+                                                    _gameManager->firstLayerPattern,
+                                                    glm::ivec2(_gameManager->mapSizeX, _gameManager->mapSizeZ));
+
+    savedPath.clear();
+    for (glm::ivec2& pos: path)
+    {
+        Entity* tile = _gameManager->firstLayerEntities[pos.x][pos.y];
+        sTransformComponent* tileTransform = tile->getComponent<sTransformComponent>();
+        savedPath.push_back(tileTransform->getPos());
+
+        _gameManager->spawnersPaths[pos.x][pos.y] = 1;
+    }
+}
+
+void    Spawner::updateEnemiesPaths()
+{
+    glm::ivec2 target(CASTLE_POS);
+    auto em = EntityFactory::getBindedEntityManager();
+    for (sConfig* waveConfig: _currentWaves)
+    {
+        for (uint32_t entityId: waveConfig->spawnedEntities)
+        {
+            Entity* entity = em->getEntity(entityId);
+            if (!entity)
+            {
+                continue;
+            }
+            glm::ivec2 entityPos;
+            sTransformComponent* entityTransform = entity->getComponent<sTransformComponent>();
+            std::vector<glm::vec3> enemyPath;
+            entityPos.x = static_cast<int>(std::ceil(entityTransform->getPos().x) / 25.0f);
+            entityPos.y = static_cast<int>(entityTransform->getPos().z / 25.0f);
+            getPath(entityPos, target, enemyPath);
+            setEnemyPath(entity, enemyPath);
+        }
+    }
+}
+
+Entity*    Spawner::spawnEntity(const std::string& entityName)
+{
+    auto& pos = _transform->getPos();
+    Entity* enemy = this->Instantiate(entityName, glm::vec3(pos.x, 18.75, pos.z));
+
+    setEnemyPath(enemy, _closestPath);
 
     return (enemy);
 }

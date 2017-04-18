@@ -3,6 +3,11 @@
 
 #define LAYER_NUMBER 10
 
+GameManager::GameManager()
+{
+    std::memset(spawnersPaths, 0, sizeof(spawnersPaths[0][0]) * mapSizeX * mapSizeZ);
+}
+
 void GameManager::start()
 {
     for (int x = 0; x < this->mapSizeX; x++)

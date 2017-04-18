@@ -16,7 +16,7 @@
 class GameManager final : public BaseScript
 {
 public:
-    GameManager() = default;
+    GameManager();
     ~GameManager() = default;
 
     int mapSizeZ = 38;
@@ -53,6 +53,8 @@ public:
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 21, 21, 21, 21, 21, 21, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 21, 21, 22, 22, 22, 21, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
     };
+
+    char spawnersPaths[29][38];
 
     Entity* firstLayerEntities[29][38];
 
