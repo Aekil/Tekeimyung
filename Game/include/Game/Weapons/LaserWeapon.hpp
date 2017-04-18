@@ -13,7 +13,7 @@ public:
     ~LaserWeapon() = default;
 
 public:
-    void fire(sTransformComponent* playerTransform, sRenderComponent* playerRender, glm::vec3 playerDirection) override final;
-    void reload() override final;
-    void upgradeByLevel() override final;
+    void    fire(Player* player, sTransformComponent* playerTransform, sRenderComponent* playerRender, glm::vec3 playerDirection) override final;
+    void    reload() override final;
+    void    upgradeByLevel() override final;
 };

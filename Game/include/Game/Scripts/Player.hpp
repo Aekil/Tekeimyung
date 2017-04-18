@@ -12,8 +12,8 @@
 
 #include <Game/Scripts/Health.hpp>
 #include <Game/Attibutes/Attribute.hpp>
-#include <Game/Weapons/IWeapon.hpp>
 
+class IWeapon;
 class GameManager;
 class WaveManager;
 

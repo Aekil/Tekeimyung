@@ -4,9 +4,7 @@
 
 #include <Game/Scripts/LifeTime.hpp>
 
-void LifeTime::start()
-{
-}
+void LifeTime::start() {}
 
 void LifeTime::update(float dt)
 {

@@ -14,7 +14,7 @@ LaserWeapon::LaserWeapon()
     this->_attributes["Damage"] = new Attribute(1.0f);
 }
 
-void LaserWeapon::fire(sTransformComponent* playerTransform, sRenderComponent* playerRender, glm::vec3 playerDirection)
+void    LaserWeapon::fire(Player* player, sTransformComponent* playerTransform, sRenderComponent* playerRender, glm::vec3 playerDirection)
 {
     glm::vec3 playerPos = playerTransform->getPos() + (playerRender->getModel()->getSize().y / 2.0f * playerTransform->getScale().y);
     Ray raycastHit = Ray(playerPos, glm::vec3{ playerDirection.x, 0.0f, playerDirection.z });
@@ -53,7 +53,7 @@ void LaserWeapon::upgradeByLevel()
     }
 }
 
-void LaserWeapon::reload()
+void    LaserWeapon::reload()
 {
 
 }

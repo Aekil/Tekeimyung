@@ -1003,7 +1003,9 @@ bool    ComponentFactory<sParticleEmitterComponent>::updateEditor(const std::str
     sParticleEmitterComponent* component = static_cast<sParticleEmitterComponent*>(entityComponent ? entityComponent : _components[entityType]);
     *savedComponent = component;
     bool changed = false;
+    char*   textureString = &component->texture[0];
 
+    //changed |= ImGui::InputText("Texture string", &(component->texture[0]), sizeof(char*));
     changed |= ImGui::SliderFloat("Emitter life (0 to disable)", &component->emitterLife, 0.0f, 10.0f);
     changed |= ImGui::SliderFloat("Rate", &component->rate, 0.0f, 3.0f);
     changed |= ImGui::SliderInt("Max particles", (int*)&component->maxParticles, 0, 500);
