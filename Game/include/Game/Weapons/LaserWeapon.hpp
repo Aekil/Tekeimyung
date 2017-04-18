@@ -13,7 +13,20 @@ public:
     ~LaserWeapon() = default;
 
 public:
-    void    fire(Player* player, sTransformComponent* playerTransform, sRenderComponent* playerRender, glm::vec3 playerDirection) override final;
-    void    reload() override final;
-    void    upgradeByLevel() override final;
+    void fire(Player* player, sTransformComponent* playerTransform, sRenderComponent* playerRender, glm::vec3 playerDirection) override final;
+    void reload() override final;
+    void upgradeByLevel() override final;
+
+private:
+    void fireOneEnemy(Player* player, sTransformComponent* playerTransform, sRenderComponent* playerRender, glm::vec3 playerDirection);
+    void fireMultipleEnemy(Player* player, sTransformComponent* playerTransform, sRenderComponent* playerRender, glm::vec3 playerDirection);
+
+private:
+    bool _timeDamage = false;
+    std::vector<Entity*> _oldEntitiesHited;
+    float _timeDamageDealt = 0.05f;
+    bool _pierceEnemy = false;
+
+    bool _timeExplosion = false;
+    float _timeExplosionPercent = 0.07f;
 };

@@ -16,10 +16,10 @@
 void Build::start()
 {
     // TileFloor
+    this->_buildableItems["TileFloor"].push_back("TILE_BASE_TURRET");
     this->_buildableItems["TileFloor"].push_back("TRAP_NEEDLE");
     this->_buildableItems["TileFloor"].push_back("TRAP_CUTTER");
     this->_buildableItems["TileFloor"].push_back("TRAP_FIRE");
-    this->_buildableItems["TileFloor"].push_back("TILE_BASE_TURRET");
 
     // TileBaseTurret
     this->_buildableItems["TileBaseTurret"].push_back("TOWER_FIRE");
