@@ -89,7 +89,7 @@
          ]
       },
       "sSphereColliderComponent" : {
-         "isTrigger" : false,
+         "isTrigger" : true,
          "pos" : {
             "x" : 2,
             "y" : 9,
