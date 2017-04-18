@@ -11,7 +11,15 @@
 #include <Engine/Core/BaseScript.hpp>
 #include <Engine/Core/ScriptFactory.hpp>
 
-#define GAME_MANAGER_TAG    "TutoManager"
+#define TUTO_MANAGER_TAG    "TutoManager"
+
+enum eTutoStates
+{
+    MOVE = 0,
+    ENABLE_BUILD,
+    BUILD,
+    TUTO_DONE
+};
 
 class TutoManager final : public BaseScript
 {
@@ -19,29 +27,16 @@ public:
     TutoManager() = default;
     ~TutoManager() = default;
 
-    int mapSizeZ = 12;
-    int mapSizeX = 12;
-
-    int firstLayerPattern[12][12] = {
-        { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-        { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-        { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-        { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-        { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-        { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2 },
-        { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2 },
-        { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-        { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-        { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-        { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-        { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-    };
-
-    Entity* firstLayerEntities[12][12];
-
 public:
     void start() override final;
     void update(float dt) override final;
+
+private:
+    EntityManager*  _em;
+    const Entity*   _gameManager;
+    const Entity*   _tutoDisplay;
+
+    eTutoStates     _states;
 };
 
 REGISTER_SCRIPT(TutoManager);

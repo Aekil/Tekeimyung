@@ -7,13 +7,13 @@
 #include <map>
 
 #include <Engine/Components.hh>
-
 #include <Game/Attibutes/Attribute.hpp>
+#include <Game/Scripts/Player.hpp>
 
-class IWeapon
+class   IWeapon
 {
 public:
-    virtual void fire(sTransformComponent* playerTransform, sRenderComponent* playerRender, glm::vec3 playerDirection) = 0;
+    virtual void fire(Player* player, sTransformComponent* playerTransform, sRenderComponent* playerRender, glm::vec3 playerDirection) = 0;
     virtual void reload() = 0;
     virtual double getAttribute(std::string attributeName)
     {

@@ -15,9 +15,9 @@ public:
     ~DefaultWeapon() = default;
 
 public:
-    void fire(sTransformComponent* playerTransform, sRenderComponent* playerRender, glm::vec3 playerDirection) override final;
-    void reload() override final;
-    void upgradeByLevel() override;
+    void    fire(Player* player, sTransformComponent* playerTransform, sRenderComponent* playerRender, glm::vec3 playerDirection) override final;
+    void    reload() override final;
+    void    upgradeByLevel() override final;
 
 private:
     std::string _tag;

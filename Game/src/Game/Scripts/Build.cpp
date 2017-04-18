@@ -8,16 +8,18 @@
 #include <Engine/EntityFactory.hpp>
 
 #include <Game/Scripts/Build.hpp>
+#include <Game/Scripts/GameManager.hpp>
+#include <Game/Scripts/Spawner.hpp>
 #include <Game/Scripts/Tile.hpp>
 #include <Game/Scripts/Teleport.hpp>
 
 void Build::start()
 {
     // TileFloor
+    this->_buildableItems["TileFloor"].push_back("TILE_BASE_TURRET");
     this->_buildableItems["TileFloor"].push_back("TRAP_NEEDLE");
     this->_buildableItems["TileFloor"].push_back("TRAP_CUTTER");
     this->_buildableItems["TileFloor"].push_back("TRAP_FIRE");
-    this->_buildableItems["TileFloor"].push_back("TILE_BASE_TURRET");
 
     // TileBaseTurret
     this->_buildableItems["TileBaseTurret"].push_back("TOWER_FIRE");
@@ -33,12 +35,87 @@ void Build::start()
 
     this->_transform = this->getComponent<sTransformComponent>();
     this->_render = this->getComponent<sRenderComponent>();
+
+    // Get GameManager
+    {
+        auto em = EntityFactory::getBindedEntityManager();
+        Entity* gameManager = em->getEntityByTag("GameManager");
+        if (!gameManager)
+        {
+            LOG_WARN("Can't find entity with GameManager tag");
+            return;
+        }
+
+        auto scriptComponent = gameManager->getComponent<sScriptComponent>();
+
+        if (!scriptComponent)
+        {
+            LOG_WARN("Can't find scriptComponent on GameManager entity");
+            return;
+        }
+
+        _gameManager = scriptComponent->getScript<GameManager>("GameManager");
+        if (!_gameManager)
+        {
+            LOG_WARN("Can't find GameManager");
+        }
+    }
 }
 
 void Build::update(float dt)
 {
     this->buildInput();
     this->checkBuildableZone();
+}
+
+void Build::updateSpawnersPaths(const glm::ivec2& tilePos)
+{
+    if (!_gameManager)
+    {
+        LOG_WARN("Can't update spawners paths because there is no GameManager");
+        return;
+    }
+
+    // This is not a spawner path, no need to update the paths
+    if (!_gameManager->spawnersPaths[tilePos.x][tilePos.y])
+    {
+        return;
+    }
+    else
+    {
+        LOG_INFO("UPDATE SPAWNERS PATHS");
+    }
+
+    // Clear spawners paths map before update
+    std::memset(_gameManager->spawnersPaths,
+                0,
+                sizeof(_gameManager->spawnersPaths[0][0]) * _gameManager->mapSizeX * _gameManager->mapSizeZ);
+
+    auto em = EntityFactory::getBindedEntityManager();
+    const auto& spawners = em->getEntitiesByTag("Spawner");
+
+    // Update paths
+    for (auto &spawner : spawners)
+    {
+        auto scriptComponent = spawner->getComponent<sScriptComponent>();
+
+        if (!scriptComponent)
+        {
+            LOG_WARN("Can't find scriptComponent on Spawner entity");
+            continue;
+        }
+        if (!scriptComponent->enabled)
+            continue;
+
+        auto spawnerScript = scriptComponent->getScript<Spawner>("Spawner");
+        if (!spawnerScript)
+        {
+            LOG_WARN("Can't find Spawner script on scriptComponent");
+            continue;
+        }
+
+        spawnerScript->updateClosestPath();
+    }
 }
 
 void Build::buildInput()
@@ -54,6 +131,14 @@ void Build::buildInput()
             auto previewRenderer = entity->getComponent<sRenderComponent>();
             previewRenderer->ignoreRaycast = true;
         }
+
+        glm::ivec2 tilePos;
+        sTransformComponent* tileTransform = _tile->getComponent<sTransformComponent>();
+
+        tilePos.x = static_cast<int>(std::ceil(tileTransform->getPos().x) / 25.0f);
+        tilePos.y = static_cast<int>(tileTransform->getPos().z / 25.0f);
+        _gameManager->firstLayerPattern[tilePos.x][tilePos.y] = 0;
+        updateSpawnersPaths(tilePos);
     }
 
     if (this->_buildEnabled && this->mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_2] == Mouse::eButtonState::CLICK_PRESSED && this->_tile != nullptr)

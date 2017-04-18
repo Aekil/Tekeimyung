@@ -34,6 +34,10 @@ struct sRenderableMesh {
     int layer;
 
     bool dynamic;
+
+    // If true and dynamic is false,
+    // all dynamic objects behind it will not be seen with transparency
+    bool hideDynamic;
 };
 
 struct sRenderableText {
@@ -54,12 +58,14 @@ public:
                                                 uint32_t uboOffset = 0,
                                                 uint32_t uboSize = 0,
                                                 uint32_t instancesNb = 0,
-                                                bool dynamic = false);
+                                                bool dynamic = false,
+                                                bool hideDynamic = false);
     void                            addMesh(MeshInstance* meshInstance, UniformBuffer* ubo,
                                                 uint32_t uboOffset = 0,
                                                 uint32_t uboSize = 0,
                                                 uint32_t instancesNb = 0,
-                                                bool dynamic = false);
+                                                bool dynamic = false,
+                                                bool hideDynamic = false);
     void                            addUIModel(ModelInstance* modelInstance,
                                                 UniformBuffer* ubo,
                                                 int layer,

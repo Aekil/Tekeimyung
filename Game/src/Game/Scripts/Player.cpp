@@ -176,7 +176,7 @@ void Player::handleShoot(float dt)
     {
         if (mouse.isPressed(Mouse::eButton::MOUSE_BUTTON_1))
         {
-            this->_weapons[this->_actualWeapon]->fire(this->_transform, this->_render, this->_direction);
+            this->_weapons[this->_actualWeapon]->fire(this, this->_transform, this->_render, this->_direction);
             this->_elapsedTime = 0;
         }
     }

@@ -405,7 +405,7 @@ void   GameWindow::posCallback(GLFWwindow* window, int xpos, int ypos)
 
 /**
     Callback function used to handle the Keyboard class through keys' states.
-    This function only retrieve a specific key and updates its state in the keys' map.
+    This function only retrieves a specific key and updates its state in the keys' map.
 */
 void	GameWindow::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
@@ -639,8 +639,8 @@ void    GameWindow::handleClose(GLFWwindow* window)
 {
     if (_closeHandler)
     {
-        glfwSetWindowShouldClose(window, false);
         glfwRestoreWindow(window);
+        glfwSetWindowShouldClose(window, false);
         _closeHandler(_closeHandlerData);
     }
 }

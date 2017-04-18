@@ -4,7 +4,11 @@
 
 #pragma once
 
+#include <glm/vec2.hpp>
+
 #include <Engine/Core/ScriptFactory.hpp>
+
+class GameManager;
 
 class Build : public BaseScript
 {
@@ -19,6 +23,7 @@ public:
 private:
     void checkBuildableZone();
     void buildInput();
+    void updateSpawnersPaths(const glm::ivec2& tilePos);
 
 private:
     const Entity* _tile;
@@ -30,6 +35,8 @@ private:
     std::map<std::string, int> _currentIdx;
     bool _buildEnabled;
     float _buildableRadius;
+
+    GameManager* _gameManager = nullptr;
 };
 
 REGISTER_SCRIPT(Build);

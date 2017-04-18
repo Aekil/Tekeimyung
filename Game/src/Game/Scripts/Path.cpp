@@ -1,5 +1,6 @@
 #include <algorithm>
 
+#include <Game/Scripts/GameManager.hpp>
 #include <Game/Scripts/Path.hpp>
 
 Node::Node(glm::ivec2 pos_, bool isWalkable_)
@@ -32,7 +33,7 @@ Node*    Path::getNodeFromPos(int x, int y, int map[29][38])
         return nullptr;
 
     glm::ivec2 pos(x, y);
-    bool isWalkable = (map[x][y] == 1);
+    bool isWalkable = (map[x][y] % LAYER_NUMBER) == 1;
     return (new Node(pos, isWalkable));
 }
 

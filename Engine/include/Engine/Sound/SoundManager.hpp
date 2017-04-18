@@ -10,7 +10,11 @@
 #include <fmod_common.h>
 #include <fmod_errors.h>
 
-#define ENABLE_SOUND        true
+#if defined (ENGINE_DEBUG)
+    #define ENABLE_SOUND    false
+#else
+    #define ENABLE_SOUND    true
+#endif
 
 #define SOUNDS_DIRECTORY    "resources/sounds"
 
@@ -84,8 +88,8 @@ public:
     //tSoundInfos                             getSoundInfos(uint32_t soundID);
 
 private:
-    void                                    addChannel(FMOD::Channel* channel);
-    void                                    removeChannel(FMOD::Channel* channel);
+    /*void                                    addChannel(FMOD::Channel* channel);
+    void                                    removeChannel(FMOD::Channel* channel);*/
 
 private:
     static std::shared_ptr<SoundManager>    _soundManager;
@@ -95,5 +99,4 @@ private:
     FMOD::ChannelGroup*                     _channelGroup;
 
     tSound                                  _sounds[NB_MAX_SOUNDS];
-    //FMOD::Channel*                          _channels[NB_MAX_CHANNELS];
 };

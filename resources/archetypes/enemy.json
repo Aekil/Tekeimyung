@@ -70,6 +70,26 @@
                      "name" : "color"
                   }
                ]
+            },
+            {
+               "layer" : "DEFAULT",
+               "name" : "lightning_effect",
+               "params" : [
+                  {
+                     "frames" : [
+                        {
+                           "easing" : "EASE_IN",
+                           "time" : 0.41999998688697815,
+                           "value" : {
+                              "x" : 0,
+                              "y" : 0,
+                              "z" : 360
+                           }
+                        }
+                     ],
+                     "name" : "rotation"
+                  }
+               ]
             }
          ],
          "color" : {
@@ -128,7 +148,7 @@
          "rotation" : {
             "x" : 0,
             "y" : 3.0517578125e-05,
-            "z" : 0
+            "z" : 359.99481201171875
          },
          "scale" : {
             "x" : 1,

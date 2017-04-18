@@ -82,7 +82,6 @@ void Enemy::death()
     GoldManager* goldManager = scriptComp->getScript<GoldManager>(GOLD_MANAGER_TAG);
     goldManager->addGolds(10); // arbitrary number which needs to be replaced depending on the enemy archetype
 
-
     auto player = em->getEntityByTag("Player");
 
     player->getComponent<sScriptComponent>()->getScript<Player>("Player")->addExperience(this->_experienceEarned);

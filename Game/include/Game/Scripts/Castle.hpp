@@ -22,6 +22,12 @@ public:
     void onCollisionEnter(Entity* entity) override final;
     void death() override final;
 
+    //  Json serialization & ImGui edition.
+public:
+    bool        updateEditor() override final;
+    JsonValue   saveToJson() override final;
+    void        loadFromJson(const JsonValue& json) override final;
+
 private:
     Entity*                 _healthBarEmpty;
     sTransformComponent*    _healthBarEmptyTransform;

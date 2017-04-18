@@ -52,7 +52,7 @@ T randomFrom(const T min, const T max)
     return static_cast<T>(uni(re));
 }
 
-void DefaultWeapon::fire(sTransformComponent* playerTransform, sRenderComponent* playerRender, glm::vec3 playerDirection)
+void DefaultWeapon::fire(Player* player, sTransformComponent* playerTransform, sRenderComponent* playerRender, glm::vec3 playerDirection)
 {
     Entity*                 bullet;
     sScriptComponent*       bulletScripts;

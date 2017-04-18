@@ -3,34 +3,56 @@
 */
 
 #include <Engine/EntityFactory.hpp>
+#include <Game/Scripts/GameManager.hpp>
 #include <Game/Scripts/TutoManager.hpp>
 
 void TutoManager::start()
 {
-    for (int x = 0; x < this->mapSizeX; x++)
+    _em = EntityFactory::getBindedEntityManager();
+    if (_em != nullptr)
     {
-        for (int z = 0; z < this->mapSizeZ; z++)
-        {
-            if ((int)(this->firstLayerPattern[x][z]) == 1)
-                this->firstLayerEntities[x][z] = this->Instantiate("TILE_FLOOR", glm::vec3(x * 25, 0, z * 25));
-            else if ((int)(this->firstLayerPattern[x][z]) == 2)
-                this->firstLayerEntities[x][z] = this->Instantiate("SPAWNER", glm::vec3(x * 25, 0, z * 25));
-        }
+        _gameManager = _em->getEntityByTag(GAME_MANAGER_TAG);
+        if (_gameManager != nullptr)
+            _tutoDisplay = _em->getEntityByTag(TUTO_MANAGER_TAG);
     }
+    _states = MOVE;
 }
 
 void TutoManager::update(float dt)
 {
-    EntityManager* em = EntityFactory::getBindedEntityManager();
-    const auto& projectiles = em->getEntitiesByTag("Projectile");
-    for (auto &projectile : projectiles)
+    if (_gameManager != nullptr && _tutoDisplay != nullptr)
     {
-        sTransformComponent* transform = projectile->getComponent<sTransformComponent>();
-        if (transform->getPos().x < 0 || transform->getPos().z < 0 ||
-            transform->getPos().x > this->mapSizeX * 25 ||
-            transform->getPos().z > this->mapSizeZ * 25)
+        sScriptComponent*   scriptComp = _gameManager->getComponent<sScriptComponent>();
+        TutoManager*        tutoManager = scriptComp->getScript<TutoManager>(TUTO_MANAGER_TAG);
+        sTextComponent*     textComp = _tutoDisplay->getComponent<sTextComponent>();
+
+        auto &&keyboard = GameWindow::getInstance()->getKeyboard();
+        auto &&mouse = GameWindow::getInstance()->getMouse();
+        //char                goldsText[30];
+
+        //sprintf_s(goldsText, "%d Golds", golds);
+        switch (_states)
         {
-            em->destroyEntityRegister(projectile);
+        case MOVE:
+            textComp->text.setContent("Use W,A,S,D to move");
+            if (keyboard.getStateMap()[Keyboard::eKey::S] == Keyboard::eKeyState::KEY_PRESSED)
+                _states = ENABLE_BUILD;
+            break;
+        case ENABLE_BUILD:
+            textComp->text.setContent("Use E to enable build zone");
+            if (keyboard.getStateMap()[Keyboard::eKey::E] == Keyboard::eKeyState::KEY_PRESSED)
+                _states = BUILD;
+            break;
+        case BUILD:
+            textComp->text.setContent("Use Left Click on buildable zone to build something");
+            if (mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_1] == Mouse::eButtonState::CLICK_PRESSED)
+                _states = TUTO_DONE;
+            break;
+        case TUTO_DONE:
+            textComp->text.setContent("Well done ! Tutorial completed.");
+            break;
+        default:
+            break;
         }
     }
 }

@@ -1003,7 +1003,9 @@ bool    ComponentFactory<sParticleEmitterComponent>::updateEditor(const std::str
     sParticleEmitterComponent* component = static_cast<sParticleEmitterComponent*>(entityComponent ? entityComponent : _components[entityType]);
     *savedComponent = component;
     bool changed = false;
+    char*   textureString = &component->texture[0];
 
+    //changed |= ImGui::InputText("Texture string", &(component->texture[0]), sizeof(char*));
     changed |= ImGui::SliderFloat("Emitter life (0 to disable)", &component->emitterLife, 0.0f, 10.0f);
     changed |= ImGui::SliderFloat("Rate", &component->rate, 0.0f, 3.0f);
     changed |= ImGui::SliderInt("Max particles", (int*)&component->maxParticles, 0, 500);
@@ -1201,30 +1203,28 @@ bool    ComponentFactory<sButtonComponent>::updateEditor(const std::string& enti
 
 sComponent* ComponentFactory<sScriptComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
 {
-    sScriptComponent*  component;
+    sScriptComponent*  component = new sScriptComponent();
 
-    component = new sScriptComponent();
-
-    auto scripts = json.get()["scripts"];
+    auto    scripts = json.get()["scripts"];
     if (scripts.size() > 0 && scripts.type() != Json::ValueType::arrayValue)
     {
-        LOG_ERROR("%s::sScriptComponent loadFromJson error: scripts is not an array", entityType.c_str());
+        LOG_ERROR("%s::sScriptComponent loadFromJson error: 'scripts' is not an array", entityType.c_str());
         return (component);
     }
 
     for (const auto& script: scripts)
     {
-        // Load animation
-        JsonValue scriptJson(script);
+        JsonValue   scriptJson(script);
         std::string scriptName = scriptJson.getString("name", "");
+        auto        scriptInstance = ScriptFactory::create(scriptName);
 
-        auto scriptInstance = ScriptFactory::create(scriptName);
-        if (!scriptInstance)
+        if (scriptInstance == nullptr)
         {
-            LOG_ERROR("%s::sScriptComponent loadFromJson error: script \"%s\" does not exists", entityType.c_str(), scriptName.c_str());
+            LOG_ERROR("%s::sScriptComponent loadFromJson error: script \"%s\" does not exist", entityType.c_str(), scriptName.c_str());
             continue;
         }
 
+        LOG_DEBUG("Loading script '%s' from Json...", scriptName.c_str());
         scriptInstance->loadFromJson(scriptJson);
 
         component->scripts.push_back(std::move(scriptInstance));
@@ -1258,34 +1258,59 @@ bool    ComponentFactory<sScriptComponent>::updateEditor(const std::string& enti
     *savedComponent = component;
     bool changed = false;
 
-    ImGui::Text("\n");
+    ImGui::Separator();
     ImGui::Text("Scripts");
     ImGui::SameLine();
 
-    // Add new script button
-    if (ImGui::Button("New"))
+    //  Add new script button
+    if (ImGui::Button("Add a script"))
     {
         ImGui::OpenPopup("scripts");
     }
 
-    // Display new scripts that can be added
+    //  Display new scripts that can be added
     if (ImGui::BeginPopup("scripts"))
     {
         for (auto script: ScriptFactory::getScriptsNames())
         {
-            // Entity does not have this script
+            //  Entity does not have this script
             if (!component->hasScript(script))
             {
-                // Script button pressed, add it to the entity
+                //  Script button pressed, add it to the entity
                 if (ImGui::Button(script))
                 {
                     auto scriptInstance = ScriptFactory::create(script);
                     scriptInstance->setEntity(entity);
                     component->scripts.push_back(std::move(scriptInstance));
+                    //return (true);
                 }
             }
         }
         ImGui::EndPopup();
+    }
+
+    if (component->selectedScript != nullptr)
+    {
+        //  Delete script
+        ImGui::SameLine();
+        //ImGui::PushStyleColor(ImGuiCol_Button, ImColor(0.6f, 0.0f, 0.0f, 0.5f));
+        //ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImColor(0.6f, 0.0f, 0.0f, 1.0f));
+        if (ImGui::Button("Delete"))
+        {
+            uint32_t    index = 0;
+
+            //  Find script index in scripts vector
+            for (const auto& script : component->scripts)
+            {
+                if (script.get() == component->selectedScript)
+                    break;
+                index++;
+            }
+            component->scripts.erase(component->scripts.begin() + index);
+            component->selectedScript = nullptr;
+            return (true);
+        }
+        //ImGui::PopStyleColor(2);
     }
 
     // Scripts list
@@ -1299,33 +1324,17 @@ bool    ComponentFactory<sScriptComponent>::updateEditor(const std::string& enti
     }
     ImGui::EndChild();
 
-    if (!component->selectedScript)
-        return (changed);
-
-    // Delete script
-    if (ImGui::Button("Delete"))
+    if (component->selectedScript != nullptr)
     {
-        uint32_t i = 0;
-        // Find script index in scripts vector
-        for (const auto& script: component->scripts)
-        {
-            if (script.get() == component->selectedScript)
-                break;
-            i++;
-        }
-        component->scripts.erase(component->scripts.begin() + i);
-        component->selectedScript = nullptr;
-        return (true);
+        ImGui::BeginGroup();
+        ImGui::Text("%s script options", component->selectedScript->getName().c_str());
+
+        component->selectedScript->updateEditor();
+        ImGui::EndGroup();
     }
-
-    ImGui::Text("\n");
-    ImGui::Text("%s script options\n--------------------\n", component->selectedScript->getName().c_str());
-
-    component->selectedScript->updateEditor();
 
     return (changed);
 }
-
 
 /*
 ** sUiComponent
