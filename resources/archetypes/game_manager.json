@@ -4,7 +4,6 @@
          "name" : "GAME_MANAGER"
       },
       "sScriptComponent" : {
-         "class" : [ "GameManager" ],
          "scripts" : [
             {
                "name" : "GameManager"
@@ -12,7 +11,7 @@
             {
                "map_parts" : [],
                "name" : "WaveManager",
-               "waves" : 0
+               "waves_max" : 12
             },
             {
                "name" : "GoldManager"

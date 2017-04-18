@@ -74,10 +74,10 @@ void Enemy::death()
     this->Destroy();
 
     // Add golds for enemy dying
-    const auto& gameManager = em->getEntityByTag("GameManager");
-    sScriptComponent* scriptComp = gameManager->getComponent<sScriptComponent>();
-    GoldManager* goldManager = scriptComp->getScript<GoldManager>("GoldManager");
-    goldManager->addGolds(10); // arbitrary number which needs to be replaced depending on the enemy archetype
+    //const auto& gameManager = em->getEntityByTag("GameManager");
+    //sScriptComponent* scriptComp = gameManager->getComponent<sScriptComponent>();
+    //GoldManager* goldManager = scriptComp->getScript<GoldManager>("GoldManager");
+    //goldManager->addGolds(10); // arbitrary number which needs to be replaced depending on the enemy archetype
 
 
     auto player = em->getEntityByTag("Player");

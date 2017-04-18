@@ -25,7 +25,7 @@
             {
                "configs" : [
                   {
-                     "associated_wave" : 0,
+                     "associated_wave" : 1,
                      "spawnable_entities" : [
                         {
                            "amount" : 1,
@@ -35,7 +35,7 @@
                      ]
                   },
                   {
-                     "associated_wave" : 1,
+                     "associated_wave" : 2,
                      "spawnable_entities" : [
                         {
                            "amount" : 1,
@@ -45,7 +45,7 @@
                      ]
                   },
                   {
-                     "associated_wave" : 2,
+                     "associated_wave" : 3,
                      "spawnable_entities" : [
                         {
                            "amount" : 1,
@@ -60,7 +60,7 @@
                      ]
                   },
                   {
-                     "associated_wave" : 3,
+                     "associated_wave" : 4,
                      "spawnable_entities" : [
                         {
                            "amount" : 2,
@@ -75,7 +75,7 @@
                      ]
                   },
                   {
-                     "associated_wave" : 4,
+                     "associated_wave" : 5,
                      "spawnable_entities" : [
                         {
                            "amount" : 2,
@@ -90,7 +90,7 @@
                      ]
                   },
                   {
-                     "associated_wave" : 5,
+                     "associated_wave" : 6,
                      "spawnable_entities" : [
                         {
                            "amount" : 2,
@@ -105,7 +105,7 @@
                      ]
                   },
                   {
-                     "associated_wave" : 6,
+                     "associated_wave" : 7,
                      "spawnable_entities" : [
                         {
                            "amount" : 3,
@@ -120,7 +120,7 @@
                      ]
                   },
                   {
-                     "associated_wave" : 7,
+                     "associated_wave" : 8,
                      "spawnable_entities" : [
                         {
                            "amount" : 3,
@@ -140,7 +140,7 @@
                      ]
                   },
                   {
-                     "associated_wave" : 8,
+                     "associated_wave" : 9,
                      "spawnable_entities" : [
                         {
                            "amount" : 3,
@@ -160,7 +160,7 @@
                      ]
                   },
                   {
-                     "associated_wave" : 9,
+                     "associated_wave" : 10,
                      "spawnable_entities" : [
                         {
                            "amount" : 4,
@@ -180,7 +180,7 @@
                      ]
                   },
                   {
-                     "associated_wave" : 10,
+                     "associated_wave" : 11,
                      "spawnable_entities" : [
                         {
                            "amount" : 6,
@@ -200,7 +200,7 @@
                      ]
                   },
                   {
-                     "associated_wave" : 11,
+                     "associated_wave" : 12,
                      "spawnable_entities" : [
                         {
                            "amount" : 1,
