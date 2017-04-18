@@ -12,6 +12,7 @@
 #include <Engine/Core/ScriptFactory.hpp>
 
 #define GAME_MANAGER_TAG    "GameManager"
+#define LAYER_NUMBER 10
 
 class GameManager final : public BaseScript
 {
