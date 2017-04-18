@@ -1,7 +1,11 @@
 #include <Engine/EntityFactory.hpp>
 #include <Game/Scripts/GameManager.hpp>
 
-#define LAYER_NUMBER 10
+GameManager::GameManager()
+{
+    std::memset(spawnersPaths, 0, sizeof(spawnersPaths[0][0]) * mapSizeX * mapSizeZ);
+    std::memset(firstLayerEntities, 0, sizeof(firstLayerEntities[0][0]) * mapSizeX * mapSizeZ);
+}
 
 void GameManager::start()
 {
