@@ -79,17 +79,27 @@ void Player::update(float dt)
 
 void Player::changeWeapon()
 {
-    if (this->keyboard.getStateMap()[Keyboard::eKey::X] == Keyboard::eKeyState::KEY_RELEASED)
-    {
-        this->_actualWeapon++;
+    auto &&scroll = mouse.getScroll();
+    static double lastOffset = scroll.yOffset;
 
-        if (this->_actualWeapon >= this->_weapons.size())
+    if (lastOffset != scroll.yOffset)
+    {
+        if (this->mouse.getScroll().yOffset < 0)
+            this->_actualWeapon++;
+        else
+            this->_actualWeapon--;
+
+        if (this->_actualWeapon >= (int)this->_weapons.size())
             this->_actualWeapon = 0;
+        else if (this->_actualWeapon < 0)
+            this->_actualWeapon = static_cast<int>(this->_weapons.size() - 1);
 
         updateWeaponMaterial();
 
         LOG_DEBUG("Actual weapon : %d", this->_actualWeapon);
     }
+
+    lastOffset = scroll.yOffset;
 }
 
 void Player::updateDirection()
