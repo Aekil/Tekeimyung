@@ -16,9 +16,15 @@
 enum eTutoStates
 {
     MOVE = 0,
-    ENABLE_BUILD,
+    SHOOT,
+    CHANGE_WEAPON,
+    CHOOSE_BUILD,
     BUILD,
-    TUTO_DONE
+    DISABLE_BUILD,
+    CHECK_HOWTOPLAY,
+    CHECK_BUILDLIST,
+    TUTO_DONE,
+    TUTO_HIDDEN
 };
 
 class TutoManager final : public BaseScript
