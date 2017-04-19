@@ -82,7 +82,8 @@ void Player::changeWeapon()
     auto &&scroll = mouse.getScroll();
     static double lastOffset = scroll.yOffset;
 
-    if (lastOffset != scroll.yOffset)
+    if (lastOffset != scroll.yOffset &&
+        !keyboard.isPressed(Keyboard::eKey::LEFT_CONTROL))
     {
         if (this->mouse.getScroll().yOffset < 0)
             this->_actualWeapon++;
