@@ -8,6 +8,8 @@
 #include <Game/Weapons/LaserWeapon.hpp>
 #include <Game/Scripts/Enemy.hpp>
 
+const std::string LaserWeapon::Name = "Laser";
+
 LaserWeapon::LaserWeapon()
 {
     this->_attributes["FireRate"] = new Attribute(0.0f);

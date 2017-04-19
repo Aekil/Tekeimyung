@@ -179,6 +179,18 @@ void Player::handleShoot(float dt)
             this->_weapons[this->_actualWeapon]->fire(this, this->_transform, this->_render, this->_direction);
             this->_elapsedTime = 0;
         }
+        else
+        {
+            if (this->_weapons[this->_actualWeapon]->getName() == LaserWeapon::Name)
+            {
+                LaserWeapon* obj = dynamic_cast<LaserWeapon*>(this->_weapons[this->_actualWeapon]);
+                if (obj->_laser != nullptr)
+                {
+                    this->Destroy(obj->_laser);
+                    obj->_laser = nullptr;
+                }
+            }
+        }
     }
 }
 

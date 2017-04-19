@@ -6,8 +6,11 @@
 
 #include <Game/Weapons/IWeapon.hpp>
 
+
 class LaserWeapon final : public IWeapon
 {
+    friend class Player;
+
 public:
     LaserWeapon();
     ~LaserWeapon() = default;
@@ -16,6 +19,13 @@ public:
     void fire(Player* player, sTransformComponent* playerTransform, sRenderComponent* playerRender, glm::vec3 playerDirection) override final;
     void reload() override final;
     void upgradeByLevel() override final;
+
+    virtual std::string getName()
+    {
+        return this->Name;
+    }
+
+    const static std::string Name;
 
 private:
     void fireOneEnemy(Player* player, sTransformComponent* playerTransform, sRenderComponent* playerRender, glm::vec3 playerDirection);

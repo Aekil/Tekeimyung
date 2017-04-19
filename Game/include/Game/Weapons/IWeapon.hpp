@@ -24,10 +24,12 @@ public:
 
     virtual void levelUp()
     {
-        LOG_DEBUG("Weapon level up");
         this->_level++;
+        LOG_DEBUG("Weapon level up : %d", this->_level);
         this->upgradeByLevel();
     }
+
+    virtual std::string getName() = 0;
 
 protected:
     std::map<std::string, Attribute*> _attributes;
