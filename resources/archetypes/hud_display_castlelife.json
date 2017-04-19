@@ -13,6 +13,7 @@
             "r" : 0
          },
          "dynamic" : false,
+         "hide_dynamic" : false,
          "ignore_raycast" : false,
          "materials" : [ "MAT_Default" ],
          "model" : "resources/models/default.DAE",
