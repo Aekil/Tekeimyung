@@ -155,9 +155,20 @@ void    RenderingSystem::addParticlesToRenderQueue(EntityManager& em, float elap
         }
 
         if (uiComponent)
-            _renderQueue.addUIModel(model, emitter->buffer->ubo, uiComponent->layer, 0, emitter->buffer->size, emitter->particlesNb);
+            _renderQueue.addUIModel(model,
+                                    emitter->buffer->ubo,
+                                    uiComponent->layer,
+                                    0,
+                                    emitter->buffer->size,
+                                    emitter->particlesNb);
         else
-            _renderQueue.addModel(model, emitter->buffer->ubo, 0, emitter->buffer->size, emitter->particlesNb);
+            _renderQueue.addModel(model,
+                                    emitter->buffer->ubo,
+                                    0,
+                                    emitter->buffer->size,
+                                    emitter->particlesNb,
+                                    render->dynamic,
+                                    true);
     }
 }
 
