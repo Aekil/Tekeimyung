@@ -140,32 +140,12 @@ void Player::movement(float elapsedTime)
         }
     }
 
+    #if defined(ENGINE_DEBUG)
     if (this->keyboard.getStateMap()[Keyboard::eKey::L] == Keyboard::eKeyState::KEY_RELEASED)
     {
         this->_weapons[this->_actualWeapon]->levelUp();
-
-        /*Entity*                 bullet;
-        sScriptComponent*       bulletScripts;
-        Projectile*             projectileScript;
-
-        bullet = Instantiate("PLAYER_BULLET");
-        bulletScripts = bullet->getComponent<sScriptComponent>();
-        projectileScript = bulletScripts->getScript<Projectile>("Projectile");
-
-        projectileScript->_projectileTransform->setPos(_transform->getPos());
-
-        projectileScript->_projectileTransform->translate(glm::vec3(0.0f, -((_render->getModel()->getMin().y * _transform->getScale().y) / 2.0f), 0.0f));
-
-        projectileScript->_damage = _damage;
-        projectileScript->followDirection({_direction.x, 0.0f, _direction.z});
-
-#if (ENABLE_SOUND)
-        if (_shootSound->soundID != -1)
-        {
-            SoundManager::getInstance()->playSound(_shootSound->soundID);
-        }
-#endif*/
     }
+    #endif
 }
 
 void Player::handleShoot(float dt)

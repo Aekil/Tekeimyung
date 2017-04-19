@@ -322,8 +322,10 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
     _batches.clear();
     auto &&keyboard = GameWindow::getInstance()->getKeyboard();
 
+    #if defined(ENGINE_DEBUG)
     if (keyboard.getStateMap()[Keyboard::eKey::C] == Keyboard::eKeyState::KEY_PRESSED)
         _displayAllColliders = !_displayAllColliders;
+    #endif
 
     forEachEntity(em, [&](Entity *entity) {
         // Don't display particle systems

@@ -27,10 +27,11 @@ void HudDisplayCastleLife::update(float dt)
         sScriptComponent*   scriptComp = _castle->getComponent<sScriptComponent>();
         Castle*             castle = scriptComp->getScript<Castle>(CASTLE_TAG);
         int                 castleLife = castle->getHealth();
+        int                 maxCastleLife = castle->getMaxHealth();
         sTextComponent*     textComp = _castleLifeHudDisplay->getComponent<sTextComponent>();
         char                castleLifeText[MAX_SIZE_TEXT_CASTLELIFE];
 
-        sprintf_s(castleLifeText, "Castle Health :\n%d/%d", castleLife, MAX_CASTLE_HEALTH);
+        sprintf_s(castleLifeText, "Castle Health :\n%d/%d", castleLife, maxCastleLife);
         textComp->text.setContent(castleLifeText);
     }
 }
