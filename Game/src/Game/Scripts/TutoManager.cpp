@@ -20,8 +20,6 @@ void TutoManager::start()
 
 void TutoManager::update(float dt)
 {
-    static int shootCounter = 0;
-
     if (_gameManager != nullptr && _tutoDisplay != nullptr)
     {
         sScriptComponent*   scriptComp = _gameManager->getComponent<sScriptComponent>();
@@ -30,12 +28,14 @@ void TutoManager::update(float dt)
 
         auto &&keyboard = GameWindow::getInstance()->getKeyboard();
         auto &&mouse = GameWindow::getInstance()->getMouse();
+        auto &&scroll = mouse.getScroll();
+        static int shootCounter = 0;
 
         switch (_states)
         {
         case MOVE:
             textComp->text.setContent("Use W,A,S,D to move");
-            if (keyboard.getStateMap()[Keyboard::eKey::S] == Keyboard::eKeyState::KEY_PRESSED)
+            if (keyboard.getStateMap()[Keyboard::eKey::S] == Keyboard::eKeyState::KEY_PRESSED) // improve this test ?
                 _states = SHOOT;
             break;
         case SHOOT:
@@ -44,19 +44,23 @@ void TutoManager::update(float dt)
                 _states = CHANGE_WEAPON;
             break;
         case CHANGE_WEAPON:
+            static double lastOffset = scroll.yOffset;
             textComp->text.setContent("Use the scroll wheel to change your weapon (you have 3 different) !");
-            // how to get mouse wheel ?
-            if (mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_1] == Mouse::eButtonState::CLICK_PRESSED) // replace by scroll
+            if (lastOffset != scroll.yOffset)
                 _states = CHOOSE_BUILD;
             break;
         case CHOOSE_BUILD:
             textComp->text.setContent("Use keys from 1 to 5 (on the top of your keyboard)\n    to choose a building and enable build zone!");
-            if (keyboard.getStateMap()[Keyboard::eKey::KEY_1] == Keyboard::eKeyState::KEY_PRESSED)
+            if (keyboard.getStateMap()[Keyboard::eKey::KEY_1] == Keyboard::eKeyState::KEY_PRESSED ||
+                keyboard.getStateMap()[Keyboard::eKey::KEY_2] == Keyboard::eKeyState::KEY_PRESSED ||
+                keyboard.getStateMap()[Keyboard::eKey::KEY_3] == Keyboard::eKeyState::KEY_PRESSED || 
+                keyboard.getStateMap()[Keyboard::eKey::KEY_4] == Keyboard::eKeyState::KEY_PRESSED || 
+                keyboard.getStateMap()[Keyboard::eKey::KEY_5] == Keyboard::eKeyState::KEY_PRESSED)
                 _states = BUILD;
             break;
         case BUILD:
             textComp->text.setContent("Use Left Click on buildable zone to build something");
-            if (mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_1] == Mouse::eButtonState::CLICK_PRESSED)
+            if (mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_1] == Mouse::eButtonState::CLICK_PRESSED) // improve this test !
                 _states = DISABLE_BUILD;
             break;
         case DISABLE_BUILD:
