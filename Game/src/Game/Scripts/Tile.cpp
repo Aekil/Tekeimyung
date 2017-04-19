@@ -8,7 +8,7 @@
 #include <Engine/Utils/ResourceManager.hpp>
 
 #include <Game/Scripts/Tile.hpp>
-#include <Game/Scripts/Build.hpp>
+#include <Game/Scripts/NewBuild.hpp>
 
 void Tile::start()
 {
@@ -23,35 +23,30 @@ void Tile::update(float dt)
 
 void Tile::onHoverEnter()
 {
-    if (_buildable)
+    if (this->_buildable == true)
     {
-        auto em = EntityFactory::getBindedEntityManager();
+        auto    em = EntityFactory::getBindedEntityManager();
+        auto    buildScript = em->getEntityByTag("Player")->getComponent<sScriptComponent>()->getScript<NewBuild>("NewBuild");
 
-        auto buildScript = em->getEntityByTag("Player")->getComponent<sScriptComponent>()->getScript<Build>("Build");
-        buildScript->setTile(this->entity);
+        buildScript->setTileHovered(this->getEntity());
     }
 }
 
 void Tile::onHoverExit()
 {
-    auto em = EntityFactory::getBindedEntityManager();
+    auto    em = EntityFactory::getBindedEntityManager();
+    auto    buildScript = em->getEntityByTag("Player")->getComponent<sScriptComponent>()->getScript<NewBuild>("NewBuild");
 
-    auto buildScript = em->getEntityByTag("Player")->getComponent<sScriptComponent>()->getScript<Build>("Build");
-    buildScript->setTile(nullptr);
+    buildScript->setTileHovered(nullptr);
 }
 
 void Tile::setBuildable(bool buildable)
 {
-    this->_buildable = buildable;
+    Material*   displayedMaterial;
 
-    if (_buildable == true)
-    {
-        _render->getModelInstance()->setMaterial(_buildMaterial);
-    }
-    else
-    {
-        _render->getModelInstance()->setMaterial(_renderMaterial);
-    }
+    this->_buildable = buildable;
+    displayedMaterial = (buildable == true ? this->_buildMaterial : this->_renderMaterial);
+    this->_render->getModelInstance()->setMaterial(displayedMaterial);
 }
 
 bool Tile::isBuildable()
