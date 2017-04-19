@@ -37,7 +37,7 @@ Cylinder::Cylinder(Cylinder::sInfo& info): Geometry(Geometry::eType::CYLINDER)
     {
         Vertex vertex;
         vertex.uv = glm::vec2(halfCosThetas[i] + 0.5, halfSinThetas[i] + 0.5);
-        vertex.pos = glm::vec3(halfCosThetas[i], height / 2.0f, halfSinThetas[i]);
+        vertex.pos = glm::vec3(halfCosThetas[i], height, halfSinThetas[i]);
         vertex.color = glm::vec3(0.0f, 0.0f, 0.0f);
         vertex.normal = glm::vec3(0.0f, 1.0f, 0.0f);
         mesh->vertexs.push_back(vertex);
@@ -54,7 +54,7 @@ Cylinder::Cylinder(Cylinder::sInfo& info): Geometry(Geometry::eType::CYLINDER)
     {
         Vertex vertex;
         vertex.uv = glm::vec2(halfCosThetas[i] + 0.5, halfSinThetas[i] + 0.5);
-        vertex.pos = glm::vec3(halfCosThetas[i], -height / 2.0f, halfSinThetas[i]);
+        vertex.pos = glm::vec3(halfCosThetas[i], 0.0f, halfSinThetas[i]);
         vertex.color = glm::vec3(0.0f, 0.0f, 0.0f);
         vertex.normal = glm::vec3(0.0f, -1.0f, 0.0f);
         mesh->vertexs.push_back(vertex);
@@ -72,7 +72,7 @@ Cylinder::Cylinder(Cylinder::sInfo& info): Geometry(Geometry::eType::CYLINDER)
     {
         Vertex vertex;
         vertex.uv = glm::vec2(curU, 0.0f);
-        vertex.pos = glm::vec3(halfCosThetas[i], height / 2.0f, halfSinThetas[i]);
+        vertex.pos = glm::vec3(halfCosThetas[i], height, halfSinThetas[i]);
         vertex.color = glm::vec3(0.0f, 0.0f, 0.0f);
         vertex.normal = -vertex.pos;
         mesh->vertexs.push_back(vertex);
@@ -86,7 +86,7 @@ Cylinder::Cylinder(Cylinder::sInfo& info): Geometry(Geometry::eType::CYLINDER)
     {
         Vertex vertex;
         vertex.uv = glm::vec2(curU, 1.0f);
-        vertex.pos = glm::vec3(halfCosThetas[i], -height / 2.0f, halfSinThetas[i]);
+        vertex.pos = glm::vec3(halfCosThetas[i], 0.0f, halfSinThetas[i]);
         vertex.color = glm::vec3(0.0f, 0.0f, 0.0f);
         vertex.normal = -vertex.pos;
         mesh->vertexs.push_back(vertex);

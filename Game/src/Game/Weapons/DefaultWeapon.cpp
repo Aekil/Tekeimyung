@@ -8,6 +8,8 @@
 #include <Game/Weapons/DefaultWeapon.hpp>
 #include <Game/Scripts/Projectile.hpp>
 
+const std::string DefaultWeapon::Name = "Default";
+
 DefaultWeapon::DefaultWeapon()
 {
     this->_tag = "Projectile";

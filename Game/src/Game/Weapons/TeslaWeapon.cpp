@@ -12,6 +12,7 @@
 #include <Game/Weapons/TeslaWeapon.hpp>
 #include <Game/Scripts/Enemy.hpp>
 
+const std::string TeslaWeapon::Name = "Tesla";
 
 TeslaWeapon::TeslaWeapon()
 {

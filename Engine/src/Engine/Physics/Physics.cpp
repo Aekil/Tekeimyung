@@ -11,7 +11,7 @@ Physics::Physics() {}
 
 Physics::~Physics() {}
 
-bool        Physics::raycast(const Ray& ray, Entity** hitEntity, std::vector<Entity*> entitiesFilter, bool useRange)
+bool        Physics::raycast(const Ray& ray, Entity** hitEntity, std::vector<Entity*> entitiesFilter, float range)
 {
     float                   nearestHitDist = 0.0f;
     Entity*                 nearestEntity = nullptr;
@@ -41,11 +41,22 @@ bool        Physics::raycast(const Ray& ray, Entity** hitEntity, std::vector<Ent
             boxMin += transform->getPos();
             boxMax += transform->getPos();
 
-            float   distance = Collisions::rayVSAABB(ray, boxMin, boxMax);
+            float distance = Collisions::rayVSAABB(ray, boxMin, boxMax);
             if (distance != 0 && (nearestEntity == nullptr || distance <= nearestHitDist))
             {
-                nearestHitDist = distance;
-                nearestEntity = entity;
+                if (range != -1.0f)
+                {
+                    if (distance <= range)
+                    {
+                        nearestHitDist = distance;
+                        nearestEntity = entity;
+                    }
+                }
+                else
+                {
+                    nearestHitDist = distance;
+                    nearestEntity = entity;
+                }
             }
         }
     }
@@ -92,7 +103,7 @@ bool    Physics::raycast(const Ray& ray, Entity** hitEntity)
     return (nearestEntity != nullptr);
 }
 
-bool    Physics::raycastAll(const Ray& ray, std::vector<Entity*>& hitEntities, std::vector<Entity*> entitiesFilter, bool useRange)
+bool    Physics::raycastAll(const Ray& ray, std::vector<Entity*>& hitEntities, std::vector<Entity*> entitiesFilter, float range)
 {
     EntityManager* em = EntityFactory::getBindedEntityManager();
     for (Entity* entity : em->getEntities())
@@ -121,7 +132,17 @@ bool    Physics::raycastAll(const Ray& ray, std::vector<Entity*>& hitEntities, s
             float distance = Collisions::rayVSAABB(ray, boxMin, boxMax);
             if (distance != 0)
             {
-                hitEntities.push_back(entity);
+                if (range != -1.0f)
+                {
+                    if (distance <= range)
+                    {
+                        hitEntities.push_back(entity);
+                    }
+                }
+                else
+                {
+                    hitEntities.push_back(entity);
+                }
             }
         }
     }
