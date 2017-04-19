@@ -7,8 +7,8 @@
 
 #define CASTLE_TAG          "Castle"
 
-#define MAX_CASTLE_HEALTH   4200
-#define DMG_FOR_EACH_ENEMY  200
+#define DEFAULT_MAX_CASTLE_HEALTH       42
+#define DEFAULT_CASTLE_DMG_FROM_ENEMY   1
 
 class Castle final : public BaseScript, public Health
 {
