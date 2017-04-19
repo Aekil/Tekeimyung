@@ -13,6 +13,7 @@
             "r" : 1
          },
          "dynamic" : false,
+         "hide_dynamic" : false,
          "ignore_raycast" : false,
          "materials" : [ "text_victory.mat" ],
          "model" : "resources/models/default.DAE",

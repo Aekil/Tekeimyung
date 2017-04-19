@@ -62,7 +62,7 @@ void    RenderQueue::addUIModel(ModelInstance* modelInstance,
         Material *material = meshInstance->getMaterial();
         ASSERT(material != nullptr, "A mesh should have a material");
 
-        sRenderableMesh renderableMesh = { meshInstance.get(), ubo, uboOffset, uboSize, instancesNb, layer, false, false };
+        sRenderableMesh renderableMesh = { meshInstance.get(), ubo, uboOffset, uboSize, instancesNb, layer, false, true };
         if (material->transparent)
         {
             CHECK_QUEUE_NOT_FULL(_uiTransparentMeshsNb);
@@ -102,19 +102,19 @@ void    RenderQueue::addLight(Light* light)
 
 void    RenderQueue::clear()
 {
-    std::memset(_opaqueMeshs.data(), 0, _opaqueMeshsNb * sizeof(void*));
+    std::memset(_opaqueMeshs.data(), 0, _opaqueMeshsNb * sizeof(sRenderableMesh));
     _opaqueMeshsNb = 0;
 
-    std::memset(_transparentMeshs.data(), 0, _transparentMeshsNb * sizeof(void*));
+    std::memset(_transparentMeshs.data(), 0, _transparentMeshsNb * sizeof(sRenderableMesh));
     _transparentMeshsNb = 0;
 
-    std::memset(_uiOpaqueMeshs.data(), 0, _uiOpaqueMeshsNb * sizeof(void*));
+    std::memset(_uiOpaqueMeshs.data(), 0, _uiOpaqueMeshsNb * sizeof(sRenderableMesh));
     _uiOpaqueMeshsNb = 0;
 
-    std::memset(_uiTransparentMeshs.data(), 0, _uiTransparentMeshsNb * sizeof(void*));
+    std::memset(_uiTransparentMeshs.data(), 0, _uiTransparentMeshsNb * sizeof(sRenderableMesh));
     _uiTransparentMeshsNb = 0;
 
-    std::memset(_texts.data(), 0, _textsNb * sizeof(void*));
+    std::memset(_texts.data(), 0, _textsNb * sizeof(sRenderableText));
     _textsNb = 0;
 
     std::memset(_lights.data(), 0, _lightsNb * sizeof(void*));

@@ -26,6 +26,7 @@
             "r" : 1
          },
          "dynamic" : false,
+         "hide_dynamic" : false,
          "ignore_raycast" : false,
          "materials" : [ "Material #26", "Material #26" ],
          "model" : "resources/models/traps/trap_cutter.DAE",

@@ -35,6 +35,7 @@ START_SYSTEM(RenderingSystem)
         Mesh* mesh{nullptr};
         MeshInstance* meshInstance{nullptr};
         bool dynamic{false};
+        bool hideDynamic{false};
     };
 
 public:

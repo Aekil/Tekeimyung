@@ -49,6 +49,7 @@
             "r" : 1
          },
          "dynamic" : false,
+         "hide_dynamic" : false,
          "ignore_raycast" : false,
          "materials" : [ "button_try_again_green.mat" ],
          "model" : "resources/models/default.DAE",

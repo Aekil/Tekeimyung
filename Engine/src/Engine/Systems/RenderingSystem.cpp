@@ -155,9 +155,20 @@ void    RenderingSystem::addParticlesToRenderQueue(EntityManager& em, float elap
         }
 
         if (uiComponent)
-            _renderQueue.addUIModel(model, emitter->buffer->ubo, uiComponent->layer, 0, emitter->buffer->size, emitter->particlesNb);
+            _renderQueue.addUIModel(model,
+                                    emitter->buffer->ubo,
+                                    uiComponent->layer,
+                                    0,
+                                    emitter->buffer->size,
+                                    emitter->particlesNb);
         else
-            _renderQueue.addModel(model, emitter->buffer->ubo, 0, emitter->buffer->size, emitter->particlesNb);
+            _renderQueue.addModel(model,
+                                    emitter->buffer->ubo,
+                                    0,
+                                    emitter->buffer->size,
+                                    emitter->particlesNb,
+                                    render->dynamic,
+                                    true);
     }
 }
 
@@ -388,7 +399,7 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
 
    for (auto& batch: _batches)
    {
-        _renderQueue.addMesh(batch.meshInstance, batch.buffer->ubo, 0, batch.buffer->size, batch.instances, batch.dynamic);
+        _renderQueue.addMesh(batch.meshInstance, batch.buffer->ubo, 0, batch.buffer->size, batch.instances, batch.dynamic, batch.hideDynamic);
    }
 
     // Add cameras views to render queue
@@ -448,12 +459,14 @@ void    RenderingSystem::addBatch(sTransformComponent* transform, sRenderCompone
         auto material = meshInstance->getMaterial();
         auto mesh = meshInstance->getMesh();
         bool dynamic = render->dynamic;
+        bool hideDynamic = render->hideDynamic;
         sBatch* batch = nullptr;
         for (auto& batch_: _batches)
         {
             if (batch_.mesh == mesh &&
                 batch_.material == material &&
                 batch_.dynamic == dynamic &&
+                batch_.hideDynamic == hideDynamic &&
                 batch_.instances < INSTANCING_MAX)
             {
                 batch = &batch_;
@@ -469,6 +482,7 @@ void    RenderingSystem::addBatch(sTransformComponent* transform, sRenderCompone
             batch->mesh = mesh;
             batch->meshInstance = meshInstance.get();
             batch->dynamic = dynamic;
+            batch->hideDynamic = hideDynamic;
         }
         uint32_t offset = batch->instances * (sizeof(glm::vec4) + sizeof(glm::mat4));
         auto transform_ = transform->getTransform();

@@ -4,6 +4,7 @@
 
 #include <Engine/Components.hh>
 #include <Engine/EntityFactory.hpp>
+#include <Engine/Utils/Maths.hpp>
 
 #include <Game/Scripts/GameManager.hpp>
 #include <Game/Scripts/GoldManager.hpp>
@@ -49,6 +50,11 @@ void Enemy::update(float dt)
     Health::update(_transform);
 }
 
+void    Enemy::setPercentExplosion(double percentExplosion)
+{
+    this->_percentExplosion = percentExplosion;
+}
+
 void    Enemy::onCollisionEnter(Entity* entity)
 {
     if (entity->getTag() == "ProjectileKnockBack")
@@ -73,6 +79,11 @@ void Enemy::death()
     sTransformComponent* explosionTransform = explosion->getComponent<sTransformComponent>();
     sTransformComponent* entityTransform = entity->getComponent<sTransformComponent>();
     explosionTransform->setPos(entityTransform->getPos());
+
+    if (Maths::randomFrom(0.0f, 1.0f) > (1.0f - this->_percentExplosion))
+    {
+        //EXPLOSION LASER
+    }
 
     this->Destroy();
 
