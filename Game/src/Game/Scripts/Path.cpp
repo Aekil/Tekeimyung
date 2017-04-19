@@ -31,7 +31,7 @@ Node*    Path::getNodeFromPos(int x, int y)
         return nullptr;
 
     glm::ivec2 pos(x, y);
-    bool isWalkable = (_map[x][y] % LAYER_NUMBER) == 1;
+    bool isWalkable = (map[x][y] % LAYER_NUMBER) == 1 || (map[x][y] % LAYER_NUMBER) == 3;
     return (new Node(pos, isWalkable));
 }
 
@@ -156,6 +156,12 @@ bool    Path::findTarget()
 std::vector<glm::ivec2>  Path::goToTarget(glm::ivec2 pos, glm::ivec2 target, int map[29][38], const glm::ivec2& mapSize)
 {
     std::vector<glm::ivec2> path;
+
+    if (pos.x < 0 || pos.y < 0 ||
+        pos.x >= mapSize.x || pos.y >= mapSize.y)
+    {
+        return (path);
+    }
 
     _mapSize = mapSize;
     _openNodes.clear();

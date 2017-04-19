@@ -30,7 +30,7 @@ void    HowToPlayState::setupSystems()
 
 bool    HowToPlayState::init()
 {
-    SoundManager::getInstance()->setVolume(0.3f); // same as for PauseState since it pause the game
+    SoundManager::getInstance()->setVolumeAllChannels(0.3f); // same as for PauseState since it pause the game
     return (true);
 }
 
@@ -43,7 +43,7 @@ bool    HowToPlayState::update(float elapsedTime)
     if (keyboard.getStateMap()[Keyboard::eKey::ESCAPE] == Keyboard::eKeyState::KEY_PRESSED ||
         keyboard.getStateMap()[Keyboard::eKey::H] == Keyboard::eKeyState::KEY_PRESSED)
     {
-        SoundManager::getInstance()->setVolume(1.0f);
+        SoundManager::getInstance()->setVolumeAllChannels(1.0f);
         return (false);
     }
 

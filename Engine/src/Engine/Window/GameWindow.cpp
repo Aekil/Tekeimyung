@@ -378,13 +378,13 @@ void    GameWindow::focusCallback(GLFWwindow* window, int focused)
     // The window gained the focus
     if (focused)
     {
-        SoundManager::getInstance()->resume();
+        SoundManager::getInstance()->resumeAllChannels();
         gameWindow->hasLostFocus(false);
     }
     // The window lost focus
     else
     {
-        SoundManager::getInstance()->pause();
+        SoundManager::getInstance()->pauseAllChannels();
         gameWindow->hasLostFocus(true);
     }
 }

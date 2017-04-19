@@ -26,6 +26,7 @@
             "r" : 1
          },
          "dynamic" : false,
+         "hide_dynamic" : false,
          "ignore_raycast" : false,
          "materials" : [ "bloom_cyan.mat" ],
          "model" : "resources/models/blocks/block.DAE",
@@ -62,5 +63,5 @@
       }
    },
    "name" : "TILE_FLOOR",
-   "tag" : "TileFloor"
+   "tag" : ""
 }

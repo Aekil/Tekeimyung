@@ -7,8 +7,8 @@
 
 void Castle::start()
 {
-    this->setHealth(0);
-    this->setMaxHealth(0);
+    this->setHealth(DEFAULT_MAX_CASTLE_HEALTH);
+    this->setMaxHealth(DEFAULT_MAX_CASTLE_HEALTH);
 
     this->_render = getComponent<sRenderComponent>();
     this->_transform = getComponent<sTransformComponent>();
@@ -22,13 +22,13 @@ void Castle::update(float dt)
 
 void Castle::onCollisionEnter(Entity* entity)
 {
-    if (entity->getTag() == "Enemy")
+    if (entity->getTag() == ENEMY_TAG)
     {
-        this->takeDamage(200);
+        this->takeDamage(DEFAULT_CASTLE_DMG_FROM_ENEMY);
 
         sScriptComponent* script = entity->getComponent<sScriptComponent>();
-        Enemy* enemy = script ? script->getScript<Enemy>("Enemy") : nullptr;
-        enemy->death();
+        Enemy* enemy = script ? script->getScript<Enemy>(ENEMY_TAG) : nullptr;
+        enemy->remove();
     }
 }
 
@@ -56,7 +56,7 @@ bool        Castle::updateEditor()
     }
     if (ImGui::InputInt("Max health", &maxHealth, 1, 100, ImGuiInputTextFlags_CharsNoBlank))
     {
-        this->setMaxHealth(currentHealth);
+        this->setMaxHealth(maxHealth);
         changed |= true;
     }
     ImGui::EndGroup();

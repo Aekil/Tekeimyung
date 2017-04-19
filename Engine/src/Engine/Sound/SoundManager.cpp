@@ -25,10 +25,10 @@ _system(nullptr)
         _sounds[i].channel = nullptr;
         _sounds[i].type = eSoundType::DEFAULT_SOUND;
     }
-    for (int i = 0; i < NB_MAX_CHANNELS; ++i)
+    /*for (int i = 0; i < NB_MAX_CHANNELS; ++i)
     {
         _channels[i] = nullptr;
-    }
+    }*/
 }
 
 SoundManager::~SoundManager() {}
@@ -45,11 +45,15 @@ std::shared_ptr<SoundManager>   SoundManager::getInstance()
 bool    SoundManager::initialize()
 {
     _result = FMOD::System_Create(&_system);
-    if (!errorCheck())
+    if (errorCheck())
         return (false);
 
     _result = _system->init(NB_MAX_CHANNELS, FMOD_INIT_NORMAL, 0);
-    if (!errorCheck())
+    if (errorCheck())
+        return (false);
+
+    _result = _system->getMasterChannelGroup(&_channelGroup);
+    if (errorCheck())
         return (false);
 
     return (true);
@@ -75,12 +79,11 @@ bool    SoundManager::errorCheck()
 {
     if (_result != FMOD_OK)
     {
-        //if (_result != 30 )//&& _result != 3)
-            //LOG_ERROR("FMOD error! (%d) : %s", _result, FMOD_ErrorString(_result));
+        LOG_ERROR("FMOD error! (%d) : %s", _result, FMOD_ErrorString(_result));
         //std::cerr << "FMOD error! (" << _result << ") " << FMOD_ErrorString(_result) << std::endl;
-        return (false);
+        return (true);
     }
-    return (true);
+    return (false);
 }
 
 void    SoundManager::freeSound(int id)
@@ -91,6 +94,10 @@ void    SoundManager::freeSound(int id)
         _result = _sounds[id].sound->release();
         errorCheck();
     }
+    else
+    {
+        LOG_WARN("Sound with id n°%d is already released", id);
+    }
 }
 
 int     SoundManager::registerSound(const std::string& name, eSoundType type)
@@ -98,14 +105,14 @@ int     SoundManager::registerSound(const std::string& name, eSoundType type)
     for (int i = 0; i < NB_MAX_SOUNDS; i++)
     {
         // The sound type changed, reload it to optimize
-        if (_sounds[i].name == name &&
+        /*if (_sounds[i].name == name &&
             _sounds[i].type != type &&
             _sounds[i].type != eSoundType::NONE)
         {
             _sounds[i].sound->release();
             _sounds[i].sound = nullptr;
             _sounds[i].free = true;
-        }
+        }*/
 
         if (_sounds[i].free)
         {
@@ -113,48 +120,53 @@ int     SoundManager::registerSound(const std::string& name, eSoundType type)
             _sounds[i].type = type;
             _sounds[i].name = name;
             _sounds[i].id = i;
-            // Load music and default sound as streams
-            if (type == eSoundType::BACKGROUND_SOUND || type == eSoundType::NONE)
+
+            if (type == eSoundType::BACKGROUND_SOUND /*|| type == eSoundType::NONE*/)
             {
-                _sounds[i].type = eSoundType::BACKGROUND_SOUND;
+                //_sounds[i].type = eSoundType::BACKGROUND_SOUND;
                 _result = _system->createStream(name.c_str(), FMOD_LOOP_NORMAL, 0, &_sounds[i].sound);
             }
             else // type == DEFAULT_SOUND
             {
                 _result = _system->createSound(name.c_str(), FMOD_DEFAULT, 0, &_sounds[i].sound);
             }
-            LOG_INFO("Load sound : %s", name.c_str());
-            errorCheck();
+            if (!errorCheck())
+                LOG_INFO("sound : %s has been successfully loaded", name.c_str());
+            else
+                LOG_WARN("sound : %s has not been properly loaded", name.c_str());
             return (_sounds[i].id);
         }
         else if (_sounds[i].name == name)
+        {
+            LOG_INFO("sound : %s is already loaded", name.c_str());
             return (_sounds[i].id);
+        }
     }
-    LOG_WARN("No place available to register more sounds");
+    LOG_WARN("No available space to register (& load) more sounds");
     return (-1);
 }
 
 void    SoundManager::playSound(int id)
 {
-    // Out of range
-    if (id < 0 || id >= NB_MAX_SOUNDS)
+    if (id < 0 || id >= NB_MAX_SOUNDS) // Out of range
+    {
+        LOG_WARN("Sound id %d out of range in playSound(id)", id);
         return;
+    }
 
-    // Play sound
     _result = _system->playSound(_sounds[id].sound, 0, false, &_sounds[id].channel);
     errorCheck();
 
-    // Add channel to array
     if (_sounds[id].channel == nullptr)
     {
         LOG_ERROR("Failed to play sound : channel handle is null");
         return;
     }
 
-    addChannel(_sounds[id].channel);
+    //addChannel(_sounds[id].channel);
 }
 
-void    SoundManager::resumeSound(int id)
+/*void    SoundManager::resumeSound(int id)
 {
     if (id < 0 || id >= NB_MAX_SOUNDS || // Out of range
         _sounds[id].channel == nullptr) // Not currently playing
@@ -187,15 +199,21 @@ void    SoundManager::stopSound(int id)
     errorCheck();
 
     _sounds[id].channel = nullptr;
-}
+}*/
 
 bool    SoundManager::isSoundPlaying(int id)
 {
     bool isPlaying = false;
 
-    if (id < 0 || id >= NB_MAX_SOUNDS || // Out of range
-        _sounds[id].channel == nullptr) // Not currently playing
+    if (id < 0 || id >= NB_MAX_SOUNDS) // out of range
+    {
+        LOG_WARN("Sound id %d out of range in isSoundPlaying(id)", id);
         return (false);
+    }
+    if (_sounds[id].channel == nullptr || _sounds[id].free) // Not currently playing
+    {
+        return (false);
+    }
 
     _result = _sounds[id].channel->isPlaying(&isPlaying);
     errorCheck();
@@ -203,7 +221,7 @@ bool    SoundManager::isSoundPlaying(int id)
     return (isPlaying);
 }
 
-bool    SoundManager::isSoundPaused(int id)
+/*bool    SoundManager::isSoundPaused(int id)
 {
     bool isPaused = false;
 
@@ -215,9 +233,9 @@ bool    SoundManager::isSoundPaused(int id)
     errorCheck();
 
     return (isPaused);
-}
+}*/
 
-unsigned int        SoundManager::getSoundCurrentPosition(int id)
+/*unsigned int        SoundManager::getSoundCurrentPosition(int id)
 {
     unsigned int    currentPosition;
 
@@ -253,64 +271,65 @@ unsigned int        SoundManager::getSoundLength(int id)
         }
     }
     return (soundLength);
+}*/
+
+int     SoundManager::getSoundIDFromName(const std::string& name) const
+{
+    for (int i = 0; i < NB_MAX_SOUNDS; i++)
+    {
+        if (!_sounds[i].free && _sounds[i].name == name)
+            return (_sounds[i].id);
+    }
+    LOG_WARN("Sound %s is not registered", name.c_str());
+    return (-1);
 }
 
 const char*   SoundManager::getSoundNameFromID(int id) const
 {
     for (int i = 0; i < NB_MAX_SOUNDS; i++)
     {
-        if (i == id)
-        {
-            if (!_sounds[i].free)
-            {
-                return (_sounds[i].name.c_str());
-            }
-            else
-            {
-                break;
-            }
-        }
+        if (!_sounds[i].free && i == id)
+            return (_sounds[i].name.c_str());
     }
+    LOG_WARN("Sound with id n°%d is not registered", id);
     return (nullptr);
 }
 
-void    SoundManager::pause()
+void    SoundManager::pauseAllChannels()
 {
-    for (int i = 0; i < NB_MAX_CHANNELS; ++i)
-    {
-        if (_channels[i] == nullptr)
-            continue;
+    bool chanGrpState;
 
-        _result = _channels[i]->setPaused(true);
+    _result = _channelGroup->getPaused(&chanGrpState);
+    errorCheck();
+
+    if (!chanGrpState)
+    {
+        _result = _channelGroup->setPaused(1);
         errorCheck();
     }
 }
 
-void    SoundManager::resume()
+void    SoundManager::resumeAllChannels()
 {
-    for (int i = 0; i < NB_MAX_CHANNELS; ++i)
-    {
-        if (_channels[i] == nullptr)
-            continue;
+    bool chanGrpState;
+    
+    _result = _channelGroup->getPaused(&chanGrpState);
+    errorCheck();
 
-        _result = _channels[i]->setPaused(false);
+    if (chanGrpState)
+    {
+        _result = _channelGroup->setPaused(0);
         errorCheck();
     }
 }
 
-void    SoundManager::setVolume(float volume)
+void    SoundManager::setVolumeAllChannels(float volume)
 {
-    for (int i = 0; i < NB_MAX_CHANNELS; ++i)
-    {
-        if (_channels[i] == nullptr)
-            continue;
-
-        _result = _channels[i]->setVolume(volume);
-        errorCheck();
-    }
+    _result = _channelGroup->setVolume(volume);
+    errorCheck();
 }
 
-void    SoundManager::addChannel(FMOD::Channel* channel)
+/*void    SoundManager::addChannel(FMOD::Channel* channel)
 {
     int index = 0;
     _result = channel->getIndex(&index);
@@ -340,9 +359,9 @@ void    SoundManager::removeChannel(FMOD::Channel* channel)
     {
         LOG_ERROR("SoundManager::removeChannel, Channel index out of range");
     }
-}
+}*/
 
-tSoundInfos         SoundManager::getSoundInfos(uint32_t soundID)
+/*tSoundInfos         SoundManager::getSoundInfos(uint32_t soundID)
 {
     tSoundInfos     soundInfos;
     float           exponent, mantissa;
@@ -362,4 +381,4 @@ tSoundInfos         SoundManager::getSoundInfos(uint32_t soundID)
     soundInfos.lengthSeconds = (unsigned int) (mantissa2 * 60.0f);
 
     return (soundInfos);
-}
+}*/

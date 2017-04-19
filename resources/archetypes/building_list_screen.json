@@ -1,0 +1,56 @@
+{
+   "components" : {
+      "sNameComponent" : {
+         "name" : "BUILDING_LIST_SCREEN"
+      },
+      "sRenderComponent" : {
+         "animated" : false,
+         "animations" : [],
+         "color" : {
+            "a" : 1,
+            "b" : 1,
+            "g" : 1,
+            "r" : 1
+         },
+         "dynamic" : false,
+         "hide_dynamic" : false,
+         "ignore_raycast" : false,
+         "materials" : [ "texture_buildinglist.mat" ],
+         "model" : "resources/models/default.DAE",
+         "type" : "PLANE"
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 960,
+            "y" : 549.719970703125,
+            "z" : 0
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "scale" : {
+            "x" : 102.39994049072266,
+            "y" : 84.833305358886719,
+            "z" : 0.0010000000474974513
+         }
+      },
+      "sUiComponent" : {
+         "horizontal_alignment" : "MIDDLE",
+         "layer" : 0,
+         "offset" : {
+            "x" : 0,
+            "y" : 4
+         },
+         "percentage_size" : true,
+         "size" : {
+            "x" : 0.53333300352096558,
+            "y" : 0.83333307504653931
+         },
+         "vertical_alignment" : "MIDDLE"
+      }
+   },
+   "name" : "BUILDING_LIST_SCREEN",
+   "tag" : ""
+}

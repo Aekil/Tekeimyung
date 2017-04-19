@@ -6,6 +6,7 @@
 #include <Engine/Utils/ResourceManager.hpp>
 
 #include <Engine/Graphics/Geometries/Box.hpp>
+#include <Engine/Graphics/Geometries/Cylinder.hpp>
 #include <Engine/Graphics/Geometries/Plane.hpp>
 #include <Engine/Graphics/Geometries/Sphere.hpp>
 #include <Engine/Graphics/Geometries/Circle.hpp>
@@ -64,6 +65,13 @@ void GeometryFactory::initGeometries()
         std::unique_ptr<Geometry> cone = std::make_unique<Trapeze>(trapezeInfos);
         ResourceManager::getInstance()->registerResource<Geometry>(std::move(cone), "trapeze");
     }
+
+    // Cylinder
+    {
+        Cylinder::sInfo cylinderInfos = {SIZE_UNIT / 2.0f, SIZE_UNIT};
+        std::unique_ptr<Geometry> cylinder = std::make_unique<Cylinder>(cylinderInfos);
+        ResourceManager::getInstance()->registerResource<Geometry>(std::move(cylinder), "cylinder");
+    }
 }
 
 Geometry*   GeometryFactory::getGeometry(Geometry::eType type)
@@ -92,6 +100,10 @@ Geometry*   GeometryFactory::getGeometry(Geometry::eType type)
     else if (type == Geometry::eType::TRAPEZE)
     {
         geometry = ResourceManager::getInstance()->getOrLoadResource<Geometry>("trapeze");
+    }
+    else if (type == Geometry::eType::CYLINDER)
+    {
+        geometry = ResourceManager::getInstance()->getOrLoadResource<Geometry>("cylinder");
     }
     else
     {

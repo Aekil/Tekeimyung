@@ -49,6 +49,7 @@
             "r" : 1
          },
          "dynamic" : false,
+         "hide_dynamic" : false,
          "ignore_raycast" : false,
          "materials" : [ "button_how_to_play.mat" ],
          "model" : "resources/models/default.DAE",

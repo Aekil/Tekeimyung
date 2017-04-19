@@ -49,7 +49,7 @@ void    EventSound::linkEventSound(int i, int id, const ResourceManager::sSoundS
     {
         if (_eventSoundDataList[i].soundID != -1)
         {
-            SoundManager::getInstance()->stopSound(_eventSoundDataList[i].soundID);
+            //SoundManager::getInstance()->stopSound(_eventSoundDataList[i].soundID);
         }
         _eventSoundDataList[i].soundID = id;
         _eventSoundDataList[i].soundName = soundString.name;
@@ -66,7 +66,7 @@ void    EventSound::removeEventSound(int i)
     }
     else
     {
-        SoundManager::getInstance()->stopSound(_eventSoundDataList[i].soundID);
+        //SoundManager::getInstance()->stopSound(_eventSoundDataList[i].soundID);
         _eventSoundDataList[i].soundID = -1;
         _eventSoundDataList[i].soundName = "";
         _eventSoundDataList[i].soundPath = "";

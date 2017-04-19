@@ -6,8 +6,11 @@
 
 #include <Game/Weapons/IWeapon.hpp>
 
+
 class LaserWeapon final : public IWeapon
 {
+    friend class Player;
+
 public:
     LaserWeapon();
     ~LaserWeapon() = default;
@@ -17,9 +20,17 @@ public:
     void reload() override final;
     void upgradeByLevel() override final;
 
+    virtual std::string getName()
+    {
+        return this->Name;
+    }
+
+    const static std::string Name;
+
 private:
     void fireOneEnemy(Player* player, sTransformComponent* playerTransform, sRenderComponent* playerRender, glm::vec3 playerDirection);
     void fireMultipleEnemy(Player* player, sTransformComponent* playerTransform, sRenderComponent* playerRender, glm::vec3 playerDirection);
+    Entity* farestEnemy(sTransformComponent* playerTransform, std::vector<Entity*> entities);
 
 private:
     bool _timeDamage = false;
@@ -29,4 +40,5 @@ private:
 
     bool _timeExplosion = false;
     float _timeExplosionPercent = 0.07f;
+    Entity* _laser = nullptr;
 };

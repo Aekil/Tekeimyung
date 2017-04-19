@@ -35,7 +35,7 @@ void    PauseState::setupSystems()
 
 bool    PauseState::init()
 {
-    SoundManager::getInstance()->setVolume(0.3f);
+    SoundManager::getInstance()->setVolumeAllChannels(0.3f);
     return (true);
 }
 
@@ -51,7 +51,7 @@ bool    PauseState::update(float elapsedTime)
     // Unpause the game
     if (keyboard.getStateMap()[Keyboard::eKey::ESCAPE] == Keyboard::eKeyState::KEY_PRESSED)
     {
-        SoundManager::getInstance()->setVolume(1.0f);
+        SoundManager::getInstance()->setVolumeAllChannels(1.0f);
         return (false);
     }
 

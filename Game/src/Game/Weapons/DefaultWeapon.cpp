@@ -2,12 +2,14 @@
 ** Author : Simon AMBROISE
 */
 
-#include <random>
-
 #include <Engine/EntityFactory.hpp>
+#include <Engine/Utils/ResourceManager.hpp>
+#include <Engine/Utils/Maths.hpp>
 
 #include <Game/Weapons/DefaultWeapon.hpp>
 #include <Game/Scripts/Projectile.hpp>
+
+const std::string DefaultWeapon::Name = "Default";
 
 DefaultWeapon::DefaultWeapon()
 {
@@ -19,6 +21,7 @@ DefaultWeapon::DefaultWeapon()
     this->_attributes["CriticalStrike"] = new Attribute(150.0 / 100.0);
 
     _shootSound = EventSound::getEventByEventType(eEventSound::PLAYER_SHOOT);
+    _material = ResourceManager::getInstance()->getResource<Material>("weapon_default.mat");
 }
 
 void DefaultWeapon::upgradeByLevel()
@@ -37,19 +40,6 @@ void DefaultWeapon::upgradeByLevel()
     default:
         break;
     }
-}
-
-template <typename T>
-T randomFrom(const T min, const T max)
-{
-    static std::random_device rdev;
-    static std::default_random_engine re(rdev());
-    typedef typename std::conditional<
-        std::is_floating_point<T>::value,
-        std::uniform_real_distribution<T>,
-        std::uniform_int_distribution<T>>::type dist_type;
-    dist_type uni(min, max);
-    return static_cast<T>(uni(re));
 }
 
 void DefaultWeapon::fire(Player* player, sTransformComponent* playerTransform, sRenderComponent* playerRender, glm::vec3 playerDirection)
@@ -72,7 +62,7 @@ void DefaultWeapon::fire(Player* player, sTransformComponent* playerTransform, s
 
     projectileScript->_projectileTransform->translate(glm::vec3(0.0f, -((playerRender->getModel()->getMin().y * playerTransform->getScale().y) / 2.0f), 0.0f));
 
-    if (randomFrom(0.0f, 1.0f) < (1.0f - this->_attributes["CriticalChance"]->getFinalValue()))
+    if (Maths::randomFrom(0.0f, 1.0f) < (1.0f - this->_attributes["CriticalChance"]->getFinalValue()))
         projectileScript->_damage = this->_attributes["Damage"]->getFinalValue();
     else
         projectileScript->_damage = this->_attributes["Damage"]->getFinalValue() * (1 + this->_attributes["CriticalStrike"]->getFinalValue());
@@ -80,7 +70,7 @@ void DefaultWeapon::fire(Player* player, sTransformComponent* playerTransform, s
     projectileScript->followDirection({ playerDirection.x, 0.0f, playerDirection.z });
 
 #if (ENABLE_SOUND)
-    if (_shootSound->soundID != -1 && !SoundManager::getInstance()->isSoundPlaying(_shootSound->soundID))
+    if (_shootSound->soundID != -1)
     {
         SoundManager::getInstance()->playSound(_shootSound->soundID);
     }

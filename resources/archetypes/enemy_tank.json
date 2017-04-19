@@ -79,6 +79,7 @@
             "r" : 1
          },
          "dynamic" : false,
+         "hide_dynamic" : false,
          "ignore_raycast" : false,
          "materials" : [ "enemy.mat" ],
          "model" : "resources/models/characters/enemy.DAE",

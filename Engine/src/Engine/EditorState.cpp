@@ -28,7 +28,7 @@ void    EditorState::setupSystems()
 
 bool    EditorState::init()
 {
-    SoundManager::getInstance()->setVolume(0.3f);
+    SoundManager::getInstance()->setVolumeAllChannels(0.3f);
     initCamera();
 
     return (true);

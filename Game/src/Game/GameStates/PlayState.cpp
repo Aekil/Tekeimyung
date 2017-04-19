@@ -15,6 +15,7 @@
 #include <Engine/Systems/UISystem.hpp>
 #include <Engine/Systems/MouseSystem.hpp>
 #include <Game/GameStates/HowToPlayState.hpp>
+#include <Game/GameStates/BuildingListState.hpp>
 #include <Game/GameStates/PauseState.hpp>
 
 #include <Game/GameStates/PlayState.hpp>
@@ -55,7 +56,10 @@ bool    PlayState::update(float elapsedTime)
     {
         _gameStateManager->addState<HowToPlayState>();
     }
-
+    if (keyboard.getStateMap()[Keyboard::eKey::B] == Keyboard::eKeyState::KEY_PRESSED)
+    {
+        _gameStateManager->addState<BuildingListState>();
+    }
     if (keyboard.getStateMap()[Keyboard::eKey::ESCAPE] == Keyboard::eKeyState::KEY_PRESSED ||
         gameWindow->hasLostFocus())
     {
