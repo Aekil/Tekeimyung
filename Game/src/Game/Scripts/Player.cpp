@@ -9,6 +9,7 @@
 #include <Engine/Graphics/Camera.hpp>
 #include <Engine/Graphics/Renderer.hpp>
 #include <Engine/Physics/Physics.hpp>
+#include <Engine/Utils/Exception.hpp>
 
 #include <Game/Scripts/GameManager.hpp>
 #include <Game/Scripts/Projectile.hpp>
@@ -64,6 +65,8 @@ void Player::start()
         _gameManager = scriptComponent->getScript<GameManager>("GameManager");
         _waveManager = scriptComponent->getScript<WaveManager>("WaveManager");
     }
+
+    updateWeaponMaterial();
 }
 
 void Player::update(float dt)
@@ -76,15 +79,28 @@ void Player::update(float dt)
 
 void Player::changeWeapon()
 {
-    if (this->keyboard.getStateMap()[Keyboard::eKey::X] == Keyboard::eKeyState::KEY_RELEASED)
-    {
-        this->_actualWeapon++;
+    auto &&scroll = mouse.getScroll();
+    static double lastOffset = scroll.yOffset;
 
-        if (this->_actualWeapon >= this->_weapons.size())
+    if (lastOffset != scroll.yOffset &&
+        !keyboard.isPressed(Keyboard::eKey::LEFT_CONTROL))
+    {
+        if (this->mouse.getScroll().yOffset < 0)
+            this->_actualWeapon++;
+        else
+            this->_actualWeapon--;
+
+        if (this->_actualWeapon >= (int)this->_weapons.size())
             this->_actualWeapon = 0;
+        else if (this->_actualWeapon < 0)
+            this->_actualWeapon = static_cast<int>(this->_weapons.size() - 1);
+
+        updateWeaponMaterial();
 
         LOG_DEBUG("Actual weapon : %d", this->_actualWeapon);
-    } 
+    }
+
+    lastOffset = scroll.yOffset;
 }
 
 void Player::updateDirection()
@@ -140,32 +156,12 @@ void Player::movement(float elapsedTime)
         }
     }
 
+    #if defined(ENGINE_DEBUG)
     if (this->keyboard.getStateMap()[Keyboard::eKey::L] == Keyboard::eKeyState::KEY_RELEASED)
     {
         this->_weapons[this->_actualWeapon]->levelUp();
-
-        /*Entity*                 bullet;
-        sScriptComponent*       bulletScripts;
-        Projectile*             projectileScript;
-
-        bullet = Instantiate("PLAYER_BULLET");
-        bulletScripts = bullet->getComponent<sScriptComponent>();
-        projectileScript = bulletScripts->getScript<Projectile>("Projectile");
-
-        projectileScript->_projectileTransform->setPos(_transform->getPos());
-
-        projectileScript->_projectileTransform->translate(glm::vec3(0.0f, -((_render->getModel()->getMin().y * _transform->getScale().y) / 2.0f), 0.0f));
-
-        projectileScript->_damage = _damage;
-        projectileScript->followDirection({_direction.x, 0.0f, _direction.z});
-
-#if (ENABLE_SOUND)
-        if (_shootSound->soundID != -1)
-        {
-            SoundManager::getInstance()->playSound(_shootSound->soundID);
-        }
-#endif*/
     }
+    #endif
 }
 
 void Player::handleShoot(float dt)
@@ -178,6 +174,18 @@ void Player::handleShoot(float dt)
         {
             this->_weapons[this->_actualWeapon]->fire(this, this->_transform, this->_render, this->_direction);
             this->_elapsedTime = 0;
+        }
+        else
+        {
+            if (this->_weapons[this->_actualWeapon]->getName() == LaserWeapon::Name)
+            {
+                LaserWeapon* obj = dynamic_cast<LaserWeapon*>(this->_weapons[this->_actualWeapon]);
+                if (obj->_laser != nullptr)
+                {
+                    this->Destroy(obj->_laser);
+                    obj->_laser = nullptr;
+                }
+            }
         }
     }
 }
@@ -204,6 +212,18 @@ void Player::addExperience(int xp)
 
     if (this->_experience > this->_nextLevelUp)
         this->levelUp();
+}
+
+void Player::updateWeaponMaterial()
+{
+    Material* weaponMaterial = this->_weapons[this->_actualWeapon]->getMaterial();
+
+    if (!weaponMaterial)
+    {
+        EXCEPT(InternalErrorException, "Missing material for weapon %d", this->_actualWeapon);
+    }
+
+    _render->getModelInstance()->setMaterial(weaponMaterial);
 }
 
 void Player::levelUp()

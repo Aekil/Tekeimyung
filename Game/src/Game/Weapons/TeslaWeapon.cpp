@@ -12,6 +12,7 @@
 #include <Game/Weapons/TeslaWeapon.hpp>
 #include <Game/Scripts/Enemy.hpp>
 
+const std::string TeslaWeapon::Name = "Tesla";
 
 TeslaWeapon::TeslaWeapon()
 {
@@ -21,6 +22,8 @@ TeslaWeapon::TeslaWeapon()
     this->_attributes["MaxRange"] = new Attribute(35.0f);
     this->_attributes["HitAmount"] = new Attribute(2);
     this->_attributes["StunChance"] = new Attribute(0.0f);
+
+    _material = ResourceManager::getInstance()->getResource<Material>("weapon_tesla.mat");
 }
 
 void    TeslaWeapon::fire(Player* player, sTransformComponent* playerTransform, sRenderComponent* playerRender, glm::vec3 playerDirection)

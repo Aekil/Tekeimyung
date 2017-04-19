@@ -45,6 +45,7 @@ public:
     void onCollisionExit(Entity* entity) override final;
 
     void addExperience(int);
+    void updateWeaponMaterial();
 
 private:
     glm::vec3 _direction;

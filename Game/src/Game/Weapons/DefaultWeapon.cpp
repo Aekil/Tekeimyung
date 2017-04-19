@@ -3,10 +3,13 @@
 */
 
 #include <Engine/EntityFactory.hpp>
+#include <Engine/Utils/ResourceManager.hpp>
 #include <Engine/Utils/Maths.hpp>
 
 #include <Game/Weapons/DefaultWeapon.hpp>
 #include <Game/Scripts/Projectile.hpp>
+
+const std::string DefaultWeapon::Name = "Default";
 
 DefaultWeapon::DefaultWeapon()
 {
@@ -18,6 +21,7 @@ DefaultWeapon::DefaultWeapon()
     this->_attributes["CriticalStrike"] = new Attribute(150.0 / 100.0);
 
     _shootSound = EventSound::getEventByEventType(eEventSound::PLAYER_SHOOT);
+    _material = ResourceManager::getInstance()->getResource<Material>("weapon_default.mat");
 }
 
 void DefaultWeapon::upgradeByLevel()
