@@ -13,6 +13,7 @@
             "r" : 1
          },
          "dynamic" : false,
+         "hide_dynamic" : false,
          "ignore_raycast" : true,
          "materials" : [ "texture_popup_background.mat" ],
          "model" : "resources/models/default.DAE",

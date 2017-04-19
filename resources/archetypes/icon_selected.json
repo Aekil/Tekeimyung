@@ -46,6 +46,7 @@
             "r" : 1
          },
          "dynamic" : false,
+         "hide_dynamic" : false,
          "ignore_raycast" : false,
          "materials" : [ "icon_selected.mat" ],
          "model" : "resources/models/default.DAE",

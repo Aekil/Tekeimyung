@@ -57,6 +57,7 @@
             "r" : 1
          },
          "dynamic" : false,
+         "hide_dynamic" : false,
          "ignore_raycast" : false,
          "materials" : [ "particle_circle.mat" ],
          "model" : "resources/models/default.DAE",

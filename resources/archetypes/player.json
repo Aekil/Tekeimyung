@@ -15,6 +15,7 @@
          },
          "dynamic" : false,
          "geometry" : null,
+         "hide_dynamic" : false,
          "ignore_raycast" : false,
          "materials" : [ "_01 - Default", "_02 - Default" ],
          "model" : "resources/models/characters/character.DAE",

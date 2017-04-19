@@ -26,6 +26,7 @@
             "r" : 1
          },
          "dynamic" : false,
+         "hide_dynamic" : false,
          "ignore_raycast" : false,
          "materials" : [ "bloom_green.mat" ],
          "model" : "resources/models/blocks/block.DAE",

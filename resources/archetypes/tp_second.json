@@ -26,6 +26,7 @@
             "r" : 0
          },
          "dynamic" : false,
+         "hide_dynamic" : false,
          "ignore_raycast" : false,
          "materials" : [ "_01 - Default" ],
          "model" : "resources/models/blocks/block.DAE",
