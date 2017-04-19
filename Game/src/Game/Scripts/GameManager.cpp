@@ -19,6 +19,8 @@ void GameManager::start()
                     this->firstLayerEntities[x][z] = this->Instantiate("TILE_FLOOR", glm::vec3(x * 25, 0, z * 25));
                 else if ((int)(this->firstLayerPattern[x][z] % LAYER_NUMBER) == 2)
                     this->firstLayerEntities[x][z] = this->Instantiate("SPAWNER", glm::vec3(x * 25, 0, z * 25));
+                else if ((int)(this->firstLayerPattern[x][z] % LAYER_NUMBER) == 3)
+                    this->firstLayerEntities[x][z] = this->Instantiate("BUILDABLE_TILE_FLOOR", glm::vec3(x * 25, 0, z * 25));
             }
             else
             {
