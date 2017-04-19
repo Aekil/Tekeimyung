@@ -16,6 +16,7 @@ LaserWeapon::LaserWeapon()
     this->_attributes["Ammo"] = new Attribute(100.0f);
     this->_attributes["Damage"] = new Attribute(1.0f);
     this->_attributes["ExplosionPercentage"] = new Attribute(1.0 / 100.0);
+    this->_attributes["MaxRange"] = new Attribute(150.0f);
 }
 
 void    LaserWeapon::fire(Player* player, sTransformComponent* playerTransform, sRenderComponent* playerRender, glm::vec3 playerDirection)
@@ -25,10 +26,18 @@ void    LaserWeapon::fire(Player* player, sTransformComponent* playerTransform, 
     if (this->_attributes["Ammo"]->getFinalValue() == 0)
         this->reload();
 
+    if (this->_laser == nullptr)
+        this->_laser = EntityFactory::createEntity("LASER_CYLINDER");
+
+    glm::vec3 playerPos = playerTransform->getPos() + (playerRender->getModel()->getSize().y / 2.0f * playerTransform->getScale().y);
+    this->_laser->getComponent<sTransformComponent>()->setPos(playerPos);
+    this->_laser->getComponent<sTransformComponent>()->setScale(glm::vec3{ 0.2f, this->_attributes["MaxRange"]->getFinalValue() / SIZE_UNIT, 0.2f });
+    this->_laser->getComponent<sTransformComponent>()->setRotation(glm::vec3(90.0f, playerTransform->getRotation().y, 0.0f));
+
     if (!this->_pierceEnemy)
         this->fireOneEnemy(player, playerTransform, playerRender, playerDirection);
     else
-        this->fireMultipleEnemy(player, playerTransform, playerRender, playerDirection);
+        this->fireMultipleEnemy(player, playerTransform, playerRender, playerDirection);    
 }
 
 Entity* LaserWeapon::farestEnemy(sTransformComponent* playerTransform, std::vector<Entity*> entities)
@@ -55,7 +64,7 @@ void LaserWeapon::fireMultipleEnemy(Player* player, sTransformComponent* playerT
     Ray raycastHit = Ray(playerPos, glm::vec3{ playerDirection.x, 0.0f, playerDirection.z });
 
     std::vector<Entity*> hitedEntities;
-    if (Physics::raycastAll(raycastHit, hitedEntities, std::vector<Entity*>{ player->getEntity(), this->_laser }, false))
+    if (Physics::raycastAll(raycastHit, hitedEntities, std::vector<Entity*>{ player->getEntity(), this->_laser }, this->_attributes["MaxRange"]->getFinalValue()))
     {
         if (hitedEntities.size() == 0)
         {
@@ -72,7 +81,7 @@ void LaserWeapon::fireMultipleEnemy(Player* player, sTransformComponent* playerT
         if (this->_laser == nullptr)
             this->_laser = EntityFactory::createEntity("LASER_CYLINDER");
 
-        this->_laser->getComponent<sTransformComponent>()->setPos((playerPos + farestEntity->getComponent<sTransformComponent>()->getPos()) * 0.5f);
+        this->_laser->getComponent<sTransformComponent>()->setPos(playerPos);
         this->_laser->getComponent<sTransformComponent>()->setScale(glm::vec3{ 0.2f, glm::distance(farestEntity->getComponent<sTransformComponent>()->getPos(), playerTransform->getPos()) / SIZE_UNIT, 0.2f });
         this->_laser->getComponent<sTransformComponent>()->setRotation(glm::vec3(90.0f, playerTransform->getRotation().y, 0.0f));
 
@@ -108,14 +117,14 @@ void LaserWeapon::fireOneEnemy(Player* player, sTransformComponent* playerTransf
     Ray raycastHit = Ray(playerPos, glm::vec3{ playerDirection.x, 0.0f, playerDirection.z });
 
     Entity* hitedEntity;
-    if (Physics::raycast(raycastHit, &hitedEntity, std::vector<Entity*>{ player->getEntity(), this->_laser }, false))
+    if (Physics::raycast(raycastHit, &hitedEntity, std::vector<Entity*>{ player->getEntity(), this->_laser }, this->_attributes["MaxRange"]->getFinalValue()))
     {
         if (hitedEntity != nullptr && hitedEntity->getTag() == "Enemy")
         {
             if (this->_laser == nullptr)
                 this->_laser = EntityFactory::createEntity("LASER_CYLINDER");
 
-            this->_laser->getComponent<sTransformComponent>()->setPos((playerPos + hitedEntity->getComponent<sTransformComponent>()->getPos()) * 0.5f);
+            this->_laser->getComponent<sTransformComponent>()->setPos(playerPos);
             this->_laser->getComponent<sTransformComponent>()->setScale(glm::vec3{ 0.2f, glm::distance(hitedEntity->getComponent<sTransformComponent>()->getPos(), playerTransform->getPos()) / SIZE_UNIT, 0.2f });
             this->_laser->getComponent<sTransformComponent>()->setRotation(glm::vec3(90.0f, playerTransform->getRotation().y, 0.0f));
 
