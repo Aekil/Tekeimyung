@@ -158,6 +158,12 @@ std::vector<glm::ivec2>  Path::goToTarget(glm::ivec2 pos, glm::ivec2 target, int
 {
     std::vector<glm::ivec2> path;
 
+    if (pos.x < 0 || pos.y < 0 ||
+        pos.x >= mapSize.x || pos.y >= mapSize.y)
+    {
+        return (path);
+    }
+
     _mapSize = mapSize;
 
     _from = pos;
