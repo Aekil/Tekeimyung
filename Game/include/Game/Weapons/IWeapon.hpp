@@ -7,6 +7,7 @@
 #include <map>
 
 #include <Engine/Components.hh>
+#include <Engine/Graphics/Material.hpp>
 #include <Game/Attibutes/Attribute.hpp>
 #include <Game/Scripts/Player.hpp>
 
@@ -31,8 +32,14 @@ public:
 
     virtual std::string getName() = 0;
 
+    Material* getMaterial()
+    {
+        return (_material);
+    }
+
 protected:
     std::map<std::string, Attribute*> _attributes;
+    Material* _material = nullptr;
 
     int _level = 0;
 };

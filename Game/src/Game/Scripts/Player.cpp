@@ -9,6 +9,7 @@
 #include <Engine/Graphics/Camera.hpp>
 #include <Engine/Graphics/Renderer.hpp>
 #include <Engine/Physics/Physics.hpp>
+#include <Engine/Utils/Exception.hpp>
 
 #include <Game/Scripts/GameManager.hpp>
 #include <Game/Scripts/Projectile.hpp>
@@ -64,6 +65,8 @@ void Player::start()
         _gameManager = scriptComponent->getScript<GameManager>("GameManager");
         _waveManager = scriptComponent->getScript<WaveManager>("WaveManager");
     }
+
+    updateWeaponMaterial();
 }
 
 void Player::update(float dt)
@@ -83,8 +86,10 @@ void Player::changeWeapon()
         if (this->_actualWeapon >= this->_weapons.size())
             this->_actualWeapon = 0;
 
+        updateWeaponMaterial();
+
         LOG_DEBUG("Actual weapon : %d", this->_actualWeapon);
-    } 
+    }
 }
 
 void Player::updateDirection()
@@ -196,6 +201,18 @@ void Player::addExperience(int xp)
 
     if (this->_experience > this->_nextLevelUp)
         this->levelUp();
+}
+
+void Player::updateWeaponMaterial()
+{
+    Material* weaponMaterial = this->_weapons[this->_actualWeapon]->getMaterial();
+
+    if (!weaponMaterial)
+    {
+        EXCEPT(InternalErrorException, "Missing material for weapon %d", this->_actualWeapon);
+    }
+
+    _render->getModelInstance()->setMaterial(weaponMaterial);
 }
 
 void Player::levelUp()

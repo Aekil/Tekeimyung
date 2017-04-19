@@ -17,6 +17,8 @@ LaserWeapon::LaserWeapon()
     this->_attributes["Damage"] = new Attribute(1.0f);
     this->_attributes["ExplosionPercentage"] = new Attribute(1.0 / 100.0);
     this->_attributes["MaxRange"] = new Attribute(150.0f);
+
+    _material = ResourceManager::getInstance()->getResource<Material>("weapon_laser.mat");
 }
 
 void    LaserWeapon::fire(Player* player, sTransformComponent* playerTransform, sRenderComponent* playerRender, glm::vec3 playerDirection)
@@ -37,7 +39,7 @@ void    LaserWeapon::fire(Player* player, sTransformComponent* playerTransform, 
     if (!this->_pierceEnemy)
         this->fireOneEnemy(player, playerTransform, playerRender, playerDirection);
     else
-        this->fireMultipleEnemy(player, playerTransform, playerRender, playerDirection);    
+        this->fireMultipleEnemy(player, playerTransform, playerRender, playerDirection);
 }
 
 Entity* LaserWeapon::farestEnemy(sTransformComponent* playerTransform, std::vector<Entity*> entities)
