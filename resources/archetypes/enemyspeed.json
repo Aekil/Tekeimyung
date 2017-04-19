@@ -105,7 +105,7 @@
                "experience_earned" : 20,
                "health" : 120,
                "name" : "Enemy",
-               "speed" : 60
+               "speed" : 150
             }
          ]
       },
