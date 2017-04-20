@@ -170,9 +170,9 @@
          "scripts" : [
             {
                "experience_earned" : 20,
-               "health" : 150,
+               "health" : 200,
                "name" : "Enemy",
-               "speed" : 100
+               "speed" : 25
             }
          ]
       },

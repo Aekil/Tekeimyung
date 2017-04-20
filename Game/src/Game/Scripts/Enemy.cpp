@@ -85,7 +85,7 @@ void Enemy::death()
     const auto& gameManager = em->getEntityByTag(GAME_MANAGER_TAG);
     sScriptComponent* scriptComp = gameManager->getComponent<sScriptComponent>();
     GoldManager* goldManager = scriptComp->getScript<GoldManager>(GOLD_MANAGER_TAG);
-    goldManager->addGolds(10); // arbitrary number which needs to be replaced depending on the enemy archetype
+    goldManager->addGolds(20); // arbitrary number which needs to be replaced depending on the enemy archetype
 
     auto player = em->getEntityByTag("Player");
 

@@ -14,7 +14,7 @@ LaserWeapon::LaserWeapon()
 {
     this->_attributes["FireRate"] = new Attribute(0.0f);
     this->_attributes["Ammo"] = new Attribute(100.0f);
-    this->_attributes["Damage"] = new Attribute(1.0f);
+    this->_attributes["Damage"] = new Attribute(0.5f);
     this->_attributes["ExplosionPercentage"] = new Attribute(1.0 / 100.0);
     this->_attributes["MaxRange"] = new Attribute(150.0f);
 

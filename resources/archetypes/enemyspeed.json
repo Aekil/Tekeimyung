@@ -122,10 +122,10 @@
          "class" : [ "Enemy" ],
          "scripts" : [
             {
-               "experience_earned" : 20,
+               "experience_earned" : 12,
                "health" : 120,
                "name" : "Enemy",
-               "speed" : 150
+               "speed" : 50
             }
          ]
       },

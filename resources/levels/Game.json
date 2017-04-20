@@ -96,6 +96,7 @@
                   "r" : 1
                },
                "dynamic" : true,
+               "hide_dynamic" : false,
                "ignore_raycast" : false,
                "materials" : [ "_01 - Default", "_02 - Default" ],
                "model" : "resources/models/characters/character.DAE",
@@ -172,6 +173,7 @@
                   "r" : 1
                },
                "dynamic" : false,
+               "hide_dynamic" : false,
                "ignore_raycast" : false,
                "materials" : [ "bloom_green.mat" ],
                "model" : "resources/models/buildings/geometric_castle.DAE",
@@ -324,6 +326,237 @@
          },
          "name" : "CAMERA",
          "tag" : ""
+      },
+      {
+         "components" : {
+            "sNameComponent" : {
+               "name" : "HUD_DISPLAY_CASTLELIFE"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 0,
+                  "b" : 0,
+                  "g" : 0,
+                  "r" : 0
+               },
+               "dynamic" : false,
+               "hide_dynamic" : false,
+               "ignore_raycast" : false,
+               "materials" : [ "MAT_Default" ],
+               "model" : "resources/models/default.DAE",
+               "type" : "MESH"
+            },
+            "sScriptComponent" : {
+               "scripts" : [
+                  {
+                     "name" : "HudDisplayCastleLife"
+                  }
+               ]
+            },
+            "sTextComponent" : {
+               "color" : {
+                  "a" : 1,
+                  "b" : 0,
+                  "g" : 0.078431375324726105,
+                  "r" : 0.70588237047195435
+               },
+               "content" : "Castle health:\nx/X",
+               "font_name" : "moonhouse.ttf",
+               "font_size" : 22
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 1631.657958984375,
+                  "y" : 991.17791748046875,
+                  "z" : 0
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 19.200000762939453,
+                  "y" : 10.180000305175781,
+                  "z" : 1
+               }
+            },
+            "sTypeComponent" : {
+               "type" : "TILE_WALKABLE"
+            },
+            "sUiComponent" : {
+               "horizontal_alignment" : "RIGHT",
+               "layer" : 0,
+               "offset" : {
+                  "x" : 8,
+                  "y" : 15
+               },
+               "percentage_size" : false,
+               "size" : {
+                  "x" : 0.10000000149011612,
+                  "y" : 0.10000000149011612
+               },
+               "vertical_alignment" : "TOP"
+            }
+         },
+         "name" : "HUD_DISPLAY_CASTLELIFE",
+         "tag" : "HudDisplayCastleLife"
+      },
+      {
+         "components" : {
+            "sNameComponent" : {
+               "name" : "HUD_DISPLAY_GOLD"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 0,
+                  "b" : 0,
+                  "g" : 0,
+                  "r" : 0
+               },
+               "dynamic" : false,
+               "hide_dynamic" : false,
+               "ignore_raycast" : false,
+               "materials" : [ "MAT_Default" ],
+               "model" : "resources/models/default.DAE",
+               "type" : "MESH"
+            },
+            "sScriptComponent" : {
+               "scripts" : [
+                  {
+                     "name" : "HudDisplayGold"
+                  }
+               ]
+            },
+            "sTextComponent" : {
+               "color" : {
+                  "a" : 1,
+                  "b" : 0,
+                  "g" : 0.78431373834609985,
+                  "r" : 0.78431373834609985
+               },
+               "content" : "X Golds",
+               "font_name" : "moonhouse.ttf",
+               "font_size" : 22
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 1670.0579833984375,
+                  "y" : 919.9879150390625,
+                  "z" : 0
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 19.200000762939453,
+                  "y" : 10.180000305175781,
+                  "z" : 1
+               }
+            },
+            "sTypeComponent" : {
+               "type" : "TILE_WALKABLE"
+            },
+            "sUiComponent" : {
+               "horizontal_alignment" : "RIGHT",
+               "layer" : 0,
+               "offset" : {
+                  "x" : 10,
+                  "y" : 8
+               },
+               "percentage_size" : false,
+               "size" : {
+                  "x" : 0.10000000149011612,
+                  "y" : 0.10000000149011612
+               },
+               "vertical_alignment" : "TOP"
+            }
+         },
+         "name" : "HUD_DISPLAY_GOLD",
+         "tag" : "HudDisplayGold"
+      },
+      {
+         "components" : {
+            "sNameComponent" : {
+               "name" : "HUD_DISPLAY_WAVE"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 0,
+                  "b" : 0,
+                  "g" : 0,
+                  "r" : 0
+               },
+               "dynamic" : false,
+               "hide_dynamic" : false,
+               "ignore_raycast" : false,
+               "materials" : [ "MAT_Default" ],
+               "model" : "resources/models/default.DAE",
+               "type" : "MESH"
+            },
+            "sScriptComponent" : {
+               "scripts" : [
+                  {
+                     "name" : "HudDisplayWave"
+                  }
+               ]
+            },
+            "sTextComponent" : {
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 0
+               },
+               "content" : "x/x waves",
+               "font_name" : "moonhouse.ttf",
+               "font_size" : 22
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 1382.0579833984375,
+                  "y" : 991.17791748046875,
+                  "z" : 0
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 19.200000762939453,
+                  "y" : 10.180000305175781,
+                  "z" : 1
+               }
+            },
+            "sTypeComponent" : {
+               "type" : "TILE_WALKABLE"
+            },
+            "sUiComponent" : {
+               "horizontal_alignment" : "RIGHT",
+               "layer" : 0,
+               "offset" : {
+                  "x" : -5,
+                  "y" : 15
+               },
+               "percentage_size" : false,
+               "size" : {
+                  "x" : 0.10000000149011612,
+                  "y" : 0.10000000149011612
+               },
+               "vertical_alignment" : "TOP"
+            }
+         },
+         "name" : "HUD_DISPLAY_WAVE",
+         "tag" : "HudDisplayWave"
       }
    ],
    "name" : "Game"

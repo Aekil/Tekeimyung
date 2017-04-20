@@ -9,6 +9,7 @@
 #include    <Game/Scripts/Tile.hpp>
 #include    <Game/Scripts/TutoManagerMessage.hpp>
 #include    <Game/Scripts/Player.hpp>
+#include    <Game/Scripts/Spawner.hpp>
 
 void        NewBuild::start()
 {
@@ -349,5 +350,63 @@ void        NewBuild::placePreviewedEntity()
 
 void        NewBuild::updateSpawnersPaths(const glm::ivec2& tilePos)
 {
+    if (this->_gameManager == nullptr)
+    {
+        LOG_WARN("Can't update spawners paths because there is no GameManager");
+        return;
+    }
 
+    // This is not a spawner path, no need to update the paths
+    if (!this->_gameManager->spawnersPaths[tilePos.x][tilePos.y])
+    {
+        return;
+    }
+    else
+    {
+        LOG_INFO("UPDATE SPAWNERS PATHS");
+    }
+
+    for (int x = 0; x < _gameManager->mapSizeX; x++)
+    {
+        for (int z = 0; z < _gameManager->mapSizeZ; z++)
+        {
+            Entity* tile = _gameManager->firstLayerEntities[x][z];
+            if (tile)
+            {
+                sRenderComponent* tileRender = tile->getComponent<sRenderComponent>();
+                tileRender->color = glm::vec4(1.0f);
+            }
+        }
+    }
+
+    // Clear spawners paths map before update
+    std::memset(_gameManager->spawnersPaths,
+                0,
+                sizeof(_gameManager->spawnersPaths[0][0]) * _gameManager->mapSizeX * _gameManager->mapSizeZ);
+
+    auto em = EntityFactory::getBindedEntityManager();
+    const auto& spawners = em->getEntitiesByTag("Spawner");
+
+    // Update paths
+    for (auto &spawner : spawners)
+    {
+        auto scriptComponent = spawner->getComponent<sScriptComponent>();
+
+        if (!scriptComponent)
+        {
+            LOG_WARN("Can't find scriptComponent on Spawner entity");
+            continue;
+        }
+        if (!scriptComponent->enabled)
+            continue;
+
+        auto spawnerScript = scriptComponent->getScript<Spawner>("Spawner");
+        if (!spawnerScript)
+        {
+            LOG_WARN("Can't find Spawner script on scriptComponent");
+            continue;
+        }
+
+        spawnerScript->updateClosestPath();
+    }
 }
