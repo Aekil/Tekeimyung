@@ -8,11 +8,13 @@
 #include    <Game/Scripts/NewBuild.hpp>
 #include    <Game/Scripts/Tile.hpp>
 #include    <Game/Scripts/TutoManagerMessage.hpp>
+#include    <Game/Scripts/Player.hpp>
 
 void        NewBuild::start()
 {
     this->retrieveManagers();
     this->bindEntitiesToInputs();
+    this->retrievePlayerScript();
     this->_radius = 7.7f;
 }
 
@@ -35,6 +37,7 @@ void        NewBuild::disableAll()
 {
     this->_enabled = false;
     this->_currentChoice.erase();
+    this->_player->setCanShoot(true);
 
     auto        em = EntityFactory::getBindedEntityManager();
     const auto& floorTiles = em->getEntitiesByTag("TileFloor");
@@ -84,8 +87,12 @@ void        NewBuild::setTileHovered(const Entity* tileHovered)
 
         if (tileScript->isBuildable() == true)
         {
-            auto&   position = this->_tileHovered->getComponent<sTransformComponent>()->getPos();
+            auto&       position = this->_tileHovered->getComponent<sTransformComponent>()->getPos();
 
+            if (this->_tileHovered->getTag() == "TileBaseTurret")
+                this->_currentChoice = "TOWER_FIRE";
+            else if (this->_tileHovered->getTag() == "TileFloor" && this->_currentChoice == "TOWER_FIRE")
+                this->_currentChoice = "TILE_BASE_TURRET";
             this->_preview = this->Instantiate(this->_currentChoice, glm::vec3(position.x, position.y + 12.5f, position.z));
 
             if (this->_preview != nullptr)
@@ -140,20 +147,47 @@ void        NewBuild::retrieveManagers()
     }
 }
 
+void        NewBuild::retrievePlayerScript()
+{
+    auto    em = EntityFactory::getBindedEntityManager();
+    Entity* player = em->getEntityByTag("Player");
+
+    if (player == nullptr)
+    {
+        LOG_WARN("Could not find Entity with tag \"%s\"", "Player");
+        return;
+    }
+
+    auto scriptComponent = player->getComponent<sScriptComponent>();
+
+    if (scriptComponent == nullptr)
+    {
+        LOG_WARN("Could not find %s on Entity %s", "sScriptComponent", "Player");
+        return;
+    }
+
+    this->_player = scriptComponent->getScript<Player>("Player");
+
+    if (this->_player == nullptr)
+    {
+        LOG_WARN("Could not find script %s on Entity %s", "sScriptComponent", "Player");
+    }
+}
+
 void        NewBuild::bindEntitiesToInputs()
 {
     this->_bindedEntities.insert(std::make_pair(Keyboard::eKey::KEY_1, "TILE_BASE_TURRET"));
-    this->_bindedEntities.insert(std::make_pair(Keyboard::eKey::KEY_2, "TOWER_FIRE"));
-    this->_bindedEntities.insert(std::make_pair(Keyboard::eKey::KEY_3, "TRAP_NEEDLE"));
-    this->_bindedEntities.insert(std::make_pair(Keyboard::eKey::KEY_4, "TRAP_CUTTER"));
-    this->_bindedEntities.insert(std::make_pair(Keyboard::eKey::KEY_5, "TRAP_FIRE"));
+    //this->_bindedEntities.insert(std::make_pair(Keyboard::eKey::KEY_2, "TOWER_FIRE"));
+    this->_bindedEntities.insert(std::make_pair(Keyboard::eKey::KEY_2, "TRAP_NEEDLE"));
+    this->_bindedEntities.insert(std::make_pair(Keyboard::eKey::KEY_3, "TRAP_CUTTER"));
+    this->_bindedEntities.insert(std::make_pair(Keyboard::eKey::KEY_4, "TRAP_FIRE"));
 }
 
 void        NewBuild::checkUserInputs()
 {
-    if (this->_enabled == true && this->mouse.isPressed(Mouse::eButton::MOUSE_BUTTON_1) == true)
+    if (this->_enabled == true && this->mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_1] == Mouse::eButtonState::CLICK_RELEASED)
         this->placePreviewedEntity();
-    else if (this->_enabled == true && this->mouse.isPressed(Mouse::eButton::MOUSE_BUTTON_2) == true)
+    else if (this->_enabled == true && this->mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_2] == Mouse::eButtonState::CLICK_RELEASED)
         this->disableAll();
 
     if (this->_currentChoice.empty() == true)
@@ -174,6 +208,7 @@ void        NewBuild::checkUserInputs()
     {
         this->setEnabled(true);
         this->triggerBuildableZone(this->_currentChoice);
+        this->_player->setCanShoot(false);
     }
 }
 
@@ -182,8 +217,9 @@ void        NewBuild::triggerBuildableZone(const std::string &archetype)
     sTransformComponent*    transform = this->getComponent<sTransformComponent>();
 
     auto        em = EntityFactory::getBindedEntityManager();
-    const auto& floorTiles = em->getEntitiesByTag("TileFloor");
 
+    //  Looking for floor tiles
+    const auto& floorTiles = em->getEntitiesByTag("TileFloor");
     for (Entity* floorTile : floorTiles)
     {
         auto    box = floorTile->getComponent<sBoxColliderComponent>();
@@ -193,7 +229,7 @@ void        NewBuild::triggerBuildableZone(const std::string &archetype)
             auto    tileTransform = floorTile->getComponent<sTransformComponent>();
             auto    tileScriptComponent = floorTile->getComponent<sScriptComponent>();
 
-            if (tileScriptComponent == nullptr)
+            if (tileScriptComponent == nullptr || tileScriptComponent->enabled == false)
                 continue;
 
             Tile*   tileScript = tileScriptComponent->getScript<Tile>("Tile");
@@ -211,6 +247,57 @@ void        NewBuild::triggerBuildableZone(const std::string &archetype)
                 glm::vec3(box->size.x * SIZE_UNIT, box->size.y * SIZE_UNIT, box->size.z * SIZE_UNIT)))
             {
                 tileScript->setBuildable(true);
+            }
+            else
+            {
+                if (tileScript->getEntity() == this->_tileHovered)
+                {
+                    this->Destroy(this->_preview);
+                    this->_preview = nullptr;
+                    this->_tileHovered = nullptr;
+                }
+            }
+        }
+    }
+
+    //  Looking for turret base tiles
+    const auto& turretBasetiles = em->getEntitiesByTag("TileBaseTurret");
+    for (Entity* turretBaseTile : turretBasetiles)
+    {
+        auto    box = turretBaseTile->getComponent<sBoxColliderComponent>();
+
+        if (box != nullptr)
+        {
+            auto    tileTransform = turretBaseTile->getComponent<sTransformComponent>();
+            auto    tileScriptComponent = turretBaseTile->getComponent<sScriptComponent>();
+
+            if (tileScriptComponent == nullptr || tileScriptComponent->enabled == false)
+                continue;
+
+            Tile*   tileScript = tileScriptComponent->getScript<Tile>("Tile");
+
+            if (tileScript == nullptr)
+                continue;
+
+            tileScript->setBuildable(false);
+
+            if (this->isEnabled() == false)
+                continue;
+
+            if (Collisions::sphereVSAABB(transform->getPos(),
+                this->_radius * SIZE_UNIT, box->pos + tileTransform->getPos(),
+                glm::vec3(box->size.x * SIZE_UNIT, box->size.y * SIZE_UNIT, box->size.z * SIZE_UNIT)))
+            {
+                tileScript->setBuildable(true);
+            }
+            else
+            {
+                if (tileScript->getEntity() == this->_tileHovered)
+                {
+                    this->Destroy(this->_preview);
+                    this->_preview = nullptr;
+                    this->_tileHovered = nullptr;
+                }
             }
         }
     }

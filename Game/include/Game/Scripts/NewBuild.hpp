@@ -7,6 +7,7 @@
 #include    <Engine/Core/ScriptFactory.hpp>
 
 #include    <Game/Scripts/GameManager.hpp>
+#include    <Game/Scripts/Player.hpp>
 #include    <Game/Scripts/GoldManager.hpp>
 #include    <Game/Scripts/Tile.hpp>
 
@@ -33,6 +34,7 @@ public:
 private:
     GameManager*    _gameManager = nullptr;
     GoldManager*    _goldManager = nullptr;
+    Player*         _player = nullptr;
 
     bool            _enabled = false;
     const Entity*   _tileHovered = nullptr;
@@ -44,6 +46,7 @@ private:
     MapKeyboardEntity   _bindedEntities;
 
 private:
+    void            retrievePlayerScript();
     void            retrieveManagers();
 
     void            bindEntitiesToInputs();
