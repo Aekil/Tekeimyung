@@ -31,7 +31,7 @@ Node*    Path::getNodeFromPos(int x, int y)
         return nullptr;
 
     glm::ivec2 pos(x, y);
-    bool isWalkable = (map[x][y] % LAYER_NUMBER) == 1 || (map[x][y] % LAYER_NUMBER) == 3;
+    bool isWalkable = (_map[x][y] % LAYER_NUMBER) == 1 || (_map[x][y] % LAYER_NUMBER) == 3;
     return (new Node(pos, isWalkable));
 }
 

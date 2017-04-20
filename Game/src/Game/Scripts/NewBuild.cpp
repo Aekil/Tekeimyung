@@ -126,11 +126,11 @@ void        NewBuild::retrieveGameManager()
 
 void        NewBuild::bindEntitiesToInputs()
 {
-    this->_bindedEntities.insert(std::make_pair(Keyboard::eKey::Y, "TILE_BASE_TURRET"));
-    this->_bindedEntities.insert(std::make_pair(Keyboard::eKey::U, "TOWER_FIRE"));
-    this->_bindedEntities.insert(std::make_pair(Keyboard::eKey::I, "TRAP_NEEDLE"));
-    this->_bindedEntities.insert(std::make_pair(Keyboard::eKey::O, "TRAP_CUTTER"));
-    this->_bindedEntities.insert(std::make_pair(Keyboard::eKey::P, "TRAP_FIRE"));
+    this->_bindedEntities.insert(std::make_pair(Keyboard::eKey::KEY_1, "TILE_BASE_TURRET"));
+    this->_bindedEntities.insert(std::make_pair(Keyboard::eKey::KEY_2, "TOWER_FIRE"));
+    this->_bindedEntities.insert(std::make_pair(Keyboard::eKey::KEY_3, "TRAP_NEEDLE"));
+    this->_bindedEntities.insert(std::make_pair(Keyboard::eKey::KEY_4, "TRAP_CUTTER"));
+    this->_bindedEntities.insert(std::make_pair(Keyboard::eKey::KEY_5, "TRAP_FIRE"));
 }
 
 void        NewBuild::checkUserInputs()
