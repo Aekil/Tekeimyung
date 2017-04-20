@@ -231,6 +231,15 @@ void        NewBuild::triggerBuildableZone(const std::string &archetype)
             {
                 tileScript->setBuildable(true);
             }
+            else
+            {
+                if (tileScript->getEntity() == this->_tileHovered)
+                {
+                    this->Destroy(this->_preview);
+                    this->_preview = nullptr;
+                    this->_tileHovered = nullptr;
+                }
+            }
         }
     }
 
@@ -263,6 +272,15 @@ void        NewBuild::triggerBuildableZone(const std::string &archetype)
                 glm::vec3(box->size.x * SIZE_UNIT, box->size.y * SIZE_UNIT, box->size.z * SIZE_UNIT)))
             {
                 tileScript->setBuildable(true);
+            }
+            else
+            {
+                if (tileScript->getEntity() == this->_tileHovered)
+                {
+                    this->Destroy(this->_preview);
+                    this->_preview = nullptr;
+                    this->_tileHovered = nullptr;
+                }
             }
         }
     }
