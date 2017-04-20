@@ -26,7 +26,7 @@ TutoManager::TutoManager()
     _statesMessages[eTutoState::MOVE] = "Use W,A,S,D to move";
     _statesMessages[eTutoState::SHOOT] = "Use left click to shoot !";
     _statesMessages[eTutoState::CHANGE_WEAPON] = "Use the scroll wheel to change your weapon (you have 3 different) !";
-    _statesMessages[eTutoState::CHOOSE_BUILD] = "Use keys from 1 to 5 (on the top of your keyboard)\n    to choose a building and enable build zone!";
+    _statesMessages[eTutoState::CHOOSE_BUILD] = "Use keys from 1 to 4 (on the top of your keyboard)\n    to choose a building and enable build zone!";
     _statesMessages[eTutoState::BUILD] = "Use Left Click on buildable zone to build something";
     _statesMessages[eTutoState::DISABLE_BUILD] = "Use Right Click to disable build mode";
     _statesMessages[eTutoState::CHECK_HOWTOPLAY] = "Check the HowToPlay as reminder with H\n\n(remember that you can always check it again with the same shortcut)";
