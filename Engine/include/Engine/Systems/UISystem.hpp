@@ -12,9 +12,10 @@
 START_SYSTEM(UISystem)
 public:
     UISystem();
-    virtual ~UISystem();
+    ~UISystem() override final;
 
-    virtual void                        update(EntityManager &em, float elapsedTime);
+    void                        update(EntityManager &em, float elapsedTime) override final;
+    bool                        init() override final;
 
     void                                onWindowResize(EntityManager &em);
 
