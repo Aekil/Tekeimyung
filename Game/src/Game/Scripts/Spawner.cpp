@@ -30,7 +30,7 @@ void Spawner::start()
 
         if (!scriptComponent)
         {
-            LOG_WARN("Can't find scriptComponent on GameManager entity");
+            LOG_WARN("Could not find %s on GameManager entity", "sScriptComponent");
             return;
         }
 		
