@@ -41,14 +41,29 @@ void        NewBuild::disableAll()
     this->_player->setCanShoot(true);
 
     auto        em = EntityFactory::getBindedEntityManager();
-    const auto& floorTiles = em->getEntitiesByTag("TileFloor");
 
     this->Destroy(this->_preview);
     this->_preview = nullptr;
     this->_tileHovered = nullptr;
+    
+    const auto& floorTiles = em->getEntitiesByTag("TileFloor");
     for (Entity* floorTile : floorTiles)
     {
         sScriptComponent*   scriptComponent = floorTile->getComponent<sScriptComponent>();
+
+        if (scriptComponent != nullptr)
+        {
+            Tile*   tileScript = scriptComponent->getScript<Tile>("Tile");
+
+            if (tileScript != nullptr)
+                tileScript->setBuildable(false);
+        }
+    }
+
+    const auto& turretBasetiles = em->getEntitiesByTag("TileBaseTurret");
+    for (Entity* turretBaseTile : turretBasetiles)
+    {
+        sScriptComponent*   scriptComponent = turretBaseTile->getComponent<sScriptComponent>();
 
         if (scriptComponent != nullptr)
         {
