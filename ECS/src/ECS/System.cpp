@@ -27,9 +27,6 @@ void    System::forEachEntity(EntityManager& em, std::function<void(Entity* enti
         if (entity)
             callback(entity);
     }
-
-    // Destroy entities in destroy queue
-    em.destroyEntities();
 }
 
 uint32_t    System::getId() const

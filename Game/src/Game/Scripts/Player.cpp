@@ -14,6 +14,7 @@
 #include <Game/Scripts/GameManager.hpp>
 #include <Game/Scripts/Projectile.hpp>
 #include <Game/Scripts/Player.hpp>
+#include <Game/Scripts/TutoManagerMessage.hpp>
 #include <Game/Scripts/WaveManager.hpp>
 
 #include <Game/Weapons/DefaultWeapon.hpp>
@@ -96,6 +97,7 @@ void Player::changeWeapon()
             this->_actualWeapon = static_cast<int>(this->_weapons.size() - 1);
 
         updateWeaponMaterial();
+        TutoManagerMessage::getInstance()->sendMessage(eTutoState::CHANGE_WEAPON);
 
         LOG_DEBUG("Actual weapon : %d", this->_actualWeapon);
     }
@@ -141,18 +143,22 @@ void Player::movement(float elapsedTime)
         if (KB_P(Keyboard::eKey::S))
         {
             _rigidBody->velocity += glm::vec3(this->_attributes["Speed"]->getFinalValue(), 0.0f, this->_attributes["Speed"]->getFinalValue());
+            TutoManagerMessage::getInstance()->sendMessage(eTutoState::MOVE);
         }
         if (KB_P(Keyboard::eKey::Z))
         {
             _rigidBody->velocity += glm::vec3(-this->_attributes["Speed"]->getFinalValue(), 0.0f, -this->_attributes["Speed"]->getFinalValue());
+            TutoManagerMessage::getInstance()->sendMessage(eTutoState::MOVE);
         }
         if (KB_P(Keyboard::eKey::Q))
         {
             _rigidBody->velocity += glm::vec3(-this->_attributes["Speed"]->getFinalValue(), 0.0f, this->_attributes["Speed"]->getFinalValue());
+            TutoManagerMessage::getInstance()->sendMessage(eTutoState::MOVE);
         }
         if (KB_P(Keyboard::eKey::D))
         {
             _rigidBody->velocity += glm::vec3(this->_attributes["Speed"]->getFinalValue(), 0.0f, -this->_attributes["Speed"]->getFinalValue());
+            TutoManagerMessage::getInstance()->sendMessage(eTutoState::MOVE);
         }
     }
 
@@ -174,6 +180,7 @@ void Player::handleShoot(float dt)
         {
             this->_weapons[this->_actualWeapon]->fire(this, this->_transform, this->_render, this->_direction);
             this->_elapsedTime = 0;
+            TutoManagerMessage::getInstance()->sendMessage(eTutoState::SHOOT);
         }
         else
         {

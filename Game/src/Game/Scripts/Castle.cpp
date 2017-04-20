@@ -10,6 +10,7 @@ void Castle::start()
     this->_render = getComponent<sRenderComponent>();
     this->_transform = getComponent<sTransformComponent>();
     Health::init(_render);
+    _hitCastle = EventSound::getEventByEventType(eEventSound::ENEMY_HIT_CASTLE);
 }
 
 void Castle::update(float dt)
@@ -26,6 +27,13 @@ void Castle::onCollisionEnter(Entity* entity)
         sScriptComponent* script = entity->getComponent<sScriptComponent>();
         Enemy* enemy = script ? script->getScript<Enemy>(ENEMY_TAG) : nullptr;
         enemy->remove();
+
+#if (ENABLE_SOUND)
+        if (_hitCastle->soundID != -1)
+        {
+            SoundManager::getInstance()->playSound(_hitCastle->soundID);
+        }
+#endif
     }
 }
 

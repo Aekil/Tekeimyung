@@ -22,7 +22,6 @@ void Enemy::start()
     Health::init(_render);
     _dyingSound = EventSound::getEventByEventType(eEventSound::ENEMY_DYING);
     _earningCoins = EventSound::getEventByEventType(eEventSound::EARN_COINS_FROM_ENEMY);
-    _hitCastle = EventSound::getEventByEventType(eEventSound::ENEMY_HIT_CASTLE);
 }
 
 void Enemy::update(float dt)
@@ -75,17 +74,12 @@ void Enemy::death()
 {
     EntityManager* em = EntityFactory::getBindedEntityManager();
 
-    Entity* explosion = Instantiate("ENEMY_EXPLOSION");
-    sTransformComponent* explosionTransform = explosion->getComponent<sTransformComponent>();
-    sTransformComponent* entityTransform = entity->getComponent<sTransformComponent>();
-    explosionTransform->setPos(entityTransform->getPos());
-
     if (Maths::randomFrom(0.0f, 1.0f) > (1.0f - this->_percentExplosion))
     {
         //EXPLOSION LASER
     }
 
-    this->Destroy();
+    this->remove();
 
     // Add golds for enemy dying
     const auto& gameManager = em->getEntityByTag(GAME_MANAGER_TAG);
@@ -112,13 +106,12 @@ void Enemy::death()
 // Called to remove the enemy when "dying", without gaining golds or exp ?
 void Enemy::remove()
 {
+    Entity* explosion = Instantiate("ENEMY_EXPLOSION");
+    sTransformComponent* explosionTransform = explosion->getComponent<sTransformComponent>();
+    sTransformComponent* entityTransform = entity->getComponent<sTransformComponent>();
+    explosionTransform->setPos(entityTransform->getPos());
+
     this->Destroy();
-#if (ENABLE_SOUND) // can be put in Castle.cpp script (after calling this function)
-    if (_hitCastle->soundID != -1)
-    {
-        SoundManager::getInstance()->playSound(_hitCastle->soundID);
-    }
-#endif
 }
 
 bool Enemy::takeDamage(double damage)

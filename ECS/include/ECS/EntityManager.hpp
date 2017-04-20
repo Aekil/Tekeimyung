@@ -66,6 +66,7 @@ private:
     std::unordered_map<uint32_t, std::vector<Entity*> >        _entitiesComponentGroups;
 
     std::vector<Entity*>                            _entitiesToDestroy;
+    std::vector<Entity*>                            _entitiesToFree;
 
     World&                                          _world;
 

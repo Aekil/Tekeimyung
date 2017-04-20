@@ -49,7 +49,6 @@ private:
 
     tEventSound* _dyingSound = nullptr;
     tEventSound* _earningCoins = nullptr;
-    tEventSound* _hitCastle = nullptr; // could be put in Castle.hpp script
 
     double _percentExplosion;
 
