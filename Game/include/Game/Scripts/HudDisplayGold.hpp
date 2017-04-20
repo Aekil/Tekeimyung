@@ -9,7 +9,7 @@
 
 #define HUD_DISPLAY_GOLD_TAG    "HudDisplayGold"
 
-#define MAX_SIZE_TEXT_GOLDS     15
+#define MAX_SIZE_TEXT_GOLDS     256
 
 class HudDisplayGold : public BaseScript
 {

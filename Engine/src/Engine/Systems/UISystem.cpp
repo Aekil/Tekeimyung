@@ -30,6 +30,12 @@ void    UISystem::update(EntityManager& em, float elapsedTime)
     });
 }
 
+bool    UISystem::init()
+{
+    onWindowResize(*EntityFactory::getBindedEntityManager());
+    return (true);
+}
+
 void    UISystem::onWindowResize(EntityManager &em)
 {
     forEachEntity(em, [&](Entity *entity) {

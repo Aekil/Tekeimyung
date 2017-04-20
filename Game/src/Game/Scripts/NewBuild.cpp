@@ -7,11 +7,12 @@
 
 #include    <Game/Scripts/NewBuild.hpp>
 #include    <Game/Scripts/Tile.hpp>
+#include    <Game/Scripts/TutoManagerMessage.hpp>
 #include    <Game/Scripts/Player.hpp>
 
 void        NewBuild::start()
 {
-    this->retrieveGameManager();
+    this->retrieveManagers();
     this->bindEntitiesToInputs();
     this->retrievePlayerScript();
     this->_radius = 7.7f;
@@ -56,6 +57,8 @@ void        NewBuild::disableAll()
                 tileScript->setBuildable(false);
         }
     }
+
+    TutoManagerMessage::getInstance()->sendMessage(eTutoState::DISABLE_BUILD);
 }
 
 void        NewBuild::setTileHovered(const Entity* tileHovered)
@@ -104,7 +107,7 @@ void        NewBuild::setTileHovered(const Entity* tileHovered)
     }
 }
 
-void        NewBuild::retrieveGameManager()
+void        NewBuild::retrieveManagers()
 {
     auto    em = EntityFactory::getBindedEntityManager();
     Entity* gameManager = em->getEntityByTag("GameManager");
@@ -123,11 +126,24 @@ void        NewBuild::retrieveGameManager()
         return;
     }
 
-    this->_gameManager = scriptComponent->getScript<GameManager>("GameManager");
-
-    if (this->_gameManager == nullptr)
+    // Retrieve GameManager
     {
-        LOG_WARN("Could not find script %s on Entity %s", "sScriptComponent", "GameManager");
+        this->_gameManager = scriptComponent->getScript<GameManager>("GameManager");
+
+        if (this->_gameManager == nullptr)
+        {
+            LOG_WARN("Could not find script %s on Entity %s", "GameManager", "GameManager");
+        }
+    }
+
+    // Retrieve GoldManager
+    {
+        this->_goldManager = scriptComponent->getScript<GoldManager>(GOLD_MANAGER_TAG);
+
+        if (this->_goldManager == nullptr)
+        {
+            LOG_WARN("Could not find script %s on Entity %s", GOLD_MANAGER_TAG, "GameManager");
+        }
     }
 }
 
@@ -181,6 +197,7 @@ void        NewBuild::checkUserInputs()
         {
             if (KB_P(bindedEntity.first) == true)
             {
+                TutoManagerMessage::getInstance()->sendMessage(eTutoState::CHOOSE_BUILD);
                 this->_currentChoice = bindedEntity.second;
                 LOG_DEBUG("Current choice :\t%s", this->_currentChoice.c_str());
                 break;
@@ -288,15 +305,32 @@ void        NewBuild::triggerBuildableZone(const std::string &archetype)
 
 void        NewBuild::placePreviewedEntity()
 {
-    auto&   position = this->_tileHovered->getComponent<sTransformComponent>()->getPos();
-    auto    entity = this->Instantiate(this->_currentChoice, glm::vec3(position.x, position.y + 12.5f, position.z));
-
+    if (this->_currentChoice == "TILE_BASE_TURRET")
+    {
+        if (!this->_goldManager->removeGolds(50))
+            return;
+    }
+    else if (this->_currentChoice == "TOWER_FIRE")
+    {
+        if (!this->_goldManager->removeGolds(50))
+            return;
+    }
+    else if (this->_currentChoice == "TRAP_NEEDLE" ||
+            this->_currentChoice == "TRAP_FIRE" ||
+            this->_currentChoice == "TRAP_CUTTER")
+    {
+        if (!this->_goldManager->removeGolds(30))
+            return;
+    }
 
     if (entity->getTag() != "TileBaseTurret")
     {
         auto previewRenderer = entity->getComponent<sRenderComponent>();
         previewRenderer->ignoreRaycast = true;
     }
+
+    auto&   position = this->_tileHovered->getComponent<sTransformComponent>()->getPos();
+    auto    entity = this->Instantiate(this->_currentChoice, glm::vec3(position.x, position.y + 12.5f, position.z));
 
     glm::ivec2              tilePos;
     sTransformComponent*    tileTransform = this->_tileHovered->getComponent<sTransformComponent>();
@@ -305,9 +339,11 @@ void        NewBuild::placePreviewedEntity()
     tilePos.y = static_cast<int>(tileTransform->getPos().z / 25.0f);
     this->_gameManager->firstLayerPattern[tilePos.x][tilePos.y] = 0;
     this->updateSpawnersPaths(tilePos);
+
+    TutoManagerMessage::getInstance()->sendMessage(eTutoState::BUILD);
 }
 
 void        NewBuild::updateSpawnersPaths(const glm::ivec2& tilePos)
 {
-    
+
 }

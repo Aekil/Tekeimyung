@@ -8,6 +8,7 @@
 
 #include    <Game/Scripts/GameManager.hpp>
 #include    <Game/Scripts/Player.hpp>
+#include    <Game/Scripts/GoldManager.hpp>
 #include    <Game/Scripts/Tile.hpp>
 
 typedef     std::unordered_map<Keyboard::eKey, std::string>   MapKeyboardEntity;
@@ -32,6 +33,7 @@ public:
 
 private:
     GameManager*    _gameManager = nullptr;
+    GoldManager*    _goldManager = nullptr;
     Player*         _player = nullptr;
 
     bool            _enabled = false;
@@ -44,8 +46,8 @@ private:
     MapKeyboardEntity   _bindedEntities;
 
 private:
-    void            retrieveGameManager();
     void            retrievePlayerScript();
+    void            retrieveManagers();
 
     void            bindEntitiesToInputs();
     void            checkUserInputs();
