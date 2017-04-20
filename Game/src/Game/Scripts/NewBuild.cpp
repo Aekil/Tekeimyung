@@ -7,6 +7,7 @@
 
 #include    <Game/Scripts/NewBuild.hpp>
 #include    <Game/Scripts/Tile.hpp>
+#include    <Game/Scripts/TutoManagerMessage.hpp>
 
 void        NewBuild::start()
 {
@@ -53,6 +54,8 @@ void        NewBuild::disableAll()
                 tileScript->setBuildable(false);
         }
     }
+
+    TutoManagerMessage::getInstance()->sendMessage(eTutoState::DISABLE_BUILD);
 }
 
 void        NewBuild::setTileHovered(const Entity* tileHovered)
@@ -147,6 +150,7 @@ void        NewBuild::checkUserInputs()
         {
             if (KB_P(bindedEntity.first) == true)
             {
+                TutoManagerMessage::getInstance()->sendMessage(eTutoState::CHOOSE_BUILD);
                 this->_currentChoice = bindedEntity.second;
                 LOG_DEBUG("Current choice :\t%s", this->_currentChoice.c_str());
                 break;
@@ -218,9 +222,11 @@ void        NewBuild::placePreviewedEntity()
     tilePos.y = static_cast<int>(tileTransform->getPos().z / 25.0f);
     this->_gameManager->firstLayerPattern[tilePos.x][tilePos.y] = 0;
     this->updateSpawnersPaths(tilePos);
+
+    TutoManagerMessage::getInstance()->sendMessage(eTutoState::BUILD);
 }
 
 void        NewBuild::updateSpawnersPaths(const glm::ivec2& tilePos)
 {
-    
+
 }
