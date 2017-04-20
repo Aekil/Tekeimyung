@@ -47,22 +47,42 @@
                   {
                      "frames" : [
                         {
-                           "easing" : "EASE_IN",
-                           "time" : 0.5,
+                           "easing" : "NONE",
+                           "time" : 0.25,
                            "value" : {
                               "w" : 1,
-                              "x" : 1,
+                              "x" : 0.23529411852359772,
                               "y" : 0,
                               "z" : 0
                            }
                         },
                         {
-                           "easing" : "EASE_OUT",
+                           "easing" : "NONE",
+                           "time" : 0.5,
+                           "value" : {
+                              "w" : 0,
+                              "x" : 0,
+                              "y" : 0,
+                              "z" : 0
+                           }
+                        },
+                        {
+                           "easing" : "NONE",
+                           "time" : 0.75,
+                           "value" : {
+                              "w" : 1,
+                              "x" : 0.23529411852359772,
+                              "y" : 0,
+                              "z" : 0
+                           }
+                        },
+                        {
+                           "easing" : "NONE",
                            "time" : 1,
                            "value" : {
                               "w" : 1,
                               "x" : 1,
-                              "y" : 0,
+                              "y" : 1,
                               "z" : 1
                            }
                         }
@@ -75,13 +95,13 @@
          "color" : {
             "a" : 1,
             "b" : 1,
-            "g" : 1,
+            "g" : 0,
             "r" : 1
          },
          "dynamic" : true,
          "hide_dynamic" : false,
          "ignore_raycast" : false,
-         "materials" : [ "enemy.mat" ],
+         "materials" : [ "enemy_sphere.mat" ],
          "model" : "resources/models/characters/enemy.DAE",
          "type" : "SPHERE"
       },
