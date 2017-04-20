@@ -36,12 +36,11 @@ void        NewBuild::setEnabled(bool enabled)
 
 void        NewBuild::disableAll()
 {
+    auto        em = EntityFactory::getBindedEntityManager();
+
     this->_enabled = false;
     this->_currentChoice.erase();
     this->_player->setCanShoot(true);
-
-    auto        em = EntityFactory::getBindedEntityManager();
-
     this->Destroy(this->_preview);
     this->_preview = nullptr;
     this->_tileHovered = nullptr;
