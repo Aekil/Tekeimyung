@@ -25,7 +25,12 @@ void HudDisplayCastleLife::update(float dt)
     if (_castle != nullptr && _castleLifeHudDisplay != nullptr)
     {
         sScriptComponent*   scriptComp = _castle->getComponent<sScriptComponent>();
+        if (scriptComp == nullptr)
+            return;
         Castle*             castle = scriptComp->getScript<Castle>(CASTLE_TAG);
+        if (castle == nullptr)
+            return;
+
         int                 castleLife = castle->getHealth();
         int                 maxCastleLife = castle->getMaxHealth();
         sTextComponent*     textComp = _castleLifeHudDisplay->getComponent<sTextComponent>();
