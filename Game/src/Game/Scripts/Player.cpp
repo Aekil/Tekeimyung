@@ -168,7 +168,7 @@ void Player::handleShoot(float dt)
 {
     this->_elapsedTime += dt;
 
-    if (this->_elapsedTime > this->_weapons[this->_actualWeapon]->getAttribute("FireRate"))
+    if (this->_canShoot && this->_elapsedTime > this->_weapons[this->_actualWeapon]->getAttribute("FireRate"))
     {
         if (mouse.isPressed(Mouse::eButton::MOUSE_BUTTON_1))
         {
@@ -235,4 +235,9 @@ void Player::levelUp()
     std::pair<std::string, double> reward = this->_levelUpReward[this->_level];
 
     //this->_attributes[reward.first]->addModifier(Modifier(reward.second));
+}
+
+void Player::setCanShoot(bool canShoot)
+{
+    this->_canShoot = canShoot;
 }

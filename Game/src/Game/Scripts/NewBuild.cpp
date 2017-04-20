@@ -7,11 +7,13 @@
 
 #include    <Game/Scripts/NewBuild.hpp>
 #include    <Game/Scripts/Tile.hpp>
+#include    <Game/Scripts/Player.hpp>
 
 void        NewBuild::start()
 {
     this->retrieveGameManager();
     this->bindEntitiesToInputs();
+    this->retrievePlayerScript();
     this->_radius = 7.7f;
 }
 
@@ -34,6 +36,7 @@ void        NewBuild::disableAll()
 {
     this->_enabled = false;
     this->_currentChoice.erase();
+    this->_player->setCanShoot(true);
 
     auto        em = EntityFactory::getBindedEntityManager();
     const auto& floorTiles = em->getEntitiesByTag("TileFloor");
@@ -124,6 +127,33 @@ void        NewBuild::retrieveGameManager()
     }
 }
 
+void        NewBuild::retrievePlayerScript()
+{
+    auto    em = EntityFactory::getBindedEntityManager();
+    Entity* player = em->getEntityByTag("Player");
+
+    if (player == nullptr)
+    {
+        LOG_WARN("Could not find Entity with tag \"%s\"", "Player");
+        return;
+    }
+
+    auto scriptComponent = player->getComponent<sScriptComponent>();
+
+    if (scriptComponent == nullptr)
+    {
+        LOG_WARN("Could not find %s on Entity %s", "sScriptComponent", "Player");
+        return;
+    }
+
+    this->_player = scriptComponent->getScript<Player>("Player");
+
+    if (this->_player == nullptr)
+    {
+        LOG_WARN("Could not find script %s on Entity %s", "sScriptComponent", "Player");
+    }
+}
+
 void        NewBuild::bindEntitiesToInputs()
 {
     this->_bindedEntities.insert(std::make_pair(Keyboard::eKey::KEY_1, "TILE_BASE_TURRET"));
@@ -157,6 +187,7 @@ void        NewBuild::checkUserInputs()
     {
         this->setEnabled(true);
         this->triggerBuildableZone(this->_currentChoice);
+        this->_player->setCanShoot(false);
     }
 }
 
