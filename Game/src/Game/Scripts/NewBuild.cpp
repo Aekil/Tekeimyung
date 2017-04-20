@@ -186,7 +186,7 @@ void        NewBuild::bindEntitiesToInputs()
 
 void        NewBuild::checkUserInputs()
 {
-    if (this->_enabled == true && this->mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_1] == Mouse::eButtonState::CLICK_RELEASED)
+    if (this->_enabled == true && this->_tileHovered != nullptr && this->mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_1] == Mouse::eButtonState::CLICK_RELEASED)
         this->placePreviewedEntity();
     else if (this->_enabled == true && this->mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_2] == Mouse::eButtonState::CLICK_RELEASED)
         this->disableAll();
