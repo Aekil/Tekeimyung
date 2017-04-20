@@ -45,6 +45,8 @@ private:
     //  Each archetype's string is binded to a keyboard key
     MapKeyboardEntity   _bindedEntities;
 
+    std::vector<uint32_t> _alreadyBuiltTile;
+
 private:
     void            retrievePlayerScript();
     void            retrieveManagers();

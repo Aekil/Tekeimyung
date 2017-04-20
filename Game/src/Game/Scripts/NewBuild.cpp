@@ -305,6 +305,9 @@ void        NewBuild::triggerBuildableZone(const std::string &archetype)
 
 void        NewBuild::placePreviewedEntity()
 {
+    if (std::find(this->_alreadyBuiltTile.begin(), this->_alreadyBuiltTile.end(), this->_tileHovered->id) != this->_alreadyBuiltTile.end())
+        return;
+
     if (this->_currentChoice == "TILE_BASE_TURRET")
     {
         if (!this->_goldManager->removeGolds(50))
@@ -316,8 +319,8 @@ void        NewBuild::placePreviewedEntity()
             return;
     }
     else if (this->_currentChoice == "TRAP_NEEDLE" ||
-            this->_currentChoice == "TRAP_FIRE" ||
-            this->_currentChoice == "TRAP_CUTTER")
+        this->_currentChoice == "TRAP_FIRE" ||
+        this->_currentChoice == "TRAP_CUTTER")
     {
         if (!this->_goldManager->removeGolds(30))
             return;
@@ -331,6 +334,7 @@ void        NewBuild::placePreviewedEntity()
 
     auto&   position = this->_tileHovered->getComponent<sTransformComponent>()->getPos();
     auto    entity = this->Instantiate(this->_currentChoice, glm::vec3(position.x, position.y + 12.5f, position.z));
+    this->_alreadyBuiltTile.push_back(this->_tileHovered->id);
 
     glm::ivec2              tilePos;
     sTransformComponent*    tileTransform = this->_tileHovered->getComponent<sTransformComponent>();
