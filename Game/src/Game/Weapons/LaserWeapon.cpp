@@ -31,7 +31,7 @@ void    LaserWeapon::fire(Player* player, sTransformComponent* playerTransform, 
     if (this->_laser == nullptr)
         this->_laser = EntityFactory::createEntity("LASER_CYLINDER");
 
-    glm::vec3 playerPos = playerTransform->getPos() + (playerRender->getModel()->getSize().y / 2.0f * playerTransform->getScale().y);
+    glm::vec3 playerPos = glm::vec3{ playerTransform->getPos().x, playerTransform->getPos().y + (playerRender->getModel()->getSize().y / 2.0f * playerTransform->getScale().y), playerTransform->getPos().z };
     this->_laser->getComponent<sTransformComponent>()->setPos(playerPos);
     this->_laser->getComponent<sTransformComponent>()->setScale(glm::vec3{ 0.2f, this->_attributes["MaxRange"]->getFinalValue() / SIZE_UNIT, 0.2f });
     this->_laser->getComponent<sTransformComponent>()->setRotation(glm::vec3(90.0f, playerTransform->getRotation().y, 0.0f));
@@ -62,7 +62,7 @@ Entity* LaserWeapon::farestEnemy(sTransformComponent* playerTransform, std::vect
 
 void LaserWeapon::fireMultipleEnemy(Player* player, sTransformComponent* playerTransform, sRenderComponent* playerRender, glm::vec3 playerDirection)
 {
-    glm::vec3 playerPos = playerTransform->getPos() + (playerRender->getModel()->getSize().y / 2.0f * playerTransform->getScale().y);
+    glm::vec3 playerPos = glm::vec3{ playerTransform->getPos().x, playerTransform->getPos().y + (playerRender->getModel()->getSize().y / 2.0f * playerTransform->getScale().y), playerTransform->getPos().z };
     Ray raycastHit = Ray(playerPos, glm::vec3{ playerDirection.x, 0.0f, playerDirection.z });
 
     std::vector<Entity*> hitedEntities;
@@ -115,7 +115,7 @@ void LaserWeapon::fireMultipleEnemy(Player* player, sTransformComponent* playerT
 
 void LaserWeapon::fireOneEnemy(Player* player, sTransformComponent* playerTransform, sRenderComponent* playerRender, glm::vec3 playerDirection)
 {
-    glm::vec3 playerPos = playerTransform->getPos() + (playerRender->getModel()->getSize().y / 2.0f * playerTransform->getScale().y);
+    glm::vec3 playerPos = glm::vec3{ playerTransform->getPos().x, playerTransform->getPos().y + (playerRender->getModel()->getSize().y / 2.0f * playerTransform->getScale().y), playerTransform->getPos().z };
     Ray raycastHit = Ray(playerPos, glm::vec3{ playerDirection.x, 0.0f, playerDirection.z });
 
     Entity* hitedEntity;

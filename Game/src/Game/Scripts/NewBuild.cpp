@@ -120,6 +120,7 @@ void        NewBuild::setTileHovered(const Entity* tileHovered)
                 this->_currentChoice = "TOWER_FIRE";
             else if (this->_tileHovered->getTag() == "TileFloor" && this->_currentChoice == "TOWER_FIRE")
                 this->_currentChoice = "TILE_BASE_TURRET";
+            
             this->_preview = this->Instantiate(this->_currentChoice, glm::vec3(position.x, position.y + 12.5f, position.z));
 
             if (this->_preview != nullptr)
@@ -430,8 +431,7 @@ void            NewBuild::updatePreview()
 
     if (this->_tileHovered->getTag() == "TileBaseTurret")
         this->_currentChoice = "TOWER_FIRE";
-    else if (this->_tileHovered->getTag() == "TileFloor" && this->_currentChoice == "TOWER_FIRE")
-        this->_currentChoice = "TILE_BASE_TURRET";
+
     this->_preview = this->Instantiate(this->_currentChoice, glm::vec3(position.x, position.y + 12.5f, position.z));
 
     if (this->_preview != nullptr)
