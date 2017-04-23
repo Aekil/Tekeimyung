@@ -16,12 +16,23 @@ void        NewBuild::start()
     this->retrieveManagers();
     this->bindEntitiesToInputs();
     this->retrievePlayerScript();
+    this->initPrices();
     this->_radius = 7.7f;
 }
 
 void        NewBuild::update(float deltaTime)
 {
     this->checkUserInputs();
+}
+
+void        NewBuild::initPrices()
+{
+    this->_buildingPrices["TILE_BASE_TURRET"] = 50;
+    this->_buildingPrices["TILE_WALL"] = 30;
+    this->_buildingPrices["TOWER_FIRE"] = 50;
+    this->_buildingPrices["TRAP_NEEDLE"] = 30;
+    this->_buildingPrices["TRAP_FIRE"] = 30;
+    this->_buildingPrices["TRAP_CUTTER"] = 30;
 }
 
 bool        NewBuild::isEnabled() const
@@ -324,23 +335,8 @@ void        NewBuild::placePreviewedEntity()
     if (std::find(this->_alreadyBuiltTile.begin(), this->_alreadyBuiltTile.end(), this->_tileHovered->id) != this->_alreadyBuiltTile.end())
         return;
 
-    if (this->_currentChoice == "TILE_BASE_TURRET")
-    {
-        if (!this->_goldManager->removeGolds(50))
-            return;
-    }
-    else if (this->_currentChoice == "TOWER_FIRE")
-    {
-        if (!this->_goldManager->removeGolds(50))
-            return;
-    }
-    else if (this->_currentChoice == "TRAP_NEEDLE" ||
-        this->_currentChoice == "TRAP_FIRE" ||
-        this->_currentChoice == "TRAP_CUTTER")
-    {
-        if (!this->_goldManager->removeGolds(30))
-            return;
-    }
+    if (!this->_goldManager->removeGolds(this->_buildingPrices[this->_currentChoice]))
+        return;
 
     if (entity->getTag() != "TileBaseTurret")
     {

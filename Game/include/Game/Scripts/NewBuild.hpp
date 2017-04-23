@@ -47,6 +47,8 @@ private:
 
     std::vector<uint32_t> _alreadyBuiltTile;
 
+    std::map<std::string, int> _buildingPrices;
+
 private:
     void            retrievePlayerScript();
     void            retrieveManagers();
@@ -57,6 +59,8 @@ private:
 
     void            placePreviewedEntity();
     void            updateSpawnersPaths(const glm::ivec2& tilePos);
+
+    void            initPrices();
 };
 
 REGISTER_SCRIPT(NewBuild);
