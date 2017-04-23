@@ -98,6 +98,7 @@ void        NewBuild::setTileHovered(const Entity* tileHovered)
         if (tileScript == nullptr)
         {
             LOG_WARN("Could not find script %s on Entity %s", "sScriptComponent", "TileFloor");
+            return;
         }
 
         if (tileScript->isBuildable() == true)
@@ -192,10 +193,10 @@ void        NewBuild::retrievePlayerScript()
 void        NewBuild::bindEntitiesToInputs()
 {
     this->_bindedEntities.insert(std::make_pair(Keyboard::eKey::KEY_1, "TILE_BASE_TURRET"));
-    //this->_bindedEntities.insert(std::make_pair(Keyboard::eKey::KEY_2, "TOWER_FIRE"));
-    this->_bindedEntities.insert(std::make_pair(Keyboard::eKey::KEY_2, "TRAP_NEEDLE"));
-    this->_bindedEntities.insert(std::make_pair(Keyboard::eKey::KEY_3, "TRAP_CUTTER"));
-    this->_bindedEntities.insert(std::make_pair(Keyboard::eKey::KEY_4, "TRAP_FIRE"));
+    this->_bindedEntities.insert(std::make_pair(Keyboard::eKey::KEY_2, "TILE_WALL"));
+    this->_bindedEntities.insert(std::make_pair(Keyboard::eKey::KEY_3, "TRAP_NEEDLE"));
+    this->_bindedEntities.insert(std::make_pair(Keyboard::eKey::KEY_4, "TRAP_CUTTER"));
+    this->_bindedEntities.insert(std::make_pair(Keyboard::eKey::KEY_5, "TRAP_FIRE"));
 }
 
 void        NewBuild::checkUserInputs()

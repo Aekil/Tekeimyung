@@ -9,7 +9,6 @@
 
 #include <Game/GameStates/VictoryScreenState.hpp>
 #include <Game/GameStates/DefeatScreenState.hpp>
-#include <Game/Scripts/Build.hpp>
 #include <Game/Scripts/GameManager.hpp>
 #include <Game/Scripts/Spawner.hpp>
 #include <Game/Scripts/WaveManager.hpp>
@@ -130,18 +129,22 @@ bool    WaveManager::checkBoardState(float deltaTime)
 void        WaveManager::spawnMapPart()
 {
     auto    em = EntityFactory::getBindedEntityManager();
-    Entity* gameManager = em->getEntityByTag("GameManager");
+    Entity* gameManager = em->getEntityByTag("GameManager");
+
     if (!gameManager)
     {
         LOG_WARN("Can't find entity with GameManager tag");
         return;
-    }
-    auto    scriptComponent = gameManager->getComponent<sScriptComponent>();
+    }
+
+    auto    scriptComponent = gameManager->getComponent<sScriptComponent>();
+
     if (!scriptComponent)
     {
         LOG_WARN("Can't find scriptComponent on GameManager entity");
         return;
-    }
+    }
+
     auto    gameManagerScript = scriptComponent->getScript<GameManager>("GameManager");
 
     gameManagerScript->displayMapParts(this->_mapParts[this->_currentWave - 1]);
@@ -296,7 +299,8 @@ bool            WaveManager::updateEditor()
 
     ImGui::BeginGroup();
     ImGui::Text("Wave/MapPart");
-    for (int idx = 0; idx < this->_mapParts.size(); idx++)    {
+    for (int idx = 0; idx < this->_mapParts.size(); idx++)
+    {
         ImGui::PushID(idx);
         ImGui::InputInt("Map Part", &(this->_mapParts[idx]));
         ImGui::PopID();
@@ -313,9 +317,11 @@ JsonValue       WaveManager::saveToJson()
 
     for (auto& mapPart : this->_mapParts)
     {
-        JsonValue   configJson;
+        JsonValue   configJson;
+
         configJson.setInt("map_part", mapPart);
-        configsJson.push_back(configJson);
+        configsJson.push_back(configJson);
+
     }
 
     waveManagerJson.setValueVec("map_parts", configsJson);
@@ -330,15 +336,18 @@ void                WaveManager::loadFromJson(const JsonValue& json)
     int             idx = 0;
 
     this->_waves = wavesMax;
-    this->_mapParts.resize(this->_waves);
+    this->_mapParts.resize(this->_waves);
+
     if (mapParts.size() > 0 && mapParts.type() != Json::ValueType::arrayValue)
     {
         LOG_ERROR("WaveManager::loadFromJson error: configs is not an array");
         return;
-    }
+    }
+
     for (const auto& mapPart : mapParts)
     {
-        JsonValue   value(mapPart);
+        JsonValue   value(mapPart);
+
         this->_mapParts[idx++] = value.getInt("map_part", -1);
     }
 }
