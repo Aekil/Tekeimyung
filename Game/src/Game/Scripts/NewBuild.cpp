@@ -55,7 +55,7 @@ void        NewBuild::disableAll()
     this->Destroy(this->_preview);
     this->_preview = nullptr;
     this->_tileHovered = nullptr;
-    
+
     const auto& floorTiles = em->getEntitiesByTag("TileFloor");
     for (Entity* floorTile : floorTiles)
     {
@@ -217,21 +217,21 @@ void        NewBuild::checkUserInputs()
     else if (this->_enabled == true && this->mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_2] == Mouse::eButtonState::CLICK_RELEASED)
         this->disableAll();
 
-    if (this->_currentChoice.empty() == true)
+    //  auto = std::pair<Keyboard::eKey, std::string>
+    for (auto bindedEntity : this->_bindedEntities)
     {
-        //  auto = std::pair<Keyboard::eKey, std::string>
-        for (auto bindedEntity : this->_bindedEntities)
+        if (this->keyboard.getStateMap()[bindedEntity.first] == Keyboard::eKeyState::KEY_RELEASED)
         {
-            if (KB_P(bindedEntity.first) == true)
-            {
-                TutoManagerMessage::getInstance()->sendMessage(eTutoState::CHOOSE_BUILD);
-                this->_currentChoice = bindedEntity.second;
-                LOG_DEBUG("Current choice :\t%s", this->_currentChoice.c_str());
-                break;
-            }
+            TutoManagerMessage::getInstance()->sendMessage(eTutoState::CHOOSE_BUILD);
+            this->_currentChoice = bindedEntity.second;
+            LOG_DEBUG("Current choice :\t%s", this->_currentChoice.c_str());
+            if (this->_preview != nullptr && this->_tileHovered != nullptr)
+                this->updatePreview();
+            break;
         }
     }
-    else
+
+    if (!this->_currentChoice.empty())
     {
         this->setEnabled(true);
         this->triggerBuildableZone(this->_currentChoice);
@@ -392,8 +392,8 @@ void        NewBuild::updateSpawnersPaths(const glm::ivec2& tilePos)
 
     // Clear spawners paths map before update
     std::memset(_gameManager->spawnersPaths,
-                0,
-                sizeof(_gameManager->spawnersPaths[0][0]) * _gameManager->mapSizeX * _gameManager->mapSizeZ);
+        0,
+        sizeof(_gameManager->spawnersPaths[0][0]) * _gameManager->mapSizeX * _gameManager->mapSizeZ);
 
     auto em = EntityFactory::getBindedEntityManager();
     const auto& spawners = em->getEntitiesByTag("Spawner");
@@ -419,5 +419,27 @@ void        NewBuild::updateSpawnersPaths(const glm::ivec2& tilePos)
         }
 
         spawnerScript->updateClosestPath();
+    }
+}
+
+void            NewBuild::updatePreview()
+{
+    auto&       position = this->_tileHovered->getComponent<sTransformComponent>()->getPos();
+
+    this->Destroy(this->_preview);
+
+    if (this->_tileHovered->getTag() == "TileBaseTurret")
+        this->_currentChoice = "TOWER_FIRE";
+    else if (this->_tileHovered->getTag() == "TileFloor" && this->_currentChoice == "TOWER_FIRE")
+        this->_currentChoice = "TILE_BASE_TURRET";
+    this->_preview = this->Instantiate(this->_currentChoice, glm::vec3(position.x, position.y + 12.5f, position.z));
+
+    if (this->_preview != nullptr)
+    {
+        auto    previewRenderer = this->_preview->getComponent<sRenderComponent>();
+        auto    previewScripts = this->_preview->getComponent<sScriptComponent>();
+
+        previewRenderer->ignoreRaycast = true;
+        previewScripts->enabled = false;
     }
 }

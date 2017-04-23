@@ -61,6 +61,7 @@ private:
     void            updateSpawnersPaths(const glm::ivec2& tilePos);
 
     void            initPrices();
+    void            updatePreview();
 };
 
 REGISTER_SCRIPT(NewBuild);
