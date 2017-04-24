@@ -76,7 +76,7 @@ void Enemy::death()
 
     if (Maths::randomFrom(0.0f, 1.0f) > (1.0f - this->_percentExplosion))
     {
-        //EXPLOSION LASER
+        LOG_DEBUG("Explosion laser");
     }
 
     this->remove();
@@ -120,7 +120,7 @@ bool Enemy::takeDamage(double damage)
     return (Health::takeDamage(damage));
 }
 
-void Enemy::setPath(const std::vector<glm::vec3>& path)
+void Enemy::setPath(const std::vector<glm::vec3>& path) 
 {
     _path = path;
     _pathProgress = 0;

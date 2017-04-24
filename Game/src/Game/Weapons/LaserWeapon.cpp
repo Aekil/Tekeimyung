@@ -105,6 +105,7 @@ void LaserWeapon::fireMultipleEnemy(Player* player, sTransformComponent* playerT
                         this->_attributes["ExplosionPercentage"]->clearAll();
                 }
 
+                enemyScript->setPercentExplosion(this->_attributes["ExplosionPercentage"]->getFinalValue());
                 enemyScript->takeDamage(this->_attributes["Damage"]->getFinalValue());
 
                 this->_oldEntitiesHited.push_back(hitedEntity);
@@ -171,6 +172,7 @@ void LaserWeapon::upgradeByLevel()
         this->_pierceEnemy = true;
         break;
     case 3:
+        this->_timeExplosion = true;
         break;
     default:
         break;
