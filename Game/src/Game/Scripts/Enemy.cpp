@@ -79,11 +79,12 @@ void Enemy::death()
 {
     EntityManager* em = EntityFactory::getBindedEntityManager();
 
-    LOG_DEBUG("%f", this->_percentExplosion->getFinalValue());
-
-    if (Maths::randomFrom(0.0f, 1.0f) > (1.0f - this->_percentExplosion->getFinalValue()))
+    if (this->_percentExplosion != nullptr)
     {
-        LOG_DEBUG("Explosion laser");
+        if (Maths::randomFrom(0.0f, 1.0f) > (1.0f - this->_percentExplosion->getFinalValue()))
+        {
+            LOG_DEBUG("Explosion laser");
+        }
     }
 
     this->remove();
