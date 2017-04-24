@@ -63,6 +63,10 @@ bool    PlayState::update(float elapsedTime)
         _gameStateManager->addState<BuildingListState>();
         TutoManagerMessage::getInstance()->sendMessage(eTutoState::CHECK_BUILDLIST);
     }
+    if (keyboard.getStateMap()[Keyboard::eKey::T] == Keyboard::eKeyState::KEY_PRESSED)
+    {
+        TutoManagerMessage::getInstance()->sendMessage(eTutoState::TUTO_DONE);
+    }
     if (keyboard.getStateMap()[Keyboard::eKey::ESCAPE] == Keyboard::eKeyState::KEY_PRESSED ||
         gameWindow->hasLostFocus())
     {

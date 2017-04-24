@@ -31,7 +31,7 @@ TutoManager::TutoManager()
     _statesMessages[eTutoState::DISABLE_BUILD] = "Use Right Click to disable build mode";
     _statesMessages[eTutoState::CHECK_HOWTOPLAY] = "Check the HowToPlay as reminder with H\n\n(remember that you can always check it again with the same shortcut)";
     _statesMessages[eTutoState::CHECK_BUILDLIST] = "Check the Build list with B to know what you can build and for how much golds.\n\n(remember that you can always check it again with the same shortcut)";
-    _statesMessages[eTutoState::TUTO_DONE] = "Well done ! Tutorial completed.\n\nGood luck & Have fun !";
+    _statesMessages[eTutoState::TUTO_DONE] = "Well done ! Tutorial completed.\n\nGood luck & Have fun ! (press T to hide tutorial)";
     _statesMessages[eTutoState::TUTO_HIDDEN] = "";
 }
 

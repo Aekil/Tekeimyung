@@ -29,7 +29,7 @@ void Player::death()
 void Player::start()
 {
     this->_weapons.push_back(new DefaultWeapon());
-    this->_weapons.push_back(new TeslaWeapon());
+    //this->_weapons.push_back(new TeslaWeapon());
     this->_weapons.push_back(new LaserWeapon());
 
     this->_levelUpReward[2] = std::make_pair<std::string, double>("FireRate", -25.0 / 100.0);
