@@ -24,7 +24,7 @@ DefaultWeapon::DefaultWeapon()
     _material = ResourceManager::getInstance()->getResource<Material>("weapon_default.mat");
 }
 
-void DefaultWeapon::upgradeByLevel()
+void    DefaultWeapon::upgradeByLevel()
 {
     switch (this->_level)
     {
@@ -42,7 +42,7 @@ void DefaultWeapon::upgradeByLevel()
     }
 }
 
-void DefaultWeapon::fire(Player* player, sTransformComponent* playerTransform, sRenderComponent* playerRender, glm::vec3 playerDirection)
+void    DefaultWeapon::fire(Player* player, sTransformComponent* playerTransform, sRenderComponent* playerRender, glm::vec3 playerDirection)
 {
     Entity*                 bullet;
     sScriptComponent*       bulletScripts;
@@ -77,7 +77,11 @@ void DefaultWeapon::fire(Player* player, sTransformComponent* playerTransform, s
 #endif
 }
 
-void DefaultWeapon::reload()
+void    DefaultWeapon::reload()
 {
     this->_attributes["Ammo"]->clearAllBonuses();
+}
+
+void    DefaultWeapon::clean()
+{
 }

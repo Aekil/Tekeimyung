@@ -1,6 +1,6 @@
 {
    "ambient" : {
-      "a" : 0,
+      "a" : 1,
       "b" : 0,
       "g" : 0,
       "r" : 0
@@ -8,24 +8,24 @@
    "bloom_color" : {
       "a" : 1,
       "b" : 0,
-      "g" : 0.039215687662363052,
-      "r" : 0.83529412746429443
+      "g" : 1,
+      "r" : 1
    },
    "diffuse" : {
-      "a" : 0,
+      "a" : 1,
       "b" : 0,
-      "g" : 0,
-      "r" : 0
+      "g" : 1,
+      "r" : 1
    },
    "dst_blend" : "GL_ONE_MINUS_SRC_ALPHA",
    "face_camera" : false,
    "has_bloom" : true,
    "src_blend" : "GL_SRC_ALPHA",
    "textures" : {
-      "ambient" : "resources/sprites/textures/bloom_red.png",
+      "ambient" : "resources/sprites/textures/bloom_yellow.png",
       "bloom" : "",
       "bloom_alpha" : "resources/sprites/textures/bloom_alpha.png",
-      "diffuse" : "resources/sprites/textures/bloom_red.png"
+      "diffuse" : "resources/sprites/textures/bloom_yellow.png"
    },
    "transparent" : false,
    "wireframe" : false

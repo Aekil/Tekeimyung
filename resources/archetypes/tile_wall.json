@@ -1,7 +1,20 @@
 {
    "components" : {
+      "sBoxColliderComponent" : {
+         "isTrigger" : false,
+         "pos" : {
+            "x" : 4.76837158203125e-06,
+            "y" : 6.25,
+            "z" : 7.62939453125e-06
+         },
+         "size" : {
+            "x" : 2.6000027656555176,
+            "y" : 1.2999999523162842,
+            "z" : 2.6000032424926758
+         }
+      },
       "sNameComponent" : {
-         "name" : "CASTLE"
+         "name" : "TILE_WALL"
       },
       "sRenderComponent" : {
          "animated" : false,
@@ -15,8 +28,8 @@
          "dynamic" : false,
          "hide_dynamic" : false,
          "ignore_raycast" : false,
-         "materials" : [ "bloom_green.mat" ],
-         "model" : "resources/models/buildings/geometric_castle.DAE",
+         "materials" : [ "bloom_yellow.mat" ],
+         "model" : "resources/models/blocks/block.DAE",
          "type" : "MESH"
       },
       "sRigidBodyComponent" : {
@@ -33,29 +46,17 @@
          }
       },
       "sScriptComponent" : {
-         "class" : [ "Castle" ],
          "scripts" : [
             {
-               "current_health" : 42,
-               "max_health" : 42,
-               "name" : "Castle"
+               "name" : "Tile"
             }
          ]
       },
-      "sSphereColliderComponent" : {
-         "isTrigger" : false,
-         "pos" : {
-            "x" : 0,
-            "y" : 18.75,
-            "z" : 0
-         },
-         "radius" : 3.8499999046325684
-      },
       "sTransformComponent" : {
          "pos" : {
-            "x" : 200,
+            "x" : 58.589900970458984,
             "y" : 12.5,
-            "z" : -25
+            "z" : 175
          },
          "rotation" : {
             "x" : 0,
@@ -69,9 +70,9 @@
          }
       },
       "sTypeComponent" : {
-         "type" : "TILE_NOT_WALKABLE"
+         "type" : "TILE_WALKABLE"
       }
    },
-   "name" : "CASTLE",
-   "tag" : "Castle"
+   "name" : "TILE_WALL",
+   "tag" : "TileWall"
 }

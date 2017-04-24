@@ -9,7 +9,7 @@
 
 #define HUD_DISPLAY_CASTLELIFE_TAG  "HudDisplayCastleLife"
 
-#define MAX_SIZE_TEXT_CASTLELIFE    30
+#define MAX_SIZE_TEXT_CASTLELIFE    256
 
 class HudDisplayCastleLife : public BaseScript
 {

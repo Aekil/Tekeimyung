@@ -17,9 +17,7 @@ float   Node::getDistance(const Node* to)
     int dstX = abs(this->pos.x - to->pos.x);
     int dstY = abs(this->pos.y - to->pos.y);
 
-    if (dstX > dstY)
-        return static_cast<float>(14 * dstY + 10 * (dstX - dstY));
-    return static_cast<float>(14 * dstX + 10 * (dstY - dstX));
+    return sqrt((dstX * dstX) + (dstY * dstY));
 }
 
 Path::~Path()
@@ -27,13 +25,13 @@ Path::~Path()
     freeNodes();
 }
 
-Node*    Path::getNodeFromPos(int x, int y, int map[29][38])
+Node*    Path::getNodeFromPos(int x, int y)
 {
     if (x < 0 || x > _mapSize .x - 1 || y < 0 || y > _mapSize.y - 1)
         return nullptr;
 
     glm::ivec2 pos(x, y);
-    bool isWalkable = (map[x][y] % LAYER_NUMBER) == 1 || (map[x][y] % LAYER_NUMBER) == 3;
+    bool isWalkable = (_map[x][y] % LAYER_NUMBER) == 1 || (_map[x][y] % LAYER_NUMBER) == 3;
     return (new Node(pos, isWalkable));
 }
 
@@ -54,7 +52,7 @@ void    Path::freeNodes()
     delete _nodes;
 }
 
-void    Path::generateNodes(int map[29][38])
+void    Path::generateNodes()
 {
     freeNodes();
     _nodes = new Node**[(int)_mapSize.x];
@@ -63,7 +61,7 @@ void    Path::generateNodes(int map[29][38])
         _nodes[x] = new Node*[(int)_mapSize.y];
         for (int y = 0; y < _mapSize.y; ++y)
         {
-            _nodes[x][y] = getNodeFromPos(x, y, map);
+            _nodes[x][y] = getNodeFromPos(x, y);
         }
     }
 }
@@ -99,9 +97,6 @@ std::vector<Node*>   Path::getAdjacentWalkableNodes(Node* fromNode)
     {
         int x = node->pos.x;
         int y = node->pos.y;
-        // Out of range
-        if (x < 0 || x > _mapSize.x - 1 || y < 0 || y > _mapSize.y - 1)
-            continue;
 
         // Non walkable node
         if (!node->isWalkable)
@@ -113,16 +108,11 @@ std::vector<Node*>   Path::getAdjacentWalkableNodes(Node* fromNode)
         if (node->state == Node::NodeState::Closed)
             continue;
 
-        // Already-open nodes are only added to the list if their G-value is lower going via this route.
-        float newMovementCost = fromNode->g + fromNode->getDistance(node);
-        if (node->state == Node::NodeState::Untested ||
-            newMovementCost < node->g)
-        {
-            node->g = newMovementCost;
-            node->h = node->getDistance(_nodes[_target.x][_target.y]);
-            node->parent = fromNode;
-            walkableNodes.push_back(node);
-        }
+        float newMovementCost = fromNode->g + 1;
+        node->g = newMovementCost;
+        node->h = node->getDistance(_nodes[_target.x][_target.y]);
+        node->parent = fromNode;
+        walkableNodes.push_back(node);
     }
 
     return (walkableNodes);
@@ -133,24 +123,33 @@ bool sortNodes(const Node* lhs, const Node* rhs)
     return ((lhs->h + lhs->g) < (rhs->h + rhs->g));
 }
 
-bool    Path::findTarget(Node* currentNode)
+bool    Path::findTarget()
 {
+    if (_openNodes.size() == 0)
+        return (false);
+
+    Node* currentNode = _openNodes[0];
+    _openNodes.erase(_openNodes.begin());
+
     currentNode->state = Node::NodeState::Closed;
     std::vector<Node*> nextNodes = getAdjacentWalkableNodes(currentNode);
 
-    std::sort(nextNodes.begin(), nextNodes.end(), sortNodes);
     for (Node* nextNode: nextNodes)
     {
         if (nextNode->pos.x == _target.x && nextNode->pos.y == _target.y)
         {
             return (true);
         }
-        else
+
+        if (std::find(_openNodes.begin(), _openNodes.end(), nextNode) == _openNodes.end())
         {
-            if (findTarget(nextNode)) // Note: Recurses back into Search(Node)
-                return (true);
+            _openNodes.push_back(nextNode);
         }
+
     }
+
+    std::sort(_openNodes.begin(), _openNodes.end(), sortNodes);
+    findTarget();
     return (false);
 }
 
@@ -165,12 +164,15 @@ std::vector<glm::ivec2>  Path::goToTarget(glm::ivec2 pos, glm::ivec2 target, int
     }
 
     _mapSize = mapSize;
+    _openNodes.clear();
 
     _from = pos;
     _target = target;
+    std::memcpy(_map, map, sizeof(map[0][0]) * mapSize.x * mapSize.y);
 
-    generateNodes(map);
-    findTarget(_nodes[_from.x][_from.y]);
+    generateNodes();
+    _openNodes.push_back(_nodes[_from.x][_from.y]);
+    findTarget();
 
     Node* node = _nodes[_target.x][_target.y];
     while (node->parent != nullptr)

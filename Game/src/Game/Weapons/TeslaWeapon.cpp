@@ -187,3 +187,7 @@ void            TeslaWeapon::fireOrb(Player* player, sTransformComponent* player
     orbScript->setPosition(playerTransform->getPos());
     orbScript->setDirection({ playerDirection.x, 0.0f, playerDirection.z });
 }
+
+void    TeslaWeapon::clean()
+{
+}

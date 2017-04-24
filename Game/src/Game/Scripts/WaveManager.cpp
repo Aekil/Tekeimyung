@@ -9,7 +9,7 @@
 
 #include <Game/GameStates/VictoryScreenState.hpp>
 #include <Game/GameStates/DefeatScreenState.hpp>
-#include <Game/Scripts/Build.hpp>
+#include <Game/Scripts/GameManager.hpp>
 #include <Game/Scripts/Spawner.hpp>
 #include <Game/Scripts/WaveManager.hpp>
 #include <Game/Scripts/Enemy.hpp>
@@ -24,6 +24,7 @@ void        WaveManager::start()
     this->_progressBar.maxProgress = 5.0f;
     this->_progressBar.init("TIMER_BAR_EMPTY", "TIMER_BAR");
     this->_progressBar.display(false);
+    this->_mapParts.resize(this->_waves);
 }
 
 void        WaveManager::update(float dt)
@@ -89,6 +90,8 @@ void            WaveManager::startWave(uint32_t wave)
     const auto& spawners = em->getEntitiesByTag("Spawner");
 
     this->_currentWave = wave;
+    if (this->_mapParts[this->_currentWave - 1] != -1)
+        this->spawnMapPart();
     for (auto &spawner : spawners)
     {
         auto    scriptComponent = spawner->getComponent<sScriptComponent>();
@@ -107,7 +110,8 @@ void            WaveManager::startWave(uint32_t wave)
             return;
         }
 
-        spawnerScript->triggerSpawnerConfigs(this->_currentWave);
+        if (scriptComponent->enabled == true)
+            spawnerScript->triggerSpawnerConfigs(this->_currentWave);
     }
 }
 
@@ -120,6 +124,30 @@ bool    WaveManager::checkBoardState(float deltaTime)
     }
 
     return (this->checkEndWave());
+}
+
+void        WaveManager::spawnMapPart()
+{
+    auto    em = EntityFactory::getBindedEntityManager();
+    Entity* gameManager = em->getEntityByTag("GameManager");
+
+    if (!gameManager)
+    {
+        LOG_WARN("Can't find entity with GameManager tag");
+        return;
+    }
+
+    auto    scriptComponent = gameManager->getComponent<sScriptComponent>();
+
+    if (!scriptComponent)
+    {
+        LOG_WARN("Can't find scriptComponent on GameManager entity");
+        return;
+    }
+
+    auto    gameManagerScript = scriptComponent->getScript<GameManager>("GameManager");
+
+    gameManagerScript->displayMapParts(this->_mapParts[this->_currentWave - 1]);
 }
 
 bool    WaveManager::checkEndWave()
@@ -136,6 +164,9 @@ bool    WaveManager::checkEndWave()
             LOG_WARN("Can't find sScriptComponent on Spawner entity");
             continue;
         }
+
+        if (scriptComponent->enabled == false)
+            continue;
 
         auto    spawnerScript = scriptComponent->getScript<Spawner>("Spawner");
 
@@ -266,13 +297,34 @@ bool            WaveManager::updateEditor()
     }
     ImGui::EndGroup();
 
+    ImGui::BeginGroup();
+    ImGui::Text("Wave/MapPart");
+    for (int idx = 0; idx < this->_mapParts.size(); idx++)
+    {
+        ImGui::PushID(idx);
+        ImGui::InputInt("Map Part", &(this->_mapParts[idx]));
+        ImGui::PopID();
+    }
+    ImGui::EndGroup();
+
     return (changed);
 }
 
 JsonValue       WaveManager::saveToJson()
 {
     JsonValue   waveManagerJson;
+    std::vector<JsonValue>  configsJson;
 
+    for (auto& mapPart : this->_mapParts)
+    {
+        JsonValue   configJson;
+
+        configJson.setInt("map_part", mapPart);
+        configsJson.push_back(configJson);
+
+    }
+
+    waveManagerJson.setValueVec("map_parts", configsJson);
     waveManagerJson.setUInt("waves_max", this->_waves);
     return (waveManagerJson);
 }
@@ -280,8 +332,24 @@ JsonValue       WaveManager::saveToJson()
 void                WaveManager::loadFromJson(const JsonValue& json)
 {
     unsigned int    wavesMax = json.getUInt("waves_max", 0);
+    auto            mapParts = json.get()["map_parts"];
+    int             idx = 0;
 
     this->_waves = wavesMax;
+    this->_mapParts.resize(this->_waves);
+
+    if (mapParts.size() > 0 && mapParts.type() != Json::ValueType::arrayValue)
+    {
+        LOG_ERROR("WaveManager::loadFromJson error: configs is not an array");
+        return;
+    }
+
+    for (const auto& mapPart : mapParts)
+    {
+        JsonValue   value(mapPart);
+
+        this->_mapParts[idx++] = value.getInt("map_part", -1);
+    }
 }
 
 void    WaveManager::updateProgressBar(float deltaTime)

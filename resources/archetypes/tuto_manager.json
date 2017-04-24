@@ -45,7 +45,7 @@
       },
       "sTransformComponent" : {
          "pos" : {
-            "x" : 960,
+            "x" : 672,
             "y" : 898.67822265625,
             "z" : 0
          },
@@ -67,7 +67,7 @@
          "horizontal_alignment" : "MIDDLE",
          "layer" : 0,
          "offset" : {
-            "x" : 0,
+            "x" : -15,
             "y" : -10
          },
          "percentage_size" : false,

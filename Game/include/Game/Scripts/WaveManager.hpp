@@ -58,6 +58,7 @@ private:
     void    handleGameOver();
 
     bool    checkBoardState(float deltaTime);
+    void    spawnMapPart();
     void    updatePlayerState(bool teleport, unsigned int layer);
     void    updateProgressBar(float deltaTime);
 

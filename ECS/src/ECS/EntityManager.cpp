@@ -47,8 +47,7 @@ void    EntityManager::destroyEntity(Entity* entity)
         return;
     }
     _entities.erase(entityIt);
-
-    _entityPool->free(entity);
+    entity->_free = true;
 }
 
 void    EntityManager::destroyEntityRegister(Entity* entity)
@@ -61,13 +60,24 @@ void    EntityManager::destroyEntityRegister(Entity* entity)
 
 void    EntityManager::destroyEntities()
 {
+    // _entitiesToFree is used to free entities from pool
+    // the next frame of the destroy
+    for (Entity* entity: _entitiesToFree)
+    {
+        _entityPool->free(entity);
+    }
+
+    _entitiesToFree.clear();
+
     if (_entitiesToDestroy.empty())
         return;
 
     uint32_t i = 0;
     uint32_t len = (uint32_t)_entitiesToDestroy.size();
+    _entitiesToFree.resize(len);
     for (i; i < len; ++i)
     {
+        _entitiesToFree[i] = _entitiesToDestroy[i];
         destroyEntity(_entitiesToDestroy[i]);
     }
 
@@ -90,6 +100,7 @@ void    EntityManager::destroyAllEntities()
         destroyEntity(entity);
     }
     _entitiesToDestroy.clear();
+    _entitiesToFree.clear();
 }
 
 std::vector<Entity*>& EntityManager::getEntities()

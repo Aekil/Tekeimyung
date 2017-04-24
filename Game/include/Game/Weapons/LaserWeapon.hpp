@@ -19,6 +19,7 @@ public:
     void fire(Player* player, sTransformComponent* playerTransform, sRenderComponent* playerRender, glm::vec3 playerDirection) override final;
     void reload() override final;
     void upgradeByLevel() override final;
+    void clean() override final;
 
     virtual std::string getName()
     {
@@ -39,6 +40,6 @@ private:
     bool _pierceEnemy = false;
 
     bool _timeExplosion = false;
-    float _timeExplosionPercent = 0.07f;
+    float _timeExplosionPercent = 0.17f;
     Entity* _laser = nullptr;
 };

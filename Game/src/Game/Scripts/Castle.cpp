@@ -7,12 +7,10 @@
 
 void Castle::start()
 {
-    this->setHealth(DEFAULT_MAX_CASTLE_HEALTH);
-    this->setMaxHealth(DEFAULT_MAX_CASTLE_HEALTH);
-
     this->_render = getComponent<sRenderComponent>();
     this->_transform = getComponent<sTransformComponent>();
     Health::init(_render);
+    _hitCastle = EventSound::getEventByEventType(eEventSound::ENEMY_HIT_CASTLE);
 }
 
 void Castle::update(float dt)
@@ -27,8 +25,29 @@ void Castle::onCollisionEnter(Entity* entity)
         this->takeDamage(DEFAULT_CASTLE_DMG_FROM_ENEMY);
 
         sScriptComponent* script = entity->getComponent<sScriptComponent>();
-        Enemy* enemy = script ? script->getScript<Enemy>(ENEMY_TAG) : nullptr;
+
+        if (script == nullptr)
+        {
+            LOG_WARN("Could not find %s on Entity %s", "sScriptComponent", "Enemy");
+            return;
+        }
+
+        Enemy* enemy = script->getScript<Enemy>(ENEMY_TAG);
+
+        if (enemy == nullptr)
+        {
+            LOG_WARN("Could not find script %s on Entity %s", "Enemy", "Enemy");
+            return;
+        }
+
         enemy->remove();
+
+#if (ENABLE_SOUND)
+        if (_hitCastle->soundID != -1)
+        {
+            SoundManager::getInstance()->playSound(_hitCastle->soundID);
+        }
+#endif
     }
 }
 

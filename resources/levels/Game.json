@@ -11,6 +11,44 @@
                      "name" : "GameManager"
                   },
                   {
+                     "map_parts" : [
+                        {
+                           "map_part" : -1
+                        },
+                        {
+                           "map_part" : -1
+                        },
+                        {
+                           "map_part" : -1
+                        },
+                        {
+                           "map_part" : 1
+                        },
+                        {
+                           "map_part" : -1
+                        },
+                        {
+                           "map_part" : -1
+                        },
+                        {
+                           "map_part" : -1
+                        },
+                        {
+                           "map_part" : 2
+                        },
+                        {
+                           "map_part" : -1
+                        },
+                        {
+                           "map_part" : -1
+                        },
+                        {
+                           "map_part" : -1
+                        },
+                        {
+                           "map_part" : -1
+                        }
+                     ],
                      "name" : "WaveManager",
                      "waves_max" : 12
                   },
@@ -27,7 +65,7 @@
                },
                "rotation" : {
                   "x" : 0,
-                  "y" : -0,
+                  "y" : 0,
                   "z" : 0
                },
                "scale" : {
@@ -58,6 +96,7 @@
                   "r" : 1
                },
                "dynamic" : true,
+               "hide_dynamic" : false,
                "ignore_raycast" : false,
                "materials" : [ "_01 - Default", "_02 - Default" ],
                "model" : "resources/models/characters/character.DAE",
@@ -82,7 +121,7 @@
                      "name" : "Player"
                   },
                   {
-                     "name" : "Build"
+                     "name" : "NewBuild"
                   }
                ]
             },
@@ -134,6 +173,7 @@
                   "r" : 1
                },
                "dynamic" : false,
+               "hide_dynamic" : false,
                "ignore_raycast" : false,
                "materials" : [ "bloom_green.mat" ],
                "model" : "resources/models/buildings/geometric_castle.DAE",
@@ -155,8 +195,8 @@
             "sScriptComponent" : {
                "scripts" : [
                   {
-                     "current_health" : 0,
-                     "max_health" : 0,
+                     "current_health" : 42,
+                     "max_health" : 42,
                      "name" : "Castle"
                   }
                ]
@@ -290,6 +330,83 @@
       {
          "components" : {
             "sNameComponent" : {
+               "name" : "HUD_DISPLAY_CASTLELIFE"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 0,
+                  "b" : 0,
+                  "g" : 0,
+                  "r" : 0
+               },
+               "dynamic" : false,
+               "hide_dynamic" : false,
+               "ignore_raycast" : false,
+               "materials" : [ "MAT_Default" ],
+               "model" : "resources/models/default.DAE",
+               "type" : "MESH"
+            },
+            "sScriptComponent" : {
+               "scripts" : [
+                  {
+                     "name" : "HudDisplayCastleLife"
+                  }
+               ]
+            },
+            "sTextComponent" : {
+               "color" : {
+                  "a" : 1,
+                  "b" : 0,
+                  "g" : 0.078431375324726105,
+                  "r" : 0.70588237047195435
+               },
+               "content" : "Castle health:\nx/X",
+               "font_name" : "moonhouse.ttf",
+               "font_size" : 22
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 1631.657958984375,
+                  "y" : 971.9678955078125,
+                  "z" : 0
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 19.200000762939453,
+                  "y" : 10.180000305175781,
+                  "z" : 1
+               }
+            },
+            "sTypeComponent" : {
+               "type" : "TILE_WALKABLE"
+            },
+            "sUiComponent" : {
+               "horizontal_alignment" : "RIGHT",
+               "layer" : 0,
+               "offset" : {
+                  "x" : 8,
+                  "y" : 13
+               },
+               "percentage_size" : false,
+               "size" : {
+                  "x" : 0.10000000149011612,
+                  "y" : 0.10000000149011612
+               },
+               "vertical_alignment" : "TOP"
+            }
+         },
+         "name" : "HUD_DISPLAY_CASTLELIFE",
+         "tag" : "HudDisplayCastleLife"
+      },
+      {
+         "components" : {
+            "sNameComponent" : {
                "name" : "HUD_DISPLAY_GOLD"
             },
             "sRenderComponent" : {
@@ -302,6 +419,7 @@
                   "r" : 0
                },
                "dynamic" : false,
+               "hide_dynamic" : false,
                "ignore_raycast" : false,
                "materials" : [ "MAT_Default" ],
                "model" : "resources/models/default.DAE",
@@ -328,7 +446,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 1670.0579833984375,
-                  "y" : 930.7879638671875,
+                  "y" : 921.06793212890625,
                   "z" : 0
                },
                "rotation" : {
@@ -378,6 +496,7 @@
                   "r" : 0
                },
                "dynamic" : false,
+               "hide_dynamic" : false,
                "ignore_raycast" : false,
                "materials" : [ "MAT_Default" ],
                "model" : "resources/models/default.DAE",
@@ -404,7 +523,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 1382.0579833984375,
-                  "y" : 1002.6779174804688,
+                  "y" : 982.14794921875,
                   "z" : 0
                },
                "rotation" : {
@@ -426,7 +545,7 @@
                "layer" : 0,
                "offset" : {
                   "x" : -5,
-                  "y" : 15
+                  "y" : 14
                },
                "percentage_size" : false,
                "size" : {
@@ -438,82 +557,6 @@
          },
          "name" : "HUD_DISPLAY_WAVE",
          "tag" : "HudDisplayWave"
-      },
-      {
-         "components" : {
-            "sNameComponent" : {
-               "name" : "HUD_DISPLAY_CASTLELIFE"
-            },
-            "sRenderComponent" : {
-               "animated" : false,
-               "animations" : [],
-               "color" : {
-                  "a" : 0,
-                  "b" : 0,
-                  "g" : 0,
-                  "r" : 0
-               },
-               "dynamic" : false,
-               "ignore_raycast" : false,
-               "materials" : [ "MAT_Default" ],
-               "model" : "resources/models/default.DAE",
-               "type" : "MESH"
-            },
-            "sScriptComponent" : {
-               "scripts" : [
-                  {
-                     "name" : "HudDisplayCastleLife"
-                  }
-               ]
-            },
-            "sTextComponent" : {
-               "color" : {
-                  "a" : 1,
-                  "b" : 0,
-                  "g" : 0.078431375324726105,
-                  "r" : 0.70588237047195435
-               },
-               "content" : "Castle health:\nx/X",
-               "font_name" : "moonhouse.ttf",
-               "font_size" : 22
-            },
-            "sTransformComponent" : {
-               "pos" : {
-                  "x" : 1631.657958984375,
-                  "y" : 1002.6779174804688,
-                  "z" : 0
-               },
-               "rotation" : {
-                  "x" : 0,
-                  "y" : 0,
-                  "z" : 0
-               },
-               "scale" : {
-                  "x" : 19.200000762939453,
-                  "y" : 10.180000305175781,
-                  "z" : 1
-               }
-            },
-            "sTypeComponent" : {
-               "type" : "TILE_WALKABLE"
-            },
-            "sUiComponent" : {
-               "horizontal_alignment" : "RIGHT",
-               "layer" : 0,
-               "offset" : {
-                  "x" : 8,
-                  "y" : 15
-               },
-               "percentage_size" : false,
-               "size" : {
-                  "x" : 0.10000000149011612,
-                  "y" : 0.10000000149011612
-               },
-               "vertical_alignment" : "TOP"
-            }
-         },
-         "name" : "HUD_DISPLAY_CASTLELIFE",
-         "tag" : "HudDisplayCastleLife"
       },
       {
          "components" : {
@@ -530,6 +573,7 @@
                   "r" : 1
                },
                "dynamic" : false,
+               "hide_dynamic" : false,
                "ignore_raycast" : false,
                "materials" : [ "MAT_Default" ],
                "model" : "resources/models/default.DAE",
@@ -561,7 +605,7 @@
             },
             "sTransformComponent" : {
                "pos" : {
-                  "x" : 960,
+                  "x" : 672,
                   "y" : 898.67822265625,
                   "z" : 0
                },
@@ -583,7 +627,7 @@
                "horizontal_alignment" : "MIDDLE",
                "layer" : 0,
                "offset" : {
-                  "x" : 0,
+                  "x" : -15,
                   "y" : -10
                },
                "percentage_size" : false,

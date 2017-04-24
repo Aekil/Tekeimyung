@@ -47,6 +47,8 @@ public:
     void addExperience(int);
     void updateWeaponMaterial();
 
+    void setCanShoot(bool);
+
 private:
     glm::vec3 _direction;
     sTransformComponent* _transform;
@@ -67,6 +69,8 @@ private:
     GameManager* _gameManager{ nullptr };
 
     std::map<int, std::pair<std::string, double>> _levelUpReward;
+
+    bool _canShoot = true;
 };
 
 REGISTER_SCRIPT(Player);

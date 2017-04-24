@@ -13,7 +13,7 @@
 #if defined (ENGINE_DEBUG)
     #define ENABLE_SOUND    false
 #else
-    #define ENABLE_SOUND    true
+    #define ENABLE_SOUND    false
 #endif
 
 #define SOUNDS_DIRECTORY    "resources/sounds"

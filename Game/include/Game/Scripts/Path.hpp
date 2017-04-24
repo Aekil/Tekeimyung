@@ -43,12 +43,12 @@ public:
     std::vector<glm::ivec2>         goToTarget(glm::ivec2 pos, glm::ivec2 target, int map[29][38], const glm::ivec2& mapSize);
 
 private:
-    Node*                           getNodeFromPos(int x, int y, int map[29][38]);
+    Node*                           getNodeFromPos(int x, int y);
     void                            freeNodes();
-    void                            generateNodes(int map[29][38]);
+    void                            generateNodes();
     std::vector<Node*>              getAdjacentNodes(Node* fromNode);
     std::vector<Node*>              getAdjacentWalkableNodes(Node* fromNode);
-    bool                            findTarget(Node* currentNode);
+    bool                            findTarget();
 
 
 private:
@@ -57,4 +57,7 @@ private:
 
     glm::ivec2                      _from;
     glm::ivec2                      _target;
+
+    int                             _map[29][38];
+    std::vector<Node*>              _openNodes;
 };

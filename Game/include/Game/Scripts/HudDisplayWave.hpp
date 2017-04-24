@@ -9,7 +9,7 @@
 
 #define HUD_DISPLAY_WAVE_TAG    "HudDisplayWave"
 
-#define MAX_SIZE_TEXT_WAVES     15
+#define MAX_SIZE_TEXT_WAVES     256
 
 class HudDisplayWave : public BaseScript
 {

@@ -50,6 +50,9 @@ bool    GameState::update(float elapsedTime)
         return (false);
     }
 
+    // Destroy entities in destroy queue
+    _world.getEntityManager()->destroyEntities();
+
     return (true);
 }
 

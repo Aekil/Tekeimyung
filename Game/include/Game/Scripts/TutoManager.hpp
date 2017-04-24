@@ -4,45 +4,50 @@
 
 #pragma once
 
-#include <vector>
+#include <unordered_map>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 
 #include <Engine/Core/BaseScript.hpp>
 #include <Engine/Core/ScriptFactory.hpp>
+#include <Engine/Components.hh>
 
 #define TUTO_MANAGER_TAG    "TutoManager"
 
-enum eTutoStates
+enum class eTutoState: int
 {
     MOVE = 0,
-    SHOOT,
-    CHANGE_WEAPON,
-    CHOOSE_BUILD,
-    BUILD,
-    DISABLE_BUILD,
-    CHECK_HOWTOPLAY,
-    CHECK_BUILDLIST,
-    TUTO_DONE,
-    TUTO_HIDDEN
+    SHOOT = 1,
+    CHANGE_WEAPON = 2,
+    CHOOSE_BUILD = 3,
+    BUILD = 4,
+    DISABLE_BUILD = 5,
+    CHECK_HOWTOPLAY = 6,
+    CHECK_BUILDLIST = 7,
+    TUTO_DONE = 8,
+    TUTO_HIDDEN = 9
 };
+
+eTutoState& operator++(eTutoState& state);
+eTutoState operator++(eTutoState& state, int);
 
 class TutoManager final : public BaseScript
 {
 public:
-    TutoManager() = default;
+    TutoManager();
     ~TutoManager() = default;
 
 public:
     void start() override final;
     void update(float dt) override final;
+    void sendMessage(eTutoState state);
 
 private:
-    EntityManager*  _em;
-    const Entity*   _gameManager;
-    const Entity*   _tutoDisplay;
+    sTextComponent*     _textComp = nullptr;
 
-    eTutoStates     _states;
+    eTutoState _currentState = eTutoState::MOVE;
+
+    std::unordered_map<eTutoState, std::string> _statesMessages;
 };
 
 REGISTER_SCRIPT(TutoManager);

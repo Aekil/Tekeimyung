@@ -32,6 +32,8 @@ public:
 
     virtual std::string getName() = 0;
 
+    virtual void clean() = 0;
+
     Material* getMaterial()
     {
         return (_material);
