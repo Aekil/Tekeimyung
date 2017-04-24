@@ -86,6 +86,8 @@ void Player::changeWeapon()
     if (lastOffset != scroll.yOffset &&
         !keyboard.isPressed(Keyboard::eKey::LEFT_CONTROL))
     {
+        this->_weapons[this->_actualWeapon]->clean();
+
         if (this->mouse.getScroll().yOffset < 0)
             this->_actualWeapon++;
         else
@@ -98,8 +100,6 @@ void Player::changeWeapon()
 
         updateWeaponMaterial();
         TutoManagerMessage::getInstance()->sendMessage(eTutoState::CHANGE_WEAPON);
-
-        LOG_DEBUG("Actual weapon : %d", this->_actualWeapon);
     }
 
     lastOffset = scroll.yOffset;
@@ -162,12 +162,12 @@ void Player::movement(float elapsedTime)
         }
     }
 
-    #if defined(ENGINE_DEBUG)
+#if defined(ENGINE_DEBUG)
     if (this->keyboard.getStateMap()[Keyboard::eKey::L] == Keyboard::eKeyState::KEY_RELEASED)
     {
         this->_weapons[this->_actualWeapon]->levelUp();
     }
-    #endif
+#endif
 }
 
 void Player::handleShoot(float dt)
@@ -183,17 +183,7 @@ void Player::handleShoot(float dt)
             TutoManagerMessage::getInstance()->sendMessage(eTutoState::SHOOT);
         }
         else
-        {
-            if (this->_weapons[this->_actualWeapon]->getName() == LaserWeapon::Name)
-            {
-                LaserWeapon* obj = dynamic_cast<LaserWeapon*>(this->_weapons[this->_actualWeapon]);
-                if (obj->_laser != nullptr)
-                {
-                    this->Destroy(obj->_laser);
-                    obj->_laser = nullptr;
-                }
-            }
-        }
+            this->_weapons[this->_actualWeapon]->clean();
     }
 }
 

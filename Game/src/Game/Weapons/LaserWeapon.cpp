@@ -70,10 +70,7 @@ void LaserWeapon::fireMultipleEnemy(Player* player, sTransformComponent* playerT
     {
         if (hitedEntities.size() == 0)
         {
-            auto em = EntityFactory::getBindedEntityManager();
-
-            em->destroyEntityRegister(this->_laser);
-            this->_laser = nullptr;
+            this->clean();
             this->_oldEntitiesHited.clear();
             return;
         }
@@ -151,10 +148,7 @@ void LaserWeapon::fireOneEnemy(Player* player, sTransformComponent* playerTransf
         }
         else
         {
-            auto em = EntityFactory::getBindedEntityManager();
-
-            em->destroyEntityRegister(this->_laser);
-            this->_laser = nullptr;
+            this->clean();
             this->_oldEntitiesHited.clear();
         }
     }
@@ -182,4 +176,12 @@ void LaserWeapon::upgradeByLevel()
 void    LaserWeapon::reload()
 {
 
+}
+
+void    LaserWeapon::clean()
+{
+    auto em = EntityFactory::getBindedEntityManager();
+
+    em->destroyEntityRegister(this->_laser);
+    this->_laser = nullptr;
 }
