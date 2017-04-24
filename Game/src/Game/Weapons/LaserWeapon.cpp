@@ -15,7 +15,6 @@ LaserWeapon::LaserWeapon()
     this->_attributes["FireRate"] = new Attribute(0.0f);
     this->_attributes["Ammo"] = new Attribute(100.0f);
     this->_attributes["Damage"] = new Attribute(0.75f);
-    this->_attributes["ExplosionPercentage"] = new Attribute(1.0 / 100.0);
     this->_attributes["MaxRange"] = new Attribute(150.0f);
 
     _material = ResourceManager::getInstance()->getResource<Material>("weapon_laser.mat");
@@ -94,15 +93,17 @@ void LaserWeapon::fireMultipleEnemy(Player* player, sTransformComponent* playerT
 
                 auto enemyScript = entityScriptComponent->getScript<Enemy>("Enemy");
 
+                if (enemyScript == nullptr)
+                    return;
+
                 if (this->_timeExplosion)
                 {
-                    if (std::find(this->_oldEntitiesHited.begin(), this->_oldEntitiesHited.end(), hitedEntity) != this->_oldEntitiesHited.end())
-                        this->_attributes["ExplosionPercentage"]->addModifier(Modifier(this->_timeExplosionPercent));
+                    if (enemyScript->getPercentExplosion() == nullptr)
+                        enemyScript->setPercentExplosion(new Attribute(1.0 / 100.0));
                     else
-                        this->_attributes["ExplosionPercentage"]->clearAll();
+                        enemyScript->getPercentExplosion()->addModifier(Modifier(this->_timeExplosionPercent));
                 }
 
-                enemyScript->setPercentExplosion(this->_attributes["ExplosionPercentage"]->getFinalValue());
                 enemyScript->takeDamage(this->_attributes["Damage"]->getFinalValue());
 
                 this->_oldEntitiesHited.push_back(hitedEntity);

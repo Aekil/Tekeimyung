@@ -49,9 +49,14 @@ void Enemy::update(float dt)
     Health::update(_transform);
 }
 
-void    Enemy::setPercentExplosion(double percentExplosion)
+void    Enemy::setPercentExplosion(Attribute* percentExplosion)
 {
     this->_percentExplosion = percentExplosion;
+}
+
+Attribute*  Enemy::getPercentExplosion()
+{
+    return this->_percentExplosion;
 }
 
 void    Enemy::onCollisionEnter(Entity* entity)
@@ -74,7 +79,9 @@ void Enemy::death()
 {
     EntityManager* em = EntityFactory::getBindedEntityManager();
 
-    if (Maths::randomFrom(0.0f, 1.0f) > (1.0f - this->_percentExplosion))
+    LOG_DEBUG("%f", this->_percentExplosion->getFinalValue());
+
+    if (Maths::randomFrom(0.0f, 1.0f) > (1.0f - this->_percentExplosion->getFinalValue()))
     {
         LOG_DEBUG("Explosion laser");
     }

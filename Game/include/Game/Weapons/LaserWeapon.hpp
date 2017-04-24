@@ -40,6 +40,6 @@ private:
     bool _pierceEnemy = false;
 
     bool _timeExplosion = false;
-    float _timeExplosionPercent = 0.07f;
+    float _timeExplosionPercent = 0.17f;
     Entity* _laser = nullptr;
 };

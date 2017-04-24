@@ -84,5 +84,4 @@ void    DefaultWeapon::reload()
 
 void    DefaultWeapon::clean()
 {
-
 }

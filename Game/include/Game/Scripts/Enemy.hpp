@@ -10,6 +10,7 @@
 #include <Engine/Utils/EventSound.hpp>
 
 #include <Game/Scripts/Health.hpp>
+#include <Game/Attibutes/Attribute.hpp>
 
 #define ENEMY_TAG   "Enemy"
 
@@ -27,7 +28,8 @@ public:
     void remove();
     bool takeDamage(double damage) override final;
 
-    void setPercentExplosion(double);
+    Attribute* getPercentExplosion();
+    void setPercentExplosion(Attribute*);
     void setPath(const std::vector<glm::vec3>& path);
 
     bool updateEditor() override final;
@@ -50,7 +52,7 @@ private:
     tEventSound* _dyingSound = nullptr;
     tEventSound* _earningCoins = nullptr;
 
-    double _percentExplosion;
+    Attribute* _percentExplosion = nullptr;
 
     float _speed;
 
