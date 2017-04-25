@@ -7,6 +7,8 @@
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 
+#include <ECS/Entity.hpp>
+
 #include <Engine/Graphics/Ray.hpp>
 
 class Collisions
@@ -23,6 +25,9 @@ public:
     static bool         sphereVSAABB(const glm::vec3& spherePosition, float sphereRadius, const glm::vec3& boxPosition, const glm::vec3& boxSize);
 
     static float        rayVSAABB(const Ray& ray, const glm::vec3& boxMin, const glm::vec3& boxMax);
+
+    static bool         isColliding(Entity*, Entity*);
+    static bool         isCollidingSphereAndEntity(glm::vec3, float, Entity*);
 private:
 
 };

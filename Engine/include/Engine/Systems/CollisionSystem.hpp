@@ -11,7 +11,4 @@ public:
     CollisionSystem();
     virtual ~CollisionSystem() {};
     virtual void    update(EntityManager &em, float elapsedTime);
-
-private:
-    bool            isColliding(Entity *firstEntity, Entity *secondEntity);
 END_SYSTEM(CollisionSystem)

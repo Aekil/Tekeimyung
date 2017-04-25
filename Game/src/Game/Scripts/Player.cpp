@@ -238,3 +238,46 @@ void Player::setCanShoot(bool canShoot)
 {
     this->_canShoot = canShoot;
 }
+
+bool Player::updateEditor()
+{
+    bool changed = false;
+
+    changed |= ImGui::InputFloat("Speed", &_speed, 10.0f, ImGuiInputTextFlags_AllowTabInput);
+
+    int health = getMaxHealth();
+    if (ImGui::InputInt("Health", &health, 10, ImGuiInputTextFlags_AllowTabInput))
+    {
+        if (health < 0)
+            health = 0;
+        setMaxHealth(health);
+        changed = true;
+    }
+
+    if (ImGui::InputInt("Experience earned", &this->_experienceEarned, 10, ImGuiInputTextFlags_AllowTabInput))
+    {
+        if (this->_experienceEarned < 0)
+            this->_experienceEarned = 0;
+        changed = true;
+    }
+
+    return (changed);
+}
+
+JsonValue Player::saveToJson()
+{
+    JsonValue json;
+
+    json.setFloat("speed", _speed);
+    json.setUInt("health", getMaxHealth());
+    json.setUInt("experience_earned", this->_experienceEarned);
+
+    return (json);
+}
+
+void    Player::loadFromJson(const JsonValue& json)
+{
+    _speed = json.getFloat("speed", 50.0f);
+    setMaxHealth(json.getUInt("health", 150));
+    this->_experienceEarned = json.getUInt("experience_earned", 20);
+}

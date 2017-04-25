@@ -14,7 +14,7 @@ LaserWeapon::LaserWeapon()
 {
     this->_attributes["FireRate"] = new Attribute(0.0f);
     this->_attributes["Ammo"] = new Attribute(100.0f);
-    this->_attributes["Damage"] = new Attribute(0.75f);
+    this->_attributes["Damage"] = new Attribute(2.0f);
     this->_attributes["MaxRange"] = new Attribute(150.0f);
 
     _material = ResourceManager::getInstance()->getResource<Material>("weapon_laser.mat");

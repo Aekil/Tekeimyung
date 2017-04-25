@@ -5,6 +5,7 @@
 #include <Engine/Components.hh>
 #include <Engine/EntityFactory.hpp>
 #include <Engine/Utils/Maths.hpp>
+#include <Engine/Physics/Collisions.hpp>
 
 #include <Game/Scripts/GameManager.hpp>
 #include <Game/Scripts/GoldManager.hpp>
@@ -83,7 +84,31 @@ void Enemy::death()
     {
         if (Maths::randomFrom(0.0f, 1.0f) > (1.0f - this->_percentExplosion->getFinalValue()))
         {
-            LOG_DEBUG("Explosion laser");
+            auto enemies = em->getEntitiesByTag("Enemy");
+
+            for (auto& enemy : enemies)
+            {
+                if (enemy->id != this->entity->id && Collisions::isCollidingSphereAndEntity(this->_transform->getPos(), 7.7f, enemy))
+                {
+                    auto enemyScriptComponent = enemy->getComponent<sScriptComponent>();
+
+                    if (enemyScriptComponent == nullptr)
+                    {
+                        LOG_WARN("Could not find %s on Entity %s", "sScriptComponent", "Enemy");
+                        return;
+                    }
+
+                    auto enemyScript = enemyScriptComponent->getScript<Enemy>("Enemy");
+
+                    if (enemyScript == nullptr)
+                    {
+                        LOG_WARN("Could not find script %s on Entity %s", "Enemy", "Enemy");
+                        return;
+                    }
+
+                    enemyScript->takeDamage(25.0f);
+                }
+            }
         }
     }
 
@@ -128,7 +153,7 @@ bool Enemy::takeDamage(double damage)
     return (Health::takeDamage(damage));
 }
 
-void Enemy::setPath(const std::vector<glm::vec3>& path) 
+void Enemy::setPath(const std::vector<glm::vec3>& path)
 {
     _path = path;
     _pathProgress = 0;

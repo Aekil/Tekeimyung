@@ -49,6 +49,10 @@ public:
 
     void setCanShoot(bool);
 
+    bool updateEditor() override final;
+    JsonValue saveToJson() override final;
+    void loadFromJson(const JsonValue& json) override final;
+
 private:
     glm::vec3 _direction;
     sTransformComponent* _transform;
