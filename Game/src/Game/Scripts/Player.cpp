@@ -243,41 +243,48 @@ bool Player::updateEditor()
 {
     bool changed = false;
 
-    changed |= ImGui::InputFloat("Speed", &_speed, 10.0f, ImGuiInputTextFlags_AllowTabInput);
-
-    int health = getMaxHealth();
-    if (ImGui::InputInt("Health", &health, 10, ImGuiInputTextFlags_AllowTabInput))
+    ImGui::Text("Weapons config");
+    
+    // Configs list
     {
-        if (health < 0)
-            health = 0;
-        setMaxHealth(health);
-        changed = true;
+        uint32_t i = 0;
+        ImGui::BeginChild("Weapons config", ImVec2(0, 100), true);
+        for (auto& weapon : this->_weapons)
+        {
+            ImGui::PushID(i);
+            if (ImGui::Selectable(weapon->getName().c_str(), _selectedWeapon == i))
+            {
+                _selectedWeapon = i;
+            }
+            ImGui::PopID();
+            i++;
+        }
+        ImGui::EndChild();
     }
 
-    if (ImGui::InputInt("Experience earned", &this->_experienceEarned, 10, ImGuiInputTextFlags_AllowTabInput))
+
+    if (this->_weapons.size() == 0)
+        return (false);
+
+    // Configs editor
     {
-        if (this->_experienceEarned < 0)
-            this->_experienceEarned = 0;
-        changed = true;
+        auto& weapon = this->_weapons[_selectedWeapon];
+
+        ImGui::Text(FMT_MSG("Damage (with modifier) : (%.3f)", weapon->getAttribute("Damage")).c_str());
+
+        for (auto &attribute : weapon->_attributes)
+        {
+            auto baseValue = static_cast<float>(attribute.second->getBaseValue());
+
+            if (ImGui::InputFloat(attribute.first.c_str(), &baseValue, 1.0f, ImGuiInputTextFlags_AllowTabInput))
+            {
+                if (baseValue < 0)
+                    baseValue = 0;
+                attribute.second->setBaseValue(baseValue);
+                changed = true;
+            }
+        }
     }
 
     return (changed);
-}
-
-JsonValue Player::saveToJson()
-{
-    JsonValue json;
-
-    json.setFloat("speed", _speed);
-    json.setUInt("health", getMaxHealth());
-    json.setUInt("experience_earned", this->_experienceEarned);
-
-    return (json);
-}
-
-void    Player::loadFromJson(const JsonValue& json)
-{
-    _speed = json.getFloat("speed", 50.0f);
-    setMaxHealth(json.getUInt("health", 150));
-    this->_experienceEarned = json.getUInt("experience_earned", 20);
 }

@@ -77,3 +77,13 @@ void Attribute::clearAllModifiers()
 {
     this->_modifiers.clear();
 }
+
+double Attribute::getBaseValue()
+{
+    return this->_baseValue;
+}
+
+void Attribute::setBaseValue(double baseValue)
+{
+    this->_baseValue = baseValue;
+}
