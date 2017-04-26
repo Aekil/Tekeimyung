@@ -5,13 +5,16 @@
 #include <imgui.h>
 #include <imgui_impl_glfw_gl3.h>
 
+#include <Engine/EntityFactory.hpp>
 #include <Engine/Components.hh>
 #include <Engine/Window/GameWindow.hpp>
-#include <Engine/Utils/Logger.hpp>
+#include <Engine/Debug/Logger.hpp>
 #include <Game/Scripts/CameraScript.hpp>
 
 void CameraScript::start()
 {
+    auto    em = EntityFactory::getBindedEntityManager();
+
     _cameraComp = entity->getComponent<sCameraComponent>();
     _scrollSpeed = 1500.0f;
 
@@ -27,6 +30,7 @@ void CameraScript::update(float dt)
     auto &keyboard = gameWindow->getKeyboard();
     auto& camera = _cameraComp->camera;
 
+#if defined (ENGINE_DEBUG)
     // update Projection type
     {
         if (keyboard.isPressed(Keyboard::eKey::O))
@@ -34,6 +38,7 @@ void CameraScript::update(float dt)
         else if (keyboard.isPressed(Keyboard::eKey::P))
             camera.setProjType(Camera::eProj::PERSPECTIVE);
     }
+#endif
 
     // update zoom
     {
@@ -43,7 +48,7 @@ void CameraScript::update(float dt)
 
         if (offset && keyboard.isPressed(Keyboard::eKey::LEFT_CONTROL))
         {
-            camera.setProjSize(camera.getProjSize() + (float)offset * dt * _scrollSpeed);
+            camera.setProjSize(camera.getProjSize() + (float) offset * dt * _scrollSpeed);
 
             // Limit max projection size to 700
             camera.setProjSize(std::min(camera.getProjSize(), 700.0f));
@@ -54,7 +59,23 @@ void CameraScript::update(float dt)
         _lastScrollOffset = scroll.yOffset;
     }
 
-    // update camera position when reaching edge
+
+    if (this->_followEntity == true)
+    {
+        static float moveSpeed = 300.0f;
+
+        if (this->_entityToFollow != nullptr)
+        {
+            sTransformComponent*    entityTransform = this->_entityToFollow->getComponent<sTransformComponent>();
+
+            if (entityTransform != nullptr)
+            {
+                camera.translate({ moveSpeed * dt, 0.0f, 0.0f }, Camera::eTransform::LOCAL);
+            }
+        }
+    }
+    //  Update camera position when reaching edge
+    else
     {
         static float edgeDist = 80.0f;
         static float moveSpeed = 300.0f;

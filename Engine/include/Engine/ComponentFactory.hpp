@@ -11,8 +11,8 @@
 #include <ECS/Entity.hpp>
 
 #include <Engine/Utils/Exception.hpp>
-#include <Engine/Utils/Logger.hpp>
-#include <Engine/Utils/Debug.hpp>
+#include <Engine/Debug/Logger.hpp>
+#include <Engine/Debug/Debug.hpp>
 #include <Engine/Components.hh>
 #include <Engine/Utils/JsonValue.hpp>
 

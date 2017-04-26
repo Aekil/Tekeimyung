@@ -1,5 +1,5 @@
 #include <Engine/Graphics/BufferPool.hpp>
-#include <Engine/Utils/Debug.hpp>
+#include <Engine/Debug/Debug.hpp>
 
 void BufferPool::SubBuffer::free()
 {

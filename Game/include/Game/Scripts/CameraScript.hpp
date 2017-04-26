@@ -19,6 +19,8 @@ private:
     sCameraComponent*   _cameraComp;
     float               _scrollSpeed;
     double              _lastScrollOffset;
+    bool                _followEntity = false;
+    Entity*             _entityToFollow = nullptr;
 };
 
 REGISTER_SCRIPT(CameraScript);

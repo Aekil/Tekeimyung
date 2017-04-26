@@ -6,7 +6,7 @@
 
 #include <ECS/System.hpp>
 
-#include <Engine/Utils/MonitoringDebugWindow.hpp>
+#include <Engine/Debug/MonitoringDebugWindow.hpp>
 
 START_SYSTEM(ScriptSystem)
 public:

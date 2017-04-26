@@ -9,8 +9,8 @@
 #include <Engine/Core/GameStateManager.hpp>
 #include <Engine/Graphics/Renderer.hpp>
 #include <Engine/Sound/SoundManager.hpp>
-#include <Engine/Utils/DebugWindow.hpp>
-#include <Engine/Utils/Logger.hpp>
+#include <Engine/Debug/DebugWindow.hpp>
+#include <Engine/Debug/Logger.hpp>
 #include <Engine/Window/GameWindow.hpp>
 
 class Engine

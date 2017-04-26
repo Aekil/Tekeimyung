@@ -7,8 +7,8 @@
 #include <glm/vec2.hpp>
 
 #include <Engine/Utils/Helper.hpp>
-#include <Engine/Utils/Debug.hpp>
-#include <Engine/Utils/Logger.hpp>
+#include <Engine/Debug/Debug.hpp>
+#include <Engine/Debug/Logger.hpp>
 
 #include <Engine/Graphics/Mesh.hpp>
 

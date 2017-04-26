@@ -8,7 +8,7 @@
 #include <stb_image/stb_image.h>
 
 #include <Engine/Utils/Exception.hpp>
-#include <Engine/Utils/Logger.hpp>
+#include <Engine/Debug/Logger.hpp>
 
 #include <Engine/Graphics/Texture.hpp>
 

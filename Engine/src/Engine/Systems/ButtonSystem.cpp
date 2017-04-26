@@ -7,7 +7,7 @@
 #include <glm/gtx/string_cast.hpp>
 
 #include <Engine/Window/GameWindow.hpp>
-#include <Engine/Utils/Logger.hpp>
+#include <Engine/Debug/Logger.hpp>
 #include <Engine/Utils/LevelLoader.hpp>
 #include <Engine/Physics/Collisions.hpp>
 
@@ -67,7 +67,7 @@ void    ButtonSystem::handleButtonMouseHover(EntityManager& em, Entity* entity, 
     glm::vec2               pos = glm::vec2(transform->getPos()) - (size / 2.0f);
 
     // Check the mouse is in the button (2D AABB collision)
-    if (Collisions::pointVSAABB2D(cursorPos, pos, size))
+    if (render->enabled == true && Collisions::pointVSAABB2D(cursorPos, pos, size))
     {
         removeSelected(em, _currentSelected);
         _currentSelected = entityIdx;

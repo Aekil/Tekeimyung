@@ -2,7 +2,7 @@
 #include <memory>
 
 #include <Engine/Graphics/UI/Font.hpp>
-# include <Engine/Utils/Logger.hpp>
+# include <Engine/Debug/Logger.hpp>
 
 Font::Font() {}
 

@@ -10,7 +10,7 @@
 #include <ECS/Entity.hpp>
 #include <ECS/EntityManager.hpp>
 #include <Engine/EditorState.hpp>
-#include <Engine/Utils/Debug.hpp>
+#include <Engine/Debug/Debug.hpp>
 #include <Engine/Utils/JsonValue.hpp>
 #include <Engine/Core/GameState.hpp>
 

@@ -1,0 +1,56 @@
+{
+   "components" : {
+      "sNameComponent" : {
+         "name" : "ICON_WAVE"
+      },
+      "sRenderComponent" : {
+         "animated" : false,
+         "animations" : [],
+         "color" : {
+            "a" : 1,
+            "b" : 1,
+            "g" : 1,
+            "r" : 0
+         },
+         "dynamic" : false,
+         "hide_dynamic" : false,
+         "ignore_raycast" : false,
+         "materials" : [ "icon_wave.mat" ],
+         "model" : "resources/models/default.DAE",
+         "type" : "PLANE"
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 460.79998779296875,
+            "y" : 142.3800048828125,
+            "z" : 0
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "scale" : {
+            "x" : 6.3999357223510742,
+            "y" : 6.0266609191894531,
+            "z" : 1
+         }
+      },
+      "sUiComponent" : {
+         "horizontal_alignment" : "MIDDLE",
+         "layer" : 0,
+         "offset" : {
+            "x" : -26,
+            "y" : -36
+         },
+         "percentage_size" : true,
+         "size" : {
+            "x" : 0.033332999795675278,
+            "y" : 0.05925920233130455
+         },
+         "vertical_alignment" : "MIDDLE"
+      }
+   },
+   "name" : "ICON_WAVE",
+   "tag" : ""
+}

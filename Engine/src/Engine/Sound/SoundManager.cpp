@@ -5,8 +5,8 @@
 #include <cmath>
 #include <iostream>
 
-#include <Engine/Utils/Debug.hpp>
-#include <Engine/Utils/Logger.hpp>
+#include <Engine/Debug/Debug.hpp>
+#include <Engine/Debug/Logger.hpp>
 #include <Engine/Utils/ResourceManager.hpp>
 
 #include <Engine/Sound/SoundManager.hpp>

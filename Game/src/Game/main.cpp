@@ -12,9 +12,9 @@
 #include <Engine/Utils/Exception.hpp>
 #include <Engine/Utils/EventSound.hpp>
 #include <Engine/Utils/LevelLoader.hpp>
-#include <Engine/Utils/Logger.hpp>
+#include <Engine/Debug/Logger.hpp>
 #include <Engine/Utils/ResourceManager.hpp>
-#include <Engine/Utils/Debug.hpp>
+#include <Engine/Debug/Debug.hpp>
 
 #include <Game/GameStates/ConfirmExitState.hpp>
 #include <Game/GameStates/HowToPlayState.hpp>

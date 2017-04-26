@@ -9,7 +9,7 @@
 
 #include <ECS/EntityManager.hpp>
 #include <Engine/Core/GameState.hpp>
-#include <Engine/Utils/Debug.hpp>
+#include <Engine/Debug/Debug.hpp>
 
 class GameState;
 

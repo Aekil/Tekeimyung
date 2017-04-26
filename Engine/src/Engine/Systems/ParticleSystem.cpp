@@ -9,7 +9,7 @@
 
 #include <Engine/Window/GameWindow.hpp>
 #include <Engine/Utils/Helper.hpp>
-#include <Engine/Utils/Logger.hpp>
+#include <Engine/Debug/Logger.hpp>
 #include <Engine/Graphics/Geometries/Plane.hpp>
 
 #include <Engine/Systems/ParticleSystem.hpp>

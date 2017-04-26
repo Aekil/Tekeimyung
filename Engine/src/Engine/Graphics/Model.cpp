@@ -7,7 +7,7 @@
 #include <assimp/postprocess.h>
 
 #include <Engine/Utils/Exception.hpp>
-#include <Engine/Utils/Logger.hpp>
+#include <Engine/Debug/Logger.hpp>
 #include <Engine/Utils/Helper.hpp>
 
 #include <Engine/Graphics/Model.hpp>
