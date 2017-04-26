@@ -23,7 +23,7 @@ eTutoState operator++(eTutoState& state, int)
 
 TutoManager::TutoManager()
 {
-    _statesMessages[eTutoState::MOVE] = "Use W,A,S,D to move";
+    _statesMessages[eTutoState::MOVE] = "Use W,A,S,D to move (Press K to skip the tutorial)";
     _statesMessages[eTutoState::SHOOT] = "Use left click to shoot !";
     _statesMessages[eTutoState::CHANGE_WEAPON] = "Use the scroll wheel to change your weapon (you have 2 different) !";
     _statesMessages[eTutoState::CHOOSE_BUILD] = "Use keys from 1 to 4 (on the top of your keyboard)\n    to choose a building and enable build zone!";
@@ -45,7 +45,14 @@ void TutoManager::start()
     }
 }
 
-void TutoManager::update(float dt) {}
+void TutoManager::update(float dt) 
+{
+    if (this->keyboard.getStateMap()[Keyboard::eKey::K] == Keyboard::eKeyState::KEY_RELEASED)
+    {
+        this->_currentState = eTutoState::TUTO_DONE;
+        this->sendMessage(eTutoState::TUTO_DONE);
+    }
+}
 
 void    TutoManager::sendMessage(eTutoState state)
 {
