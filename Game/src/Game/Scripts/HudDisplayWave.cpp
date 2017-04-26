@@ -11,27 +11,33 @@
 
 void HudDisplayWave::start()
 {
-    _em = EntityFactory::getBindedEntityManager();
-    if (_em != nullptr)
+    this->_em = EntityFactory::getBindedEntityManager();
+    if (this->_em != nullptr)
     {
-        _gameManager = _em->getEntityByTag(GAME_MANAGER_TAG);
-        if (_gameManager != nullptr)
-            _waveHudDisplay = _em->getEntityByTag(HUD_DISPLAY_WAVE_TAG);
+        this->_gameManager = this->_em->getEntityByTag(GAME_MANAGER_TAG);
+        if (this->_gameManager != nullptr)
+            this->_waveHudDisplay = this->_em->getEntityByTag(HUD_DISPLAY_WAVE_TAG);
     }
 }
 
 void HudDisplayWave::update(float dt)
 {
-    if (_gameManager != nullptr && _waveHudDisplay != nullptr)
+    if (this->_gameManager != nullptr && this->_waveHudDisplay != nullptr)
     {
         sScriptComponent*   scriptComp = _gameManager->getComponent<sScriptComponent>();
         WaveManager*        waveManager = scriptComp->getScript<WaveManager>(WAVE_MANAGER_TAG);
-        sTextComponent*     textComp = _waveHudDisplay->getComponent<sTextComponent>();
-        char                waveText[MAX_SIZE_TEXT_WAVES];
         int                 nbWaves = waveManager->getNbWaves();
         int                 currentWave = waveManager->getCurrentWave();
 
-        sprintf_s(waveText, "%d/%d waves", currentWave, nbWaves);
-        textComp->text.setContent(waveText);
+        if (nbWaves != this->_tmpNbWaves || currentWave != this->_tmpcurrentWave)
+        {
+            sTextComponent*     textComp = _waveHudDisplay->getComponent<sTextComponent>();
+            char                waveText[MAX_SIZE_TEXT_WAVES];
+
+            sprintf_s(waveText, "%d/%d", currentWave, nbWaves);
+            textComp->text.setContent(waveText);
+            this->_tmpNbWaves = nbWaves;
+            this->_tmpcurrentWave = currentWave;
+        }
     }
 }

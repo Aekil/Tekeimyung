@@ -458,6 +458,9 @@ virtual sComponent* clone()
 virtual void update(sTextComponent* component)
 {
     this->text = component->text;
+    this->horizontalAlignment = component->horizontalAlignment;
+    this->verticalAlignment = component->verticalAlignment;
+    this->offset = component->offset;
 }
 
 virtual void update(sComponent* component)

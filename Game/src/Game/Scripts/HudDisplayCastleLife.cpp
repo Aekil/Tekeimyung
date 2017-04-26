@@ -11,20 +11,20 @@
 
 void HudDisplayCastleLife::start()
 {
-    _em = EntityFactory::getBindedEntityManager();
-    if (_em != nullptr)
+    this->_em = EntityFactory::getBindedEntityManager();
+    if (this->_em != nullptr)
     {
-        _castle = _em->getEntityByTag(CASTLE_TAG);
-        if (_castle != nullptr)
-            _castleLifeHudDisplay = _em->getEntityByTag(HUD_DISPLAY_CASTLELIFE_TAG);
+        this->_castle = this->_em->getEntityByTag(CASTLE_TAG);
+        if (this->_castle != nullptr)
+            this->_castleLifeHudDisplay = this->_em->getEntityByTag(HUD_DISPLAY_CASTLELIFE_TAG);
     }
 }
 
 void HudDisplayCastleLife::update(float dt)
 {
-    if (_castle != nullptr && _castleLifeHudDisplay != nullptr)
+    if (this->_castle != nullptr && this->_castleLifeHudDisplay != nullptr)
     {
-        sScriptComponent*   scriptComp = _castle->getComponent<sScriptComponent>();
+        sScriptComponent*   scriptComp = this->_castle->getComponent<sScriptComponent>();
         
         if (scriptComp == nullptr)
             return;
@@ -36,10 +36,16 @@ void HudDisplayCastleLife::update(float dt)
 
         int                 castleLife = castle->getHealth();
         int                 maxCastleLife = castle->getMaxHealth();
-        sTextComponent*     textComp = _castleLifeHudDisplay->getComponent<sTextComponent>();
-        char                castleLifeText[MAX_SIZE_TEXT_CASTLELIFE];
 
-        sprintf_s(castleLifeText, "Castle Health :\n%d/%d", castleLife, maxCastleLife);
-        textComp->text.setContent(castleLifeText);
+        if (castleLife != this->_tmpCastleLife || maxCastleLife != this->_tmpMaxCastleLife)
+        {
+            sTextComponent*     textComp = _castleLifeHudDisplay->getComponent<sTextComponent>();
+            char                castleLifeText[MAX_SIZE_TEXT_CASTLELIFE];
+
+            sprintf_s(castleLifeText, "%d/%d", castleLife, maxCastleLife);
+            textComp->text.setContent(castleLifeText);
+            this->_tmpCastleLife = castleLife;
+            this->_tmpMaxCastleLife = maxCastleLife;
+        }
     }
 }
