@@ -28,6 +28,9 @@ private:
     void                                setSelected(Entity* entity, bool hovered = false);
     void                                removeSelected(EntityManager &em, int buttonIdx);
 
+    uint32_t                            getNextButtonEnabled(EntityManager& em, uint32_t buttonIdx, uint32_t recurse = 0);
+    uint32_t                            getPreviousButtonEnabled(EntityManager& em, uint32_t buttonIdx, uint32_t recurse = 0);
+
 
 private:
     GameStateManager*                   _gameStateManager;

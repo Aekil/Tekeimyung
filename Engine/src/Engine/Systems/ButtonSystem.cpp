@@ -87,16 +87,13 @@ void    ButtonSystem::handleButtonsKeys(EntityManager &em)
         if (upPressed)
         {
             removeSelected(em, _currentSelected);
-            _currentSelected -= 1;
-            if (_currentSelected < 0)
-                _currentSelected = (int)_entities.size() - 1;
+            _currentSelected = getPreviousButtonEnabled(em, _currentSelected);
             setSelected(em, _currentSelected);
         }
         else if (downPressed)
         {
             removeSelected(em, _currentSelected);
-            _currentSelected += 1;
-            _currentSelected = _currentSelected % _entities.size();
+            _currentSelected = getNextButtonEnabled(em, _currentSelected);
             setSelected(em, _currentSelected);
         }
 
@@ -106,7 +103,10 @@ void    ButtonSystem::handleButtonsKeys(EntityManager &em)
     {
         if (upPressed || downPressed)
         {
-            _currentSelected = 0;
+            // Get the next button from the end of the list
+            // It allows to skip all disabled buttons of the start of the list
+            _currentSelected = _entities.size() > 0 ? _entities.size() - 1 : 0;
+            _currentSelected = getNextButtonEnabled(em, _currentSelected);
             setSelected(em, _currentSelected);
         }
 
@@ -224,4 +224,45 @@ void    ButtonSystem::setupSelectedIcon()
     _iconSelected = EntityFactory::createOrGetEntity("ICON_SELECTED");
     _iconRender = _iconSelected->getComponent<sRenderComponent>();
     _iconRender->_display = false;
+}
+
+uint32_t    ButtonSystem::getNextButtonEnabled(EntityManager& em, uint32_t buttonIdx, uint32_t recurse)
+{
+    // We went across all buttons, and no prev was found (All disabled ?)
+    if (recurse == _entities.size() - 1)
+        return (buttonIdx);
+
+    int nextButtonIdx = buttonIdx + 1;
+    nextButtonIdx = nextButtonIdx % _entities.size();
+
+    Entity* nextButtonEntity = em.getEntity(_entities[nextButtonIdx]);
+    sButtonComponent* nextButton = nextButtonEntity->getComponent<sButtonComponent>();
+
+    if (nextButton->enabled)
+    {
+        return (nextButtonIdx);
+    }
+
+    return (getNextButtonEnabled(em, nextButtonIdx, recurse + 1));
+}
+
+uint32_t    ButtonSystem::getPreviousButtonEnabled(EntityManager& em, uint32_t buttonIdx, uint32_t recurse)
+{
+    // We went across all buttons, and no prev was found (All disabled ?)
+    if (recurse == _entities.size() - 1)
+        return (buttonIdx);
+
+    int prevButtonIdx = buttonIdx - 1;
+    if (prevButtonIdx < 0)
+        prevButtonIdx = (int)_entities.size() - 1;
+
+    Entity* prevButtonEntity = em.getEntity(_entities[prevButtonIdx]);
+    sButtonComponent* prevButton = prevButtonEntity->getComponent<sButtonComponent>();
+
+    if (prevButton->enabled)
+    {
+        return (prevButtonIdx);
+    }
+
+    return (getPreviousButtonEnabled(em, prevButtonIdx, recurse + 1));
 }
