@@ -10,6 +10,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <Engine/Components.hh>
 #include <Engine/Graphics/UI/Font.hpp>
 #include <Engine/Graphics/Material.hpp>
 #include <Engine/Utils/Exception.hpp>
@@ -166,11 +167,12 @@ void    Renderer::render(Camera* camera, RenderQueue& renderQueue)
     _transparencyFrameBuffer.unBind(GL_FRAMEBUFFER);
 }
 
-std::unique_ptr<Texture>    Renderer::generateTexture(ModelInstance* model, uint32_t width, uint32_t height)
+std::unique_ptr<Texture>    Renderer::generateTextureFromModel(sRenderComponent* renderComponent, uint32_t width, uint32_t height)
 {
     float windowBufferWidth = (float)GameWindow::getInstance()->getBufferWidth();
     float windowBufferHeight = (float)GameWindow::getInstance()->getBufferHeight();
 
+    ModelInstance* model = renderComponent->getModelInstance();
     // Init render frame buffer
     {
         _2DFrameBuffer.bind(GL_FRAMEBUFFER);
@@ -235,7 +237,7 @@ std::unique_ptr<Texture>    Renderer::generateTexture(ModelInstance* model, uint
 
         // Update uniform buffer
         _2DRenderBuffer.update((void*)glm::value_ptr(transform), sizeof(glm::mat4));
-        _2DRenderBuffer.update((void*)glm::value_ptr(glm::vec4(1.0f)), sizeof(glm::vec4), sizeof(glm::mat4));
+        _2DRenderBuffer.update((void*)glm::value_ptr(renderComponent->color), sizeof(glm::vec4), sizeof(glm::mat4));
     }
 
     // The light have the same direction as the camera

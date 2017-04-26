@@ -19,6 +19,8 @@
 #include <Engine/Graphics/UniformBuffer.hpp>
 #include <Engine/Graphics/Texture.hpp>
 
+struct sRenderComponent;
+
 class Renderer
 {
 public:
@@ -37,7 +39,7 @@ public:
     void                                endFrame();
     void                                render(Camera* camera, RenderQueue& renderQueue);
 
-    std::unique_ptr<Texture>            generateTexture(ModelInstance* model, uint32_t width, uint32_t height);
+    std::unique_ptr<Texture>            generateTextureFromModel(sRenderComponent* renderComponent, uint32_t width, uint32_t height);
 
 private:
     void                                sceneRenderPass(Camera* camera, RenderQueue& renderQueue);
