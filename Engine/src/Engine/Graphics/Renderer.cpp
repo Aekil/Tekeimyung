@@ -909,6 +909,17 @@ bool    Renderer::setupFrameBuffers(Framebuffer& framebuffer,
                                     uint32_t width,
                                     uint32_t height)
 {
+    // Check if the framebuffer has the same size as the given width and height
+    // We don't setup again the framebuffer (and blur framebuffers) if the size is the same
+    if (framebuffer.getColorAttachments().size() != 0)
+    {
+        auto& sceneColorAttachment = framebuffer.getColorAttachments()[0];
+        if (sceneColorAttachment->getWidth() == width &&
+            sceneColorAttachment->getHeight() == height)
+        {
+            return (true);
+        }
+    }
     // Setup scene framebuffer
     {
         framebuffer.bind(GL_FRAMEBUFFER);
