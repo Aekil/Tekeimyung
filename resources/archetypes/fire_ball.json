@@ -21,10 +21,13 @@
                "r" : 1
             }
          },
+         "display_only_particles" : true,
          "emitter_life" : 0,
          "life" : 76,
          "life_variance" : 1,
+         "materials" : [ "bloom_red.mat" ],
          "max_particles" : 86,
+         "model" : "resources/models/default.DAE",
          "rate" : 0,
          "size" : {
             "finish" : 0,
@@ -35,7 +38,8 @@
          "spawn_nb" : 1,
          "speed" : 34.409000396728516,
          "speed_variance" : 0,
-         "texture" : "resources/sprites/particles/particle_circle.png"
+         "texture" : "resources/sprites/particles/particle_circle.png",
+         "type" : "PLANE"
       },
       "sRenderComponent" : {
          "animated" : false,
