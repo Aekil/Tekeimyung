@@ -20,9 +20,12 @@
 #include <Engine/Graphics/Texture.hpp>
 
 struct sRenderComponent;
+class Model2DRenderer;
 
 class Renderer
 {
+friend Model2DRenderer;
+
 public:
     Renderer();
     ~Renderer();
@@ -64,7 +67,6 @@ private:
                                                             uint32_t height);
     bool                                setupMainFramebuffers();
     void                                setupShaderPrograms();
-    void                                setup2DTextureGeneration();
 
 private:
     void                                initTextRendering();
