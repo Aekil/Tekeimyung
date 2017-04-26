@@ -41,6 +41,7 @@ public:
     void start() override final;
     void update(float dt) override final;
     void sendMessage(eTutoState state);
+    bool isFinished();
 
 private:
     sTextComponent*     _textComp = nullptr;
@@ -48,6 +49,8 @@ private:
     eTutoState _currentState = eTutoState::MOVE;
 
     std::unordered_map<eTutoState, std::string> _statesMessages;
+
+    bool _isFinished = false;
 };
 
 REGISTER_SCRIPT(TutoManager);

@@ -61,11 +61,19 @@ public:
 
     std::map<int, std::vector<Entity*>> _mapParts;
 
+    std::string _mapName;
+
 public:
     void start() override final;
     void update(float dt) override final;
 
     void displayMapParts(int);
+
+//  Json serialization & ImGui edition.
+public:
+    bool        updateEditor() override final;
+    JsonValue   saveToJson() override final;
+    void        loadFromJson(const JsonValue& json) override final;
 };
 
 REGISTER_SCRIPT(GameManager);

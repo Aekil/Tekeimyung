@@ -11,6 +11,7 @@
 #define WAVE_MANAGER_TAG    "WaveManager"
 
 class       Build;
+class       TutoManager;
 
 class       WaveManager final : public BaseScript
 {
@@ -71,6 +72,7 @@ private:
 
     ProgressBar    _progressBar;
     Build* _playerBuild;
+    TutoManager* _tutoManager;
     std::vector<int> _mapParts;
 };
 
