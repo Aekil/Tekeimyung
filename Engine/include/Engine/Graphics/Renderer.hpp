@@ -44,7 +44,8 @@ public:
 private:
     void                                sceneRenderPass(Camera* camera, RenderQueue& renderQueue);
     void                                transparencyPass(Camera* camera, RenderQueue& renderQueue);
-    void                                bloomPass();
+    void                                bloomPass(Texture* sceneColorAttachment,
+                                                    const std::vector<std::array<Framebuffer, 2>>& blurFrameBuffers);
     void                                finalBlendingPass();
     void                                renderOpaqueObjects(std::vector<sRenderableMesh>& meshs,
                                                             uint32_t meshsNb,
@@ -57,7 +58,11 @@ private:
     void                                renderTexts(std::vector<sRenderableText>& texts,
                                                                 uint32_t textsNb);
 
-    bool                                setupFrameBuffer();
+    bool                                setupFrameBuffers(Framebuffer& framebuffer,
+                                                            std::vector<std::array<Framebuffer, 2>>& blurFrameBuffers,
+                                                            uint32_t width,
+                                                            uint32_t height);
+    bool                                setupMainFrameBuffers();
     void                                setupShaderPrograms();
     void                                setup2DTextureGeneration();
 
@@ -102,6 +107,7 @@ private:
 
 
     Framebuffer                         _2DFrameBuffer;
+    std::vector<std::array<Framebuffer, 2>> _2DBlurFrameBuffers;
     UniformBuffer                       _2DRenderBuffer;
     RenderQueue                         _2DRenderQueue;
     Camera                              _2DRenderCamera;
