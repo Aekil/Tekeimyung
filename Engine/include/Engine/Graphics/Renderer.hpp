@@ -58,11 +58,11 @@ private:
     void                                renderTexts(std::vector<sRenderableText>& texts,
                                                                 uint32_t textsNb);
 
-    bool                                setupFrameBuffers(Framebuffer& framebuffer,
+    bool                                setupFramebuffers(Framebuffer& framebuffer,
                                                             std::vector<std::array<Framebuffer, 2>>& blurFrameBuffers,
                                                             uint32_t width,
                                                             uint32_t height);
-    bool                                setupMainFrameBuffers();
+    bool                                setupMainFramebuffers();
     void                                setupShaderPrograms();
     void                                setup2DTextureGeneration();
 
@@ -99,15 +99,15 @@ private:
     // Used for UI
     Light                               _UILight;
 
-    Framebuffer                         _frameBuffer;
-    Framebuffer                         _transparencyFrameBuffer;
+    Framebuffer                         _framebuffer;
+    Framebuffer                         _transparencyFramebuffer;
 
     // We have one frame buffer and two color attachments for each blur kernel size
     std::vector<std::array<Framebuffer, 2>>   _blurFramebuffers;
 
 
     Framebuffer                         _2DFrameBuffer;
-    std::vector<std::array<Framebuffer, 2>> _2DBlurFrameBuffers;
+    std::vector<std::array<Framebuffer, 2>> _2DBlurFramebuffers;
     UniformBuffer                       _2DRenderBuffer;
     RenderQueue                         _2DRenderQueue;
     Camera                              _2DRenderCamera;

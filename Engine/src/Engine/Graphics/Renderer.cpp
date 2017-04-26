@@ -79,7 +79,7 @@ void    Renderer::onWindowResize()
     _UICamera.updateViewport();
     _UICamera.updateUBO();
 
-    if (!setupMainFrameBuffers())
+    if (!setupMainFramebuffers())
     {
         EXCEPT(InternalErrorException, "Failed to setup main frame buffer");
     }
@@ -106,19 +106,19 @@ void    Renderer::beginFrame()
     // Clear window screen
     glClear(GL_COLOR_BUFFER_BIT);
 
-    _frameBuffer.use(GL_FRAMEBUFFER);
+    _framebuffer.use(GL_FRAMEBUFFER);
 
     // Clear frame buffer
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    _frameBuffer.unBind(GL_FRAMEBUFFER);
+    _framebuffer.unBind(GL_FRAMEBUFFER);
 
-    _transparencyFrameBuffer.use(GL_FRAMEBUFFER);
+    _transparencyFramebuffer.use(GL_FRAMEBUFFER);
 
     // Clear frame buffer
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    _transparencyFrameBuffer.unBind(GL_FRAMEBUFFER);
+    _transparencyFramebuffer.unBind(GL_FRAMEBUFFER);
 
     for (auto& blurFramebuffer: _blurFramebuffers)
     {
@@ -140,7 +140,7 @@ void    Renderer::endFrame()
     // Apply bloom and then blend the scene with bloom texture
     {
         glDisable(GL_DEPTH_TEST);
-        bloomPass(_frameBuffer.getColorAttachments()[1].get(), _blurFramebuffers);
+        bloomPass(_framebuffer.getColorAttachments()[1].get(), _blurFramebuffers);
         finalBlendingPass();
         glEnable(GL_DEPTH_TEST);
     }
@@ -160,11 +160,11 @@ void    Renderer::render(Camera* camera, RenderQueue& renderQueue)
     }
 
     // All the renders will use the color attachments and the depth buffer of the framebuffer
-    _frameBuffer.use(GL_FRAMEBUFFER);
+    _framebuffer.use(GL_FRAMEBUFFER);
     sceneRenderPass(camera, renderQueue);
-    _transparencyFrameBuffer.use(GL_FRAMEBUFFER);
+    _transparencyFramebuffer.use(GL_FRAMEBUFFER);
     transparencyPass(camera, renderQueue);
-    _transparencyFrameBuffer.unBind(GL_FRAMEBUFFER);
+    _transparencyFramebuffer.unBind(GL_FRAMEBUFFER);
 }
 
 std::unique_ptr<Texture>    Renderer::generateTextureFromModel(sRenderComponent* renderComponent, uint32_t width, uint32_t height)
@@ -175,7 +175,7 @@ std::unique_ptr<Texture>    Renderer::generateTextureFromModel(sRenderComponent*
     ModelInstance* model = renderComponent->getModelInstance();
 
     // Init framebuffer
-    if (!setupFrameBuffers(_2DFrameBuffer, _2DBlurFrameBuffers, width, height))
+    if (!setupFramebuffers(_2DFramebuffer, _2DBlurFramebuffers, width, height))
     {
         LOG_INFO("Failed to setup 2D render frame buffers");
         return (nullptr);
@@ -229,13 +229,13 @@ std::unique_ptr<Texture>    Renderer::generateTextureFromModel(sRenderComponent*
     _2DRenderQueue.addLight(&_2DRenderLight);
 
     // Render the model in our frame buffer
-    _2DFrameBuffer.use(GL_FRAMEBUFFER);
+    _2DFramebuffer.use(GL_FRAMEBUFFER);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     sceneRenderPass(&_2DRenderCamera, _2DRenderQueue);
 
     // Bloom pass
     {
-        bloomPass(_2DFrameBuffer.getColorAttachments()[1].get(), _2DBlurFrameBuffers);
+        bloomPass(_2DFramebuffer.getColorAttachments()[1].get(), _2DBlurFramebuffers);
         glViewport(0,
                     0,
                     (uint32_t)width,
@@ -244,12 +244,12 @@ std::unique_ptr<Texture>    Renderer::generateTextureFromModel(sRenderComponent*
         _finalBlendingShaderProgram.use();
         glUniform1i(_finalBlendingShaderProgram.getUniformLocation("image"), 0);
 
-        _2DFrameBuffer.use(GL_FRAMEBUFFER);
+        _2DFramebuffer.use(GL_FRAMEBUFFER);
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE);
-        for (uint32_t i = 0; i < _2DBlurFrameBuffers.size(); ++i)
+        for (uint32_t i = 0; i < _2DBlurFramebuffers.size(); ++i)
         {
-            _2DBlurFrameBuffers[i][1].getColorAttachments()[0]->bind();
+            _2DBlurFramebuffers[i][1].getColorAttachments()[0]->bind();
             _screenPlane.bind();
 
             glDrawElements(GL_TRIANGLES,
@@ -257,7 +257,7 @@ std::unique_ptr<Texture>    Renderer::generateTextureFromModel(sRenderComponent*
                         GL_UNSIGNED_INT,
                         0);
         }
-        _2DFrameBuffer.getColorAttachments()[0]->bind();
+        _2DFramebuffer.getColorAttachments()[0]->bind();
 
         glDrawElements(GL_TRIANGLES,
                     6,
@@ -267,9 +267,9 @@ std::unique_ptr<Texture>    Renderer::generateTextureFromModel(sRenderComponent*
         glDisable(GL_BLEND);
     }
 
-    _2DFrameBuffer.unBind(GL_FRAMEBUFFER);
+    _2DFramebuffer.unBind(GL_FRAMEBUFFER);
 
-    return (std::move(_2DFrameBuffer.getColorAttachments()[0]));
+    return (std::move(_2DFramebuffer.getColorAttachments()[0]));
 }
 
 void    Renderer::sceneRenderPass(Camera* camera, RenderQueue& renderQueue)
@@ -557,11 +557,11 @@ void    Renderer::transparencyPass(Camera* camera, RenderQueue& renderQueue)
 }
 
 void    Renderer::bloomPass(Texture* sceneColorAttachment,
-                            const std::vector<std::array<Framebuffer, 2>>& blurFrameBuffers)
+                            const std::vector<std::array<Framebuffer, 2>>& blurFramebuffers)
 {
-    for (uint32_t i = 0; i < blurFrameBuffers.size(); ++i)
+    for (uint32_t i = 0; i < blurFramebuffers.size(); ++i)
     {
-        auto& blurFramebuffer = blurFrameBuffers[i];
+        auto& blurFramebuffer = blurFramebuffers[i];
         auto& horizontalColorAttachment = blurFramebuffer[0].getColorAttachments()[0];
         auto& verticalColorAttachment = blurFramebuffer[1].getColorAttachments()[0];
 
@@ -576,8 +576,8 @@ void    Renderer::bloomPass(Texture* sceneColorAttachment,
 
         // Downsample bright image into texture
         {
-            auto& frameBuffer = blurFramebuffer[1];
-            frameBuffer.use(GL_FRAMEBUFFER);
+            auto& framebuffer = blurFramebuffer[1];
+            framebuffer.use(GL_FRAMEBUFFER);
 
             sceneColorAttachment->bind();
             _screenPlane.bind();
@@ -598,9 +598,9 @@ void    Renderer::bloomPass(Texture* sceneColorAttachment,
         {
             // Horizontal pass
             {
-                auto& frameBuffer = blurFramebuffer[0];
+                auto& framebuffer = blurFramebuffer[0];
 
-                frameBuffer.use(GL_FRAMEBUFFER);
+                framebuffer.use(GL_FRAMEBUFFER);
                 glUniform1i(_blurShaderProgram.getUniformLocation("horizontal"), true);
 
 
@@ -617,9 +617,9 @@ void    Renderer::bloomPass(Texture* sceneColorAttachment,
 
             // Vertical pass
             {
-                auto& frameBuffer = blurFramebuffer[1];
+                auto& framebuffer = blurFramebuffer[1];
 
-                frameBuffer.use(GL_FRAMEBUFFER);
+                framebuffer.use(GL_FRAMEBUFFER);
                 glUniform1i(_blurShaderProgram.getUniformLocation("horizontal"), false);
 
 
@@ -664,14 +664,14 @@ void    Renderer::finalBlendingPass()
                     GL_UNSIGNED_INT,
                     0);
     }
-    _frameBuffer.getColorAttachments()[0]->bind();
+    _framebuffer.getColorAttachments()[0]->bind();
 
     glDrawElements(GL_TRIANGLES,
                 6,
                 GL_UNSIGNED_INT,
                 0);
 
-    _transparencyFrameBuffer.getColorAttachments()[0]->bind();
+    _transparencyFramebuffer.getColorAttachments()[0]->bind();
     glDrawElements(GL_TRIANGLES,
                 6,
                 GL_UNSIGNED_INT,
@@ -904,8 +904,8 @@ void    Renderer::renderTexts(std::vector<sRenderableText>& texts,
     }
 }
 
-bool    Renderer::setupFrameBuffers(Framebuffer& framebuffer,
-                                    std::vector<std::array<Framebuffer, 2>>& blurFrameBuffers,
+bool    Renderer::setupFramebuffers(Framebuffer& framebuffer,
+                                    std::vector<std::array<Framebuffer, 2>>& blurFramebuffers,
                                     uint32_t width,
                                     uint32_t height)
 {
@@ -950,9 +950,9 @@ bool    Renderer::setupFrameBuffers(Framebuffer& framebuffer,
 
     // Setup blur framebuffers
     {
-        blurFrameBuffers.resize(3);
+        blurFramebuffers.resize(3);
 
-        for (auto& blurFramebuffer: blurFrameBuffers)
+        for (auto& blurFramebuffer: blurFramebuffers)
         {
             for (auto& framebuffer: blurFramebuffer)
             {
@@ -961,41 +961,41 @@ bool    Renderer::setupFrameBuffers(Framebuffer& framebuffer,
         }
 
         // Full texture blur
-        blurFrameBuffers[0][0].addColorAttachment(Texture::create(static_cast<GLsizei>(width),
+        blurFramebuffers[0][0].addColorAttachment(Texture::create(static_cast<GLsizei>(width),
                                                     static_cast<GLsizei>(height),
                                                     GL_RGBA16F,
                                                     GL_RGBA,
                                                     GL_FLOAT));
-        blurFrameBuffers[0][1].addColorAttachment(Texture::create(static_cast<GLsizei>(width),
+        blurFramebuffers[0][1].addColorAttachment(Texture::create(static_cast<GLsizei>(width),
                                                     static_cast<GLsizei>(height),
                                                     GL_RGBA16F,
                                                     GL_RGBA,
                                                     GL_FLOAT));
         // 1/2 Texture blur
-        blurFrameBuffers[1][0].addColorAttachment(Texture::create(static_cast<GLsizei>(width / 2.0f),
+        blurFramebuffers[1][0].addColorAttachment(Texture::create(static_cast<GLsizei>(width / 2.0f),
                                                     static_cast<GLsizei>(height / 2.0f),
                                                     GL_RGBA16F,
                                                     GL_RGBA,
                                                     GL_FLOAT));
-        blurFrameBuffers[1][1].addColorAttachment(Texture::create(static_cast<GLsizei>(width / 2.0f),
+        blurFramebuffers[1][1].addColorAttachment(Texture::create(static_cast<GLsizei>(width / 2.0f),
                                                     static_cast<GLsizei>(height / 2.0f),
                                                     GL_RGBA16F,
                                                     GL_RGBA,
                                                     GL_FLOAT));
 
         // 1/4 Texture blur
-        blurFrameBuffers[2][0].addColorAttachment(Texture::create(static_cast<GLsizei>(width / 4.0f),
+        blurFramebuffers[2][0].addColorAttachment(Texture::create(static_cast<GLsizei>(width / 4.0f),
                                                     static_cast<GLsizei>(height / 4.0f),
                                                     GL_RGBA16F,
                                                     GL_RGBA,
                                                     GL_FLOAT));
-        blurFrameBuffers[2][1].addColorAttachment(Texture::create(static_cast<GLsizei>(width / 4.0f),
+        blurFramebuffers[2][1].addColorAttachment(Texture::create(static_cast<GLsizei>(width / 4.0f),
                                                     static_cast<GLsizei>(height / 4.0f),
                                                     GL_RGBA16F,
                                                     GL_RGBA,
                                                     GL_FLOAT));
 
-        for (auto& blurFramebuffer: blurFrameBuffers)
+        for (auto& blurFramebuffer: blurFramebuffers)
         {
             for (auto& framebuffer: blurFramebuffer)
             {
@@ -1010,37 +1010,37 @@ bool    Renderer::setupFrameBuffers(Framebuffer& framebuffer,
     return (true);
 }
 
-bool    Renderer::setupMainFrameBuffers()
+bool    Renderer::setupMainFramebuffers()
 {
     GLsizei windowBufferWidth = (GLsizei)GameWindow::getInstance()->getBufferWidth();
     GLsizei windowBufferHeight = (GLsizei)GameWindow::getInstance()->getBufferHeight();
 
     if (!windowBufferWidth ||
         !windowBufferHeight ||
-        !setupFrameBuffers(_frameBuffer, _blurFramebuffers, windowBufferWidth, windowBufferHeight))
+        !setupFramebuffers(_framebuffer, _blurFramebuffers, windowBufferWidth, windowBufferHeight))
     {
         return (false);
     }
 
     // Setup transparency frame buffer
     {
-        _transparencyFrameBuffer.bind(GL_FRAMEBUFFER);
-        _transparencyFrameBuffer.removeColorAttachments();
+        _transparencyFramebuffer.bind(GL_FRAMEBUFFER);
+        _transparencyFramebuffer.removeColorAttachments();
         // Scene color attachment
-        _transparencyFrameBuffer.addColorAttachment(Texture::create(windowBufferWidth,
+        _transparencyFramebuffer.addColorAttachment(Texture::create(windowBufferWidth,
                                                 windowBufferHeight,
                                                 GL_RGBA16F,
                                                 GL_RGBA,
                                                 GL_FLOAT));
-        _transparencyFrameBuffer.setDepthAttachment(GL_DEPTH_COMPONENT,
+        _transparencyFramebuffer.setDepthAttachment(GL_DEPTH_COMPONENT,
                                         windowBufferWidth,
                                         windowBufferHeight);
 
-        if (!_transparencyFrameBuffer.isComplete())
+        if (!_transparencyFramebuffer.isComplete())
         {
             return (false);
         }
-        _transparencyFrameBuffer.unBind(GL_FRAMEBUFFER);
+        _transparencyFramebuffer.unBind(GL_FRAMEBUFFER);
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
