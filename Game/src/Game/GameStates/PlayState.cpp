@@ -39,7 +39,7 @@ void    PlayState::setupSystems()
 
 bool    PlayState::init()
 {
-    _pair = std::make_pair(Keyboard::eKey::F, new HandleFullscreenEvent());
+    //_pair = std::make_pair(Keyboard::eKey::F, new HandleFullscreenEvent());
     _backgroundMusic = EventSound::getEventByEventType(eEventSound::BACKGROUND);
     return (true);
 }
@@ -50,8 +50,8 @@ bool    PlayState::update(float elapsedTime)
     auto &&keyboard = GameWindow::getInstance()->getKeyboard();
     auto &&mouse = GameWindow::getInstance()->getMouse();
 
-    if (keyboard.getStateMap()[_pair.first] == Keyboard::eKeyState::KEY_PRESSED)
-        _pair.second->execute();
+    //if (keyboard.getStateMap()[_pair.first] == Keyboard::eKeyState::KEY_PRESSED)
+    //    _pair.second->execute();
 
     if (keyboard.getStateMap()[Keyboard::eKey::H] == Keyboard::eKeyState::KEY_PRESSED)
     {

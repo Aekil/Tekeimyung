@@ -1435,6 +1435,8 @@ sComponent* ComponentFactory<sTextComponent>::loadFromJson(const std::string& en
     component->text.setContent(json.getString("content", ""));
     component->text.setColor(json.getColor4f("color", {1.0f, 1.0f, 1.0f, 1.0f}));
     component->text.setFontSize(json.getUInt("font_size", 10));
+    component->horizontalAlignment = EnumManager<eHorizontalAlignment>::stringToEnum(json.getString("horizontal_alignment", "MIDDLE"));
+    component->verticalAlignment = EnumManager<eVerticalAlignment>::stringToEnum(json.getString("vertical_alignment", "MIDDLE"));
 
     // Load text font
     {
@@ -1461,6 +1463,8 @@ JsonValue&    ComponentFactory<sTextComponent>::saveToJson(const std::string& en
     json.setString("content", component->text.getContent());
     json.setColor4f("color", component->text.getColor());
     json.setUInt("font_size", component->text.getFontSize());
+    json.setString("horizontal_alignment", EnumManager<eHorizontalAlignment>::enumToString(component->horizontalAlignment));
+    json.setString("vertical_alignment", EnumManager<eVerticalAlignment>::enumToString(component->verticalAlignment));
 
     if (component->text.getFont())
     {

@@ -14,11 +14,11 @@ public:
     ButtonSystem(GameStateManager* gameStateManager);
     virtual ~ButtonSystem();
 
+    void                                setupSelectedIcon();
     virtual void                        update(EntityManager &em, float elapsedTime);
 
 private:
     void                                removeSelected(Entity* entity);
-    void                                setupSelectedIcon();
 
     void                                handleButtonMouseHover(EntityManager& em, Entity* entity, uint32_t entityIdx, const glm::vec2& cursorPos);
     void                                handleButtonsKeys(EntityManager& em);

@@ -24,6 +24,9 @@ private:
     EntityManager*  _em;
     const Entity*   _castle;
     const Entity*   _castleLifeHudDisplay;
+
+    int             _tmpCastleLife = 0;
+    int             _tmpMaxCastleLife = 0;
 };
 
 REGISTER_SCRIPT(HudDisplayCastleLife);
