@@ -14,7 +14,7 @@
 #include <Engine/Graphics/UI/Font.hpp>
 #include <Engine/Graphics/Material.hpp>
 #include <Engine/Utils/Exception.hpp>
-#include <Engine/Utils/Logger.hpp>
+#include <Engine/Debug/Logger.hpp>
 #include <Engine/Utils/ResourceManager.hpp>
 #include <Engine/Window/GameWindow.hpp>
 

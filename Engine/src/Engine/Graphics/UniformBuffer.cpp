@@ -5,7 +5,7 @@
 #include <cstring>
 
 #include <Engine/Graphics/UniformBuffer.hpp>
-#include <Engine/Utils/Logger.hpp>
+#include <Engine/Debug/Logger.hpp>
 
 UniformBuffer::UniformBuffer(): _UBO(0), _bindingPoint(0), _init(false), _size(0)
 {

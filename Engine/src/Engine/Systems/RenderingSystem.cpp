@@ -11,13 +11,13 @@
 #include <imgui_impl_glfw_gl3.h>
 
 #include <Engine/Utils/Exception.hpp>
-#include <Engine/Utils/Logger.hpp>
+#include <Engine/Debug/Logger.hpp>
 #include <Engine/Window/GameWindow.hpp>
 #include <Engine/Graphics/UI/Font.hpp>
 #include <Engine/Graphics/Geometries/Trapeze.hpp>
 #include <Engine/Graphics/Renderer.hpp>
 
-#include <Engine/LevelEntitiesDebugWindow.hpp>
+#include <Engine/Debug/LevelEntitiesDebugWindow.hpp>
 
 #include <Engine/Systems/RenderingSystem.hpp>
 

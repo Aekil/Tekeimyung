@@ -12,7 +12,7 @@
 #include <Engine/Utils/JsonWriter.hpp>
 #include <Engine/Utils/JsonReader.hpp>
 #include <Engine/Utils/LevelLoader.hpp>
-#include <Engine/Utils/Logger.hpp>
+#include <Engine/Debug/Logger.hpp>
 
 std::unique_ptr<LevelLoader>    LevelLoader::_instance = nullptr;
 

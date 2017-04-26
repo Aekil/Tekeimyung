@@ -6,7 +6,7 @@
 #include <vector>
 
 #include <Engine/Utils/Exception.hpp>
-#include <Engine/Utils/Logger.hpp>
+#include <Engine/Debug/Logger.hpp>
 
 #include <Engine/Utils/File.hpp>
 

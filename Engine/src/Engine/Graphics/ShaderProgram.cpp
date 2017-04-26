@@ -7,7 +7,7 @@
 #include <Engine/Utils/Exception.hpp>
 #include <Engine/Utils/File.hpp>
 #include <Engine/Utils/Helper.hpp>
-#include <Engine/Utils/Logger.hpp>
+#include <Engine/Debug/Logger.hpp>
 #include <Engine/Utils/ResourceManager.hpp>
 
 #include <Engine/Graphics/ShaderProgram.hpp>

@@ -8,7 +8,7 @@
 #include <Engine/EntityFactory.hpp>
 #include <Engine/Components.hh>
 #include <Engine/Window/GameWindow.hpp>
-#include <Engine/Utils/Logger.hpp>
+#include <Engine/Debug/Logger.hpp>
 #include <Game/Scripts/CameraScript.hpp>
 
 void CameraScript::start()

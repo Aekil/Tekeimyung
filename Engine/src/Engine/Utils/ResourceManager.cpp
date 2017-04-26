@@ -2,7 +2,7 @@
 * @Author   Guillaume Labey
 */
 
-#include <Engine/Utils/Logger.hpp>
+#include <Engine/Debug/Logger.hpp>
 #include <dirent.h>
 #include <fstream>
 #include <algorithm>

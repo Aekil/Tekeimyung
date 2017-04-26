@@ -12,7 +12,7 @@
 #include <Engine/Graphics/Geometries/Circle.hpp>
 #include <Engine/Graphics/Geometries/Cone.hpp>
 #include <Engine/Graphics/Geometries/Trapeze.hpp>
-#include <Engine/Utils/Logger.hpp>
+#include <Engine/Debug/Logger.hpp>
 
 #include <Engine/Graphics/Geometries/GeometryFactory.hpp>
 

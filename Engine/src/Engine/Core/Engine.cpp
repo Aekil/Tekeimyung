@@ -4,18 +4,19 @@
 
 #include <iostream>
 
-#include <Engine/MenuBarDebugWindow.hpp>
 #include <Engine/EditorState.hpp>
-#include <Engine/EntitiesTemplateDebugWindow.hpp>
 #include <Engine/Graphics/Geometries/GeometryFactory.hpp>
-#include <Engine/LevelEntitiesDebugWindow.hpp>
-#include <Engine/MaterialDebugWindow.hpp>
-#include <Engine/SoundEditorWindow.hpp>
+#include <Engine/Debug/Logger.hpp>
+#include <Engine/Debug/MenuBarDebugWindow.hpp>
+#include <Engine/Debug/EntitiesTemplateDebugWindow.hpp>
+#include <Engine/Debug/LevelEntitiesDebugWindow.hpp>
+#include <Engine/Debug/MaterialDebugWindow.hpp>
+#include <Engine/Debug/SoundEditorWindow.hpp>
+#include <Engine/Debug/LogDebugWindow.hpp>
+#include <Engine/Debug/MonitoringDebugWindow.hpp>
+#include <Engine/Debug/OverlayDebugWindow.hpp>
+#include <Engine/Debug/InspectorDebugWindow.hpp>
 #include <Engine/Utils/LevelLoader.hpp>
-#include <Engine/Utils/LogDebugWindow.hpp>
-#include <Engine/Utils/Logger.hpp>
-#include <Engine/Utils/MonitoringDebugWindow.hpp>
-#include <Engine/Utils/OverlayDebugWindow.hpp>
 #include <Engine/Utils/Timer.hpp>
 
 #include <Engine/Core/Engine.hpp>
@@ -110,12 +111,18 @@ bool    Engine::run(int ac, char** av, std::shared_ptr<GameState> startGameState
             // Update debug windows
             if (_gameStateManager.hasStates())
             {
-                for (auto&& debugWindow: _debugWindows)
+                if (_debugWindows.size() > 0)
                 {
-                    if (debugWindow->isDisplayed())
-                        debugWindow->build(currentState, elapsedTime);
+                    DebugWindow::applyGlobalStyle();
+                    for (auto&& debugWindow : _debugWindows)
+                    {
+                        if (debugWindow->isDisplayed())
+                            debugWindow->build(currentState, elapsedTime);
+                    }
                 }
             }
+
+            ImGui::ShowTestWindow();
 
             _renderer->endFrame();
         }
@@ -159,18 +166,17 @@ bool    Engine::initDebugWindows(int ac, char** av)
         // so the first state should be EditorState
         auto& frontState = _gameStateManager.getStates().front();
         ASSERT(frontState->getId() == EditorState::identifier, "The first state of the engine should be EditorState in debug mode");
-        addDebugWindow<MenuBarDebugWindow>(this, frontState->getWorld().getEntityManager(), glm::vec2(0, 0), glm::vec2(0, 0));
-        addDebugWindow<OverlayDebugWindow>(glm::vec2(10, 10), glm::vec2(0, 0));
-        addDebugWindow<LevelEntitiesDebugWindow>(glm::vec2(0, 80), glm::vec2(600, 350));
-        addDebugWindow<EntitiesTemplateDebugWindow>(glm::vec2(600, 80), glm::vec2(300, 200));
-        addDebugWindow<MaterialDebugWindow>(glm::vec2(GameWindow::getInstance()->getBufferWidth() - 500,
-                                                    GameWindow::getInstance()->getBufferHeight() - 300),
-                                            glm::vec2(500, 300));
-        addDebugWindow<SoundEditorWindow>(glm::vec2(GameWindow::getInstance()->getBufferWidth() - 950,
-                                                    GameWindow::getInstance()->getBufferHeight() - 200),
-                                        glm::vec2(450, 200));
-        addDebugWindow<LogDebugWindow>(Logger::getInstance(), glm::vec2(0, 430), glm::vec2(300, 200));
+        addDebugWindow<MenuBarDebugWindow>(this, frontState->getWorld().getEntityManager());
+        addDebugWindow<OverlayDebugWindow>();
+        addDebugWindow<LevelEntitiesDebugWindow>();
+        addDebugWindow<EntitiesTemplateDebugWindow>();
+        addDebugWindow<MaterialDebugWindow>();
+        addDebugWindow<SoundEditorWindow>();
+        addDebugWindow<LogDebugWindow>(Logger::getInstance());
         addDebugWindow<MonitoringDebugWindow>(MonitoringDebugWindow::getInstance());
+        addDebugWindow<InspectorDebugWindow>();
+
+        this->getDebugWindow<InspectorDebugWindow>()->bindPopulateFunction(this->getDebugWindow<LevelEntitiesDebugWindow>());
 
         // Handle command line for MenuBarDebugWindow
         if (ac >= 2)

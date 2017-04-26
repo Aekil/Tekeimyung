@@ -7,7 +7,7 @@
 
 #include <Engine/Components.hh>
 #include <Engine/EntityFactory.hpp>
-#include <Engine/Utils/Debug.hpp>
+#include <Engine/Debug/Debug.hpp>
 
 #include <Engine/Systems/ScriptSystem.hpp>
 

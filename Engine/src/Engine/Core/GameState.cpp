@@ -4,9 +4,9 @@
 
 #include <Engine/Systems/RenderingSystem.hpp>
 #include <Engine/Utils/LevelLoader.hpp>
-#include <Engine/Utils/Debug.hpp>
+#include <Engine/Debug/Debug.hpp>
 #include <Engine/Utils/Exception.hpp>
-#include <Engine/Utils/MonitoringDebugWindow.hpp>
+#include <Engine/Debug/MonitoringDebugWindow.hpp>
 #include <Engine/Window/GameWindow.hpp>
 #include <Engine/EditorState.hpp>
 #include <Engine/EntityFactory.hpp>

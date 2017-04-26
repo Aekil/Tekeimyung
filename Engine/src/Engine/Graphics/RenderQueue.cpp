@@ -3,8 +3,8 @@
 */
 
 #include <Engine/Graphics/RenderQueue.hpp>
-#include <Engine/Utils/Debug.hpp>
-#include <Engine/Utils/Logger.hpp>
+#include <Engine/Debug/Debug.hpp>
+#include <Engine/Debug/Logger.hpp>
 
 void    RenderQueue::addModel(ModelInstance* modelInstance,
                                 UniformBuffer* ubo,
