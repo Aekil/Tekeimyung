@@ -10,6 +10,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <Engine/Components.hh>
 #include <Engine/Graphics/UI/Font.hpp>
 #include <Engine/Graphics/Material.hpp>
 #include <Engine/Utils/Exception.hpp>
@@ -77,9 +78,9 @@ void    Renderer::onWindowResize()
     _UICamera.updateViewport();
     _UICamera.updateUBO();
 
-    if (!setupFrameBuffer())
+    if (!setupMainFramebuffers())
     {
-        EXCEPT(InternalErrorException, "Failed to setup frame buffer");
+        EXCEPT(InternalErrorException, "Failed to setup main frame buffer");
     }
 
     // Update scissor
@@ -104,19 +105,19 @@ void    Renderer::beginFrame()
     // Clear window screen
     glClear(GL_COLOR_BUFFER_BIT);
 
-    _frameBuffer.use(GL_FRAMEBUFFER);
+    _framebuffer.use(GL_FRAMEBUFFER);
 
     // Clear frame buffer
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    _frameBuffer.unBind(GL_FRAMEBUFFER);
+    _framebuffer.unBind(GL_FRAMEBUFFER);
 
-    _transparencyFrameBuffer.use(GL_FRAMEBUFFER);
+    _transparencyFramebuffer.use(GL_FRAMEBUFFER);
 
     // Clear frame buffer
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    _transparencyFrameBuffer.unBind(GL_FRAMEBUFFER);
+    _transparencyFramebuffer.unBind(GL_FRAMEBUFFER);
 
     for (auto& blurFramebuffer: _blurFramebuffers)
     {
@@ -138,10 +139,9 @@ void    Renderer::endFrame()
     // Apply bloom and then blend the scene with bloom texture
     {
         glDisable(GL_DEPTH_TEST);
-        bloomPass();
+        bloomPass(_framebuffer.getColorAttachments()[1].get(), _blurFramebuffers);
         finalBlendingPass();
         glEnable(GL_DEPTH_TEST);
-        _currentShaderProgram = nullptr;
     }
 
     // Display imgui windows
@@ -153,21 +153,27 @@ void    Renderer::endFrame()
 
 void    Renderer::render(Camera* camera, RenderQueue& renderQueue)
 {
+    if (camera)
+    {
+        _currentCamera = camera;
+    }
+
     // All the renders will use the color attachments and the depth buffer of the framebuffer
-    _frameBuffer.use(GL_FRAMEBUFFER);
+    _framebuffer.use(GL_FRAMEBUFFER);
     sceneRenderPass(camera, renderQueue);
-    _transparencyFrameBuffer.use(GL_FRAMEBUFFER);
+    _transparencyFramebuffer.use(GL_FRAMEBUFFER);
     transparencyPass(camera, renderQueue);
-    _transparencyFrameBuffer.unBind(GL_FRAMEBUFFER);
+    _transparencyFramebuffer.unBind(GL_FRAMEBUFFER);
 }
 
 void    Renderer::sceneRenderPass(Camera* camera, RenderQueue& renderQueue)
 {
+    _currentShaderProgram = nullptr;
+
     // Scene objects
     {
         if (camera)
         {
-            _currentCamera = camera;
             auto& lights = renderQueue.getLights();
             uint32_t lightsNb = renderQueue.getLightsNb();
 
@@ -236,7 +242,6 @@ void    Renderer::sceneRenderPass(Camera* camera, RenderQueue& renderQueue)
         _textShaderProgram.use();
         glUniform1i(_textShaderProgram.getUniformLocation("textImage"), 0);
         renderTexts(renderQueue.getTexts(), renderQueue.getTextsNb());
-        _currentShaderProgram = nullptr;
     }
 
     // Enable depth buffer write and depth test for non-UI objects
@@ -445,13 +450,12 @@ void    Renderer::transparencyPass(Camera* camera, RenderQueue& renderQueue)
 
 }
 
-void    Renderer::bloomPass()
+void    Renderer::bloomPass(Texture* sceneColorAttachment,
+                            const std::vector<std::array<Framebuffer, 2>>& blurFramebuffers)
 {
-    auto sceneColorAttachment = _frameBuffer.getColorAttachments()[1].get();
-
-    for (uint32_t i = 0; i < _blurFramebuffers.size(); ++i)
+    for (uint32_t i = 0; i < blurFramebuffers.size(); ++i)
     {
-        auto& blurFramebuffer = _blurFramebuffers[i];
+        auto& blurFramebuffer = blurFramebuffers[i];
         auto& horizontalColorAttachment = blurFramebuffer[0].getColorAttachments()[0];
         auto& verticalColorAttachment = blurFramebuffer[1].getColorAttachments()[0];
 
@@ -466,8 +470,8 @@ void    Renderer::bloomPass()
 
         // Downsample bright image into texture
         {
-            auto& frameBuffer = blurFramebuffer[1];
-            frameBuffer.use(GL_FRAMEBUFFER);
+            auto& framebuffer = blurFramebuffer[1];
+            framebuffer.use(GL_FRAMEBUFFER);
 
             sceneColorAttachment->bind();
             _screenPlane.bind();
@@ -488,9 +492,9 @@ void    Renderer::bloomPass()
         {
             // Horizontal pass
             {
-                auto& frameBuffer = blurFramebuffer[0];
+                auto& framebuffer = blurFramebuffer[0];
 
-                frameBuffer.use(GL_FRAMEBUFFER);
+                framebuffer.use(GL_FRAMEBUFFER);
                 glUniform1i(_blurShaderProgram.getUniformLocation("horizontal"), true);
 
 
@@ -507,9 +511,9 @@ void    Renderer::bloomPass()
 
             // Vertical pass
             {
-                auto& frameBuffer = blurFramebuffer[1];
+                auto& framebuffer = blurFramebuffer[1];
 
-                frameBuffer.use(GL_FRAMEBUFFER);
+                framebuffer.use(GL_FRAMEBUFFER);
                 glUniform1i(_blurShaderProgram.getUniformLocation("horizontal"), false);
 
 
@@ -554,14 +558,14 @@ void    Renderer::finalBlendingPass()
                     GL_UNSIGNED_INT,
                     0);
     }
-    _frameBuffer.getColorAttachments()[0]->bind();
+    _framebuffer.getColorAttachments()[0]->bind();
 
     glDrawElements(GL_TRIANGLES,
                 6,
                 GL_UNSIGNED_INT,
                 0);
 
-    _transparencyFrameBuffer.getColorAttachments()[0]->bind();
+    _transparencyFramebuffer.getColorAttachments()[0]->bind();
     glDrawElements(GL_TRIANGLES,
                 6,
                 GL_UNSIGNED_INT,
@@ -794,46 +798,55 @@ void    Renderer::renderTexts(std::vector<sRenderableText>& texts,
     }
 }
 
-bool    Renderer::setupFrameBuffer()
+bool    Renderer::setupFramebuffers(Framebuffer& framebuffer,
+                                    std::vector<std::array<Framebuffer, 2>>& blurFramebuffers,
+                                    uint32_t width,
+                                    uint32_t height)
 {
-    GLsizei windowBufferWidth = (GLsizei)GameWindow::getInstance()->getBufferWidth();
-    GLsizei windowBufferHeight = (GLsizei)GameWindow::getInstance()->getBufferHeight();
-    bool complete = true;
-
-    if (!windowBufferWidth || !windowBufferHeight)
+    // Check if the framebuffer has the same size as the given width and height
+    // We don't setup again the framebuffer (and blur framebuffers) if the size is the same
+    if (framebuffer.getColorAttachments().size() != 0)
     {
-        return (false);
+        auto& sceneColorAttachment = framebuffer.getColorAttachments()[0];
+        if (sceneColorAttachment->getWidth() == width &&
+            sceneColorAttachment->getHeight() == height)
+        {
+            return (true);
+        }
     }
-
     // Setup scene framebuffer
     {
-        _frameBuffer.bind(GL_FRAMEBUFFER);
-        _frameBuffer.removeColorAttachments();
+        framebuffer.bind(GL_FRAMEBUFFER);
+        framebuffer.removeColorAttachments();
         // Scene color attachment
-        _frameBuffer.addColorAttachment(Texture::create(windowBufferWidth,
-                                                windowBufferHeight,
+        framebuffer.addColorAttachment(Texture::create(width,
+                                                height,
                                                 GL_RGBA16F,
                                                 GL_RGBA,
                                                 GL_FLOAT));
         // Bright scene color attachment (used for glow)
-        _frameBuffer.addColorAttachment(Texture::create(windowBufferWidth,
-                                                windowBufferHeight,
+        framebuffer.addColorAttachment(Texture::create(width,
+                                                height,
                                                 GL_RGBA16F,
                                                 GL_RGBA,
                                                 GL_FLOAT));
-        _frameBuffer.setDepthAttachment(GL_DEPTH_COMPONENT,
-                                        windowBufferWidth,
-                                        windowBufferHeight);
+        framebuffer.setDepthAttachment(GL_DEPTH_COMPONENT,
+                                        width,
+                                        height);
 
-        complete = _frameBuffer.isComplete();
-        _frameBuffer.unBind(GL_FRAMEBUFFER);
+        if (!framebuffer.isComplete())
+        {
+            framebuffer.unBind(GL_FRAMEBUFFER);
+            return (false);
+        }
+        framebuffer.unBind(GL_FRAMEBUFFER);
     }
 
     // Setup blur framebuffers
     {
-        _blurFramebuffers.resize(3);
+        blurFramebuffers.resize(3);
 
-        for (auto& blurFramebuffer: _blurFramebuffers)
+        for (auto& blurFramebuffer: blurFramebuffers)
         {
             for (auto& framebuffer: blurFramebuffer)
             {
@@ -841,73 +854,92 @@ bool    Renderer::setupFrameBuffer()
             }
         }
 
-        // Resize the texture to have the same effect as 41x41 kernel with a 5x5 kernel
-        _blurFramebuffers[0][0].addColorAttachment(Texture::create(static_cast<GLsizei>(windowBufferWidth),
-                                                    static_cast<GLsizei>(windowBufferHeight),
+        // Full texture blur
+        blurFramebuffers[0][0].addColorAttachment(Texture::create(static_cast<GLsizei>(width),
+                                                    static_cast<GLsizei>(height),
                                                     GL_RGBA16F,
                                                     GL_RGBA,
                                                     GL_FLOAT));
-        _blurFramebuffers[0][1].addColorAttachment(Texture::create(static_cast<GLsizei>(windowBufferWidth),
-                                                    static_cast<GLsizei>(windowBufferHeight),
+        blurFramebuffers[0][1].addColorAttachment(Texture::create(static_cast<GLsizei>(width),
+                                                    static_cast<GLsizei>(height),
                                                     GL_RGBA16F,
                                                     GL_RGBA,
                                                     GL_FLOAT));
-        // Resize the texture to have the same effect as 21x21 kernel with a 5x5 kernel
-        _blurFramebuffers[1][0].addColorAttachment(Texture::create(static_cast<GLsizei>(windowBufferWidth / 2.0f),
-                                                    static_cast<GLsizei>(windowBufferHeight / 2.0f),
+        // 1/2 Texture blur
+        blurFramebuffers[1][0].addColorAttachment(Texture::create(static_cast<GLsizei>(width / 2.0f),
+                                                    static_cast<GLsizei>(height / 2.0f),
                                                     GL_RGBA16F,
                                                     GL_RGBA,
                                                     GL_FLOAT));
-        _blurFramebuffers[1][1].addColorAttachment(Texture::create(static_cast<GLsizei>(windowBufferWidth / 2.0f),
-                                                    static_cast<GLsizei>(windowBufferHeight / 2.0f),
-                                                    GL_RGBA16F,
-                                                    GL_RGBA,
-                                                    GL_FLOAT));
-
-        // Resize the texture to have the same effect as 11x11 kernel with a 5x5 kernel
-        _blurFramebuffers[2][0].addColorAttachment(Texture::create(static_cast<GLsizei>(windowBufferWidth / 4.0f),
-                                                    static_cast<GLsizei>(windowBufferHeight / 4.0f),
-                                                    GL_RGBA16F,
-                                                    GL_RGBA,
-                                                    GL_FLOAT));
-        // Resize the texture to have the same effect as 11x11 kernel with a 5x5 kernel
-        _blurFramebuffers[2][1].addColorAttachment(Texture::create(static_cast<GLsizei>(windowBufferWidth / 4.0f),
-                                                    static_cast<GLsizei>(windowBufferHeight / 4.0f),
+        blurFramebuffers[1][1].addColorAttachment(Texture::create(static_cast<GLsizei>(width / 2.0f),
+                                                    static_cast<GLsizei>(height / 2.0f),
                                                     GL_RGBA16F,
                                                     GL_RGBA,
                                                     GL_FLOAT));
 
-        for (auto& blurFramebuffer: _blurFramebuffers)
+        // 1/4 Texture blur
+        blurFramebuffers[2][0].addColorAttachment(Texture::create(static_cast<GLsizei>(width / 4.0f),
+                                                    static_cast<GLsizei>(height / 4.0f),
+                                                    GL_RGBA16F,
+                                                    GL_RGBA,
+                                                    GL_FLOAT));
+        blurFramebuffers[2][1].addColorAttachment(Texture::create(static_cast<GLsizei>(width / 4.0f),
+                                                    static_cast<GLsizei>(height / 4.0f),
+                                                    GL_RGBA16F,
+                                                    GL_RGBA,
+                                                    GL_FLOAT));
+
+        for (auto& blurFramebuffer: blurFramebuffers)
         {
             for (auto& framebuffer: blurFramebuffer)
             {
                 framebuffer.bind(GL_FRAMEBUFFER);
-                complete = complete && framebuffer.isComplete();
+                if (!framebuffer.isComplete())
+                {
+                    return (false);
+                }
             }
         }
+    }
+    return (true);
+}
+
+bool    Renderer::setupMainFramebuffers()
+{
+    GLsizei windowBufferWidth = (GLsizei)GameWindow::getInstance()->getBufferWidth();
+    GLsizei windowBufferHeight = (GLsizei)GameWindow::getInstance()->getBufferHeight();
+
+    if (!windowBufferWidth ||
+        !windowBufferHeight ||
+        !setupFramebuffers(_framebuffer, _blurFramebuffers, windowBufferWidth, windowBufferHeight))
+    {
+        return (false);
     }
 
     // Setup transparency frame buffer
     {
-        _transparencyFrameBuffer.bind(GL_FRAMEBUFFER);
-        _transparencyFrameBuffer.removeColorAttachments();
+        _transparencyFramebuffer.bind(GL_FRAMEBUFFER);
+        _transparencyFramebuffer.removeColorAttachments();
         // Scene color attachment
-        _transparencyFrameBuffer.addColorAttachment(Texture::create(windowBufferWidth,
+        _transparencyFramebuffer.addColorAttachment(Texture::create(windowBufferWidth,
                                                 windowBufferHeight,
                                                 GL_RGBA16F,
                                                 GL_RGBA,
                                                 GL_FLOAT));
-        _transparencyFrameBuffer.setDepthAttachment(GL_DEPTH_COMPONENT,
+        _transparencyFramebuffer.setDepthAttachment(GL_DEPTH_COMPONENT,
                                         windowBufferWidth,
                                         windowBufferHeight);
 
-        complete = _transparencyFrameBuffer.isComplete();
-        _transparencyFrameBuffer.unBind(GL_FRAMEBUFFER);
+        if (!_transparencyFramebuffer.isComplete())
+        {
+            return (false);
+        }
+        _transparencyFramebuffer.unBind(GL_FRAMEBUFFER);
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-    return (complete);
+    return (true);
 }
 
 void    Renderer::setupShaderPrograms()
@@ -1049,6 +1081,8 @@ void    Renderer::setupShaderPrograms()
         _screenPlane.updateData(vertexs, 4, indices, 6);
     }
 }
+
+
 
 void    Renderer::initTextRendering()
 {

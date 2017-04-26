@@ -76,3 +76,13 @@ void    UniformBuffer::setBindingPoint(uint16_t bindingPoint)
 {
     _bindingPoint = bindingPoint;
 }
+
+bool    UniformBuffer::isInit() const
+{
+    return (_init);
+}
+
+uint32_t    UniformBuffer::getSize() const
+{
+    return (_size);
+}
