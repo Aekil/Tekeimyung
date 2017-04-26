@@ -50,6 +50,7 @@ bool    Renderer::initialize()
     {
         initTextRendering();
         setupShaderPrograms();
+        setup2DTextureGeneration();
         onWindowResize();
     }
     catch(const Exception& e)
@@ -141,7 +142,6 @@ void    Renderer::endFrame()
         bloomPass();
         finalBlendingPass();
         glEnable(GL_DEPTH_TEST);
-        _currentShaderProgram = nullptr;
     }
 
     // Display imgui windows
@@ -153,6 +153,11 @@ void    Renderer::endFrame()
 
 void    Renderer::render(Camera* camera, RenderQueue& renderQueue)
 {
+    if (camera)
+    {
+        _currentCamera = camera;
+    }
+
     // All the renders will use the color attachments and the depth buffer of the framebuffer
     _frameBuffer.use(GL_FRAMEBUFFER);
     sceneRenderPass(camera, renderQueue);
@@ -161,13 +166,103 @@ void    Renderer::render(Camera* camera, RenderQueue& renderQueue)
     _transparencyFrameBuffer.unBind(GL_FRAMEBUFFER);
 }
 
+std::unique_ptr<Texture>    Renderer::generateTexture(ModelInstance* model, uint32_t width, uint32_t height)
+{
+    float windowBufferWidth = (float)GameWindow::getInstance()->getBufferWidth();
+    float windowBufferHeight = (float)GameWindow::getInstance()->getBufferHeight();
+
+    // Init render frame buffer
+    {
+        _2DFrameBuffer.bind(GL_FRAMEBUFFER);
+        _2DFrameBuffer.removeColorAttachments();
+        // Scene color attachment
+        _2DFrameBuffer.addColorAttachment(Texture::create(width,
+                                height,
+                                GL_RGBA,
+                                GL_RGBA,
+                                GL_UNSIGNED_BYTE));
+        // Bright scene color attachment (used for glow)
+        _2DFrameBuffer.addColorAttachment(Texture::create(width,
+                                height,
+                                GL_RGBA,
+                                GL_RGBA,
+                                GL_UNSIGNED_BYTE));
+        _2DFrameBuffer.setDepthAttachment(GL_DEPTH_COMPONENT,
+                                        width,
+                                        height);
+
+        if (!_2DFrameBuffer.isComplete())
+        {
+            _2DFrameBuffer.unBind(GL_FRAMEBUFFER);
+            return (nullptr);
+        }
+        _2DFrameBuffer.unBind(GL_FRAMEBUFFER);
+    }
+
+    // Set camera viewport
+    {
+        Camera::sViewport viewportRect;
+        viewportRect.offset.x = 0.0f;
+        viewportRect.offset.y = 0.0f;
+        viewportRect.extent.width = (float)width / windowBufferWidth;
+        viewportRect.extent.height = (float)height / windowBufferHeight;
+        _2DRenderCamera.setViewportRect(viewportRect);
+    }
+
+
+    // Calculate camera projection size so the model fit all the texture
+    // The size is the distance between the front left bottom and back right top corners of the model
+    // We don't take the real position of the corners, but create a virtual 3D box with the size of the model
+    {
+        glm::vec3 frontLeftBottom = glm::vec3(_2DRenderCamera.getView() * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+        glm::vec3 backRightTop = glm::vec3(_2DRenderCamera.getView() * glm::vec4(model->getModel()->getSize().x, model->getModel()->getSize().y, -model->getModel()->getSize().z, 1.0f));
+        float projSize = glm::distance(frontLeftBottom, backRightTop);
+        // Inverse the projection so the texture otherwise the texture will be reversed
+        _2DRenderCamera.setProjSize(-projSize);
+    }
+
+    // Place the object in front of the camera and center it
+    {
+        glm::vec3 cameraDir = glm::normalize(_2DRenderCamera.getDirection());
+
+        // Calculate the translation the model need to have his pivot point centered
+        glm::vec3 modelPivot = glm::vec3(0.0f, -(model->getModel()->getSize().y / 2.0f + model->getModel()->getMin().y), 0.0f);
+        modelPivot += glm::vec3(-(model->getModel()->getSize().x / 2.0f + model->getModel()->getMin().x), 0.0f, 0.0f);
+        modelPivot += glm::vec3(0.0f, 0.0f, -(model->getModel()->getSize().z / 2.0f + model->getModel()->getMin().z));
+
+        // We place the object at a distance of 50 in front of the camera and center it
+        glm::mat4 transform = glm::translate(glm::mat4(1.0f), cameraDir * -50.0f + modelPivot);
+
+        // Update uniform buffer
+        _2DRenderBuffer.update((void*)glm::value_ptr(transform), sizeof(glm::mat4));
+        _2DRenderBuffer.update((void*)glm::value_ptr(glm::vec4(1.0f)), sizeof(glm::vec4), sizeof(glm::mat4));
+    }
+
+    // The light have the same direction as the camera
+    _2DRenderLight.setDirection(-glm::normalize(_2DRenderCamera.getDirection()));
+
+    // Update render queue
+    _2DRenderQueue.clear();
+    _2DRenderQueue.addModel(model, &_2DRenderBuffer, 0, _2DRenderBuffer.getSize());
+    _2DRenderQueue.addLight(&_2DRenderLight);
+
+    // Render the model in our frame buffer
+    _2DFrameBuffer.use(GL_FRAMEBUFFER);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    sceneRenderPass(&_2DRenderCamera, _2DRenderQueue);
+    _2DFrameBuffer.unBind(GL_FRAMEBUFFER);
+
+    return (std::move(_2DFrameBuffer.getColorAttachments()[0]));
+}
+
 void    Renderer::sceneRenderPass(Camera* camera, RenderQueue& renderQueue)
 {
+    _currentShaderProgram = nullptr;
+
     // Scene objects
     {
         if (camera)
         {
-            _currentCamera = camera;
             auto& lights = renderQueue.getLights();
             uint32_t lightsNb = renderQueue.getLightsNb();
 
@@ -236,7 +331,6 @@ void    Renderer::sceneRenderPass(Camera* camera, RenderQueue& renderQueue)
         _textShaderProgram.use();
         glUniform1i(_textShaderProgram.getUniformLocation("textImage"), 0);
         renderTexts(renderQueue.getTexts(), renderQueue.getTextsNb());
-        _currentShaderProgram = nullptr;
     }
 
     // Enable depth buffer write and depth test for non-UI objects
@@ -1048,6 +1142,26 @@ void    Renderer::setupShaderPrograms()
 
         _screenPlane.updateData(vertexs, 4, indices, 6);
     }
+}
+
+void    Renderer::setup2DTextureGeneration()
+{
+    // Setup camera
+    // We rotate the camera to have an isometric view
+    _2DRenderCamera.rotate(-35.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+    _2DRenderCamera.rotate(47.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    _2DRenderCamera.setNear(0.1f);
+    _2DRenderCamera.setFar(5000.0f);
+    _2DRenderCamera.setProjType(Camera::eProj::ORTHOGRAPHIC_3D);
+
+    // Setup uniform buffer to pass model transformation and color
+    _2DRenderBuffer.init(sizeof(glm::mat4) + sizeof(glm::vec4), GL_SHADER_STORAGE_BUFFER);
+    _2DRenderBuffer.setBindingPoint(3);
+
+
+    // Setup light
+    _2DRenderLight.setAmbient({1.0f, 1.0f, 1.0f});
+    _2DRenderLight.setDiffuse({1.0f, 1.0f, 1.0f});
 }
 
 void    Renderer::initTextRendering()

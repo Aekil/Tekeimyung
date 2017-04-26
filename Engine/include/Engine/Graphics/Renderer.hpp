@@ -37,6 +37,8 @@ public:
     void                                endFrame();
     void                                render(Camera* camera, RenderQueue& renderQueue);
 
+    std::unique_ptr<Texture>            generateTexture(ModelInstance* model, uint32_t width, uint32_t height);
+
 private:
     void                                sceneRenderPass(Camera* camera, RenderQueue& renderQueue);
     void                                transparencyPass(Camera* camera, RenderQueue& renderQueue);
@@ -55,6 +57,7 @@ private:
 
     bool                                setupFrameBuffer();
     void                                setupShaderPrograms();
+    void                                setup2DTextureGeneration();
 
 private:
     void                                initTextRendering();
@@ -94,4 +97,11 @@ private:
 
     // We have one frame buffer and two color attachments for each blur kernel size
     std::vector<std::array<Framebuffer, 2>>   _blurFramebuffers;
+
+
+    Framebuffer                         _2DFrameBuffer;
+    UniformBuffer                       _2DRenderBuffer;
+    RenderQueue                         _2DRenderQueue;
+    Camera                              _2DRenderCamera;
+    Light                               _2DRenderLight;
 };
