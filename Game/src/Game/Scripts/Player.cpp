@@ -9,29 +9,41 @@
 #include <Engine/Graphics/Camera.hpp>
 #include <Engine/Graphics/Renderer.hpp>
 #include <Engine/Physics/Physics.hpp>
+#include <Engine/Utils/Exception.hpp>
 
 #include <Game/Scripts/GameManager.hpp>
 #include <Game/Scripts/Projectile.hpp>
 #include <Game/Scripts/Player.hpp>
+#include <Game/Scripts/TutoManagerMessage.hpp>
 #include <Game/Scripts/WaveManager.hpp>
+
+#include <Game/Weapons/DefaultWeapon.hpp>
+#include <Game/Weapons/TeslaWeapon.hpp>
+#include <Game/Weapons/LaserWeapon.hpp>
 
 void Player::death()
 {
     this->Destroy();
-    //LOG_DEBUG("I'm dead now");
 }
 
 void Player::start()
 {
+    this->_weapons.push_back(new DefaultWeapon());
+    //this->_weapons.push_back(new TeslaWeapon());
+    this->_weapons.push_back(new LaserWeapon());
+
+    this->_levelUpReward[2] = std::make_pair<std::string, double>("FireRate", -25.0 / 100.0);
+    this->_levelUpReward[3] = std::make_pair<std::string, double>("FireRate", -25.0 / 100.0);
+
+    this->_attributes["Speed"] = new Attribute(80.0f);
+
     setHealth(200);
     setMaxHealth(200);
+
     this->_transform = this->getComponent<sTransformComponent>();
     this->_render = this->getComponent<sRenderComponent>();
     this->_rigidBody = this->getComponent<sRigidBodyComponent>();
     _buildEnabled = false;
-    _damage = 20;
-    _speed = 80.0f;
-    _shootSound = EventSound::getEventByEventType(eEventSound::PLAYER_SHOOT);
 
     // Get GameManager
     {
@@ -55,20 +67,42 @@ void Player::start()
         _waveManager = scriptComponent->getScript<WaveManager>("WaveManager");
     }
 
-    //LOG_DEBUG("BORN");
+    updateWeaponMaterial();
 }
 
 void Player::update(float dt)
 {
     this->updateDirection();
     this->movement(dt);
-    //this->handleShoot();
+    this->handleShoot(dt);
+    this->changeWeapon();
+}
 
-    // Player is on top layer
-    if (_waveManager && !_waveManager->isWaiting())
+void Player::changeWeapon()
+{
+    auto &&scroll = mouse.getScroll();
+    static double lastOffset = scroll.yOffset;
+
+    if (lastOffset != scroll.yOffset &&
+        !keyboard.isPressed(Keyboard::eKey::LEFT_CONTROL))
     {
-        this->blockPlayerOnTopLayer(dt);
+        this->_weapons[this->_actualWeapon]->clean();
+
+        if (this->mouse.getScroll().yOffset < 0)
+            this->_actualWeapon++;
+        else
+            this->_actualWeapon--;
+
+        if (this->_actualWeapon >= (int)this->_weapons.size())
+            this->_actualWeapon = 0;
+        else if (this->_actualWeapon < 0)
+            this->_actualWeapon = static_cast<int>(this->_weapons.size() - 1);
+
+        updateWeaponMaterial();
+        TutoManagerMessage::getInstance()->sendMessage(eTutoState::CHANGE_WEAPON);
     }
+
+    lastOffset = scroll.yOffset;
 }
 
 void Player::updateDirection()
@@ -82,7 +116,7 @@ void Player::updateDirection()
     Ray ray = camera->screenPosToRay((float)cursor.getX(), (float)cursor.getY());
     float hitDistance;
 
-    if (Physics::raycastPlane(ray, {0.0f, 1.0f, 0.0f}, {0.0f, _transform->getPos().y, 0.0f}, hitDistance))
+    if (Physics::raycastPlane(ray, { 0.0f, 1.0f, 0.0f }, { 0.0f, _transform->getPos().y, 0.0f }, hitDistance))
     {
         glm::vec3 target = ray.getPoint(hitDistance);
         _direction = glm::normalize(target - _transform->getPos());
@@ -108,83 +142,48 @@ void Player::movement(float elapsedTime)
     {
         if (KB_P(Keyboard::eKey::S))
         {
-            _rigidBody->velocity += glm::vec3(_speed, 0.0f, _speed);
+            _rigidBody->velocity += glm::vec3(this->_attributes["Speed"]->getFinalValue(), 0.0f, this->_attributes["Speed"]->getFinalValue());
+            TutoManagerMessage::getInstance()->sendMessage(eTutoState::MOVE);
         }
         if (KB_P(Keyboard::eKey::Z))
         {
-            _rigidBody->velocity += glm::vec3(-_speed, 0.0f, -_speed);
+            _rigidBody->velocity += glm::vec3(-this->_attributes["Speed"]->getFinalValue(), 0.0f, -this->_attributes["Speed"]->getFinalValue());
+            TutoManagerMessage::getInstance()->sendMessage(eTutoState::MOVE);
         }
         if (KB_P(Keyboard::eKey::Q))
         {
-            _rigidBody->velocity += glm::vec3(-_speed, 0.0f, _speed);
+            _rigidBody->velocity += glm::vec3(-this->_attributes["Speed"]->getFinalValue(), 0.0f, this->_attributes["Speed"]->getFinalValue());
+            TutoManagerMessage::getInstance()->sendMessage(eTutoState::MOVE);
         }
         if (KB_P(Keyboard::eKey::D))
         {
-            _rigidBody->velocity += glm::vec3(_speed, 0.0f, -_speed);
+            _rigidBody->velocity += glm::vec3(this->_attributes["Speed"]->getFinalValue(), 0.0f, -this->_attributes["Speed"]->getFinalValue());
+            TutoManagerMessage::getInstance()->sendMessage(eTutoState::MOVE);
         }
     }
-}
 
-void Player::handleShoot()
-{
-    if (mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_1] == Mouse::eButtonState::CLICK_PRESSED)
+#if defined(ENGINE_DEBUG)
+    if (this->keyboard.getStateMap()[Keyboard::eKey::L] == Keyboard::eKeyState::KEY_RELEASED)
     {
-        Entity*                 bullet;
-        sScriptComponent*       bulletScripts;
-        Projectile*             projectileScript;
-
-        bullet = Instantiate("PLAYER_BULLET");
-        bulletScripts = bullet->getComponent<sScriptComponent>();
-        projectileScript = bulletScripts->getScript<Projectile>("Projectile");
-
-        projectileScript->_projectileTransform->setPos(_transform->getPos());
-
-        projectileScript->_projectileTransform->translate(glm::vec3(0.0f, -((_render->getModel()->getMin().y * _transform->getScale().y) / 2.0f), 0.0f));
-
-        projectileScript->_damage = _damage;
-        projectileScript->followDirection({_direction.x, 0.0f, _direction.z});
-
-#if (ENABLE_SOUND)
-        if (_shootSound->soundID != -1 && !SoundManager::getInstance()->isSoundPlaying(_shootSound->soundID))
-        {
-            SoundManager::getInstance()->playSound(_shootSound->soundID);
-        }
+        this->_weapons[this->_actualWeapon]->levelUp();
+    }
 #endif
-    }
 }
 
-void Player::blockPlayerOnTopLayer(float dt)
+void Player::handleShoot(float dt)
 {
-    glm::vec3 playerPos = _transform->getPos();
-    playerPos.x += (_rigidBody->velocity.x * dt);
-    playerPos.z += (_rigidBody->velocity.z * dt);
+    this->_elapsedTime += dt;
 
-    float modelSize = _render->getModel()->getSize().x / 2.0f;
-
-    blockPlayer(playerPos);
-    blockPlayer(playerPos + glm::vec3(modelSize, 0.0f, 0.0f));
-    blockPlayer(playerPos + glm::vec3(0.0f, 0.0f, modelSize));
-}
-
-void Player::blockPlayer(const glm::vec3& playerPos)
-{
-    glm::ivec2 mapPos;
-    mapPos.x = static_cast<int>(std::ceil(playerPos.x) / 25.0f);
-    mapPos.y = static_cast<int>(playerPos.z / 25.0f);
-
-    if (mapPos.x >= 0 &&
-        mapPos.x < _gameManager->mapSize &&
-        mapPos.y >= 0 &&
-        mapPos.y < _gameManager->mapSize)
+    if (this->_canShoot && this->_elapsedTime > this->_weapons[this->_actualWeapon]->getAttribute("FireRate"))
     {
-        if (_gameManager->secondLayerPattern[mapPos.x][mapPos.y] != 1)
+        if (mouse.isPressed(Mouse::eButton::MOUSE_BUTTON_1))
         {
-            _rigidBody->velocity = glm::vec3(0.0f);
+            this->_weapons[this->_actualWeapon]->fire(this, this->_transform, this->_render, this->_direction);
+            this->_elapsedTime = 0;
+            TutoManagerMessage::getInstance()->sendMessage(eTutoState::SHOOT);
         }
-    }
-    else if (mapPos.x < 0 || mapPos.y < 0)
-    {
-        _rigidBody->velocity = glm::vec3(0.0f);
+        else
+            this->_weapons[this->_actualWeapon]->clean();
     }
 }
 
@@ -202,4 +201,40 @@ void Player::onCollisionEnter(Entity* entity)
 
 void Player::onCollisionExit(Entity* entity)
 {
+}
+
+void Player::addExperience(int xp)
+{
+    this->_experience += xp;
+
+    if (this->_experience > this->_nextLevelUp)
+        this->levelUp();
+}
+
+void Player::updateWeaponMaterial()
+{
+    Material* weaponMaterial = this->_weapons[this->_actualWeapon]->getMaterial();
+
+    if (!weaponMaterial)
+    {
+        EXCEPT(InternalErrorException, "Missing material for weapon %d", this->_actualWeapon);
+    }
+
+    _render->getModelInstance()->setMaterial(weaponMaterial);
+}
+
+void Player::levelUp()
+{
+    this->_nextLevelUp += 250;
+
+    this->_level++;
+
+    std::pair<std::string, double> reward = this->_levelUpReward[this->_level];
+
+    //this->_attributes[reward.first]->addModifier(Modifier(reward.second));
+}
+
+void Player::setCanShoot(bool canShoot)
+{
+    this->_canShoot = canShoot;
 }

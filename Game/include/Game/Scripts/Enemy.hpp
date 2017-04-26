@@ -10,6 +10,9 @@
 #include <Engine/Utils/EventSound.hpp>
 
 #include <Game/Scripts/Health.hpp>
+#include <Game/Attibutes/Attribute.hpp>
+
+#define ENEMY_TAG   "Enemy"
 
 class Enemy final : public BaseScript, public Health
 {
@@ -22,8 +25,11 @@ public:
     void update(float dt) override final;
     void onCollisionEnter(Entity* entity) override final;
     void death() override final;
-    bool takeDamage(int damage) override final;
+    void remove();
+    bool takeDamage(double damage) override final;
 
+    Attribute* getPercentExplosion();
+    void setPercentExplosion(Attribute*);
     void setPath(const std::vector<glm::vec3>& path);
 
     bool updateEditor() override final;
@@ -46,7 +52,11 @@ private:
     tEventSound* _dyingSound = nullptr;
     tEventSound* _earningCoins = nullptr;
 
+    Attribute* _percentExplosion = nullptr;
+
     float _speed;
+
+    int _experienceEarned;
 };
 
 REGISTER_SCRIPT(Enemy);

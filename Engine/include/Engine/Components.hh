@@ -64,6 +64,7 @@ virtual void update(sRenderComponent* component)
     this->_display = component->_display;
     this->ignoreRaycast = component->ignoreRaycast;
     this->dynamic = component->dynamic;
+    this->hideDynamic = component->hideDynamic;
 }
 
 virtual void update(sComponent* component)
@@ -111,11 +112,13 @@ Geometry::eType type;
 bool                    _display = true;
 bool                    ignoreRaycast = false;
 bool                    dynamic = false;
+bool                    hideDynamic = false;
 
 glm::vec4 color;
 
 // Last color since ubo update
 glm::vec4 lastColor;
+
 END_COMPONENT(sRenderComponent)
 
 
@@ -677,3 +680,23 @@ std::unique_ptr<ModelInstance> _cameraView = nullptr;
 // so we can't use a model from GeometryFactory and just scale it
 std::unique_ptr<Geometry> _cameraPerspective = nullptr;
 END_COMPONENT(sCameraComponent)
+
+
+START_COMPONENT(sDynamicComponent)
+virtual sComponent* clone()
+{
+    sDynamicComponent* component = new sDynamicComponent();
+    component->update(this);
+
+    return (component);
+}
+
+virtual void update(sDynamicComponent* component)
+{
+}
+
+virtual void update(sComponent* component)
+{
+    update(static_cast<sDynamicComponent*>(component));
+}
+END_COMPONENT(sDynamicComponent)

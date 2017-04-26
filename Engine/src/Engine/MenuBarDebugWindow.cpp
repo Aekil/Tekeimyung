@@ -7,6 +7,7 @@
 #include <Engine/Core/Engine.hpp>
 #include <Engine/EditorState.hpp>
 #include <Engine/EntityFactory.hpp>
+#include <Engine/Graphics/Renderer.hpp>
 #include <Engine/MenuBarDebugWindow.hpp>
 #include <Engine/Utils/LevelLoader.hpp>
 
@@ -123,6 +124,9 @@ void    MenuBarDebugWindow::displayPlayStopMenu()
         {
             if (ImGui::MenuItem("Stop"))
             {
+                // Remove current camera from renderer because it will be deleted when removing states
+                Renderer::getInstance()->setCurrentCamera(nullptr);
+
                 // Remove all states except from the first one (EditorState)
                 uint32_t statesNb = (uint32_t)gameStateManager.getStates().size();
                 for (statesNb; statesNb > 1; --statesNb)

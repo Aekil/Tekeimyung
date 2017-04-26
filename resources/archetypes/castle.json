@@ -13,6 +13,7 @@
             "r" : 1
          },
          "dynamic" : false,
+         "hide_dynamic" : false,
          "ignore_raycast" : false,
          "materials" : [ "bloom_green.mat" ],
          "model" : "resources/models/buildings/geometric_castle.DAE",
@@ -35,6 +36,8 @@
          "class" : [ "Castle" ],
          "scripts" : [
             {
+               "current_health" : 42,
+               "max_health" : 42,
                "name" : "Castle"
             }
          ]

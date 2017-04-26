@@ -11,7 +11,7 @@
 class Projectile final : public BaseScript
 {
 friend class Tower;
-friend class Player;
+friend class DefaultWeapon;
 
 public:
     Projectile() = default;

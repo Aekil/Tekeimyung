@@ -130,14 +130,14 @@ const std::vector<ResourceManager::sSoundStrings>&  ResourceManager::getSoundsSt
 
 void    ResourceManager::loadSound(const std::string basename, const std::string& fileName)
 {
-    // Add sound string to Ressource Manager
+    // Add sound string to Resource Manager
     sSoundStrings soundString;
     soundString.path = fileName;
     soundString.name = basename;
     _soundsStrings.push_back(soundString);
 
     // Load sound in Sound Manager
-    SoundManager::getInstance()->registerSound(fileName);
+    //SoundManager::getInstance()->registerSound(fileName);
 }
 
 template<typename T>

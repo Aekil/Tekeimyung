@@ -1,0 +1,83 @@
+{
+   "components" : {
+      "sNameComponent" : {
+         "name" : "TUTO_MANAGER"
+      },
+      "sRenderComponent" : {
+         "animated" : false,
+         "animations" : [],
+         "color" : {
+            "a" : 1,
+            "b" : 1,
+            "g" : 1,
+            "r" : 1
+         },
+         "dynamic" : false,
+         "hide_dynamic" : false,
+         "ignore_raycast" : false,
+         "materials" : [ "MAT_Default" ],
+         "model" : "resources/models/default.DAE",
+         "type" : "MESH"
+      },
+      "sScriptComponent" : {
+         "scripts" : [
+            {
+               "name" : "TutoManager"
+            },
+            {
+               "name" : "GoldManager"
+            },
+            {
+               "name" : "TutoManager"
+            }
+         ]
+      },
+      "sTextComponent" : {
+         "color" : {
+            "a" : 1,
+            "b" : 1,
+            "g" : 1,
+            "r" : 1
+         },
+         "content" : "Use W,A,S,D to move",
+         "font_name" : "arial.ttf",
+         "font_size" : 22
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 672,
+            "y" : 898.67822265625,
+            "z" : 0
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "scale" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         }
+      },
+      "sTypeComponent" : {
+         "type" : "TILE_WALKABLE"
+      },
+      "sUiComponent" : {
+         "horizontal_alignment" : "MIDDLE",
+         "layer" : 0,
+         "offset" : {
+            "x" : -15,
+            "y" : -10
+         },
+         "percentage_size" : false,
+         "size" : {
+            "x" : 0.10000000149011612,
+            "y" : 0.10000000149011612
+         },
+         "vertical_alignment" : "TOP"
+      }
+   },
+   "name" : "TUTO_MANAGER",
+   "tag" : "TutoManager"
+}

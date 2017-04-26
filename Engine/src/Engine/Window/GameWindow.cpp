@@ -378,13 +378,13 @@ void    GameWindow::focusCallback(GLFWwindow* window, int focused)
     // The window gained the focus
     if (focused)
     {
-        SoundManager::getInstance()->resume();
+        SoundManager::getInstance()->resumeAllChannels();
         gameWindow->hasLostFocus(false);
     }
     // The window lost focus
     else
     {
-        SoundManager::getInstance()->pause();
+        SoundManager::getInstance()->pauseAllChannels();
         gameWindow->hasLostFocus(true);
     }
 }
@@ -405,7 +405,7 @@ void   GameWindow::posCallback(GLFWwindow* window, int xpos, int ypos)
 
 /**
     Callback function used to handle the Keyboard class through keys' states.
-    This function only retrieve a specific key and updates its state in the keys' map.
+    This function only retrieves a specific key and updates its state in the keys' map.
 */
 void	GameWindow::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
@@ -620,24 +620,27 @@ void    GameWindow::handleResize(int width, int height)
     if (_lostFocus)
         return;
 
-    _bufferWidth = width;
-    _bufferHeight = height;
-
-    // Handle window resize for menu systems
-    for (auto& gameState: _gameStateManager->getStates())
+    if (width && height)
     {
-        gameState->onWindowResize();
-    }
+        _bufferWidth = width;
+        _bufferHeight = height;
 
-    Renderer::getInstance()->onWindowResize();
+        // Handle window resize for menu systems
+        for (auto& gameState: _gameStateManager->getStates())
+        {
+            gameState->onWindowResize();
+        }
+
+        Renderer::getInstance()->onWindowResize();
+    }
 }
 
 void    GameWindow::handleClose(GLFWwindow* window)
 {
     if (_closeHandler)
     {
-        glfwSetWindowShouldClose(window, false);
         glfwRestoreWindow(window);
+        glfwSetWindowShouldClose(window, false);
         _closeHandler(_closeHandlerData);
     }
 }

@@ -18,6 +18,7 @@
 
 #include <Game/GameStates/ConfirmExitState.hpp>
 #include <Game/GameStates/HowToPlayState.hpp>
+#include <Game/GameStates/BuildingListState.hpp>
 #include <Game/GameStates/OptionsMenuState.hpp>
 #include <Game/GameStates/PauseState.hpp>
 #include <Game/GameStates/PlayState.hpp>
@@ -60,6 +61,7 @@ int     main(int ac, char** av)
         LevelLoader::getInstance()->loadDirectory(LEVELS_DIRECTORY);
         REGISTER_GAMESTATE(ConfirmExitState);
         REGISTER_GAMESTATE(HowToPlayState);
+        REGISTER_GAMESTATE(BuildingListState);
         REGISTER_GAMESTATE(OptionsMenuState);
         REGISTER_GAMESTATE(PauseState);
         REGISTER_GAMESTATE(PlayState);

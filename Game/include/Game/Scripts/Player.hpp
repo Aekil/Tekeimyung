@@ -11,7 +11,9 @@
 #include <Engine/Core/ScriptFactory.hpp>
 
 #include <Game/Scripts/Health.hpp>
+#include <Game/Attibutes/Attribute.hpp>
 
+class IWeapon;
 class GameManager;
 class WaveManager;
 
@@ -24,12 +26,11 @@ public:
 private:
     void updateDirection();
     void movement(float elapsedTime);
-    void handleShoot();
-
-    void blockPlayerOnTopLayer(float dt);
-    void blockPlayer(const glm::vec3& playerPos);
+    void handleShoot(float dt);
 
     float buildableRadius;
+    void levelUp();
+    void changeWeapon();
 
 public:
     void start() override final;
@@ -43,18 +44,33 @@ public:
     void onCollisionEnter(Entity* entity) override final;
     void onCollisionExit(Entity* entity) override final;
 
+    void addExperience(int);
+    void updateWeaponMaterial();
+
+    void setCanShoot(bool);
+
 private:
     glm::vec3 _direction;
     sTransformComponent* _transform;
     sRenderComponent* _render;
     sRigidBodyComponent* _rigidBody;
     bool _buildEnabled;
-    int _damage;
-    float _speed;
-    tEventSound* _shootSound = nullptr;
 
-    WaveManager* _waveManager{nullptr};
-    GameManager* _gameManager{nullptr};
+    int _experience = 0;
+    float _elapsedTime = 0.0f;
+    int _nextLevelUp = 100;
+    int _level = 1;
+    int _actualWeapon = 0;
+
+    std::map<std::string, Attribute*> _attributes;
+    std::vector<IWeapon*> _weapons;
+
+    WaveManager* _waveManager{ nullptr };
+    GameManager* _gameManager{ nullptr };
+
+    std::map<int, std::pair<std::string, double>> _levelUpReward;
+
+    bool _canShoot = true;
 };
 
 REGISTER_SCRIPT(Player);

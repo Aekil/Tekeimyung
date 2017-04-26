@@ -15,7 +15,9 @@
 #include <Engine/Systems/UISystem.hpp>
 #include <Engine/Systems/MouseSystem.hpp>
 #include <Game/GameStates/HowToPlayState.hpp>
+#include <Game/GameStates/BuildingListState.hpp>
 #include <Game/GameStates/PauseState.hpp>
+#include <Game/Scripts/TutoManagerMessage.hpp>
 
 #include <Game/GameStates/PlayState.hpp>
 
@@ -54,8 +56,17 @@ bool    PlayState::update(float elapsedTime)
     if (keyboard.getStateMap()[Keyboard::eKey::H] == Keyboard::eKeyState::KEY_PRESSED)
     {
         _gameStateManager->addState<HowToPlayState>();
+        TutoManagerMessage::getInstance()->sendMessage(eTutoState::CHECK_HOWTOPLAY);
     }
-
+    if (keyboard.getStateMap()[Keyboard::eKey::B] == Keyboard::eKeyState::KEY_PRESSED)
+    {
+        _gameStateManager->addState<BuildingListState>();
+        TutoManagerMessage::getInstance()->sendMessage(eTutoState::CHECK_BUILDLIST);
+    }
+    if (keyboard.getStateMap()[Keyboard::eKey::T] == Keyboard::eKeyState::KEY_PRESSED)
+    {
+        TutoManagerMessage::getInstance()->sendMessage(eTutoState::TUTO_DONE);
+    }
     if (keyboard.getStateMap()[Keyboard::eKey::ESCAPE] == Keyboard::eKeyState::KEY_PRESSED ||
         gameWindow->hasLostFocus())
     {

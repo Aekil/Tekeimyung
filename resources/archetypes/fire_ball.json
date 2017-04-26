@@ -1,5 +1,6 @@
 {
    "components" : {
+      "sDynamicComponent" : null,
       "sNameComponent" : {
          "name" : "FIRE_BALL"
       },
@@ -10,13 +11,13 @@
             "finish" : {
                "a" : 0,
                "b" : 0,
-               "g" : 0.63999998569488525,
+               "g" : 0.64705884456634521,
                "r" : 1
             },
             "start" : {
-               "a" : 0.60000002384185791,
+               "a" : 0.60784316062927246,
                "b" : 0,
-               "g" : 0.30000001192092896,
+               "g" : 0.29411765933036804,
                "r" : 1
             }
          },
@@ -56,8 +57,9 @@
             "r" : 1
          },
          "dynamic" : false,
+         "hide_dynamic" : false,
          "ignore_raycast" : false,
-         "materials" : [ "particle_circle.mat" ],
+         "materials" : [ "bloom_red.mat" ],
          "model" : "resources/models/default.DAE",
          "spriteSize" : {
             "x" : 0,
@@ -88,7 +90,7 @@
          ]
       },
       "sSphereColliderComponent" : {
-         "isTrigger" : false,
+         "isTrigger" : true,
          "pos" : {
             "x" : 2,
             "y" : 9,

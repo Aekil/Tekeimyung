@@ -17,6 +17,7 @@
             "r" : 1
          },
          "dynamic" : false,
+         "hide_dynamic" : false,
          "ignore_raycast" : false,
          "materials" : [ "button_back_to_menu.mat" ],
          "model" : "resources/models/traps/trap_needle.DAE",

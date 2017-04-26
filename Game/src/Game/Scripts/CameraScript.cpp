@@ -41,7 +41,7 @@ void CameraScript::update(float dt)
 
         double offset = scroll.yOffset - _lastScrollOffset;
 
-        if (offset)
+        if (offset && keyboard.isPressed(Keyboard::eKey::LEFT_CONTROL))
         {
             camera.setProjSize(camera.getProjSize() + (float)offset * dt * _scrollSpeed);
 

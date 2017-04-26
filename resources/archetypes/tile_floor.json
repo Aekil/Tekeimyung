@@ -26,6 +26,7 @@
             "r" : 1
          },
          "dynamic" : false,
+         "hide_dynamic" : false,
          "ignore_raycast" : false,
          "materials" : [ "bloom_cyan.mat" ],
          "model" : "resources/models/blocks/block.DAE",
@@ -48,7 +49,7 @@
          },
          "rotation" : {
             "x" : 0,
-            "y" : -0,
+            "y" : 0,
             "z" : 0
          },
          "scale" : {
@@ -62,5 +63,5 @@
       }
    },
    "name" : "TILE_FLOOR",
-   "tag" : "TileFloor"
+   "tag" : ""
 }

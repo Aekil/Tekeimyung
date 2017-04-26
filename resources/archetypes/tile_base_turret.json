@@ -9,7 +9,7 @@
          },
          "size" : {
             "x" : 2.6000027656555176,
-            "y" : 1.3500049114227295,
+            "y" : 1.2999999523162842,
             "z" : 2.6000032424926758
          }
       },
@@ -26,11 +26,25 @@
             "r" : 1
          },
          "dynamic" : false,
+         "hide_dynamic" : false,
          "ignore_raycast" : false,
          "materials" : [ "bloom_green.mat" ],
          "model" : "resources/models/blocks/block.DAE",
          "texture" : "",
          "type" : "MESH"
+      },
+      "sRigidBodyComponent" : {
+         "collisions_enabled" : true,
+         "gravity" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "velocity" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         }
       },
       "sScriptComponent" : {
          "class" : [ "Tile" ],
@@ -48,7 +62,7 @@
          },
          "rotation" : {
             "x" : 0,
-            "y" : -0,
+            "y" : 0,
             "z" : 0
          },
          "scale" : {

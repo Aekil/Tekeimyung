@@ -14,7 +14,7 @@ public:
     virtual ~Health() = default;
 
 public:
-    virtual bool takeDamage(int damage);
+    virtual bool takeDamage(double damage);
     int getHealth() const;
     int getMaxHealth() const;
     void setHealth(int health);

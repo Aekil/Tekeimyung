@@ -19,6 +19,7 @@
     PROCESS(FACE_CAMERA, 4)                     \
     PROCESS(BLOOM, 8)                           \
     PROCESS(TEXTURE_BLOOM, 16)                  \
+    PROCESS(TEXTURE_BLOOM_ALPHA, 32)            \
 
 #define BLENDING_MODES(PROCESS)                 \
     PROCESS(GL_ZERO)                            \
@@ -48,6 +49,7 @@ public:
     {
         glm::vec4       ambient;
         glm::vec4       diffuse;
+        glm::vec4       bloom;
     };
 
     REGISTER_ENUM(eOption, uint8_t, MAT_OPTIONS)
@@ -77,11 +79,13 @@ public:
 
     const glm::vec4&    getAmbient() const;
     const glm::vec4&    getDiffuse() const;
+    const glm::vec4&    getBloom() const;
     bool                isFacingCamera() const;
     bool                hasBloom() const;
 
     void                setAmbient(const glm::vec4& ambient);
     void                setDiffuse(const glm::vec4& diffuse);
+    void                setBloom(const glm::vec4& bloom);
     void                isFacingCamera(bool faceCamera);
     void                hasBloom(bool bloom);
 
@@ -106,8 +110,9 @@ private:
 
     glm::vec4           _ambient;
     glm::vec4           _diffuse;
+    glm::vec4           _bloom;
     bool                _faceCamera{false};
-    bool                _bloom{false};
+    bool                _hasBloom{false};
 
     int                 _options{0};
 

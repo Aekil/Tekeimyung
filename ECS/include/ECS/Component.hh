@@ -12,13 +12,16 @@ class Entity;
 struct sComponent
 {
     sComponent() {}
-    sComponent(uint32_t id): id(id) {}
+    sComponent(uint32_t id): id(id) {
+        enabled = true;
+    }
     virtual ~sComponent() {}
 
     virtual sComponent* clone() = 0;
     virtual void        update(sComponent* component) = 0;
     uint32_t id;
     Entity* entity{nullptr};
+    bool enabled;
 };
 
 

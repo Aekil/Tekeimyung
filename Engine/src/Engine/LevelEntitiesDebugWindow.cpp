@@ -60,8 +60,8 @@ void    LevelEntitiesDebugWindow::build(std::shared_ptr<GameState> gameState, fl
     // The entity has been deleted or none is selected
     if (!selectedEntity)
     {
-        selectedEntity = em->getEntities().front();
-        _selectedEntityId = selectedEntity->id;
+        ImGui::End();
+        return;
     }
 
     displayEntityDebug(em, selectedEntity);
@@ -88,9 +88,9 @@ void    LevelEntitiesDebugWindow::displayEntityDebug(EntityManager* em, Entity* 
         // Delete the entity
         if (ImGui::Button("Delete"))
         {
-            ImGui::PopStyleColor(3);
             ImGui::EndGroup();
             em->destroyEntity(entity);
+            ImGui::PopStyleColor(3);
             return;
         }
 
@@ -131,7 +131,6 @@ void    LevelEntitiesDebugWindow::displayEntityDebug(EntityManager* em, Entity* 
 
         ImGui::PopStyleColor(3);
 
-
         // Edit entity tag
         ImGui::Text("\n");
         const std::string& entityTag = entity->getTag();
@@ -143,7 +142,6 @@ void    LevelEntitiesDebugWindow::displayEntityDebug(EntityManager* em, Entity* 
         {
             entity->setTag(entityTagVec.data());
         }
-
 
         // Display new component that can be added
         if (ImGui::BeginPopup("components"))
@@ -168,14 +166,16 @@ void    LevelEntitiesDebugWindow::displayEntityDebug(EntityManager* em, Entity* 
             }
             ImGui::EndPopup();
         }
+
         // Display all components debug
         for (uint32_t i = 0; i < entity->getComponents().size(); ++i)
         {
             sComponent* component = entity->getComponents()[i];
             std::string componentName = IComponentFactory::getComponentNameWithHash(component->id);
+
             ASSERT(componentName.size() > 0, "The component name should exist");
-            IComponentFactory* compFactory = IComponentFactory::getFactory(componentName);
-            sComponent* savedComponent = nullptr;
+            IComponentFactory*  compFactory = IComponentFactory::getFactory(componentName);
+            sComponent*         savedComponent = nullptr;
 
             // Display component debug
             if (ImGui::CollapsingHeader(componentName.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
@@ -189,6 +189,7 @@ void    LevelEntitiesDebugWindow::displayEntityDebug(EntityManager* em, Entity* 
                     entity->removeComponent(component);
                     --i;
                 }
+
                 // Component debug content
                 else if (compFactory->updateEditor(entityName, &savedComponent, component, entity))
                 {

@@ -13,16 +13,17 @@
             "r" : 1
          },
          "dynamic" : false,
+         "hide_dynamic" : false,
          "ignore_raycast" : false,
-         "materials" : [ "how_to_play_menu.mat" ],
+         "materials" : [ "texture_how_to_play.mat" ],
          "model" : "resources/models/default.DAE",
          "texture" : "resources/sprites/buttons/howtoplay.png",
          "type" : "PLANE"
       },
       "sTransformComponent" : {
          "pos" : {
-            "x" : 921.5999755859375,
-            "y" : 508.5,
+            "x" : 960,
+            "y" : 549.17999267578125,
             "z" : 0
          },
          "rotation" : {
@@ -31,8 +32,8 @@
             "z" : 0
          },
          "scale" : {
-            "x" : 105.59999847412109,
-            "y" : 71.189994812011719,
+            "x" : 102.39994049072266,
+            "y" : 84.749977111816406,
             "z" : 0.0010000000474974513
          }
       },
@@ -40,13 +41,13 @@
          "horizontal_alignment" : "MIDDLE",
          "layer" : 0,
          "offset" : {
-            "x" : -2,
-            "y" : 0
+            "x" : 0,
+            "y" : 4
          },
          "percentage_size" : true,
          "size" : {
-            "x" : 0.55000001192092896,
-            "y" : 0.69999998807907104
+            "x" : 0.53333300352096558,
+            "y" : 0.83333307504653931
          },
          "vertical_alignment" : "MIDDLE"
       }

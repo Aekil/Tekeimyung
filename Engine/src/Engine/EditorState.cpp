@@ -28,7 +28,7 @@ void    EditorState::setupSystems()
 
 bool    EditorState::init()
 {
-    SoundManager::getInstance()->setVolume(0.3f);
+    SoundManager::getInstance()->setVolumeAllChannels(0.3f);
     initCamera();
 
     return (true);
@@ -186,6 +186,10 @@ void    EditorState::handleObjectSelection()
         if (selectedEntity)
         {
             LevelEntitiesDebugWindow::setSelectedEntityId(selectedEntity->id);
+        }
+        else
+        {
+            LevelEntitiesDebugWindow::setSelectedEntityId(0);
         }
     }
 }

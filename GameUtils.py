@@ -42,11 +42,11 @@ def main(argv):
 
 #include <Game/Scripts/%s.hpp>
 
-void %s::Start()
+void %s::start()
 {
 }
 
-void %s::Update(float dt)
+void %s::update(float dt)
 {
 }
 """ % (author, name, name, name))
@@ -66,12 +66,12 @@ public:
     %s() {};
     ~%s() {};
 public:
-    virtual void Start();
-    virtual void Update(float dt);
+    virtual void start();
+    virtual void update(float dt);
 };
 
-REGISTER_SCRIPT(%s, "%s");
-""" % (author, name, name, name,name,name))
+REGISTER_SCRIPT(%s);
+""" % (author, name, name, name,name))
             includeFile.close()
     else:
         use()

@@ -32,7 +32,8 @@
     PROCESS(sUiComponent),\
     PROCESS(sTextComponent),\
     PROCESS(sLightComponent),\
-    PROCESS(sCameraComponent)
+    PROCESS(sCameraComponent),\
+    PROCESS(sDynamicComponent)
 
 #define GENERATE_PAIRS(COMPONENT) { #COMPONENT, new ComponentFactory<COMPONENT>() }
 
@@ -405,4 +406,18 @@ public:
     JsonValue&  saveToJson(const std::string& entityType, const sComponent* savedComponent = nullptr, JsonValue* toJson = nullptr) override final;
 
     bool    updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity) override final;
+};
+
+/*
+** sDynamicComponent
+*/
+
+template <>
+class ComponentFactory<sDynamicComponent> final : public BaseComponentFactory<sDynamicComponent>
+{
+public:
+    char* getTypeName() override final { return "sDynamicComponent"; }
+
+    sComponent* loadFromJson(const std::string& entityType, const JsonValue& json) override final;
+    JsonValue&  saveToJson(const std::string& entityType, const sComponent* savedComponent = nullptr, JsonValue* toJson = nullptr) override final;
 };

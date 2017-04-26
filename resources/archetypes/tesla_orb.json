@@ -1,0 +1,97 @@
+{
+   "components" : {
+      "sDynamicComponent" : null,
+      "sNameComponent" : {
+         "name" : "TESLA_ORB"
+      },
+      "sRenderComponent" : {
+         "animated" : false,
+         "animations" : [
+            {
+               "layer" : "DEFAULT",
+               "name" : "spinning",
+               "params" : [
+                  {
+                     "frames" : [
+                        {
+                           "easing" : "NONE",
+                           "time" : 0.5,
+                           "value" : {
+                              "x" : 0,
+                              "y" : 360,
+                              "z" : 0
+                           }
+                        }
+                     ],
+                     "name" : "rotation"
+                  }
+               ]
+            }
+         ],
+         "color" : {
+            "a" : 1,
+            "b" : 1,
+            "g" : 1,
+            "r" : 1
+         },
+         "dynamic" : false,
+         "hide_dynamic" : false,
+         "ignore_raycast" : false,
+         "materials" : [ "bloom_horizontal.mat" ],
+         "model" : "resources/models/default.DAE",
+         "type" : "SPHERE"
+      },
+      "sRigidBodyComponent" : {
+         "collisions_enabled" : true,
+         "gravity" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "velocity" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         }
+      },
+      "sScriptComponent" : {
+         "scripts" : [
+            {
+               "name" : "TeslaOrb"
+            },
+            {
+               "lifetime" : 8,
+               "name" : "LifeTime"
+            }
+         ]
+      },
+      "sSphereColliderComponent" : {
+         "isTrigger" : true,
+         "pos" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "radius" : 1
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : 3.0517578125e-05,
+            "z" : 0
+         },
+         "scale" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         }
+      }
+   },
+   "name" : "TESLA_ORB",
+   "tag" : ""
+}

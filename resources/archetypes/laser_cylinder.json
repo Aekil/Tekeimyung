@@ -1,0 +1,45 @@
+{
+   "components" : {
+      "sNameComponent" : {
+         "name" : "LASER_CYLINDER"
+      },
+      "sRenderComponent" : {
+         "animated" : false,
+         "animations" : [],
+         "color" : {
+            "a" : 1,
+            "b" : 1,
+            "g" : 1,
+            "r" : 1
+         },
+         "dynamic" : false,
+         "hide_dynamic" : true,
+         "ignore_raycast" : false,
+         "materials" : [ "bloom_laser.mat" ],
+         "model" : "resources/models/default.DAE",
+         "type" : "CYLINDER"
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 191.88682556152344,
+            "y" : 100,
+            "z" : 393.04269409179688
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "scale" : {
+            "x" : 0.20000000298023224,
+            "y" : 0.99999916553497314,
+            "z" : 0.20000000298023224
+         }
+      },
+      "sTypeComponent" : {
+         "type" : "TILE_WALKABLE"
+      }
+   },
+   "name" : "LASER_CYLINDER",
+   "tag" : ""
+}

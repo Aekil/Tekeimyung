@@ -26,3 +26,5 @@ public:
 private:
 
 };
+
+double      SquaredDistPointAABB(const glm::vec3& p, const glm::vec3& min, const glm::vec3& max);
