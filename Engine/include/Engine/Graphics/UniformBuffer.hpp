@@ -21,6 +21,9 @@ public:
 
     void                    setBindingPoint(uint16_t bindingPoint);
 
+    bool                    isInit() const;
+    uint32_t                getSize() const;
+
 private:
     // Uniform buffer object
     GLuint                  _UBO;

@@ -108,3 +108,8 @@ const std::vector<std::unique_ptr<Texture> >&   Framebuffer::getColorAttachments
 {
     return (_colorAttachments);
 }
+
+std::vector<std::unique_ptr<Texture> >&   Framebuffer::getColorAttachments()
+{
+    return (_colorAttachments);
+}
