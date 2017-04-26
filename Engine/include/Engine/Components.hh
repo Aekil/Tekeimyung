@@ -286,12 +286,47 @@ virtual void update(sParticleEmitterComponent* component)
     this->sizeStartVariance = component->sizeStartVariance;
     this->sizeFinishVariance = component->sizeFinishVariance;
 
-    this->texture = component->texture;
+    this->displayOnlyParticles = component->displayOnlyParticles;
+
+    this->modelFile = component->modelFile;
+    this->type = component->type;
+    if (component->_modelInstance)
+    {
+        this->_modelInstance = std::make_unique<ModelInstance>(*component->_modelInstance);
+    }
 }
 
 virtual void update(sComponent* component)
 {
     update(static_cast<sParticleEmitterComponent*>(component));
+}
+
+void initModelInstance()
+{
+    if (type == Geometry::eType::MESH)
+    {
+        Model* model = ResourceManager::getInstance()->getResource<Model>(modelFile);
+        _modelInstance = std::make_unique<ModelInstance>(model);
+    }
+    else
+    {
+        Model* model = GeometryFactory::getGeometry(type);
+        _modelInstance = std::make_unique<ModelInstance>(model);
+    }
+}
+
+ModelInstance* getModelInstance()
+{
+    if (!_modelInstance)
+        initModelInstance();
+    return _modelInstance.get();
+}
+
+const Model* getModel()
+{
+    if (!_modelInstance)
+        initModelInstance();
+    return _modelInstance->getModel();
 }
 
 // Spawn particles each rate second
@@ -325,8 +360,13 @@ float sizeFinish;
 float sizeStartVariance;
 float sizeFinishVariance;
 
-// Particles texture
-std::string texture;
+// Particles model
+std::string modelFile;
+Geometry::eType type;
+std::unique_ptr<ModelInstance> _modelInstance = nullptr;
+
+// Set this boolean to display only particles, not the sRenderComponent
+bool displayOnlyParticles = true;
 END_COMPONENT(sParticleEmitterComponent)
 
 START_COMPONENT(sNameComponent)

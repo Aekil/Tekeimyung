@@ -125,13 +125,16 @@ void    RenderingSystem::addParticlesToRenderQueue(EntityManager& em, float elap
 
         sUiComponent* uiComponent = entity->getComponent<sUiComponent>();
         sRenderComponent *render = entity->getComponent<sRenderComponent>();
-        auto&& model = render->getModelInstance();
+        sParticleEmitterComponent *emitterComp = entity->getComponent<sParticleEmitterComponent>();
+        auto&& model = emitterComp->getModelInstance();
 
         if (!model || !render->_display)
             continue;
 
         // Update animation
-        if (render->_animator.isPlaying())
+        if (emitterComp->displayOnlyParticles && // If the sRenderComponent is also displayed, the animation will
+                                                 // already be updated in sRenderComponent render loop
+            render->_animator.isPlaying())
         {
             sTransformComponent* transform = entity->getComponent<sTransformComponent>();
 
@@ -167,7 +170,7 @@ void    RenderingSystem::addParticlesToRenderQueue(EntityManager& em, float elap
                                     0,
                                     emitter->buffer->size,
                                     emitter->particlesNb,
-                                    render->dynamic,
+                                    false,
                                     true);
     }
 }
@@ -328,8 +331,10 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
     #endif
 
     forEachEntity(em, [&](Entity *entity) {
-        // Don't display particle systems
-        if (!entity->getComponent<sParticleEmitterComponent>())
+        sParticleEmitterComponent* particleEmitterComp = entity->getComponent<sParticleEmitterComponent>();
+        // Display the sRenderComponent only if there is no sParticleEmitterComponent
+        // Or if the user want to render both sRenderComponent and sParticleEmitterComponent
+        if (!particleEmitterComp || !particleEmitterComp->displayOnlyParticles)
         {
             sRenderComponent *render = entity->getComponent<sRenderComponent>();
             sTransformComponent* transform = entity->getComponent<sTransformComponent>();
