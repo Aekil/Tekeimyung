@@ -122,8 +122,6 @@ bool    Engine::run(int ac, char** av, std::shared_ptr<GameState> startGameState
                 }
             }
 
-            ImGui::ShowTestWindow();
-
             _renderer->endFrame();
         }
     }

@@ -10,10 +10,15 @@
 #include <Engine/Utils/Exception.hpp>
 #include <Engine/Utils/JsonWriter.hpp>
 #include <Engine/Utils/ResourceManager.hpp>
+#include <Engine/Window/GameWindow.hpp>
 
 #include <Engine/Debug/MaterialDebugWindow.hpp>
 
-MaterialDebugWindow::MaterialDebugWindow() : DebugWindow("Materials") {}
+MaterialDebugWindow::MaterialDebugWindow() : DebugWindow("Materials")
+{
+    this->_size.x = GameWindow::getInstance()->getBufferWidth() - 500;
+    this->_size.y = GameWindow::getInstance()->getBufferHeight() - 300;
+}
 
 MaterialDebugWindow::MaterialDebugWindow(const ImVec2& pos, const ImVec2& size) :
     DebugWindow("Materials", pos, size) {}
@@ -49,6 +54,8 @@ void    MaterialDebugWindow::build(std::shared_ptr<GameState> gameState, float e
     }
 
     this->displayMaterialsList();
+    ImGui::SameLine();
+    this->populateInspector();
     ImGui::End();
 }
 
@@ -63,8 +70,7 @@ void    MaterialDebugWindow::populateInspector()
 
 void    MaterialDebugWindow::displayMaterialsList()
 {
-    //ImGui::BeginChild("Materials list", ImVec2(_size.x * 40.0f / 100.0f, 0), true);
-    ImGui::BeginChild("Materials list");
+    ImGui::BeginChild("Materials list", ImVec2(_size.x * 40.0f / 100.0f, 0), true);
     auto& materialNames = ResourceManager::getInstance()->getResourcesNames<Material>();
     for (const char* materialName: materialNames)
     {
@@ -80,7 +86,7 @@ void    MaterialDebugWindow::displayMaterialsList()
 
 void    MaterialDebugWindow::displayMaterialsProperties()
 {
-    ImGui::BeginChild("Properties");
+    ImGui::BeginChild("Properties", ImVec2(300, 0), false);
 
     ImGui::Text("Material name:\t%s", this->_selectedMaterialName);
     ImGui::Separator();

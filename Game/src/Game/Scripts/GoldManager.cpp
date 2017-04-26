@@ -2,7 +2,7 @@
 ** @Author : Julien CHARDON
 */
 
-#include <Engine/Utils/Logger.hpp>
+#include <Engine/Debug/Logger.hpp>
 
 #include <Game/Scripts/GoldManager.hpp>
 
