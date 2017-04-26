@@ -33,7 +33,13 @@ public:
     std::unique_ptr<Texture>                    generateTextureFromModel(sRenderComponent* renderComponent,
                                                                         uint32_t width,
                                                                         uint32_t height);
-
+    std::unique_ptr<Texture>                    generateTextureFromModel(const std::string& entityName,
+                                                                        uint32_t width,
+                                                                        uint32_t height);
+    void                                        renderModelOnPlane(const std::string& modelEntityName,
+                                                                    const std::string& planeEntityName,
+                                                                    uint32_t width,
+                                                                    uint32_t height);
 private:
     void                                        initialize();
 
@@ -48,4 +54,8 @@ private:
     RenderQueue                                 _2DRenderQueue;
     Camera                                      _2DRenderCamera;
     Light                                       _2DRenderLight;
+
+    // Store the textures rendered in Model2DRenderer::renderModelOnPlane
+    // We need to do this because we give the pointer to the plane material
+    std::vector<std::unique_ptr<Texture>>       _renderedTextures;
 };

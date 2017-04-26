@@ -5,6 +5,7 @@
 #include <glm/gtc/type_ptr.hpp> // glm::value_ptr
 
 #include <Engine/Components.hh>
+#include <Engine/EntityFactory.hpp>
 #include <Engine/Graphics/Model2DRenderer.hpp>
 #include <Engine/Graphics/Renderer.hpp>
 
@@ -150,4 +151,61 @@ std::unique_ptr<Texture>    Model2DRenderer::generateTextureFromModel(sRenderCom
     _2DFramebuffer.removeColorAttachments();
 
     return (texture);
+}
+
+std::unique_ptr<Texture>    Model2DRenderer::generateTextureFromModel(const std::string& entityName,
+                                                                        uint32_t width,
+                                                                        uint32_t height)
+{
+    auto em = EntityFactory::getBindedEntityManager();
+    Entity* entity = EntityFactory::createEntity(entityName);
+
+    sRenderComponent* entityRender = entity->getComponent<sRenderComponent>();
+    if (!entityRender)
+    {
+        LOG_ERROR("Model2DRenderer::generateTextureFromModel : the entity has no sRenderComponent", entityName.c_str());
+        return (nullptr);
+    }
+
+    std::unique_ptr<Texture> texture = Model2DRenderer::getInstance()->generateTextureFromModel(entityRender, width, height);
+
+    // Destroy the entity, we don't need it anymore
+    em->destroyEntityRegister(entity);
+
+    return (texture);
+}
+
+void    Model2DRenderer::renderModelOnPlane(const std::string& modelEntityName,
+                                                                const std::string& planeEntityName,
+                                                                uint32_t width,
+                                                                uint32_t height)
+{
+    auto em = EntityFactory::getBindedEntityManager();
+    Entity* planeEntity = em->getEntityByTag(planeEntityName);
+    if (!planeEntity)
+    {
+        LOG_ERROR("Model2DRenderer::renderModelOnPlane : Plane entity not found in current EntityManager");
+        return;
+    }
+
+    sRenderComponent* planeEntityRender = planeEntity->getComponent<sRenderComponent>();
+    if (!planeEntityRender)
+    {
+        LOG_ERROR("Model2DRenderer::renderModelOnPlane : Can't get sRenderComponent on plane entity %s", planeEntityName.c_str());
+        return;
+    }
+
+    ModelInstance* planeEntityModelInstance = planeEntityRender->getModelInstance();
+    if (!planeEntityModelInstance->getMeshsInstances().size())
+    {
+        LOG_ERROR("Model2DRenderer::renderModelOnPlane : The plane entity %s has no mesh", planeEntityName.c_str());
+        return;
+    }
+
+    std::unique_ptr<Texture> texture = Model2DRenderer::getInstance()->generateTextureFromModel(modelEntityName, width, height);
+    // Let Model2DRenderer own the texture
+    _renderedTextures.push_back(std::move(texture));
+
+    planeEntityModelInstance->getMeshsInstances()[0]->getMaterial()->setTexture(Texture::eType::DIFFUSE, _renderedTextures.back().get());
+    planeEntityModelInstance->getMeshsInstances()[0]->getMaterial()->setTexture(Texture::eType::AMBIENT, _renderedTextures.back().get());
 }
