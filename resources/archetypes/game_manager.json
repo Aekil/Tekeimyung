@@ -6,9 +6,48 @@
       "sScriptComponent" : {
          "scripts" : [
             {
+               "map_name" : "",
                "name" : "GameManager"
             },
             {
+               "map_parts" : [
+                  {
+                     "map_part" : 0
+                  },
+                  {
+                     "map_part" : 0
+                  },
+                  {
+                     "map_part" : 0
+                  },
+                  {
+                     "map_part" : 0
+                  },
+                  {
+                     "map_part" : 0
+                  },
+                  {
+                     "map_part" : 0
+                  },
+                  {
+                     "map_part" : 0
+                  },
+                  {
+                     "map_part" : 0
+                  },
+                  {
+                     "map_part" : 0
+                  },
+                  {
+                     "map_part" : 0
+                  },
+                  {
+                     "map_part" : 0
+                  },
+                  {
+                     "map_part" : 0
+                  }
+               ],
                "name" : "WaveManager",
                "waves_max" : 12
             },

@@ -11,8 +11,8 @@
 #include <ECS/Entity.hpp>
 
 #include <Engine/Utils/Exception.hpp>
-#include <Engine/Utils/Logger.hpp>
-#include <Engine/Utils/Debug.hpp>
+#include <Engine/Debug/Logger.hpp>
+#include <Engine/Debug/Debug.hpp>
 #include <Engine/Components.hh>
 #include <Engine/Utils/JsonValue.hpp>
 
@@ -183,7 +183,12 @@ public:
     sComponent* loadFromJson(const std::string& entityType, const JsonValue& json) override final;
     JsonValue& saveToJson(const std::string& entityType, const sComponent* savedComponent = nullptr, JsonValue* toJson = nullptr) override final;
 
+    static void     loadModelMaterialsFromJson(const std::string& entityType, ModelInstance* modelInstance, const JsonValue& json);
+    static void     saveModelMaterialsFromJson(ModelInstance* modelInstance, JsonValue& json);
+    static void     updateMaterialsEditor(ModelInstance* modelInstance);
+
 private:
+
     void            loadTranslateParamAnimation(std::shared_ptr<ParamAnimation<glm::vec3>> paramAnimation, JsonValue& json);
     void            loadColorParamAnimation(std::shared_ptr<ParamAnimation<glm::vec4>> paramAnimation, JsonValue& json);
 
@@ -191,7 +196,6 @@ private:
     void            saveColorParamAnimation(std::shared_ptr<IParamAnimation> paramAnimation_, JsonValue& json);
 
     bool            updateEditor(const std::string& entityType, sComponent** savedComponent, sComponent* entityComponent, Entity* entity) override final;
-    bool            updateMaterialsEditor(sRenderComponent* component, Entity* entity);
     bool            updateAnimationsEditor(sRenderComponent* component, Entity* entity);
     bool            updateParamsAnimationsEditor(AnimationPtr playedAnimation, Entity* entity);
     bool            updateAnimationParamTranslate(Entity* entity, std::shared_ptr<IParamAnimation> paramAnimation_, uint32_t& frameNb);

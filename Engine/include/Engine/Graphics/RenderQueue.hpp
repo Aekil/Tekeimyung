@@ -12,7 +12,7 @@
 #include <Engine/Graphics/ModelInstance.hpp>
 #include <Engine/Graphics/UI/Text.hpp>
 #include <Engine/Graphics/UniformBuffer.hpp>
-#include <Engine/Utils/Logger.hpp>
+#include <Engine/Debug/Logger.hpp>
 
 #define MAX_RENDERABLE_MESHS 4000
 #define MAX_LIGHTS 50

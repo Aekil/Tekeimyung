@@ -2,7 +2,7 @@
 * @Author   Guillaume Labey
 */
 
-#include <Engine/Utils/Debug.hpp>
+#include <Engine/Debug/Debug.hpp>
 #include <Engine/Utils/ResourceManager.hpp>
 
 #include <Engine/Graphics/Geometries/Cylinder.hpp>

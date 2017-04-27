@@ -20,10 +20,13 @@
                "r" : 1
             }
          },
+         "display_only_particles" : true,
          "emitter_life" : 0,
          "life" : 42,
          "life_variance" : 15,
+         "materials" : [ "icon_selected.mat" ],
          "max_particles" : 50,
+         "model" : "resources/models/default.DAE",
          "rate" : 0,
          "size" : {
             "finish" : 0,
@@ -34,7 +37,8 @@
          "spawn_nb" : 1,
          "speed" : 50,
          "speed_variance" : 0,
-         "texture" : ""
+         "texture" : "",
+         "type" : "PLANE"
       },
       "sRenderComponent" : {
          "animated" : false,

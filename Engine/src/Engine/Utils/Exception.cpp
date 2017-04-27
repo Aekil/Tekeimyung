@@ -4,7 +4,7 @@
 
 #include <sstream>
 
-#include <Engine/Utils/Logger.hpp>
+#include <Engine/Debug/Logger.hpp>
 
 #include <Engine/Utils/Exception.hpp>
 

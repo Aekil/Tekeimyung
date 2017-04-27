@@ -8,7 +8,7 @@
 #include <Engine/Window/GameWindow.hpp>
 #include <Engine/Physics/Collisions.hpp>
 #include <Engine/Graphics/Geometries/Geometry.hpp>
-#include <Engine/Utils/Logger.hpp>
+#include <Engine/Debug/Logger.hpp>
 
 #include <Engine/Components.hh>
 #include <Engine/EntityFactory.hpp>

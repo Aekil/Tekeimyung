@@ -3,7 +3,7 @@
 */
 
 #include <Engine/Utils/File.hpp>
-#include <Engine/Utils/Logger.hpp>
+#include <Engine/Debug/Logger.hpp>
 #include <Engine/Utils/ResourceManager.hpp>
 
 #include <Engine/Utils/JsonWriter.hpp>

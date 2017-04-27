@@ -24,6 +24,9 @@ private:
     EntityManager*  _em;
     const Entity*   _gameManager;
     const Entity*   _waveHudDisplay;
+
+    int             _tmpNbWaves = 0;
+    int             _tmpcurrentWave = 0;
 };
 
 REGISTER_SCRIPT(HudDisplayWave);

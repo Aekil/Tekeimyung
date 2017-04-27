@@ -20,10 +20,13 @@
                "r" : 1
             }
          },
+         "display_only_particles" : true,
          "emitter_life" : 0.21500000357627869,
          "life" : 14,
          "life_variance" : 8,
+         "materials" : [ "MAT_Default" ],
          "max_particles" : 50,
+         "model" : "resources/models/default.DAE",
          "rate" : 0,
          "size" : {
             "finish" : 1,
@@ -34,7 +37,8 @@
          "spawn_nb" : 1,
          "speed" : 119.35500335693359,
          "speed_variance" : 150.53800964355469,
-         "texture" : "resources/sprites/particles/particle_circle.png"
+         "texture" : "resources/sprites/particles/particle_circle.png",
+         "type" : "MESH"
       },
       "sTransformComponent" : {
          "pos" : {

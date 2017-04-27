@@ -30,6 +30,7 @@ public:
     bool                        isComplete() const;
 
     const std::vector<std::unique_ptr<Texture> >& getColorAttachments() const;
+    std::vector<std::unique_ptr<Texture> >& getColorAttachments();
 
 private:
     void                        setAttachment(GLuint attachmentId, std::unique_ptr<Texture>& texture);

@@ -1,6 +1,6 @@
 #include <algorithm>
 
-#include <Engine/Utils/Logger.hpp>
+#include <Engine/Debug/Logger.hpp>
 
 #include <Game/Attibutes/Attribute.hpp>
 

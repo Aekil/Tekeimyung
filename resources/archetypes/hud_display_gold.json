@@ -33,14 +33,16 @@
             "g" : 0.78431373834609985,
             "r" : 0.78431373834609985
          },
-         "content" : "X Golds",
+         "content" : "X",
          "font_name" : "moonhouse.ttf",
-         "font_size" : 22
+         "font_size" : 22,
+         "horizontal_alignment" : "RIGHT",
+         "vertical_alignment" : "MIDDLE"
       },
       "sTransformComponent" : {
          "pos" : {
-            "x" : 1670.0579833984375,
-            "y" : 921.06793212890625,
+            "x" : 960,
+            "y" : 142.3800048828125,
             "z" : 0
          },
          "rotation" : {
@@ -58,18 +60,18 @@
          "type" : "TILE_WALKABLE"
       },
       "sUiComponent" : {
-         "horizontal_alignment" : "RIGHT",
+         "horizontal_alignment" : "MIDDLE",
          "layer" : 0,
          "offset" : {
-            "x" : 10,
-            "y" : 8
+            "x" : 0,
+            "y" : -36
          },
          "percentage_size" : false,
          "size" : {
             "x" : 0.10000000149011612,
             "y" : 0.10000000149011612
          },
-         "vertical_alignment" : "TOP"
+         "vertical_alignment" : "MIDDLE"
       }
    },
    "name" : "HUD_DISPLAY_GOLD",

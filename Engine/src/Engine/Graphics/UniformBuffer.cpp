@@ -5,7 +5,7 @@
 #include <cstring>
 
 #include <Engine/Graphics/UniformBuffer.hpp>
-#include <Engine/Utils/Logger.hpp>
+#include <Engine/Debug/Logger.hpp>
 
 UniformBuffer::UniformBuffer(): _UBO(0), _bindingPoint(0), _init(false), _size(0)
 {
@@ -75,4 +75,14 @@ void    UniformBuffer::bind(uint32_t offset, uint32_t size)
 void    UniformBuffer::setBindingPoint(uint16_t bindingPoint)
 {
     _bindingPoint = bindingPoint;
+}
+
+bool    UniformBuffer::isInit() const
+{
+    return (_init);
+}
+
+uint32_t    UniformBuffer::getSize() const
+{
+    return (_size);
 }

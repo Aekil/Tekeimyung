@@ -109,8 +109,7 @@ sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& 
     component->dynamic = json.getBool("dynamic", false);
     component->hideDynamic = json.getBool("hide_dynamic", false);
 
-    std::string geometryName = json.getString("type", "MESH");
-    component->type = EnumManager<Geometry::eType>::stringToEnum(geometryName);
+    component->type = EnumManager<Geometry::eType>::stringToEnum(json.getString("type", "MESH"));
 
     // Load animations
     {
@@ -158,36 +157,72 @@ sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& 
         }
     }
 
-    // Load materials
-    {
-        // Init model instance
-        ModelInstance* modelInstance = component->getModelInstance();
-
-        std::vector<std::string> materials = json.getStringVec("materials", {});
-
-        uint32_t meshsNb = (uint32_t)modelInstance->getModel()->getMeshs().size();
-        uint32_t i = 0;
-        for (const std::string& materialName: materials)
-        {
-            if (i >= meshsNb)
-            {
-                break;
-            }
-
-            Material* material = ResourceManager::getInstance()->getResource<Material>(materialName);
-            if (!material)
-            {
-                LOG_WARN("%s::sRenderComponent loadFromJson error: can't find material %s, the default material will be used ", entityType.c_str(), materialName.c_str());
-                material = ResourceManager::getInstance()->getResource<Material>("geometry_default.mat");
-
-                ASSERT(material != nullptr, "The material geometry_default.mat should exist")
-            }
-
-            modelInstance->getMeshsInstances()[i++]->setMaterial(material);
-        }
-    }
+    ComponentFactory<sRenderComponent>::loadModelMaterialsFromJson(entityType, component->getModelInstance(), json);
 
     return (component);
+}
+
+void    ComponentFactory<sRenderComponent>::loadModelMaterialsFromJson(const std::string& entityType, ModelInstance* modelInstance, const JsonValue& json)
+{
+    std::vector<std::string> materials = json.getStringVec("materials", {});
+
+    uint32_t meshsNb = (uint32_t)modelInstance->getModel()->getMeshs().size();
+    uint32_t i = 0;
+    for (const std::string& materialName: materials)
+    {
+        if (i >= meshsNb)
+        {
+            break;
+        }
+
+        Material* material = ResourceManager::getInstance()->getResource<Material>(materialName);
+        if (!material)
+        {
+            LOG_WARN("%s::sRenderComponent loadFromJson error: can't find material %s, the default material will be used ", entityType.c_str(), materialName.c_str());
+            material = ResourceManager::getInstance()->getResource<Material>("geometry_default.mat");
+
+            ASSERT(material != nullptr, "The material geometry_default.mat should exist")
+        }
+
+        modelInstance->getMeshsInstances()[i++]->setMaterial(material);
+    }
+}
+
+void    ComponentFactory<sRenderComponent>::saveModelMaterialsFromJson(ModelInstance* modelInstance, JsonValue& json)
+{
+    std::vector<std::string> materialsNames;
+
+    auto& meshsInstances = modelInstance->getMeshsInstances();
+    for (auto& meshInstance: meshsInstances)
+    {
+        Material* material = meshInstance->getMaterial();
+        ASSERT(material != nullptr, "A mesh instance should have a material");
+        materialsNames.push_back(material->getId());
+    }
+
+    json.setStringVec("materials", materialsNames);
+}
+
+void    ComponentFactory<sRenderComponent>::updateMaterialsEditor(ModelInstance* modelInstance)
+{
+    ImGui::Text("\n");
+    ImGui::Text("Materials");
+
+    auto& meshsInstances = modelInstance->getMeshsInstances();
+    uint32_t i = 0;
+    for (auto& meshInstance: meshsInstances)
+    {
+        ImGui::PushID(i++);
+        Material* material = meshInstance->getMaterial();
+        ASSERT(material != nullptr, "A mesh instance should have a material");
+
+        std::string materialName = material->getId();
+        if (Helper::updateComboString("mat", ResourceManager::getInstance()->getResourcesNames<Material>(), materialName))
+        {
+            meshInstance->setMaterial(ResourceManager::getInstance()->getResource<Material>(materialName));
+        }
+        ImGui::PopID();
+    }
 }
 
 void    ComponentFactory<sRenderComponent>::loadTranslateParamAnimation(std::shared_ptr<ParamAnimation<glm::vec3>> paramAnimation, JsonValue& json)
@@ -279,20 +314,7 @@ JsonValue&    ComponentFactory<sRenderComponent>::saveToJson(const std::string& 
         json.setValueVec("animations", animations);
     }
 
-    // Save materials
-    {
-        std::vector<std::string> materialsNames;
-
-        auto& meshsInstances = const_cast<sRenderComponent*>(component)->getModelInstance()->getMeshsInstances();
-        for (auto& meshInstance: meshsInstances)
-        {
-            Material* material = meshInstance->getMaterial();
-            ASSERT(material != nullptr, "A mesh instance should have a material");
-            materialsNames.push_back(material->getId());
-        }
-
-        json.setStringVec("materials", materialsNames);
-    }
+    ComponentFactory<sRenderComponent>::saveModelMaterialsFromJson(const_cast<sRenderComponent*>(component)->getModelInstance(), json);
 
     return (json);
 }
@@ -342,66 +364,32 @@ bool    ComponentFactory<sRenderComponent>::updateEditor(const std::string& enti
     sRenderComponent* component = static_cast<sRenderComponent*>(entityComponent ? entityComponent : _components[entityType]);
     *savedComponent = component;
     bool changed = false;
-    bool typeChanged = false;
-    bool modelChanged = false;
 
     changed |= ImGui::ColorEdit4("color", glm::value_ptr(component->color));
     changed |= ImGui::Checkbox("Ignore mouse raycast", &component->ignoreRaycast);
     changed |= ImGui::Checkbox("Dynamic", &component->dynamic);
     changed |= ImGui::Checkbox("Hide dynamic", &component->hideDynamic);
-    typeChanged |= Helper::updateComboEnum<Geometry::eType>("Model type", component->type);
+
+    if (Helper::updateComboEnum<Geometry::eType>("Model type", component->type))
+    {
+        component->_modelInstance = nullptr;
+    }
 
     if (component->type == Geometry::eType::MESH)
     {
-        static ResourceManager* resourceManager = ResourceManager::getInstance();
-        static std::vector<const char*>& modelsString = const_cast<std::vector<const char*>&>(resourceManager->getResourcesNames<Model>());
-        auto model = resourceManager->getOrLoadResource<Model>(component->modelFile);
-        int selectedModel = static_cast<int>(std::find(modelsString.cbegin(), modelsString.cend(), model->getId()) - modelsString.begin());
-        const char** modelsList = modelsString.data();
-
-        if (ImGui::ListBox("model", &selectedModel, modelsList, (int)resourceManager->getResourcesNames<Model>().size(), 4))
+        std::string modelName = component->getModel()->getId();
+        if (Helper::updateComboString("model", ResourceManager::getInstance()->getResourcesNames<Model>(), modelName))
         {
-            modelChanged = true;
-            model = resourceManager->getOrLoadResource<Model>(modelsString[selectedModel]);
+            component->_modelInstance = nullptr;
+            auto model = ResourceManager::getInstance()->getOrLoadResource<Model>(modelName);
             component->modelFile = model->getPath();
         }
     }
 
-    changed |= typeChanged || modelChanged;
-
-    if (typeChanged || modelChanged)
-    {
-        // Remove the model to auto reload the new model
-        component->_modelInstance = nullptr;
-    }
-
-    updateMaterialsEditor(component, entity);
+    ComponentFactory<sRenderComponent>::updateMaterialsEditor(component->getModelInstance());
     updateAnimationsEditor(component, entity);
 
     return (changed);
-}
-
-bool    ComponentFactory<sRenderComponent>::updateMaterialsEditor(sRenderComponent* component, Entity* entity)
-{
-    ImGui::Text("\n");
-    ImGui::Text("Materials");
-
-    auto& meshsInstances = component->getModelInstance()->getMeshsInstances();
-    uint32_t i = 0;
-    for (auto& meshInstance: meshsInstances)
-    {
-        ImGui::PushID(i++);
-        Material* material = meshInstance->getMaterial();
-        ASSERT(material != nullptr, "A mesh instance should have a material");
-
-        std::string materialName = material->getId();
-        if (Helper::updateComboString("mat", ResourceManager::getInstance()->getResourcesNames<Material>(), materialName))
-        {
-            meshInstance->setMaterial(ResourceManager::getInstance()->getResource<Material>(materialName));
-        }
-        ImGui::PopID();
-    }
-    return (false);
 }
 
 bool    ComponentFactory<sRenderComponent>::updateAnimationsEditor(sRenderComponent* component, Entity* entity)
@@ -962,7 +950,12 @@ sComponent* ComponentFactory<sParticleEmitterComponent>::loadFromJson(const std:
         component->sizeFinishVariance = 0.0f;
     }
 
-    component->texture = json.getString("texture", "");
+    component->displayOnlyParticles = json.getBool("display_only_particles", true);
+    component->modelFile = json.getString("model", "resources/models/default.DAE");
+
+    component->type = EnumManager<Geometry::eType>::stringToEnum(json.getString("type", "MESH"));
+
+    ComponentFactory<sRenderComponent>::loadModelMaterialsFromJson(entityType, component->getModelInstance(), json);
 
     return (component);
 }
@@ -996,7 +989,10 @@ JsonValue&    ComponentFactory<sParticleEmitterComponent>::saveToJson(const std:
     json.setFloat("speed", component->speed);
     json.setFloat("speed_variance", component->speedVariance);
 
-    json.setString("texture", component->texture);
+    json.setBool("display_only_particles", component->displayOnlyParticles);
+    json.setString("model", component->modelFile);
+    json.setString("type", EnumManager<Geometry::eType>::enumToString(component->type));
+    ComponentFactory<sRenderComponent>::saveModelMaterialsFromJson(const_cast<sParticleEmitterComponent*>(component)->getModelInstance(), json);
 
     return (json);
 }
@@ -1006,7 +1002,25 @@ bool    ComponentFactory<sParticleEmitterComponent>::updateEditor(const std::str
     sParticleEmitterComponent* component = static_cast<sParticleEmitterComponent*>(entityComponent ? entityComponent : _components[entityType]);
     *savedComponent = component;
     bool changed = false;
-    char*   textureString = &component->texture[0];
+
+    changed |= ImGui::Checkbox("Display only particles", &component->displayOnlyParticles);
+    if (Helper::updateComboEnum<Geometry::eType>("Model type", component->type))
+    {
+        component->_modelInstance = nullptr;
+    }
+
+    if (component->type == Geometry::eType::MESH)
+    {
+        std::string modelName = component->getModel()->getId();
+        if (Helper::updateComboString("model", ResourceManager::getInstance()->getResourcesNames<Model>(), modelName))
+        {
+            component->_modelInstance = nullptr;
+            auto model = ResourceManager::getInstance()->getOrLoadResource<Model>(modelName);
+            component->modelFile = model->getPath();
+        }
+    }
+    ComponentFactory<sRenderComponent>::updateMaterialsEditor(component->getModelInstance());
+    ImGui::Text("\n");
 
     //changed |= ImGui::InputText("Texture string", &(component->texture[0]), sizeof(char*));
     changed |= ImGui::SliderFloat("Emitter life (0 to disable)", &component->emitterLife, 0.0f, 10.0f);
@@ -1168,6 +1182,7 @@ sComponent* ComponentFactory<sButtonComponent>::loadFromJson(const std::string& 
 
     component->action = EnumManager<sButtonComponent::eAction>::stringToEnum(json.getString("action", "NONE"));
     component->actionLevel = json.getString("action_level", "");
+    component->removeStates = json.getUInt("remove_states", 0);
 
     return component;
 }
@@ -1179,6 +1194,7 @@ JsonValue&    ComponentFactory<sButtonComponent>::saveToJson(const std::string& 
 
     json.setString("action", EnumManager<sButtonComponent::eAction>::enumToString(component->action));
     json.setString("action_level", component->actionLevel);
+    json.setUInt("remove_states", component->removeStates);
 
     return (json);
 }
@@ -1190,6 +1206,13 @@ bool    ComponentFactory<sButtonComponent>::updateEditor(const std::string& enti
     bool changed = false;
 
     changed |= Helper::updateComboEnum<sButtonComponent::eAction>("Action", component->action);
+
+    int removeStates = component->removeStates;
+    if (ImGui::InputInt("Remove states before action", &removeStates))
+    {
+        removeStates = std::max(removeStates, 0);
+        component->removeStates = removeStates;
+    }
 
     if (component->action == sButtonComponent::eAction::ADD_LEVEL ||
         component->action == sButtonComponent::eAction::REPLACE_CURRENT_LEVEL)
@@ -1435,6 +1458,8 @@ sComponent* ComponentFactory<sTextComponent>::loadFromJson(const std::string& en
     component->text.setContent(json.getString("content", ""));
     component->text.setColor(json.getColor4f("color", {1.0f, 1.0f, 1.0f, 1.0f}));
     component->text.setFontSize(json.getUInt("font_size", 10));
+    component->horizontalAlignment = EnumManager<eHorizontalAlignment>::stringToEnum(json.getString("horizontal_alignment", "MIDDLE"));
+    component->verticalAlignment = EnumManager<eVerticalAlignment>::stringToEnum(json.getString("vertical_alignment", "MIDDLE"));
 
     // Load text font
     {
@@ -1461,6 +1486,8 @@ JsonValue&    ComponentFactory<sTextComponent>::saveToJson(const std::string& en
     json.setString("content", component->text.getContent());
     json.setColor4f("color", component->text.getColor());
     json.setUInt("font_size", component->text.getFontSize());
+    json.setString("horizontal_alignment", EnumManager<eHorizontalAlignment>::enumToString(component->horizontalAlignment));
+    json.setString("vertical_alignment", EnumManager<eVerticalAlignment>::enumToString(component->verticalAlignment));
 
     if (component->text.getFont())
     {

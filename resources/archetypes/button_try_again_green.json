@@ -2,7 +2,8 @@
    "components" : {
       "sButtonComponent" : {
          "action" : "REPLACE_CURRENT_LEVEL",
-         "action_level" : "Game"
+         "action_level" : "Game",
+         "remove_states" : 0
       },
       "sNameComponent" : {
          "name" : "BUTTON_TRY_AGAIN_GREEN"

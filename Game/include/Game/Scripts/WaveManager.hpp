@@ -6,11 +6,11 @@
 
 #include    <Engine/Core/BaseScript.hpp>
 #include    <Engine/Core/ScriptFactory.hpp>
+
 #include    <Game/Scripts/ProgressBar.hpp>
+#include    <Game/Scripts/GoldManager.hpp>
 
 #define WAVE_MANAGER_TAG    "WaveManager"
-
-class       Build;
 
 class       WaveManager final : public BaseScript
 {
@@ -34,13 +34,12 @@ public:
     WaveManager() = default;
     ~WaveManager() override final = default;
 
+    //  BaseScript.hpp override functions
 public:
     void    start() override final;
     void    update(float dt) override final;
 
-    int     getCurrentWave() const;
-    int     getNbWaves() const;
-    eState  getManagerState() const;
+    void    setTutorialIsFinished(bool);
 
     //  Json serialization & ImGui edition.
 public:
@@ -48,7 +47,14 @@ public:
     JsonValue   saveToJson() override final;
     void        loadFromJson(const JsonValue& json) override final;
 
+public:
+    int     getCurrentWave() const;
+    int     getNbWaves() const;
+    eState  getManagerState() const;
+
 private:
+    void    retrieveGoldManager();
+
     void    startWave(uint32_t wave);
     bool    checkEndWave();
     bool    isGameOver();
@@ -69,9 +75,11 @@ private:
     eState          _state;
     eBoardState    _boardState;
 
-    ProgressBar    _progressBar;
-    Build* _playerBuild;
-    std::vector<int> _mapParts;
+    ProgressBar         _progressBar;
+    std::vector<int>    _mapParts;
+
+    GoldManager*        _goldManager = nullptr;
+    bool                _tutorialIsFinished = false;
 };
 
 REGISTER_SCRIPT(WaveManager);

@@ -1,0 +1,61 @@
+{
+   "components" : {
+      "sButtonComponent" : {
+         "action" : "NONE",
+         "action_level" : "",
+         "remove_states" : 0
+      },
+      "sNameComponent" : {
+         "name" : "BUTTON_LEFT_CHEVRON"
+      },
+      "sRenderComponent" : {
+         "animated" : false,
+         "animations" : [],
+         "color" : {
+            "a" : 1,
+            "b" : 1,
+            "g" : 1,
+            "r" : 1
+         },
+         "dynamic" : false,
+         "hide_dynamic" : false,
+         "ignore_raycast" : false,
+         "materials" : [ "button_left_chevron.mat" ],
+         "model" : "resources/models/default.DAE",
+         "type" : "PLANE"
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 768,
+            "y" : 142.3800048828125,
+            "z" : 0
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "scale" : {
+            "x" : 7.5999932289123535,
+            "y" : 7.1566596031188965,
+            "z" : 1
+         }
+      },
+      "sUiComponent" : {
+         "horizontal_alignment" : "MIDDLE",
+         "layer" : 0,
+         "offset" : {
+            "x" : -10,
+            "y" : -36
+         },
+         "percentage_size" : true,
+         "size" : {
+            "x" : 0.039583299309015274,
+            "y" : 0.070370301604270935
+         },
+         "vertical_alignment" : "MIDDLE"
+      }
+   },
+   "name" : "BUTTON_LEFT_CHEVRON",
+   "tag" : ""
+}

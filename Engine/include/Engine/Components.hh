@@ -286,12 +286,47 @@ virtual void update(sParticleEmitterComponent* component)
     this->sizeStartVariance = component->sizeStartVariance;
     this->sizeFinishVariance = component->sizeFinishVariance;
 
-    this->texture = component->texture;
+    this->displayOnlyParticles = component->displayOnlyParticles;
+
+    this->modelFile = component->modelFile;
+    this->type = component->type;
+    if (component->_modelInstance)
+    {
+        this->_modelInstance = std::make_unique<ModelInstance>(*component->_modelInstance);
+    }
 }
 
 virtual void update(sComponent* component)
 {
     update(static_cast<sParticleEmitterComponent*>(component));
+}
+
+void initModelInstance()
+{
+    if (type == Geometry::eType::MESH)
+    {
+        Model* model = ResourceManager::getInstance()->getResource<Model>(modelFile);
+        _modelInstance = std::make_unique<ModelInstance>(model);
+    }
+    else
+    {
+        Model* model = GeometryFactory::getGeometry(type);
+        _modelInstance = std::make_unique<ModelInstance>(model);
+    }
+}
+
+ModelInstance* getModelInstance()
+{
+    if (!_modelInstance)
+        initModelInstance();
+    return _modelInstance.get();
+}
+
+const Model* getModel()
+{
+    if (!_modelInstance)
+        initModelInstance();
+    return _modelInstance->getModel();
 }
 
 // Spawn particles each rate second
@@ -325,8 +360,13 @@ float sizeFinish;
 float sizeStartVariance;
 float sizeFinishVariance;
 
-// Particles texture
-std::string texture;
+// Particles model
+std::string modelFile;
+Geometry::eType type;
+std::unique_ptr<ModelInstance> _modelInstance = nullptr;
+
+// Set this boolean to display only particles, not the sRenderComponent
+bool displayOnlyParticles = true;
 END_COMPONENT(sParticleEmitterComponent)
 
 START_COMPONENT(sNameComponent)
@@ -458,6 +498,9 @@ virtual sComponent* clone()
 virtual void update(sTextComponent* component)
 {
     this->text = component->text;
+    this->horizontalAlignment = component->horizontalAlignment;
+    this->verticalAlignment = component->verticalAlignment;
+    this->offset = component->offset;
 }
 
 virtual void update(sComponent* component)
@@ -513,6 +556,7 @@ virtual void update(sButtonComponent* component)
     this->hovered = component->hovered;
     this->action = component->action;
     this->actionLevel = component->actionLevel;
+    this->removeStates = component->removeStates;
 }
 
 virtual void update(sComponent* component)
@@ -524,6 +568,8 @@ bool        selected = false;
 bool        hovered = false;
 eAction     action = eAction::NONE;
 std::string actionLevel;
+// We can remove states before action
+uint32_t    removeStates = 0;
 END_COMPONENT(sButtonComponent)
 REGISTER_ENUM_MANAGER(sButtonComponent::eAction, BUTTON_ACTION);
 

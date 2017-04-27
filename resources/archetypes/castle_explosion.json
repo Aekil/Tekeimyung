@@ -20,10 +20,13 @@
                "r" : 0.43137255311012268
             }
          },
+         "display_only_particles" : true,
          "emitter_life" : 5,
          "life" : 60,
          "life_variance" : 0,
+         "materials" : [ "bloom_red.mat" ],
          "max_particles" : 210,
+         "model" : "resources/models/buildings/geometric_castle.DAE",
          "rate" : 0,
          "size" : {
             "finish" : 0.13400000333786011,
@@ -33,7 +36,8 @@
          },
          "speed" : 40.860000610351563,
          "speed_variance" : 20.430000305175781,
-         "texture" : ""
+         "texture" : "",
+         "type" : "MESH"
       },
       "sRenderComponent" : {
          "animated" : false,

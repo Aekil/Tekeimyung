@@ -3,7 +3,7 @@
 */
 
 #include <algorithm>
-#include <Engine/Utils/Logger.hpp>
+#include <Engine/Debug/Logger.hpp>
 
 #include <Engine/Graphics/Animator.hpp>
 

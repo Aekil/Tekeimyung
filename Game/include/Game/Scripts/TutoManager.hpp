@@ -12,6 +12,9 @@
 #include <Engine/Core/ScriptFactory.hpp>
 #include <Engine/Components.hh>
 
+class GoldManager;
+class WaveManager;
+
 #define TUTO_MANAGER_TAG    "TutoManager"
 
 enum class eTutoState: int
@@ -25,11 +28,11 @@ enum class eTutoState: int
     CHECK_HOWTOPLAY = 6,
     CHECK_BUILDLIST = 7,
     TUTO_DONE = 8,
-    TUTO_HIDDEN = 9
+    TUTO_WAVE = 9
 };
 
 eTutoState& operator++(eTutoState& state);
-eTutoState operator++(eTutoState& state, int);
+eTutoState  operator++(eTutoState& state, int);
 
 class TutoManager final : public BaseScript
 {
@@ -42,10 +45,13 @@ public:
     void update(float dt) override final;
     void sendMessage(eTutoState state);
 
-private:
-    sTextComponent*     _textComp = nullptr;
+    static void display(bool displayed);
 
-    eTutoState _currentState = eTutoState::MOVE;
+private:
+    WaveManager*        _waveManager;
+    GoldManager*        _goldManager;
+    sTextComponent*     _textComp = nullptr;
+    eTutoState          _currentState = eTutoState::MOVE;
 
     std::unordered_map<eTutoState, std::string> _statesMessages;
 };

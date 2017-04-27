@@ -7,7 +7,7 @@
 #include <glm/gtx/string_cast.hpp>
 
 #include <Engine/Window/GameWindow.hpp>
-#include <Engine/Utils/Logger.hpp>
+#include <Engine/Debug/Logger.hpp>
 
 #include <Engine/Components.hh>
 #include <Engine/EntityFactory.hpp>

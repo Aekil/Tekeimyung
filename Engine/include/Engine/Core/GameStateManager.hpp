@@ -9,7 +9,8 @@
 
 #include <ECS/EntityManager.hpp>
 #include <Engine/Core/GameState.hpp>
-#include <Engine/Utils/Debug.hpp>
+#include <Engine/Debug/Debug.hpp>
+#include <Engine/Debug/Logger.hpp>
 
 class GameState;
 
@@ -61,7 +62,11 @@ public:
     template<typename T>
     bool                                        replaceState(T gameState)
     {
-        removeCurrentState();
+        if (!removeCurrentState())
+        {
+            LOG_WARN("Can't replace state: there is no states in the stack");
+            return (false);
+        }
         return (addState(gameState));
     }
 
@@ -72,7 +77,7 @@ public:
         return (replaceState(gameState));
     }
 
-    void                                        removeCurrentState();
+    bool                                        removeCurrentState();
 
     std::shared_ptr<GameState>                  getCurrentState() const;
     bool                                        hasStates() const;
@@ -83,6 +88,7 @@ public:
     }
 
     void                                        clearStates();
+    void                                        removeLastStates(uint32_t nb);
 
 private:
     // States vector

@@ -19,8 +19,14 @@
 #include <Engine/Graphics/UniformBuffer.hpp>
 #include <Engine/Graphics/Texture.hpp>
 
+struct sRenderComponent;
+class Model2DRenderer;
+
 class Renderer
 {
+friend Camera;
+friend Model2DRenderer;
+
 public:
     Renderer();
     ~Renderer();
@@ -37,10 +43,13 @@ public:
     void                                endFrame();
     void                                render(Camera* camera, RenderQueue& renderQueue);
 
+    std::unique_ptr<Texture>            generateTextureFromModel(sRenderComponent* renderComponent, uint32_t width, uint32_t height);
+
 private:
     void                                sceneRenderPass(Camera* camera, RenderQueue& renderQueue);
     void                                transparencyPass(Camera* camera, RenderQueue& renderQueue);
-    void                                bloomPass();
+    void                                bloomPass(Texture* sceneColorAttachment,
+                                                    const std::vector<std::array<Framebuffer, 2>>& blurFrameBuffers);
     void                                finalBlendingPass();
     void                                renderOpaqueObjects(std::vector<sRenderableMesh>& meshs,
                                                             uint32_t meshsNb,
@@ -53,7 +62,11 @@ private:
     void                                renderTexts(std::vector<sRenderableText>& texts,
                                                                 uint32_t textsNb);
 
-    bool                                setupFrameBuffer();
+    bool                                setupFramebuffers(Framebuffer& framebuffer,
+                                                            std::vector<std::array<Framebuffer, 2>>& blurFrameBuffers,
+                                                            uint32_t width,
+                                                            uint32_t height);
+    bool                                setupMainFramebuffers();
     void                                setupShaderPrograms();
 
 private:
@@ -82,6 +95,7 @@ private:
 
     Camera*                             _currentCamera;
     Camera                              _UICamera;
+    Camera                              _defaultCamera;
 
     // Used when there is no light
     Light                               _defaultLight;
@@ -89,9 +103,17 @@ private:
     // Used for UI
     Light                               _UILight;
 
-    Framebuffer                         _frameBuffer;
-    Framebuffer                         _transparencyFrameBuffer;
+    Framebuffer                         _framebuffer;
+    Framebuffer                         _transparencyFramebuffer;
 
     // We have one frame buffer and two color attachments for each blur kernel size
     std::vector<std::array<Framebuffer, 2>>   _blurFramebuffers;
+
+
+    Framebuffer                         _2DFrameBuffer;
+    std::vector<std::array<Framebuffer, 2>> _2DBlurFramebuffers;
+    UniformBuffer                       _2DRenderBuffer;
+    RenderQueue                         _2DRenderQueue;
+    Camera                              _2DRenderCamera;
+    Light                               _2DRenderLight;
 };

@@ -11,61 +11,75 @@
 #include <Game/GameStates/DefeatScreenState.hpp>
 #include <Game/Scripts/GameManager.hpp>
 #include <Game/Scripts/Spawner.hpp>
+#include <Game/Scripts/TutoManager.hpp>
 #include <Game/Scripts/WaveManager.hpp>
 #include <Game/Scripts/Enemy.hpp>
 
 void        WaveManager::start()
 {
     auto    em = EntityFactory::getBindedEntityManager();
-
     this->_state = WaveManager::eState::STARTING;
     this->_boardState = WaveManager::eBoardState::IDLE;
-    this->_progressBar.currentProgress = 0.0f;
-    this->_progressBar.maxProgress = 5.0f;
-    this->_progressBar.init("TIMER_BAR_EMPTY", "TIMER_BAR");
-    this->_progressBar.display(false);
+    //this->_progressBar.currentProgress = 0.0f;
+    //this->_progressBar.maxProgress = 5.0f;
+    //this->_progressBar.init("TIMER_BAR_EMPTY", "TIMER_BAR");
+    //this->_progressBar.display(false);
     this->_mapParts.resize(this->_waves);
+    this->retrieveGoldManager();
 }
 
 void        WaveManager::update(float dt)
 {
     switch (this->_state)
     {
-        case eState::STARTING:
-            LOG_DEBUG("WaveManager's state: %s", "STARTING");
+    case eState::STARTING:
+        LOG_DEBUG("WaveManager's state: %s", "STARTING");
+        if (this->_tutorialIsFinished)
+        {
+            this->_goldManager->setGolds(STARTING_AMOUNT_OF_GOLD);
             this->_state = eState::PENDING_WAVE;
-            break;
-        case eState::PENDING_WAVE:
-            this->updateProgressBar(dt);
-            if (this->_progressBar.currentProgress <= 0.0f)
-            {
-                this->_progressBar.display(false);
-                //this->updatePlayerState(true, 1);
-                this->startWave(this->_currentWave + 1);
-                this->_state = eState::ONGOING_WAVE;
-                LOG_DEBUG("WaveManager's state: %s", "ONGOING_WAVE");
-            }
-            break;
-        case eState::ONGOING_WAVE:
-            if (this->checkBoardState(dt) == true)
-            {
-                this->_state = eState::PENDING_WAVE;
-                //this->updatePlayerState(false, 0);
-                this->_progressBar.currentProgress = this->_progressBar.maxProgress;
-                this->_progressBar.display(true);
-                LOG_DEBUG("WaveManager's state: %s", "PENDING_WAVE");
-            }
-            if (this->_boardState != eBoardState::IDLE)
-                this->_state = eState::ENDING;
-            break;
-        case eState::ENDING:
-            LOG_DEBUG("WaveManager's state: %s", "ENDING");
-            this->_state = eState::ENDED;
-            this->end();
-            break;
-        case eState::ENDED:
-            LOG_DEBUG("WaveManager's state: %s", "ENDED");
-            break;
+        }
+        break;
+    case eState::PENDING_WAVE:
+        //this->updateProgressBar(dt);
+        //if (this->_progressBar.currentProgress <= 0.0f)
+        //{
+        //    this->_progressBar.display(false);
+        //    this->startWave(this->_currentWave + 1);
+        //    this->_state = eState::ONGOING_WAVE;
+        //    LOG_DEBUG("WaveManager's state: %s", "ONGOING_WAVE");
+        //}
+        if (this->keyboard.getStateMap()[Keyboard::eKey::SPACE] == Keyboard::eKeyState::KEY_RELEASED)
+        {
+            this->startWave(this->_currentWave + 1);
+            this->_state = eState::ONGOING_WAVE;
+            this->_goldManager->setIncreaseOnTime(true);
+            TutoManager::display(false);
+            LOG_DEBUG("WaveManager's state: %s", "ONGOING_WAVE");
+        }
+        break;
+    case eState::ONGOING_WAVE:
+        if (this->checkBoardState(dt) == true)
+        {
+            this->_state = eState::PENDING_WAVE;
+            this->_goldManager->setIncreaseOnTime(false);
+            TutoManager::display(true);
+            //this->_progressBar.currentProgress = this->_progressBar.maxProgress;
+            //this->_progressBar.display(true);
+            LOG_DEBUG("WaveManager's state: %s", "PENDING_WAVE");
+        }
+
+        if (this->_boardState != eBoardState::IDLE)
+            this->_state = eState::ENDING;
+        break;
+    case eState::ENDING:
+        LOG_DEBUG("WaveManager's state: %s", "ENDING");
+        this->_state = eState::ENDED;
+        this->end();
+        break;
+    case eState::ENDED:
+        LOG_DEBUG("WaveManager's state: %s", "ENDED");
+        break;
     }
 }
 
@@ -82,6 +96,25 @@ int     WaveManager::getNbWaves() const
 WaveManager::eState WaveManager::getManagerState() const
 {
     return (this->_state);
+}
+
+void            WaveManager::retrieveGoldManager()
+{
+    auto        em = EntityFactory::getBindedEntityManager();
+    Entity*     goldManager = em->getEntityByTag("GameManager");
+
+    if (goldManager != nullptr)
+    {
+        sScriptComponent*   scriptComponent = goldManager->getComponent<sScriptComponent>();
+
+        if (scriptComponent != nullptr)
+        {
+            GoldManager*    goldScript = scriptComponent->getScript<GoldManager>("GoldManager");
+
+            if (goldScript != nullptr)
+                this->_goldManager = goldScript;
+        }
+    }
 }
 
 void            WaveManager::startWave(uint32_t wave)
@@ -103,7 +136,7 @@ void            WaveManager::startWave(uint32_t wave)
         }
 
         auto    spawnerScript = scriptComponent->getScript<Spawner>("Spawner");
-        
+
         if (!spawnerScript)
         {
             LOG_WARN("Entities with tag \"Spawner\" should have a \"Spawner\" script attached");
@@ -115,6 +148,8 @@ void            WaveManager::startWave(uint32_t wave)
     }
 }
 
+
+
 bool    WaveManager::checkBoardState(float deltaTime)
 {
     if (this->isGameOver() == true)
@@ -125,6 +160,8 @@ bool    WaveManager::checkBoardState(float deltaTime)
 
     return (this->checkEndWave());
 }
+
+
 
 void        WaveManager::spawnMapPart()
 {
@@ -150,7 +187,9 @@ void        WaveManager::spawnMapPart()
     gameManagerScript->displayMapParts(this->_mapParts[this->_currentWave - 1]);
 }
 
-bool    WaveManager::checkEndWave()
+
+
+bool            WaveManager::checkEndWave()
 {
     auto        em = EntityFactory::getBindedEntityManager();
     const auto& spawners = em->getEntitiesByTag("Spawner");
@@ -178,6 +217,7 @@ bool    WaveManager::checkEndWave()
 
     if (this->_currentWave == this->_waves)
         this->_boardState = eBoardState::VICTORY;
+
     return (true);
 }
 
@@ -194,60 +234,24 @@ void        WaveManager::end()
 
     switch (this->_boardState)
     {
-        case eBoardState::IDLE:
-        case eBoardState::VICTORY:
-            gameStateManager->addState<VictoryScreenState>();
-            break;
-        case eBoardState::DEFEAT:
-            this->handleGameOver();
-            gameStateManager->addState<DefeatScreenState>();
-            break;
-        default:
-            LOG_WARN("The WaveManager should not end without VICTORY or DEFEAT board state !");
-            break;
+    case eBoardState::IDLE:
+    case eBoardState::VICTORY:
+        gameStateManager->addState<VictoryScreenState>();
+        break;
+    case eBoardState::DEFEAT:
+        this->handleGameOver();
+        gameStateManager->addState<DefeatScreenState>();
+        break;
+    default:
+        LOG_WARN("The WaveManager should not end without VICTORY or DEFEAT board state !");
+        break;
     }
 }
 
-//void        WaveManager::updatePlayerState(bool teleport, unsigned int layer)
-//{
-//    auto    em = EntityFactory::getBindedEntityManager();
-//    Entity* player = em->getEntityByTag("Player");
-//
-//    if (!player)
-//    {
-//        LOG_WARN("Could not find entity with tag \"%s\"", "Player");
-//        return;
-//    }
-//
-//    if (teleport == true)
-//    {
-//        sTransformComponent*    playerTransform = player->getComponent<sTransformComponent>();
-//
-//        playerTransform->setPos({ 96.0f, 22.5f, 116.0f });
-//    }
-//
-//    auto    scriptComponent = player->getComponent<sScriptComponent>();
-//
-//    if (!scriptComponent)
-//    {
-//        LOG_WARN("Could not find sScriptComponent on entity \"%s\"", player->getComponent<sNameComponent>()->value.c_str());
-//        return;
-//    }
-//
-//    Build*  buildScript = scriptComponent->getScript<Build>("Build");
-//
-//    if (buildScript == nullptr)
-//    {
-//        LOG_WARN("Could not find \"Build\" script on entity \"%s\"", player->getComponent<sNameComponent>()->value.c_str());
-//        return;
-//    }
-//    
-//    buildScript->setLayer(layer);
-//}
-
-void    WaveManager::handleEndWave()
+void        WaveManager::handleEndWave()
 {
-    auto em = EntityFactory::getBindedEntityManager();
+    auto    em = EntityFactory::getBindedEntityManager();
+
     _progressBar.currentProgress = _progressBar.maxProgress;
     _progressBar.display(true);
 }
@@ -286,7 +290,6 @@ bool            WaveManager::updateEditor()
     bool        changed = false;
     int         wavesMax = (int) this->_waves;
 
-
     ImGui::BeginGroup();
     if (ImGui::InputInt("Number of waves", &wavesMax, 1, 100, ImGuiInputTextFlags_CharsNoBlank))
     {
@@ -310,9 +313,9 @@ bool            WaveManager::updateEditor()
     return (changed);
 }
 
-JsonValue       WaveManager::saveToJson()
+JsonValue                   WaveManager::saveToJson()
 {
-    JsonValue   waveManagerJson;
+    JsonValue               waveManagerJson;
     std::vector<JsonValue>  configsJson;
 
     for (auto& mapPart : this->_mapParts)
@@ -321,13 +324,13 @@ JsonValue       WaveManager::saveToJson()
 
         configJson.setInt("map_part", mapPart);
         configsJson.push_back(configJson);
-
     }
-
     waveManagerJson.setValueVec("map_parts", configsJson);
     waveManagerJson.setUInt("waves_max", this->_waves);
     return (waveManagerJson);
 }
+
+
 
 void                WaveManager::loadFromJson(const JsonValue& json)
 {
@@ -352,9 +355,17 @@ void                WaveManager::loadFromJson(const JsonValue& json)
     }
 }
 
+
+
 void    WaveManager::updateProgressBar(float deltaTime)
 {
     this->_progressBar.currentProgress -= deltaTime;
     this->_progressBar.currentProgress = std::max(0.0f, this->_progressBar.currentProgress);
     this->_progressBar.update();
+}
+
+void    WaveManager::setTutorialIsFinished(bool tutorialIsFinished)
+{
+
+    this->_tutorialIsFinished = tutorialIsFinished;
 }

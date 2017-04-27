@@ -6,7 +6,7 @@
 #include <ctime>
 #include <algorithm>
 
-#include <Engine/Utils/Debug.hpp>
+#include <Engine/Debug/Debug.hpp>
 
 #include <Engine/Utils/Helper.hpp>
 

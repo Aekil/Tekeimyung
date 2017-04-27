@@ -2,7 +2,8 @@
    "components" : {
       "sButtonComponent" : {
          "action" : "ADD_LEVEL",
-         "action_level" : "Options"
+         "action_level" : "Options",
+         "remove_states" : 0
       },
       "sNameComponent" : {
          "name" : "BUTTON_OPTIONS"

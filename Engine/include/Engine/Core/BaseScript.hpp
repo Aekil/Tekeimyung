@@ -9,7 +9,7 @@
 
 #include <ECS/Entity.hpp>
 
-#include <Engine/Utils/Logger.hpp>
+#include <Engine/Debug/Logger.hpp>
 #include <Engine/Utils/JsonValue.hpp>
 
 #include <Engine/Window/GameWindow.hpp>
@@ -44,7 +44,7 @@ public:
     bool isInitialized;
 
 protected:
-    Entity* entity;
+    Entity* entity = nullptr;
     Keyboard& keyboard = GameWindow::getInstance()->getKeyboard();
     Mouse& mouse = GameWindow::getInstance()->getMouse();
 

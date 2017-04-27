@@ -2,7 +2,8 @@
    "components" : {
       "sButtonComponent" : {
          "action" : "ADD_LEVEL",
-         "action_level" : "ConfirmExit"
+         "action_level" : "ConfirmExit",
+         "remove_states" : 0
       },
       "sNameComponent" : {
          "name" : "BUTTON_QUIT"

@@ -1,0 +1,56 @@
+{
+   "components" : {
+      "sNameComponent" : {
+         "name" : "ICON_HEALTH"
+      },
+      "sRenderComponent" : {
+         "animated" : false,
+         "animations" : [],
+         "color" : {
+            "a" : 1,
+            "b" : 0.16470588743686676,
+            "g" : 0.16470588743686676,
+            "r" : 1
+         },
+         "dynamic" : false,
+         "hide_dynamic" : false,
+         "ignore_raycast" : false,
+         "materials" : [ "icon_health.mat" ],
+         "model" : "resources/models/blocks/block.DAE",
+         "type" : "PLANE"
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 460.79998779296875,
+            "y" : 50.850006103515625,
+            "z" : 0
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "scale" : {
+            "x" : 6.3999357223510742,
+            "y" : 6.0266404151916504,
+            "z" : 1
+         }
+      },
+      "sUiComponent" : {
+         "horizontal_alignment" : "MIDDLE",
+         "layer" : 0,
+         "offset" : {
+            "x" : -26,
+            "y" : -45
+         },
+         "percentage_size" : true,
+         "size" : {
+            "x" : 0.033332999795675278,
+            "y" : 0.059259001165628433
+         },
+         "vertical_alignment" : "MIDDLE"
+      }
+   },
+   "name" : "ICON_HEALTH",
+   "tag" : ""
+}

@@ -74,3 +74,36 @@ void GameManager::displayMapParts(int part)
         script->enabled = true;
     }
 }
+
+
+bool        GameManager::updateEditor()
+{
+    bool        changed = false;
+    ImGui::Text("Map name");
+
+    std::vector<char> animationNameVec(this->_mapName.cbegin(), this->_mapName.cend());
+    animationNameVec.push_back(0);
+    animationNameVec.resize(64);
+
+    if (ImGui::InputText("Name", animationNameVec.data(), animationNameVec.size()))
+    {
+        this->_mapName = animationNameVec.data();
+        changed |= true;
+    }
+
+    return (changed);
+}
+
+JsonValue   GameManager::saveToJson()
+{
+    JsonValue               gameManagerJson;
+
+    gameManagerJson.setString("map_name", this->_mapName);
+
+    return (gameManagerJson);
+}
+
+void        GameManager::loadFromJson(const JsonValue& json)
+{
+    this->_mapName = json.getString("map_name", "");
+}

@@ -5,7 +5,7 @@
 #include <Engine/EntityFactory.hpp>
 #include <Engine/EditorState.hpp>
 #include <Engine/Graphics/Renderer.hpp>
-#include <Engine/LevelEntitiesDebugWindow.hpp>
+#include <Engine/Debug/LevelEntitiesDebugWindow.hpp>
 #include <Engine/Physics/Physics.hpp>
 #include <Engine/Sound/SoundManager.hpp>
 #include <Engine/Systems/RenderingSystem.hpp>

@@ -2,7 +2,8 @@
    "components" : {
       "sButtonComponent" : {
          "action" : "NONE",
-         "action_level" : ""
+         "action_level" : "",
+         "remove_states" : 0
       },
       "sNameComponent" : {
          "name" : "BUTTON_CONFIRM_YES"

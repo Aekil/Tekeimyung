@@ -16,7 +16,7 @@ DefaultWeapon::DefaultWeapon()
     this->_tag = "Projectile";
     this->_attributes["FireRate"] = new Attribute(1.0);
     this->_attributes["Ammo"] = new Attribute(100.0);
-    this->_attributes["Damage"] = new Attribute(35.0);
+    this->_attributes["Damage"] = new Attribute(50.0);
     this->_attributes["CriticalChance"] = new Attribute(5.0 / 100.0);
     this->_attributes["CriticalStrike"] = new Attribute(150.0 / 100.0);
 
@@ -58,9 +58,7 @@ void    DefaultWeapon::fire(Player* player, sTransformComponent* playerTransform
     bulletScripts = bullet->getComponent<sScriptComponent>();
     projectileScript = bulletScripts->getScript<Projectile>("Projectile");
 
-    projectileScript->_projectileTransform->setPos(playerTransform->getPos());
-
-    projectileScript->_projectileTransform->translate(glm::vec3(0.0f, -((playerRender->getModel()->getMin().y * playerTransform->getScale().y) / 2.0f), 0.0f));
+    projectileScript->_projectileTransform->setPos(glm::vec3{ playerTransform->getPos().x, playerTransform->getPos().y + (playerRender->getModel()->getSize().y / 2.0f * playerTransform->getScale().y), playerTransform->getPos().z });
 
     if (Maths::randomFrom(0.0f, 1.0f) < (1.0f - this->_attributes["CriticalChance"]->getFinalValue()))
         projectileScript->_damage = this->_attributes["Damage"]->getFinalValue();

@@ -77,6 +77,7 @@ private:
     static void                         cursorEnterCallback(GLFWwindow* window, int entered);
     static void                         cursorPositionCallback(GLFWwindow* window, double xPos, double yPos);
     static void                         scrollCallback(GLFWwindow* window, double xOffset, double yOffset);
+    static bool                         sendImGuiScrollCallback(GLFWwindow* window, double xOffset, double yOffset);
 
     static void                         charCallback(GLFWwindow* window, unsigned int c);
     static bool                         sendImGuiCharCallback(GameWindow* gameWindow, GLFWwindow* window, unsigned int c);

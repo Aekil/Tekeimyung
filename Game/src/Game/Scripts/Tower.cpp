@@ -5,7 +5,7 @@
 #include <Engine/Components.hh>
 #include <Engine/EntityFactory.hpp>
 #include <Engine/Physics/Collisions.hpp>
-#include <Engine/Utils/Debug.hpp>
+#include <Engine/Debug/Debug.hpp>
 
 #include <Game/Scripts/Projectile.hpp>
 #include <Game/Scripts/Tower.hpp>

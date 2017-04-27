@@ -9,7 +9,7 @@
 #include <string>
 #include <cstdio>
 
-#include <Engine/Utils/Debug.hpp>
+#include <Engine/Debug/Debug.hpp>
 #include <Engine/Utils/Helper.hpp>
 
 #define FORMAT_BUFFER_SIZE  512

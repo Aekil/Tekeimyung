@@ -2,7 +2,7 @@
 ** @Author : Julien CHARDON
 */
 
-#include <Engine/Utils/Logger.hpp>
+#include <Engine/Debug/Logger.hpp>
 
 #include <Game/Scripts/GoldManager.hpp>
 
@@ -15,18 +15,21 @@ void GoldManager::update(float dt)
 {
     static float elapsedTime = 0;
 
-    elapsedTime += dt;
-    if (elapsedTime >= GOLD_TIMER)
+    if (this->_increaseOnTime)
     {
-        addGolds(GOLD_TIME_BONUS);
-        elapsedTime -= GOLD_TIMER;
+        elapsedTime += dt;
+        if (elapsedTime >= GOLD_TIMER)
+        {
+            addGolds(GOLD_TIME_BONUS);
+            elapsedTime = 0.0f;
+        }
     }
 }
 
 int GoldManager::getGolds() const
 {
     return (this->_golds);
-}
+}   
 
 void GoldManager::setGolds(int newGoldAmount)
 {
@@ -59,4 +62,9 @@ void GoldManager::secureSetGolds(int futureValue)
     }
     else
         this->_golds = futureValue;
+}
+
+void GoldManager::setIncreaseOnTime(bool increaseOnTime)
+{
+    this->_increaseOnTime = increaseOnTime;
 }

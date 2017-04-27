@@ -1,0 +1,69 @@
+{
+   "components" : {
+      "sNameComponent" : {
+         "name" : "TEXT_PAGE_NUMBER"
+      },
+      "sRenderComponent" : {
+         "animated" : false,
+         "animations" : [],
+         "color" : {
+            "a" : 1,
+            "b" : 1,
+            "g" : 1,
+            "r" : 1
+         },
+         "dynamic" : false,
+         "hide_dynamic" : false,
+         "ignore_raycast" : false,
+         "materials" : [ "MAT_Default" ],
+         "model" : "resources/models/default.DAE",
+         "type" : "MESH"
+      },
+      "sTextComponent" : {
+         "color" : {
+            "a" : 1,
+            "b" : 1,
+            "g" : 1,
+            "r" : 1
+         },
+         "content" : "PAGE : %d/%d",
+         "font_name" : "moonhouse.ttf",
+         "font_size" : 30,
+         "horizontal_alignment" : "MIDDLE",
+         "vertical_alignment" : "MIDDLE"
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 960,
+            "y" : 152.54998779296875,
+            "z" : 0
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "scale" : {
+            "x" : 4.1706829071044922,
+            "y" : 2.9020974636077881,
+            "z" : 1
+         }
+      },
+      "sUiComponent" : {
+         "horizontal_alignment" : "MIDDLE",
+         "layer" : 0,
+         "offset" : {
+            "x" : 0,
+            "y" : -35
+         },
+         "percentage_size" : false,
+         "size" : {
+            "x" : 0.10000000149011612,
+            "y" : 0.10000000149011612
+         },
+         "vertical_alignment" : "MIDDLE"
+      }
+   },
+   "name" : "TEXT_PAGE_NUMBER",
+   "tag" : ""
+}

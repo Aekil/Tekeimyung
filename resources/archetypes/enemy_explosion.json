@@ -21,10 +21,13 @@
                "r" : 0.43137255311012268
             }
          },
+         "display_only_particles" : true,
          "emitter_life" : 0.64500004053115845,
          "life" : 73,
          "life_variance" : 0,
+         "materials" : [ "bloom_red.mat" ],
          "max_particles" : 13,
+         "model" : "resources/models/default.DAE",
          "rate" : 0,
          "size" : {
             "finish" : 0.16100001335144043,
@@ -35,7 +38,8 @@
          "spawn_nb" : 1,
          "speed" : 12.903000831604004,
          "speed_variance" : 2.1510000228881836,
-         "texture" : ""
+         "texture" : "",
+         "type" : "BOX"
       },
       "sRenderComponent" : {
          "animated" : false,

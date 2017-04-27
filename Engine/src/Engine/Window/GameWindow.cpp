@@ -9,8 +9,8 @@
 
 #include <Engine/Graphics/Renderer.hpp>
 #include <Engine/Sound/SoundManager.hpp>
-#include <Engine/Utils/Debug.hpp>
-#include <Engine/Utils/Logger.hpp>
+#include <Engine/Debug/Debug.hpp>
+#include <Engine/Debug/Logger.hpp>
 
 #include <Engine/Window/GameWindow.hpp>
 
@@ -96,7 +96,7 @@ bool    GameWindow::initialize()
     this->setRunning(true);
 
     #if defined(ENGINE_DEBUG)
-        initDebugOutput();
+        this->initDebugOutput();
     #endif
 
     return (true);
@@ -474,7 +474,6 @@ void    GameWindow::buttonCallback(GLFWwindow* window, int button, int action, i
 {
     GameWindow*     gameWindow;
     Mouse::eButton  mouseButton;
-    ImGuiIO&        io = ImGui::GetIO();
 
     gameWindow = static_cast<GameWindow*>(glfwGetWindowUserPointer(window));
     ASSERT(gameWindow != nullptr, "GameWindow should not be null.");
@@ -567,10 +566,26 @@ void    GameWindow::scrollCallback(GLFWwindow* window, double xOffset, double yO
     gameWindow = static_cast<GameWindow*>(glfwGetWindowUserPointer(window));
     ASSERT(gameWindow != nullptr, "GameWindow should not be null.");
 
+    // Don't capture mouse events if ImGui is capturing them
+    if (sendImGuiScrollCallback(window, xOffset, yOffset))
+        return;
+
     sScroll&    scroll = gameWindow->getMouse().getScroll();
 
     scroll.xOffset += xOffset;
     scroll.yOffset += yOffset;
+}
+
+bool    GameWindow::sendImGuiScrollCallback(GLFWwindow* window, double xOffset, double yOffset)
+{
+    ImGuiIO&    io = ImGui::GetIO();
+
+    if (io.WantCaptureMouse)
+    {
+        ImGui_ImplGlfwGL3_ScrollCallback(window, xOffset, yOffset);
+        return (true);
+    }
+    return (false);
 }
 
 void    GameWindow::charCallback(GLFWwindow* window, unsigned int c)
