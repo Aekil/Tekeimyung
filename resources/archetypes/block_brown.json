@@ -1,0 +1,65 @@
+{
+   "components" : {
+      "sBoxColliderComponent" : {
+         "isTrigger" : false,
+         "pos" : {
+            "x" : 0,
+            "y" : 6.25,
+            "z" : 0
+         },
+         "size" : {
+            "x" : 2.5999999046325684,
+            "y" : 1.3500000238418579,
+            "z" : 2.5999999046325684
+         }
+      },
+      "sNameComponent" : {
+         "name" : "BLOCK_BROWN"
+      },
+      "sRenderComponent" : {
+         "animated" : false,
+         "animations" : [],
+         "color" : {
+            "a" : 1,
+            "b" : 1,
+            "g" : 1,
+            "r" : 1
+         },
+         "ignore_raycast" : false,
+         "materials" : [ "cube_bloom_cyan.mat" ],
+         "model" : "resources/models/blocks/block.DAE",
+         "texture" : "",
+         "type" : "MESH"
+      },
+      "sScriptComponent" : {
+         "class" : [ "Tile" ],
+         "scripts" : [
+            {
+               "name" : "Tile"
+            }
+         ]
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "scale" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         }
+      },
+      "sTypeComponent" : {
+         "type" : "TILE_WALKABLE"
+      }
+   },
+   "name" : "BLOCK_BROWN",
+   "tag" : "BlockBrown"
+}

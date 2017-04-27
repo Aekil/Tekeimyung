@@ -1,0 +1,32 @@
+{
+   "ambient" : {
+      "a" : 1,
+      "b" : 1,
+      "g" : 1,
+      "r" : 1
+   },
+   "bloom_color" : {
+      "a" : 0.43137255311012268,
+      "b" : 1,
+      "g" : 1,
+      "r" : 0
+   },
+   "diffuse" : {
+      "a" : 1,
+      "b" : 1,
+      "g" : 1,
+      "r" : 1
+   },
+   "dst_blend" : "GL_ONE_MINUS_SRC_ALPHA",
+   "face_camera" : false,
+   "has_bloom" : true,
+   "src_blend" : "GL_SRC_ALPHA",
+   "textures" : {
+      "ambient" : "resources/sprites/textures/hud_tuto_box.png",
+      "bloom" : "",
+      "bloom_alpha" : "resources/sprites/textures/hud_tuto_box.png",
+      "diffuse" : ""
+   },
+   "transparent" : true,
+   "wireframe" : false
+}

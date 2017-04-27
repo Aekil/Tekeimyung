@@ -15,18 +15,12 @@
          "dynamic" : false,
          "hide_dynamic" : false,
          "ignore_raycast" : false,
-         "materials" : [ "MAT_Default" ],
+         "materials" : [ "hud_tuto_box.mat" ],
          "model" : "resources/models/default.DAE",
-         "type" : "MESH"
+         "type" : "PLANE"
       },
       "sScriptComponent" : {
          "scripts" : [
-            {
-               "name" : "TutoManager"
-            },
-            {
-               "name" : "GoldManager"
-            },
             {
                "name" : "TutoManager"
             }
@@ -39,14 +33,16 @@
             "g" : 1,
             "r" : 1
          },
-         "content" : "Use W,A,S,D to move",
+         "content" : "Use W,A,S,D to move (or Press K to skip the tutorial)",
          "font_name" : "arial.ttf",
-         "font_size" : 22
+         "font_size" : 24,
+         "horizontal_alignment" : "MIDDLE",
+         "vertical_alignment" : "MIDDLE"
       },
       "sTransformComponent" : {
          "pos" : {
-            "x" : 672,
-            "y" : 898.67822265625,
+            "x" : 537.5999755859375,
+            "y" : 935.6400146484375,
             "z" : 0
          },
          "rotation" : {
@@ -55,8 +51,8 @@
             "z" : 0
          },
          "scale" : {
-            "x" : 1,
-            "y" : 1,
+            "x" : 96.799873352050781,
+            "y" : 5.8383326530456543,
             "z" : 1
          }
       },
@@ -67,15 +63,15 @@
          "horizontal_alignment" : "MIDDLE",
          "layer" : 0,
          "offset" : {
-            "x" : -15,
-            "y" : -10
+            "x" : -22,
+            "y" : 42
          },
-         "percentage_size" : false,
+         "percentage_size" : true,
          "size" : {
-            "x" : 0.10000000149011612,
-            "y" : 0.10000000149011612
+            "x" : 0.50416600704193115,
+            "y" : 0.057407401502132416
          },
-         "vertical_alignment" : "TOP"
+         "vertical_alignment" : "MIDDLE"
       }
    },
    "name" : "TUTO_MANAGER",
