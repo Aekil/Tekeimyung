@@ -58,9 +58,7 @@ void    DefaultWeapon::fire(Player* player, sTransformComponent* playerTransform
     bulletScripts = bullet->getComponent<sScriptComponent>();
     projectileScript = bulletScripts->getScript<Projectile>("Projectile");
 
-    projectileScript->_projectileTransform->setPos(playerTransform->getPos());
-
-    projectileScript->_projectileTransform->translate(glm::vec3(0.0f, -((playerRender->getModel()->getMin().y * playerTransform->getScale().y) / 2.0f), 0.0f));
+    projectileScript->_projectileTransform->setPos(glm::vec3{ playerTransform->getPos().x, playerTransform->getPos().y + (playerRender->getModel()->getSize().y / 2.0f * playerTransform->getScale().y), playerTransform->getPos().z });
 
     if (Maths::randomFrom(0.0f, 1.0f) < (1.0f - this->_attributes["CriticalChance"]->getFinalValue()))
         projectileScript->_damage = this->_attributes["Damage"]->getFinalValue();

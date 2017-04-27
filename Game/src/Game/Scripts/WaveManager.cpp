@@ -331,6 +331,7 @@ void    WaveManager::updateProgressBar(float deltaTime)
 }
 
 void    WaveManager::setTutorialIsFinished(bool tutorialIsFinished)
-{
+{
+
     this->_tutorialIsFinished = tutorialIsFinished;
 }
