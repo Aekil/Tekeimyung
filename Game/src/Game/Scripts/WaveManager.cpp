@@ -12,7 +12,6 @@
 #include <Game/Scripts/GameManager.hpp>
 #include <Game/Scripts/Spawner.hpp>
 #include <Game/Scripts/WaveManager.hpp>
-#include <Game/Scripts/TutoManager.hpp>
 #include <Game/Scripts/Enemy.hpp>
 
 void        WaveManager::start()
@@ -25,30 +24,6 @@ void        WaveManager::start()
     this->_progressBar.init("TIMER_BAR_EMPTY", "TIMER_BAR");
     this->_progressBar.display(false);
     this->_mapParts.resize(this->_waves);
-    
-    auto tutoManager = em->getEntityByTag("TutoManager");
-
-    if (tutoManager == nullptr)
-    {
-        LOG_WARN("No entity with TutoManager tag");
-        return;
-    }
-
-    auto tutoManagerScript = tutoManager->getComponent<sScriptComponent>();
-
-    if (tutoManagerScript == nullptr)
-    {
-        LOG_WARN("No script component on TutoManager");
-        return;
-    }
-
-    this->_tutoManager = tutoManagerScript->getScript<TutoManager>("TutoManager");
-
-    if (this->_tutoManager == nullptr)
-    {
-        LOG_WARN("No script TutoManager on entity");
-        return;
-    }
 }
 
 void        WaveManager::update(float dt)
@@ -57,8 +32,7 @@ void        WaveManager::update(float dt)
     {
         case eState::STARTING:
             LOG_DEBUG("WaveManager's state: %s", "STARTING");
-            if (this->_tutoManager->isFinished())
-                this->_state = eState::PENDING_WAVE;
+            this->_state = eState::PENDING_WAVE;
             break;
         case eState::PENDING_WAVE:
             this->updateProgressBar(dt);
@@ -355,4 +329,4 @@ void    WaveManager::updateProgressBar(float deltaTime)
     this->_progressBar.currentProgress -= deltaTime;
     this->_progressBar.currentProgress = std::max(0.0f, this->_progressBar.currentProgress);
     this->_progressBar.update();
-}
+}
