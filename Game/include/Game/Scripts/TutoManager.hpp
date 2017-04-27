@@ -12,6 +12,9 @@
 #include <Engine/Core/ScriptFactory.hpp>
 #include <Engine/Components.hh>
 
+class GoldManager;
+class WaveManager;
+
 #define TUTO_MANAGER_TAG    "TutoManager"
 
 enum class eTutoState: int
@@ -43,8 +46,9 @@ public:
     void sendMessage(eTutoState state);
 
 private:
+    WaveManager*   _waveManager;
+    GoldManager*   _goldManager;
     sTextComponent*     _textComp = nullptr;
-
     eTutoState _currentState = eTutoState::MOVE;
 
     std::unordered_map<eTutoState, std::string> _statesMessages;

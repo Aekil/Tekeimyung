@@ -15,11 +15,14 @@ void GoldManager::update(float dt)
 {
     static float elapsedTime = 0;
 
-    elapsedTime += dt;
-    if (elapsedTime >= GOLD_TIMER)
+    if (this->_increaseOnTime)
     {
-        addGolds(GOLD_TIME_BONUS);
-        elapsedTime -= GOLD_TIMER;
+        elapsedTime += dt;
+        if (elapsedTime >= GOLD_TIMER)
+        {
+            addGolds(GOLD_TIME_BONUS);
+            elapsedTime = 0.0f;
+        }
     }
 }
 
@@ -59,4 +62,9 @@ void GoldManager::secureSetGolds(int futureValue)
     }
     else
         this->_golds = futureValue;
+}
+
+void GoldManager::setIncreaseOnTime(bool increaseOnTime)
+{
+    this->_increaseOnTime = increaseOnTime;
 }

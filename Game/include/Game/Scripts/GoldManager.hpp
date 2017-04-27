@@ -31,12 +31,14 @@ public:
     void    setGolds(int newGoldAmount);
     void    addGolds(int addedGolds);
     bool    removeGolds(int removedGolds);
+    void    setIncreaseOnTime(bool);
 
 private:
     void    secureSetGolds(int futureValue);
 
 private:
     int     _golds;
+    bool    _increaseOnTime = true;
 };
 
 REGISTER_SCRIPT(GoldManager);

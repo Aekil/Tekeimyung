@@ -6,6 +6,7 @@
 #include <Game/Scripts/GameManager.hpp>
 #include <Game/Scripts/TutoManager.hpp>
 #include <Game/Scripts/WaveManager.hpp>
+#include <Game/Scripts/GoldManager.hpp>
 
 eTutoState& operator++(eTutoState& state)
 {
@@ -39,6 +40,43 @@ TutoManager::TutoManager()
 void TutoManager::start()
 {
     this->_textComp = this->getComponent<sTextComponent>();
+
+    auto em = EntityFactory::getBindedEntityManager();
+
+    auto entity = em->getEntityByTag("GameManager");
+
+    if (entity == nullptr)
+    {
+        LOG_ERROR("No entity with GameManager tag");
+        return;
+    }
+
+    auto gameManagerScriptComponent = entity->getComponent<sScriptComponent>();
+
+    if (gameManagerScriptComponent == nullptr)
+    {
+        LOG_ERROR("No scriptComponent on entity");
+        return;
+    }
+
+    this->_waveManager = gameManagerScriptComponent->getScript<WaveManager>("WaveManager");
+
+    if (this->_waveManager == nullptr)
+    {
+        LOG_ERROR("No WaveManager script on entity");
+        return;
+    }
+
+    this->_goldManager = gameManagerScriptComponent->getScript<GoldManager>("GoldManager");
+
+    if (this->_goldManager == nullptr)
+    {
+        LOG_ERROR("No GoldManager script on entity");
+        return;
+    }
+
+    this->_goldManager->setIncreaseOnTime(false);
+    this->_goldManager->setGolds(0);
 }
 
 void TutoManager::update(float dt)
@@ -58,35 +96,17 @@ void    TutoManager::sendMessage(eTutoState state)
         _textComp->text.setContent(_statesMessages[_currentState]);
         if (state == eTutoState::TUTO_DONE)
         {
-            auto em = EntityFactory::getBindedEntityManager();
-
-            auto entity = em->getEntityByTag("GameManager");
-
-            if (entity == nullptr)
-            {
-                LOG_ERROR("No entity with GameManager tag");
-                return;
-            }
-
-            auto scriptComponent = entity->getComponent<sScriptComponent>();
-
-            if (scriptComponent == nullptr)
-            {
-                LOG_ERROR("No scriptComponent on entity");
-                return;
-            }
-
-            auto waveManager = scriptComponent->getScript<WaveManager>("WaveManager");
-
-            if (waveManager == nullptr)
-            {
-                LOG_ERROR("No wavemanager script on entity");
-                return;
-            }
-
-            waveManager->setTutorialIsFinished(true);
+            this->_waveManager->setTutorialIsFinished(true);
+            this->_goldManager->setIncreaseOnTime(true);
+            this->_goldManager->setGolds(STARTING_AMOUNT_OF_GOLD);
 
             this->Destroy();
         }
+
+        if (this->_currentState == eTutoState::BUILD)
+            this->_goldManager->setGolds(50);
+
+        if (this->_currentState == eTutoState::DISABLE_BUILD)
+            this->_goldManager->setGolds(0);
     }
 }
