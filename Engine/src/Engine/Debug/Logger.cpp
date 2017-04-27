@@ -106,9 +106,7 @@ void    Logger::log(Logger::eLogLevel level, const std::string& message)
             "]\t" << message << std::endl;
     }
     
-#if defined(ENGINE_DEBUG)
     _log.append("[%s]\t%s\n", getLevelToString(level).c_str(), message.c_str());
-#endif
 }
 
 const ImGuiTextBuffer&  Logger::getLog() const

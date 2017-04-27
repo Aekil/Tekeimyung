@@ -65,7 +65,5 @@ private:
 
     static std::shared_ptr<Logger>  _instance;
 
-#if defined(ENGINE_DEBUG)
      ImGuiTextBuffer     _log;
-#endif
 };

@@ -15,7 +15,8 @@
 #include <Engine/Components.hh>
 
 #include <Game/GameStates/HowToPlayState.hpp>
-
+#include <Game/Scripts/TutoManager.hpp>
+#include <Game/Scripts/TutoManagerMessage.hpp>
 
 HowToPlayState::~HowToPlayState() {}
 
@@ -31,6 +32,7 @@ void    HowToPlayState::setupSystems()
 
 bool    HowToPlayState::init()
 {
+    TutoManagerMessage::getInstance()->sendMessage(eTutoState::CHECK_HOWTOPLAY);
     SoundManager::getInstance()->setVolumeAllChannels(0.3f); // same as for PauseState since it pause the game
     this->retrievePages();
     this->updateLevelDisplayed();
@@ -60,9 +62,10 @@ bool    HowToPlayState::update(float elapsedTime)
 
 void    HowToPlayState::retrievePages()
 {
-    this->_pages.push_back("PageControls");
-    this->_pages.push_back("PageBuildables");
-    this->_pages.push_back("PageWeapons");
+    //this->_pages.push_back("PageControls");
+    //this->_pages.push_back("PageBuildables");
+    //this->_pages.push_back("PageWeapons");
+    this->_pages.push_back("HowToPlay");
 }
 
 void    HowToPlayState::retrieveButtons()
@@ -90,14 +93,17 @@ void    HowToPlayState::updatePaging()
     this->setButton(this->_buttonLeftChevron, false);
     this->setButton(this->_buttonRightChevron, false);
 
-    if (this->_currentPageIndex == 0)
-        this->setButton(this->_buttonRightChevron, true);
-    else if (this->_currentPageIndex == this->_pages.size() - 1)
-        this->setButton(this->_buttonLeftChevron, true);
-    else
+    if (this->_pages.size() > 1)
     {
-        this->setButton(this->_buttonLeftChevron, true);
-        this->setButton(this->_buttonRightChevron, true);
+        if (this->_currentPageIndex == 0)
+            this->setButton(this->_buttonRightChevron, true);
+        else if (this->_currentPageIndex == this->_pages.size() - 1)
+            this->setButton(this->_buttonLeftChevron, true);
+        else
+        {
+            this->setButton(this->_buttonLeftChevron, true);
+            this->setButton(this->_buttonRightChevron, true);
+        }
     }
 
     this->updatePagingText();

@@ -16,7 +16,7 @@ DefaultWeapon::DefaultWeapon()
     this->_tag = "Projectile";
     this->_attributes["FireRate"] = new Attribute(1.0);
     this->_attributes["Ammo"] = new Attribute(100.0);
-    this->_attributes["Damage"] = new Attribute(35.0);
+    this->_attributes["Damage"] = new Attribute(50.0);
     this->_attributes["CriticalChance"] = new Attribute(5.0 / 100.0);
     this->_attributes["CriticalStrike"] = new Attribute(150.0 / 100.0);
 

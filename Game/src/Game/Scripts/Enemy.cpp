@@ -3,6 +3,7 @@
 */
 
 #include <Engine/Components.hh>
+#include <Engine/ComponentFactory.hpp>
 #include <Engine/EntityFactory.hpp>
 #include <Engine/Utils/Maths.hpp>
 
@@ -90,10 +91,11 @@ void Enemy::death()
     this->remove();
 
     // Add golds for enemy dying
-    const auto& gameManager = em->getEntityByTag(GAME_MANAGER_TAG);
-    sScriptComponent* scriptComp = gameManager->getComponent<sScriptComponent>();
-    GoldManager* goldManager = scriptComp->getScript<GoldManager>(GOLD_MANAGER_TAG);
-    goldManager->addGolds(20); // arbitrary number which needs to be replaced depending on the enemy archetype
+    const auto&         gameManager = em->getEntityByTag(GAME_MANAGER_TAG);
+    sScriptComponent*   scriptComp = gameManager->getComponent<sScriptComponent>();
+    GoldManager*        goldManager = scriptComp->getScript<GoldManager>(GOLD_MANAGER_TAG);
+
+    goldManager->addGolds(this->_goldEarned);
 
     auto player = em->getEntityByTag("Player");
 
@@ -156,6 +158,13 @@ bool Enemy::updateEditor()
         changed = true;
     }
 
+    if (ImGui::InputInt("Gold earned", &this->_goldEarned, 10, ImGuiInputTextFlags_AllowTabInput))
+    {
+        if (this->_goldEarned < 0)
+            this->_goldEarned = 0;
+        changed = true;
+    }
+
     return (changed);
 }
 
@@ -166,6 +175,7 @@ JsonValue Enemy::saveToJson()
     json.setFloat("speed", _speed);
     json.setUInt("health", getMaxHealth());
     json.setUInt("experience_earned", this->_experienceEarned);
+    json.setUInt("gold_earned", this->_goldEarned);
 
     return (json);
 }
@@ -175,4 +185,5 @@ void    Enemy::loadFromJson(const JsonValue& json)
     _speed = json.getFloat("speed", 50.0f);
     setMaxHealth(json.getUInt("health", 150));
     this->_experienceEarned = json.getUInt("experience_earned", 20);
+    this->_goldEarned = json.getUInt("gold_earned", 20);
 }

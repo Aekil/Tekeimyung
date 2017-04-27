@@ -28,11 +28,11 @@ enum class eTutoState: int
     CHECK_HOWTOPLAY = 6,
     CHECK_BUILDLIST = 7,
     TUTO_DONE = 8,
-    TUTO_HIDDEN = 9
+    TUTO_WAVE = 9
 };
 
 eTutoState& operator++(eTutoState& state);
-eTutoState operator++(eTutoState& state, int);
+eTutoState  operator++(eTutoState& state, int);
 
 class TutoManager final : public BaseScript
 {
@@ -45,11 +45,13 @@ public:
     void update(float dt) override final;
     void sendMessage(eTutoState state);
 
+    static void display(bool displayed);
+
 private:
-    WaveManager*   _waveManager;
-    GoldManager*   _goldManager;
+    WaveManager*        _waveManager;
+    GoldManager*        _goldManager;
     sTextComponent*     _textComp = nullptr;
-    eTutoState _currentState = eTutoState::MOVE;
+    eTutoState          _currentState = eTutoState::MOVE;
 
     std::unordered_map<eTutoState, std::string> _statesMessages;
 };

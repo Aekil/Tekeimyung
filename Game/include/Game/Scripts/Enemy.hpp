@@ -54,9 +54,9 @@ private:
 
     Attribute* _percentExplosion = nullptr;
 
-    float _speed;
-
-    int _experienceEarned;
+    float   _speed = 0.0f;
+    int     _goldEarned = 0;
+    int     _experienceEarned = 0;
 };
 
 REGISTER_SCRIPT(Enemy);

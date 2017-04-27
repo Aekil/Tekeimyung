@@ -53,11 +53,11 @@ bool    PlayState::update(float elapsedTime)
     //if (keyboard.getStateMap()[_pair.first] == Keyboard::eKeyState::KEY_PRESSED)
     //    _pair.second->execute();
 
-    if (keyboard.getStateMap()[Keyboard::eKey::H] == Keyboard::eKeyState::KEY_PRESSED)
-    {
-        _gameStateManager->addState<HowToPlayState>();
-        TutoManagerMessage::getInstance()->sendMessage(eTutoState::CHECK_HOWTOPLAY);
-    }
+    //if (keyboard.getStateMap()[Keyboard::eKey::H] == Keyboard::eKeyState::KEY_PRESSED)
+    //{
+    //    _gameStateManager->addState<HowToPlayState>();
+    //    TutoManagerMessage::getInstance()->sendMessage(eTutoState::CHECK_HOWTOPLAY);
+    //}
     if (keyboard.getStateMap()[Keyboard::eKey::B] == Keyboard::eKeyState::KEY_PRESSED)
     {
         _gameStateManager->addState<BuildingListState>();

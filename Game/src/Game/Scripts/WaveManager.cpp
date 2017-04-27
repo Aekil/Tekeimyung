@@ -11,6 +11,7 @@
 #include <Game/GameStates/DefeatScreenState.hpp>
 #include <Game/Scripts/GameManager.hpp>
 #include <Game/Scripts/Spawner.hpp>
+#include <Game/Scripts/TutoManager.hpp>
 #include <Game/Scripts/WaveManager.hpp>
 #include <Game/Scripts/Enemy.hpp>
 
@@ -19,11 +20,12 @@ void        WaveManager::start()
     auto    em = EntityFactory::getBindedEntityManager();
     this->_state = WaveManager::eState::STARTING;
     this->_boardState = WaveManager::eBoardState::IDLE;
-    this->_progressBar.currentProgress = 0.0f;
-    this->_progressBar.maxProgress = 5.0f;
-    this->_progressBar.init("TIMER_BAR_EMPTY", "TIMER_BAR");
-    this->_progressBar.display(false);
+    //this->_progressBar.currentProgress = 0.0f;
+    //this->_progressBar.maxProgress = 5.0f;
+    //this->_progressBar.init("TIMER_BAR_EMPTY", "TIMER_BAR");
+    //this->_progressBar.display(false);
     this->_mapParts.resize(this->_waves);
+    this->retrieveGoldManager();
 }
 
 void        WaveManager::update(float dt)
@@ -33,15 +35,26 @@ void        WaveManager::update(float dt)
     case eState::STARTING:
         LOG_DEBUG("WaveManager's state: %s", "STARTING");
         if (this->_tutorialIsFinished)
+        {
+            this->_goldManager->setGolds(STARTING_AMOUNT_OF_GOLD);
             this->_state = eState::PENDING_WAVE;
+        }
         break;
     case eState::PENDING_WAVE:
-        this->updateProgressBar(dt);
-        if (this->_progressBar.currentProgress <= 0.0f)
+        //this->updateProgressBar(dt);
+        //if (this->_progressBar.currentProgress <= 0.0f)
+        //{
+        //    this->_progressBar.display(false);
+        //    this->startWave(this->_currentWave + 1);
+        //    this->_state = eState::ONGOING_WAVE;
+        //    LOG_DEBUG("WaveManager's state: %s", "ONGOING_WAVE");
+        //}
+        if (this->keyboard.getStateMap()[Keyboard::eKey::SPACE] == Keyboard::eKeyState::KEY_RELEASED)
         {
-            this->_progressBar.display(false);
             this->startWave(this->_currentWave + 1);
             this->_state = eState::ONGOING_WAVE;
+            this->_goldManager->setIncreaseOnTime(true);
+            TutoManager::display(false);
             LOG_DEBUG("WaveManager's state: %s", "ONGOING_WAVE");
         }
         break;
@@ -49,8 +62,10 @@ void        WaveManager::update(float dt)
         if (this->checkBoardState(dt) == true)
         {
             this->_state = eState::PENDING_WAVE;
-            this->_progressBar.currentProgress = this->_progressBar.maxProgress;
-            this->_progressBar.display(true);
+            this->_goldManager->setIncreaseOnTime(false);
+            TutoManager::display(true);
+            //this->_progressBar.currentProgress = this->_progressBar.maxProgress;
+            //this->_progressBar.display(true);
             LOG_DEBUG("WaveManager's state: %s", "PENDING_WAVE");
         }
 
@@ -81,6 +96,25 @@ int     WaveManager::getNbWaves() const
 WaveManager::eState WaveManager::getManagerState() const
 {
     return (this->_state);
+}
+
+void            WaveManager::retrieveGoldManager()
+{
+    auto        em = EntityFactory::getBindedEntityManager();
+    Entity*     goldManager = em->getEntityByTag("GameManager");
+
+    if (goldManager != nullptr)
+    {
+        sScriptComponent*   scriptComponent = goldManager->getComponent<sScriptComponent>();
+
+        if (scriptComponent != nullptr)
+        {
+            GoldManager*    goldScript = scriptComponent->getScript<GoldManager>("GoldManager");
+
+            if (goldScript != nullptr)
+                this->_goldManager = goldScript;
+        }
+    }
 }
 
 void            WaveManager::startWave(uint32_t wave)
