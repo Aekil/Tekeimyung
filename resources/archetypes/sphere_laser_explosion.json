@@ -16,9 +16,9 @@
                            "easing" : "NONE",
                            "time" : 0.5,
                            "value" : {
-                              "x" : 1,
-                              "y" : 1,
-                              "z" : 1
+                              "x" : 7.6999998092651367,
+                              "y" : 7.6999998092651367,
+                              "z" : 7.6999998092651367
                            }
                         }
                      ],
@@ -54,6 +54,14 @@
          "model" : "resources/models/default.DAE",
          "type" : "SPHERE"
       },
+      "sScriptComponent" : {
+         "scripts" : [
+            {
+               "lifetime" : 0.5,
+               "name" : "LifeTime"
+            }
+         ]
+      },
       "sTransformComponent" : {
          "pos" : {
             "x" : 198.74853515625,
@@ -62,13 +70,13 @@
          },
          "rotation" : {
             "x" : 0,
-            "y" : 0,
+            "y" : -0,
             "z" : 0
          },
          "scale" : {
-            "x" : 1,
-            "y" : 1,
-            "z" : 1
+            "x" : 0.99999856948852539,
+            "y" : 1.0000004768371582,
+            "z" : 1.000002384185791
          }
       },
       "sTypeComponent" : {
