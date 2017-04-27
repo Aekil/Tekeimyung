@@ -135,12 +135,14 @@ void    ButtonSystem::handleButtonsActions(EntityManager& em)
         if (button->action == sButtonComponent::eAction::ADD_LEVEL &&
             button->actionLevel.size() > 0)
         {
+            _gameStateManager->removeLastStates(button->removeStates);
             std::shared_ptr<GameState> gameState = LevelLoader::getInstance()->createLevelState(button->actionLevel, _gameStateManager);
             _gameStateManager->addState(gameState);
         }
         else if (button->action == sButtonComponent::eAction::REPLACE_CURRENT_LEVEL &&
             button->actionLevel.size() > 0)
         {
+            _gameStateManager->removeLastStates(button->removeStates);
             std::shared_ptr<GameState> gameState = LevelLoader::getInstance()->createLevelState(button->actionLevel, _gameStateManager);
             _gameStateManager->replaceState(gameState);
         }

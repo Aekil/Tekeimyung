@@ -556,6 +556,7 @@ virtual void update(sButtonComponent* component)
     this->hovered = component->hovered;
     this->action = component->action;
     this->actionLevel = component->actionLevel;
+    this->removeStates = component->removeStates;
 }
 
 virtual void update(sComponent* component)
@@ -567,6 +568,8 @@ bool        selected = false;
 bool        hovered = false;
 eAction     action = eAction::NONE;
 std::string actionLevel;
+// We can remove states before action
+uint32_t    removeStates = 0;
 END_COMPONENT(sButtonComponent)
 REGISTER_ENUM_MANAGER(sButtonComponent::eAction, BUTTON_ACTION);
 

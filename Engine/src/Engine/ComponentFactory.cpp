@@ -1182,6 +1182,7 @@ sComponent* ComponentFactory<sButtonComponent>::loadFromJson(const std::string& 
 
     component->action = EnumManager<sButtonComponent::eAction>::stringToEnum(json.getString("action", "NONE"));
     component->actionLevel = json.getString("action_level", "");
+    component->removeStates = json.getUInt("remove_states", 0);
 
     return component;
 }
@@ -1193,6 +1194,7 @@ JsonValue&    ComponentFactory<sButtonComponent>::saveToJson(const std::string& 
 
     json.setString("action", EnumManager<sButtonComponent::eAction>::enumToString(component->action));
     json.setString("action_level", component->actionLevel);
+    json.setUInt("remove_states", component->removeStates);
 
     return (json);
 }
@@ -1209,6 +1211,13 @@ bool    ComponentFactory<sButtonComponent>::updateEditor(const std::string& enti
         component->action == sButtonComponent::eAction::REPLACE_CURRENT_LEVEL)
     {
         Helper::updateComboString("Level", LevelLoader::getInstance()->getLevels(), component->actionLevel);
+
+        int removeStates = component->removeStates;
+        if (ImGui::InputInt("Remove states before action", &removeStates))
+        {
+            removeStates = std::max(removeStates, 0);
+            component->removeStates = removeStates;
+        }
     }
 
     return (changed);
