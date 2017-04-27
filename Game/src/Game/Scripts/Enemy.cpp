@@ -111,7 +111,7 @@ void Enemy::death()
                         return;
                     }
 
-                    enemyScript->takeDamage(25.0f);
+                    enemyScript->takeDamage(50.0f);
                 }
             }
         }
