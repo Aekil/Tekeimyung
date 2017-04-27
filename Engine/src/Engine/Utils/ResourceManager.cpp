@@ -26,6 +26,8 @@ ResourceManager::ResourceManager()
 {
     // Add empty name for empty choice
     _resourcesNames[Resource::eType::TEXTURE].push_back("");
+
+    _defaultResources[Resource::eType::MODEL] = "default.DAE";
 }
 
 ResourceManager::~ResourceManager() {}
@@ -141,6 +143,25 @@ void    ResourceManager::loadSound(const std::string basename, const std::string
 }
 
 template<typename T>
+T*  ResourceManager::getDefaultResource()
+{
+    auto defaultResourceName = _defaultResources.find(T::getResourceType());
+    if (defaultResourceName == _defaultResources.end())
+    {
+        return (nullptr);
+    }
+
+    auto& resourceMap = _resources[T::getResourceType()];
+    auto defaultResource = resourceMap.find(defaultResourceName->second);
+    if (defaultResource == resourceMap.end())
+    {
+        LOG_WARN("Can't find default resource %s", defaultResourceName->second);
+        return (nullptr);
+    }
+    return (static_cast<T*>(defaultResource->second.get()));
+}
+
+template<typename T>
 T*  ResourceManager::getResource(const std::string& path)
 {
     // Resources are stored with their basename
@@ -150,7 +171,8 @@ T*  ResourceManager::getResource(const std::string& path)
     auto& resourceMap = _resources[T::getResourceType()];
     if (resourceMap.find(name) == resourceMap.end())
     {
-        return (nullptr);
+        LOG_WARN("Can't find resource %s, loading default resource", path.c_str());
+        return (getDefaultResource<T>());
     }
 
     auto& resource = resourceMap.at(name);
@@ -179,7 +201,8 @@ T*  ResourceManager::loadResource(const std::string& path)
 
     if (!resource->loadFromFile(path))
     {
-        return (nullptr);
+        LOG_WARN("Can't load resource %s, loading default resource", path.c_str());
+        return (getDefaultResource<T>());
     }
 
     auto& resourceMap = _resources[T::getResourceType()];
@@ -239,6 +262,13 @@ template Geometry*  ResourceManager::getOrLoadResource<Geometry>(const std::stri
 template Material*  ResourceManager::getOrLoadResource<Material>(const std::string& path);
 template File*  ResourceManager::getOrLoadResource<File>(const std::string& path);
 template Font*  ResourceManager::getOrLoadResource<Font>(const std::string& path);
+
+template Model*  ResourceManager::getDefaultResource<Model>();
+template Texture*  ResourceManager::getDefaultResource<Texture>();
+template Geometry*  ResourceManager::getDefaultResource<Geometry>();
+template Material*  ResourceManager::getDefaultResource<Material>();
+template File*  ResourceManager::getDefaultResource<File>();
+template Font*  ResourceManager::getDefaultResource<Font>();
 
 template Model*  ResourceManager::getResource<Model>(const std::string& path);
 template Texture*  ResourceManager::getResource<Texture>(const std::string& path);

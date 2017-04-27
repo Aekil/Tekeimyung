@@ -177,45 +177,49 @@ bool        Material::loadFromFile(const std::string& fileName)
 
     JsonValue textures(parsed.get("textures", {}));
 
-    // Ambient texture
+    try
     {
-        std::string texturePath = textures.getString("ambient", "");
-        if (texturePath.size() != 0)
+        // Ambient texture
         {
-            Texture* texture = ResourceManager::getInstance()->getOrLoadResource<Texture>(texturePath);
-            setTexture(Texture::eType::AMBIENT, texture);
+            std::string texturePath = textures.getString("ambient", "");
+            if (texturePath.size() != 0)
+            {
+                Texture* texture = ResourceManager::getInstance()->getOrLoadResource<Texture>(texturePath);
+                setTexture(Texture::eType::AMBIENT, texture);
+            }
         }
-    }
 
-    // Diffuse texture
-    {
-        std::string texturePath = textures.getString("diffuse", "");
-        if (texturePath.size() != 0)
+        // Diffuse texture
         {
-            Texture* texture = ResourceManager::getInstance()->getOrLoadResource<Texture>(texturePath);
-            setTexture(Texture::eType::DIFFUSE, texture);
+            std::string texturePath = textures.getString("diffuse", "");
+            if (texturePath.size() != 0)
+            {
+                Texture* texture = ResourceManager::getInstance()->getOrLoadResource<Texture>(texturePath);
+                setTexture(Texture::eType::DIFFUSE, texture);
+            }
         }
-    }
 
-    // Bloom texture
-    {
-        std::string texturePath = textures.getString("bloom", "");
-        if (texturePath.size() != 0)
+        // Bloom texture
         {
-            Texture* texture = ResourceManager::getInstance()->getOrLoadResource<Texture>(texturePath);
-            setTexture(Texture::eType::BLOOM, texture);
+            std::string texturePath = textures.getString("bloom", "");
+            if (texturePath.size() != 0)
+            {
+                Texture* texture = ResourceManager::getInstance()->getOrLoadResource<Texture>(texturePath);
+                setTexture(Texture::eType::BLOOM, texture);
+            }
         }
-    }
 
-    // Bloom texture alpha
-    {
-        std::string texturePath = textures.getString("bloom_alpha", "");
-        if (texturePath.size() != 0)
+        // Bloom texture alpha
         {
-            Texture* texture = ResourceManager::getInstance()->getOrLoadResource<Texture>(texturePath);
-            setTexture(Texture::eType::BLOOM_ALPHA, texture);
+            std::string texturePath = textures.getString("bloom_alpha", "");
+            if (texturePath.size() != 0)
+            {
+                Texture* texture = ResourceManager::getInstance()->getOrLoadResource<Texture>(texturePath);
+                setTexture(Texture::eType::BLOOM_ALPHA, texture);
+            }
         }
     }
+    catch (FileNotFoundException& e) { (void)e; }
 
     _isModelMaterial = false;
     needUpdate();

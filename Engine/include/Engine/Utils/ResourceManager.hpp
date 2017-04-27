@@ -75,11 +75,15 @@ private:
     std::string                                     getBasename(const std::string& fileName);
     void                                            loadSound(const std::string basename, const std::string& fileName);
 
+    template<typename T>
+    T*                                              getDefaultResource();
+
 private:
     using tResourcesMap =  std::unordered_map<std::string, std::unique_ptr<Resource>>;
 
     std::unordered_map<Resource::eType, tResourcesMap> _resources;
     std::unordered_map<Resource::eType, std::vector<const char*>> _resourcesNames;
+    std::unordered_map<Resource::eType, const char*> _defaultResources;
 
     // Store sounds basename list
     std::vector<sSoundStrings>                              _soundsStrings;
