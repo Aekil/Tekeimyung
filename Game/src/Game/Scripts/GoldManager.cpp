@@ -29,7 +29,7 @@ void GoldManager::update(float dt)
 int GoldManager::getGolds() const
 {
     return (this->_golds);
-}
+}   
 
 void GoldManager::setGolds(int newGoldAmount)
 {

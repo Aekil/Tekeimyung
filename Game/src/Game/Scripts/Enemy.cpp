@@ -82,9 +82,12 @@ void Enemy::death()
 
     if (this->_percentExplosion != nullptr)
     {
-        if (Maths::randomFrom(0.0f, 1.0f) > (1.0f - this->_percentExplosion->getFinalValue()))
+        if (Maths::randomFrom(0.0f, 1.0f) > (1.0f - /*this->_percentExplosion->getFinalValue()*/1.0f))
         {
-            LOG_DEBUG("Explosion laser");
+            auto sphereExplosion = this->Instantiate("SPHERE_LASER_EXPLOSION", this->getComponent<sTransformComponent>()->getPos());
+
+            sRenderComponent* renderSphereExplosion = sphereExplosion->getComponent<sRenderComponent>();
+            renderSphereExplosion->_animator.play("growing_up", false);
         }
     }
 

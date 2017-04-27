@@ -2,7 +2,8 @@
    "components" : {
       "sButtonComponent" : {
          "action" : "NONE",
-         "action_level" : ""
+         "action_level" : "",
+         "remove_states" : 0
       },
       "sNameComponent" : {
          "name" : "BUTTON_RIGHT_CHEVRON"
@@ -31,7 +32,7 @@
          },
          "rotation" : {
             "x" : 0,
-            "y" : -0,
+            "y" : 0,
             "z" : 0
          },
          "scale" : {

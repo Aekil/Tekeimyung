@@ -1,44 +1,42 @@
 {
    "components" : {
-      "sButtonComponent" : {
-         "action" : "REPLACE_CURRENT_LEVEL",
-         "action_level" : "Game",
-         "remove_states" : 0
-      },
       "sNameComponent" : {
-         "name" : "BUTTON_TRY_AGAIN_RED"
+         "name" : "SPHERE_LASER_EXPLOSION"
       },
       "sRenderComponent" : {
          "animated" : false,
          "animations" : [
             {
                "layer" : "DEFAULT",
-               "name" : "fading",
+               "name" : "growing_up",
                "params" : [
                   {
                      "frames" : [
                         {
                            "easing" : "NONE",
-                           "time" : 0.75,
+                           "time" : 0.5,
                            "value" : {
-                              "w" : 0.47058823704719543,
-                              "x" : 1,
-                              "y" : 1,
-                              "z" : 1
-                           }
-                        },
-                        {
-                           "easing" : "NONE",
-                           "time" : 1.25,
-                           "value" : {
-                              "w" : 1,
                               "x" : 1,
                               "y" : 1,
                               "z" : 1
                            }
                         }
                      ],
-                     "name" : "color"
+                     "name" : "scale"
+                  },
+                  {
+                     "frames" : [
+                        {
+                           "easing" : "NONE",
+                           "time" : 0.5,
+                           "value" : {
+                              "x" : 0,
+                              "y" : 360,
+                              "z" : 0
+                           }
+                        }
+                     ],
+                     "name" : "rotation"
                   }
                ]
             }
@@ -52,15 +50,15 @@
          "dynamic" : false,
          "hide_dynamic" : false,
          "ignore_raycast" : false,
-         "materials" : [ "button_try_again_red.mat" ],
+         "materials" : [ "sphere_laser_explosion.mat" ],
          "model" : "resources/models/default.DAE",
-         "type" : "PLANE"
+         "type" : "SPHERE"
       },
       "sTransformComponent" : {
          "pos" : {
-            "x" : 960,
-            "y" : 345.77999877929688,
-            "z" : 0
+            "x" : 198.74853515625,
+            "y" : 100,
+            "z" : 369.568359375
          },
          "rotation" : {
             "x" : 0,
@@ -68,26 +66,15 @@
             "z" : 0
          },
          "scale" : {
-            "x" : 30,
-            "y" : 7.1999526023864746,
+            "x" : 1,
+            "y" : 1,
             "z" : 1
          }
       },
-      "sUiComponent" : {
-         "horizontal_alignment" : "MIDDLE",
-         "layer" : 0,
-         "offset" : {
-            "x" : 0,
-            "y" : -16
-         },
-         "percentage_size" : true,
-         "size" : {
-            "x" : 0.15625,
-            "y" : 0.070795997977256775
-         },
-         "vertical_alignment" : "MIDDLE"
+      "sTypeComponent" : {
+         "type" : "TILE_WALKABLE"
       }
    },
-   "name" : "BUTTON_TRY_AGAIN_RED",
+   "name" : "SPHERE_LASER_EXPLOSION",
    "tag" : ""
 }

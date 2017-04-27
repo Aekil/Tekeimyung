@@ -2,7 +2,8 @@
    "components" : {
       "sButtonComponent" : {
          "action" : "REPLACE_CURRENT_LEVEL",
-         "action_level" : "HomeScreen"
+         "action_level" : "HomeScreen",
+         "remove_states" : 0
       },
       "sNameComponent" : {
          "name" : "BUTTON_BACK_TO_MENU"
