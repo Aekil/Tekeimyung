@@ -38,7 +38,7 @@ class TutoManager final : public BaseScript
 {
 public:
     TutoManager();
-    ~TutoManager() = default;
+    ~TutoManager();
 
 public:
     void start() override final;
