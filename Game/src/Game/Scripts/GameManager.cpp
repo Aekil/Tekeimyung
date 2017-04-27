@@ -44,8 +44,6 @@ void GameManager::start()
             }
         }
     }
-
-    //this->transform = this->getComponent<sTransformComponent>();
 }
 
 void GameManager::update(float dt)

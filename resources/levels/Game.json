@@ -331,6 +331,91 @@
       {
          "components" : {
             "sNameComponent" : {
+               "name" : "TUTO_MANAGER"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 1
+               },
+               "dynamic" : false,
+               "hide_dynamic" : false,
+               "ignore_raycast" : false,
+               "materials" : [ "MAT_Default" ],
+               "model" : "resources/models/default.DAE",
+               "type" : "MESH"
+            },
+            "sScriptComponent" : {
+               "scripts" : [
+                  {
+                     "name" : "TutoManager"
+                  },
+                  {
+                     "name" : "GoldManager"
+                  },
+                  {
+                     "name" : "TutoManager"
+                  }
+               ]
+            },
+            "sTextComponent" : {
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 1
+               },
+               "content" : "Use W,A,S,D to move (or Press K to skip the tutorial)",
+               "font_name" : "arial.ttf",
+               "font_size" : 22,
+               "horizontal_alignment" : "MIDDLE",
+               "vertical_alignment" : "MIDDLE"
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 672,
+                  "y" : 906.7781982421875,
+                  "z" : 0
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 1,
+                  "y" : 1,
+                  "z" : 1
+               }
+            },
+            "sTypeComponent" : {
+               "type" : "TILE_WALKABLE"
+            },
+            "sUiComponent" : {
+               "horizontal_alignment" : "MIDDLE",
+               "layer" : 0,
+               "offset" : {
+                  "x" : -15,
+                  "y" : -10
+               },
+               "percentage_size" : false,
+               "size" : {
+                  "x" : 0.10000000149011612,
+                  "y" : 0.10000000149011612
+               },
+               "vertical_alignment" : "TOP"
+            }
+         },
+         "name" : "TUTO_MANAGER",
+         "tag" : "TutoManager"
+      },
+      {
+         "components" : {
+            "sNameComponent" : {
                "name" : "HUD_DISPLAY_CASTLELIFE"
             },
             "sRenderComponent" : {
@@ -372,7 +457,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 960,
-                  "y" : 61.019989013671875,
+                  "y" : 61.6199951171875,
                   "z" : 0
                },
                "rotation" : {
@@ -451,7 +536,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 1824,
-                  "y" : 142.3800048828125,
+                  "y" : 143.77999877929688,
                   "z" : 0
                },
                "rotation" : {
@@ -530,7 +615,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 960,
-                  "y" : 147.46499633789063,
+                  "y" : 148.91500854492188,
                   "z" : 0
                },
                "rotation" : {
@@ -589,7 +674,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 1324.800048828125,
-                  "y" : 142.3800048828125,
+                  "y" : 143.77999877929688,
                   "z" : 0
                },
                "rotation" : {
@@ -599,7 +684,7 @@
                },
                "scale" : {
                   "x" : 6.399993896484375,
-                  "y" : 6.0266604423522949,
+                  "y" : 6.0859193801879883,
                   "z" : 1
                }
             },
@@ -645,7 +730,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 460.79998779296875,
-                  "y" : 50.850006103515625,
+                  "y" : 51.350006103515625,
                   "z" : 0
                },
                "rotation" : {
@@ -655,7 +740,7 @@
                },
                "scale" : {
                   "x" : 6.3999357223510742,
-                  "y" : 6.0266404151916504,
+                  "y" : 6.0858993530273438,
                   "z" : 1
                }
             },
@@ -701,7 +786,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 460.79998779296875,
-                  "y" : 142.3800048828125,
+                  "y" : 143.77999877929688,
                   "z" : 0
                },
                "rotation" : {
@@ -711,7 +796,7 @@
                },
                "scale" : {
                   "x" : 6.3999357223510742,
-                  "y" : 6.0266609191894531,
+                  "y" : 6.0859198570251465,
                   "z" : 1
                }
             },
@@ -732,85 +817,6 @@
          },
          "name" : "ICON_WAVE",
          "tag" : ""
-      },
-      {
-         "components" : {
-            "sNameComponent" : {
-               "name" : "TUTO_MANAGER"
-            },
-            "sRenderComponent" : {
-               "animated" : false,
-               "animations" : [],
-               "color" : {
-                  "a" : 1,
-                  "b" : 1,
-                  "g" : 1,
-                  "r" : 1
-               },
-               "dynamic" : false,
-               "hide_dynamic" : false,
-               "ignore_raycast" : false,
-               "materials" : [ "hud_tuto_box.mat" ],
-               "model" : "resources/models/default.DAE",
-               "type" : "PLANE"
-            },
-            "sScriptComponent" : {
-               "scripts" : [
-                  {
-                     "name" : "TutoManager"
-                  }
-               ]
-            },
-            "sTextComponent" : {
-               "color" : {
-                  "a" : 1,
-                  "b" : 1,
-                  "g" : 1,
-                  "r" : 1
-               },
-               "content" : "Use W,A,S,D to move (or Press K to skip the tutorial)",
-               "font_name" : "arial.ttf",
-               "font_size" : 24,
-               "horizontal_alignment" : "MIDDLE",
-               "vertical_alignment" : "MIDDLE"
-            },
-            "sTransformComponent" : {
-               "pos" : {
-                  "x" : 537.5999755859375,
-                  "y" : 935.6400146484375,
-                  "z" : 0
-               },
-               "rotation" : {
-                  "x" : 0,
-                  "y" : 0,
-                  "z" : 0
-               },
-               "scale" : {
-                  "x" : 96.799873352050781,
-                  "y" : 5.8383326530456543,
-                  "z" : 1
-               }
-            },
-            "sTypeComponent" : {
-               "type" : "TILE_WALKABLE"
-            },
-            "sUiComponent" : {
-               "horizontal_alignment" : "MIDDLE",
-               "layer" : 0,
-               "offset" : {
-                  "x" : -22,
-                  "y" : 42
-               },
-               "percentage_size" : true,
-               "size" : {
-                  "x" : 0.50416600704193115,
-                  "y" : 0.057407401502132416
-               },
-               "vertical_alignment" : "MIDDLE"
-            }
-         },
-         "name" : "TUTO_MANAGER",
-         "tag" : "TutoManager"
       }
    ],
    "name" : "Game"

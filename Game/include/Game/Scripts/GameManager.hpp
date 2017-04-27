@@ -10,7 +10,6 @@
 
 #include <Engine/Core/BaseScript.hpp>
 #include <Engine/Core/ScriptFactory.hpp>
-#include <Engine/ComponentFactory.hpp>
 
 #define GAME_MANAGER_TAG    "GameManager"
 #define LAYER_NUMBER 10
@@ -63,8 +62,6 @@ public:
     std::map<int, std::vector<Entity*>> _mapParts;
 
     std::string _mapName;
-
-    sTransformComponent*    transform = nullptr;
 
 public:
     void start() override final;
