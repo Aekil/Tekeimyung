@@ -44,7 +44,7 @@ public:
     bool isInitialized;
 
 protected:
-    Entity* entity;
+    Entity* entity = nullptr;
     Keyboard& keyboard = GameWindow::getInstance()->getKeyboard();
     Mouse& mouse = GameWindow::getInstance()->getMouse();
 

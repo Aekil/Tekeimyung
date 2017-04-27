@@ -5,6 +5,7 @@
 #include <Engine/EntityFactory.hpp>
 #include <Game/Scripts/GameManager.hpp>
 #include <Game/Scripts/TutoManager.hpp>
+#include <Game/Scripts/WaveManager.hpp>
 
 eTutoState& operator++(eTutoState& state)
 {
@@ -37,15 +38,10 @@ TutoManager::TutoManager()
 
 void TutoManager::start()
 {
-    auto em = EntityFactory::getBindedEntityManager();
-    Entity* tutoDisplay = em->getEntityByTag(TUTO_MANAGER_TAG);
-    if (tutoDisplay)
-    {
-        _textComp = tutoDisplay->getComponent<sTextComponent>();
-    }
+    this->_textComp = this->getComponent<sTextComponent>();
 }
 
-void TutoManager::update(float dt) 
+void TutoManager::update(float dt)
 {
     if (this->keyboard.getStateMap()[Keyboard::eKey::K] == Keyboard::eKeyState::KEY_RELEASED)
     {
@@ -61,11 +57,36 @@ void    TutoManager::sendMessage(eTutoState state)
         ++_currentState;
         _textComp->text.setContent(_statesMessages[_currentState]);
         if (state == eTutoState::TUTO_DONE)
-            this->_isFinished = true;
-    }
-}
+        {
+            auto em = EntityFactory::getBindedEntityManager();
 
-bool    TutoManager::isFinished()
-{
-    return this->_isFinished;
+            auto entity = em->getEntityByTag("GameManager");
+
+            if (entity == nullptr)
+            {
+                LOG_ERROR("No entity with GameManager tag");
+                return;
+            }
+
+            auto scriptComponent = entity->getComponent<sScriptComponent>();
+
+            if (scriptComponent == nullptr)
+            {
+                LOG_ERROR("No scriptComponent on entity");
+                return;
+            }
+
+            auto waveManager = scriptComponent->getScript<WaveManager>("WaveManager");
+
+            if (waveManager == nullptr)
+            {
+                LOG_ERROR("No wavemanager script on entity");
+                return;
+            }
+
+            waveManager->setTutorialIsFinished(true);
+
+            this->Destroy();
+        }
+    }
 }

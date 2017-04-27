@@ -10,9 +10,6 @@
 
 #define WAVE_MANAGER_TAG    "WaveManager"
 
-class       Build;
-class       TutoManager;
-
 class       WaveManager final : public BaseScript
 {
 public:
@@ -43,6 +40,7 @@ public:
     int     getNbWaves() const;
     eState  getManagerState() const;
 
+    void    setTutorialIsFinished(bool);
     //  Json serialization & ImGui edition.
 public:
     bool        updateEditor() override final;
@@ -71,9 +69,9 @@ private:
     eBoardState    _boardState;
 
     ProgressBar    _progressBar;
-    Build* _playerBuild;
-    TutoManager* _tutoManager;
     std::vector<int> _mapParts;
+
+    bool _tutorialIsFinished = false;
 };
 
 REGISTER_SCRIPT(WaveManager);
