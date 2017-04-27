@@ -7,6 +7,12 @@
 #include <Game/Scripts/TutoManager.hpp>
 #include <Game/Scripts/WaveManager.hpp>
 #include <Game/Scripts/GoldManager.hpp>
+#include <Game/Scripts/TutoManagerMessage.hpp>
+
+TutoManager::~TutoManager()
+{
+    TutoManagerMessage::_instance = nullptr;
+}
 
 eTutoState& operator++(eTutoState& state)
 {

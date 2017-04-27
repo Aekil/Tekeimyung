@@ -10,6 +10,8 @@
 
 class TutoManagerMessage
 {
+friend TutoManager;
+
 public:
     TutoManagerMessage() = default;
     ~TutoManagerMessage() = default;
