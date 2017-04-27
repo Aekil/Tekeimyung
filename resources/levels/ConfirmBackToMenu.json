@@ -4,7 +4,8 @@
          "components" : {
             "sButtonComponent" : {
                "action" : "REMOVE_CURRENT_LEVEL",
-               "action_level" : ""
+               "action_level" : "",
+               "remove_states" : 0
             },
             "sNameComponent" : {
                "name" : "BUTTON_CONFIRM_NO"
@@ -19,6 +20,7 @@
                   "r" : 1
                },
                "dynamic" : false,
+               "hide_dynamic" : false,
                "ignore_raycast" : false,
                "materials" : [ "button_confirm_no.mat" ],
                "model" : "resources/models/default.DAE",
@@ -62,8 +64,9 @@
       {
          "components" : {
             "sButtonComponent" : {
-               "action" : "REPLACE_CURRENT_LEVEL",
-               "action_level" : "HomeScreen"
+               "action" : "NONE",
+               "action_level" : "HomeScreen",
+               "remove_states" : 3
             },
             "sNameComponent" : {
                "name" : "BUTTON_CONFIRM_YES"
@@ -78,6 +81,7 @@
                   "r" : 1
                },
                "dynamic" : false,
+               "hide_dynamic" : false,
                "ignore_raycast" : false,
                "materials" : [ "button_confirm_yes.mat" ],
                "model" : "resources/models/default.DAE",
@@ -133,6 +137,7 @@
                   "r" : 1
                },
                "dynamic" : false,
+               "hide_dynamic" : false,
                "ignore_raycast" : false,
                "materials" : [ "message_progress_lost_warning.mat" ],
                "model" : "resources/models/default.DAE",
@@ -188,6 +193,7 @@
                   "r" : 1
                },
                "dynamic" : false,
+               "hide_dynamic" : false,
                "ignore_raycast" : true,
                "materials" : [ "texture_popup_background.mat" ],
                "model" : "resources/models/default.DAE",

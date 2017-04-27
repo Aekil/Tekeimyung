@@ -55,5 +55,15 @@ void    GameStateManager::removeLastStates(uint32_t nb)
         return;
     }
 
-    _states.erase(_states.end() - nb, _states.end());
+    for (nb; nb != 0; --nb)
+    {
+        _states.back()->bindEntityManager();
+        _states.pop_back();
+    }
+
+    if (hasStates())
+    {
+        _states.back()->bindEntityManager();
+        _states.back()->onEnter();
+    }
 }

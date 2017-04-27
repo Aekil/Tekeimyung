@@ -35,7 +35,10 @@ Renderer::Renderer(): _currentCamera(nullptr)
     _UICamera.updateUBO();
 }
 
-Renderer::~Renderer() {}
+Renderer::~Renderer()
+{
+    _instance = nullptr;
+}
 
 std::shared_ptr<Renderer>   Renderer::getInstance()
 {
@@ -92,6 +95,10 @@ void    Renderer::onWindowResize()
 
 Camera* Renderer::getCurrentCamera()
 {
+    if (!_currentCamera)
+    {
+        return (&_defaultCamera);
+    }
     return (_currentCamera);
 }
 

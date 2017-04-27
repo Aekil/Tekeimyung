@@ -8,9 +8,10 @@
 #include <glm/gtx/rotate_vector.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include <Engine/Window/GameWindow.hpp>
-#include <Engine/Utils/Helper.hpp>
 #include <Engine/Debug/Debug.hpp>
+#include <Engine/Graphics/Renderer.hpp>
+#include <Engine/Utils/Helper.hpp>
+#include <Engine/Window/GameWindow.hpp>
 
 #include <Engine/Graphics/Camera.hpp>
 
@@ -32,7 +33,17 @@ Camera::Camera(): _needUpdateView(true), _needUpdateProj(true), _fov(45.0f),
     updateViewport();
 }
 
-Camera::~Camera() {}
+Camera::~Camera()
+{
+    // We don't want the Renderer camera singleton to use our camera adress
+    // Because it will be deleted
+    auto renderer = Renderer::_instance;
+    if (renderer &&
+        renderer->getCurrentCamera() == this)
+    {
+        renderer->setCurrentCamera(nullptr);
+    }
+}
 
 Camera::Camera(const Camera& camera)
 {

@@ -24,6 +24,7 @@ class Model2DRenderer;
 
 class Renderer
 {
+friend Camera;
 friend Model2DRenderer;
 
 public:
@@ -94,6 +95,7 @@ private:
 
     Camera*                             _currentCamera;
     Camera                              _UICamera;
+    Camera                              _defaultCamera;
 
     // Used when there is no light
     Light                               _defaultLight;
