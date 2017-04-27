@@ -1207,17 +1207,17 @@ bool    ComponentFactory<sButtonComponent>::updateEditor(const std::string& enti
 
     changed |= Helper::updateComboEnum<sButtonComponent::eAction>("Action", component->action);
 
+    int removeStates = component->removeStates;
+    if (ImGui::InputInt("Remove states before action", &removeStates))
+    {
+        removeStates = std::max(removeStates, 0);
+        component->removeStates = removeStates;
+    }
+
     if (component->action == sButtonComponent::eAction::ADD_LEVEL ||
         component->action == sButtonComponent::eAction::REPLACE_CURRENT_LEVEL)
     {
         Helper::updateComboString("Level", LevelLoader::getInstance()->getLevels(), component->actionLevel);
-
-        int removeStates = component->removeStates;
-        if (ImGui::InputInt("Remove states before action", &removeStates))
-        {
-            removeStates = std::max(removeStates, 0);
-            component->removeStates = removeStates;
-        }
     }
 
     return (changed);

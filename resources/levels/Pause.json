@@ -4,7 +4,8 @@
          "components" : {
             "sButtonComponent" : {
                "action" : "REMOVE_CURRENT_LEVEL",
-               "action_level" : ""
+               "action_level" : "",
+               "remove_states" : 0
             },
             "sNameComponent" : {
                "name" : "BUTTON_RESUME"
@@ -19,6 +20,7 @@
                   "r" : 1
                },
                "dynamic" : false,
+               "hide_dynamic" : false,
                "ignore_raycast" : false,
                "materials" : [ "button_resume.mat" ],
                "model" : "resources/models/default.DAE",
@@ -63,7 +65,8 @@
          "components" : {
             "sButtonComponent" : {
                "action" : "ADD_LEVEL",
-               "action_level" : "HowToPlay"
+               "action_level" : "HowToPlay",
+               "remove_states" : 0
             },
             "sNameComponent" : {
                "name" : "BUTTON_HOW_TO_PLAY"
@@ -78,6 +81,7 @@
                   "r" : 1
                },
                "dynamic" : false,
+               "hide_dynamic" : false,
                "ignore_raycast" : false,
                "materials" : [ "button_how_to_play.mat" ],
                "model" : "resources/models/default.DAE",
@@ -122,7 +126,8 @@
          "components" : {
             "sButtonComponent" : {
                "action" : "ADD_LEVEL",
-               "action_level" : "Options"
+               "action_level" : "Options",
+               "remove_states" : 0
             },
             "sNameComponent" : {
                "name" : "BUTTON_OPTIONS"
@@ -137,6 +142,7 @@
                   "r" : 1
                },
                "dynamic" : false,
+               "hide_dynamic" : false,
                "ignore_raycast" : false,
                "materials" : [ "button_options.mat" ],
                "model" : "resources/models/default.DAE",
@@ -181,7 +187,8 @@
          "components" : {
             "sButtonComponent" : {
                "action" : "ADD_LEVEL",
-               "action_level" : "ConfirmBackToMenu"
+               "action_level" : "ConfirmBackToMenu",
+               "remove_states" : 0
             },
             "sNameComponent" : {
                "name" : "BUTTON_BACK_TO_MENU"
@@ -228,6 +235,7 @@
                   "r" : 1
                },
                "dynamic" : false,
+               "hide_dynamic" : false,
                "ignore_raycast" : false,
                "materials" : [ "button_back_to_menu.mat" ],
                "model" : "resources/models/traps/trap_needle.DAE",
@@ -272,7 +280,8 @@
          "components" : {
             "sButtonComponent" : {
                "action" : "ADD_LEVEL",
-               "action_level" : "ConfirmExit"
+               "action_level" : "ConfirmExit",
+               "remove_states" : 0
             },
             "sNameComponent" : {
                "name" : "BUTTON_EXIT_GAME"
@@ -287,6 +296,7 @@
                   "r" : 1
                },
                "dynamic" : false,
+               "hide_dynamic" : false,
                "ignore_raycast" : false,
                "materials" : [ "button_exit_game.mat" ],
                "model" : "resources/models/default.DAE",

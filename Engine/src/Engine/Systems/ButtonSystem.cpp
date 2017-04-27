@@ -148,7 +148,12 @@ void    ButtonSystem::handleButtonsActions(EntityManager& em)
         }
         else if (button->action == sButtonComponent::eAction::REMOVE_CURRENT_LEVEL)
         {
+            _gameStateManager->removeLastStates(button->removeStates);
             _gameStateManager->removeCurrentState();
+        }
+        else if (button->action == sButtonComponent::eAction::NONE)
+        {
+            _gameStateManager->removeLastStates(button->removeStates);
         }
     }
 }
