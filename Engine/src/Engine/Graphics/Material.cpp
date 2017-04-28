@@ -74,7 +74,7 @@ Material*    Material::loadFromAssimp(aiMaterial* assimpMaterial, const std::str
 
     // Return material if already exists
     {
-        Material* material = ResourceManager::getInstance()->getResource<Material>(name.C_Str());
+        Material* material = ResourceManager::getInstance()->getResource<Material>(name.C_Str(), false);
         if (material)
         {
             return (material);

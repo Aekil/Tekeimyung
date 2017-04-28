@@ -53,7 +53,7 @@ public:
     void                                            loadResources(const std::string& directory);
 
     template<typename T>
-    T*                                              getResource(const std::string& path);
+    T*                                              getResource(const std::string& path, bool useDefaultIfNotFound = true);
     template<typename T>
     T*                                              getOrLoadResource(const std::string& path);
     template<typename T>
@@ -63,7 +63,7 @@ public:
 
     const std::vector<sSoundStrings>&               getSoundsStrings() const;
 
-    static ResourceManager*                        getInstance();
+    static ResourceManager*                         getInstance();
     static std::string                              getFileExtension(const std::string& fileName);
 
 private:

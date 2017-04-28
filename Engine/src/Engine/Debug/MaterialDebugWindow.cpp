@@ -35,19 +35,26 @@ void    MaterialDebugWindow::build(std::shared_ptr<GameState> gameState, float e
 
     if (ImGui::Button("Create")) ImGui::OpenPopup("create_material");
     ImGui::SameLine();
-    if (ImGui::Button("Save all")) saveMaterials();
-    ImGui::Separator();
+    if (this->_selectedMaterialName != nullptr && this->_selectedMaterial != nullptr && ImGui::Button("Save"))
+        this->saveMaterial(this->_selectedMaterialName);
+    ImGui::SameLine();
+    if (ImGui::Button("Save all")) this->saveMaterials();
+    ImGui::SameLine();
 
     if (ImGui::BeginPopup("create_material"))
     {
         static char newTypeName[64] = "";
 
-        ImGui::InputText("New material", newTypeName, 64);
-        if (ImGui::Button("OK !"))
+        ImGui::InputText("Material name", newTypeName, 64);
+        if (std::string(newTypeName).size() > 0)
         {
-            if (createMaterial(newTypeName))
+            ImGui::Separator();
+            if (ImGui::Button("Confirm"))
             {
-                ImGui::CloseCurrentPopup();
+                if (createMaterial(newTypeName))
+                {
+                    ImGui::CloseCurrentPopup();
+                }
             }
         }
         ImGui::EndPopup();
@@ -70,17 +77,28 @@ void    MaterialDebugWindow::populateInspector()
 
 void    MaterialDebugWindow::displayMaterialsList()
 {
+    static ImGuiTextFilter  filter;
+
+    filter.Draw();
+    ImGui::Separator();
     ImGui::BeginChild("Materials list", ImVec2(_size.x * 40.0f / 100.0f, 0), true);
-    auto& materialNames = ResourceManager::getInstance()->getResourcesNames<Material>();
+
+    auto&   materialNames = ResourceManager::getInstance()->getResourcesNames<Material>();
+
     for (const char* materialName: materialNames)
     {
-        Material* material = ResourceManager::getInstance()->getResource<Material>(materialName);
-        if (!material->isModelMaterial() && ImGui::Selectable(materialName, _selectedMaterialName == materialName))
+        if (filter.PassFilter(materialName) == true)
         {
-            _selectedMaterialName = materialName;
-            _selectedMaterial = material;
+            Material*   material = ResourceManager::getInstance()->getResource<Material>(materialName);
+
+            if (!material->isModelMaterial() && ImGui::Selectable(materialName, _selectedMaterialName == materialName))
+            {
+                _selectedMaterialName = materialName;
+                _selectedMaterial = material;
+            }
         }
     }
+
     ImGui::EndChild();
 }
 
@@ -266,9 +284,12 @@ bool    MaterialDebugWindow::createMaterial(std::string name)
         return (false);
     }
 
-    std::string filePath = std::string(MATERIALS_DIRECTORY) + name;
-    std::unique_ptr<Material> material = std::make_unique<Material>(false);
+    std::string                 filePath = std::string(MATERIALS_DIRECTORY) + name;
+    std::unique_ptr<Material>   material = std::make_unique<Material>(false);
+
     ResourceManager::getInstance()->registerResource<Material>(std::move(material), filePath);
+
+    //std::sort(materialNames.begin(), materialNames.end());
     LOG_INFO("New material \"%s\" has been created", name.c_str());
 
     return (true);
@@ -283,95 +304,104 @@ bool    MaterialDebugWindow::cloneMaterial(Material* material, std::string clone
     }
 
     cloneName = cloneName + ".mat";
-    auto& materialNames = ResourceManager::getInstance()->getResourcesNames<Material>();
+
+    auto&   materialNames = ResourceManager::getInstance()->getResourcesNames<Material>();
+    
     if (std::find(materialNames.cbegin(), materialNames.cend(), cloneName) != materialNames.cend())
     {
         LOG_ERROR("Can't clone material \"%s\" with clone name \"%s\": already exists", material->getId().c_str(), cloneName.c_str());
         return (false);
     }
 
-    std::string filePath = std::string(MATERIALS_DIRECTORY) + cloneName;
-    std::unique_ptr<Material> cloneMaterial = std::make_unique<Material>(*material);
+    std::string                 filePath = std::string(MATERIALS_DIRECTORY) + cloneName;
+    std::unique_ptr<Material>   cloneMaterial = std::make_unique<Material>(*material);
+
     ResourceManager::getInstance()->registerResource<Material>(std::move(cloneMaterial), filePath);
+    //std::sort(materialNames.begin(), materialNames.end());
     LOG_INFO("Material \"%s\" has been cloned to \"%s\"", material->getId().c_str(), cloneName.c_str());
 
     return (true);
 }
 
-void    MaterialDebugWindow::saveMaterials()
+void    MaterialDebugWindow::saveMaterial(const char* materialName)
 {
-    auto& materialNames = ResourceManager::getInstance()->getResourcesNames<Material>();
-    for (const char* materialName: materialNames)
+    Material*   material = ResourceManager::getInstance()->getResource<Material>(materialName);
+
+    // Only save non-model materials
+    if (!material->isModelMaterial())
     {
-        Material* material = ResourceManager::getInstance()->getResource<Material>(materialName);
+        JsonWriter  jsonWriter;
+        JsonValue   json;
+        JsonValue   texturesJson;
 
-        // Only save non-model materials
-        if (!material->isModelMaterial())
+        json.setColor4f("ambient", material->getAmbient());
+        json.setColor4f("diffuse", material->getDiffuse());
+        json.setColor4f("bloom_color", material->getBloom());
+        json.setBool("face_camera", material->isFacingCamera());
+        json.setBool("has_bloom", material->hasBloom());
+        json.setBool("transparent", material->transparent);
+        json.setBool("wireframe", material->wireframe);
+        json.setString("src_blend", Material::getBlendStringFromEnum(material->srcBlend));
+        json.setString("dst_blend", Material::getBlendStringFromEnum(material->dstBlend));
+
+        // Ambient texture
+        if (material->getTexture(Texture::eType::AMBIENT))
         {
-            JsonWriter jsonWriter;
-            JsonValue json;
-            JsonValue texturesJson;
-
-            json.setColor4f("ambient", material->getAmbient());
-            json.setColor4f("diffuse", material->getDiffuse());
-            json.setColor4f("bloom_color", material->getBloom());
-            json.setBool("face_camera", material->isFacingCamera());
-            json.setBool("has_bloom", material->hasBloom());
-            json.setBool("transparent", material->transparent);
-            json.setBool("wireframe", material->wireframe);
-            json.setString("src_blend", Material::getBlendStringFromEnum(material->srcBlend));
-            json.setString("dst_blend", Material::getBlendStringFromEnum(material->dstBlend));
-
-            // Ambient texture
-            if (material->getTexture(Texture::eType::AMBIENT))
-            {
-                texturesJson.setString("ambient", material->getTexture(Texture::eType::AMBIENT)->getPath());
-            }
-            else
-            {
-                texturesJson.setString("ambient", "");
-            }
-
-            // Diffuse texture
-            if (material->getTexture(Texture::eType::DIFFUSE))
-            {
-                texturesJson.setString("diffuse", material->getTexture(Texture::eType::DIFFUSE)->getPath());
-            }
-            else
-            {
-                texturesJson.setString("diffuse", "");
-            }
-
-            // Bloom texture
-            if (material->getTexture(Texture::eType::BLOOM))
-            {
-                texturesJson.setString("bloom", material->getTexture(Texture::eType::BLOOM)->getPath());
-            }
-            else
-            {
-                texturesJson.setString("bloom", "");
-            }
-
-            // Bloom texture alpha
-            if (material->getTexture(Texture::eType::BLOOM_ALPHA))
-            {
-                texturesJson.setString("bloom_alpha", material->getTexture(Texture::eType::BLOOM_ALPHA)->getPath());
-            }
-            else
-            {
-                texturesJson.setString("bloom_alpha", "");
-            }
-
-            json.setValue("textures", texturesJson);
-            saveMaterial(material, json);
+            texturesJson.setString("ambient", material->getTexture(Texture::eType::AMBIENT)->getPath());
         }
+        else
+        {
+            texturesJson.setString("ambient", "");
+        }
+
+        // Diffuse texture
+        if (material->getTexture(Texture::eType::DIFFUSE))
+        {
+            texturesJson.setString("diffuse", material->getTexture(Texture::eType::DIFFUSE)->getPath());
+        }
+        else
+        {
+            texturesJson.setString("diffuse", "");
+        }
+
+        // Bloom texture
+        if (material->getTexture(Texture::eType::BLOOM))
+        {
+            texturesJson.setString("bloom", material->getTexture(Texture::eType::BLOOM)->getPath());
+        }
+        else
+        {
+            texturesJson.setString("bloom", "");
+        }
+
+        // Bloom texture alpha
+        if (material->getTexture(Texture::eType::BLOOM_ALPHA))
+        {
+            texturesJson.setString("bloom_alpha", material->getTexture(Texture::eType::BLOOM_ALPHA)->getPath());
+        }
+        else
+        {
+            texturesJson.setString("bloom_alpha", "");
+        }
+
+        json.setValue("textures", texturesJson);
+        this->saveMaterial(material, json);
     }
+}
+
+void        MaterialDebugWindow::saveMaterials()
+{
+    auto&   materialNames = ResourceManager::getInstance()->getResourcesNames<Material>();
+
+    for (const char* materialName: materialNames)
+        this->saveMaterial(materialName);
+
     LOG_INFO("All materials has been saved");
 }
 
-void    MaterialDebugWindow::saveMaterial(Material* material, JsonValue& json)
+void            MaterialDebugWindow::saveMaterial(Material* material, JsonValue& json)
 {
-    JsonWriter jsonWriter;
+    JsonWriter  jsonWriter;
     std::string filePath = std::string(MATERIALS_DIRECTORY) + material->getId();
 
     jsonWriter.write(material->getPath(), json);

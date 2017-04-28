@@ -32,12 +32,13 @@ Cylinder::Cylinder(Cylinder::sInfo& info): Geometry(Geometry::eType::CYLINDER)
         curTheta += stepTheta;
     }
 
+    float twiceRadius = radius * 2.0f;
     // Top cap
     for (uint32_t i = 0; i < verticesPerCircle; ++i)
     {
         Vertex vertex;
-        vertex.uv = glm::vec2(halfCosThetas[i] + 0.5, halfSinThetas[i] + 0.5);
         vertex.pos = glm::vec3(halfCosThetas[i], height, halfSinThetas[i]);
+        vertex.uv = glm::vec2((vertex.pos.x + radius) / twiceRadius, (vertex.pos.z + radius) / twiceRadius);
         vertex.color = glm::vec3(0.0f, 0.0f, 0.0f);
         vertex.normal = glm::vec3(0.0f, 1.0f, 0.0f);
         mesh->vertexs.push_back(vertex);
@@ -53,8 +54,8 @@ Cylinder::Cylinder(Cylinder::sInfo& info): Geometry(Geometry::eType::CYLINDER)
     for (uint32_t i = 0; i < verticesPerCircle; ++i)
     {
         Vertex vertex;
-        vertex.uv = glm::vec2(halfCosThetas[i] + 0.5, halfSinThetas[i] + 0.5);
         vertex.pos = glm::vec3(halfCosThetas[i], 0.0f, halfSinThetas[i]);
+        vertex.uv = glm::vec2(1.0f - (vertex.pos.x + radius) / twiceRadius, (vertex.pos.z + radius) / twiceRadius);
         vertex.color = glm::vec3(0.0f, 0.0f, 0.0f);
         vertex.normal = glm::vec3(0.0f, -1.0f, 0.0f);
         mesh->vertexs.push_back(vertex);
