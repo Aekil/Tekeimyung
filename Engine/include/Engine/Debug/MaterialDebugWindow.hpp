@@ -11,7 +11,7 @@
 
 #define MATERIALS_DIRECTORY    "resources/materials/"
 
-class MaterialDebugWindow : public DebugWindow, public IInspectorImplementation
+class           MaterialDebugWindow : public DebugWindow, public IInspectorImplementation
 {
 public:
     MaterialDebugWindow();
@@ -32,9 +32,10 @@ private:
     bool        createMaterial(std::string name);
     bool        cloneMaterial(Material* material, std::string cloneName);
     void        saveMaterials();
+    void        saveMaterial(const char* materialName);
     void        saveMaterial(Material* material, JsonValue& json);
 
 private:
-    Material*   _selectedMaterial{nullptr};
-    const char* _selectedMaterialName{nullptr};
+    Material*   _selectedMaterial = nullptr;
+    const char* _selectedMaterialName = nullptr;
 };

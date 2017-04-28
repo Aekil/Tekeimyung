@@ -8,54 +8,67 @@
 #include <Engine/EntityFactory.hpp>
 #include <Engine/Utils/Helper.hpp>
 
-EntitiesTemplateDebugWindow::EntitiesTemplateDebugWindow() : DebugWindow("Entities templates") {}
+EntitiesTemplateDebugWindow::EntitiesTemplateDebugWindow() : DebugWindow("Archetypes") {}
 
 EntitiesTemplateDebugWindow::EntitiesTemplateDebugWindow(const ImVec2& pos, const ImVec2& size) :
-                                    DebugWindow("Entities templates", pos, size) {}
+                                    DebugWindow("Archetypes", pos, size) {}
 
 EntitiesTemplateDebugWindow::~EntitiesTemplateDebugWindow() {}
 
 void    EntitiesTemplateDebugWindow::build(std::shared_ptr<GameState> gameState, float elapsedTime)
 {
+    static ImGuiTextFilter  filter;
+
     if (!ImGui::Begin(_title.c_str(), &_displayed))
     {
         ImGui::End();
         return;
     }
 
-    // Create entity type
-    static char typeName[64];
-    ImGui::PushItemWidth(120);
-    ImGui::InputText("##default", typeName, 64);
+    if (ImGui::Button("New archetype")) ImGui::OpenPopup("create_archetype");
     ImGui::SameLine();
-    ImGui::PushStyleColor(ImGuiCol_Button, ImColor(0.27f, 0.51f, 0.70f, 1.0f));
-    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImColor(0.39f, 0.58f, 0.92f, 1.0f));
-    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImColor(0.49f, 0.68f, 0.92f, 1.0f));
-        if (ImGui::Button("Create entity type") && std::string(typeName).size() > 0)
+
+    if (ImGui::BeginPopup("create_archetype"))
     {
-        if (EntityFactory::entityTypeExists(typeName))
-            LOG_ERROR("Can't create entity type %s, it already exists", typeName);
-        else
-            EntityFactory::createEntityType(typeName);
+        static char newArchetypeName[64] = "";
+
+        ImGui::InputText("Archetype name", newArchetypeName, 64);
+        if (std::string(newArchetypeName).size() > 0)
+        {
+            ImGui::Separator();
+            if (ImGui::Button("Confirm") == true)
+            {
+                if (EntityFactory::entityTypeExists(newArchetypeName))
+                    LOG_ERROR("Could not create archetype %s, it already exists", newArchetypeName);
+                else
+                    EntityFactory::createEntityType(newArchetypeName);
+                ImGui::CloseCurrentPopup();
+            }
+        }
+        ImGui::EndPopup();
     }
-    ImGui::PopStyleColor(3);
 
     // Clone template: specify new type name
     if (ImGui::Button("Save all"))
     {
-        for (const auto& type: EntityFactory::getTypesString())
+        for (const auto& type : EntityFactory::getTypesString())
         {
             EntityFactory::saveEntityTemplateToJson(type);
         }
     }
+    ImGui::SameLine();
 
     // Templates list
-    ImGui::BeginChild("Templates list", ImVec2(150, 0), true);
+    filter.Draw();
+    ImGui::BeginChild("Archetypes list", ImVec2(300, 0), true);
     for (const auto& type: EntityFactory::getTypesString())
     {
-        if (ImGui::Selectable(type, _selectedEntityTemplate == type))
+        if (filter.PassFilter(type))
         {
-            _selectedEntityTemplate = type;
+            if (ImGui::Selectable(type, _selectedEntityTemplate == type))
+            {
+                _selectedEntityTemplate = type;
+            }
         }
     }
     ImGui::EndChild();

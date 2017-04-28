@@ -63,7 +63,7 @@ public:
 
     const std::vector<sSoundStrings>&               getSoundsStrings() const;
 
-    static ResourceManager*                        getInstance();
+    static ResourceManager*                         getInstance();
     static std::string                              getFileExtension(const std::string& fileName);
 
 private:
