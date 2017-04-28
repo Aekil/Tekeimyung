@@ -34,11 +34,11 @@ TutoManager::TutoManager()
 {
     _statesMessages[eTutoState::MOVE] = "Press W, A, S or D to move (Press K to SKIP the tutorial)";
     _statesMessages[eTutoState::SHOOT] = "Use LEFT CLICK to shoot !";
-    _statesMessages[eTutoState::CHANGE_WEAPON] = "Use the SCROLL WHEEL to change your weapon (you have 2 different ones) !";
-    _statesMessages[eTutoState::CHOOSE_BUILD] = "Press 1, 2, 3 or 4 to choose an item to build !";
+    _statesMessages[eTutoState::CHANGE_WEAPON] = "Use the mouse SCROLL WHEEL to change your weapon !";
+    _statesMessages[eTutoState::CHOOSE_BUILD] = "Press 1, 2, 3, 4 or 5 to choose an item to build !";
     _statesMessages[eTutoState::BUILD] = "Use LEFT CLICK on buildable zone to build something";
     _statesMessages[eTutoState::DISABLE_BUILD] = "Use RIGHT CLICK to disable build mode";
-    _statesMessages[eTutoState::CHECK_HOWTOPLAY] = "Don't worry, you can still go to the 'How to Play' menu from the pause menu";
+    _statesMessages[eTutoState::CHECK_HOWTOPLAY] = "Try to check the 'How to Play' from the pause menu (press Escape)";
     _statesMessages[eTutoState::CHECK_BUILDLIST] = "Check the Build list with B to know what you can build and for how much golds";
     _statesMessages[eTutoState::TUTO_DONE] = "Well done ! Tutorial completed. GL & HF ! (press T to QUIT tutorial)";
     _statesMessages[eTutoState::TUTO_WAVE] = "Press SPACE to start the wave";
