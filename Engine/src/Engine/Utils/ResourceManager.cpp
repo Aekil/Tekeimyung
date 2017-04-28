@@ -28,6 +28,7 @@ ResourceManager::ResourceManager()
     _resourcesNames[Resource::eType::TEXTURE].push_back("");
 
     _defaultResources[Resource::eType::MODEL] = "default.DAE";
+    _defaultResources[Resource::eType::MATERIAL] = "geometry_default.mat";
 }
 
 ResourceManager::~ResourceManager() {}
@@ -162,7 +163,7 @@ T*  ResourceManager::getDefaultResource()
 }
 
 template<typename T>
-T*  ResourceManager::getResource(const std::string& path)
+T*  ResourceManager::getResource(const std::string& path, bool useDefaultIfNotFound)
 {
     // Resources are stored with their basename
     std::string name = getBasename(path);
@@ -171,8 +172,15 @@ T*  ResourceManager::getResource(const std::string& path)
     auto& resourceMap = _resources[T::getResourceType()];
     if (resourceMap.find(name) == resourceMap.end())
     {
-        LOG_WARN("Can't find resource %s, loading default resource", path.c_str());
-        return (getDefaultResource<T>());
+        if (useDefaultIfNotFound)
+        {
+            LOG_WARN("Can't find resource %s, loading default resource", path.c_str());
+            return (getDefaultResource<T>());
+        }
+        else
+        {
+            return (nullptr);
+        }
     }
 
     auto& resource = resourceMap.at(name);
@@ -182,7 +190,9 @@ T*  ResourceManager::getResource(const std::string& path)
 template<typename T>
 T*  ResourceManager::getOrLoadResource(const std::string& path)
 {
-    T* resource = getResource<T>(path);
+    // Pass false so we don't get the default resource if it's not found
+    // Because we want to load it
+    T* resource = getResource<T>(path, false);
 
     // The resource is not loaded
     if (!resource)
@@ -270,12 +280,12 @@ template Material*  ResourceManager::getDefaultResource<Material>();
 template File*  ResourceManager::getDefaultResource<File>();
 template Font*  ResourceManager::getDefaultResource<Font>();
 
-template Model*  ResourceManager::getResource<Model>(const std::string& path);
-template Texture*  ResourceManager::getResource<Texture>(const std::string& path);
-template Geometry*  ResourceManager::getResource<Geometry>(const std::string& path);
-template Material*  ResourceManager::getResource<Material>(const std::string& path);
-template File*  ResourceManager::getResource<File>(const std::string& path);
-template Font*  ResourceManager::getResource<Font>(const std::string& path);
+template Model*  ResourceManager::getResource<Model>(const std::string& path, bool useDefaultIfNotFound);
+template Texture*  ResourceManager::getResource<Texture>(const std::string& path, bool useDefaultIfNotFound);
+template Geometry*  ResourceManager::getResource<Geometry>(const std::string& path, bool useDefaultIfNotFound);
+template Material*  ResourceManager::getResource<Material>(const std::string& path, bool useDefaultIfNotFound);
+template File*  ResourceManager::getResource<File>(const std::string& path, bool useDefaultIfNotFound);
+template Font*  ResourceManager::getResource<Font>(const std::string& path, bool useDefaultIfNotFound);
 
 template Model*  ResourceManager::registerResource<Model>(std::unique_ptr<Model> resource, const std::string& path);
 template Texture*  ResourceManager::registerResource<Texture>(std::unique_ptr<Texture> resource, const std::string& path);
