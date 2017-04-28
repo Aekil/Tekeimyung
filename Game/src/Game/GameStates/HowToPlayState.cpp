@@ -47,8 +47,8 @@ bool    HowToPlayState::update(float elapsedTime)
     bool success = GameState::update(elapsedTime);
 
     // Quit the state
-    if (keyboard.getStateMap()[Keyboard::eKey::ESCAPE] == Keyboard::eKeyState::KEY_PRESSED ||
-        keyboard.getStateMap()[Keyboard::eKey::H] == Keyboard::eKeyState::KEY_PRESSED)
+    if (keyboard.getStateMap()[Keyboard::eKey::ESCAPE] == Keyboard::eKeyState::KEY_PRESSED/* ||
+        keyboard.getStateMap()[Keyboard::eKey::H] == Keyboard::eKeyState::KEY_PRESSED*/)
     {
         SoundManager::getInstance()->setVolumeAllChannels(1.0f);
         return (false);
