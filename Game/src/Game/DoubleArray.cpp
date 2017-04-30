@@ -60,11 +60,11 @@ void    DoubleArray<T>::allocate(uint32_t width, uint32_t height)
 template <typename T>
 void    DoubleArray<T>::free()
 {
-    delete[] _content;
     _width = 0;
     _height = 0;
     _content = nullptr;
     _allocated = false;
+    delete[] _content;
 }
 
 template <typename T>

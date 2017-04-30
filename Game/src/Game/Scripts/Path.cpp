@@ -44,9 +44,9 @@ void    Path::freeNodes()
         return;
     }
 
-    for (int x = 0; x < _map->getWidth(); ++x)
+    for (int x = 0; x < _nodes.getWidth(); ++x)
     {
-        for (int y = 0; y < _map->getHeight(); ++y)
+        for (int y = 0; y < _nodes.getHeight(); ++y)
         {
             delete _nodes[x][y];
         }
