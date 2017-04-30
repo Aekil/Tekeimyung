@@ -354,7 +354,7 @@ void        NewBuild::placePreviewedEntity()
 
     tilePos.x = static_cast<int>(std::ceil(tileTransform->getPos().x) / 25.0f);
     tilePos.y = static_cast<int>(tileTransform->getPos().z / 25.0f);
-    this->_gameManager->firstLayerPattern[tilePos.x][tilePos.y] = 0;
+    this->_gameManager->map[tilePos.x][tilePos.y] = 0;
     this->updateSpawnersPaths(tilePos);
 
     TutoManagerMessage::getInstance()->sendMessage(eTutoState::BUILD);
@@ -368,8 +368,9 @@ void        NewBuild::updateSpawnersPaths(const glm::ivec2& tilePos)
         return;
     }
 
+    auto& spawnersPaths = _gameManager->map.getSpawnersPaths();
     // This is not a spawner path, no need to update the paths
-    if (!this->_gameManager->spawnersPaths[tilePos.x][tilePos.y])
+    if (!spawnersPaths[tilePos.x][tilePos.y])
     {
         return;
     }
@@ -378,11 +379,12 @@ void        NewBuild::updateSpawnersPaths(const glm::ivec2& tilePos)
         LOG_INFO("UPDATE SPAWNERS PATHS");
     }
 
-    for (int x = 0; x < _gameManager->mapSizeX; x++)
+    auto& mapEntities = _gameManager->map.getEntities();
+    for (int x = 0; x < _gameManager->map.getWidth(); x++)
     {
-        for (int z = 0; z < _gameManager->mapSizeZ; z++)
+        for (int z = 0; z < _gameManager->map.getHeight(); z++)
         {
-            Entity* tile = _gameManager->firstLayerEntities[x][z];
+            Entity* tile = mapEntities[x][z];
             if (tile)
             {
                 sRenderComponent* tileRender = tile->getComponent<sRenderComponent>();
@@ -392,9 +394,7 @@ void        NewBuild::updateSpawnersPaths(const glm::ivec2& tilePos)
     }
 
     // Clear spawners paths map before update
-    std::memset(_gameManager->spawnersPaths,
-        0,
-        sizeof(_gameManager->spawnersPaths[0][0]) * _gameManager->mapSizeX * _gameManager->mapSizeZ);
+    spawnersPaths.clear();
 
     auto em = EntityFactory::getBindedEntityManager();
     const auto& spawners = em->getEntitiesByTag("Spawner");

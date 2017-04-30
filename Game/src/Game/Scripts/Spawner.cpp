@@ -33,7 +33,7 @@ void Spawner::start()
             LOG_WARN("Could not find %s on GameManager entity", "sScriptComponent");
             return;
         }
-		
+
         this->_gameManager = scriptComponent->getScript<GameManager>("GameManager");
         this->updateClosestPath();
     }
@@ -297,7 +297,7 @@ void    Spawner::setEnemyPath(Entity* enemy, const std::vector<glm::vec3>& path)
         LOG_WARN("Can't find Enemy script on entity");
         return;
     }
-	
+
     enemyScript->setPath(path);
 }
 
@@ -305,17 +305,18 @@ void    Spawner::getPath(const glm::ivec2& from, const glm::ivec2& to, std::vect
 {
     std::vector<glm::ivec2> path = _path.goToTarget(from,
                                                     to,
-                                                    _gameManager->firstLayerPattern,
-                                                    glm::ivec2(_gameManager->mapSizeX, _gameManager->mapSizeZ));
+                                                    &_gameManager->map);
 
     savedPath.clear();
+    auto& mapEntities = _gameManager->map.getEntities();
+    auto& spawnersPaths = _gameManager->map.getSpawnersPaths();
     for (glm::ivec2& pos: path)
     {
-        Entity* tile = _gameManager->firstLayerEntities[pos.x][pos.y];
+        Entity* tile = mapEntities[pos.x][pos.y];
         sTransformComponent* tileTransform = tile->getComponent<sTransformComponent>();
         savedPath.push_back(tileTransform->getPos());
 
-        _gameManager->spawnersPaths[pos.x][pos.y] = 1;
+        spawnersPaths[pos.x][pos.y] = 1;
     }
 }
 
