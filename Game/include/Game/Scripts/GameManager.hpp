@@ -20,9 +20,6 @@ public:
     GameManager();
     ~GameManager() = default;
 
-    Map map;
-    std::string mapName;
-
 public:
     void start() override final;
     void update(float dt) override final;
@@ -34,6 +31,12 @@ public:
     bool        updateEditor() override final;
     JsonValue   saveToJson() override final;
     void        loadFromJson(const JsonValue& json) override final;
+
+public:
+    Map map;
+
+private:
+    std::string _mapName;
 };
 
 REGISTER_SCRIPT(GameManager);

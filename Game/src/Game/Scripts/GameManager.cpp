@@ -6,9 +6,9 @@ GameManager::GameManager() {}
 
 void GameManager::start()
 {
-    if (!MapLoader::load("level_01", map))
+    if (!MapLoader::load(_mapName, map))
     {
-        EXCEPT(InternalErrorException, "Failed to load map %s", "level_01");
+        EXCEPT(InternalErrorException, "Failed to load map %s", _mapName);
     }
 }
 
@@ -47,13 +47,13 @@ bool        GameManager::updateEditor()
     bool        changed = false;
     ImGui::Text("Map name");
 
-    std::vector<char> animationNameVec(this->mapName.cbegin(), this->mapName.cend());
+    std::vector<char> animationNameVec(this->_mapName.cbegin(), this->_mapName.cend());
     animationNameVec.push_back(0);
     animationNameVec.resize(64);
 
     if (ImGui::InputText("Name", animationNameVec.data(), animationNameVec.size()))
     {
-        this->mapName = animationNameVec.data();
+        this->_mapName = animationNameVec.data();
         changed |= true;
     }
 
@@ -64,12 +64,12 @@ JsonValue   GameManager::saveToJson()
 {
     JsonValue               gameManagerJson;
 
-    gameManagerJson.setString("map_name", this->mapName);
+    gameManagerJson.setString("map_name", this->_mapName);
 
     return (gameManagerJson);
 }
 
 void        GameManager::loadFromJson(const JsonValue& json)
 {
-    this->mapName = json.getString("map_name", "");
+    this->_mapName = json.getString("map_name", "");
 }
