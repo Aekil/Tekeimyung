@@ -83,7 +83,7 @@ void Enemy::death()
 
     if (this->_percentExplosion != nullptr)
     {
-        if (Maths::randomFrom(0.0f, 1.0f) > (1.0f - /*this->_percentExplosion->getFinalValue()*/1.0f))
+        if (Maths::randomFrom(0.0f, 1.0f) > (1.0f - this->_percentExplosion->getFinalValue()))
         {
             auto sphereExplosion = this->Instantiate("SPHERE_LASER_EXPLOSION", this->getComponent<sTransformComponent>()->getPos());
 
