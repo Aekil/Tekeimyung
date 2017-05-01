@@ -9,20 +9,29 @@
 #include <Engine/Graphics/MeshInstance.hpp>
 
 
-MeshInstance::MeshInstance(Mesh* mesh) : _mesh(mesh), _material(mesh->getMaterial()) {}
+MeshInstance::MeshInstance(Mesh* mesh) : _mesh(mesh)
+{
+    setMaterial(mesh->getMaterial());
+}
 
 MeshInstance::MeshInstance(const MeshInstance& meshInstance)
 {
     _mesh = meshInstance._mesh;
-    _material = meshInstance._material;
+    setMaterial(meshInstance._material);
 }
 
-MeshInstance::~MeshInstance() {}
+MeshInstance::~MeshInstance()
+{
+    if (_material)
+    {
+        delete _material;
+    }
+}
 
 MeshInstance& MeshInstance::operator=(const MeshInstance& meshInstance)
 {
     _mesh = meshInstance._mesh;
-    _material = meshInstance._material;
+    setMaterial(meshInstance._material);
     return (*this);
 }
 
@@ -48,5 +57,19 @@ Material*  MeshInstance::getMaterial()
 
 void    MeshInstance::setMaterial(Material* material)
 {
-    _material = material;
+    if (!material)
+    {
+        return;
+    }
+
+    // Copy material
+    if (_material)
+    {
+        *_material = *material;
+    }
+    // Create new material
+    else
+    {
+        _material = new Material(*material);
+    }
 }

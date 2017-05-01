@@ -57,7 +57,7 @@ public:
 public:
     Material(bool isModelMaterial = true);
     Material(const Material& material);
-    ~Material() {}
+    ~Material() override final {}
 
     Material&           operator=(const Material& material);
 
