@@ -1,0 +1,36 @@
+{
+   "components" : {
+      "sNameComponent" : {
+         "name" : "SIDEBAR_MANAGER"
+      },
+      "sScriptComponent" : {
+         "scripts" : [
+            {
+               "name" : "SidebarBuildings"
+            }
+         ]
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 100,
+            "y" : 100,
+            "z" : 100
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : -0,
+            "z" : 0
+         },
+         "scale" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         }
+      },
+      "sTypeComponent" : {
+         "type" : "TILE_WALKABLE"
+      }
+   },
+   "name" : "SIDEBAR_MANAGER",
+   "tag" : "SidebarManager"
+}

@@ -372,7 +372,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 960,
-                  "y" : 61.019989013671875,
+                  "y" : 61.079986572265625,
                   "z" : 0
                },
                "rotation" : {
@@ -451,7 +451,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 1824,
-                  "y" : 142.3800048828125,
+                  "y" : 142.51998901367188,
                   "z" : 0
                },
                "rotation" : {
@@ -530,7 +530,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 960,
-                  "y" : 147.46499633789063,
+                  "y" : 147.6099853515625,
                   "z" : 0
                },
                "rotation" : {
@@ -589,7 +589,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 1324.800048828125,
-                  "y" : 142.3800048828125,
+                  "y" : 142.51998901367188,
                   "z" : 0
                },
                "rotation" : {
@@ -599,7 +599,7 @@
                },
                "scale" : {
                   "x" : 6.399993896484375,
-                  "y" : 6.0266604423522949,
+                  "y" : 6.0325860977172852,
                   "z" : 1
                }
             },
@@ -645,7 +645,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 460.79998779296875,
-                  "y" : 50.850006103515625,
+                  "y" : 50.899993896484375,
                   "z" : 0
                },
                "rotation" : {
@@ -655,7 +655,7 @@
                },
                "scale" : {
                   "x" : 6.3999357223510742,
-                  "y" : 6.0266404151916504,
+                  "y" : 6.0325665473937988,
                   "z" : 1
                }
             },
@@ -701,7 +701,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 460.79998779296875,
-                  "y" : 142.3800048828125,
+                  "y" : 142.51998901367188,
                   "z" : 0
                },
                "rotation" : {
@@ -711,7 +711,7 @@
                },
                "scale" : {
                   "x" : 6.3999357223510742,
-                  "y" : 6.0266609191894531,
+                  "y" : 6.0325865745544434,
                   "z" : 1
                }
             },
@@ -777,7 +777,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 537.5999755859375,
-                  "y" : 935.6400146484375,
+                  "y" : 936.55999755859375,
                   "z" : 0
                },
                "rotation" : {
@@ -787,7 +787,7 @@
                },
                "scale" : {
                   "x" : 96.799873352050781,
-                  "y" : 5.8383326530456543,
+                  "y" : 5.8440732955932617,
                   "z" : 1
                }
             },
@@ -811,6 +811,176 @@
          },
          "name" : "TUTO_MANAGER",
          "tag" : "TutoManager"
+      },
+      {
+         "components" : {
+            "sNameComponent" : {
+               "name" : "SIDEBAR_MANAGER"
+            },
+            "sScriptComponent" : {
+               "scripts" : [
+                  {
+                     "name" : "SidebarBuildings"
+                  }
+               ]
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 100,
+                  "y" : 100,
+                  "z" : 100
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 1,
+                  "y" : 1,
+                  "z" : 1
+               }
+            },
+            "sTypeComponent" : {
+               "type" : "TILE_WALKABLE"
+            }
+         },
+         "name" : "SIDEBAR_MANAGER",
+         "tag" : "SidebarManager"
+      },
+      {
+         "components" : {
+            "sNameComponent" : {
+               "name" : "SIDEBAR_ITEM"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 1
+               },
+               "dynamic" : false,
+               "hide_dynamic" : false,
+               "ignore_raycast" : false,
+               "materials" : [ "texture_sidebar_item.mat" ],
+               "model" : "resources/models/default.DAE",
+               "type" : "PLANE"
+            },
+            "sScriptComponent" : {
+               "scripts" : []
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 1860.800048828125,
+                  "y" : 509,
+                  "z" : 0
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 8,
+                  "y" : 8,
+                  "z" : 1
+               }
+            },
+            "sTypeComponent" : {
+               "type" : "TILE_WALKABLE"
+            },
+            "sUiComponent" : {
+               "horizontal_alignment" : "RIGHT",
+               "layer" : 0,
+               "offset" : {
+                  "x" : -1,
+                  "y" : 0
+               },
+               "percentage_size" : false,
+               "size" : {
+                  "x" : 0.10000000149011612,
+                  "y" : 0.10000000149011612
+               },
+               "vertical_alignment" : "MIDDLE"
+            }
+         },
+         "name" : "SIDEBAR_ITEM",
+         "tag" : "SidebarItem"
+      },
+      {
+         "components" : {
+            "sNameComponent" : {
+               "name" : "HUD_SIDEBAR_TEXT"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 1
+               },
+               "dynamic" : false,
+               "hide_dynamic" : false,
+               "ignore_raycast" : false,
+               "materials" : [ "MAT_Default" ],
+               "model" : "resources/models/default.DAE",
+               "type" : "MESH"
+            },
+            "sTextComponent" : {
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 1
+               },
+               "content" : "1",
+               "font_name" : "arial.ttf",
+               "font_size" : 20,
+               "horizontal_alignment" : "LEFT",
+               "vertical_alignment" : "TOP"
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 1850.3819580078125,
+                  "y" : 529.3599853515625,
+                  "z" : 0
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : -0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 1,
+                  "y" : 1,
+                  "z" : 1
+               }
+            },
+            "sTypeComponent" : {
+               "type" : "TILE_WALKABLE"
+            },
+            "sUiComponent" : {
+               "horizontal_alignment" : "RIGHT",
+               "layer" : 0,
+               "offset" : {
+                  "x" : -3,
+                  "y" : 2
+               },
+               "percentage_size" : false,
+               "size" : {
+                  "x" : 0.10000000149011612,
+                  "y" : 0.10000000149011612
+               },
+               "vertical_alignment" : "MIDDLE"
+            }
+         },
+         "name" : "HUD_SIDEBAR_TEXT",
+         "tag" : ""
       }
    ],
    "name" : "Game"
