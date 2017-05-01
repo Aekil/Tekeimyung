@@ -25,6 +25,7 @@ public:
     virtual ~Resource();
 
     Resource&           operator=(const Resource& resource);
+    bool                operator==(const Resource& resource);
 
     const std::string   getId() const;
     void                setId(const std::string& id);

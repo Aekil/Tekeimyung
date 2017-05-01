@@ -464,15 +464,15 @@ void    RenderingSystem::addBatch(sTransformComponent* transform, sRenderCompone
     auto& meshsInstances = model->getMeshsInstances();
     for (auto& meshInstance: meshsInstances)
     {
+        auto material = meshInstance->getMaterial();
         auto mesh = meshInstance->getMesh();
-        auto material = mesh->getMaterial();
         bool dynamic = render->dynamic;
         bool hideDynamic = render->hideDynamic;
         sBatch* batch = nullptr;
         for (auto& batch_: _batches)
         {
             if (batch_.mesh == mesh &&
-                batch_.material == material &&
+                *batch_.material == *material &&
                 batch_.dynamic == dynamic &&
                 batch_.hideDynamic == hideDynamic &&
                 batch_.instances < INSTANCING_MAX)

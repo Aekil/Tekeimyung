@@ -60,6 +60,7 @@ public:
     ~Material() override final {}
 
     Material&           operator=(const Material& material);
+    bool                operator==(const Material& material);
 
     static Material*    loadFromAssimp(aiMaterial* assimpMaterial, const std::string& path);
     void                bind();

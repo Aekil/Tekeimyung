@@ -62,6 +62,22 @@ Material&   Material::operator=(const Material& material)
     return (*this);
 }
 
+bool    Material::operator==(const Material& material)
+{
+    return (Resource::operator==(material) &&
+            _faceCamera == material._faceCamera &&
+            _hasBloom == material._hasBloom &&
+            transparent == material.transparent &&
+            wireframe == material.wireframe &&
+            _isModelMaterial == material._isModelMaterial &&
+            srcBlend == material.srcBlend &&
+            dstBlend == material.dstBlend &&
+            _diffuse == material._diffuse &&
+            _ambient == material._ambient &&
+            _bloom == material._bloom &&
+            _textures == material._textures);
+}
+
 Material*    Material::loadFromAssimp(aiMaterial* assimpMaterial, const std::string& path)
 {
     aiString file;

@@ -21,6 +21,12 @@ Resource&   Resource::operator=(const Resource& resource)
     return (*this);
 }
 
+bool    Resource::operator==(const Resource& resource)
+{
+    return (_id == resource._id &&
+            _path == resource._path);
+}
+
 const std::string   Resource::getId() const
 {
     return (_id);
