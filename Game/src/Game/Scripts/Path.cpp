@@ -20,6 +20,8 @@ float   Node::getDistance(const Node* to)
     return sqrt((dstX * dstX) + (dstY * dstY));
 }
 
+Path::Path() {}
+
 Path::~Path()
 {
     freeNodes();
@@ -27,39 +29,38 @@ Path::~Path()
 
 Node*    Path::getNodeFromPos(int x, int y)
 {
-    if (x < 0 || x > _mapSize .x - 1 || y < 0 || y > _mapSize.y - 1)
+    if (x < 0 || x > _map->getWidth() - 1 || y < 0 || y > _map->getHeight() - 1)
         return nullptr;
 
     glm::ivec2 pos(x, y);
-    bool isWalkable = (_map[x][y] % LAYER_NUMBER) == 1 || (_map[x][y] % LAYER_NUMBER) == 3;
+    bool isWalkable = ((*_map)[x][y] % LAYER_NUMBER) == 1 || ((*_map)[x][y] % LAYER_NUMBER) == 3;
     return (new Node(pos, isWalkable));
 }
 
 void    Path::freeNodes()
 {
-    if (!_nodes)
-        return;
-
-    for (int x = 0; x < _mapSize.x; ++x)
+    if (!_nodes.isAllocated())
     {
-        for (int y = 0; y < _mapSize.y; ++y)
+        return;
+    }
+
+    for (int x = 0; x < _nodes.getWidth(); ++x)
+    {
+        for (int y = 0; y < _nodes.getHeight(); ++y)
         {
             delete _nodes[x][y];
         }
-        delete _nodes[x];
     }
-
-    delete _nodes;
+    _nodes.free();
 }
 
 void    Path::generateNodes()
 {
     freeNodes();
-    _nodes = new Node**[(int)_mapSize.x];
-    for (int x = 0; x < _mapSize.x; ++x)
+    _nodes.allocate(_map->getWidth(), _map->getHeight());
+    for (int x = 0; x < _map->getWidth(); ++x)
     {
-        _nodes[x] = new Node*[(int)_mapSize.y];
-        for (int y = 0; y < _mapSize.y; ++y)
+        for (int y = 0; y < _map->getHeight(); ++y)
         {
             _nodes[x][y] = getNodeFromPos(x, y);
         }
@@ -81,7 +82,7 @@ std::vector<Node*>   Path::getAdjacentNodes(Node* fromNode)
         int x = location.x;
         int y = location.y;
         // Not out of range
-        if (!(x < 0 || x > _mapSize.x - 1 || y < 0 || y > _mapSize.y - 1))
+        if (!(x < 0 || x > _map->getWidth() - 1 || y < 0 || y > _map->getHeight() - 1))
             adjacentNodes.push_back(_nodes[x][y]);
     }
 
@@ -153,22 +154,22 @@ bool    Path::findTarget()
     return (false);
 }
 
-std::vector<glm::ivec2>  Path::goToTarget(glm::ivec2 pos, glm::ivec2 target, int map[29][38], const glm::ivec2& mapSize)
+std::vector<glm::ivec2>  Path::goToTarget(glm::ivec2 pos, glm::ivec2 target, Map* map)
 {
     std::vector<glm::ivec2> path;
 
+    _map = map;
+
     if (pos.x < 0 || pos.y < 0 ||
-        pos.x >= mapSize.x || pos.y >= mapSize.y)
+        pos.x >= _map->getWidth() || pos.y >= _map->getHeight())
     {
         return (path);
     }
 
-    _mapSize = mapSize;
     _openNodes.clear();
 
     _from = pos;
     _target = target;
-    std::memcpy(_map, map, sizeof(map[0][0]) * mapSize.x * mapSize.y);
 
     generateNodes();
     _openNodes.push_back(_nodes[_from.x][_from.y]);

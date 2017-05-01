@@ -70,11 +70,11 @@ void    RenderingSystem::addCollidersToRenderQueue(Entity* entity, sTransformCom
     {
         if (!boxCollider->box)
         {
-            Material* colliderMaterial = ResourceManager::getInstance()->getResource<Material>("colliders.mat");
             Geometry* boxModel = GeometryFactory::getGeometry(Geometry::eType::BOX);
-
-            boxModel->setMaterial(colliderMaterial);
             boxCollider->box = std::make_unique<ModelInstance>(boxModel);
+
+            Material* colliderMaterial = ResourceManager::getInstance()->getResource<Material>("colliders.mat");
+            boxCollider->box->setMaterial(colliderMaterial);
         }
 
         glm::mat4 boxTransform = transform->getTransform();
@@ -93,11 +93,11 @@ void    RenderingSystem::addCollidersToRenderQueue(Entity* entity, sTransformCom
         {
             Sphere::sInfo sphereInfo;
             sphereInfo.radius = SIZE_UNIT;
-            Material* colliderMaterial = ResourceManager::getInstance()->getResource<Material>("colliders.mat");
             Geometry* sphereModel = GeometryFactory::getGeometry(Geometry::eType::SPHERE);
-
-            sphereModel->setMaterial(colliderMaterial);
             sphereCollider->sphere = std::make_unique<ModelInstance>(sphereModel);
+
+            Material* colliderMaterial = ResourceManager::getInstance()->getResource<Material>("colliders.mat");
+            sphereCollider->sphere->setMaterial(colliderMaterial);
         }
 
         glm::mat4 sphereTransform = transform->getTransform();
@@ -179,11 +179,11 @@ void    RenderingSystem::addLightConeToRenderQueue(sLightComponent* lightComp, s
 {
     if (!lightComp->_lightCone)
     {
-        Material* material = ResourceManager::getInstance()->getResource<Material>("light.mat");
         Geometry* coneModel = GeometryFactory::getGeometry(Geometry::eType::CONE);
-
-        coneModel->setMaterial(material);
         lightComp->_lightCone = std::make_unique<ModelInstance>(coneModel);
+
+        Material* material = ResourceManager::getInstance()->getResource<Material>("light.mat");
+        lightComp->_lightCone->setMaterial(material);
     }
 
     BufferPool::SubBuffer* buffer = lightComp->_lightCone->getBuffer(_bufferPool.get());
@@ -232,9 +232,9 @@ void    RenderingSystem::addCameraViewPerspectiveToRenderQueue(sCameraComponent*
 
 
         cameraComp->_cameraPerspective = std::make_unique<Trapeze>(trapezeInfos);
-
-        cameraComp->_cameraPerspective->setMaterial(material);
         cameraComp->_cameraView = std::make_unique<ModelInstance>(cameraComp->_cameraPerspective.get());
+
+        cameraComp->_cameraView->setMaterial(material);
     }
 
     transform->_posOffsetWorld = glm::vec3(0.0f);
@@ -266,10 +266,11 @@ void    RenderingSystem::addCameraViewOrthoGraphicToRenderQueue(sCameraComponent
     Camera& camera = cameraComp->camera;
     if (!cameraComp->_cameraView)
     {
-        Material* material = ResourceManager::getInstance()->getResource<Material>("camera.mat");
         Geometry* viewPreviewModel = GeometryFactory::getGeometry(Geometry::eType::BOX);
-        viewPreviewModel->setMaterial(material);
         cameraComp->_cameraView = std::make_unique<ModelInstance>(viewPreviewModel);
+
+        Material* material = ResourceManager::getInstance()->getResource<Material>("camera.mat");
+        cameraComp->_cameraView->setMaterial(material);
     }
 
     glm::mat4 transformMat = transform->getTransform();

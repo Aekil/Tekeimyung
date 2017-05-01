@@ -16,7 +16,7 @@ void    Geometry::setMaterial(Material* material)
 {
     ASSERT(_meshs.size() == 1, "A geometry should have 1 mesh");
 
-    _meshs[0]->setMaterial(std::move(material));
+    _meshs[0]->setMaterial(material);
 }
 
 Material*   Geometry::getMaterial() const

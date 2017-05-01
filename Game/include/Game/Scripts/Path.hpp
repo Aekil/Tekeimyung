@@ -8,6 +8,9 @@
 #include <glm/vec3.hpp>
 #include <vector>
 
+#include <Game/DoubleArray.hpp>
+#include <Game/Map.hpp>
+
 class Node
 {
 public:
@@ -37,10 +40,10 @@ public:
 class Path
 {
 public:
-    Path() = default;
+    Path();
     ~Path();
 
-    std::vector<glm::ivec2>         goToTarget(glm::ivec2 pos, glm::ivec2 target, int map[29][38], const glm::ivec2& mapSize);
+    std::vector<glm::ivec2>         goToTarget(glm::ivec2 pos, glm::ivec2 target, Map* map);
 
 private:
     Node*                           getNodeFromPos(int x, int y);
@@ -52,12 +55,12 @@ private:
 
 
 private:
-    Node***                         _nodes = nullptr;
-    glm::vec2                       _mapSize;
+    DoubleArray<Node*>              _nodes;
 
     glm::ivec2                      _from;
     glm::ivec2                      _target;
 
-    int                             _map[29][38];
+    Map*                            _map = nullptr;
+
     std::vector<Node*>              _openNodes;
 };
