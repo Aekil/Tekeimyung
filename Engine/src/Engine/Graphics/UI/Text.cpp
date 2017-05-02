@@ -82,21 +82,38 @@ const glm::vec2&    Text::getSize()
 void    Text::setFont(Font* font)
 {
     _font = font;
+    needUpdate();
 }
 
 void    Text::setContent(const std::string& content)
 {
     _content = content;
-    _needUpdateSize = true;
+    needUpdate();
 }
 
 void    Text::setFontSize(uint32_t fontSize)
 {
     _fontSize = fontSize;
-    _needUpdateSize = true;
+    needUpdate();
 }
 
 void    Text::setColor(const glm::vec4& color)
 {
     _color = color;
+}
+
+void    Text::isDirty(bool dirty)
+{
+    _dirty = dirty;
+}
+
+bool    Text::isDirty() const
+{
+    return (_dirty);
+}
+
+void    Text::needUpdate()
+{
+    _needUpdateSize = true;
+    isDirty(true);
 }

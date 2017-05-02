@@ -46,6 +46,7 @@ void    UISystem::onWindowResize(EntityManager &em)
 void    UISystem::handleAlignment(EntityManager& em, Entity* entity, bool forceUpdate)
 {
     sUiComponent* ui = entity->getComponent<sUiComponent>();
+    sTextComponent* textComp = entity->getComponent<sTextComponent>();
 
     if (ui && (ui->needUpdate || forceUpdate))
     {
@@ -118,12 +119,23 @@ void    UISystem::handleAlignment(EntityManager& em, Entity* entity, bool forceU
 
         // Text
         {
-            sTextComponent* textComp = entity->getComponent<sTextComponent>();
             if (textComp)
             {
+                textComp->text.isDirty(false);
                 alignText(textComp, size);
             }
         }
+    }
+    else if (textComp && textComp->text.isDirty())
+    {
+        sRenderComponent* render = entity->getComponent<sRenderComponent>();
+        sTransformComponent* transform = entity->getComponent<sTransformComponent>();
+
+        glm::vec3 size = render->getModel()->getSize();
+        size *= transform->getScale();
+
+        textComp->text.isDirty(false);
+        alignText(textComp, size);
     }
 
     ui->needUpdate = false;
