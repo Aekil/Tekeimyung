@@ -13,7 +13,7 @@
 void Tile::start()
 {
     _render = this->getComponent<sRenderComponent>();
-    _renderMaterial = _render->getModelInstance()->getMeshsInstances()[0]->getMaterial();
+    _renderMaterial = *_render->getModelInstance()->getMeshsInstances()[0]->getMaterial();
     _buildMaterial = ResourceManager::getInstance()->getResource<Material>("build.mat");
 }
 
@@ -45,7 +45,7 @@ void Tile::setBuildable(bool buildable)
     Material*   displayedMaterial;
 
     this->_buildable = buildable;
-    displayedMaterial = (buildable == true ? this->_buildMaterial : this->_renderMaterial);
+    displayedMaterial = (buildable == true ? this->_buildMaterial : &this->_renderMaterial);
     this->_render->getModelInstance()->setMaterial(displayedMaterial);
 }
 
