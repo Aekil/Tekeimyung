@@ -5,6 +5,7 @@
 #include <imgui.h>
 
 #include <Engine/Debug/LogDebugWindow.hpp>
+#include <Engine/Utils/Helper.hpp>
 
 LogDebugWindow::LogDebugWindow(std::shared_ptr<Logger> logger) :
     DebugWindow("Logs"), _logger(logger), _lastLogSize(0)
@@ -44,20 +45,26 @@ void    LogDebugWindow::build(std::shared_ptr<GameState> gameState, float elapse
         ImGui::End();
         return;
     }
-    
-    for (int index = 0; index < 5; ++index)
+
+    auto& logLevels = EnumManager<Logger::eLogLevel>::enumStrings;
+    uint32_t logLevelsNb = EnumManager<Logger::eLogLevel>::enumLength;
+    for (int index = 0; index < logLevelsNb; ++index)
     {
         ImColor     logColorActive;
         ImColor     logColorHover;
 
+        if (index > 5)
+        {
+            LOG_ERROR("No color for log filter %d", index);
+            continue;
+        }
         logColorActive = (this->_logColors != nullptr ? this->_logColors[index] : ImGui::GetStyle().Colors[ImGuiCol_ButtonActive]);
         logColorHover = logColorActive;
         //ImGui::PushStyleColor(ImGuiCol_Button, ImColor::HSV(0.0f, 0.1f, 0.5f, 1.0f));
         ImGui::PushStyleColor(ImGuiCol_Button, logColorActive);
         ImGui::PushStyleColor(ImGuiCol_ButtonHovered, logColorHover);
         ImGui::PushStyleColor(ImGuiCol_ButtonActive, logColorActive);
-        level = this->_logger->getLevelByIndex(index);
-        ImGui::Button(this->_logger->getLevelToString(level).c_str());
+        ImGui::Button(logLevels[index]);
         ImGui::PopStyleColor(3);
         if (index < 4) ImGui::SameLine();
     }
