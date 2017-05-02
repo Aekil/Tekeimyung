@@ -20,12 +20,13 @@ void    System::forEachEntity(EntityManager& em, std::function<void(Entity* enti
     for (uint32_t idx = 0; idx < this->_entities.size(); idx++)
     {
         Entity* entity = em.getEntity(this->_entities[idx]);
+        if (!entity)
+            continue;
 
         if (this->hasDependencyDisabled(entity))
             continue;
 
-        if (entity)
-            callback(entity);
+        callback(entity);
     }
 }
 
