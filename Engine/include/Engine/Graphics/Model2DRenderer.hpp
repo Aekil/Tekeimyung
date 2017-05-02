@@ -9,6 +9,7 @@
 #include <unordered_map>
 #include <glm/mat4x4.hpp>
 
+#include <ECS/Entity.hpp>
 #include <Engine/Graphics/Camera.hpp>
 #include <Engine/Graphics/Framebuffer.hpp>
 #include <Engine/Graphics/Light.hpp>
@@ -33,11 +34,15 @@ public:
     std::unique_ptr<Texture>                    generateTextureFromModel(sRenderComponent* renderComponent,
                                                                         uint32_t width,
                                                                         uint32_t height);
-    std::unique_ptr<Texture>                    generateTextureFromModel(const std::string& entityName,
+    std::unique_ptr<Texture>                    generateTextureFromModel(Entity* modelEntity,
                                                                         uint32_t width,
                                                                         uint32_t height);
-    void                                        renderModelOnPlane(const std::string& modelEntityName,
-                                                                    const std::string& planeEntityName,
+    bool                                        renderModelOnPlane(const std::string& modelEntityName,
+                                                                    const std::string& planeEntityTagName,
+                                                                    uint32_t width,
+                                                                    uint32_t height);
+    bool                                        renderModelOnPlane(Entity* modelEntity,
+                                                                    const std::string& planeEntityTagName,
                                                                     uint32_t width,
                                                                     uint32_t height);
 private:
