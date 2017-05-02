@@ -8,6 +8,32 @@
 
 #include <ECS/Entity.hpp>
 
+Entity::sHandle::sHandle(): value(0) {}
+
+Entity::sHandle::sHandle(uint32_t handle): value(handle) {}
+
+Entity::sHandle::sHandle(const sHandle& handle): value(handle.value) {}
+
+Entity::sHandle::operator   uint32_t()
+{
+    return (value);
+}
+
+bool    Entity::sHandle::operator!()
+{
+    return (!value);
+}
+
+bool    Entity::sHandle::operator!=(const sHandle& handle)
+{
+    return (value != handle.value);
+}
+
+bool    Entity::sHandle::operator==(const Entity::sHandle& rhs) const
+{
+    return (value == rhs.value);
+}
+
 Entity::~Entity()
 {
     std::for_each(_components.begin(), _components.end(), [this](sComponent* component)

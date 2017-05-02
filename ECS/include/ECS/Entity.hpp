@@ -21,8 +21,9 @@ friend EntityPool;
 public:
     struct sHandle
     {
-        sHandle(): value(0) {}
-        sHandle(uint32_t handle): value(handle) {}
+        sHandle();
+        sHandle(uint32_t handle);
+        sHandle(const sHandle& handle);
 
         union
         {
@@ -35,20 +36,10 @@ public:
             uint32_t value;
         };
 
-        explicit operator uint32_t()
-        {
-            return (value);
-        }
-
-        bool operator!()
-        {
-            return (!value);
-        }
-
-        bool operator!=(const sHandle& handle)
-        {
-            return (value != handle.value);
-        }
+        explicit operator uint32_t();
+        bool operator!();
+        bool operator!=(const sHandle& handle);
+        bool operator==(const Entity::sHandle& rhs) const;
     };
 
 private:
@@ -105,18 +96,13 @@ private:
 };
 
 
-inline bool operator==(const Entity::sHandle& lhs, const Entity::sHandle& rhs)
-{
-    return (lhs.value == rhs.value);
-}
-
-
+// Add hash method for Entity::sHandler so it can be used in a std::map
 namespace std {
     template <> struct hash<Entity::sHandle>
     {
         size_t operator()(const Entity::sHandle& handle) const
         {
-        return (hash<uint32_t>()(handle.value));
+            return (hash<uint32_t>()(handle.value));
         }
     };
 }
