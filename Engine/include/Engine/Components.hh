@@ -154,6 +154,7 @@ virtual void update(sComponent* component)
 glm::vec3 gravity;
 glm::vec3 velocity;
 std::map<uint32_t, eCollisionState> collisions;
+std::vector<std::string> ignoredTags;
 bool collisionsEnabled;
 END_COMPONENT(sRigidBodyComponent)
 

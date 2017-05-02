@@ -24,7 +24,7 @@ CollisionSystem::CollisionSystem()
 void    CollisionSystem::update(EntityManager &em, float elapsedTime)
 {
     const std::vector<Entity*>& entities = em.getEntitiesByComponent<sRigidBodyComponent>();
-    
+
     this->forEachEntity(em, [&](Entity* entity)
     {
         if (entity->getComponent<sSphereColliderComponent>() || entity->getComponent<sBoxColliderComponent>())
@@ -37,6 +37,10 @@ void    CollisionSystem::update(EntityManager &em, float elapsedTime)
                     {
                         sRigidBodyComponent* rigidBody = entity->getComponent<sRigidBodyComponent>();
                         sRigidBodyComponent* rigidBodyB = (*it)->getComponent<sRigidBodyComponent>();
+
+                        if (std::find(rigidBody->ignoredTags.begin(), rigidBody->ignoredTags.end(), (*it)->getTag()) != rigidBody->ignoredTags.end())
+                            continue;
+                        
                         auto colliding = Collisions::isColliding(entity, (*it));
 
                         if (rigidBody->collisionsEnabled && colliding)
@@ -47,7 +51,7 @@ void    CollisionSystem::update(EntityManager &em, float elapsedTime)
                                     || entity->getComponent<sBoxColliderComponent>() != nullptr && !entity->getComponent<sBoxColliderComponent>()->isTrigger))
                             {
                                 rigidBody->velocity = glm::vec3(0.0f);
-                            } 
+                            }
 
                             if (rigidBody->collisions.find((*it)->id) == rigidBody->collisions.end() || rigidBody->collisions[(*it)->id] == eCollisionState::NO_COLLISION)
                             {

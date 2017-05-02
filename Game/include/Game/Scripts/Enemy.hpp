@@ -28,6 +28,8 @@ public:
     void remove();
     bool takeDamage(double damage) override final;
 
+    void stun();
+
     Attribute* getPercentExplosion();
     void setPercentExplosion(Attribute*);
     void setPath(const std::vector<glm::vec3>& path);

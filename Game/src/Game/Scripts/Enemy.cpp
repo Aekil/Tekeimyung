@@ -27,11 +27,14 @@ void Enemy::start()
 
     auto& meshInstances = this->_render->getModelInstance()->getMeshsInstances();
     for (auto& meshInstance : meshInstances)
-    {
-        auto material = meshInstance->getMaterial();
+        this->_baseBlooms.push_back(meshInstance->getMaterial()->getBloom());
 
-        this->_baseBlooms.push_back(material->getBloom());
-    }
+    sRigidBodyComponent* rigidBodyComponent = this->getComponent<sRigidBodyComponent>();
+
+    if (rigidBodyComponent == nullptr)
+        std::runtime_error("Could not retrieve " + std::string("sRigidBodyComponent") + " from Entity with archetype \"" + std::string("ENEMY") + "\"");
+
+    rigidBodyComponent->ignoredTags.push_back("Enemy");
 }
 
 void Enemy::update(float dt)
@@ -43,8 +46,14 @@ void Enemy::update(float dt)
         const glm::vec3& entityPos = this->_transform->getPos();
         glm::vec3 direction = glm::normalize(targetPos - entityPos);
 
-        direction *= this->_speed * dt;
-        _transform->translate(direction);
+        direction *= this->_speed;
+
+        sRigidBodyComponent* rigidBodyComponent = this->getComponent<sRigidBodyComponent>();
+
+        if (rigidBodyComponent == nullptr)
+            std::runtime_error("Could not retrieve " + std::string("sRigidBodyComponent") + " from Entity with archetype \"" + std::string("ENEMY") + "\"");
+
+        rigidBodyComponent->velocity = direction;
 
         if (glm::length(direction) > glm::length(targetPos - entityPos))
         {
@@ -185,6 +194,10 @@ void Enemy::setPath(const std::vector<glm::vec3>& path)
 {
     _path = path;
     _pathProgress = 0;
+}
+
+void Enemy::stun()
+{
 }
 
 bool Enemy::updateEditor()
