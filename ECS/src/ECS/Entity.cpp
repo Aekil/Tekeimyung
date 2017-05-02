@@ -17,14 +17,9 @@ Entity::~Entity()
     _components.clear();
 }
 
-bool Entity::operator==(uint32_t id_)
-{
-    return (id == id_);
-}
-
 bool Entity::operator==(Entity &entity)
 {
-    return (id == entity.id);
+    return (handle == entity.handle);
 }
 
 void    Entity::addComponent(sComponent* component)

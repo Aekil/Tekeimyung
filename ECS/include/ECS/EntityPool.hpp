@@ -25,7 +25,7 @@ public:
     Entity*                             allocate();
     void                                free(Entity* entity);
 
-    Entity*                             getEntity(uint32_t entityId);
+    Entity*                             getEntity(const Entity::sHandle& handle);
 
 private:
     EntityManager*                      _em;

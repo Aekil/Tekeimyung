@@ -36,7 +36,7 @@ Entity* EntityPool::allocate()
         for (uint32_t i = 0; i < _entitiesPerChunk; ++i) {
             // We do +1 on id because we want to use 0 id as null entity
             // So we can do getEntity(0)
-            chunk->entities[i].id = chunk->idx * _entitiesPerChunk + i + 1;
+            chunk->entities[i].handle.index = chunk->idx * _entitiesPerChunk + i + 1;
             chunk->freeEntities[i] = i;
             chunk->entities[i]._em = _em;
             chunk->entities[i]._free = true;
@@ -51,7 +51,7 @@ Entity* EntityPool::allocate()
 void EntityPool::free(Entity* entity)
 {
     // Remember ID is ID + 1
-    uint32_t entityId = entity->id - 1;
+    uint32_t entityId = entity->handle.index - 1;
 
     uint32_t chunkNb = entityId / _entitiesPerChunk;
     entity->_free = true;
@@ -60,17 +60,17 @@ void EntityPool::free(Entity* entity)
     chunk->freeEntities.insert(chunk->freeEntities.begin(), entityId % _entitiesPerChunk);
 }
 
-Entity* EntityPool::getEntity(uint32_t entityId)
+Entity* EntityPool::getEntity(const Entity::sHandle& handle)
 {
     // Remember ID is ID + 1
-    uint32_t chunkNb = (entityId - 1) / _entitiesPerChunk;
+    uint32_t chunkNb = (handle.index - 1) / _entitiesPerChunk;
 
-    if (chunkNb >= _chunks.size() || entityId == 0)
+    if (chunkNb >= _chunks.size() || handle.index == 0)
     {
         return (nullptr);
     }
 
-    Entity* entity = _chunks[chunkNb]->entities + ((entityId - 1) % _entitiesPerChunk);
+    Entity* entity = _chunks[chunkNb]->entities + ((handle.index - 1) % _entitiesPerChunk);
 
     // The entity is not allocated
     if (entity->_free)

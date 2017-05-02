@@ -333,7 +333,7 @@ void        NewBuild::triggerBuildableZone(const std::string &archetype)
 
 void        NewBuild::placePreviewedEntity()
 {
-    if (std::find(this->_alreadyBuiltTile.begin(), this->_alreadyBuiltTile.end(), this->_tileHovered->id) != this->_alreadyBuiltTile.end())
+    if (std::find(this->_alreadyBuiltTile.begin(), this->_alreadyBuiltTile.end(), this->_tileHovered->handle) != this->_alreadyBuiltTile.end())
         return;
 
     if (!this->_goldManager->removeGolds(this->_buildingPrices[this->_currentChoice]))
@@ -347,7 +347,7 @@ void        NewBuild::placePreviewedEntity()
 
     auto&   position = this->_tileHovered->getComponent<sTransformComponent>()->getPos();
     auto    entity = this->Instantiate(this->_currentChoice, glm::vec3(position.x, position.y + 12.5f, position.z));
-    this->_alreadyBuiltTile.push_back(this->_tileHovered->id);
+    this->_alreadyBuiltTile.push_back(this->_tileHovered->handle);
 
     glm::ivec2              tilePos;
     sTransformComponent*    tileTransform = this->_tileHovered->getComponent<sTransformComponent>();

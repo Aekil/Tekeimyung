@@ -6,6 +6,7 @@
 
 #include <vector>
 #include <cstdint>
+#include <functional>
 
 #include <ECS/Component.hh>
 
@@ -17,14 +18,46 @@ class Entity
 friend EntityManager;
 friend EntityPool;
 
+public:
+    struct sHandle
+    {
+        sHandle(): value(0) {}
+        sHandle(uint32_t handle): value(handle) {}
+
+        union
+        {
+            struct
+            {
+                uint32_t index: 20;
+                uint32_t count: 12;
+            };
+
+            uint32_t value;
+        };
+
+        explicit operator uint32_t()
+        {
+            return (value);
+        }
+
+        bool operator!()
+        {
+            return (!value);
+        }
+
+        bool operator!=(const sHandle& handle)
+        {
+            return (value != handle.value);
+        }
+    };
+
 private:
     Entity() {}
-    Entity(EntityManager* em, uint32_t id_): id(id_), _em(em) {}
+    Entity(EntityManager* em, uint32_t handle_): handle(handle_), _em(em) {}
 
 public:
     ~Entity();
 
-    bool operator==(uint32_t id_);
     bool operator==(Entity &entity);
 
     void                            addComponent(sComponent* component);
@@ -62,7 +95,7 @@ public:
     const std::string&              getTag() const;
 
 public:
-    uint32_t                        id;
+    sHandle                         handle;
     std::vector<sComponent*>        _components;
     bool                            _free;
 
@@ -70,3 +103,20 @@ private:
     std::string                     _tag;
     EntityManager*                  _em;
 };
+
+
+inline bool operator==(const Entity::sHandle& lhs, const Entity::sHandle& rhs)
+{
+    return (lhs.value == rhs.value);
+}
+
+
+namespace std {
+    template <> struct hash<Entity::sHandle>
+    {
+        size_t operator()(const Entity::sHandle& handle) const
+        {
+        return (hash<uint32_t>()(handle.value));
+        }
+    };
+}

@@ -43,7 +43,7 @@ void    EntityManager::destroyEntity(Entity* entity)
     auto entityIt = std::find(_entities.cbegin(), _entities.cend(), entity);
     if (entityIt == _entities.cend())
     {
-        std::cerr << "Warning: Attempt to delete entity " << entity->id << " which is already deleted" << std::endl;
+        std::cerr << "Warning: Attempt to delete entity " << entity->handle.index << " which is already deleted" << std::endl;
         return;
     }
     _entities.erase(entityIt);
@@ -125,9 +125,9 @@ Entity* EntityManager::getEntityByTag(const std::string& tag)
     return (nullptr);
 }
 
-Entity* EntityManager::getEntity(uint32_t id) const
+Entity* EntityManager::getEntity(const Entity::sHandle& handle) const
 {
-    return (_entityPool->getEntity(id));
+    return (_entityPool->getEntity(handle));
 }
 
 void    EntityManager::notifyEntityNewComponent(Entity* entity, sComponent* component)

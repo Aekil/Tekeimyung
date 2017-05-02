@@ -326,9 +326,9 @@ void    Spawner::updateEnemiesPaths()
     auto em = EntityFactory::getBindedEntityManager();
     for (sConfig* waveConfig: _currentConfigs)
     {
-        for (uint32_t entityId: waveConfig->spawnedEntities)
+        for (const Entity::sHandle& entityHandler: waveConfig->spawnedEntities)
         {
-            Entity* entity = em->getEntity(entityId);
+            Entity* entity = em->getEntity(entityHandler);
             if (!entity)
             {
                 continue;
@@ -372,7 +372,7 @@ void    Spawner::spawnEntitiesFromConfig(sConfig* waveConfig, float dt)
             else
                 LOG_ERROR("Could not spawn entity from config \"%s\"", entity.name);
 
-            waveConfig->spawnedEntities.push_back(spawnedEntity->id);
+            waveConfig->spawnedEntities.push_back(spawnedEntity->handle);
         }
     }
 }
@@ -389,10 +389,10 @@ void    Spawner::sConfig::updateSpawnedEntities()
 
     for (it; it != spawnedEntities.end();)
     {
-        uint32_t    entityId = *it;
+        Entity::sHandle    entityHandler = *it;
 
         //  The entity of the wave config is dead
-        if (em->getEntity(entityId) == nullptr)
+        if (em->getEntity(entityHandler) == nullptr)
             it = spawnedEntities.erase(it);
         else
             ++it;

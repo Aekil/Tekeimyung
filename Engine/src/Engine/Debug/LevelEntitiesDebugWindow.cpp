@@ -7,7 +7,7 @@
 #include <Engine/EntityFactory.hpp>
 #include <Engine/Debug/LevelEntitiesDebugWindow.hpp>
 
-uint32_t    LevelEntitiesDebugWindow::_selectedEntityId = 0;
+Entity::sHandle    LevelEntitiesDebugWindow::_selectedEntityHandler = 0;
 
 LevelEntitiesDebugWindow::LevelEntitiesDebugWindow() : DebugWindow("Scene Hierarchy") {}
 
@@ -38,10 +38,10 @@ void    LevelEntitiesDebugWindow::build(std::shared_ptr<GameState> gameState, fl
         ASSERT(name != nullptr, "The entity should have a name");
         if (filter.PassFilter(name->value.c_str()) == true)
         {
-            ImGui::PushID(entity->id);
-            if (ImGui::Selectable(name->value.c_str(), _selectedEntityId == entity->id))
+            ImGui::PushID(static_cast<uint32_t>(entity->handle));
+            if (ImGui::Selectable(name->value.c_str(), _selectedEntityHandler == entity->handle))
             {
-                _selectedEntityId = entity->id;
+                _selectedEntityHandler = entity->handle;
             }
             ImGui::PopID();
         }
@@ -54,7 +54,7 @@ void    LevelEntitiesDebugWindow::build(std::shared_ptr<GameState> gameState, fl
         return;
     }
 
-    Entity* selectedEntity = em->getEntity(_selectedEntityId);
+    Entity* selectedEntity = em->getEntity(_selectedEntityHandler);
 
     // The entity has been deleted or none is selected
     if (!selectedEntity)
@@ -199,9 +199,9 @@ void    LevelEntitiesDebugWindow::displayEntityDebug(EntityManager* em, Entity* 
     ImGui::EndGroup();
 }
 
-uint32_t    LevelEntitiesDebugWindow::getSelectedEntityId()
+Entity::sHandle    LevelEntitiesDebugWindow::getSelectedEntityHandler()
 {
-    return (_selectedEntityId);
+    return (_selectedEntityHandler);
 }
 
 void    LevelEntitiesDebugWindow::createTemplate(Entity* entity, const std::string& newTypeName)
@@ -251,9 +251,9 @@ void    LevelEntitiesDebugWindow::createTemplate(Entity* entity, const std::stri
     EntityFactory::saveEntityTemplateToJson(newTypeName);
 }
 
-void    LevelEntitiesDebugWindow::setSelectedEntityId(uint32_t id)
+void    LevelEntitiesDebugWindow::setSelectedEntityHandler(Entity::sHandle handle)
 {
-    _selectedEntityId = id;
+    _selectedEntityHandler = handle;
 }
 
 void    LevelEntitiesDebugWindow::populateInspector()
@@ -264,7 +264,7 @@ void    LevelEntitiesDebugWindow::populateInspector()
     em = GameWindow::getInstance()->getGameStateManager()->getCurrentState()->getWorld().getEntityManager();
     if (em != nullptr)
     {
-        selectedEntity = em->getEntity(this->_selectedEntityId);
+        selectedEntity = em->getEntity(this->_selectedEntityHandler);
         if (selectedEntity != nullptr)
             this->displayEntityDebug(em, selectedEntity);
     }

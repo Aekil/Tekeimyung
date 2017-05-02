@@ -11,7 +11,7 @@
 
 void Projectile::start()
 {
-    _targetId = 0;
+    _targetHandler = 0;
     _projectileTransform = entity->getComponent<sTransformComponent>();
     _projectileCollider = entity->getComponent<sSphereColliderComponent>();
     _projectileRigidBody = entity->getComponent<sRigidBodyComponent>();
@@ -21,13 +21,13 @@ void Projectile::start()
 
 void Projectile::update(float dt)
 {
-    if (!_targetId)
+    if (!_targetHandler)
     {
         return;
     }
 
     EntityManager* em = EntityFactory::getBindedEntityManager();
-    Entity* target = em->getEntity(_targetId);
+    Entity* target = em->getEntity(_targetHandler);
     if (!target)
     {
         //LOG_INFO("No target");
@@ -41,7 +41,7 @@ void Projectile::update(float dt)
 
 void Projectile::onCollisionEnter(Entity* entity)
 {
-    if (entity->id == _targetId || entity->getTag() == "Enemy")
+    if (entity->handle == _targetHandler || entity->getTag() == "Enemy")
     {
         sScriptComponent* script = entity->getComponent<sScriptComponent>();
         Enemy* enemy = script ? script->getScript<Enemy>("Enemy") : nullptr;
@@ -71,7 +71,7 @@ void Projectile::followDirection(const glm::vec3& dir)
 
 void Projectile::destroyProjectile()
 {
-    _targetId = 0;
+    _targetHandler = 0;
     // Set a low emitter life instead of destroying the entity
     _projectileEmitter->emitterLife = 0.001f;
     _projectileRigidBody->collisionsEnabled = false;

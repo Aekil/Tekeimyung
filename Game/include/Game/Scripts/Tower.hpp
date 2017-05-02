@@ -6,6 +6,7 @@
 
 #include <Engine/Utils/EventSound.hpp>
 #include <Engine/Core/ScriptFactory.hpp>
+#include <ECS/Entity.hpp>
 
 class Tower final : public BaseScript
 {
@@ -22,7 +23,7 @@ private:
     Entity* getClosestEnemy();
 
 private:
-    uint32_t    _targetId;
+    Entity::sHandle    _targetHandler;
     float       _fireRate;
     float       _lastShotTime;
     float       _range;

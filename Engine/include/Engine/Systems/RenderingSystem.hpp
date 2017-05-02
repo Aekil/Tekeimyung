@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include <memory>
 
+#include <ECS/Entity.hpp>
 #include <ECS/System.hpp>
 
 #include <Engine/Graphics/BufferPool.hpp>
@@ -39,7 +40,7 @@ START_SYSTEM(RenderingSystem)
     };
 
 public:
-    RenderingSystem(std::unordered_map<uint32_t, sEmitter*>* particleEmitters);
+    RenderingSystem(std::unordered_map<Entity::sHandle, sEmitter*>* particleEmitters);
     ~RenderingSystem() override final;
 
     void update(EntityManager& em, float elapsedTime) override final;
@@ -60,7 +61,7 @@ private:
     void                                    updateModelBuffer(BufferPool::SubBuffer* buffer, const glm::mat4& transform, const glm::vec4& color);
 
 private:
-    std::unordered_map<uint32_t, sEmitter*>*    _particleEmitters;
+    std::unordered_map<Entity::sHandle, sEmitter*>*     _particleEmitters;
 
     RenderQueue                                 _renderQueue;
 

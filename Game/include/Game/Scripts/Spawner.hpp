@@ -6,6 +6,7 @@
 
 #include <glm/vec3.hpp>
 
+#include <ECS/Entity.hpp>
 #include <Engine/Core/ScriptFactory.hpp>
 #include <Game/Scripts/Path.hpp>
 
@@ -31,7 +32,7 @@ public:
         std::vector<sEntity>    spawnableEntities;
         uint32_t                associatedWave = 0;
 
-        std::vector<uint32_t>   spawnedEntities;
+        std::vector<Entity::sHandle>   spawnedEntities;
 
         //  Remove dead entities from sEntity::spawnedEntities
         void    updateSpawnedEntities();

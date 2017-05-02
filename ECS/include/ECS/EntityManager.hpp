@@ -39,7 +39,7 @@ public:
         return (_entitiesComponentGroups[T::identifier]);
     }
 
-    Entity*                                         getEntity(uint32_t id) const;
+    Entity*                                         getEntity(const Entity::sHandle& handle) const;
 
     // This function is not notified by the entity or the entity manager
     // It has to be called when an entity is created (all the components created too)

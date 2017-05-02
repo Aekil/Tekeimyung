@@ -26,7 +26,7 @@ bool RenderingSystem::_displayAllColliders = false;
 std::unique_ptr<BufferPool> RenderingSystem::_bufferPool = nullptr;
 std::unique_ptr<BufferPool> RenderingSystem::_batchesBufferPool = nullptr;
 
-RenderingSystem::RenderingSystem(std::unordered_map<uint32_t, sEmitter*>* particleEmitters):
+RenderingSystem::RenderingSystem(std::unordered_map<Entity::sHandle, sEmitter*>* particleEmitters):
                                 _particleEmitters(particleEmitters)
 {
     addDependency<sRenderComponent>();
@@ -66,7 +66,7 @@ void    RenderingSystem::addCollidersToRenderQueue(Entity* entity, sTransformCom
     sBoxColliderComponent* boxCollider = entity->getComponent<sBoxColliderComponent>();
     sSphereColliderComponent* sphereCollider = entity->getComponent<sSphereColliderComponent>();
     if (boxCollider && boxCollider->display &&
-        (LevelEntitiesDebugWindow::getSelectedEntityId() == entity->id || _displayAllColliders))
+        (LevelEntitiesDebugWindow::getSelectedEntityHandler() == entity->handle || _displayAllColliders))
     {
         if (!boxCollider->box)
         {
@@ -87,7 +87,7 @@ void    RenderingSystem::addCollidersToRenderQueue(Entity* entity, sTransformCom
         _renderQueue.addModel(boxCollider->box.get(), buffer->ubo, buffer->offset, buffer->size, 0, false, true);
     }
     if (sphereCollider && sphereCollider->display &&
-        (LevelEntitiesDebugWindow::getSelectedEntityId() == entity->id || _displayAllColliders))
+        (LevelEntitiesDebugWindow::getSelectedEntityHandler() == entity->handle || _displayAllColliders))
     {
         if (!sphereCollider->sphere)
         {
@@ -387,7 +387,7 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
 
             // Only display light cone in debug mode
             #if defined(ENGINE_DEBUG)
-                if (LevelEntitiesDebugWindow::getSelectedEntityId() == light->id)
+                if (LevelEntitiesDebugWindow::getSelectedEntityHandler() == light->handle)
                 {
                     addLightConeToRenderQueue(lightComp, transform);
                 }
@@ -436,8 +436,8 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
         if (_camera)
         {
             #if defined(ENGINE_DEBUG)
-                uint32_t selectedEntityId = LevelEntitiesDebugWindow::getSelectedEntityId();
-                Entity* selectedEntity = em.getEntity(selectedEntityId);
+                Entity::sHandle selectedEntityHandler = LevelEntitiesDebugWindow::getSelectedEntityHandler();
+                Entity* selectedEntity = em.getEntity(selectedEntityHandler);
                 if (selectedEntity)
                 {
                     sCameraComponent* cameraComp = selectedEntity->getComponent<sCameraComponent>();
