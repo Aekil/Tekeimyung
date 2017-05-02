@@ -24,6 +24,14 @@ void Enemy::start()
     Health::init(_render);
     _dyingSound = EventSound::getEventByEventType(eEventSound::ENEMY_DYING);
     _earningCoins = EventSound::getEventByEventType(eEventSound::EARN_COINS_FROM_ENEMY);
+
+    auto& meshInstances = this->_render->getModelInstance()->getMeshsInstances();
+    for (auto& meshInstance : meshInstances)
+    {
+        auto material = meshInstance->getMaterial();
+
+        this->_baseBlooms.push_back(material->getBloom());
+    }
 }
 
 void Enemy::update(float dt)
@@ -46,6 +54,20 @@ void Enemy::update(float dt)
     else
     {
         _transform->translate(glm::vec3(0.0f, 0.0f, -this->_speed * dt));
+    }
+
+    if (this->_percentExplosion != nullptr)
+    {
+        int i = 0;
+        auto& meshInstances = this->_render->getModelInstance()->getMeshsInstances();
+        for (auto& meshInstance : meshInstances)
+        {
+            auto material = meshInstance->getMaterial();
+
+            auto baseBloom = this->_baseBlooms[i];
+            material->setBloom(glm::vec4{ baseBloom.x * this->_percentExplosion->getFinalValue() * 100, baseBloom.y * this->_percentExplosion->getFinalValue() * 100, baseBloom.z * this->_percentExplosion->getFinalValue() * 100, baseBloom.w });
+            i++;
+        }
     }
 
     Health::update(_transform);

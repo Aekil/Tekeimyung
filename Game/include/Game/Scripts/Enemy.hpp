@@ -57,6 +57,8 @@ private:
     float   _speed = 0.0f;
     int     _goldEarned = 0;
     int     _experienceEarned = 0;
+
+    std::vector<glm::vec4> _baseBlooms;
 };
 
 REGISTER_SCRIPT(Enemy);
