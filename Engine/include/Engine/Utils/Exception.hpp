@@ -90,6 +90,12 @@ public:
     : Exception{"RendererAPIException", description, file, function, line} {}
 };
 
+class NullptrException : public Exception {
+public:
+    NullptrException(const std::string &description, const char* file, const char* function, uint32_t line)
+        : Exception{ "NullptrException", description, file, function, line } {}
+};
+
 #define EXCEPT(type, format, ...)\
 do {\
     throw type(Helper::formatMessage(format, ## __VA_ARGS__), __FILE__, FUNCTION, __LINE__);\

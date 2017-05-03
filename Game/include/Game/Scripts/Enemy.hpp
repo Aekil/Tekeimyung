@@ -48,6 +48,8 @@ private:
     sRenderComponent* _render;
     sRenderComponent* _healthRender;
 
+    sRigidBodyComponent* _rigidBody;
+
     std::vector<glm::vec3> _path;
     uint32_t _pathProgress{0};
 

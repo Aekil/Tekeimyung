@@ -29,12 +29,12 @@ void Enemy::start()
     for (auto& meshInstance : meshInstances)
         this->_baseBlooms.push_back(meshInstance->getMaterial()->getBloom());
 
-    sRigidBodyComponent* rigidBodyComponent = this->getComponent<sRigidBodyComponent>();
+    this->_rigidBody = this->getComponent<sRigidBodyComponent>();
 
-    if (rigidBodyComponent == nullptr)
-        std::runtime_error("Could not retrieve " + std::string("sRigidBodyComponent") + " from Entity with archetype \"" + std::string("ENEMY") + "\"");
+    if (this->_rigidBody == nullptr)
+        EXCEPT(NullptrException, "Could not retrieve %s from Entity with archetype \"%s\"", "sRigidBodyComponent", "ENEMY");
 
-    rigidBodyComponent->ignoredTags.push_back("Enemy");
+    this->_rigidBody->ignoredTags.push_back("Enemy");
 }
 
 void Enemy::update(float dt)
@@ -48,22 +48,13 @@ void Enemy::update(float dt)
 
         direction *= this->_speed;
 
-        sRigidBodyComponent* rigidBodyComponent = this->getComponent<sRigidBodyComponent>();
-
-        if (rigidBodyComponent == nullptr)
-            std::runtime_error("Could not retrieve " + std::string("sRigidBodyComponent") + " from Entity with archetype \"" + std::string("ENEMY") + "\"");
-
-        rigidBodyComponent->velocity = direction;
+        this->_rigidBody->velocity = direction;
 
         if (glm::length(direction) > glm::length(targetPos - entityPos))
-        {
             _pathProgress++;
-        }
     }
     else
-    {
         _transform->translate(glm::vec3(0.0f, 0.0f, -this->_speed * dt));
-    }
 
     if (this->_percentExplosion != nullptr)
     {
@@ -129,18 +120,12 @@ void Enemy::death()
                     auto enemyScriptComponent = enemy->getComponent<sScriptComponent>();
 
                     if (enemyScriptComponent == nullptr)
-                    {
-                        LOG_WARN("Could not find %s on Entity %s", "sScriptComponent", "Enemy");
-                        return;
-                    }
+                        std::runtime_error("Could not find " + std::string("sScriptComponent") + " on entity with archetype " + "ENEMY");
 
                     auto enemyScript = enemyScriptComponent->getScript<Enemy>("Enemy");
 
                     if (enemyScript == nullptr)
-                    {
-                        LOG_WARN("Could not find script %s on Entity %s", "Enemy", "Enemy");
-                        return;
-                    }
+                        std::runtime_error("Could not find script " + std::string("Enemy") + " on entity with archetype" + "ENEMY");
 
                     enemyScript->takeDamage(50.0f);
                 }
@@ -198,6 +183,7 @@ void Enemy::setPath(const std::vector<glm::vec3>& path)
 
 void Enemy::stun()
 {
+    this->_rigidBody->velocity = glm::vec3{ 0,0,0 };
 }
 
 bool Enemy::updateEditor()

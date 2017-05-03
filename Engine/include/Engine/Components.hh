@@ -156,6 +156,8 @@ glm::vec3 velocity;
 std::map<uint32_t, eCollisionState> collisions;
 std::vector<std::string> ignoredTags;
 bool collisionsEnabled;
+
+int selectedTags = -1;
 END_COMPONENT(sRigidBodyComponent)
 
 
