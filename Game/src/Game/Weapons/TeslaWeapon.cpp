@@ -52,7 +52,7 @@ void    TeslaWeapon::upgradeByLevel()
     {
         case 1:
             this->_attributes["Damage"]->addModifier(Modifier(100.0 / 100.0));
-            this->_attributes["HitAmount"]->addModifier(Modifier(100.0 / 100.0));
+            this->_attributes["HitAmount"]->addBonus(Bonus(1));
             break;
         case 2:
             this->_attributes["StunChance"]->addModifier(Modifier(35.0 / 100.0));
@@ -74,7 +74,7 @@ void    TeslaWeapon::fireLightning(Player* player, sTransformComponent* playerTr
     playerPos = playerTransform->getPos() + (playerRender->getModel()->getSize().y / 2.0f * playerTransform->getScale().y);
     raycastHit = Ray(playerPos, glm::vec3{ playerDirection.x, 0.0f, playerDirection.z });
 
-    if (Physics::raycast(raycastHit, &hitEntity, std::vector<Entity*> { player->getEntity() }, false) == true &&
+    if (Physics::raycast(raycastHit, &hitEntity, std::vector<Entity*> { player->getEntity() }) == true &&
         hitEntity->getTag() == "Enemy")
     {
         this->spreadLightning(hitEntity, this->_attributes["HitAmount"]->getFinalValue());
@@ -152,7 +152,17 @@ void    TeslaWeapon::triggerLightningEffect(Entity* entity)
             sRenderComponent*   render = entity->getComponent<sRenderComponent>();
 
             if (render != nullptr)
+            {
                 render->_animator.play("lightning_effect", false);
+                
+                auto& meshInstances = render->getModelInstance()->getMeshsInstances();
+
+                for (auto& meshInstance : meshInstances)
+                {
+                    auto mat = meshInstance->getMaterial();
+                    mat->setBloom(glm::vec4{ 0.0f, 0.0f, std::numeric_limits<float>::max() * 10.0f, mat->getBloom().w });
+                }
+            }
         }
     }
 }
@@ -162,26 +172,17 @@ void            TeslaWeapon::fireOrb(Player* player, sTransformComponent* player
     Entity*     teslaOrb = EntityFactory::createEntity("TESLA_ORB");
 
     if (teslaOrb == nullptr)
-    {
-        LOG_WARN("Could not create Entity with archetype \"%s\"", "TESLA_ORB");
-        return;
-    }
+        throw std::runtime_error("Could not create Entity with archetype \"" + std::string("TESLA_ORB") + "\"");
 
     sScriptComponent*   scriptComponent = teslaOrb->getComponent<sScriptComponent>();
 
     if (scriptComponent == nullptr)
-    {
-        LOG_WARN("Could not retrieve %s from Entity with archetype \"%s\"", "sScriptComponent", "TESLA_ORB");
-        return;
-    }
+        throw std::runtime_error("Could not retrieve " + std::string("sScriptComponent") + " from Entity with archetype \"" + std::string("TESLA_ORB") + "\"");
 
     TeslaOrb*   orbScript = scriptComponent->getScript<TeslaOrb>("TeslaOrb");
 
     if (scriptComponent == nullptr)
-    {
-        LOG_WARN("Could not retrieve script %s from Entity with archetype \"%s\"", "TeslaOrb", "TESLA_ORB");
-        return;
-    }
+        throw std::runtime_error("Could not retrieve script " + std::string("TeslaOrb") + " from Entity with archetype \"" + std::string("TESLA_ORB") + "\"");
 
     //  Let's set the orb's direction according to the player's.
     orbScript->setPosition(playerTransform->getPos());

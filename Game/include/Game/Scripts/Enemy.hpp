@@ -28,6 +28,8 @@ public:
     void remove();
     bool takeDamage(double damage) override final;
 
+    void stun();
+
     Attribute* getPercentExplosion();
     void setPercentExplosion(Attribute*);
     void setPath(const std::vector<glm::vec3>& path);
@@ -46,6 +48,8 @@ private:
     sRenderComponent* _render;
     sRenderComponent* _healthRender;
 
+    sRigidBodyComponent* _rigidBody;
+
     std::vector<glm::vec3> _path;
     uint32_t _pathProgress{0};
 
@@ -57,6 +61,8 @@ private:
     float   _speed = 0.0f;
     int     _goldEarned = 0;
     int     _experienceEarned = 0;
+
+    std::vector<glm::vec4> _baseBlooms;
 };
 
 REGISTER_SCRIPT(Enemy);
