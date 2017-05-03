@@ -19,6 +19,16 @@ Entity* EntityPool::allocate()
             {
                 Entity* entity = chunk->entities + chunk->freeEntities.back();
                 entity->_free = false;
+                // Update handle version
+                // All previous handles will be invalidated
+                if (entity->handle.count == ENTITY_HANDLE_MAX_COUNT)
+                {
+                    entity->handle.count = 0;
+                }
+                else
+                {
+                    entity->handle.count++;
+                }
                 chunk->freeEntities.pop_back();
                 return (entity);
             }
@@ -72,8 +82,8 @@ Entity* EntityPool::getEntity(const Entity::sHandle& handle)
 
     Entity* entity = _chunks[chunkNb]->entities + ((handle.index - 1) % _entitiesPerChunk);
 
-    // The entity is not allocated
-    if (entity->_free)
+    if (entity->_free || // The entity is not allocated
+        entity->handle != handle) // Outdated handle
         return (nullptr);
 
     return (entity);

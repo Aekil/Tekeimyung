@@ -10,6 +10,8 @@
 
 #include <ECS/Component.hh>
 
+#define ENTITY_HANDLE_MAX_COUNT 4096
+
 class EntityManager;
 class EntityPool;
 
@@ -30,7 +32,7 @@ public:
             struct
             {
                 uint32_t index: 20;
-                uint32_t count: 12;
+                uint32_t count: 12; // ENTITY_HANDLE_MAX_COUNT: 2^12 => 4096
             };
 
             uint32_t value;
