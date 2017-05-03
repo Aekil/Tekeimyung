@@ -12,7 +12,7 @@
 
 void Tower::start()
 {
-    _targetHandler = 0;
+    _targetHandle = 0;
     _fireRate = 1.8f;
     _lastShotTime = _fireRate;
     _towerTransform = entity->getComponent<sTransformComponent>();
@@ -27,7 +27,7 @@ void Tower::update(float dt)
     EntityManager* em = EntityFactory::getBindedEntityManager();
     _lastShotTime += dt;
 
-    if (!_targetHandler && _lastShotTime >= _fireRate)
+    if (!_targetHandle && _lastShotTime >= _fireRate)
     {
         Entity* enemy = getClosestEnemy();
         if (enemy)
@@ -37,11 +37,11 @@ void Tower::update(float dt)
         return;
     }
 
-    Entity* target = em->getEntity(_targetHandler);
+    Entity* target = em->getEntity(_targetHandle);
 
     if (!target || !isInRange(target))
     {
-        _targetHandler = 0;
+        _targetHandle = 0;
     }
     else if (_lastShotTime >= _fireRate)
     {
@@ -73,7 +73,7 @@ void Tower::shootTarget(Entity* target)
 
     projectileScript->_projectileTransform->setPos(_towerTransform->getPos());
     projectileScript->_projectileTransform->translate(glm::vec3(0.0f, _towerRender->getModel()->getMax().y - 20.0f, 0.0f));
-    projectileScript->_targetHandler = target->handle;
+    projectileScript->_targetHandle = target->handle;
     projectileScript->_damage = _damage;
     projectileScript->followTarget(target);
 

@@ -23,7 +23,7 @@ private:
     Entity* getClosestEnemy();
 
 private:
-    Entity::sHandle    _targetHandler;
+    Entity::sHandle    _targetHandle;
     float       _fireRate;
     float       _lastShotTime;
     float       _range;

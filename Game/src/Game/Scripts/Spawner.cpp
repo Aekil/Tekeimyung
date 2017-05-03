@@ -326,9 +326,9 @@ void    Spawner::updateEnemiesPaths()
     auto em = EntityFactory::getBindedEntityManager();
     for (sConfig* waveConfig: _currentConfigs)
     {
-        for (const Entity::sHandle& entityHandler: waveConfig->spawnedEntities)
+        for (const Entity::sHandle& entityHandle: waveConfig->spawnedEntities)
         {
-            Entity* entity = em->getEntity(entityHandler);
+            Entity* entity = em->getEntity(entityHandle);
             if (!entity)
             {
                 continue;
@@ -389,10 +389,10 @@ void    Spawner::sConfig::updateSpawnedEntities()
 
     for (it; it != spawnedEntities.end();)
     {
-        Entity::sHandle    entityHandler = *it;
+        Entity::sHandle    entityHandle = *it;
 
         //  The entity of the wave config is dead
-        if (em->getEntity(entityHandler) == nullptr)
+        if (em->getEntity(entityHandle) == nullptr)
             it = spawnedEntities.erase(it);
         else
             ++it;

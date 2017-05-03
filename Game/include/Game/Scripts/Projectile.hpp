@@ -30,7 +30,7 @@ private:
     void destroyProjectile();
 
 private:
-    Entity::sHandle _targetHandler;
+    Entity::sHandle _targetHandle;
     float _speed;
     int _damage;
 
