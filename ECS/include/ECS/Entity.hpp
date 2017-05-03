@@ -10,7 +10,11 @@
 
 #include <ECS/Component.hh>
 
-#define ENTITY_HANDLE_MAX_COUNT 4096
+#define POWER_TWO(x) (1 << (x))
+
+#define ENTITY_HANDLE_INDEX_BITS 20
+#define ENTITY_HANDLE_COUNT_BITS 12
+#define ENTITY_HANDLE_MAX_COUNT POWER_TWO(ENTITY_HANDLE_COUNT_BITS)
 
 class EntityManager;
 class EntityPool;
@@ -31,8 +35,8 @@ public:
         {
             struct
             {
-                uint32_t index: 20;
-                uint32_t count: 12; // ENTITY_HANDLE_MAX_COUNT: 2^12 => 4096
+                uint32_t index: ENTITY_HANDLE_INDEX_BITS;
+                uint32_t count: ENTITY_HANDLE_COUNT_BITS;
             };
 
             uint32_t value;
