@@ -120,12 +120,12 @@ void Enemy::death()
                     auto enemyScriptComponent = enemy->getComponent<sScriptComponent>();
 
                     if (enemyScriptComponent == nullptr)
-                        std::runtime_error("Could not find " + std::string("sScriptComponent") + " on entity with archetype " + "ENEMY");
+                        EXCEPT(NullptrException, "Could not find %s on Entity %s", "sScriptComponent", "Enemy");
 
                     auto enemyScript = enemyScriptComponent->getScript<Enemy>("Enemy");
 
                     if (enemyScript == nullptr)
-                        std::runtime_error("Could not find script " + std::string("Enemy") + " on entity with archetype" + "ENEMY");
+                        EXCEPT(NullptrException, "Could not find script %s on Entity %s", "Enemy", "Enemy");
 
                     enemyScript->takeDamage(50.0f);
                 }
