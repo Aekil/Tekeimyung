@@ -115,7 +115,7 @@ void Enemy::death()
 
             for (auto& enemy : enemies)
             {
-                if (enemy->id != this->entity->id && Collisions::isCollidingSphereAndEntity(this->_transform->getPos(), 7.7f, enemy))
+                if (enemy->handle != this->entity->handle && Collisions::isCollidingSphereAndEntity(this->_transform->getPos(), 7.7f, enemy))
                 {
                     auto enemyScriptComponent = enemy->getComponent<sScriptComponent>();
 
