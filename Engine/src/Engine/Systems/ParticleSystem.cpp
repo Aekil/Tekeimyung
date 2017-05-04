@@ -42,7 +42,7 @@ void    ParticleSystem::initEmitter(Entity* entity)
     emitter->elapsedTime = 0;
     emitter->buffer = _bufferPool->allocate();
 
-    _emitters[entity->id] = emitter;
+    _emitters[entity->handle] = emitter;
 }
 
 
@@ -51,7 +51,7 @@ void    ParticleSystem::updateEmitter(EntityManager &em, Entity* entity, float e
     sParticleEmitterComponent *emitterComp = entity->getComponent<sParticleEmitterComponent>();
     sTransformComponent *transform = entity->getComponent<sTransformComponent>();
     sRenderComponent *render = entity->getComponent<sRenderComponent>();
-    sEmitter* emitter = _emitters[entity->id];
+    sEmitter* emitter = _emitters[entity->handle];
 
     emitter->elapsedTime += elapsedTime;
     // Update particles
@@ -96,7 +96,7 @@ void    ParticleSystem::updateEmitter(EntityManager &em, Entity* entity, float e
                 emitter->life = 0;
             }
             else {
-                removeEmitter(entity->id);
+                removeEmitter(entity->handle);
                 em.destroyEntityRegister(entity);
             }
         }
@@ -147,16 +147,16 @@ void    ParticleSystem::updateEmitter(EntityManager &em, Entity* entity, float e
     }
 }
 
-void    ParticleSystem::removeEmitter(uint32_t id)
+void    ParticleSystem::removeEmitter(const Entity::sHandle& handle)
 {
-    sEmitter* emitter = _emitters[id];
+    sEmitter* emitter = _emitters[handle];
 
     _bufferPool->free(emitter->buffer);
 
     // Delete emitter pointer
     delete emitter;
     // Remove emitter from map
-    _emitters.erase(_emitters.find(id));
+    _emitters.erase(_emitters.find(handle));
 }
 
 void    ParticleSystem::update(EntityManager &em, float elapsedTime)
@@ -168,7 +168,7 @@ void    ParticleSystem::update(EntityManager &em, float elapsedTime)
 
 
         // Emitter not initialized
-        if (_emitters.find(entity->id) == _emitters.end())
+        if (_emitters.find(entity->handle) == _emitters.end())
             initEmitter(entity);
 
         updateEmitter(em, entity, elapsedTime);
@@ -187,9 +187,9 @@ void    ParticleSystem::update(EntityManager &em, float elapsedTime)
             if (!entity ||
                 !entity->getComponent<sParticleEmitterComponent>())
             {
-                uint32_t emitterId = it->first;
+                const Entity::sHandle& emitterHandler = it->first;
                 ++it;
-                removeEmitter(emitterId);
+                removeEmitter(emitterHandler);
             }
             else
                 ++it;
@@ -197,7 +197,7 @@ void    ParticleSystem::update(EntityManager &em, float elapsedTime)
     }
 }
 
-std::unordered_map<uint32_t, sEmitter*>* ParticleSystem::getEmitters()
+std::unordered_map<Entity::sHandle, sEmitter*>* ParticleSystem::getEmitters()
 {
     return (&_emitters);
 }

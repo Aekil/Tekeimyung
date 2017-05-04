@@ -26,7 +26,7 @@ private:
     bool    _buildable = false;
 
     sRenderComponent*   _render;
-    Material*           _renderMaterial;
+    Material           _renderMaterial;
     Material*           _buildMaterial;
 };
 

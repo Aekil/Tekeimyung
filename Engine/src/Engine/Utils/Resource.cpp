@@ -6,7 +6,26 @@
 
 Resource::Resource() {}
 
+Resource::Resource(const Resource& resource)
+{
+    _path = resource._path;
+    _id = resource._id;
+}
+
 Resource::~Resource() {}
+
+Resource&   Resource::operator=(const Resource& resource)
+{
+    _path = resource._path;
+    _id = resource._id;
+    return (*this);
+}
+
+bool    Resource::operator==(const Resource& resource)
+{
+    return (_id == resource._id &&
+            _path == resource._path);
+}
 
 const std::string   Resource::getId() const
 {

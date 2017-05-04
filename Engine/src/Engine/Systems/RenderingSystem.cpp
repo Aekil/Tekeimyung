@@ -26,7 +26,7 @@ bool RenderingSystem::_displayAllColliders = false;
 std::unique_ptr<BufferPool> RenderingSystem::_bufferPool = nullptr;
 std::unique_ptr<BufferPool> RenderingSystem::_batchesBufferPool = nullptr;
 
-RenderingSystem::RenderingSystem(std::unordered_map<uint32_t, sEmitter*>* particleEmitters):
+RenderingSystem::RenderingSystem(std::unordered_map<Entity::sHandle, sEmitter*>* particleEmitters):
                                 _particleEmitters(particleEmitters)
 {
     addDependency<sRenderComponent>();
@@ -66,15 +66,15 @@ void    RenderingSystem::addCollidersToRenderQueue(Entity* entity, sTransformCom
     sBoxColliderComponent* boxCollider = entity->getComponent<sBoxColliderComponent>();
     sSphereColliderComponent* sphereCollider = entity->getComponent<sSphereColliderComponent>();
     if (boxCollider && boxCollider->display &&
-        (LevelEntitiesDebugWindow::getSelectedEntityId() == entity->id || _displayAllColliders))
+        (LevelEntitiesDebugWindow::getSelectedEntityHandler() == entity->handle || _displayAllColliders))
     {
         if (!boxCollider->box)
         {
-            Material* colliderMaterial = ResourceManager::getInstance()->getResource<Material>("colliders.mat");
             Geometry* boxModel = GeometryFactory::getGeometry(Geometry::eType::BOX);
-
-            boxModel->setMaterial(colliderMaterial);
             boxCollider->box = std::make_unique<ModelInstance>(boxModel);
+
+            Material* colliderMaterial = ResourceManager::getInstance()->getResource<Material>("colliders.mat");
+            boxCollider->box->setMaterial(colliderMaterial);
         }
 
         glm::mat4 boxTransform = transform->getTransform();
@@ -87,17 +87,17 @@ void    RenderingSystem::addCollidersToRenderQueue(Entity* entity, sTransformCom
         _renderQueue.addModel(boxCollider->box.get(), buffer->ubo, buffer->offset, buffer->size, 0, false, true);
     }
     if (sphereCollider && sphereCollider->display &&
-        (LevelEntitiesDebugWindow::getSelectedEntityId() == entity->id || _displayAllColliders))
+        (LevelEntitiesDebugWindow::getSelectedEntityHandler() == entity->handle || _displayAllColliders))
     {
         if (!sphereCollider->sphere)
         {
             Sphere::sInfo sphereInfo;
             sphereInfo.radius = SIZE_UNIT;
-            Material* colliderMaterial = ResourceManager::getInstance()->getResource<Material>("colliders.mat");
             Geometry* sphereModel = GeometryFactory::getGeometry(Geometry::eType::SPHERE);
-
-            sphereModel->setMaterial(colliderMaterial);
             sphereCollider->sphere = std::make_unique<ModelInstance>(sphereModel);
+
+            Material* colliderMaterial = ResourceManager::getInstance()->getResource<Material>("colliders.mat");
+            sphereCollider->sphere->setMaterial(colliderMaterial);
         }
 
         glm::mat4 sphereTransform = transform->getTransform();
@@ -179,11 +179,11 @@ void    RenderingSystem::addLightConeToRenderQueue(sLightComponent* lightComp, s
 {
     if (!lightComp->_lightCone)
     {
-        Material* material = ResourceManager::getInstance()->getResource<Material>("light.mat");
         Geometry* coneModel = GeometryFactory::getGeometry(Geometry::eType::CONE);
-
-        coneModel->setMaterial(material);
         lightComp->_lightCone = std::make_unique<ModelInstance>(coneModel);
+
+        Material* material = ResourceManager::getInstance()->getResource<Material>("light.mat");
+        lightComp->_lightCone->setMaterial(material);
     }
 
     BufferPool::SubBuffer* buffer = lightComp->_lightCone->getBuffer(_bufferPool.get());
@@ -232,9 +232,9 @@ void    RenderingSystem::addCameraViewPerspectiveToRenderQueue(sCameraComponent*
 
 
         cameraComp->_cameraPerspective = std::make_unique<Trapeze>(trapezeInfos);
-
-        cameraComp->_cameraPerspective->setMaterial(material);
         cameraComp->_cameraView = std::make_unique<ModelInstance>(cameraComp->_cameraPerspective.get());
+
+        cameraComp->_cameraView->setMaterial(material);
     }
 
     transform->_posOffsetWorld = glm::vec3(0.0f);
@@ -266,10 +266,11 @@ void    RenderingSystem::addCameraViewOrthoGraphicToRenderQueue(sCameraComponent
     Camera& camera = cameraComp->camera;
     if (!cameraComp->_cameraView)
     {
-        Material* material = ResourceManager::getInstance()->getResource<Material>("camera.mat");
         Geometry* viewPreviewModel = GeometryFactory::getGeometry(Geometry::eType::BOX);
-        viewPreviewModel->setMaterial(material);
         cameraComp->_cameraView = std::make_unique<ModelInstance>(viewPreviewModel);
+
+        Material* material = ResourceManager::getInstance()->getResource<Material>("camera.mat");
+        cameraComp->_cameraView->setMaterial(material);
     }
 
     glm::mat4 transformMat = transform->getTransform();
@@ -386,7 +387,7 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
 
             // Only display light cone in debug mode
             #if defined(ENGINE_DEBUG)
-                if (LevelEntitiesDebugWindow::getSelectedEntityId() == light->id)
+                if (LevelEntitiesDebugWindow::getSelectedEntityHandler() == light->handle)
                 {
                     addLightConeToRenderQueue(lightComp, transform);
                 }
@@ -435,8 +436,8 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
         if (_camera)
         {
             #if defined(ENGINE_DEBUG)
-                uint32_t selectedEntityId = LevelEntitiesDebugWindow::getSelectedEntityId();
-                Entity* selectedEntity = em.getEntity(selectedEntityId);
+                Entity::sHandle selectedEntityHandler = LevelEntitiesDebugWindow::getSelectedEntityHandler();
+                Entity* selectedEntity = em.getEntity(selectedEntityHandler);
                 if (selectedEntity)
                 {
                     sCameraComponent* cameraComp = selectedEntity->getComponent<sCameraComponent>();
@@ -471,7 +472,7 @@ void    RenderingSystem::addBatch(sTransformComponent* transform, sRenderCompone
         for (auto& batch_: _batches)
         {
             if (batch_.mesh == mesh &&
-                batch_.material == material &&
+                *batch_.material == *material &&
                 batch_.dynamic == dynamic &&
                 batch_.hideDynamic == hideDynamic &&
                 batch_.instances < INSTANCING_MAX)

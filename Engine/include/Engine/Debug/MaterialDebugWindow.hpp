@@ -35,6 +35,8 @@ private:
     void        saveMaterial(const char* materialName);
     void        saveMaterial(Material* material, JsonValue& json);
 
+    void        updateEntitiesMaterials(Material* material);
+
 private:
     Material*   _selectedMaterial = nullptr;
     const char* _selectedMaterialName = nullptr;

@@ -52,8 +52,8 @@ bool    EditorState::update(float elapsedTime)
 
     // Get selected camera
     {
-        uint32_t selectedEntityId = LevelEntitiesDebugWindow::getSelectedEntityId();
-        Entity* selectedEntity = _world.getEntityManager()->getEntity(selectedEntityId);
+        Entity::sHandle selectedEntityHandler = LevelEntitiesDebugWindow::getSelectedEntityHandler();
+        Entity* selectedEntity = _world.getEntityManager()->getEntity(selectedEntityHandler);
         if (selectedEntity)
         {
             sCameraComponent* cameraComponent = selectedEntity->getComponent<sCameraComponent>();
@@ -185,11 +185,11 @@ void    EditorState::handleObjectSelection()
 
         if (selectedEntity)
         {
-            LevelEntitiesDebugWindow::setSelectedEntityId(selectedEntity->id);
+            LevelEntitiesDebugWindow::setSelectedEntityHandler(selectedEntity->handle);
         }
         else
         {
-            LevelEntitiesDebugWindow::setSelectedEntityId(0);
+            LevelEntitiesDebugWindow::setSelectedEntityHandler(0);
         }
     }
 }

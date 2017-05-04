@@ -32,11 +32,11 @@ void MouseSystem::hoverEntity(EntityManager& em)
     Ray ray = camera->screenPosToRay((float)cursor.getX(), (float)cursor.getY());
     Physics::raycast(ray, &selectedEntity);
 
-    Entity* previousEntity = em.getEntity(this->previousEntityId);
+    Entity* previousEntity = em.getEntity(this->previousEntityHandler);
 
     if (selectedEntity != nullptr)
     {
-        if (previousEntity != nullptr && previousEntity->id != selectedEntity->id)
+        if (previousEntity != nullptr && previousEntity->handle != selectedEntity->handle)
         {
             if (previousEntity->getComponent<sScriptComponent>() != nullptr)
                 for (auto&& script : previousEntity->getComponent<sScriptComponent>()->scripts)
@@ -46,7 +46,7 @@ void MouseSystem::hoverEntity(EntityManager& em)
                 for (auto&& script : selectedEntity->getComponent<sScriptComponent>()->scripts)
                     script->onHoverEnter();
 
-            this->previousEntityId = selectedEntity->id;
+            this->previousEntityHandler = selectedEntity->handle;
         }
         else if (previousEntity == nullptr)
         {
@@ -54,7 +54,7 @@ void MouseSystem::hoverEntity(EntityManager& em)
                 for (auto&& script : selectedEntity->getComponent<sScriptComponent>()->scripts)
                     script->onHoverEnter();
 
-            this->previousEntityId = selectedEntity->id;
+            this->previousEntityHandler = selectedEntity->handle;
         }
     }
     else
@@ -65,7 +65,7 @@ void MouseSystem::hoverEntity(EntityManager& em)
                 for (auto&& script : previousEntity->getComponent<sScriptComponent>()->scripts)
                     script->onHoverExit();
 
-            this->previousEntityId = 0;
+            this->previousEntityHandler = 0;
         }
     }
 }

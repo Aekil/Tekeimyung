@@ -29,7 +29,7 @@ void Player::death()
 void Player::start()
 {
     this->_weapons.push_back(new DefaultWeapon());
-    //this->_weapons.push_back(new TeslaWeapon());
+    this->_weapons.push_back(new TeslaWeapon());
     this->_weapons.push_back(new LaserWeapon());
 
     this->_levelUpReward[2] = std::make_pair<std::string, double>("FireRate", -25.0 / 100.0);
@@ -237,4 +237,54 @@ void Player::levelUp()
 void Player::setCanShoot(bool canShoot)
 {
     this->_canShoot = canShoot;
+}
+
+bool Player::updateEditor()
+{
+    bool changed = false;
+
+    ImGui::Text("Weapons config");
+    
+    // Configs list
+    {
+        uint32_t i = 0;
+        ImGui::BeginChild("Weapons config", ImVec2(0, 100), true);
+        for (auto& weapon : this->_weapons)
+        {
+            ImGui::PushID(i);
+            if (ImGui::Selectable(weapon->getName().c_str(), _selectedWeapon == i))
+            {
+                _selectedWeapon = i;
+            }
+            ImGui::PopID();
+            i++;
+        }
+        ImGui::EndChild();
+    }
+
+
+    if (this->_weapons.size() == 0)
+        return (false);
+
+    // Configs editor
+    {
+        auto& weapon = this->_weapons[_selectedWeapon];
+
+        ImGui::Text(FMT_MSG("Damage (with modifier) : (%.3f)", weapon->getAttribute("Damage")).c_str());
+
+        for (auto &attribute : weapon->_attributes)
+        {
+            auto baseValue = static_cast<float>(attribute.second->getBaseValue());
+
+            if (ImGui::InputFloat(attribute.first.c_str(), &baseValue, 1.0f, ImGuiInputTextFlags_AllowTabInput))
+            {
+                if (baseValue < 0)
+                    baseValue = 0;
+                attribute.second->setBaseValue(baseValue);
+                changed = true;
+            }
+        }
+    }
+
+    return (changed);
 }

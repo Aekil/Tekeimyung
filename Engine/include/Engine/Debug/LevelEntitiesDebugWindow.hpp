@@ -11,7 +11,7 @@ class EditorState;
 
 class LevelEntitiesDebugWindow: public DebugWindow, public IInspectorImplementation
 {
-// Access LevelEntitiesDebugWindow::setSelectedEntityId in EditorState::handleObjectSelection
+// Access LevelEntitiesDebugWindow::setSelectedEntityHandler in EditorState::handleObjectSelection
 friend EditorState;
 
 public:
@@ -21,7 +21,7 @@ public:
 
     void                build(std::shared_ptr<GameState> gameState, float elapsedTime) override final;
 
-    static uint32_t     getSelectedEntityId();
+    static Entity::sHandle     getSelectedEntityHandler();
 
     //  IInspectorImplementation.hpp
     void                populateInspector() override final;
@@ -32,8 +32,8 @@ private:
     void                displayEntityDebug(EntityManager* em, Entity* entity);
     void                createTemplate(Entity* entity, const std::string& newTypeName);
 
-    static void         setSelectedEntityId(uint32_t id);
+    static void         setSelectedEntityHandler(Entity::sHandle handle);
 
 private:
-    static uint32_t     _selectedEntityId;
+    static Entity::sHandle     _selectedEntityHandler;
 };

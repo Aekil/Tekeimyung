@@ -24,7 +24,7 @@ CollisionSystem::CollisionSystem()
 void    CollisionSystem::update(EntityManager &em, float elapsedTime)
 {
     const std::vector<Entity*>& entities = em.getEntitiesByComponent<sRigidBodyComponent>();
-    
+
     this->forEachEntity(em, [&](Entity* entity)
     {
         if (entity->getComponent<sSphereColliderComponent>() || entity->getComponent<sBoxColliderComponent>())
@@ -33,11 +33,15 @@ void    CollisionSystem::update(EntityManager &em, float elapsedTime)
             {
                 if ((*it)->getComponent<sSphereColliderComponent>() || (*it)->getComponent<sBoxColliderComponent>())
                 {
-                    if (entity->id != (*it)->id)
+                    if (entity->handle != (*it)->handle)
                     {
                         sRigidBodyComponent* rigidBody = entity->getComponent<sRigidBodyComponent>();
                         sRigidBodyComponent* rigidBodyB = (*it)->getComponent<sRigidBodyComponent>();
-                        auto colliding = this->isColliding(entity, (*it));
+
+                        if (std::find(rigidBody->ignoredTags.begin(), rigidBody->ignoredTags.end(), (*it)->getTag()) != rigidBody->ignoredTags.end())
+                            continue;
+                        
+                        auto colliding = Collisions::isColliding(entity, (*it));
 
                         if (rigidBody->collisionsEnabled && colliding)
                         {
@@ -47,81 +51,34 @@ void    CollisionSystem::update(EntityManager &em, float elapsedTime)
                                     || entity->getComponent<sBoxColliderComponent>() != nullptr && !entity->getComponent<sBoxColliderComponent>()->isTrigger))
                             {
                                 rigidBody->velocity = glm::vec3(0.0f);
-                            } 
+                            }
 
-                            if (rigidBody->collisions.find((*it)->id) == rigidBody->collisions.end() || rigidBody->collisions[(*it)->id] == eCollisionState::NO_COLLISION)
+                            if (rigidBody->collisions.find((*it)->handle) == rigidBody->collisions.end() || rigidBody->collisions[(*it)->handle] == eCollisionState::NO_COLLISION)
                             {
-                                rigidBody->collisions[(*it)->id] = eCollisionState::ENTERING_COLLISION;
+                                rigidBody->collisions[(*it)->handle] = eCollisionState::ENTERING_COLLISION;
                             }
                         }
                         else if (rigidBody->collisionsEnabled)
                         {
-                            if (rigidBody->collisions[(*it)->id] == eCollisionState::IS_COLLIDING)
-                                rigidBody->collisions[(*it)->id] = eCollisionState::EXIT_COLLISION;
+                            if (rigidBody->collisions[(*it)->handle] == eCollisionState::IS_COLLIDING)
+                                rigidBody->collisions[(*it)->handle] = eCollisionState::EXIT_COLLISION;
                         }
 
                         if (rigidBodyB->collisionsEnabled && colliding && (*it)->getComponent<sDynamicComponent>() == nullptr)
                         {
-                            if (rigidBodyB->collisions.find(entity->id) == rigidBodyB->collisions.end() || rigidBodyB->collisions[entity->id] == eCollisionState::NO_COLLISION)
+                            if (rigidBodyB->collisions.find(entity->handle) == rigidBodyB->collisions.end() || rigidBodyB->collisions[entity->handle] == eCollisionState::NO_COLLISION)
                             {
-                                rigidBodyB->collisions[entity->id] = eCollisionState::ENTERING_COLLISION;
+                                rigidBodyB->collisions[entity->handle] = eCollisionState::ENTERING_COLLISION;
                             }
                         }
                         else if (rigidBodyB->collisionsEnabled && (*it)->getComponent<sDynamicComponent>() == nullptr)
                         {
-                            if (rigidBodyB->collisions[entity->id] == eCollisionState::IS_COLLIDING)
-                                rigidBodyB->collisions[entity->id] = eCollisionState::EXIT_COLLISION;
+                            if (rigidBodyB->collisions[entity->handle] == eCollisionState::IS_COLLIDING)
+                                rigidBodyB->collisions[entity->handle] = eCollisionState::EXIT_COLLISION;
                         }
                     }
                 }
             }
         }
     });
-}
-
-bool    CollisionSystem::isColliding(Entity *firstEntity, Entity *secondEntity)
-{
-    sTransformComponent* firstTransform = firstEntity->getComponent<sTransformComponent>();
-    sTransformComponent* secondTransform = secondEntity->getComponent<sTransformComponent>();
-
-    if (firstEntity->getComponent<sSphereColliderComponent>() != nullptr && secondEntity->getComponent<sSphereColliderComponent>() != nullptr)
-    {
-        sSphereColliderComponent* firstSphereCollider = firstEntity->getComponent<sSphereColliderComponent>();
-        sSphereColliderComponent* secondSphereCollider = secondEntity->getComponent<sSphereColliderComponent>();
-
-        return (Collisions::sphereVSsphere(
-            firstSphereCollider->pos + firstTransform->getPos(),
-            firstSphereCollider->radius * std::max({ firstTransform->getScale().x, firstTransform->getScale().y, firstTransform->getScale().z }) * SIZE_UNIT,
-            secondSphereCollider->pos + secondTransform->getPos(),
-            secondSphereCollider->radius * std::max({ secondTransform->getScale().x, secondTransform->getScale().y, secondTransform->getScale().z }) * SIZE_UNIT
-        ));
-    }
-
-    if (firstEntity->getComponent<sBoxColliderComponent>() != nullptr && secondEntity->getComponent<sSphereColliderComponent>() != nullptr)
-    {
-        sBoxColliderComponent* firstBoxCollider = firstEntity->getComponent<sBoxColliderComponent>();
-        sSphereColliderComponent* secondSphereCollider = secondEntity->getComponent<sSphereColliderComponent>();
-
-        return (Collisions::sphereVSAABB(
-            secondSphereCollider->pos + secondTransform->getPos(),
-            secondSphereCollider->radius * std::max({ secondTransform->getScale().x, secondTransform->getScale().y, secondTransform->getScale().z }) * SIZE_UNIT,
-            firstBoxCollider->pos + firstTransform->getPos(),
-            glm::vec3(firstBoxCollider->size.x * firstTransform->getScale().x, firstBoxCollider->size.y * firstTransform->getScale().y, firstBoxCollider->size.z * firstTransform->getScale().z)
-        ));
-    }
-
-    if (secondEntity->getComponent<sBoxColliderComponent>() != nullptr && firstEntity->getComponent<sSphereColliderComponent>() != nullptr)
-    {
-        sBoxColliderComponent* boxCollider = secondEntity->getComponent<sBoxColliderComponent>();
-        sSphereColliderComponent* sphereCollider = firstEntity->getComponent<sSphereColliderComponent>();
-
-        return (Collisions::sphereVSAABB(
-            sphereCollider->pos + firstTransform->getPos(),
-            sphereCollider->radius * std::max({ firstTransform->getScale().x, firstTransform->getScale().y, firstTransform->getScale().z }) * SIZE_UNIT,
-            boxCollider->pos + secondTransform->getPos(),
-            glm::vec3(boxCollider->size.x * secondTransform->getScale().x, boxCollider->size.y * secondTransform->getScale().y, boxCollider->size.z * secondTransform->getScale().z)
-        ));
-    }
-
-    return (false);
 }

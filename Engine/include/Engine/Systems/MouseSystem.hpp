@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <ECS/Entity.hpp>
 #include <ECS/System.hpp>
 
 START_SYSTEM(MouseSystem)
@@ -15,5 +16,5 @@ public:
 private:
     void hoverEntity(EntityManager&);
 
-    uint32_t previousEntityId = 0;
+    Entity::sHandle previousEntityHandler = 0;
 END_SYSTEM(MouseSystem)

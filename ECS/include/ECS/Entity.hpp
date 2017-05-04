@@ -6,8 +6,15 @@
 
 #include <vector>
 #include <cstdint>
+#include <functional>
 
 #include <ECS/Component.hh>
+
+#define POWER_TWO(x) (1 << (x))
+
+#define ENTITY_HANDLE_INDEX_BITS 20
+#define ENTITY_HANDLE_COUNT_BITS 12
+#define ENTITY_HANDLE_MAX_COUNT POWER_TWO(ENTITY_HANDLE_COUNT_BITS)
 
 class EntityManager;
 class EntityPool;
@@ -17,14 +24,37 @@ class Entity
 friend EntityManager;
 friend EntityPool;
 
+public:
+    struct sHandle
+    {
+        sHandle();
+        sHandle(uint32_t handle);
+        sHandle(const sHandle& handle);
+
+        union
+        {
+            struct
+            {
+                uint32_t index: ENTITY_HANDLE_INDEX_BITS;
+                uint32_t count: ENTITY_HANDLE_COUNT_BITS;
+            };
+
+            uint32_t value;
+        };
+
+        explicit operator uint32_t();
+        bool operator!();
+        bool operator!=(const sHandle& handle);
+        bool operator==(const Entity::sHandle& rhs) const;
+    };
+
 private:
     Entity() {}
-    Entity(EntityManager* em, uint32_t id_): id(id_), _em(em) {}
+    Entity(EntityManager* em, uint32_t handle_): handle(handle_), _em(em) {}
 
 public:
     ~Entity();
 
-    bool operator==(uint32_t id_);
     bool operator==(Entity &entity);
 
     void                            addComponent(sComponent* component);
@@ -62,7 +92,7 @@ public:
     const std::string&              getTag() const;
 
 public:
-    uint32_t                        id;
+    sHandle                         handle;
     std::vector<sComponent*>        _components;
     bool                            _free;
 
@@ -70,3 +100,15 @@ private:
     std::string                     _tag;
     EntityManager*                  _em;
 };
+
+
+// Add hash method for Entity::sHandler so it can be used in a std::map
+namespace std {
+    template <> struct hash<Entity::sHandle>
+    {
+        size_t operator()(const Entity::sHandle& handle) const
+        {
+            return (hash<uint32_t>()(handle.value));
+        }
+    };
+}

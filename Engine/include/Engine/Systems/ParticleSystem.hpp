@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include <vector>
 
+#include <ECS/Entity.hpp>
 #include <ECS/System.hpp>
 
 #include <Engine/Graphics/BufferPool.hpp>
@@ -55,15 +56,15 @@ public:
     virtual ~ParticleSystem();
 
     virtual void    update(EntityManager &em, float elapsedTime);
-    std::unordered_map<uint32_t, sEmitter*>* getEmitters();
+    std::unordered_map<Entity::sHandle, sEmitter*>* getEmitters();
 
 private:
     void            initEmitter(Entity* entity);
     void            updateEmitter(EntityManager &em, Entity* entity, float elapsedTime);
-    void            removeEmitter(uint32_t id);
+    void            removeEmitter(const Entity::sHandle& handle);
 
 private:
-    std::unordered_map<uint32_t, sEmitter*>     _emitters;
+    std::unordered_map<Entity::sHandle, sEmitter*>     _emitters;
     bool                                        _editorMode;
     static std::unique_ptr<BufferPool>          _bufferPool;
 END_SYSTEM(ParticleSystem)

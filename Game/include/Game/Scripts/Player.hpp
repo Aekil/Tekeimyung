@@ -49,6 +49,7 @@ public:
 
     void setCanShoot(bool);
 
+    bool updateEditor() override final;
 private:
     glm::vec3 _direction;
     sTransformComponent* _transform;
@@ -71,6 +72,9 @@ private:
     std::map<int, std::pair<std::string, double>> _levelUpReward;
 
     bool _canShoot = true;
+
+    //  ImGui selection index
+    uint32_t                _selectedWeapon = 0;
 };
 
 REGISTER_SCRIPT(Player);

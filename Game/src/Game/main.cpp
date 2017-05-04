@@ -83,9 +83,9 @@ int     main(int ac, char** av)
         if (!engine.run(ac, av, homeScreenState))
             return (1);
     }
-    catch (const Exception& e)
+    catch (const std::exception& e)
     {
-        LOG_ERROR("ERROR: %s", e.what());
+        LOG_ERROR("Exception : %s", e.what());
     }
 
     engine.stop();

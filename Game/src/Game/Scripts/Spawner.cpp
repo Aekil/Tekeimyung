@@ -33,7 +33,7 @@ void Spawner::start()
             LOG_WARN("Could not find %s on GameManager entity", "sScriptComponent");
             return;
         }
-		
+
         this->_gameManager = scriptComponent->getScript<GameManager>("GameManager");
         this->updateClosestPath();
     }
@@ -297,7 +297,7 @@ void    Spawner::setEnemyPath(Entity* enemy, const std::vector<glm::vec3>& path)
         LOG_WARN("Can't find Enemy script on entity");
         return;
     }
-	
+
     enemyScript->setPath(path);
 }
 
@@ -305,17 +305,18 @@ void    Spawner::getPath(const glm::ivec2& from, const glm::ivec2& to, std::vect
 {
     std::vector<glm::ivec2> path = _path.goToTarget(from,
                                                     to,
-                                                    _gameManager->firstLayerPattern,
-                                                    glm::ivec2(_gameManager->mapSizeX, _gameManager->mapSizeZ));
+                                                    &_gameManager->map);
 
     savedPath.clear();
+    auto& mapEntities = _gameManager->map.getEntities();
+    auto& spawnersPaths = _gameManager->map.getSpawnersPaths();
     for (glm::ivec2& pos: path)
     {
-        Entity* tile = _gameManager->firstLayerEntities[pos.x][pos.y];
+        Entity* tile = mapEntities[pos.x][pos.y];
         sTransformComponent* tileTransform = tile->getComponent<sTransformComponent>();
         savedPath.push_back(tileTransform->getPos());
 
-        _gameManager->spawnersPaths[pos.x][pos.y] = 1;
+        spawnersPaths[pos.x][pos.y] = 1;
     }
 }
 
@@ -325,9 +326,9 @@ void    Spawner::updateEnemiesPaths()
     auto em = EntityFactory::getBindedEntityManager();
     for (sConfig* waveConfig: _currentConfigs)
     {
-        for (uint32_t entityId: waveConfig->spawnedEntities)
+        for (const Entity::sHandle& entityHandle: waveConfig->spawnedEntities)
         {
-            Entity* entity = em->getEntity(entityId);
+            Entity* entity = em->getEntity(entityHandle);
             if (!entity)
             {
                 continue;
@@ -371,7 +372,7 @@ void    Spawner::spawnEntitiesFromConfig(sConfig* waveConfig, float dt)
             else
                 LOG_ERROR("Could not spawn entity from config \"%s\"", entity.name);
 
-            waveConfig->spawnedEntities.push_back(spawnedEntity->id);
+            waveConfig->spawnedEntities.push_back(spawnedEntity->handle);
         }
     }
 }
@@ -388,10 +389,10 @@ void    Spawner::sConfig::updateSpawnedEntities()
 
     for (it; it != spawnedEntities.end();)
     {
-        uint32_t    entityId = *it;
+        Entity::sHandle    entityHandle = *it;
 
         //  The entity of the wave config is dead
-        if (em->getEntity(entityId) == nullptr)
+        if (em->getEntity(entityHandle) == nullptr)
             it = spawnedEntities.erase(it);
         else
             ++it;

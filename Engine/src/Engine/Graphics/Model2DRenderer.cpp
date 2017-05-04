@@ -153,59 +153,71 @@ std::unique_ptr<Texture>    Model2DRenderer::generateTextureFromModel(sRenderCom
     return (texture);
 }
 
-std::unique_ptr<Texture>    Model2DRenderer::generateTextureFromModel(const std::string& entityName,
+std::unique_ptr<Texture>    Model2DRenderer::generateTextureFromModel(Entity* modelEntity,
                                                                         uint32_t width,
                                                                         uint32_t height)
 {
-    auto em = EntityFactory::getBindedEntityManager();
-    Entity* entity = EntityFactory::createEntity(entityName);
-
-    sRenderComponent* entityRender = entity->getComponent<sRenderComponent>();
+    sRenderComponent* entityRender = modelEntity->getComponent<sRenderComponent>();
     if (!entityRender)
     {
-        LOG_ERROR("Model2DRenderer::generateTextureFromModel : the entity has no sRenderComponent", entityName.c_str());
+        LOG_ERROR("Model2DRenderer::generateTextureFromModel : the entity has no sRenderComponent");
         return (nullptr);
     }
 
     std::unique_ptr<Texture> texture = Model2DRenderer::getInstance()->generateTextureFromModel(entityRender, width, height);
 
-    // Destroy the entity, we don't need it anymore
-    em->destroyEntityRegister(entity);
-
-    return (texture);
+    return (std::move(texture));
 }
 
-void    Model2DRenderer::renderModelOnPlane(const std::string& modelEntityName,
-                                                                const std::string& planeEntityName,
-                                                                uint32_t width,
-                                                                uint32_t height)
+bool    Model2DRenderer::renderModelOnPlane(Entity* modelEntity,
+                                            const std::string& planeEntityTagName,
+                                            uint32_t width,
+                                            uint32_t height)
 {
     auto em = EntityFactory::getBindedEntityManager();
-    Entity* planeEntity = em->getEntityByTag(planeEntityName);
+    Entity* planeEntity = em->getEntityByTag(planeEntityTagName);
     if (!planeEntity)
     {
         LOG_ERROR("Model2DRenderer::renderModelOnPlane : Plane entity not found in current EntityManager");
-        return;
+        return (false);
     }
 
     sRenderComponent* planeEntityRender = planeEntity->getComponent<sRenderComponent>();
     if (!planeEntityRender)
     {
-        LOG_ERROR("Model2DRenderer::renderModelOnPlane : Can't get sRenderComponent on plane entity %s", planeEntityName.c_str());
-        return;
+        LOG_ERROR("Model2DRenderer::renderModelOnPlane : Can't get sRenderComponent on plane entity %s", planeEntityTagName.c_str());
+        return (false);
     }
 
     ModelInstance* planeEntityModelInstance = planeEntityRender->getModelInstance();
     if (!planeEntityModelInstance->getMeshsInstances().size())
     {
-        LOG_ERROR("Model2DRenderer::renderModelOnPlane : The plane entity %s has no mesh", planeEntityName.c_str());
-        return;
+        LOG_ERROR("Model2DRenderer::renderModelOnPlane : The plane entity %s has no mesh", planeEntityTagName.c_str());
+        return (false);
     }
 
-    std::unique_ptr<Texture> texture = Model2DRenderer::getInstance()->generateTextureFromModel(modelEntityName, width, height);
+    std::unique_ptr<Texture> texture = Model2DRenderer::getInstance()->generateTextureFromModel(modelEntity, width, height);
     // Let Model2DRenderer own the texture
     _renderedTextures.push_back(std::move(texture));
 
     planeEntityModelInstance->getMeshsInstances()[0]->getMaterial()->setTexture(Texture::eType::DIFFUSE, _renderedTextures.back().get());
     planeEntityModelInstance->getMeshsInstances()[0]->getMaterial()->setTexture(Texture::eType::AMBIENT, _renderedTextures.back().get());
+
+    return (true);
+}
+
+bool    Model2DRenderer::renderModelOnPlane(const std::string& modelEntityName,
+                                            const std::string& planeEntityTagName,
+                                            uint32_t width,
+                                            uint32_t height)
+{
+    auto em = EntityFactory::getBindedEntityManager();
+    Entity* modelEntity = EntityFactory::createEntity(modelEntityName);
+
+    bool res = renderModelOnPlane(modelEntity, planeEntityTagName, width, height);
+
+    // Destroy the entity, we don't need it anymore
+    em->destroyEntityRegister(modelEntity);
+
+    return (res);
 }

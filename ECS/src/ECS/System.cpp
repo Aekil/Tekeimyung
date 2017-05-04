@@ -20,12 +20,13 @@ void    System::forEachEntity(EntityManager& em, std::function<void(Entity* enti
     for (uint32_t idx = 0; idx < this->_entities.size(); idx++)
     {
         Entity* entity = em.getEntity(this->_entities[idx]);
+        if (!entity)
+            continue;
 
         if (this->hasDependencyDisabled(entity))
             continue;
 
-        if (entity)
-            callback(entity);
+        callback(entity);
     }
 }
 
@@ -77,9 +78,9 @@ bool    System::onEntityNewComponent(Entity* entity, sComponent* component)
         // The entity has got all components to be in the system
         entityMatchDependencies(entity) &&
         // The entity is not already in the system list
-        std::find(_entities.cbegin(), _entities.cend(), entity->id) == _entities.cend())
+        std::find(_entities.cbegin(), _entities.cend(), entity->handle) == _entities.cend())
     {
-        _entities.push_back(entity->id);
+        _entities.push_back(entity->handle);
         return (true);
     }
     return (false);
@@ -90,7 +91,7 @@ bool    System::onEntityRemovedComponent(Entity* entity, sComponent* component)
     // The system is dependant of the component
     if (hasDependency(component))
     {
-        auto foundEntity = std::find(_entities.cbegin(), _entities.cend(), entity->id);
+        auto foundEntity = std::find(_entities.cbegin(), _entities.cend(), entity->handle);
         // The entity is in the system list
         if (foundEntity != _entities.cend())
         {
@@ -103,7 +104,7 @@ bool    System::onEntityRemovedComponent(Entity* entity, sComponent* component)
 
 bool    System::onEntityDeleted(Entity* entity)
 {
-    auto foundEntity = std::find(_entities.cbegin(), _entities.cend(), entity->id);
+    auto foundEntity = std::find(_entities.cbegin(), _entities.cend(), entity->handle);
     // The entity is in the system list
     if (foundEntity != _entities.cend())
     {

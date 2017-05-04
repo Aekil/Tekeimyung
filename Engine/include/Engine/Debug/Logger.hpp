@@ -28,18 +28,23 @@
 #define LOG_WARN(format, ...)  Logger::getInstance()->log(Logger::eLogLevel::WARN, Helper::formatMessage(format, ## __VA_ARGS__))
 #define LOG_ERROR(format, ...) Logger::getInstance()->log(Logger::eLogLevel::ERROR, Helper::formatMessage(format, ## __VA_ARGS__))
 
+#define LOG_LEVELS(PROCESS)                 \
+    PROCESS(UNKNOWN, 0)                     \
+    PROCESS(TRACE, 1 << 0)                  \
+    PROCESS(DEBUG, 1 << 1)                  \
+    PROCESS(INFO, 1 << 2)                   \
+    PROCESS(WARN, 1 << 3)                   \
+    PROCESS(ERROR, 1 << 4)                  \
+
 class           Logger
 {
 public:
-    enum class  eLogLevel
+    REGISTER_ENUM(eLogLevel, int, LOG_LEVELS)
+
+    struct sLogInfo
     {
-        TRACE = 0,
-        DEBUG,
-        INFO,
-        WARN,
-        ERROR,
-        UNKNOWN,
-        COUNT
+        std::string message;
+        eLogLevel level;
     };
 
 public:
@@ -52,18 +57,45 @@ public:
     static std::shared_ptr<Logger>  getInstance();
     std::ofstream&                  getStream();
 
-    Logger::eLogLevel       getLevelByIndex(int index);
-    std::string             getLevelToString(Logger::eLogLevel level);
-    std::string             getDateToString();
+    void                            log(Logger::eLogLevel level, const std::string& message);
 
-    void log(Logger::eLogLevel level, const std::string& message);
+    const ImGuiTextBuffer&          getLog() const;
 
-    const ImGuiTextBuffer&  getLog() const;
+    void                            setLogLevel(Logger::eLogLevel logLevel);
+    Logger::eLogLevel               getLogLevel() const;
+
+private:
+    std::string                     getDateToString();
 
 private:
     std::ofstream   _stream;
 
     static std::shared_ptr<Logger>  _instance;
 
-     ImGuiTextBuffer     _log;
+    ImGuiTextBuffer             _log;
+    std::vector<sLogInfo>       _logs;
+
+    Logger::eLogLevel           _logLevel;
 };
+
+REGISTER_ENUM_MANAGER(Logger::eLogLevel, LOG_LEVELS)
+
+inline Logger::eLogLevel operator~(const Logger::eLogLevel& rhs) {
+    return (static_cast<Logger::eLogLevel>(~static_cast<int>(rhs)));
+}
+
+inline Logger::eLogLevel operator|(const Logger::eLogLevel& lhs, const Logger::eLogLevel& rhs) {
+    return (static_cast<Logger::eLogLevel>(static_cast<int>(lhs) | static_cast<int>(rhs)));
+}
+
+inline Logger::eLogLevel operator|=(const Logger::eLogLevel& lhs, const Logger::eLogLevel& rhs) {
+    return (static_cast<Logger::eLogLevel>(static_cast<int>(lhs) | static_cast<int>(rhs)));
+}
+
+inline int operator&(const Logger::eLogLevel& lhs, const Logger::eLogLevel& rhs) {
+    return (static_cast<int>(lhs) & static_cast<int>(rhs));
+}
+
+inline Logger::eLogLevel operator&=(const Logger::eLogLevel& lhs, const Logger::eLogLevel& rhs) {
+    return (static_cast<Logger::eLogLevel>(static_cast<int>(lhs) & static_cast<int>(rhs)));
+}

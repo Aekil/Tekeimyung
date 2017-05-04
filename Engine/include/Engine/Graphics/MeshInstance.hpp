@@ -28,5 +28,5 @@ public:
 
 private:
     Mesh*                       _mesh;
-    Material*                   _material;
+    Material*                   _material = nullptr;
 };

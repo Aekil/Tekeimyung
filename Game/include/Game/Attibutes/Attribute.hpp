@@ -24,6 +24,9 @@ public:
 
     void calculateValue();
     double getFinalValue();
+
+    double getBaseValue();
+    void setBaseValue(double);
 public:
 
 private:

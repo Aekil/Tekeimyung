@@ -14,8 +14,7 @@
 
 Mesh::Mesh(Model* model) : offset(0), idxOffset(0), _material(nullptr), _model(model) {}
 
-Mesh::~Mesh()
-{}
+Mesh::~Mesh() {}
 
 bool Mesh::loadFromAssimp(aiMesh *mesh) {
     for (uint32_t j = 0; j < mesh->mNumVertices; j++)

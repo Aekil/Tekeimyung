@@ -45,7 +45,7 @@ protected:
     // Store components hashs
     std::vector<uint32_t>           _components;
 
-    std::vector<uint32_t>           _entities;
+    std::vector<Entity::sHandle>           _entities;
 
     uint32_t                        _id;
 };

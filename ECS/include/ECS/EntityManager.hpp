@@ -39,7 +39,7 @@ public:
         return (_entitiesComponentGroups[T::identifier]);
     }
 
-    Entity*                                         getEntity(uint32_t id) const;
+    Entity*                                         getEntity(const Entity::sHandle& handle) const;
 
     // This function is not notified by the entity or the entity manager
     // It has to be called when an entity is created (all the components created too)
@@ -66,8 +66,6 @@ private:
     std::unordered_map<uint32_t, std::vector<Entity*> >        _entitiesComponentGroups;
 
     std::vector<Entity*>                            _entitiesToDestroy;
-    std::vector<Entity*>                            _entitiesToFree;
-
     World&                                          _world;
 
     std::unique_ptr<EntityPool>                     _entityPool;

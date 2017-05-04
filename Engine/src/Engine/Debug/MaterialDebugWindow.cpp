@@ -11,6 +11,7 @@
 #include <Engine/Utils/JsonWriter.hpp>
 #include <Engine/Utils/ResourceManager.hpp>
 #include <Engine/Window/GameWindow.hpp>
+#include <Engine/EntityFactory.hpp>
 
 #include <Engine/Debug/MaterialDebugWindow.hpp>
 
@@ -104,6 +105,7 @@ void    MaterialDebugWindow::displayMaterialsList()
 
 void    MaterialDebugWindow::displayMaterialsProperties()
 {
+    bool changed = false;
     ImGui::BeginChild("Properties", ImVec2(300, 0), false);
 
     ImGui::Text("Material name:\t%s", this->_selectedMaterialName);
@@ -117,6 +119,7 @@ void    MaterialDebugWindow::displayMaterialsProperties()
             if (ImGui::ColorEdit4("Ambient", glm::value_ptr(ambient)))
             {
                 _selectedMaterial->setAmbient(ambient);
+                changed = true;
             }
         }
 
@@ -126,6 +129,7 @@ void    MaterialDebugWindow::displayMaterialsProperties()
             if (ImGui::ColorEdit4("Diffuse", glm::value_ptr(diffuse)))
             {
                 _selectedMaterial->setDiffuse(diffuse);
+                changed = true;
             }
         }
 
@@ -137,6 +141,7 @@ void    MaterialDebugWindow::displayMaterialsProperties()
                 if (ImGui::ColorEdit4("Bloom", glm::value_ptr(bloom)))
                 {
                     _selectedMaterial->setBloom(bloom);
+                    changed = true;
                 }
             }
         }
@@ -156,6 +161,7 @@ void    MaterialDebugWindow::displayMaterialsProperties()
                     texture = ResourceManager::getInstance()->getResource<Texture>(textureName);
                     _selectedMaterial->setTexture(Texture::eType::AMBIENT, texture);
                 }
+                changed = true;
             }
         }
 
@@ -174,6 +180,7 @@ void    MaterialDebugWindow::displayMaterialsProperties()
                     texture = ResourceManager::getInstance()->getResource<Texture>(textureName);
                     _selectedMaterial->setTexture(Texture::eType::DIFFUSE, texture);
                 }
+                changed = true;
             }
         }
 
@@ -194,6 +201,7 @@ void    MaterialDebugWindow::displayMaterialsProperties()
                         texture = ResourceManager::getInstance()->getResource<Texture>(textureName);
                         _selectedMaterial->setTexture(Texture::eType::BLOOM, texture);
                     }
+                    changed = true;
                 }
             }
         }
@@ -215,6 +223,7 @@ void    MaterialDebugWindow::displayMaterialsProperties()
                         texture = ResourceManager::getInstance()->getResource<Texture>(textureName);
                         _selectedMaterial->setTexture(Texture::eType::BLOOM_ALPHA, texture);
                     }
+                    changed = true;
                 }
             }
         }
@@ -223,14 +232,16 @@ void    MaterialDebugWindow::displayMaterialsProperties()
         if (ImGui::Checkbox("Face camera", &faceCamera))
         {
             _selectedMaterial->isFacingCamera(faceCamera);
+            changed = true;
         }
         bool bloom = _selectedMaterial->hasBloom();
         if (ImGui::Checkbox("Bloom", &bloom))
         {
             _selectedMaterial->hasBloom(bloom);
+            changed = true;
         }
-        ImGui::Checkbox("Transparent", &_selectedMaterial->transparent);
-        ImGui::Checkbox("Wireframe", &_selectedMaterial->wireframe);
+        changed |= ImGui::Checkbox("Transparent", &_selectedMaterial->transparent);
+        changed |= ImGui::Checkbox("Wireframe", &_selectedMaterial->wireframe);
 
         // Blending modes
         if (_selectedMaterial->transparent)
@@ -240,6 +251,7 @@ void    MaterialDebugWindow::displayMaterialsProperties()
             if (Helper::updateComboString("Src blend", Material::getBlendModes(), srcBlendString))
             {
                 _selectedMaterial->srcBlend = Material::getBlendEnumFromString(srcBlendString);
+                changed = true;
             }
 
             // Dst blend
@@ -247,6 +259,7 @@ void    MaterialDebugWindow::displayMaterialsProperties()
             if (Helper::updateComboString("Dst blend", Material::getBlendModes(), dstBlendString))
             {
                 _selectedMaterial->dstBlend = Material::getBlendEnumFromString(dstBlendString);
+                changed = true;
             }
         }
 
@@ -272,6 +285,11 @@ void    MaterialDebugWindow::displayMaterialsProperties()
     }
 
     ImGui::EndChild();
+
+    if (changed)
+    {
+        updateEntitiesMaterials(_selectedMaterial);
+    }
 }
 
 bool    MaterialDebugWindow::createMaterial(std::string name)
@@ -306,7 +324,7 @@ bool    MaterialDebugWindow::cloneMaterial(Material* material, std::string clone
     cloneName = cloneName + ".mat";
 
     auto&   materialNames = ResourceManager::getInstance()->getResourcesNames<Material>();
-    
+
     if (std::find(materialNames.cbegin(), materialNames.cend(), cloneName) != materialNames.cend())
     {
         LOG_ERROR("Can't clone material \"%s\" with clone name \"%s\": already exists", material->getId().c_str(), cloneName.c_str());
@@ -389,7 +407,7 @@ void    MaterialDebugWindow::saveMaterial(const char* materialName)
     }
 }
 
-void        MaterialDebugWindow::saveMaterials()
+void    MaterialDebugWindow::saveMaterials()
 {
     auto&   materialNames = ResourceManager::getInstance()->getResourcesNames<Material>();
 
@@ -399,7 +417,7 @@ void        MaterialDebugWindow::saveMaterials()
     LOG_INFO("All materials has been saved");
 }
 
-void            MaterialDebugWindow::saveMaterial(Material* material, JsonValue& json)
+void    MaterialDebugWindow::saveMaterial(Material* material, JsonValue& json)
 {
     JsonWriter  jsonWriter;
     std::string filePath = std::string(MATERIALS_DIRECTORY) + material->getId();
@@ -416,4 +434,29 @@ void            MaterialDebugWindow::saveMaterial(Material* material, JsonValue&
     }
 
     material->setPath(filePath);
+}
+
+void    MaterialDebugWindow::updateEntitiesMaterials(Material* material)
+{
+    auto em = EntityFactory::getBindedEntityManager();
+    auto& entities = em->getEntities();
+
+    for (Entity* entity: entities)
+    {
+        sRenderComponent* render = entity->getComponent<sRenderComponent>();
+        if (!render)
+        {
+            continue;
+        }
+        auto modelInstance = render->getModelInstance();
+        auto& meshsInstances = modelInstance->getMeshsInstances();
+        for (auto& meshInstance: meshsInstances)
+        {
+            if (meshInstance->getMaterial() &&
+                meshInstance->getMaterial()->getId() == material->getId())
+            {
+                meshInstance->setMaterial(material);
+            }
+        }
+    }
 }

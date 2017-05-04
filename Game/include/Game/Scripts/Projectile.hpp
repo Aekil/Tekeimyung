@@ -7,6 +7,7 @@
 #include <glm/vec3.hpp>
 
 #include <Engine/Core/ScriptFactory.hpp>
+#include <ECS/Entity.hpp>
 
 class Projectile final : public BaseScript
 {
@@ -29,7 +30,7 @@ private:
     void destroyProjectile();
 
 private:
-    uint32_t _targetId;
+    Entity::sHandle _targetHandle;
     float _speed;
     int _damage;
 

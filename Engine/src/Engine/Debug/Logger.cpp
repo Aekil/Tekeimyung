@@ -7,12 +7,17 @@
 #include <ctime>
 #include <iomanip>
 #include <iostream>
+#include <sstream>
 
 #include <Engine/Debug/Logger.hpp>
 
 std::shared_ptr<Logger> Logger::_instance;
 
-Logger::Logger() {}
+Logger::Logger()
+{
+    // TODO: Log only ERROR and WARN when LogDebugWindow filter work
+    _logLevel =  eLogLevel::DEBUG | eLogLevel::INFO | eLogLevel::TRACE | eLogLevel::ERROR | eLogLevel::WARN;
+}
 
 bool    Logger::initialize()
 {
@@ -50,30 +55,6 @@ std::ofstream&  Logger::getStream()
     return (_stream);
 }
 
-Logger::eLogLevel   Logger::getLevelByIndex(int index)
-{
-    Logger::eLogLevel   level;
-
-    level = (index >= 5 ? Logger::eLogLevel::UNKNOWN : static_cast<Logger::eLogLevel>(index));
-    return (level);
-}
-
-std::string Logger::getLevelToString(Logger::eLogLevel level)
-{
-    std::string value;
-
-    switch (level)
-    {
-        case Logger::eLogLevel::TRACE: value = "TRACE"; break;
-        case Logger::eLogLevel::DEBUG: value = "DEBUG"; break;
-        case Logger::eLogLevel::INFO: value = "INFO"; break;
-        case Logger::eLogLevel::WARN: value = "WARN"; break;
-        case Logger::eLogLevel::ERROR: value = "ERROR"; break;
-        default: value = "???"; break;
-    }
-    return (value);
-}
-
 std::string Logger::getDateToString()
 {
     time_t      rawTime;
@@ -102,14 +83,46 @@ void    Logger::log(Logger::eLogLevel level, const std::string& message)
     {
         _stream << "[" <<
             getDateToString() <<
-            " - " << getLevelToString(level) <<
+            " - " << EnumManager<Logger::eLogLevel>::enumToString(level) <<
             "]\t" << message << std::endl;
     }
-    
-    _log.append("[%s]\t%s\n", getLevelToString(level).c_str(), message.c_str());
+
+#if defined(ENGINE_DEBUG)
+    std::stringstream log;
+    log << "[" <<
+        EnumManager<Logger::eLogLevel>::enumToString(level) <<
+        "]\t" << message;
+    sLogInfo logInfo = {log.str(), level};
+    _logs.push_back(logInfo);
+    if (_logLevel & logInfo.level)
+    {
+        _log.append("%s\n", logInfo.message.c_str());
+    }
+#endif
 }
 
 const ImGuiTextBuffer&  Logger::getLog() const
 {
     return (_log);
+}
+
+void    Logger::setLogLevel(Logger::eLogLevel logLevel)
+{
+    _logLevel = logLevel;
+
+#if defined(ENGINE_DEBUG)
+    _log.clear();
+    for (sLogInfo& logInfo: _logs)
+    {
+        if (_logLevel & logInfo.level)
+        {
+            _log.append("%s\n", logInfo.message.c_str());
+        }
+    }
+#endif
+}
+
+Logger::eLogLevel   Logger::getLogLevel() const
+{
+    return (_logLevel);
 }

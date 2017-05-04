@@ -6,6 +6,7 @@
 #include <Engine/ComponentFactory.hpp>
 #include <Engine/EntityFactory.hpp>
 #include <Engine/Utils/Maths.hpp>
+#include <Engine/Physics/Collisions.hpp>
 
 #include <Game/Scripts/GameManager.hpp>
 #include <Game/Scripts/GoldManager.hpp>
@@ -23,6 +24,17 @@ void Enemy::start()
     Health::init(_render);
     _dyingSound = EventSound::getEventByEventType(eEventSound::ENEMY_DYING);
     _earningCoins = EventSound::getEventByEventType(eEventSound::EARN_COINS_FROM_ENEMY);
+
+    auto& meshInstances = this->_render->getModelInstance()->getMeshsInstances();
+    for (auto& meshInstance : meshInstances)
+        this->_baseBlooms.push_back(meshInstance->getMaterial()->getBloom());
+
+    this->_rigidBody = this->getComponent<sRigidBodyComponent>();
+
+    if (this->_rigidBody == nullptr)
+        EXCEPT(NullptrException, "Could not retrieve %s from Entity with archetype \"%s\"", "sRigidBodyComponent", "ENEMY");
+
+    this->_rigidBody->ignoredTags.push_back("Enemy");
 }
 
 void Enemy::update(float dt)
@@ -34,17 +46,28 @@ void Enemy::update(float dt)
         const glm::vec3& entityPos = this->_transform->getPos();
         glm::vec3 direction = glm::normalize(targetPos - entityPos);
 
-        direction *= this->_speed * dt;
-        _transform->translate(direction);
+        direction *= this->_speed;
+
+        this->_rigidBody->velocity = direction;
 
         if (glm::length(direction) > glm::length(targetPos - entityPos))
-        {
             _pathProgress++;
-        }
     }
     else
-    {
         _transform->translate(glm::vec3(0.0f, 0.0f, -this->_speed * dt));
+
+    if (this->_percentExplosion != nullptr)
+    {
+        int i = 0;
+        auto& meshInstances = this->_render->getModelInstance()->getMeshsInstances();
+        for (auto& meshInstance : meshInstances)
+        {
+            auto material = meshInstance->getMaterial();
+
+            auto baseBloom = this->_baseBlooms[i];
+            material->setBloom(glm::vec4{ baseBloom.x * this->_percentExplosion->getFinalValue() * 100, baseBloom.y * this->_percentExplosion->getFinalValue() * 100, baseBloom.z * this->_percentExplosion->getFinalValue() * 100, baseBloom.w });
+            i++;
+        }
     }
 
     Health::update(_transform);
@@ -82,12 +105,31 @@ void Enemy::death()
 
     if (this->_percentExplosion != nullptr)
     {
-        if (Maths::randomFrom(0.0f, 1.0f) > (1.0f - /*this->_percentExplosion->getFinalValue()*/1.0f))
+        if (Maths::randomFrom(0.0f, 1.0f) > (1.0f - this->_percentExplosion->getFinalValue()))
         {
             auto sphereExplosion = this->Instantiate("SPHERE_LASER_EXPLOSION", this->getComponent<sTransformComponent>()->getPos());
 
             sRenderComponent* renderSphereExplosion = sphereExplosion->getComponent<sRenderComponent>();
             renderSphereExplosion->_animator.play("growing_up", false);
+            auto enemies = em->getEntitiesByTag("Enemy");
+
+            for (auto& enemy : enemies)
+            {
+                if (enemy->handle != this->entity->handle && Collisions::isCollidingSphereAndEntity(this->_transform->getPos(), 7.7f, enemy))
+                {
+                    auto enemyScriptComponent = enemy->getComponent<sScriptComponent>();
+
+                    if (enemyScriptComponent == nullptr)
+                        EXCEPT(NullptrException, "Could not find %s on Entity %s", "sScriptComponent", "Enemy");
+
+                    auto enemyScript = enemyScriptComponent->getScript<Enemy>("Enemy");
+
+                    if (enemyScript == nullptr)
+                        EXCEPT(NullptrException, "Could not find script %s on Entity %s", "Enemy", "Enemy");
+
+                    enemyScript->takeDamage(50.0f);
+                }
+            }
         }
     }
 
@@ -133,10 +175,15 @@ bool Enemy::takeDamage(double damage)
     return (Health::takeDamage(damage));
 }
 
-void Enemy::setPath(const std::vector<glm::vec3>& path) 
+void Enemy::setPath(const std::vector<glm::vec3>& path)
 {
     _path = path;
     _pathProgress = 0;
+}
+
+void Enemy::stun()
+{
+    this->_rigidBody->velocity = glm::vec3{ 0,0,0 };
 }
 
 bool Enemy::updateEditor()

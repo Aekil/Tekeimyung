@@ -13,6 +13,8 @@
 
 class   IWeapon
 {
+    friend class Player;
+
 public:
     virtual void fire(Player* player, sTransformComponent* playerTransform, sRenderComponent* playerRender, glm::vec3 playerDirection) = 0;
     virtual void reload() = 0;

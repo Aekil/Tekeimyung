@@ -654,7 +654,11 @@ void    GameWindow::handleClose(GLFWwindow* window)
 {
     if (_closeHandler)
     {
-        glfwRestoreWindow(window);
+        // Window is minimized
+        if (_lostFocus)
+        {
+            glfwRestoreWindow(window);
+        }
         glfwSetWindowShouldClose(window, false);
         _closeHandler(_closeHandlerData);
     }

@@ -25,13 +25,15 @@ Material::Material(bool isModelMaterial): _isModelMaterial(isModelMaterial)
     needUpdate();
 }
 
-Material::Material(const Material& material)
+Material::Material(const Material& material): Resource(material)
 {
     _diffuse = material._diffuse;
     _ambient = material._ambient;
     _bloom = material._bloom;
     _faceCamera = material._faceCamera;
     _hasBloom = material._hasBloom;
+    wireframe = material.wireframe;
+    transparent = material.transparent;
     srcBlend = material.srcBlend;
     dstBlend = material.dstBlend;
     _textures = material._textures;
@@ -42,11 +44,14 @@ Material::Material(const Material& material)
 
 Material&   Material::operator=(const Material& material)
 {
+    Resource::operator=(material);
     _diffuse = material._diffuse;
     _ambient = material._ambient;
     _bloom = material._bloom;
     _faceCamera = material._faceCamera;
     _hasBloom = material._hasBloom;
+    wireframe = material.wireframe;
+    transparent = material.transparent;
     srcBlend = material.srcBlend;
     dstBlend = material.dstBlend;
     _textures = material._textures;
@@ -55,6 +60,22 @@ Material&   Material::operator=(const Material& material)
     needUpdate();
 
     return (*this);
+}
+
+bool    Material::operator==(const Material& material)
+{
+    return (Resource::operator==(material) &&
+            _faceCamera == material._faceCamera &&
+            _hasBloom == material._hasBloom &&
+            transparent == material.transparent &&
+            wireframe == material.wireframe &&
+            _isModelMaterial == material._isModelMaterial &&
+            srcBlend == material.srcBlend &&
+            dstBlend == material.dstBlend &&
+            _diffuse == material._diffuse &&
+            _ambient == material._ambient &&
+            _bloom == material._bloom &&
+            _textures == material._textures);
 }
 
 Material*    Material::loadFromAssimp(aiMaterial* assimpMaterial, const std::string& path)
