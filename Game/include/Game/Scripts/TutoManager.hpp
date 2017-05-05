@@ -53,7 +53,6 @@ private:
     void spawnEnemy();
 
 private:
-    WaveManager*        _waveManager;
     GoldManager*        _goldManager;
     sTextComponent*     _textComp = nullptr;
     eTutoState          _currentState = eTutoState::MOVE;

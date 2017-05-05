@@ -68,14 +68,6 @@ void TutoManager::start()
         return;
     }
 
-    this->_waveManager = gameManagerScriptComponent->getScript<WaveManager>("WaveManager");
-
-    if (this->_waveManager == nullptr)
-    {
-        LOG_ERROR("No WaveManager script on entity");
-        return;
-    }
-
     this->_goldManager = gameManagerScriptComponent->getScript<GoldManager>("GoldManager");
 
     if (this->_goldManager == nullptr)
@@ -85,7 +77,6 @@ void TutoManager::start()
     }
 
     this->_goldManager->setIncreaseOnTime(false);
-    //this->_goldManager->setGolds(0);
 }
 
 void TutoManager::update(float dt)
@@ -104,9 +95,7 @@ void    TutoManager::sendMessage(eTutoState state)
         ++this->_currentState;
         this->_textComp->text.setContent(this->_statesMessages[this->_currentState]);
 
-        if (state == eTutoState::TUTO_DONE)
-            this->_waveManager->setTutorialIsFinished(true);
-        else if (_currentState == eTutoState::TOWER_KILL_ENEMY)
+        if (_currentState == eTutoState::TOWER_KILL_ENEMY)
             spawnEnemy();
     }
 }
