@@ -29,7 +29,7 @@ Path::~Path()
 
 Node*    Path::getNodeFromPos(int x, int y)
 {
-    if (x < 0 || x > _map->getWidth() - 1 || y < 0 || y > _map->getHeight() - 1)
+    if (isOutOfRange(x, y))
         return nullptr;
 
     glm::ivec2 pos(x, y);
@@ -81,8 +81,7 @@ std::vector<Node*>   Path::getAdjacentNodes(Node* fromNode)
     {
         int x = location.x;
         int y = location.y;
-        // Not out of range
-        if (!(x < 0 || x > _map->getWidth() - 1 || y < 0 || y > _map->getHeight() - 1))
+        if (!isOutOfRange(x, y))
             adjacentNodes.push_back(_nodes[x][y]);
     }
 
@@ -160,8 +159,8 @@ std::vector<glm::ivec2>  Path::goToTarget(glm::ivec2 pos, glm::ivec2 target, Map
 
     _map = map;
 
-    if (pos.x < 0 || pos.y < 0 ||
-        pos.x >= _map->getWidth() || pos.y >= _map->getHeight())
+    if (isOutOfRange(pos.x, pos.y) ||
+        isOutOfRange(target.x, target.y))
     {
         return (path);
     }
@@ -184,4 +183,11 @@ std::vector<glm::ivec2>  Path::goToTarget(glm::ivec2 pos, glm::ivec2 target, Map
 
     std::reverse(path.begin(), path.end());
     return (path);
+}
+
+bool    Path::isOutOfRange(int x, int y) const
+{
+    return (!_map ||
+        x < 0 || y < 0 ||
+        x >= _map->getWidth() || y >= _map->getHeight());
 }
