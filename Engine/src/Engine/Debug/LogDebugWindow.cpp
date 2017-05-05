@@ -77,7 +77,9 @@ void    LogDebugWindow::build(std::shared_ptr<GameState> gameState, float elapse
     ImGui::BeginChild("Logs");
 
     // Draw components
+    ImGui::PushTextWrapPos();
     ImGui::TextUnformatted(_logger->getLog().begin(), _logger->getLog().end());
+    ImGui::PopTextWrapPos();
 
     //if (ImGui::GetItemRectSize().x > _size.x)
     //{
