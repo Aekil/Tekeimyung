@@ -53,13 +53,12 @@ void Projectile::onCollisionEnter(Entity* entity)
             return;
         }
 
-        enemy->takeDamage(_damage);
-        destroyProjectile();
-
-        if (_towerProjectile)
+        if (enemy->takeDamage(_damage) && // Enemy is dead
+            _towerProjectile)
         {
             TutoManagerMessage::getInstance()->sendMessage(eTutoState::TOWER_KILL_ENEMY);
         }
+        destroyProjectile();
     }
 }
 
