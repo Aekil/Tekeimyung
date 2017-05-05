@@ -54,7 +54,6 @@ void        NewBuild::disableAll()
     this->_player->setCanShoot(true);
     this->Destroy(this->_preview);
     this->_preview = nullptr;
-    this->_tileHovered = nullptr;
 
     const auto& floorTiles = em->getEntitiesByTag("TileFloor");
     for (Entity* floorTile : floorTiles)
@@ -89,6 +88,12 @@ void        NewBuild::disableAll()
 
 void        NewBuild::setTileHovered(const Entity* tileHovered)
 {
+    if (!isEnabled())
+    {
+        this->_tileHovered = tileHovered;
+        return;
+    }
+
     if (tileHovered != nullptr && this->_tileHovered != tileHovered)
     {
         this->Destroy(this->_preview);
@@ -226,7 +231,7 @@ void        NewBuild::checkUserInputs()
             TutoManagerMessage::getInstance()->sendMessage(eTutoState::CHOOSE_BUILD);
             this->_currentChoice = bindedEntity.second;
             LOG_DEBUG("Current choice :\t%s", this->_currentChoice.c_str());
-            if (this->_preview != nullptr && this->_tileHovered != nullptr)
+            if (this->_tileHovered != nullptr)
                 this->updatePreview();
             break;
         }
