@@ -11,6 +11,11 @@
 #include    <Game/Scripts/GoldManager.hpp>
 #include    <Game/Scripts/Tile.hpp>
 
+#define BUILD_ITEMS(PROCESS)                                                    \
+        PROCESS(Keyboard::eKey::KEY_1, "TILE_WALL", BUILD_WALL)                 \
+        PROCESS(Keyboard::eKey::KEY_2, "TILE_BASE_TURRET", BUILD_BASE_TOWER)    \
+        PROCESS(Keyboard::eKey::KEY_3, "TOWER_FIRE", BUILD_TOWER)
+
 typedef     std::unordered_map<Keyboard::eKey, std::string>   MapKeyboardEntity;
 
 class       NewBuild final : public BaseScript

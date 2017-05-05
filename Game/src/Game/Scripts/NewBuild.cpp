@@ -11,11 +11,6 @@
 #include    <Game/Scripts/Player.hpp>
 #include    <Game/Scripts/Spawner.hpp>
 
-#define BUILD_ITEMS(PROCESS)                                                    \
-        PROCESS(Keyboard::eKey::KEY_1, "TILE_WALL", BUILD_WALL)                 \
-        PROCESS(Keyboard::eKey::KEY_2, "TILE_BASE_TURRET", BUILD_BASE_TOWER)    \
-        PROCESS(Keyboard::eKey::KEY_3, "TOWER_FIRE", BUILD_TOWER)               \
-
 void        NewBuild::start()
 {
     this->retrieveManagers();
@@ -205,7 +200,7 @@ void        NewBuild::checkUserInputs()
         this->disableAll();
     }
 
-#define BUILD_COND(KEY, ITEM, TUTO_COND)\
+#define BUILD_COND(KEY, ITEM, TUTO_COND)                                                \
     if (this->keyboard.getStateMap()[KEY] == Keyboard::eKeyState::KEY_RELEASED &&       \
         TutoManagerMessage::getInstance()->stateOnGoingOrDone(eTutoState::TUTO_COND))   \
     {                                                                                   \
