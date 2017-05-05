@@ -7,6 +7,7 @@
 #include <Game/Scripts/TutoManager.hpp>
 #include <Game/Scripts/WaveManager.hpp>
 #include <Game/Scripts/GoldManager.hpp>
+#include <Game/Scripts/Spawner.hpp>
 #include <Game/Scripts/TutoManagerMessage.hpp>
 
 TutoManager::~TutoManager()
@@ -134,8 +135,19 @@ void    TutoManager::spawnEnemy()
         return;
     }
 
-    sTransformComponent* spawnerTransform = spawner->getComponent<sTransformComponent>();
-    Entity* enemy = this->Instantiate("ENEMY", glm::vec3(spawnerTransform->getPos().x,
-                                                        18.75,
-                                                        spawnerTransform->getPos().z));
+    sScriptComponent* scriptComp = spawner->getComponent<sScriptComponent>();
+    if (!scriptComp)
+    {
+        LOG_ERROR("TutoManager::spawnEnemy: Spawner don't have script component");
+        return;
+    }
+
+    Spawner* spawnerScript = scriptComp->getScript<Spawner>("Spawner");
+    if (!spawnerScript)
+    {
+        LOG_ERROR("TutoManager::spawnEnemy: Spawner don't have Spawner script");
+        return;
+    }
+
+    spawnerScript->spawnEntity("ENEMY");
 }
