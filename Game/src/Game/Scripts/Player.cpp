@@ -247,7 +247,7 @@ bool Player::updateEditor()
     bool changed = false;
 
     ImGui::Text("Weapons config");
-    
+
     // Configs list
     {
         uint32_t i = 0;

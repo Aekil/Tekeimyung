@@ -26,9 +26,9 @@ void        NewBuild::update(float deltaTime)
 
 void        NewBuild::initPrices()
 {
-    this->_buildingPrices["TILE_BASE_TURRET"] = 40;
+    this->_buildingPrices["TILE_BASE_TURRET"] = 60;
     this->_buildingPrices["TILE_WALL"] = 30;
-    this->_buildingPrices["TOWER_FIRE"] = 50;
+    this->_buildingPrices["TOWER_FIRE"] = 100;
 }
 
 bool        NewBuild::isEnabled() const

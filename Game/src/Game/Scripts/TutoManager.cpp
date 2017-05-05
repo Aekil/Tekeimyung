@@ -33,8 +33,9 @@ eTutoState operator++(eTutoState& state, int)
 TutoManager::TutoManager()
 {
     _statesMessages[eTutoState::MOVE] = "Press W, A, S or D to move (Press K to SKIP the tutorial)";
-    _statesMessages[eTutoState::BUILD_BASE_TOWER] = "Press 2 and build your first tower base !\n Tower bases are used to build towers on it !";
-    _statesMessages[eTutoState::BUILD_TOWER] = "Press 3 and select a tower base to build a tower on it !";
+    _statesMessages[eTutoState::BUILD_BASE_TOWER] = "Press 2 and build your first tower base !\n Tower bases are used to build towers on it";
+    _statesMessages[eTutoState::BUILD_TOWER] = "Press 3 and select a tower base to build a tower on it";
+    _statesMessages[eTutoState::TOWER_KILL_ENEMY] = "Towers will automatically shoot on enemies";
     _statesMessages[eTutoState::BUILD_WALL] = "Now, you don't have more gold to build a tower or a tower base !\n\
 But don't worry, you can also build walls by pressing 1\n\
 Walls are very cheap and can help you to make the enemies follow a specific path";
@@ -105,11 +106,8 @@ void    TutoManager::sendMessage(eTutoState state)
 
         if (state == eTutoState::TUTO_DONE)
             this->_waveManager->setTutorialIsFinished(true);
-/*
-        if (this->_currentState == eTutoState::BUILD)
-            this->_goldManager->setGolds(50);
-        if (this->_currentState == eTutoState::DISABLE_BUILD)
-            this->_goldManager->setGolds(0);*/
+        else if (_currentState == eTutoState::TOWER_KILL_ENEMY)
+            spawnEnemy();
     }
 }
 
@@ -134,4 +132,21 @@ void        TutoManager::display(bool displayed)
         if (render != nullptr)
             render->enabled = displayed;
     }
+}
+
+void    TutoManager::spawnEnemy()
+{
+    auto    em = EntityFactory::getBindedEntityManager();
+    Entity* spawner = em->getEntityByTag("Spawner");
+
+    if (!spawner)
+    {
+        LOG_ERROR("TutoManager::spawnEnemy: Can't find Spawner entity");
+        return;
+    }
+
+    sTransformComponent* spawnerTransform = spawner->getComponent<sTransformComponent>();
+    Entity* enemy = this->Instantiate("ENEMY", glm::vec3(spawnerTransform->getPos().x,
+                                                        18.75,
+                                                        spawnerTransform->getPos().z));
 }

@@ -22,13 +22,14 @@ enum class eTutoState: int
     MOVE = 0,
     BUILD_BASE_TOWER = 1,
     BUILD_TOWER = 2,
-    BUILD_WALL = 3,
-    CHECK_HOWTOPLAY = 4,
-    CHECK_BUILDLIST = 5,
-    SHOOT = 6,
-    CHANGE_WEAPON = 7,
-    TUTO_DONE = 8,
-    TUTO_WAVE = 9
+    TOWER_KILL_ENEMY = 3,
+    BUILD_WALL = 4,
+    CHECK_HOWTOPLAY = 5,
+    CHECK_BUILDLIST = 6,
+    SHOOT = 7,
+    CHANGE_WEAPON = 8,
+    TUTO_DONE = 9,
+    TUTO_WAVE = 10
 };
 
 eTutoState& operator++(eTutoState& state);
@@ -47,6 +48,9 @@ public:
     bool stateOnGoingOrDone(eTutoState state);
 
     static void display(bool displayed);
+
+private:
+    void spawnEnemy();
 
 private:
     WaveManager*        _waveManager;

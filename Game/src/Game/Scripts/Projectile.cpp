@@ -8,6 +8,7 @@
 
 #include <Game/Scripts/Enemy.hpp>
 #include <Game/Scripts/Projectile.hpp>
+#include <Game/Scripts/TutoManagerMessage.hpp>
 
 void Projectile::start()
 {
@@ -54,6 +55,11 @@ void Projectile::onCollisionEnter(Entity* entity)
 
         enemy->takeDamage(_damage);
         destroyProjectile();
+
+        if (_towerProjectile)
+        {
+            TutoManagerMessage::getInstance()->sendMessage(eTutoState::TOWER_KILL_ENEMY);
+        }
     }
 }
 
