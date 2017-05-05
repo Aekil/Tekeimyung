@@ -42,9 +42,6 @@ private:
     std::string     _currentChoice;
     float           _radius = 0.0f;
 
-    //  Each archetype's string is binded to a keyboard key
-    MapKeyboardEntity   _bindedEntities;
-
     std::vector<Entity::sHandle> _alreadyBuiltTile;
 
     std::map<std::string, int> _buildingPrices;
@@ -53,7 +50,6 @@ private:
     void            retrievePlayerScript();
     void            retrieveManagers();
 
-    void            bindEntitiesToInputs();
     void            checkUserInputs();
     void            triggerBuildableZone(const std::string &archetype);
 

@@ -11,10 +11,14 @@
 #include    <Game/Scripts/Player.hpp>
 #include    <Game/Scripts/Spawner.hpp>
 
+#define BUILD_ITEMS(PROCESS)                                                    \
+        PROCESS(Keyboard::eKey::KEY_1, "TILE_WALL", BUILD_WALL)                 \
+        PROCESS(Keyboard::eKey::KEY_2, "TILE_BASE_TURRET", BUILD_BASE_TOWER)    \
+        PROCESS(Keyboard::eKey::KEY_3, "TOWER_FIRE", BUILD_TOWER)               \
+
 void        NewBuild::start()
 {
     this->retrieveManagers();
-    this->bindEntitiesToInputs();
     this->retrievePlayerScript();
     this->initPrices();
     this->_radius = 7.7f;
@@ -79,8 +83,6 @@ void        NewBuild::disableAll()
                 tileScript->setBuildable(false);
         }
     }
-
-    TutoManagerMessage::getInstance()->sendMessage(eTutoState::DISABLE_BUILD);
 }
 
 void        NewBuild::setTileHovered(const Entity* tileHovered)
@@ -188,13 +190,6 @@ void        NewBuild::retrievePlayerScript()
     }
 }
 
-void        NewBuild::bindEntitiesToInputs()
-{
-    this->_bindedEntities.insert(std::make_pair(Keyboard::eKey::KEY_1, "TILE_WALL"));
-    this->_bindedEntities.insert(std::make_pair(Keyboard::eKey::KEY_2, "TILE_BASE_TURRET"));
-    this->_bindedEntities.insert(std::make_pair(Keyboard::eKey::KEY_3, "TOWER_FIRE"));
-}
-
 void        NewBuild::checkUserInputs()
 {
     if (this->_enabled == true &&
@@ -210,19 +205,18 @@ void        NewBuild::checkUserInputs()
         this->disableAll();
     }
 
-    //  auto = std::pair<Keyboard::eKey, std::string>
-    for (auto bindedEntity : this->_bindedEntities)
-    {
-        if (this->keyboard.getStateMap()[bindedEntity.first] == Keyboard::eKeyState::KEY_RELEASED)
-        {
-            TutoManagerMessage::getInstance()->sendMessage(eTutoState::CHOOSE_BUILD);
-            this->_currentChoice = bindedEntity.second;
-            LOG_DEBUG("Current choice :\t%s", this->_currentChoice.c_str());
-            if (this->_tileHovered != nullptr)
-                this->updatePreview();
-            break;
-        }
+#define BUILD_COND(KEY, ITEM, TUTO_COND)\
+    if (this->keyboard.getStateMap()[KEY] == Keyboard::eKeyState::KEY_RELEASED &&       \
+        TutoManagerMessage::getInstance()->stateOnGoingOrDone(eTutoState::TUTO_COND))   \
+    {                                                                                   \
+        this->_currentChoice = ITEM;                                                    \
+        LOG_DEBUG("Current choice :\t%s", this->_currentChoice.c_str());                \
+        if (this->_tileHovered != nullptr)                                              \
+            this->updatePreview();                                                      \
     }
+
+    BUILD_ITEMS(BUILD_COND)
+#undef BUILD_COND
 
     if (!this->_currentChoice.empty())
     {
@@ -349,7 +343,14 @@ void        NewBuild::placePreviewedEntity()
     this->_gameManager->map[tilePos.x][tilePos.y] = 0;
     this->updateSpawnersPaths(tilePos);
 
-    TutoManagerMessage::getInstance()->sendMessage(eTutoState::BUILD);
+#define SEND_TUTO_BUILD(KEY, ITEM, TUTO_COND)                                           \
+    if (this->_currentChoice == ITEM)                                                   \
+    {                                                                                   \
+        TutoManagerMessage::getInstance()->sendMessage(eTutoState::TUTO_COND);          \
+    }
+
+    BUILD_ITEMS(SEND_TUTO_BUILD)
+#undef SEND_TUTO_BUILD
 }
 
 void        NewBuild::updateSpawnersPaths(const glm::ivec2& tilePos)

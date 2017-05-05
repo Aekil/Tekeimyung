@@ -20,13 +20,13 @@ class WaveManager;
 enum class eTutoState: int
 {
     MOVE = 0,
-    SHOOT = 1,
-    CHANGE_WEAPON = 2,
-    CHOOSE_BUILD = 3,
-    BUILD = 4,
-    DISABLE_BUILD = 5,
-    CHECK_HOWTOPLAY = 6,
-    CHECK_BUILDLIST = 7,
+    BUILD_BASE_TOWER = 1,
+    BUILD_TOWER = 2,
+    BUILD_WALL = 3,
+    CHECK_HOWTOPLAY = 4,
+    CHECK_BUILDLIST = 5,
+    SHOOT = 6,
+    CHANGE_WEAPON = 7,
     TUTO_DONE = 8,
     TUTO_WAVE = 9
 };
@@ -44,6 +44,7 @@ public:
     void start() override final;
     void update(float dt) override final;
     void sendMessage(eTutoState state);
+    bool stateOnGoingOrDone(eTutoState state);
 
     static void display(bool displayed);
 

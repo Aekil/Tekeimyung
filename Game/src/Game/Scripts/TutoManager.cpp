@@ -33,13 +33,15 @@ eTutoState operator++(eTutoState& state, int)
 TutoManager::TutoManager()
 {
     _statesMessages[eTutoState::MOVE] = "Press W, A, S or D to move (Press K to SKIP the tutorial)";
-    _statesMessages[eTutoState::SHOOT] = "Use LEFT CLICK to shoot !";
-    _statesMessages[eTutoState::CHANGE_WEAPON] = "Use the mouse SCROLL WHEEL to change your weapon !";
-    _statesMessages[eTutoState::CHOOSE_BUILD] = "Press 1, 2, 3, 4 or 5 to choose an item to build !";
-    _statesMessages[eTutoState::BUILD] = "Use LEFT CLICK on buildable zone to build something";
-    _statesMessages[eTutoState::DISABLE_BUILD] = "Use RIGHT CLICK to disable build mode";
+    _statesMessages[eTutoState::BUILD_BASE_TOWER] = "Press 2 and build your first tower base !\n Tower bases are used to build towers on it !";
+    _statesMessages[eTutoState::BUILD_TOWER] = "Press 3 and select a tower base to build a tower on it !";
+    _statesMessages[eTutoState::BUILD_WALL] = "Now, you don't have more gold to build a tower or a tower base !\n\
+But don't worry, you can also build walls by pressing 1\n\
+Walls are very cheap and can help you to make the enemies follow a specific path";
     _statesMessages[eTutoState::CHECK_HOWTOPLAY] = "Try to check the 'How to Play' from the pause menu (press Escape)";
     _statesMessages[eTutoState::CHECK_BUILDLIST] = "Check the Build list with B to know what you can build and for how much golds";
+    _statesMessages[eTutoState::SHOOT] = "Use LEFT CLICK to shoot !";
+    _statesMessages[eTutoState::CHANGE_WEAPON] = "Use the mouse SCROLL WHEEL to change your weapon !";
     _statesMessages[eTutoState::TUTO_DONE] = "Well done ! Tutorial completed. GL & HF ! (press T to QUIT tutorial)";
     _statesMessages[eTutoState::TUTO_WAVE] = "Press SPACE to start the wave";
 }
@@ -82,7 +84,7 @@ void TutoManager::start()
     }
 
     this->_goldManager->setIncreaseOnTime(false);
-    this->_goldManager->setGolds(0);
+    //this->_goldManager->setGolds(0);
 }
 
 void TutoManager::update(float dt)
@@ -103,12 +105,17 @@ void    TutoManager::sendMessage(eTutoState state)
 
         if (state == eTutoState::TUTO_DONE)
             this->_waveManager->setTutorialIsFinished(true);
-
+/*
         if (this->_currentState == eTutoState::BUILD)
             this->_goldManager->setGolds(50);
         if (this->_currentState == eTutoState::DISABLE_BUILD)
-            this->_goldManager->setGolds(0);
+            this->_goldManager->setGolds(0);*/
     }
+}
+
+bool    TutoManager::stateOnGoingOrDone(eTutoState state)
+{
+    return (_currentState >= state);
 }
 
 /**

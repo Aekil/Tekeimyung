@@ -73,9 +73,12 @@ void Player::start()
 void Player::update(float dt)
 {
     this->updateDirection();
-    this->movement(dt);
-    this->handleShoot(dt);
-    this->changeWeapon();
+    if (TutoManagerMessage::getInstance()->stateOnGoingOrDone(eTutoState::MOVE))
+        this->movement(dt);
+    if (TutoManagerMessage::getInstance()->stateOnGoingOrDone(eTutoState::SHOOT))
+        this->handleShoot(dt);
+    if (TutoManagerMessage::getInstance()->stateOnGoingOrDone(eTutoState::CHANGE_WEAPON))
+        this->changeWeapon();
 }
 
 void Player::changeWeapon()
