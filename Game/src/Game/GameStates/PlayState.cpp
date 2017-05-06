@@ -41,7 +41,6 @@ void    PlayState::setupSystems()
 
 bool    PlayState::init()
 {
-    //_pair = std::make_pair(Keyboard::eKey::F, new HandleFullscreenEvent());
     _backgroundMusic = EventSound::getEventByEventType(eEventSound::BACKGROUND);
 
     // Load tutorial level
@@ -60,14 +59,6 @@ bool    PlayState::update(float elapsedTime)
     auto &&keyboard = GameWindow::getInstance()->getKeyboard();
     auto &&mouse = GameWindow::getInstance()->getMouse();
 
-    //if (keyboard.getStateMap()[_pair.first] == Keyboard::eKeyState::KEY_PRESSED)
-    //    _pair.second->execute();
-
-    //if (keyboard.getStateMap()[Keyboard::eKey::H] == Keyboard::eKeyState::KEY_PRESSED)
-    //{
-    //    _gameStateManager->addState<HowToPlayState>();
-    //    TutoManagerMessage::getInstance()->sendMessage(eTutoState::CHECK_HOWTOPLAY);
-    //}
     if (keyboard.getStateMap()[Keyboard::eKey::B] == Keyboard::eKeyState::KEY_PRESSED)
     {
         _gameStateManager->addState<BuildingListState>();
@@ -89,8 +80,6 @@ bool    PlayState::update(float elapsedTime)
     {
         _gameStateManager->addState<PauseState>();
     }
-
-    //updateCameraInputs(elapsedTime);
 
     // Play background music
     #if (ENABLE_SOUND)
