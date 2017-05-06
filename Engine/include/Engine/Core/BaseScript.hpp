@@ -34,6 +34,18 @@ public:
     virtual JsonValue saveToJson() { return (JsonValue()); };
     virtual void loadFromJson(const JsonValue& json) {}
 
+    template<typename T>
+    T* getEntityScript(Entity* entity, const char* scriptName)
+    {
+        sScriptComponent* scriptComp = entity->getComponent<sScriptComponent>();
+        if (!scriptComp)
+        {
+            return (nullptr);
+        }
+
+        return scriptComp->getScript<T>(scriptName);
+    }
+
     void setEntity(Entity* entity);
     Entity* getEntity();
 
