@@ -13,6 +13,7 @@
 #include <Engine/Components.hh>
 
 class GoldManager;
+class WaveManager;
 
 #define TUTO_MANAGER_TAG    "TutoManager"
 
@@ -66,8 +67,12 @@ private:
 
     eTutoState getState(uint32_t stateIndex) const;
 
+public:
+    static bool         _tutorialDone;
+
 private:
     GoldManager*        _goldManager;
+    WaveManager*        _waveManager;
     sTextComponent*     _textComp = nullptr;
     uint32_t            _currentState = 0;
 

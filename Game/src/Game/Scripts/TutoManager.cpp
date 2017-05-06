@@ -10,6 +10,9 @@
 #include <Game/Scripts/GoldManager.hpp>
 #include <Game/Scripts/Spawner.hpp>
 #include <Game/Scripts/TutoManagerMessage.hpp>
+#include <Game/GameStates/PlayState.hpp>
+
+bool    TutoManager::_tutorialDone = false;
 
 TutoManager::~TutoManager()
 {
@@ -100,40 +103,45 @@ void TutoManager::start()
 {
     _textComp = getComponent<sTextComponent>();
 
-    auto em = EntityFactory::getBindedEntityManager();
-    auto entity = em->getEntityByTag("GameManager");
+    if (_tutorialDone)
+    {
+        _currentState = _steps.size() - 1;
+    }
+    _textComp->text.setContent(_steps[_currentState].message);
 
-    if (entity == nullptr)
+    auto em = EntityFactory::getBindedEntityManager();
+    auto gameManager = em->getEntityByTag("GameManager");
+
+    if (gameManager == nullptr)
     {
         LOG_ERROR("No entity with GameManager tag");
         return;
     }
 
-    auto gameManagerScriptComponent = entity->getComponent<sScriptComponent>();
-
-    if (gameManagerScriptComponent == nullptr)
-    {
-        LOG_ERROR("No scriptComponent on entity");
-        return;
-    }
-
-    _goldManager = gameManagerScriptComponent->getScript<GoldManager>("GoldManager");
+    _goldManager = getEntityScript<GoldManager>(gameManager, "GoldManager");
 
     if (_goldManager == nullptr)
     {
-        LOG_ERROR("No GoldManager script on entity");
+        LOG_ERROR("No GoldManager script on gameManager");
+        return;
+    }
+    _goldManager->setIncreaseOnTime(false);
+
+    _waveManager = getEntityScript<WaveManager>(gameManager, "WaveManager");
+
+    if (_waveManager == nullptr)
+    {
+        LOG_ERROR("No WaveManager script on gameManager");
         return;
     }
 
-    _goldManager->setIncreaseOnTime(false);
 }
 
 void TutoManager::update(float dt)
 {
-    if (keyboard.getStateMap()[Keyboard::eKey::K] == Keyboard::eKeyState::KEY_RELEASED)
+    if (_waveManager && tutorialDone())
     {
-        _currentState = _steps.size() - 2; // eTutoState::TUTO_DONE
-        sendMessage(eTutoState::TUTO_DONE);
+        _waveManager->setTutorialIsFinished(true);
     }
 }
 
@@ -262,8 +270,8 @@ void    TutoManager::destroyBuilds()
         explosionTransform->setPos(towerBase->getComponent<sTransformComponent>()->getPos());
     }
 
-    this->Destroy(tower);
-    this->Destroy(towerBase);
+    Destroy(tower);
+    Destroy(towerBase);
 }
 
 eTutoState    TutoManager::getState(uint32_t stateIndex) const
