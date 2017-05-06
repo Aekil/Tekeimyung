@@ -432,6 +432,7 @@ void            NewBuild::updatePreview()
     bool isTower = this->_currentChoice == "TOWER_FIRE";
 
     this->Destroy(this->_preview);
+    this->_preview = nullptr;
 
     // Can only build towers on TileBaseTurret
     if (isTower &&
