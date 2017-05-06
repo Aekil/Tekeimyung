@@ -28,5 +28,5 @@
       "diffuse" : ""
    },
    "transparent" : true,
-   "wireframe" : false
+   "wireframe" : true
 }

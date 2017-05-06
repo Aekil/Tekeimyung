@@ -16,6 +16,7 @@ typedef struct  s_itemCase
     // texture
     char        key; // str ?
     std::string price;
+    std::string archetype;
     std::string description;
 } t_itemCase;
 

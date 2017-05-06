@@ -24,8 +24,8 @@
       },
       "sTransformComponent" : {
          "pos" : {
-            "x" : 1860.800048828125,
-            "y" : 509,
+            "x" : 960,
+            "y" : 91.349998474121094,
             "z" : 0
          },
          "rotation" : {
@@ -43,18 +43,18 @@
          "type" : "TILE_WALKABLE"
       },
       "sUiComponent" : {
-         "horizontal_alignment" : "RIGHT",
-         "layer" : 0,
+         "horizontal_alignment" : "MIDDLE",
+         "layer" : -1,
          "offset" : {
-            "x" : -1,
-            "y" : 0
+            "x" : 0,
+            "y" : 5
          },
          "percentage_size" : false,
          "size" : {
             "x" : 0.10000000149011612,
             "y" : 0.10000000149011612
          },
-         "vertical_alignment" : "MIDDLE"
+         "vertical_alignment" : "BOTTOM"
       }
    },
    "name" : "SIDEBAR_ITEM",
