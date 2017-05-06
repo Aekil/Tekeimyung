@@ -13,23 +13,23 @@
 #include <Engine/Components.hh>
 
 class GoldManager;
-class WaveManager;
 
 #define TUTO_MANAGER_TAG    "TutoManager"
 
 enum class eTutoState: int
 {
-    MOVE = 0,
-    BUILD_BASE_TOWER = 1,
-    BUILD_TOWER = 2,
-    TOWER_KILL_ENEMY = 3,
-    BUILD_WALL = 4,
-    CHECK_HOWTOPLAY = 5,
-    CHECK_BUILDLIST = 6,
-    SHOOT = 7,
-    CHANGE_WEAPON = 8,
-    TUTO_DONE = 9,
-    TUTO_WAVE = 10
+    MOVE,
+    BUILD_BASE_TOWER,
+    BUILD_TOWER,
+    DEACTIVATE_BUILD,
+    ENEMY_DEAD,
+    BUILD_WALL,
+    SHOOT,
+    CHANGE_WEAPON,
+    CHECK_HOWTOPLAY,
+    CHECK_BUILDLIST,
+    TUTO_DONE,
+    TUTO_WAVE
 };
 
 eTutoState& operator++(eTutoState& state);
@@ -37,6 +37,13 @@ eTutoState  operator++(eTutoState& state, int);
 
 class TutoManager final : public BaseScript
 {
+private:
+    struct sTutoStep
+    {
+        eTutoState state;
+        std::string message;
+    };
+
 public:
     TutoManager();
     ~TutoManager();
@@ -46,18 +53,25 @@ public:
     void update(float dt) override final;
     void sendMessage(eTutoState state);
     bool stateOnGoingOrDone(eTutoState state);
+    bool stateOnGoing(eTutoState state);
+    bool tutorialDone();
+
+    eTutoState getCurrentState() const;
 
     static void display(bool displayed);
 
 private:
-    void spawnEnemy();
+    void spawnEnemy(float speed = -1.0f); // -1 does not change enemy speed
+    void destroyBuilds();
+
+    eTutoState getState(uint32_t stateIndex) const;
 
 private:
     GoldManager*        _goldManager;
     sTextComponent*     _textComp = nullptr;
-    eTutoState          _currentState = eTutoState::MOVE;
+    uint32_t            _currentState = 0;
 
-    std::unordered_map<eTutoState, std::string> _statesMessages;
+    std::vector<sTutoStep> _steps;
 };
 
 REGISTER_SCRIPT(TutoManager);

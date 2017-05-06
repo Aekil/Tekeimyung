@@ -75,7 +75,6 @@ void Tower::shootTarget(Entity* target)
     projectileScript->_projectileTransform->translate(glm::vec3(0.0f, _towerRender->getModel()->getMax().y - 20.0f, 0.0f));
     projectileScript->_targetHandle = target->handle;
     projectileScript->_damage = _damage;
-    projectileScript->_towerProjectile = true;
     projectileScript->followTarget(target);
 
 #if (ENABLE_SOUND)

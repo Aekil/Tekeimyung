@@ -52,5 +52,21 @@ bool    TutoManagerMessage::stateOnGoingOrDone(eTutoState state)
     if (!_tutoManager)
         return (true);
 
-    return _tutoManager->stateOnGoingOrDone(state);
+    return (_tutoManager->stateOnGoingOrDone(state));
+}
+
+bool    TutoManagerMessage::stateOnGoing(eTutoState state)
+{
+    if (!_tutoManager)
+        return (false);
+
+    return (_tutoManager->stateOnGoing(state));
+}
+
+bool    TutoManagerMessage::tutorialDone()
+{
+    if (!_tutoManager)
+        return (true);
+
+    return (_tutoManager->tutorialDone());
 }

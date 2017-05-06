@@ -16,6 +16,8 @@
 
 class Enemy final : public BaseScript, public Health
 {
+    friend class TutoManager;
+
 public:
     Enemy() = default;
     ~Enemy() override final = default;

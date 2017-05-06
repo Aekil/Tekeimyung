@@ -38,8 +38,6 @@ private:
     sSphereColliderComponent* _projectileCollider;
     sRigidBodyComponent* _projectileRigidBody;
     sParticleEmitterComponent* _projectileEmitter;
-
-    bool _towerProjectile = false;
 };
 
 REGISTER_SCRIPT(Projectile);

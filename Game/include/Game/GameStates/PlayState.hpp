@@ -17,7 +17,7 @@
 #include <Engine/EntityFactory.hpp>
 #include <Engine/Utils/EventSound.hpp>
 
-START_GAMESTATE(PlayState, "Game")
+START_GAMESTATE(PlayState, "Tutorial")
  public:
     ~PlayState();
 

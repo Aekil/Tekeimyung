@@ -10,6 +10,7 @@
 
 #include <Game/Scripts/GameManager.hpp>
 #include <Game/Scripts/GoldManager.hpp>
+#include <Game/Scripts/TutoManagerMessage.hpp>
 
 #include <Game/Scripts/Enemy.hpp>
 
@@ -167,6 +168,8 @@ void Enemy::remove()
     explosionTransform->setPos(entityTransform->getPos());
 
     this->Destroy();
+
+    TutoManagerMessage::getInstance()->sendMessage(eTutoState::ENEMY_DEAD);
 }
 
 bool Enemy::takeDamage(double damage)

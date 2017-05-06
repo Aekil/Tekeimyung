@@ -198,11 +198,13 @@ void        NewBuild::checkUserInputs()
         this->mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_2] == Mouse::eButtonState::CLICK_RELEASED)
     {
         this->disableAll();
+        TutoManagerMessage::getInstance()->sendMessage(eTutoState::DEACTIVATE_BUILD);
     }
 
 #define BUILD_COND(KEY, ITEM, TUTO_COND)                                                \
     if (this->keyboard.getStateMap()[KEY] == Keyboard::eKeyState::KEY_RELEASED &&       \
-        TutoManagerMessage::getInstance()->stateOnGoingOrDone(eTutoState::TUTO_COND))   \
+        (TutoManagerMessage::getInstance()->stateOnGoing(eTutoState::TUTO_COND) ||      \
+        TutoManagerMessage::getInstance()->tutorialDone()))                             \
     {                                                                                   \
         this->_currentChoice = ITEM;                                                    \
         LOG_DEBUG("Current choice :\t%s", this->_currentChoice.c_str());                \
@@ -314,6 +316,19 @@ void        NewBuild::triggerBuildableZone(const std::string &archetype)
 
 void        NewBuild::placePreviewedEntity()
 {
+// For the tutorial, we don't want the player
+// to build the same item 2 times
+#define LOCK_BUILD_COND(KEY, ITEM, TUTO_COND)                                           \
+    if (!TutoManagerMessage::getInstance()->tutorialDone() &&                           \
+        ITEM == this->_currentChoice &&                                                 \
+        !TutoManagerMessage::getInstance()->stateOnGoing(eTutoState::TUTO_COND))        \
+    {                                                                                   \
+        return;                                                                         \
+    }
+
+    BUILD_ITEMS(LOCK_BUILD_COND)
+#undef LOCK_BUILD_COND
+
     if (std::find(this->_alreadyBuiltTile.begin(), this->_alreadyBuiltTile.end(), this->_tileHovered->handle) != this->_alreadyBuiltTile.end())
         return;
 
