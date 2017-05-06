@@ -3,6 +3,22 @@
       "sNameComponent" : {
          "name" : "SIDEBAR_MANAGER"
       },
+      "sRenderComponent" : {
+         "animated" : false,
+         "animations" : [],
+         "color" : {
+            "a" : 1,
+            "b" : 1,
+            "g" : 1,
+            "r" : 1
+         },
+         "dynamic" : false,
+         "hide_dynamic" : false,
+         "ignore_raycast" : false,
+         "materials" : [ "hud.mat" ],
+         "model" : "resources/models/default.DAE",
+         "type" : "PLANE"
+      },
       "sScriptComponent" : {
          "scripts" : [
             {
@@ -12,9 +28,9 @@
       },
       "sTransformComponent" : {
          "pos" : {
-            "x" : 100,
-            "y" : 100,
-            "z" : 100
+            "x" : 960,
+            "y" : 513.5,
+            "z" : 0
          },
          "rotation" : {
             "x" : 0,
@@ -22,13 +38,27 @@
             "z" : 0
          },
          "scale" : {
-            "x" : 1,
-            "y" : 1,
+            "x" : 192,
+            "y" : 102.69999694824219,
             "z" : 1
          }
       },
       "sTypeComponent" : {
          "type" : "TILE_WALKABLE"
+      },
+      "sUiComponent" : {
+         "horizontal_alignment" : "MIDDLE",
+         "layer" : 0,
+         "offset" : {
+            "x" : 0,
+            "y" : 0
+         },
+         "percentage_size" : true,
+         "size" : {
+            "x" : 1,
+            "y" : 1
+         },
+         "vertical_alignment" : "MIDDLE"
       }
    },
    "name" : "SIDEBAR_MANAGER",

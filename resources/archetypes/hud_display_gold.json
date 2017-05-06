@@ -15,9 +15,9 @@
          "dynamic" : false,
          "hide_dynamic" : false,
          "ignore_raycast" : false,
-         "materials" : [ "MAT_Default" ],
+         "materials" : [ "geometry_default.mat" ],
          "model" : "resources/models/default.DAE",
-         "type" : "MESH"
+         "type" : "PLANE"
       },
       "sScriptComponent" : {
          "scripts" : [
@@ -36,13 +36,13 @@
          "content" : "X",
          "font_name" : "moonhouse.ttf",
          "font_size" : 22,
-         "horizontal_alignment" : "RIGHT",
+         "horizontal_alignment" : "LEFT",
          "vertical_alignment" : "MIDDLE"
       },
       "sTransformComponent" : {
          "pos" : {
-            "x" : 960,
-            "y" : 142.3800048828125,
+            "x" : 2227.199951171875,
+            "y" : 133.510009765625,
             "z" : 0
          },
          "rotation" : {
@@ -63,8 +63,8 @@
          "horizontal_alignment" : "MIDDLE",
          "layer" : 0,
          "offset" : {
-            "x" : 0,
-            "y" : -36
+            "x" : 66,
+            "y" : -37
          },
          "percentage_size" : false,
          "size" : {

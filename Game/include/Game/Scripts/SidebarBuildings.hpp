@@ -8,15 +8,15 @@
 #include <Engine/Core/ScriptFactory.hpp>
 #include <Engine/Components.hh>
 
-#define N_BUILDABLE_ITEMS   5
+#define N_BUILDABLE_ITEMS   3
 
 typedef struct  s_itemCase
 {
     int         id;
     // texture
     char        key; // str ?
-    std::string name;
     std::string price;
+    std::string description;
 } t_itemCase;
 
 typedef struct  s_itemSelection
@@ -39,7 +39,7 @@ private:
     void init();
 
 private:
-    t_itemCase          _sidebarItems[N_BUILDABLE_ITEMS];
+    std::vector<t_itemCase> _sidebarItems;
     t_itemSelection     _itemSelection;
 };
 

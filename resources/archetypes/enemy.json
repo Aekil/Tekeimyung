@@ -159,6 +159,7 @@
             "y" : 0,
             "z" : 0
          },
+         "ignored_tags" : [],
          "velocity" : {
             "x" : 0,
             "y" : 0,
@@ -170,6 +171,7 @@
          "scripts" : [
             {
                "experience_earned" : 20,
+               "gold_earned" : 20,
                "health" : 200,
                "name" : "Enemy",
                "speed" : 25
