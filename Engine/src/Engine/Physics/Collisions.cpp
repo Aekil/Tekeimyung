@@ -72,7 +72,11 @@ double SquaredDistPointAABB(const glm::vec3& p, const glm::vec3& min, const glm:
 
 bool    Collisions::sphereVSAABB(const glm::vec3& spherePosition, float sphereRadius, const glm::vec3& boxPosition, const glm::vec3& boxSize)
 {
-    double squaredDistance = SquaredDistPointAABB(spherePosition, boxPosition, boxPosition + boxSize);
+    glm::vec3 min;
+    min.x = boxPosition.x - (boxSize.x / 2.0f);
+    min.y = boxPosition.y - (boxSize.y / 2.0f);
+    min.z = boxPosition.z - (boxSize.z / 2.0f);
+    double squaredDistance = SquaredDistPointAABB(spherePosition, min, min + boxSize);
 
     return squaredDistance < (sphereRadius * sphereRadius);
 }
