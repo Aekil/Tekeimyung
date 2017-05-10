@@ -194,7 +194,9 @@ bool    Collisions::isCollidingSphereAndEntity(glm::vec3 spherePos, float sphere
             spherePos,
             sphereRadius * (SIZE_UNIT / 2.0f),
             entityBoxCollider->pos + entityTransform->getPos(),
-            glm::vec3(entityBoxCollider->size.x * entityTransform->getScale().x, entityBoxCollider->size.y * entityTransform->getScale().y, entityBoxCollider->size.z * entityTransform->getScale().z)
+            glm::vec3(SIZE_UNIT * entityBoxCollider->size.x * entityTransform->getScale().x,
+                        SIZE_UNIT * entityBoxCollider->size.y * entityTransform->getScale().y,
+                        SIZE_UNIT * entityBoxCollider->size.z * entityTransform->getScale().z)
         ));
     }
 
@@ -228,7 +230,9 @@ bool    Collisions::isColliding(Entity *firstEntity, Entity *secondEntity)
             secondSphereCollider->pos + secondTransform->getPos(),
             secondSphereCollider->radius * std::max({ secondTransform->getScale().x, secondTransform->getScale().y, secondTransform->getScale().z }) * (SIZE_UNIT / 2.0f),
             firstBoxCollider->pos + firstTransform->getPos(),
-            glm::vec3(firstBoxCollider->size.x * firstTransform->getScale().x, firstBoxCollider->size.y * firstTransform->getScale().y, firstBoxCollider->size.z * firstTransform->getScale().z)
+            glm::vec3(SIZE_UNIT * firstBoxCollider->size.x * firstTransform->getScale().x,
+                        SIZE_UNIT * firstBoxCollider->size.y * firstTransform->getScale().y,
+                        SIZE_UNIT * firstBoxCollider->size.z * firstTransform->getScale().z)
         ));
     }
 
@@ -241,7 +245,9 @@ bool    Collisions::isColliding(Entity *firstEntity, Entity *secondEntity)
             sphereCollider->pos + firstTransform->getPos(),
             sphereCollider->radius * std::max({ firstTransform->getScale().x, firstTransform->getScale().y, firstTransform->getScale().z }) * (SIZE_UNIT / 2.0f),
             boxCollider->pos + secondTransform->getPos(),
-            glm::vec3(boxCollider->size.x * secondTransform->getScale().x, boxCollider->size.y * secondTransform->getScale().y, boxCollider->size.z * secondTransform->getScale().z)
+            glm::vec3(SIZE_UNIT * boxCollider->size.x * secondTransform->getScale().x,
+                        SIZE_UNIT * boxCollider->size.y * secondTransform->getScale().y,
+                        SIZE_UNIT * boxCollider->size.z * secondTransform->getScale().z)
         ));
     }
 
