@@ -93,8 +93,6 @@ void    RenderingSystem::addCollidersToRenderQueue(Entity* entity, sTransformCom
     {
         if (!sphereCollider->sphere)
         {
-            Sphere::sInfo sphereInfo;
-            sphereInfo.radius = SIZE_UNIT;
             Geometry* sphereModel = GeometryFactory::getGeometry(Geometry::eType::SPHERE);
             sphereCollider->sphere = std::make_unique<ModelInstance>(sphereModel);
 
