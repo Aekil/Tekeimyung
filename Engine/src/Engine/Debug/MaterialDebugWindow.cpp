@@ -436,6 +436,19 @@ void    MaterialDebugWindow::saveMaterial(Material* material, JsonValue& json)
     material->setPath(filePath);
 }
 
+void    updateModelInstanceMaterial(ModelInstance* modelInstance, Material* material)
+{
+        auto& meshsInstances = modelInstance->getMeshsInstances();
+        for (auto& meshInstance: meshsInstances)
+        {
+            if (meshInstance->getMaterial() &&
+                meshInstance->getMaterial()->getId() == material->getId())
+            {
+                meshInstance->setMaterial(material);
+            }
+        }
+}
+
 void    MaterialDebugWindow::updateEntitiesMaterials(Material* material)
 {
     auto em = EntityFactory::getBindedEntityManager();
@@ -449,14 +462,13 @@ void    MaterialDebugWindow::updateEntitiesMaterials(Material* material)
             continue;
         }
         auto modelInstance = render->getModelInstance();
-        auto& meshsInstances = modelInstance->getMeshsInstances();
-        for (auto& meshInstance: meshsInstances)
+        updateModelInstanceMaterial(modelInstance, material);
+
+        sParticleEmitterComponent* emitterComp = entity->getComponent<sParticleEmitterComponent>();
+        if (emitterComp)
         {
-            if (meshInstance->getMaterial() &&
-                meshInstance->getMaterial()->getId() == material->getId())
-            {
-                meshInstance->setMaterial(material);
-            }
+            auto modelInstance = emitterComp->getModelInstance();
+            updateModelInstanceMaterial(modelInstance, material);
         }
     }
 }
