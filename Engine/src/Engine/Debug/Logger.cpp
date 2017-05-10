@@ -94,14 +94,11 @@ void    Logger::log(Logger::eLogLevel level, const std::string& message)
         "]\t" << message;
     sLogInfo logInfo = {log.str(), level};
     _logs.push_back(logInfo);
-    if (_logLevel & logInfo.level)
-    {
-        _log.append("%s\n", logInfo.message.c_str());
-    }
+    addConsoleLog(logInfo);
 #endif
 }
 
-const ImGuiTextBuffer&  Logger::getLog() const
+const Logger::sConsoleLog&  Logger::getConsoleLog() const
 {
     return (_log);
 }
@@ -111,13 +108,10 @@ void    Logger::setLogLevel(Logger::eLogLevel logLevel)
     _logLevel = logLevel;
 
 #if defined(ENGINE_DEBUG)
-    _log.clear();
+    _log.buf.clear();
     for (sLogInfo& logInfo: _logs)
     {
-        if (_logLevel & logInfo.level)
-        {
-            _log.append("%s\n", logInfo.message.c_str());
-        }
+        addConsoleLog(logInfo);
     }
 #endif
 }
@@ -125,4 +119,22 @@ void    Logger::setLogLevel(Logger::eLogLevel logLevel)
 Logger::eLogLevel   Logger::getLogLevel() const
 {
     return (_logLevel);
+}
+
+void    Logger::addConsoleLog(const sLogInfo& logInfo)
+{
+    if (!(_logLevel & logInfo.level))
+    {
+        return;
+    }
+
+     int oldSize = _log.buf.size();
+    _log.buf.append("%s\n", logInfo.message.c_str());
+    for (int newSize =  _log.buf.size(); oldSize < newSize; oldSize++)
+    {
+        if (_log.buf[oldSize] == '\n')
+        {
+            _log.lineOffsets.push_back(oldSize);
+        }
+    }
 }
