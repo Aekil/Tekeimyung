@@ -84,6 +84,8 @@ void    RenderingSystem::addCollidersToRenderQueue(Entity* entity, sTransformCom
         BufferPool::SubBuffer* buffer = boxCollider->box->getBuffer(_bufferPool.get());
         updateModelBuffer(buffer, boxTransform, glm::vec4(0.87f, 1.0f, 1.0f, 0.1f));
 
+        updateColliderMaterial(boxCollider->box.get(), entity);
+
         _renderQueue.addModel(boxCollider->box.get(), buffer->ubo, buffer->offset, buffer->size, 0, false, true);
     }
     if (sphereCollider && sphereCollider->display &&
@@ -106,6 +108,8 @@ void    RenderingSystem::addCollidersToRenderQueue(Entity* entity, sTransformCom
 
         BufferPool::SubBuffer* buffer = sphereCollider->sphere->getBuffer(_bufferPool.get());
         updateModelBuffer(buffer, sphereTransform, glm::vec4(0.87f, 1.0f, 1.0f, 0.1f));
+
+        updateColliderMaterial(sphereCollider->sphere.get(), entity);
 
         _renderQueue.addModel(sphereCollider->sphere.get(), buffer->ubo, buffer->offset, buffer->size, 0, false, true);
     }
@@ -518,4 +522,38 @@ void    RenderingSystem::updateModelBuffer(BufferPool::SubBuffer* buffer, const 
 {
     buffer->ubo->update((void*)&transform, sizeof(glm::mat4), buffer->offset);
     buffer->ubo->update((void*)&color, sizeof(glm::vec4), buffer->offset + sizeof(glm::mat4));
+}
+
+void    RenderingSystem::updateColliderMaterial(ModelInstance* modelInstance, Entity* entity)
+{
+    bool isColliding = false;
+    sRigidBodyComponent* rigidBody = entity->getComponent<sRigidBodyComponent>();
+    if (!rigidBody)
+    {
+        return;
+    }
+
+    for (auto& it = rigidBody->collisions.begin(); it != rigidBody->collisions.end(); ++it)
+    {
+        if (rigidBody->collisions[it->first] != eCollisionState::NO_COLLISION)
+        {
+            isColliding = true;
+            break;
+        }
+    }
+
+    // Set collider material if not already set
+    if (!isColliding &&
+        modelInstance->getMeshsInstances()[0]->getMaterial()->getId() != "colliders.mat")
+    {
+        Material* colliderMaterial = ResourceManager::getInstance()->getResource<Material>("colliders.mat");
+        modelInstance->setMaterial(colliderMaterial);
+    }
+    // Set collider colliding material if not already set
+    else if (isColliding &&
+        modelInstance->getMeshsInstances()[0]->getMaterial()->getId() != "colliders_colliding.mat")
+    {
+        Material* colliderMaterial = ResourceManager::getInstance()->getResource<Material>("colliders_colliding.mat");
+        modelInstance->setMaterial(colliderMaterial);
+    }
 }

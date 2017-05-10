@@ -60,6 +60,7 @@ private:
     BufferPool::SubBuffer*                  getModelBuffer(sTransformComponent* transform, sRenderComponent* render);
     void                                    updateModelBuffer(BufferPool::SubBuffer* buffer, const glm::mat4& transform, const glm::vec4& color);
 
+    void                                    updateColliderMaterial(ModelInstance* modelInstance, Entity* entity);
 private:
     std::unordered_map<Entity::sHandle, sEmitter*>*     _particleEmitters;
 
