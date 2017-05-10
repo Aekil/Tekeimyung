@@ -31,6 +31,13 @@ void RigidBodySystem::handleCollisions(EntityManager &em, Entity* entity, sRigid
 
     for (auto& it = rigidBody->collisions.begin(); it != rigidBody->collisions.end(); ++it)
     {
+        // The entity has been deleted, remove collision
+        if (!em.getEntity(it->first))
+        {
+            rigidBody->collisions[it->first] = eCollisionState::NO_COLLISION;
+            continue;
+        }
+
         if (it->second == eCollisionState::ENTERING_COLLISION)
         {
             if (scriptComponent != nullptr)
