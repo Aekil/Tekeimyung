@@ -108,6 +108,7 @@ sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& 
     component->ignoreRaycast = json.getBool("ignore_raycast", false);
     component->dynamic = json.getBool("dynamic", false);
     component->hideDynamic = json.getBool("hide_dynamic", false);
+    component->display = json.getBool("display", true);
 
     component->type = EnumManager<Geometry::eType>::stringToEnum(json.getString("type", "MESH"));
 
@@ -276,6 +277,7 @@ JsonValue&    ComponentFactory<sRenderComponent>::saveToJson(const std::string& 
     json.setBool("ignore_raycast", component->ignoreRaycast);
     json.setBool("dynamic", component->dynamic);
     json.setBool("hide_dynamic", component->hideDynamic);
+    json.setBool("display", component->display);
 
     // Save animations
     {
@@ -362,6 +364,7 @@ bool    ComponentFactory<sRenderComponent>::updateEditor(const std::string& enti
     changed |= ImGui::Checkbox("Ignore mouse raycast", &component->ignoreRaycast);
     changed |= ImGui::Checkbox("Dynamic", &component->dynamic);
     changed |= ImGui::Checkbox("Hide dynamic", &component->hideDynamic);
+    changed |= ImGui::Checkbox("Display", &component->display);
 
     if (Helper::updateComboEnum<Geometry::eType>("Model type", component->type))
     {

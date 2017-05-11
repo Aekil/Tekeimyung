@@ -96,6 +96,7 @@
                   "g" : 0.98333263397216797,
                   "r" : 1
                },
+               "display" : true,
                "dynamic" : true,
                "hide_dynamic" : false,
                "ignore_raycast" : false,
@@ -174,6 +175,7 @@
                   "g" : 1,
                   "r" : 1
                },
+               "display" : true,
                "dynamic" : false,
                "hide_dynamic" : false,
                "ignore_raycast" : false,
@@ -344,6 +346,7 @@
                   "g" : 0,
                   "r" : 0
                },
+               "display" : true,
                "dynamic" : false,
                "hide_dynamic" : false,
                "ignore_raycast" : false,
@@ -374,7 +377,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 2227.199951171875,
-                  "y" : 205.39999389648438,
+                  "y" : 203.39999389648438,
                   "z" : 0
                },
                "rotation" : {
@@ -423,6 +426,7 @@
                   "g" : 0,
                   "r" : 0
                },
+               "display" : true,
                "dynamic" : false,
                "hide_dynamic" : false,
                "ignore_raycast" : false,
@@ -453,7 +457,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 2227.199951171875,
-                  "y" : 133.510009765625,
+                  "y" : 132.20999145507813,
                   "z" : 0
                },
                "rotation" : {
@@ -502,6 +506,7 @@
                   "g" : 0,
                   "r" : 0
                },
+               "display" : true,
                "dynamic" : false,
                "hide_dynamic" : false,
                "ignore_raycast" : false,
@@ -532,7 +537,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 2227.199951171875,
-                  "y" : 61.6199951171875,
+                  "y" : 61.019989013671875,
                   "z" : 0
                },
                "rotation" : {
@@ -581,6 +586,7 @@
                   "g" : 1,
                   "r" : 1
                },
+               "display" : true,
                "dynamic" : false,
                "hide_dynamic" : false,
                "ignore_raycast" : false,
@@ -611,7 +617,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 537.5999755859375,
-                  "y" : 944.8399658203125,
+                  "y" : 935.6400146484375,
                   "z" : 0
                },
                "rotation" : {
@@ -621,7 +627,7 @@
                },
                "scale" : {
                   "x" : 96.799873352050781,
-                  "y" : 5.8957400321960449,
+                  "y" : 5.8383326530456543,
                   "z" : 1
                }
             },
@@ -660,6 +666,7 @@
                   "g" : 1,
                   "r" : 1
                },
+               "display" : true,
                "dynamic" : false,
                "hide_dynamic" : false,
                "ignore_raycast" : false,
@@ -677,7 +684,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 960,
-                  "y" : 513.5,
+                  "y" : 508.5,
                   "z" : 0
                },
                "rotation" : {
@@ -687,7 +694,7 @@
                },
                "scale" : {
                   "x" : 192,
-                  "y" : 102.69999694824219,
+                  "y" : 101.69999694824219,
                   "z" : 1
                }
             },
@@ -726,6 +733,7 @@
                   "g" : 1,
                   "r" : 1
                },
+               "display" : true,
                "dynamic" : false,
                "hide_dynamic" : false,
                "ignore_raycast" : false,
@@ -736,7 +744,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 1632,
-                  "y" : 133.510009765625,
+                  "y" : 132.20999145507813,
                   "z" : 0
                },
                "rotation" : {
@@ -746,7 +754,7 @@
                },
                "scale" : {
                   "x" : 6.399993896484375,
-                  "y" : 6.0859193801879883,
+                  "y" : 6.0266604423522949,
                   "z" : 1
                }
             },
@@ -782,6 +790,7 @@
                   "g" : 0.16470588743686676,
                   "r" : 1
                },
+               "display" : true,
                "dynamic" : false,
                "hide_dynamic" : false,
                "ignore_raycast" : false,
@@ -792,7 +801,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 1632,
-                  "y" : 205.39999389648438,
+                  "y" : 203.39999389648438,
                   "z" : 0
                },
                "rotation" : {
@@ -802,7 +811,7 @@
                },
                "scale" : {
                   "x" : 6.3999357223510742,
-                  "y" : 6.0858993530273438,
+                  "y" : 6.0266404151916504,
                   "z" : 1
                }
             },
@@ -838,6 +847,7 @@
                   "g" : 1,
                   "r" : 0
                },
+               "display" : true,
                "dynamic" : false,
                "hide_dynamic" : false,
                "ignore_raycast" : false,
@@ -848,7 +858,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 1632,
-                  "y" : 61.6199951171875,
+                  "y" : 61.019989013671875,
                   "z" : 0
                },
                "rotation" : {
@@ -858,7 +868,7 @@
                },
                "scale" : {
                   "x" : 6.3999357223510742,
-                  "y" : 6.0859198570251465,
+                  "y" : 6.0266609191894531,
                   "z" : 1
                }
             },
@@ -879,6 +889,79 @@
          },
          "name" : "ICON_WAVE",
          "tag" : ""
+      },
+      {
+         "components" : {
+            "sNameComponent" : {
+               "name" : "SIDEBAR_ITEM_INFO"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 1
+               },
+               "display" : false,
+               "dynamic" : false,
+               "hide_dynamic" : false,
+               "ignore_raycast" : false,
+               "materials" : [ "sidebar_item_info.mat" ],
+               "model" : "resources/models/default.DAE",
+               "type" : "PLANE"
+            },
+            "sTextComponent" : {
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 1
+               },
+               "content" : "Item description",
+               "font_name" : "arial.ttf",
+               "font_size" : 26,
+               "horizontal_alignment" : "MIDDLE",
+               "vertical_alignment" : "MIDDLE"
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 960,
+                  "y" : 294.92999267578125,
+                  "z" : 0
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 105.5999755859375,
+                  "y" : 20.340000152587891,
+                  "z" : 1
+               }
+            },
+            "sTypeComponent" : {
+               "type" : "TILE_WALKABLE"
+            },
+            "sUiComponent" : {
+               "horizontal_alignment" : "MIDDLE",
+               "layer" : 0,
+               "offset" : {
+                  "x" : 0,
+                  "y" : 19
+               },
+               "percentage_size" : true,
+               "size" : {
+                  "x" : 0.5499998927116394,
+                  "y" : 0.20000000298023224
+               },
+               "vertical_alignment" : "BOTTOM"
+            }
+         },
+         "name" : "SIDEBAR_ITEM_INFO",
+         "tag" : "SidebarItemInfo"
       }
    ],
    "name" : "Game"

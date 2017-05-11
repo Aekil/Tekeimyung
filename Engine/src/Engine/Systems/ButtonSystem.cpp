@@ -178,7 +178,7 @@ void    ButtonSystem::setSelected(Entity* entity, bool hovered)
     button->hovered = hovered;
 
     // Display icon
-    _iconRender->_display = true;
+    _iconRender->display = true;
 
     // The button is already selected
     if (button->selected)
@@ -214,7 +214,7 @@ void    ButtonSystem::removeSelected(EntityManager &em, int buttonIdx)
         return;
 
     // Hide icon
-    _iconRender->_display = false;
+    _iconRender->display = false;
 
     sButtonComponent* button = entity->getComponent<sButtonComponent>();
     button->hovered = false;
@@ -230,7 +230,7 @@ void    ButtonSystem::setupSelectedIcon()
 {
     _iconSelected = EntityFactory::createOrGetEntity("ICON_SELECTED");
     _iconRender = _iconSelected->getComponent<sRenderComponent>();
-    _iconRender->_display = false;
+    _iconRender->display = false;
 }
 
 uint32_t    ButtonSystem::getNextButtonEnabled(EntityManager& em, uint32_t buttonIdx, uint32_t recurse)

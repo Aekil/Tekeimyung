@@ -15,8 +15,21 @@ public:
     ~SidebarItem() {};
 
 public:
-    void start() override final;
-    void update(float dt) override final;
+    void    start() override final;
+    void    update(float dt) override final;
+
+    void    onHoverEnter() override final;
+    void    onHoverExit() override final;
+
+    void    setDescription(const std::string& description);
+
+private:
+    void    displayTextInfo(bool display);
+
+private:
+    sRenderComponent*   _infoRender = nullptr;
+    sTextComponent*     _infoText = nullptr;
+    std::string         _description;
 };
 
 REGISTER_SCRIPT(SidebarItem);

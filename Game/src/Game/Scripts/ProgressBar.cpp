@@ -43,6 +43,6 @@ void ProgressBar::update()
 
 void    ProgressBar::display(bool display)
 {
-    this->filledRender->_display = display;
-    this->emptyRender->_display = display;
+    this->filledRender->display = display;
+    this->emptyRender->display = display;
 }

@@ -128,7 +128,7 @@ void    RenderingSystem::addParticlesToRenderQueue(EntityManager& em, float elap
         sParticleEmitterComponent *emitterComp = entity->getComponent<sParticleEmitterComponent>();
         auto&& model = emitterComp->getModelInstance();
 
-        if (!model || !render->_display)
+        if (!model || !render->display)
             continue;
 
         // Update animation
@@ -341,7 +341,7 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
             sTransformComponent* transform = entity->getComponent<sTransformComponent>();
             auto&& model = render->getModelInstance();
 
-            if (model && render->_display)
+            if (model && render->display)
             {
                 // Update animation
                 if (render->_animator.isPlaying())

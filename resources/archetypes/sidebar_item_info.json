@@ -1,0 +1,73 @@
+{
+   "components" : {
+      "sNameComponent" : {
+         "name" : "SIDEBAR_ITEM_INFO"
+      },
+      "sRenderComponent" : {
+         "animated" : false,
+         "animations" : [],
+         "color" : {
+            "a" : 1,
+            "b" : 1,
+            "g" : 1,
+            "r" : 1
+         },
+         "display" : false,
+         "dynamic" : false,
+         "hide_dynamic" : false,
+         "ignore_raycast" : false,
+         "materials" : [ "sidebar_item_info.mat" ],
+         "model" : "resources/models/default.DAE",
+         "type" : "PLANE"
+      },
+      "sTextComponent" : {
+         "color" : {
+            "a" : 1,
+            "b" : 1,
+            "g" : 1,
+            "r" : 1
+         },
+         "content" : "Item description",
+         "font_name" : "arial.ttf",
+         "font_size" : 26,
+         "horizontal_alignment" : "MIDDLE",
+         "vertical_alignment" : "MIDDLE"
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 960,
+            "y" : 294.92999267578125,
+            "z" : 0
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "scale" : {
+            "x" : 105.5999755859375,
+            "y" : 20.340000152587891,
+            "z" : 1
+         }
+      },
+      "sTypeComponent" : {
+         "type" : "TILE_WALKABLE"
+      },
+      "sUiComponent" : {
+         "horizontal_alignment" : "MIDDLE",
+         "layer" : 0,
+         "offset" : {
+            "x" : 0,
+            "y" : 19
+         },
+         "percentage_size" : true,
+         "size" : {
+            "x" : 0.5499998927116394,
+            "y" : 0.20000000298023224
+         },
+         "vertical_alignment" : "BOTTOM"
+      }
+   },
+   "name" : "SIDEBAR_ITEM_INFO",
+   "tag" : "SidebarItemInfo"
+}

@@ -5,6 +5,7 @@
 #include <Engine/EntityFactory.hpp>
 #include <Engine/Graphics/Model2DRenderer.hpp>
 #include <Game/Scripts/SidebarBuildings.hpp>
+#include <Game/Scripts/SidebarItem.hpp>
 #include <Game/Scripts/SidebarText.hpp>
 
 SidebarBuildings::SidebarBuildings()
@@ -37,6 +38,13 @@ void SidebarBuildings::init()
     {
         this->_sidebarItems[i].id = i;
         auto item = this->Instantiate("SIDEBAR_ITEM");
+
+        auto itemTextSidebarItem = getEntityScript<SidebarItem>(item, "SidebarItem");
+
+        if (itemTextSidebarItem == nullptr)
+            EXCEPT(NullptrException, "Entity with archetype %s doesn't have script %s", "SIDEBAR_ITEM", "SidebarItem");
+
+        itemTextSidebarItem->setDescription(this->_sidebarItems[i].description);
 
         auto uiComponent = item->getComponent<sUiComponent>();
 

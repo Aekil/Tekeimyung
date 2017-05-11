@@ -1,0 +1,32 @@
+{
+   "ambient" : {
+      "a" : 1,
+      "b" : 1,
+      "g" : 0.87843137979507446,
+      "r" : 0
+   },
+   "bloom_color" : {
+      "a" : 1,
+      "b" : 1,
+      "g" : 1,
+      "r" : 0
+   },
+   "diffuse" : {
+      "a" : 1,
+      "b" : 1,
+      "g" : 1,
+      "r" : 0
+   },
+   "dst_blend" : "GL_ONE_MINUS_SRC_ALPHA",
+   "face_camera" : false,
+   "has_bloom" : true,
+   "src_blend" : "GL_SRC_ALPHA",
+   "textures" : {
+      "ambient" : "",
+      "bloom" : "",
+      "bloom_alpha" : "",
+      "diffuse" : ""
+   },
+   "transparent" : false,
+   "wireframe" : true
+}

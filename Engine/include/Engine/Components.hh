@@ -61,7 +61,7 @@ virtual void update(sRenderComponent* component)
 
     this->type = component->type;
     this->_animator = component->_animator;
-    this->_display = component->_display;
+    this->display = component->display;
     this->ignoreRaycast = component->ignoreRaycast;
     this->dynamic = component->dynamic;
     this->hideDynamic = component->hideDynamic;
@@ -109,7 +109,7 @@ Animator                _animator;
 
 // Model type
 Geometry::eType type;
-bool                    _display = true;
+bool                    display = true;
 bool                    ignoreRaycast = false;
 bool                    dynamic = false;
 bool                    hideDynamic = false;
