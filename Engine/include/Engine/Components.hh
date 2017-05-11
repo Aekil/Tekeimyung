@@ -144,6 +144,7 @@ virtual void update(sRigidBodyComponent* component)
     this->gravity = component->gravity;
     this->velocity = component->velocity;
     this->collisionsEnabled = component->collisionsEnabled;
+    this->ignoredTags = component->ignoredTags;
 }
 
 virtual void update(sComponent* component)

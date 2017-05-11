@@ -159,7 +159,11 @@
             "y" : 0,
             "z" : 0
          },
-         "ignored_tags" : [],
+         "ignored_tags" : [
+            {
+               "tag" : "Player"
+            }
+         ],
          "velocity" : {
             "x" : 0,
             "y" : 0,
