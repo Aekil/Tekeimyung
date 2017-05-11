@@ -19,6 +19,9 @@ public:
     static TutoManagerMessage*                  getInstance();
 
     void                                        sendMessage(eTutoState state);
+    bool                                        stateOnGoingOrDone(eTutoState state);
+    bool                                        stateOnGoing(eTutoState state);
+    bool                                        tutorialDone();
 
 private:
     void                                        init();

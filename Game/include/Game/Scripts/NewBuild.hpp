@@ -11,6 +11,11 @@
 #include    <Game/Scripts/GoldManager.hpp>
 #include    <Game/Scripts/Tile.hpp>
 
+#define BUILD_ITEMS(PROCESS)                                                    \
+        PROCESS(Keyboard::eKey::KEY_1, "TILE_WALL", BUILD_WALL)                 \
+        PROCESS(Keyboard::eKey::KEY_2, "TILE_BASE_TURRET", BUILD_BASE_TOWER)    \
+        PROCESS(Keyboard::eKey::KEY_3, "TOWER_FIRE", BUILD_TOWER)
+
 typedef     std::unordered_map<Keyboard::eKey, std::string>   MapKeyboardEntity;
 
 class       NewBuild final : public BaseScript
@@ -42,9 +47,6 @@ private:
     std::string     _currentChoice;
     float           _radius = 0.0f;
 
-    //  Each archetype's string is binded to a keyboard key
-    MapKeyboardEntity   _bindedEntities;
-
     std::vector<Entity::sHandle> _alreadyBuiltTile;
 
     std::map<std::string, int> _buildingPrices;
@@ -53,7 +55,6 @@ private:
     void            retrievePlayerScript();
     void            retrieveManagers();
 
-    void            bindEntitiesToInputs();
     void            checkUserInputs();
     void            triggerBuildableZone(const std::string &archetype);
 

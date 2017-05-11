@@ -10,12 +10,12 @@
 #include <Engine/Core/ScriptFactory.hpp>
 #include <Game/Scripts/Path.hpp>
 
-#define CASTLE_POS 8, 0
-
 class GameManager;
 
 class       Spawner final : public BaseScript
 {
+    friend class TutoManager;
+
 public:
     struct sConfig
     {

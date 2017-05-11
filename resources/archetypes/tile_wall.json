@@ -46,11 +46,7 @@
          }
       },
       "sScriptComponent" : {
-         "scripts" : [
-            {
-               "name" : "Tile"
-            }
-         ]
+         "scripts" : []
       },
       "sTransformComponent" : {
          "pos" : {

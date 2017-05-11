@@ -16,6 +16,7 @@
 #include <Engine/Utils/ResourceManager.hpp>
 #include <Engine/Debug/Debug.hpp>
 
+#include <Game/GameStates/ConfirmBackToMenuState.hpp>
 #include <Game/GameStates/ConfirmExitState.hpp>
 #include <Game/GameStates/HowToPlayState.hpp>
 #include <Game/GameStates/BuildingListState.hpp>
@@ -59,6 +60,7 @@ int     main(int ac, char** av)
 
         // Load levels
         LevelLoader::getInstance()->loadDirectory(LEVELS_DIRECTORY);
+        REGISTER_GAMESTATE(ConfirmBackToMenuState);
         REGISTER_GAMESTATE(ConfirmExitState);
         REGISTER_GAMESTATE(HowToPlayState);
         REGISTER_GAMESTATE(BuildingListState);

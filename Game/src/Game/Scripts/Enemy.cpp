@@ -10,6 +10,7 @@
 
 #include <Game/Scripts/GameManager.hpp>
 #include <Game/Scripts/GoldManager.hpp>
+#include <Game/Scripts/TutoManagerMessage.hpp>
 
 #include <Game/Scripts/Enemy.hpp>
 
@@ -50,7 +51,7 @@ void Enemy::update(float dt)
 
         this->_rigidBody->velocity = direction;
 
-        if (glm::length(direction) > glm::length(targetPos - entityPos))
+        if (glm::length(direction * dt) > glm::length(targetPos - entityPos))
             _pathProgress++;
     }
     else
@@ -167,6 +168,8 @@ void Enemy::remove()
     explosionTransform->setPos(entityTransform->getPos());
 
     this->Destroy();
+
+    TutoManagerMessage::getInstance()->sendMessage(eTutoState::ENEMY_DEAD);
 }
 
 bool Enemy::takeDamage(double damage)
