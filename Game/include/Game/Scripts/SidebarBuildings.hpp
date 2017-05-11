@@ -20,12 +20,6 @@ typedef struct  s_itemCase
     std::string description;
 } t_itemCase;
 
-typedef struct  s_itemSelection
-{
-    bool        selected;
-    int         idSelected;
-} t_itemSelection;
-
 class SidebarBuildings final : public BaseScript
 {
 public:
@@ -44,7 +38,6 @@ private:
 
 private:
     std::vector<t_itemCase> _sidebarItems;
-    t_itemSelection     _itemSelection;
 };
 
 REGISTER_SCRIPT(SidebarBuildings);

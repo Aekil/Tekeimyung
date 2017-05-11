@@ -10,6 +10,7 @@
 #include    <Game/Scripts/TutoManagerMessage.hpp>
 #include    <Game/Scripts/Player.hpp>
 #include    <Game/Scripts/Spawner.hpp>
+#include    <Game/Scripts/SidebarItem.hpp>
 
 void        NewBuild::start()
 {
@@ -50,6 +51,7 @@ void        NewBuild::disableAll()
     auto        em = EntityFactory::getBindedEntityManager();
 
     this->_enabled = false;
+    this->setSelectedItem(false);
     this->_currentChoice.erase();
     this->_player->setCanShoot(true);
     this->Destroy(this->_preview);
@@ -228,7 +230,10 @@ void        NewBuild::checkUserInputs()
         if (this->keyboard.getStateMap()[bindedEntity.first] == Keyboard::eKeyState::KEY_RELEASED)
         {
             TutoManagerMessage::getInstance()->sendMessage(eTutoState::CHOOSE_BUILD);
+            if (!this->_currentChoice.empty() && this->_currentChoice != bindedEntity.second)
+                this->setSelectedItem(false);
             this->_currentChoice = bindedEntity.second;
+            this->setSelectedItem(true);
             LOG_DEBUG("Current choice :\t%s", this->_currentChoice.c_str());
             if (this->_preview != nullptr && this->_tileHovered != nullptr)
                 this->updatePreview();
@@ -447,4 +452,16 @@ void            NewBuild::updatePreview()
         previewRenderer->ignoreRaycast = true;
         previewScripts->enabled = false;
     }
+}
+
+
+void            NewBuild::setSelectedItem(bool selected)
+{
+    auto em = EntityFactory::getBindedEntityManager();
+
+    auto item = em->getEntityByTag(this->_currentChoice + "_SIDEBAR_ITEM");
+
+    SidebarItem* sidebarItemScript = this->getEntityScript<SidebarItem>(item, "SidebarItem");
+
+    sidebarItemScript->switchColor(selected);
 }

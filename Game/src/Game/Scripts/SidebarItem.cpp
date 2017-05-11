@@ -52,3 +52,31 @@ void    SidebarItem::setDescription(const std::string& description)
 {
     _description = description;
 }
+
+
+void    SidebarItem::switchColor(bool selected)
+{
+    auto renderComponent = this->_border->getComponent<sRenderComponent>();
+    auto& meshInstances = renderComponent->getModelInstance()->getMeshsInstances();
+
+    for (auto& meshInstance : meshInstances)
+    {
+        if (selected)
+        {
+            meshInstance->getMaterial()->setBloom(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+            meshInstance->getMaterial()->setAmbient(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+            meshInstance->getMaterial()->setDiffuse(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+        }
+        else
+        {
+            meshInstance->getMaterial()->setBloom(glm::vec4(0.0f, 1.0f, 1.0f, 1.0f));
+            meshInstance->getMaterial()->setAmbient(glm::vec4(0.0f, 1.0f, 1.0f, 1.0f));
+            meshInstance->getMaterial()->setDiffuse(glm::vec4(0.0f, 1.0f, 1.0f, 1.0f));
+        }
+    }
+}
+
+void    SidebarItem::setBorderEntity(Entity* borderEntity)
+{
+    this->_border = borderEntity;
+}

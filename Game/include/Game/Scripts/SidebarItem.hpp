@@ -22,6 +22,8 @@ public:
     void    onHoverExit() override final;
 
     void    setDescription(const std::string& description);
+    void    switchColor(bool);
+    void    setBorderEntity(Entity*);
 
 private:
     void    displayTextInfo(bool display);
@@ -30,6 +32,7 @@ private:
     sRenderComponent*   _infoRender = nullptr;
     sTextComponent*     _infoText = nullptr;
     std::string         _description;
+    Entity*             _border = nullptr;
 };
 
 REGISTER_SCRIPT(SidebarItem);
