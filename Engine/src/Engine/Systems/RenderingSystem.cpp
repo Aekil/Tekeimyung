@@ -367,7 +367,7 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
                 {
                     _renderQueue.addText(textComponent->text,
                                         uiComponent ? uiComponent->layer : 0,
-                                        glm::vec2(transform->getPos().x, transform->getPos().y) + textComponent->offset);
+                                        glm::vec2(transform->getPos().x, transform->getPos().y) + textComponent->alignmentOffset);
                 }
 
                 addCollidersToRenderQueue(entity, transform);

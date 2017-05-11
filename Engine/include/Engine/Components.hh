@@ -504,6 +504,7 @@ virtual void update(sTextComponent* component)
     this->text = component->text;
     this->horizontalAlignment = component->horizontalAlignment;
     this->verticalAlignment = component->verticalAlignment;
+    this->alignmentOffset = component->alignmentOffset;
     this->offset = component->offset;
 }
 
@@ -529,7 +530,8 @@ BufferPool::SubBuffer*  getBuffer(BufferPool* bufferPool)
 Text text;
 eHorizontalAlignment    horizontalAlignment = eHorizontalAlignment::MIDDLE;
 eVerticalAlignment      verticalAlignment = eVerticalAlignment::MIDDLE;
-glm::vec2 offset; // Offset to align text
+glm::vec2 alignmentOffset; // Offset to align text
+glm::vec2 offset; // Text offset
 
 private:
 BufferPool::SubBuffer* _buffer{nullptr};

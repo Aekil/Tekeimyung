@@ -96,6 +96,7 @@
                   "g" : 0.98333263397216797,
                   "r" : 1
                },
+               "display" : true,
                "dynamic" : true,
                "hide_dynamic" : false,
                "ignore_raycast" : false,
@@ -178,6 +179,7 @@
                   "g" : 1,
                   "r" : 1
                },
+               "display" : true,
                "dynamic" : false,
                "hide_dynamic" : false,
                "ignore_raycast" : false,
@@ -348,6 +350,7 @@
                   "g" : 0,
                   "r" : 0
                },
+               "display" : true,
                "dynamic" : false,
                "hide_dynamic" : false,
                "ignore_raycast" : false,
@@ -373,12 +376,16 @@
                "font_name" : "moonhouse.ttf",
                "font_size" : 26,
                "horizontal_alignment" : "LEFT",
+               "offset" : {
+                  "x" : 0,
+                  "y" : 0
+               },
                "vertical_alignment" : "MIDDLE"
             },
             "sTransformComponent" : {
                "pos" : {
-                  "x" : 2227.199951171875,
-                  "y" : 203.39999389648438,
+                  "x" : 1824,
+                  "y" : 203.40000915527344,
                   "z" : 0
                },
                "rotation" : {
@@ -387,8 +394,8 @@
                   "z" : 0
                },
                "scale" : {
-                  "x" : 19.200000762939453,
-                  "y" : 10.180000305175781,
+                  "x" : 4.1706829071044922,
+                  "y" : 2.9020974636077881,
                   "z" : 1
                }
             },
@@ -396,18 +403,18 @@
                "type" : "TILE_WALKABLE"
             },
             "sUiComponent" : {
-               "horizontal_alignment" : "MIDDLE",
+               "horizontal_alignment" : "RIGHT",
                "layer" : 0,
                "offset" : {
-                  "x" : 66,
-                  "y" : -30
+                  "x" : 0,
+                  "y" : 15
                },
-               "percentage_size" : false,
+               "percentage_size" : true,
                "size" : {
                   "x" : 0.10000000149011612,
                   "y" : 0.10000000149011612
                },
-               "vertical_alignment" : "MIDDLE"
+               "vertical_alignment" : "BOTTOM"
             }
          },
          "name" : "HUD_DISPLAY_CASTLELIFE",
@@ -427,6 +434,7 @@
                   "g" : 0,
                   "r" : 0
                },
+               "display" : true,
                "dynamic" : false,
                "hide_dynamic" : false,
                "ignore_raycast" : false,
@@ -452,12 +460,16 @@
                "font_name" : "moonhouse.ttf",
                "font_size" : 22,
                "horizontal_alignment" : "LEFT",
+               "offset" : {
+                  "x" : 0,
+                  "y" : 0
+               },
                "vertical_alignment" : "MIDDLE"
             },
             "sTransformComponent" : {
                "pos" : {
-                  "x" : 2227.199951171875,
-                  "y" : 132.20999145507813,
+                  "x" : 1824,
+                  "y" : 132.21000671386719,
                   "z" : 0
                },
                "rotation" : {
@@ -466,8 +478,8 @@
                   "z" : 0
                },
                "scale" : {
-                  "x" : 19.200000762939453,
-                  "y" : 10.180000305175781,
+                  "x" : 4.1706833839416504,
+                  "y" : 5.8041949272155762,
                   "z" : 1
                }
             },
@@ -475,18 +487,18 @@
                "type" : "TILE_WALKABLE"
             },
             "sUiComponent" : {
-               "horizontal_alignment" : "MIDDLE",
+               "horizontal_alignment" : "RIGHT",
                "layer" : 0,
                "offset" : {
-                  "x" : 66,
-                  "y" : -37
+                  "x" : 0,
+                  "y" : 3
                },
-               "percentage_size" : false,
+               "percentage_size" : true,
                "size" : {
-                  "x" : 0.10000000149011612,
-                  "y" : 0.10000000149011612
+                  "x" : 0.10000000894069672,
+                  "y" : 0.20000000298023224
                },
-               "vertical_alignment" : "MIDDLE"
+               "vertical_alignment" : "BOTTOM"
             }
          },
          "name" : "HUD_DISPLAY_GOLD",
@@ -506,6 +518,7 @@
                   "g" : 0,
                   "r" : 0
                },
+               "display" : true,
                "dynamic" : false,
                "hide_dynamic" : false,
                "ignore_raycast" : false,
@@ -531,12 +544,16 @@
                "font_name" : "moonhouse.ttf",
                "font_size" : 26,
                "horizontal_alignment" : "LEFT",
+               "offset" : {
+                  "x" : 0,
+                  "y" : 0
+               },
                "vertical_alignment" : "MIDDLE"
             },
             "sTransformComponent" : {
                "pos" : {
-                  "x" : 2227.199951171875,
-                  "y" : 61.019989013671875,
+                  "x" : 1824,
+                  "y" : 61.020004272460938,
                   "z" : 0
                },
                "rotation" : {
@@ -545,8 +562,8 @@
                   "z" : 0
                },
                "scale" : {
-                  "x" : 19.200000762939453,
-                  "y" : 10.180000305175781,
+                  "x" : 4.1706829071044922,
+                  "y" : 2.9020974636077881,
                   "z" : 1
                }
             },
@@ -554,18 +571,18 @@
                "type" : "TILE_WALKABLE"
             },
             "sUiComponent" : {
-               "horizontal_alignment" : "MIDDLE",
+               "horizontal_alignment" : "RIGHT",
                "layer" : 0,
                "offset" : {
-                  "x" : 66,
-                  "y" : -44
+                  "x" : 0,
+                  "y" : 1
                },
-               "percentage_size" : false,
+               "percentage_size" : true,
                "size" : {
                   "x" : 0.10000000149011612,
                   "y" : 0.10000000149011612
                },
-               "vertical_alignment" : "MIDDLE"
+               "vertical_alignment" : "BOTTOM"
             }
          },
          "name" : "HUD_DISPLAY_WAVE",
@@ -585,6 +602,7 @@
                   "g" : 1,
                   "r" : 1
                },
+               "display" : true,
                "dynamic" : false,
                "hide_dynamic" : false,
                "ignore_raycast" : false,
@@ -610,6 +628,10 @@
                "font_name" : "arial.ttf",
                "font_size" : 24,
                "horizontal_alignment" : "MIDDLE",
+               "offset" : {
+                  "x" : 0,
+                  "y" : 0
+               },
                "vertical_alignment" : "MIDDLE"
             },
             "sTransformComponent" : {
@@ -664,6 +686,7 @@
                   "g" : 1,
                   "r" : 1
                },
+               "display" : true,
                "dynamic" : false,
                "hide_dynamic" : false,
                "ignore_raycast" : false,
@@ -730,6 +753,7 @@
                   "g" : 1,
                   "r" : 1
                },
+               "display" : true,
                "dynamic" : false,
                "hide_dynamic" : false,
                "ignore_raycast" : false,
@@ -739,8 +763,8 @@
             },
             "sTransformComponent" : {
                "pos" : {
-                  "x" : 1632,
-                  "y" : 132.20999145507813,
+                  "x" : 1628.800048828125,
+                  "y" : 131.83329772949219,
                   "z" : 0
                },
                "rotation" : {
@@ -755,18 +779,18 @@
                }
             },
             "sUiComponent" : {
-               "horizontal_alignment" : "MIDDLE",
+               "horizontal_alignment" : "RIGHT",
                "layer" : 0,
                "offset" : {
-                  "x" : 35,
-                  "y" : -37
+                  "x" : -13.5,
+                  "y" : 10
                },
                "percentage_size" : true,
                "size" : {
                   "x" : 0.033333301544189453,
                   "y" : 0.059259198606014252
                },
-               "vertical_alignment" : "MIDDLE"
+               "vertical_alignment" : "BOTTOM"
             }
          },
          "name" : "ICON_COIN",
@@ -786,6 +810,7 @@
                   "g" : 0.16470588743686676,
                   "r" : 1
                },
+               "display" : true,
                "dynamic" : false,
                "hide_dynamic" : false,
                "ignore_raycast" : false,
@@ -795,8 +820,8 @@
             },
             "sTransformComponent" : {
                "pos" : {
-                  "x" : 1632,
-                  "y" : 203.39999389648438,
+                  "x" : 1628.80029296875,
+                  "y" : 203.023193359375,
                   "z" : 0
                },
                "rotation" : {
@@ -811,18 +836,18 @@
                }
             },
             "sUiComponent" : {
-               "horizontal_alignment" : "MIDDLE",
+               "horizontal_alignment" : "RIGHT",
                "layer" : 0,
                "offset" : {
-                  "x" : 35,
-                  "y" : -30
+                  "x" : -13.5,
+                  "y" : 17
                },
                "percentage_size" : true,
                "size" : {
                   "x" : 0.033332999795675278,
                   "y" : 0.059259001165628433
                },
-               "vertical_alignment" : "MIDDLE"
+               "vertical_alignment" : "BOTTOM"
             }
          },
          "name" : "ICON_HEALTH",
@@ -842,6 +867,7 @@
                   "g" : 1,
                   "r" : 0
                },
+               "display" : true,
                "dynamic" : false,
                "hide_dynamic" : false,
                "ignore_raycast" : false,
@@ -851,8 +877,8 @@
             },
             "sTransformComponent" : {
                "pos" : {
-                  "x" : 1632,
-                  "y" : 61.019989013671875,
+                  "x" : 1628.80029296875,
+                  "y" : 60.643302917480469,
                   "z" : 0
                },
                "rotation" : {
@@ -867,18 +893,18 @@
                }
             },
             "sUiComponent" : {
-               "horizontal_alignment" : "MIDDLE",
+               "horizontal_alignment" : "RIGHT",
                "layer" : 0,
                "offset" : {
-                  "x" : 35,
-                  "y" : -44
+                  "x" : -13.5,
+                  "y" : 3
                },
                "percentage_size" : true,
                "size" : {
                   "x" : 0.033332999795675278,
                   "y" : 0.05925920233130455
                },
-               "vertical_alignment" : "MIDDLE"
+               "vertical_alignment" : "BOTTOM"
             }
          },
          "name" : "ICON_WAVE",
@@ -898,6 +924,7 @@
                   "g" : 1,
                   "r" : 1
                },
+               "display" : false,
                "dynamic" : false,
                "hide_dynamic" : false,
                "ignore_raycast" : false,
@@ -915,13 +942,17 @@
                "content" : "Item description",
                "font_name" : "arial.ttf",
                "font_size" : 26,
-               "horizontal_alignment" : "MIDDLE",
-               "vertical_alignment" : "MIDDLE"
+               "horizontal_alignment" : "LEFT",
+               "offset" : {
+                  "x" : 27,
+                  "y" : -18
+               },
+               "vertical_alignment" : "TOP"
             },
             "sTransformComponent" : {
                "pos" : {
                   "x" : 960,
-                  "y" : 294.92999267578125,
+                  "y" : 269.5050048828125,
                   "z" : 0
                },
                "rotation" : {
@@ -930,8 +961,8 @@
                   "z" : 0
                },
                "scale" : {
-                  "x" : 105.5999755859375,
-                  "y" : 20.340000152587891,
+                  "x" : 124.79998779296875,
+                  "y" : 15.255000114440918,
                   "z" : 1
                }
             },
@@ -947,8 +978,8 @@
                },
                "percentage_size" : true,
                "size" : {
-                  "x" : 0.5499998927116394,
-                  "y" : 0.20000000298023224
+                  "x" : 0.64999991655349731,
+                  "y" : 0.15000000596046448
                },
                "vertical_alignment" : "BOTTOM"
             }
