@@ -88,6 +88,7 @@
             "g" : 1,
             "r" : 1
          },
+         "display" : true,
          "dynamic" : false,
          "hide_dynamic" : false,
          "ignore_raycast" : false,
@@ -102,6 +103,11 @@
             "y" : 0,
             "z" : 0
          },
+         "ignored_tags" : [
+            {
+               "tag" : "Player"
+            }
+         ],
          "velocity" : {
             "x" : 0,
             "y" : 0,
@@ -112,6 +118,7 @@
          "scripts" : [
             {
                "experience_earned" : 20,
+               "gold_earned" : 20,
                "health" : 300,
                "name" : "Enemy",
                "speed" : 75

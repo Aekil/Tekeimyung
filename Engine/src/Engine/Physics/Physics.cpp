@@ -23,11 +23,11 @@ bool        Physics::raycast(const Ray& ray, Entity** hitEntity, std::vector<Ent
         //  If the entity doesn't belong to the entitiesFilter passed as a parameter !
         if (std::find(entitiesFilter.begin(), entitiesFilter.end(), entity) == entitiesFilter.end())
         {
-            sRenderComponent*       render = entity->getComponent<sRenderComponent>();
-            sTransformComponent*    transform = entity->getComponent<sTransformComponent>();
+            sRenderComponent* render = entity->getComponent<sRenderComponent>();
+            sTransformComponent* transform = entity->getComponent<sTransformComponent>();
 
             // We can't select entity that is not displayed or has model not initialized
-            if (!render || !render->getModel() || render->ignoreRaycast)
+            if (!render || !render->getModel() || render->ignoreRaycast || !render->enabled)
                 continue;
 
             // Model box collider position
@@ -90,7 +90,7 @@ bool    Physics::raycast(const Ray& ray, Entity** hitEntity)
         // Convert box collider to world position
         boxMin += transform->getPos();
         boxMax += transform->getPos();
-            
+
         float distance = Collisions::rayVSAABB(ray, boxMin, boxMax);
         if (distance != 0 && (nearestEntity == nullptr || distance <= nearestHitDist))
         {

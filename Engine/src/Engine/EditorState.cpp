@@ -48,7 +48,7 @@ bool    EditorState::update(float elapsedTime)
         _cameraPreviewUI = _cameraPreview->getComponent<sUiComponent>();
     }
 
-    _cameraPreviewRender->_display = false;
+    _cameraPreviewRender->display = false;
 
     // Get selected camera
     {
@@ -60,7 +60,7 @@ bool    EditorState::update(float elapsedTime)
             if (cameraComponent)
             {
                 selectedCamera = &cameraComponent->camera;
-                _cameraPreviewRender->_display = true;
+                _cameraPreviewRender->display = true;
             }
         }
     }
@@ -72,7 +72,7 @@ bool    EditorState::update(float elapsedTime)
         return (false);
     }
 
-    _cameraPreviewRender->_display = false;
+    _cameraPreviewRender->display = false;
 
     if (selectedCamera)
     {
@@ -80,7 +80,7 @@ bool    EditorState::update(float elapsedTime)
         return (true);
     }
 
-    _cameraPreviewRender->_display = false;
+    _cameraPreviewRender->display = false;
 
     return (true);
 }

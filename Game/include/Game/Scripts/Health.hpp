@@ -5,7 +5,7 @@
 #pragma once
 
 #include <glm/vec3.hpp>
-#include <Game/Scripts/ProgressBar.hpp>
+#include <Game/Hud/ProgressBar.hpp>
 
 class Health
 {

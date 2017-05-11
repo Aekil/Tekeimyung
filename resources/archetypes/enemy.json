@@ -143,6 +143,7 @@
             "g" : 1,
             "r" : 1
          },
+         "display" : true,
          "dynamic" : true,
          "geometry" : null,
          "hide_dynamic" : false,
@@ -159,6 +160,11 @@
             "y" : 0,
             "z" : 0
          },
+         "ignored_tags" : [
+            {
+               "tag" : "Player"
+            }
+         ],
          "velocity" : {
             "x" : 0,
             "y" : 0,
@@ -170,6 +176,7 @@
          "scripts" : [
             {
                "experience_earned" : 20,
+               "gold_earned" : 20,
                "health" : 200,
                "name" : "Enemy",
                "speed" : 25
@@ -193,12 +200,12 @@
          },
          "rotation" : {
             "x" : 0,
-            "y" : 3.0517567211063579e-05,
-            "z" : -359.92160034179688
+            "y" : 3.0517569030052982e-05,
+            "z" : 0.078400544822216034
          },
          "scale" : {
-            "x" : 1,
-            "y" : 1,
+            "x" : 0.99999994039535522,
+            "y" : 0.99999994039535522,
             "z" : 1
          }
       },

@@ -12,6 +12,7 @@
             "g" : 0,
             "r" : 0
          },
+         "display" : true,
          "dynamic" : false,
          "hide_dynamic" : false,
          "ignore_raycast" : false,
@@ -36,13 +37,17 @@
          "content" : "X",
          "font_name" : "moonhouse.ttf",
          "font_size" : 22,
-         "horizontal_alignment" : "RIGHT",
+         "horizontal_alignment" : "LEFT",
+         "offset" : {
+            "x" : 0,
+            "y" : 0
+         },
          "vertical_alignment" : "MIDDLE"
       },
       "sTransformComponent" : {
          "pos" : {
-            "x" : 960,
-            "y" : 142.3800048828125,
+            "x" : 1824,
+            "y" : 133.510009765625,
             "z" : 0
          },
          "rotation" : {
@@ -51,8 +56,8 @@
             "z" : 0
          },
          "scale" : {
-            "x" : 19.200000762939453,
-            "y" : 10.180000305175781,
+            "x" : 4.1706833839416504,
+            "y" : 5.8612666130065918,
             "z" : 1
          }
       },
@@ -60,18 +65,18 @@
          "type" : "TILE_WALKABLE"
       },
       "sUiComponent" : {
-         "horizontal_alignment" : "MIDDLE",
+         "horizontal_alignment" : "RIGHT",
          "layer" : 0,
          "offset" : {
             "x" : 0,
-            "y" : -36
+            "y" : 3
          },
-         "percentage_size" : false,
+         "percentage_size" : true,
          "size" : {
-            "x" : 0.10000000149011612,
-            "y" : 0.10000000149011612
+            "x" : 0.10000000894069672,
+            "y" : 0.20000000298023224
          },
-         "vertical_alignment" : "MIDDLE"
+         "vertical_alignment" : "BOTTOM"
       }
    },
    "name" : "HUD_DISPLAY_GOLD",

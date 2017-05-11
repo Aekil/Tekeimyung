@@ -45,6 +45,10 @@ public:
                                                                     const std::string& planeEntityTagName,
                                                                     uint32_t width,
                                                                     uint32_t height);
+    bool                                        renderModelOnPlane(const std::string& modelEntityName,
+                                                                    Entity* planeEntity,
+                                                                    uint32_t width,
+                                                                    uint32_t height);
 private:
     void                                        initialize();
 

@@ -61,7 +61,7 @@ virtual void update(sRenderComponent* component)
 
     this->type = component->type;
     this->_animator = component->_animator;
-    this->_display = component->_display;
+    this->display = component->display;
     this->ignoreRaycast = component->ignoreRaycast;
     this->dynamic = component->dynamic;
     this->hideDynamic = component->hideDynamic;
@@ -109,7 +109,7 @@ Animator                _animator;
 
 // Model type
 Geometry::eType type;
-bool                    _display = true;
+bool                    display = true;
 bool                    ignoreRaycast = false;
 bool                    dynamic = false;
 bool                    hideDynamic = false;
@@ -144,6 +144,7 @@ virtual void update(sRigidBodyComponent* component)
     this->gravity = component->gravity;
     this->velocity = component->velocity;
     this->collisionsEnabled = component->collisionsEnabled;
+    this->ignoredTags = component->ignoredTags;
 }
 
 virtual void update(sComponent* component)
@@ -503,6 +504,7 @@ virtual void update(sTextComponent* component)
     this->text = component->text;
     this->horizontalAlignment = component->horizontalAlignment;
     this->verticalAlignment = component->verticalAlignment;
+    this->alignmentOffset = component->alignmentOffset;
     this->offset = component->offset;
 }
 
@@ -528,7 +530,8 @@ BufferPool::SubBuffer*  getBuffer(BufferPool* bufferPool)
 Text text;
 eHorizontalAlignment    horizontalAlignment = eHorizontalAlignment::MIDDLE;
 eVerticalAlignment      verticalAlignment = eVerticalAlignment::MIDDLE;
-glm::vec2 offset; // Offset to align text
+glm::vec2 alignmentOffset; // Offset to align text
+glm::vec2 offset; // Text offset
 
 private:
 BufferPool::SubBuffer* _buffer{nullptr};

@@ -40,7 +40,10 @@ void    CollisionSystem::update(EntityManager &em, float elapsedTime)
 
                         if (std::find(rigidBody->ignoredTags.begin(), rigidBody->ignoredTags.end(), (*it)->getTag()) != rigidBody->ignoredTags.end())
                             continue;
-                        
+
+                        if (std::find(rigidBodyB->ignoredTags.begin(), rigidBodyB->ignoredTags.end(), entity->getTag()) != rigidBodyB->ignoredTags.end())
+                            continue;
+
                         auto colliding = Collisions::isColliding(entity, (*it));
 
                         if (rigidBody->collisionsEnabled && colliding)

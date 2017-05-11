@@ -96,6 +96,7 @@
                   "g" : 0.98333263397216797,
                   "r" : 1
                },
+               "display" : true,
                "dynamic" : true,
                "hide_dynamic" : false,
                "ignore_raycast" : false,
@@ -110,6 +111,11 @@
                   "y" : 0,
                   "z" : 0
                },
+               "ignored_tags" : [
+                  {
+                     "tag" : "Enemy"
+                  }
+               ],
                "velocity" : {
                   "x" : 0,
                   "y" : 0,
@@ -173,6 +179,7 @@
                   "g" : 1,
                   "r" : 1
                },
+               "display" : true,
                "dynamic" : false,
                "hide_dynamic" : false,
                "ignore_raycast" : false,
@@ -187,6 +194,7 @@
                   "y" : 0,
                   "z" : 0
                },
+               "ignored_tags" : [],
                "velocity" : {
                   "x" : 0,
                   "y" : 0,
@@ -342,6 +350,7 @@
                   "g" : 0,
                   "r" : 0
                },
+               "display" : true,
                "dynamic" : false,
                "hide_dynamic" : false,
                "ignore_raycast" : false,
@@ -367,12 +376,16 @@
                "font_name" : "moonhouse.ttf",
                "font_size" : 26,
                "horizontal_alignment" : "LEFT",
+               "offset" : {
+                  "x" : 0,
+                  "y" : 0
+               },
                "vertical_alignment" : "MIDDLE"
             },
             "sTransformComponent" : {
                "pos" : {
-                  "x" : 960,
-                  "y" : 61.019989013671875,
+                  "x" : 1824,
+                  "y" : 205.40000915527344,
                   "z" : 0
                },
                "rotation" : {
@@ -381,8 +394,8 @@
                   "z" : 0
                },
                "scale" : {
-                  "x" : 19.200000762939453,
-                  "y" : 10.180000305175781,
+                  "x" : 4.1706829071044922,
+                  "y" : 2.9306333065032959,
                   "z" : 1
                }
             },
@@ -390,18 +403,18 @@
                "type" : "TILE_WALKABLE"
             },
             "sUiComponent" : {
-               "horizontal_alignment" : "MIDDLE",
+               "horizontal_alignment" : "RIGHT",
                "layer" : 0,
                "offset" : {
                   "x" : 0,
-                  "y" : -44
+                  "y" : 15
                },
-               "percentage_size" : false,
+               "percentage_size" : true,
                "size" : {
                   "x" : 0.10000000149011612,
                   "y" : 0.10000000149011612
                },
-               "vertical_alignment" : "MIDDLE"
+               "vertical_alignment" : "BOTTOM"
             }
          },
          "name" : "HUD_DISPLAY_CASTLELIFE",
@@ -421,6 +434,7 @@
                   "g" : 0,
                   "r" : 0
                },
+               "display" : true,
                "dynamic" : false,
                "hide_dynamic" : false,
                "ignore_raycast" : false,
@@ -446,12 +460,16 @@
                "font_name" : "moonhouse.ttf",
                "font_size" : 22,
                "horizontal_alignment" : "LEFT",
+               "offset" : {
+                  "x" : 0,
+                  "y" : 0
+               },
                "vertical_alignment" : "MIDDLE"
             },
             "sTransformComponent" : {
                "pos" : {
                   "x" : 1824,
-                  "y" : 142.3800048828125,
+                  "y" : 133.510009765625,
                   "z" : 0
                },
                "rotation" : {
@@ -460,8 +478,8 @@
                   "z" : 0
                },
                "scale" : {
-                  "x" : 19.200000762939453,
-                  "y" : 10.180000305175781,
+                  "x" : 4.1706833839416504,
+                  "y" : 5.8612666130065918,
                   "z" : 1
                }
             },
@@ -469,18 +487,18 @@
                "type" : "TILE_WALKABLE"
             },
             "sUiComponent" : {
-               "horizontal_alignment" : "MIDDLE",
+               "horizontal_alignment" : "RIGHT",
                "layer" : 0,
                "offset" : {
-                  "x" : 45,
-                  "y" : -36
+                  "x" : 0,
+                  "y" : 3
                },
-               "percentage_size" : false,
+               "percentage_size" : true,
                "size" : {
-                  "x" : 0.10000000149011612,
-                  "y" : 0.10000000149011612
+                  "x" : 0.10000000894069672,
+                  "y" : 0.20000000298023224
                },
-               "vertical_alignment" : "MIDDLE"
+               "vertical_alignment" : "BOTTOM"
             }
          },
          "name" : "HUD_DISPLAY_GOLD",
@@ -500,6 +518,7 @@
                   "g" : 0,
                   "r" : 0
                },
+               "display" : true,
                "dynamic" : false,
                "hide_dynamic" : false,
                "ignore_raycast" : false,
@@ -525,12 +544,16 @@
                "font_name" : "moonhouse.ttf",
                "font_size" : 26,
                "horizontal_alignment" : "LEFT",
+               "offset" : {
+                  "x" : 0,
+                  "y" : 0
+               },
                "vertical_alignment" : "MIDDLE"
             },
             "sTransformComponent" : {
                "pos" : {
-                  "x" : 960,
-                  "y" : 147.46499633789063,
+                  "x" : 1824,
+                  "y" : 61.620002746582031,
                   "z" : 0
                },
                "rotation" : {
@@ -539,8 +562,8 @@
                   "z" : 0
                },
                "scale" : {
-                  "x" : 19.200000762939453,
-                  "y" : 10.180000305175781,
+                  "x" : 4.1706829071044922,
+                  "y" : 2.9306333065032959,
                   "z" : 1
                }
             },
@@ -548,190 +571,22 @@
                "type" : "TILE_WALKABLE"
             },
             "sUiComponent" : {
-               "horizontal_alignment" : "MIDDLE",
+               "horizontal_alignment" : "RIGHT",
                "layer" : 0,
                "offset" : {
                   "x" : 0,
-                  "y" : -35.5
+                  "y" : 1
                },
-               "percentage_size" : false,
+               "percentage_size" : true,
                "size" : {
                   "x" : 0.10000000149011612,
                   "y" : 0.10000000149011612
                },
-               "vertical_alignment" : "MIDDLE"
+               "vertical_alignment" : "BOTTOM"
             }
          },
          "name" : "HUD_DISPLAY_WAVE",
          "tag" : "HudDisplayWave"
-      },
-      {
-         "components" : {
-            "sNameComponent" : {
-               "name" : "ICON_COIN"
-            },
-            "sRenderComponent" : {
-               "animated" : false,
-               "animations" : [],
-               "color" : {
-                  "a" : 1,
-                  "b" : 0,
-                  "g" : 1,
-                  "r" : 1
-               },
-               "dynamic" : false,
-               "hide_dynamic" : false,
-               "ignore_raycast" : false,
-               "materials" : [ "icon_coin.mat" ],
-               "model" : "resources/models/default.DAE",
-               "type" : "PLANE"
-            },
-            "sTransformComponent" : {
-               "pos" : {
-                  "x" : 1324.800048828125,
-                  "y" : 142.3800048828125,
-                  "z" : 0
-               },
-               "rotation" : {
-                  "x" : 0,
-                  "y" : 0,
-                  "z" : 0
-               },
-               "scale" : {
-                  "x" : 6.399993896484375,
-                  "y" : 6.0266604423522949,
-                  "z" : 1
-               }
-            },
-            "sUiComponent" : {
-               "horizontal_alignment" : "MIDDLE",
-               "layer" : 0,
-               "offset" : {
-                  "x" : 19,
-                  "y" : -36
-               },
-               "percentage_size" : true,
-               "size" : {
-                  "x" : 0.033333301544189453,
-                  "y" : 0.059259198606014252
-               },
-               "vertical_alignment" : "MIDDLE"
-            }
-         },
-         "name" : "ICON_COIN",
-         "tag" : ""
-      },
-      {
-         "components" : {
-            "sNameComponent" : {
-               "name" : "ICON_HEALTH"
-            },
-            "sRenderComponent" : {
-               "animated" : false,
-               "animations" : [],
-               "color" : {
-                  "a" : 1,
-                  "b" : 0.16470588743686676,
-                  "g" : 0.16470588743686676,
-                  "r" : 1
-               },
-               "dynamic" : false,
-               "hide_dynamic" : false,
-               "ignore_raycast" : false,
-               "materials" : [ "icon_health.mat" ],
-               "model" : "resources/models/blocks/block.DAE",
-               "type" : "PLANE"
-            },
-            "sTransformComponent" : {
-               "pos" : {
-                  "x" : 460.79998779296875,
-                  "y" : 50.850006103515625,
-                  "z" : 0
-               },
-               "rotation" : {
-                  "x" : 0,
-                  "y" : 0,
-                  "z" : 0
-               },
-               "scale" : {
-                  "x" : 6.3999357223510742,
-                  "y" : 6.0266404151916504,
-                  "z" : 1
-               }
-            },
-            "sUiComponent" : {
-               "horizontal_alignment" : "MIDDLE",
-               "layer" : 0,
-               "offset" : {
-                  "x" : -26,
-                  "y" : -45
-               },
-               "percentage_size" : true,
-               "size" : {
-                  "x" : 0.033332999795675278,
-                  "y" : 0.059259001165628433
-               },
-               "vertical_alignment" : "MIDDLE"
-            }
-         },
-         "name" : "ICON_HEALTH",
-         "tag" : ""
-      },
-      {
-         "components" : {
-            "sNameComponent" : {
-               "name" : "ICON_WAVE"
-            },
-            "sRenderComponent" : {
-               "animated" : false,
-               "animations" : [],
-               "color" : {
-                  "a" : 1,
-                  "b" : 1,
-                  "g" : 1,
-                  "r" : 0
-               },
-               "dynamic" : false,
-               "hide_dynamic" : false,
-               "ignore_raycast" : false,
-               "materials" : [ "icon_wave.mat" ],
-               "model" : "resources/models/default.DAE",
-               "type" : "PLANE"
-            },
-            "sTransformComponent" : {
-               "pos" : {
-                  "x" : 460.79998779296875,
-                  "y" : 142.3800048828125,
-                  "z" : 0
-               },
-               "rotation" : {
-                  "x" : 0,
-                  "y" : 0,
-                  "z" : 0
-               },
-               "scale" : {
-                  "x" : 6.3999357223510742,
-                  "y" : 6.0266609191894531,
-                  "z" : 1
-               }
-            },
-            "sUiComponent" : {
-               "horizontal_alignment" : "MIDDLE",
-               "layer" : 0,
-               "offset" : {
-                  "x" : -26,
-                  "y" : -36
-               },
-               "percentage_size" : true,
-               "size" : {
-                  "x" : 0.033332999795675278,
-                  "y" : 0.05925920233130455
-               },
-               "vertical_alignment" : "MIDDLE"
-            }
-         },
-         "name" : "ICON_WAVE",
-         "tag" : ""
       },
       {
          "components" : {
@@ -747,6 +602,7 @@
                   "g" : 1,
                   "r" : 1
                },
+               "display" : true,
                "dynamic" : false,
                "hide_dynamic" : false,
                "ignore_raycast" : false,
@@ -772,12 +628,16 @@
                "font_name" : "arial.ttf",
                "font_size" : 24,
                "horizontal_alignment" : "MIDDLE",
+               "offset" : {
+                  "x" : 0,
+                  "y" : 0
+               },
                "vertical_alignment" : "MIDDLE"
             },
             "sTransformComponent" : {
                "pos" : {
                   "x" : 537.5999755859375,
-                  "y" : 935.6400146484375,
+                  "y" : 944.8399658203125,
                   "z" : 0
                },
                "rotation" : {
@@ -787,7 +647,7 @@
                },
                "scale" : {
                   "x" : 96.799873352050781,
-                  "y" : 5.8383326530456543,
+                  "y" : 5.8957400321960449,
                   "z" : 1
                }
             },
@@ -811,6 +671,321 @@
          },
          "name" : "TUTO_MANAGER",
          "tag" : "TutoManager"
+      },
+      {
+         "components" : {
+            "sNameComponent" : {
+               "name" : "SIDEBAR_MANAGER"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 1
+               },
+               "display" : true,
+               "dynamic" : false,
+               "hide_dynamic" : false,
+               "ignore_raycast" : true,
+               "materials" : [ "hud.mat" ],
+               "model" : "resources/models/default.DAE",
+               "type" : "PLANE"
+            },
+            "sScriptComponent" : {
+               "scripts" : [
+                  {
+                     "name" : "SidebarBuildings"
+                  }
+               ]
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 960,
+                  "y" : 513.5,
+                  "z" : 0
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 192,
+                  "y" : 102.69999694824219,
+                  "z" : 1
+               }
+            },
+            "sTypeComponent" : {
+               "type" : "TILE_WALKABLE"
+            },
+            "sUiComponent" : {
+               "horizontal_alignment" : "MIDDLE",
+               "layer" : 0,
+               "offset" : {
+                  "x" : 0,
+                  "y" : 0
+               },
+               "percentage_size" : true,
+               "size" : {
+                  "x" : 1,
+                  "y" : 1
+               },
+               "vertical_alignment" : "MIDDLE"
+            }
+         },
+         "name" : "SIDEBAR_MANAGER",
+         "tag" : "SidebarManager"
+      },
+      {
+         "components" : {
+            "sNameComponent" : {
+               "name" : "ICON_COIN"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 1,
+                  "b" : 0,
+                  "g" : 1,
+                  "r" : 1
+               },
+               "display" : true,
+               "dynamic" : false,
+               "hide_dynamic" : false,
+               "ignore_raycast" : false,
+               "materials" : [ "icon_coin.mat" ],
+               "model" : "resources/models/default.DAE",
+               "type" : "PLANE"
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 1628.800048828125,
+                  "y" : 133.12959289550781,
+                  "z" : 0
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 6.399993896484375,
+                  "y" : 6.0859193801879883,
+                  "z" : 1
+               }
+            },
+            "sUiComponent" : {
+               "horizontal_alignment" : "RIGHT",
+               "layer" : 0,
+               "offset" : {
+                  "x" : -13.5,
+                  "y" : 10
+               },
+               "percentage_size" : true,
+               "size" : {
+                  "x" : 0.033333301544189453,
+                  "y" : 0.059259198606014252
+               },
+               "vertical_alignment" : "BOTTOM"
+            }
+         },
+         "name" : "ICON_COIN",
+         "tag" : ""
+      },
+      {
+         "components" : {
+            "sNameComponent" : {
+               "name" : "ICON_HEALTH"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 1,
+                  "b" : 0.16470588743686676,
+                  "g" : 0.16470588743686676,
+                  "r" : 1
+               },
+               "display" : true,
+               "dynamic" : false,
+               "hide_dynamic" : false,
+               "ignore_raycast" : false,
+               "materials" : [ "icon_health.mat" ],
+               "model" : "resources/models/blocks/block.DAE",
+               "type" : "PLANE"
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 1628.80029296875,
+                  "y" : 205.01950073242188,
+                  "z" : 0
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 6.3999357223510742,
+                  "y" : 6.0858993530273438,
+                  "z" : 1
+               }
+            },
+            "sUiComponent" : {
+               "horizontal_alignment" : "RIGHT",
+               "layer" : 0,
+               "offset" : {
+                  "x" : -13.5,
+                  "y" : 17
+               },
+               "percentage_size" : true,
+               "size" : {
+                  "x" : 0.033332999795675278,
+                  "y" : 0.059259001165628433
+               },
+               "vertical_alignment" : "BOTTOM"
+            }
+         },
+         "name" : "ICON_HEALTH",
+         "tag" : ""
+      },
+      {
+         "components" : {
+            "sNameComponent" : {
+               "name" : "ICON_WAVE"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 0
+               },
+               "display" : true,
+               "dynamic" : false,
+               "hide_dynamic" : false,
+               "ignore_raycast" : false,
+               "materials" : [ "icon_wave.mat" ],
+               "model" : "resources/models/default.DAE",
+               "type" : "PLANE"
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 1628.80029296875,
+                  "y" : 61.239601135253906,
+                  "z" : 0
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 6.3999357223510742,
+                  "y" : 6.0859198570251465,
+                  "z" : 1
+               }
+            },
+            "sUiComponent" : {
+               "horizontal_alignment" : "RIGHT",
+               "layer" : 0,
+               "offset" : {
+                  "x" : -13.5,
+                  "y" : 3
+               },
+               "percentage_size" : true,
+               "size" : {
+                  "x" : 0.033332999795675278,
+                  "y" : 0.05925920233130455
+               },
+               "vertical_alignment" : "BOTTOM"
+            }
+         },
+         "name" : "ICON_WAVE",
+         "tag" : ""
+      },
+      {
+         "components" : {
+            "sNameComponent" : {
+               "name" : "SIDEBAR_ITEM_INFO"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 1
+               },
+               "display" : false,
+               "dynamic" : false,
+               "hide_dynamic" : false,
+               "ignore_raycast" : false,
+               "materials" : [ "sidebar_item_info.mat" ],
+               "model" : "resources/models/default.DAE",
+               "type" : "PLANE"
+            },
+            "sTextComponent" : {
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 1
+               },
+               "content" : "Item description",
+               "font_name" : "arial.ttf",
+               "font_size" : 26,
+               "horizontal_alignment" : "LEFT",
+               "offset" : {
+                  "x" : 27,
+                  "y" : -18
+               },
+               "vertical_alignment" : "TOP"
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 940.79998779296875,
+                  "y" : 272.15499877929688,
+                  "z" : 0
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 124.79998779296875,
+                  "y" : 15.405000686645508,
+                  "z" : 1
+               }
+            },
+            "sTypeComponent" : {
+               "type" : "TILE_WALKABLE"
+            },
+            "sUiComponent" : {
+               "horizontal_alignment" : "MIDDLE",
+               "layer" : 0,
+               "offset" : {
+                  "x" : -1,
+                  "y" : 19
+               },
+               "percentage_size" : true,
+               "size" : {
+                  "x" : 0.64999991655349731,
+                  "y" : 0.15000000596046448
+               },
+               "vertical_alignment" : "BOTTOM"
+            }
+         },
+         "name" : "SIDEBAR_ITEM_INFO",
+         "tag" : "SidebarItemInfo"
       }
    ],
    "name" : "Game"

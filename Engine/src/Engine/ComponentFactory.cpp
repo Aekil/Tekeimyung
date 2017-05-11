@@ -108,6 +108,7 @@ sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& 
     component->ignoreRaycast = json.getBool("ignore_raycast", false);
     component->dynamic = json.getBool("dynamic", false);
     component->hideDynamic = json.getBool("hide_dynamic", false);
+    component->display = json.getBool("display", true);
 
     component->type = EnumManager<Geometry::eType>::stringToEnum(json.getString("type", "MESH"));
 
@@ -276,6 +277,7 @@ JsonValue&    ComponentFactory<sRenderComponent>::saveToJson(const std::string& 
     json.setBool("ignore_raycast", component->ignoreRaycast);
     json.setBool("dynamic", component->dynamic);
     json.setBool("hide_dynamic", component->hideDynamic);
+    json.setBool("display", component->display);
 
     // Save animations
     {
@@ -362,6 +364,7 @@ bool    ComponentFactory<sRenderComponent>::updateEditor(const std::string& enti
     changed |= ImGui::Checkbox("Ignore mouse raycast", &component->ignoreRaycast);
     changed |= ImGui::Checkbox("Dynamic", &component->dynamic);
     changed |= ImGui::Checkbox("Hide dynamic", &component->hideDynamic);
+    changed |= ImGui::Checkbox("Display", &component->display);
 
     if (Helper::updateComboEnum<Geometry::eType>("Model type", component->type))
     {
@@ -1546,6 +1549,7 @@ sComponent* ComponentFactory<sTextComponent>::loadFromJson(const std::string& en
     component->text.setFontSize(json.getUInt("font_size", 10));
     component->horizontalAlignment = EnumManager<eHorizontalAlignment>::stringToEnum(json.getString("horizontal_alignment", "MIDDLE"));
     component->verticalAlignment = EnumManager<eVerticalAlignment>::stringToEnum(json.getString("vertical_alignment", "MIDDLE"));
+    component->offset = json.getVec2f("offset", {});
 
     // Load text font
     {
@@ -1574,6 +1578,7 @@ JsonValue&    ComponentFactory<sTextComponent>::saveToJson(const std::string& en
     json.setUInt("font_size", component->text.getFontSize());
     json.setString("horizontal_alignment", EnumManager<eHorizontalAlignment>::enumToString(component->horizontalAlignment));
     json.setString("vertical_alignment", EnumManager<eVerticalAlignment>::enumToString(component->verticalAlignment));
+    json.setVec2f("offset", component->offset);
 
     if (component->text.getFont())
     {
@@ -1641,6 +1646,12 @@ bool    ComponentFactory<sTextComponent>::updateEditor(const std::string& entity
     {
         changed |= Helper::updateComboEnum<eHorizontalAlignment>("Horizontal alignment", component->horizontalAlignment);
         changed |= Helper::updateComboEnum<eVerticalAlignment>("Vertical alignment", component->verticalAlignment);
+    }
+
+    // Edit offset
+    {
+        changed |= ImGui::InputFloat("Horizontal offset", &component->offset.x, 1.0f, ImGuiInputTextFlags_AllowTabInput);
+        changed |= ImGui::InputFloat("Vertical offset", &component->offset.y, 1.0f, ImGuiInputTextFlags_AllowTabInput);
     }
 
     if (changed)

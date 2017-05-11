@@ -7,7 +7,7 @@
 #include <Engine/Utils/Maths.hpp>
 
 #include <Game/Weapons/DefaultWeapon.hpp>
-#include <Game/Scripts/Projectile.hpp>
+#include <Game/Weapons/Projectile.hpp>
 
 const std::string DefaultWeapon::Name = "Default";
 

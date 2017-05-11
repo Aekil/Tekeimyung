@@ -130,7 +130,7 @@ void    RenderingSystem::addParticlesToRenderQueue(EntityManager& em, float elap
         sParticleEmitterComponent *emitterComp = entity->getComponent<sParticleEmitterComponent>();
         auto&& model = emitterComp->getModelInstance();
 
-        if (!model || !render->_display)
+        if (!model || !render->display)
             continue;
 
         // Update animation
@@ -343,7 +343,7 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
             sTransformComponent* transform = entity->getComponent<sTransformComponent>();
             auto&& model = render->getModelInstance();
 
-            if (model && render->_display)
+            if (model && render->display)
             {
                 // Update animation
                 if (render->_animator.isPlaying())
@@ -369,7 +369,7 @@ void    RenderingSystem::update(EntityManager& em, float elapsedTime)
                 {
                     _renderQueue.addText(textComponent->text,
                                         uiComponent ? uiComponent->layer : 0,
-                                        glm::vec2(transform->getPos().x, transform->getPos().y) + textComponent->offset);
+                                        glm::vec2(transform->getPos().x, transform->getPos().y) + textComponent->alignmentOffset);
                 }
 
                 addCollidersToRenderQueue(entity, transform);

@@ -6,6 +6,7 @@
 
 #include <Engine/Components.hh>
 #include <Engine/Window/GameWindow.hpp>
+#include <Engine/Physics/Collisions.hpp>
 #include <Engine/Physics/Physics.hpp>
 #include <Engine/Graphics/Renderer.hpp>
 
@@ -27,10 +28,13 @@ void MouseSystem::hoverEntity(EntityManager& em)
         return;
 
 
-    Entity* selectedEntity = nullptr;
-
-    Ray ray = camera->screenPosToRay((float)cursor.getX(), (float)cursor.getY());
-    Physics::raycast(ray, &selectedEntity);
+    Entity* selectedEntity = getHoveredUI(em);
+    // No UI hovered, find for 3D entities
+    if (!selectedEntity)
+    {
+        Ray ray = camera->screenPosToRay((float)cursor.getX(), (float)cursor.getY());
+        Physics::raycast(ray, &selectedEntity);
+    }
 
     Entity* previousEntity = em.getEntity(this->previousEntityHandler);
 
@@ -68,4 +72,44 @@ void MouseSystem::hoverEntity(EntityManager& em)
             this->previousEntityHandler = 0;
         }
     }
+}
+
+Entity* MouseSystem::getHoveredUI(EntityManager &em)
+{
+    Entity* nearestUI = nullptr;
+    int nearestLayer = INT_MAX;
+
+    std::vector<Entity*>    entities = em.getEntities();
+    float       windowHeight = (float)GameWindow::getInstance()->getBufferHeight();
+    auto&&      cursor = GameWindow::getInstance()->getMouse().getCursor();
+    glm::vec2   cursorPos = glm::vec2(cursor.getX(), windowHeight - cursor.getY());
+
+    for (Entity* entity : entities)
+    {
+        sUiComponent* ui = entity->getComponent<sUiComponent>();
+        if (!ui)
+        {
+            continue;
+        }
+        sRenderComponent* render = entity->getComponent<sRenderComponent>();
+        if (!render)
+        {
+            continue;
+        }
+
+        sTransformComponent*    transform = entity->getComponent<sTransformComponent>();
+        const glm::vec2&        size = glm::vec2(render->getModel()->getSize() * transform->getScale());
+        glm::vec2               pos = glm::vec2(transform->getPos()) - (size / 2.0f);
+
+        // Check the mouse is in the button (2D AABB collision)
+        if (render->enabled && !render->ignoreRaycast &&
+            ui->layer < nearestLayer &&
+            Collisions::pointVSAABB2D(cursorPos, pos, size))
+        {
+            nearestLayer = ui->layer;
+            nearestUI = entity;
+        }
+    }
+
+    return (nearestUI);
 }

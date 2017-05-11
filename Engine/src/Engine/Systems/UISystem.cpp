@@ -147,15 +147,15 @@ void    UISystem::alignText(sTextComponent* textComp, const glm::vec3& uiSize)
     {
         if (textComp->horizontalAlignment == eHorizontalAlignment::LEFT)
         {
-            textComp->offset.x = -uiSize.x / 2.0f;
+            textComp->alignmentOffset.x = -uiSize.x / 2.0f;
         }
         else if (textComp->horizontalAlignment == eHorizontalAlignment::MIDDLE)
         {
-            textComp->offset.x = -textComp->text.getSize().x / 2.0f;
+            textComp->alignmentOffset.x = -textComp->text.getSize().x / 2.0f;
         }
         else if (textComp->horizontalAlignment == eHorizontalAlignment::RIGHT)
         {
-            textComp->offset.x = (uiSize.x / 2.0f) - textComp->text.getSize().x;
+            textComp->alignmentOffset.x = (uiSize.x / 2.0f) - textComp->text.getSize().x;
         }
     }
 
@@ -163,15 +163,18 @@ void    UISystem::alignText(sTextComponent* textComp, const glm::vec3& uiSize)
     {
         if (textComp->verticalAlignment == eVerticalAlignment::TOP)
         {
-            textComp->offset.y = uiSize.y / 2.0f;
+            textComp->alignmentOffset.y = uiSize.y / 2.0f;
         }
         else if (textComp->verticalAlignment == eVerticalAlignment::MIDDLE)
         {
-            textComp->offset.y = textComp->text.getSize().y / 2.0f;
+            textComp->alignmentOffset.y = textComp->text.getSize().y / 2.0f;
         }
         else if (textComp->verticalAlignment == eVerticalAlignment::BOTTOM)
         {
-            textComp->offset.y = (-uiSize.y / 2.0f) + textComp->text.getSize().y;
+            textComp->alignmentOffset.y = (-uiSize.y / 2.0f) + textComp->text.getSize().y;
         }
     }
+
+    textComp->alignmentOffset.x += textComp->offset.x;
+    textComp->alignmentOffset.y += textComp->offset.y;
 }

@@ -25,6 +25,7 @@
             "g" : 0,
             "r" : 0
          },
+         "display" : true,
          "dynamic" : false,
          "hide_dynamic" : false,
          "ignore_raycast" : false,
@@ -39,6 +40,7 @@
             "y" : 0,
             "z" : 0
          },
+         "ignored_tags" : [],
          "velocity" : {
             "x" : 0,
             "y" : 0,

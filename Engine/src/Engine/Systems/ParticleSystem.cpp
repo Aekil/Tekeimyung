@@ -103,7 +103,7 @@ void    ParticleSystem::updateEmitter(EntityManager &em, Entity* entity, float e
     }
     // Create new particles each rate
     else if (emitter->elapsedTime >= emitterComp->rate &&
-        render->_display &&
+        render->display &&
         emitter->particlesNb < MAX_PARTICLES)
     {
         if (emitter->particlesNb >= emitter->particles.size() || // Vector is full

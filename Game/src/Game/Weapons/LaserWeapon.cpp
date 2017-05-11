@@ -6,7 +6,7 @@
 #include <Engine/EntityFactory.hpp>
 
 #include <Game/Weapons/LaserWeapon.hpp>
-#include <Game/Scripts/Enemy.hpp>
+#include <Game/Character/Enemy.hpp>
 
 const std::string LaserWeapon::Name = "Laser";
 

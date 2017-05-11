@@ -12,6 +12,7 @@
             "g" : 1,
             "r" : 1
          },
+         "display" : true,
          "dynamic" : false,
          "hide_dynamic" : false,
          "ignore_raycast" : false,
@@ -21,8 +22,8 @@
       },
       "sTransformComponent" : {
          "pos" : {
-            "x" : 1459.199951171875,
-            "y" : 142.3800048828125,
+            "x" : 1632,
+            "y" : 133.510009765625,
             "z" : 0
          },
          "rotation" : {
@@ -32,16 +33,16 @@
          },
          "scale" : {
             "x" : 6.399993896484375,
-            "y" : 6.0266604423522949,
+            "y" : 6.0859193801879883,
             "z" : 1
          }
       },
       "sUiComponent" : {
          "horizontal_alignment" : "MIDDLE",
-         "layer" : 0,
+         "layer" : -1,
          "offset" : {
-            "x" : 26,
-            "y" : -36
+            "x" : 35,
+            "y" : -37
          },
          "percentage_size" : true,
          "size" : {

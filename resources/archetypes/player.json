@@ -12,6 +12,7 @@
             "g" : 0.98333263397216797,
             "r" : 1
          },
+         "display" : true,
          "dynamic" : true,
          "geometry" : null,
          "hide_dynamic" : false,
@@ -28,6 +29,11 @@
             "y" : 0,
             "z" : 0
          },
+         "ignored_tags" : [
+            {
+               "tag" : "Enemy"
+            }
+         ],
          "velocity" : {
             "x" : 0,
             "y" : 0,

@@ -8,8 +8,8 @@
 #include <glm/vec3.hpp>
 #include <vector>
 
-#include <Game/DoubleArray.hpp>
-#include <Game/Map.hpp>
+#include <Game/Map/DoubleArray.hpp>
+#include <Game/Map/Map.hpp>
 
 class Node
 {
