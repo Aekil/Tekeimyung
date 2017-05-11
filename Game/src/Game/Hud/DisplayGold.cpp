@@ -4,8 +4,8 @@
 
 #include <Engine/EntityFactory.hpp>
 
-#include <Game/Scripts/GameManager.hpp>
-#include <Game/Scripts/GoldManager.hpp>
+#include <Game/Manager/GameManager.hpp>
+#include <Game/Manager/GoldManager.hpp>
 
 #include <Game/Hud/DisplayGold.hpp>
 

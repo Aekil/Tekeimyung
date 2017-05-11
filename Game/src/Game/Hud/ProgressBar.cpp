@@ -3,7 +3,7 @@
 */
 
 #include <Engine/EntityFactory.hpp>
-#include <Game/Scripts/ProgressBar.hpp>
+#include <Game/Hud/ProgressBar.hpp>
 
 ProgressBar::~ProgressBar()
 {

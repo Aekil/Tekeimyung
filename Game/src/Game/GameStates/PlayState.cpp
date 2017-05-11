@@ -18,8 +18,8 @@
 #include <Game/GameStates/HowToPlayState.hpp>
 #include <Game/GameStates/BuildingListState.hpp>
 #include <Game/GameStates/PauseState.hpp>
-#include <Game/Scripts/TutoManagerMessage.hpp>
-#include <Game/Scripts/TutoManager.hpp>
+#include <Game/Manager/TutoManagerMessage.hpp>
+#include <Game/Manager/TutoManager.hpp>
 
 #include <Game/GameStates/PlayState.hpp>
 

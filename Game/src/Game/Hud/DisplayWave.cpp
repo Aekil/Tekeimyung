@@ -4,8 +4,8 @@
 
 #include <Engine/EntityFactory.hpp>
 
-#include <Game/Scripts/GameManager.hpp>
-#include <Game/Scripts/WaveManager.hpp>
+#include <Game/Manager/GameManager.hpp>
+#include <Game/Manager/WaveManager.hpp>
 
 #include <Game/Hud/DisplayWave.hpp>
 

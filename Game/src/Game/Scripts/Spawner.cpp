@@ -5,11 +5,11 @@
 #include <Engine/Components.hh>
 #include <Engine/EntityFactory.hpp>
 
-#include <Game/Scripts/Enemy.hpp>
-#include <Game/Scripts/GameManager.hpp>
+#include <Game/Character/Enemy.hpp>
+#include <Game/Manager/GameManager.hpp>
 #include <Game/Scripts/Path.hpp>
 #include <Game/Scripts/Spawner.hpp>
-#include <Game/Scripts/WaveManager.hpp>
+#include <Game/Manager/WaveManager.hpp>
 
 void Spawner::start()
 {

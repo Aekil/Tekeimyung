@@ -15,8 +15,8 @@
 #include <Engine/Components.hh>
 
 #include <Game/GameStates/HowToPlayState.hpp>
-#include <Game/Scripts/TutoManager.hpp>
-#include <Game/Scripts/TutoManagerMessage.hpp>
+#include <Game/Manager/TutoManager.hpp>
+#include <Game/Manager/TutoManagerMessage.hpp>
 
 HowToPlayState::~HowToPlayState() {}
 

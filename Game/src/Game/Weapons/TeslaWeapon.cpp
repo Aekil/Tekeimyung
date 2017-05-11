@@ -8,9 +8,9 @@
 #include <Engine/Physics/Collisions.hpp>
 #include <Engine/Physics/Physics.hpp>
 
-#include <Game/Scripts/TeslaOrb.hpp>
+#include <Game/Weapons/TeslaOrb.hpp>
 #include <Game/Weapons/TeslaWeapon.hpp>
-#include <Game/Scripts/Enemy.hpp>
+#include <Game/Character/Enemy.hpp>
 
 const std::string TeslaWeapon::Name = "Tesla";
 
