@@ -15,9 +15,16 @@
          "dynamic" : false,
          "hide_dynamic" : false,
          "ignore_raycast" : false,
-         "materials" : [ "geometry_default.mat" ],
+         "materials" : [ "MAT_Default" ],
          "model" : "resources/models/default.DAE",
-         "type" : "PLANE"
+         "type" : "MESH"
+      },
+      "sScriptComponent" : {
+         "scripts" : [
+            {
+               "name" : "SidebarText"
+            }
+         ]
       },
       "sTextComponent" : {
          "color" : {
@@ -26,7 +33,7 @@
             "g" : 1,
             "r" : 1
          },
-         "content" : "",
+         "content" : "1",
          "font_name" : "arial.ttf",
          "font_size" : 20,
          "horizontal_alignment" : "LEFT",
@@ -34,8 +41,8 @@
       },
       "sTransformComponent" : {
          "pos" : {
-            "x" : 1839.3822021484375,
-            "y" : 534.03997802734375,
+            "x" : 960,
+            "y" : 17.521810531616211,
             "z" : 0
          },
          "rotation" : {
@@ -53,18 +60,18 @@
          "type" : "TILE_WALKABLE"
       },
       "sUiComponent" : {
-         "horizontal_alignment" : "RIGHT",
+         "horizontal_alignment" : "MIDDLE",
          "layer" : 0,
          "offset" : {
-            "x" : -3,
-            "y" : 2
+            "x" : 0,
+            "y" : 0
          },
          "percentage_size" : false,
          "size" : {
             "x" : 0.10000000149011612,
             "y" : 0.10000000149011612
          },
-         "vertical_alignment" : "MIDDLE"
+         "vertical_alignment" : "BOTTOM"
       }
    },
    "name" : "HUD_SIDEBAR_TEXT",
