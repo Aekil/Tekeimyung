@@ -49,6 +49,7 @@
             "g" : 1,
             "r" : 1
          },
+         "display" : true,
          "dynamic" : false,
          "hide_dynamic" : false,
          "ignore_raycast" : false,
@@ -96,7 +97,7 @@
          },
          "rotation" : {
             "x" : 0,
-            "y" : -0,
+            "y" : 0,
             "z" : 0
          },
          "scale" : {

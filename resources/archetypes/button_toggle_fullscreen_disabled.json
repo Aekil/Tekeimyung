@@ -12,6 +12,7 @@
             "g" : 0.098039217293262482,
             "r" : 0.098039217293262482
          },
+         "display" : true,
          "dynamic" : false,
          "hide_dynamic" : false,
          "ignore_raycast" : false,

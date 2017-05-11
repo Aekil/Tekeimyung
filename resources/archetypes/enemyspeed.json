@@ -98,6 +98,7 @@
             "g" : 0,
             "r" : 1
          },
+         "display" : true,
          "dynamic" : true,
          "hide_dynamic" : false,
          "ignore_raycast" : false,

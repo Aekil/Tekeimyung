@@ -689,7 +689,7 @@
                "display" : true,
                "dynamic" : false,
                "hide_dynamic" : false,
-               "ignore_raycast" : false,
+               "ignore_raycast" : true,
                "materials" : [ "hud.mat" ],
                "model" : "resources/models/default.DAE",
                "type" : "PLANE"

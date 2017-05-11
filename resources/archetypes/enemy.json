@@ -143,6 +143,7 @@
             "g" : 1,
             "r" : 1
          },
+         "display" : true,
          "dynamic" : true,
          "geometry" : null,
          "hide_dynamic" : false,

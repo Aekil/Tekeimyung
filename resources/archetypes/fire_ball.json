@@ -60,6 +60,7 @@
             "g" : 1,
             "r" : 1
          },
+         "display" : true,
          "dynamic" : false,
          "hide_dynamic" : false,
          "ignore_raycast" : false,

@@ -246,7 +246,7 @@ bool    Model2DRenderer::renderModelOnPlane(const std::string& modelEntityName,
 
     std::unique_ptr<Texture> texture = Model2DRenderer::getInstance()->generateTextureFromModel(modelEntity, width, height);
 
-    em->destroyEntityRegister(modelEntity);
+    em->destroyEntityRegister(modelEntity->handle);
 
     // Let Model2DRenderer own the texture
     _renderedTextures.push_back(std::move(texture));

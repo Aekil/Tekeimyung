@@ -12,6 +12,7 @@
             "g" : 1,
             "r" : 1
          },
+         "display" : true,
          "dynamic" : false,
          "hide_dynamic" : false,
          "ignore_raycast" : false,
@@ -37,6 +38,10 @@
          "font_name" : "arial.ttf",
          "font_size" : 24,
          "horizontal_alignment" : "MIDDLE",
+         "offset" : {
+            "x" : 0,
+            "y" : 0
+         },
          "vertical_alignment" : "MIDDLE"
       },
       "sTransformComponent" : {

@@ -12,6 +12,7 @@
             "g" : 1,
             "r" : 1
          },
+         "display" : true,
          "dynamic" : false,
          "hide_dynamic" : false,
          "ignore_raycast" : false,
@@ -30,6 +31,10 @@
          "font_name" : "moonhouse.ttf",
          "font_size" : 30,
          "horizontal_alignment" : "MIDDLE",
+         "offset" : {
+            "x" : 0,
+            "y" : 0
+         },
          "vertical_alignment" : "MIDDLE"
       },
       "sTransformComponent" : {

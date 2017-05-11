@@ -12,6 +12,7 @@
             "g" : 1,
             "r" : 1
          },
+         "display" : true,
          "dynamic" : false,
          "hide_dynamic" : false,
          "ignore_raycast" : true,
@@ -29,7 +30,7 @@
       "sTransformComponent" : {
          "pos" : {
             "x" : 960,
-            "y" : 508.5,
+            "y" : 513.5,
             "z" : 0
          },
          "rotation" : {
@@ -39,7 +40,7 @@
          },
          "scale" : {
             "x" : 192,
-            "y" : 101.69999694824219,
+            "y" : 102.69999694824219,
             "z" : 1
          }
       },
