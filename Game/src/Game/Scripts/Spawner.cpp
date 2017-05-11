@@ -256,7 +256,7 @@ void        Spawner::clearSpawnerConfigs()
 void    Spawner::updateClosestPath()
 {
     glm::ivec2 spawnerPos;
-    glm::ivec2 target(CASTLE_POS);
+    glm::ivec2 target(_gameManager->map.getCastlePos());
 
     spawnerPos.x = static_cast<int>(std::ceil(_transform->getPos().x) / 25.0f);
     spawnerPos.y = static_cast<int>(_transform->getPos().z / 25.0f);
@@ -322,7 +322,7 @@ void    Spawner::getPath(const glm::ivec2& from, const glm::ivec2& to, std::vect
 
 void    Spawner::updateEnemiesPaths()
 {
-    glm::ivec2 target(CASTLE_POS);
+    glm::ivec2 target(_gameManager->map.getCastlePos());
     auto em = EntityFactory::getBindedEntityManager();
     for (sConfig* waveConfig: _currentConfigs)
     {

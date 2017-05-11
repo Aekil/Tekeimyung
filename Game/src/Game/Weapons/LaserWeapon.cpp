@@ -181,8 +181,13 @@ void    LaserWeapon::reload()
 
 void    LaserWeapon::clean()
 {
+    if (!this->_laser)
+    {
+        return;
+    }
+
     auto em = EntityFactory::getBindedEntityManager();
 
-    em->destroyEntityRegister(this->_laser);
+    em->destroyEntityRegister(this->_laser->handle);
     this->_laser = nullptr;
 }

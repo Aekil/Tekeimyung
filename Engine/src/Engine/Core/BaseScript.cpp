@@ -22,16 +22,26 @@ Entity* BaseScript::getEntity()
 
 void BaseScript::Destroy()
 {
+    if (!this->entity)
+    {
+        return;
+    }
+
     auto em = EntityFactory::getBindedEntityManager();
 
-    em->destroyEntityRegister(this->entity);
+    em->destroyEntityRegister(this->entity->handle);
 }
 
 void BaseScript::Destroy(Entity* entity)
 {
+    if (!entity)
+    {
+        return;
+    }
+
     auto em = EntityFactory::getBindedEntityManager();
 
-    em->destroyEntityRegister(entity);
+    em->destroyEntityRegister(entity->handle);
 }
 
 const std::vector<Entity*>& BaseScript::GetEntitiesByTag(const std::string& tag)

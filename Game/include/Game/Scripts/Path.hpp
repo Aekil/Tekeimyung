@@ -53,6 +53,8 @@ private:
     std::vector<Node*>              getAdjacentWalkableNodes(Node* fromNode);
     bool                            findTarget();
 
+    bool                            isOutOfRange(int x, int y) const;
+
 
 private:
     DoubleArray<Node*>              _nodes;

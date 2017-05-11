@@ -15,7 +15,6 @@
 void        NewBuild::start()
 {
     this->retrieveManagers();
-    this->bindEntitiesToInputs();
     this->retrievePlayerScript();
     this->initPrices();
     this->_radius = 7.7f;
@@ -31,9 +30,6 @@ void        NewBuild::initPrices()
     this->_buildingPrices["TILE_BASE_TURRET"] = 40;
     this->_buildingPrices["TILE_WALL"] = 30;
     this->_buildingPrices["TOWER_FIRE"] = 50;
-    this->_buildingPrices["TRAP_NEEDLE"] = 30;
-    this->_buildingPrices["TRAP_FIRE"] = 30;
-    this->_buildingPrices["TRAP_CUTTER"] = 30;
 }
 
 bool        NewBuild::isEnabled() const
@@ -56,7 +52,6 @@ void        NewBuild::disableAll()
     this->_player->setCanShoot(true);
     this->Destroy(this->_preview);
     this->_preview = nullptr;
-    this->_tileHovered = nullptr;
 
     const auto& floorTiles = em->getEntitiesByTag("TileFloor");
     for (Entity* floorTile : floorTiles)
@@ -85,12 +80,16 @@ void        NewBuild::disableAll()
                 tileScript->setBuildable(false);
         }
     }
-
-    TutoManagerMessage::getInstance()->sendMessage(eTutoState::DISABLE_BUILD);
 }
 
 void        NewBuild::setTileHovered(const Entity* tileHovered)
 {
+    if (!isEnabled())
+    {
+        this->_tileHovered = tileHovered;
+        return;
+    }
+
     if (tileHovered != nullptr && this->_tileHovered != tileHovered)
     {
         this->Destroy(this->_preview);
@@ -118,10 +117,10 @@ void        NewBuild::setTileHovered(const Entity* tileHovered)
         {
             auto&       position = this->_tileHovered->getComponent<sTransformComponent>()->getPos();
 
-            if (this->_tileHovered->getTag() == "TileBaseTurret" && this->_currentChoice != "TOWER_FIRE")
-                return;
+            if (this->_tileHovered->getTag() == "TileBaseTurret")
+                this->_currentChoice = "TOWER_FIRE";
             else if (this->_tileHovered->getTag() == "TileFloor" && this->_currentChoice == "TOWER_FIRE")
-                return;
+                this->_currentChoice = "TILE_BASE_TURRET";
 
             this->_preview = this->Instantiate(this->_currentChoice, glm::vec3(position.x, position.y + 12.5f, position.z));
 
@@ -208,21 +207,19 @@ void        NewBuild::bindEntitiesToInputs()
 {
     this->_bindedEntities.insert(std::make_pair(Keyboard::eKey::KEY_1, "TILE_BASE_TURRET"));
     this->_bindedEntities.insert(std::make_pair(Keyboard::eKey::KEY_2, "TILE_WALL"));
-    this->_bindedEntities.insert(std::make_pair(Keyboard::eKey::KEY_3, "TOWER_FIRE"));
-    //this->_bindedEntities.insert(std::make_pair(Keyboard::eKey::KEY_4, "TRAP_CUTTER"));
-    //this->_bindedEntities.insert(std::make_pair(Keyboard::eKey::KEY_5, "TRAP_FIRE"));
+    this->_bindedEntities.insert(std::make_pair(Keyboard::eKey::KEY_3, "TRAP_NEEDLE"));
+    this->_bindedEntities.insert(std::make_pair(Keyboard::eKey::KEY_4, "TRAP_CUTTER"));
+    this->_bindedEntities.insert(std::make_pair(Keyboard::eKey::KEY_5, "TRAP_FIRE"));
 }
 
 void        NewBuild::checkUserInputs()
 {
     if (this->_enabled == true && this->_tileHovered != nullptr && this->mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_1] == Mouse::eButtonState::CLICK_RELEASED)
-    {
-        if (this->_currentChoice == "TOWER_FIRE" && this->_tileHovered->getTag() != "TileBaseTurret")
-            return;
         this->placePreviewedEntity();
-    }
     else if (this->_enabled == true && this->mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_2] == Mouse::eButtonState::CLICK_RELEASED)
         this->disableAll();
+        TutoManagerMessage::getInstance()->sendMessage(eTutoState::DEACTIVATE_BUILD);
+    }
 
     //  auto = std::pair<Keyboard::eKey, std::string>
     for (auto bindedEntity : this->_bindedEntities)
@@ -230,16 +227,16 @@ void        NewBuild::checkUserInputs()
         if (this->keyboard.getStateMap()[bindedEntity.first] == Keyboard::eKeyState::KEY_RELEASED)
         {
             TutoManagerMessage::getInstance()->sendMessage(eTutoState::CHOOSE_BUILD);
-            if (!this->_currentChoice.empty() && this->_currentChoice != bindedEntity.second)
-                this->setSelectedItem(false);
             this->_currentChoice = bindedEntity.second;
-            this->setSelectedItem(true);
             LOG_DEBUG("Current choice :\t%s", this->_currentChoice.c_str());
             if (this->_preview != nullptr && this->_tileHovered != nullptr)
                 this->updatePreview();
             break;
         }
     }
+
+    BUILD_ITEMS(BUILD_COND)
+#undef BUILD_COND
 
     if (!this->_currentChoice.empty())
     {
@@ -342,6 +339,19 @@ void        NewBuild::triggerBuildableZone(const std::string &archetype)
 
 void        NewBuild::placePreviewedEntity()
 {
+// For the tutorial, we don't want the player
+// to build the same item 2 times
+#define LOCK_BUILD_COND(KEY, ITEM, TUTO_COND)                                           \
+    if (!TutoManagerMessage::getInstance()->tutorialDone() &&                           \
+        ITEM == this->_currentChoice &&                                                 \
+        !TutoManagerMessage::getInstance()->stateOnGoing(eTutoState::TUTO_COND))        \
+    {                                                                                   \
+        return;                                                                         \
+    }
+
+    BUILD_ITEMS(LOCK_BUILD_COND)
+#undef LOCK_BUILD_COND
+
     if (std::find(this->_alreadyBuiltTile.begin(), this->_alreadyBuiltTile.end(), this->_tileHovered->handle) != this->_alreadyBuiltTile.end())
         return;
 
@@ -366,7 +376,14 @@ void        NewBuild::placePreviewedEntity()
     this->_gameManager->map[tilePos.x][tilePos.y] = 0;
     this->updateSpawnersPaths(tilePos);
 
-    TutoManagerMessage::getInstance()->sendMessage(eTutoState::BUILD);
+#define SEND_TUTO_BUILD(KEY, ITEM, TUTO_COND)                                           \
+    if (this->_currentChoice == ITEM)                                                   \
+    {                                                                                   \
+        TutoManagerMessage::getInstance()->sendMessage(eTutoState::TUTO_COND);          \
+    }
+
+    BUILD_ITEMS(SEND_TUTO_BUILD)
+#undef SEND_TUTO_BUILD
 }
 
 void        NewBuild::updateSpawnersPaths(const glm::ivec2& tilePos)
@@ -435,12 +452,13 @@ void        NewBuild::updateSpawnersPaths(const glm::ivec2& tilePos)
 void            NewBuild::updatePreview()
 {
     auto&       position = this->_tileHovered->getComponent<sTransformComponent>()->getPos();
+    bool isTower = this->_currentChoice == "TOWER_FIRE";
 
     this->Destroy(this->_preview);
+    this->_preview = nullptr;
 
-    if ((this->_tileHovered->getTag() == "TileBaseTurret" && this->_currentChoice != "TOWER_FIRE") 
-        || this->_tileHovered->getTag() != "TileBaseTurret" && this->_currentChoice == "TOWER_FIRE")
-        return;
+    if (this->_tileHovered->getTag() == "TileBaseTurret")
+        this->_currentChoice = "TOWER_FIRE";
 
     this->_preview = this->Instantiate(this->_currentChoice, glm::vec3(position.x, position.y + 12.5f, position.z));
 
@@ -465,3 +483,34 @@ void            NewBuild::setSelectedItem(bool selected)
 
     sidebarItemScript->switchColor(selected);
 }
+            this->updatePreview();
+    if (this->_enabled == true &&
+        this->_tileHovered != nullptr &&
+        this->_preview != nullptr &&
+        this->mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_1] == Mouse::eButtonState::CLICK_RELEASED)
+    {
+    }
+    else if (this->_enabled == true &&
+        this->mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_2] == Mouse::eButtonState::CLICK_RELEASED)
+    {
+#define BUILD_COND(KEY, ITEM, TUTO_COND)                                                \
+    if (this->keyboard.getStateMap()[KEY] == Keyboard::eKeyState::KEY_RELEASED &&       \
+        (TutoManagerMessage::getInstance()->stateOnGoing(eTutoState::TUTO_COND) ||      \
+        TutoManagerMessage::getInstance()->tutorialDone()))                             \
+    {                                                                                   \
+        this->_currentChoice = ITEM;                                                    \
+        LOG_DEBUG("Current choice :\t%s", this->_currentChoice.c_str());                \
+        if (this->_tileHovered != nullptr)                                              \
+            this->updatePreview();                                                      \
+    // Can only build towers on TileBaseTurret
+    if (isTower &&
+        this->_tileHovered->getTag() != "TileBaseTurret")
+    {
+        return;
+    }
+    // Only towers can be built on TileBaseTurret
+    else if (!isTower &&
+        this->_tileHovered->getTag() != "TileFloor")
+    {
+        return;
+    }

@@ -3,11 +3,16 @@
 */
 
 #include <Engine/EntityFactory.hpp>
+#include <Game/Scripts/Enemy.hpp>
 #include <Game/Scripts/GameManager.hpp>
 #include <Game/Scripts/TutoManager.hpp>
 #include <Game/Scripts/WaveManager.hpp>
 #include <Game/Scripts/GoldManager.hpp>
+#include <Game/Scripts/Spawner.hpp>
 #include <Game/Scripts/TutoManagerMessage.hpp>
+#include <Game/GameStates/PlayState.hpp>
+
+bool    TutoManager::_tutorialDone = false;
 
 TutoManager::~TutoManager()
 {
@@ -32,83 +37,163 @@ eTutoState operator++(eTutoState& state, int)
 
 TutoManager::TutoManager()
 {
-    _statesMessages[eTutoState::MOVE] = "Press W, A, S or D to move (Press K to SKIP the tutorial)";
-    _statesMessages[eTutoState::SHOOT] = "Use LEFT CLICK to shoot !";
-    _statesMessages[eTutoState::CHANGE_WEAPON] = "Use the mouse SCROLL WHEEL to change your weapon !";
-    _statesMessages[eTutoState::CHOOSE_BUILD] = "Press 1, 2, 3, 4 or 5 to choose an item to build !";
-    _statesMessages[eTutoState::BUILD] = "Use LEFT CLICK on buildable zone to build something";
-    _statesMessages[eTutoState::DISABLE_BUILD] = "Use RIGHT CLICK to disable build mode";
-    _statesMessages[eTutoState::CHECK_HOWTOPLAY] = "Try to check the 'How to Play' from the pause menu (press Escape)";
-    _statesMessages[eTutoState::CHECK_BUILDLIST] = "Check the Build list with B to know what you can build and for how much golds";
-    _statesMessages[eTutoState::TUTO_DONE] = "Well done ! Tutorial completed. GL & HF ! (press T to QUIT tutorial)";
-    _statesMessages[eTutoState::TUTO_WAVE] = "Press SPACE to start the wave";
+    _steps = {
+        {
+            eTutoState::MOVE,
+            "Press W, A, S or D to move (Press K to SKIP the tutorial)"
+        },
+        {
+            eTutoState::BUILD_BASE_TOWER,
+            "Press 2 and build your first tower base !\n Tower bases are used to build towers on it"
+        },
+        {
+            eTutoState::BUILD_TOWER,
+            "Press 3 and select a tower base to build a tower on it"
+        },
+        {
+            eTutoState::DEACTIVATE_BUILD,
+            "Deactivate the build zone with the mouse right click"
+        },
+        {
+            eTutoState::ENEMY_DEAD,
+            "Towers will automatically shoot on enemies"
+        },
+        {
+            eTutoState::BUILD_WALL,
+            "Try to build a wall by pressing 1\n\
+Walls are very cheap and can help you to make the enemies follow a specific path"
+        },
+        {
+            eTutoState::ENEMY_DEAD,
+            ""
+        },
+        {
+            eTutoState::SHOOT,
+            "Use LEFT CLICK to shoot !"
+        },
+        {
+            eTutoState::CHANGE_WEAPON,
+            "Use the mouse SCROLL WHEEL to change your weapon !"
+        },
+        {
+            eTutoState::ENEMY_DEAD,
+            "Try to kill this enemy"
+        },
+        {
+            eTutoState::CHECK_BUILDLIST,
+            "Check the Build list with B to know what you can build and for how much golds"
+        },
+        {
+            eTutoState::CHECK_HOWTOPLAY,
+            "Check the 'How to Play' from the pause menu (press Escape) for more informations"
+        },
+        {
+            eTutoState::TUTO_DONE,
+            "Well done ! Tutorial completed.\n\
+Good luck & have fun ! (press T to QUIT tutorial)"
+        },
+        {
+            eTutoState::TUTO_WAVE,
+            "Press SPACE to start the wave"
+        }
+    };
 }
 
 void TutoManager::start()
 {
-    this->_textComp = this->getComponent<sTextComponent>();
+    _textComp = getComponent<sTextComponent>();
+
+    if (_tutorialDone)
+    {
+        _currentState = _steps.size() - 1;
+    }
+    _textComp->text.setContent(_steps[_currentState].message);
 
     auto em = EntityFactory::getBindedEntityManager();
-    auto entity = em->getEntityByTag("GameManager");
+    auto gameManager = em->getEntityByTag("GameManager");
 
-    if (entity == nullptr)
+    if (gameManager == nullptr)
     {
         LOG_ERROR("No entity with GameManager tag");
         return;
     }
 
-    auto gameManagerScriptComponent = entity->getComponent<sScriptComponent>();
+    _goldManager = getEntityScript<GoldManager>(gameManager, "GoldManager");
 
-    if (gameManagerScriptComponent == nullptr)
+    if (_goldManager == nullptr)
     {
-        LOG_ERROR("No scriptComponent on entity");
+        LOG_ERROR("No GoldManager script on gameManager");
+        return;
+    }
+    _goldManager->setIncreaseOnTime(false);
+
+    _waveManager = getEntityScript<WaveManager>(gameManager, "WaveManager");
+
+    if (_waveManager == nullptr)
+    {
+        LOG_ERROR("No WaveManager script on gameManager");
         return;
     }
 
-    this->_waveManager = gameManagerScriptComponent->getScript<WaveManager>("WaveManager");
-
-    if (this->_waveManager == nullptr)
-    {
-        LOG_ERROR("No WaveManager script on entity");
-        return;
-    }
-
-    this->_goldManager = gameManagerScriptComponent->getScript<GoldManager>("GoldManager");
-
-    if (this->_goldManager == nullptr)
-    {
-        LOG_ERROR("No GoldManager script on entity");
-        return;
-    }
-
-    this->_goldManager->setIncreaseOnTime(false);
-    this->_goldManager->setGolds(0);
 }
 
 void TutoManager::update(float dt)
 {
-    if (this->keyboard.getStateMap()[Keyboard::eKey::K] == Keyboard::eKeyState::KEY_RELEASED)
+    if (_waveManager && tutorialDone())
     {
-        this->_currentState = eTutoState::TUTO_DONE;
-        this->sendMessage(eTutoState::TUTO_DONE);
+        _waveManager->setTutorialIsFinished(true);
     }
 }
 
 void    TutoManager::sendMessage(eTutoState state)
 {
-    if (state == this->_currentState && this->_textComp != nullptr)
+    if (state == getCurrentState() && _textComp != nullptr)
     {
-        ++this->_currentState;
-        this->_textComp->text.setContent(this->_statesMessages[this->_currentState]);
+        ++_currentState;
+        _textComp->text.setContent(_steps[_currentState].message);
 
-        if (state == eTutoState::TUTO_DONE)
-            this->_waveManager->setTutorialIsFinished(true);
+        if (state == eTutoState::CHANGE_WEAPON)
+            destroyBuilds();
 
-        if (this->_currentState == eTutoState::BUILD)
-            this->_goldManager->setGolds(50);
-        if (this->_currentState == eTutoState::DISABLE_BUILD)
-            this->_goldManager->setGolds(0);
+        if (getCurrentState() == eTutoState::ENEMY_DEAD)
+        {
+            float speed = -1.0f;
+            if (state == eTutoState::CHANGE_WEAPON)
+            {
+                speed = 10.0f;
+            }
+            spawnEnemy(speed);
+        }
     }
+}
+
+bool    TutoManager::stateOnGoingOrDone(eTutoState state)
+{
+    uint32_t stepNb = 0;
+    for (auto& step: _steps)
+    {
+        if (stepNb > _currentState)
+            return (false);
+        else if (step.state == state)
+            return (true);
+        ++stepNb;
+    }
+    return (false);
+}
+
+bool    TutoManager::stateOnGoing(eTutoState state)
+{
+    return (getCurrentState() == state);
+}
+
+bool    TutoManager::tutorialDone()
+{
+    return (getCurrentState() == eTutoState::TUTO_WAVE);
+}
+
+eTutoState  TutoManager::getCurrentState() const
+{
+    return (getState(_currentState));
 }
 
 /**
@@ -127,4 +212,74 @@ void        TutoManager::display(bool displayed)
         if (render != nullptr)
             render->enabled = displayed;
     }
+}
+
+void    TutoManager::spawnEnemy(float speed)
+{
+    auto    em = EntityFactory::getBindedEntityManager();
+    Entity* spawner = em->getEntityByTag("Spawner");
+
+    if (!spawner)
+    {
+        LOG_ERROR("TutoManager::spawnEnemy: Can't find Spawner entity");
+        return;
+    }
+
+    Spawner* spawnerScript = getEntityScript<Spawner>(spawner, "Spawner");
+    if (!spawnerScript)
+    {
+        LOG_ERROR("TutoManager::spawnEnemy: Spawner don't have Spawner script");
+        return;
+    }
+
+    Entity* enemy = spawnerScript->spawnEntity("ENEMY");
+
+    // Change enemy speed
+    if (speed != -1.0f)
+    {
+        Enemy* enemyScript = getEntityScript<Enemy>(enemy, "Enemy");
+        if (!enemyScript)
+        {
+            LOG_ERROR("TutoManager::spawnEnemy: Enemy don't have Enemy script");
+            return;
+        }
+
+        enemyScript->_speed = speed;
+    }
+}
+
+void    TutoManager::destroyBuilds()
+{
+    auto    em = EntityFactory::getBindedEntityManager();
+    Entity* tower = em->getEntityByTag("Tower");
+    Entity* towerBase = em->getEntityByTag("TileBaseTurret");
+
+    // Tower explosion
+    {
+        Entity* explosion = Instantiate("ENEMY_EXPLOSION");
+        sTransformComponent* explosionTransform = explosion->getComponent<sTransformComponent>();
+        sTransformComponent* entityTransform = entity->getComponent<sTransformComponent>();
+        explosionTransform->setPos(tower->getComponent<sTransformComponent>()->getPos());
+    }
+
+    // TowerBase explosion
+    {
+        Entity* explosion = Instantiate("ENEMY_EXPLOSION");
+        sTransformComponent* explosionTransform = explosion->getComponent<sTransformComponent>();
+        sTransformComponent* entityTransform = entity->getComponent<sTransformComponent>();
+        explosionTransform->setPos(towerBase->getComponent<sTransformComponent>()->getPos());
+    }
+
+    Destroy(tower);
+    Destroy(towerBase);
+}
+
+eTutoState    TutoManager::getState(uint32_t stateIndex) const
+{
+    if (stateIndex >= _steps.size())
+        return (_steps.back().state);
+    else if (stateIndex < 0)
+        return (_steps[0]).state;
+
+    return (_steps[stateIndex].state);
 }

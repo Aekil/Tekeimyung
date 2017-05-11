@@ -9,8 +9,14 @@ ProgressBar::~ProgressBar()
 {
     auto em = EntityFactory::getBindedEntityManager();
 
-    em->destroyEntityRegister(empty);
-    em->destroyEntityRegister(filled);
+    if (empty)
+    {
+        em->destroyEntityRegister(this->empty->handle);
+    }
+    if (filled)
+    {
+        em->destroyEntityRegister(this->filled->handle);
+    }
 }
 
 void    ProgressBar::init(const std::string& entityProgressBarEmpty, const std::string& entityProgressBar)

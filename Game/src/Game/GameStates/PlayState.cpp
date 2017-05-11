@@ -14,10 +14,12 @@
 #include <Engine/Systems/ScriptSystem.hpp>
 #include <Engine/Systems/UISystem.hpp>
 #include <Engine/Systems/MouseSystem.hpp>
+#include <Engine/Utils/LevelLoader.hpp>
 #include <Game/GameStates/HowToPlayState.hpp>
 #include <Game/GameStates/BuildingListState.hpp>
 #include <Game/GameStates/PauseState.hpp>
 #include <Game/Scripts/TutoManagerMessage.hpp>
+#include <Game/Scripts/TutoManager.hpp>
 
 #include <Game/GameStates/PlayState.hpp>
 
@@ -39,8 +41,15 @@ void    PlayState::setupSystems()
 
 bool    PlayState::init()
 {
-    //_pair = std::make_pair(Keyboard::eKey::F, new HandleFullscreenEvent());
     _backgroundMusic = EventSound::getEventByEventType(eEventSound::BACKGROUND);
+
+    // Load tutorial level
+    if (!TutoManager::_tutorialDone)
+    {
+        auto em = _world.getEntityManager();
+        em->destroyAllEntities();
+        LevelLoader::getInstance()->load("Tutorial", em);
+    }
     return (true);
 }
 
@@ -50,30 +59,27 @@ bool    PlayState::update(float elapsedTime)
     auto &&keyboard = GameWindow::getInstance()->getKeyboard();
     auto &&mouse = GameWindow::getInstance()->getMouse();
 
-    //if (keyboard.getStateMap()[_pair.first] == Keyboard::eKeyState::KEY_PRESSED)
-    //    _pair.second->execute();
-
-    //if (keyboard.getStateMap()[Keyboard::eKey::H] == Keyboard::eKeyState::KEY_PRESSED)
-    //{
-    //    _gameStateManager->addState<HowToPlayState>();
-    //    TutoManagerMessage::getInstance()->sendMessage(eTutoState::CHECK_HOWTOPLAY);
-    //}
     if (keyboard.getStateMap()[Keyboard::eKey::B] == Keyboard::eKeyState::KEY_PRESSED)
     {
         _gameStateManager->addState<BuildingListState>();
         TutoManagerMessage::getInstance()->sendMessage(eTutoState::CHECK_BUILDLIST);
     }
-    if (keyboard.getStateMap()[Keyboard::eKey::T] == Keyboard::eKeyState::KEY_PRESSED)
+    if (!TutoManagerMessage::getInstance()->tutorialDone())
     {
-        TutoManagerMessage::getInstance()->sendMessage(eTutoState::TUTO_DONE);
+        if (keyboard.getStateMap()[Keyboard::eKey::K] == Keyboard::eKeyState::KEY_RELEASED ||
+            (keyboard.getStateMap()[Keyboard::eKey::T] == Keyboard::eKeyState::KEY_RELEASED &&
+            TutoManagerMessage::getInstance()->stateOnGoing(eTutoState::TUTO_DONE)))
+        {
+            TutoManager::_tutorialDone = true;
+            _gameStateManager->replaceState<PlayState>();
+            return (true);
+        }
     }
     if (keyboard.getStateMap()[Keyboard::eKey::ESCAPE] == Keyboard::eKeyState::KEY_PRESSED ||
         gameWindow->hasLostFocus())
     {
         _gameStateManager->addState<PauseState>();
     }
-
-    //updateCameraInputs(elapsedTime);
 
     // Play background music
     #if (ENABLE_SOUND)

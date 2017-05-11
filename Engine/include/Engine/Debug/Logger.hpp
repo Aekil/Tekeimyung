@@ -47,6 +47,12 @@ public:
         eLogLevel level;
     };
 
+    struct sConsoleLog
+    {
+        ImGuiTextBuffer buf;
+        ImVector<int>   lineOffsets;
+    };
+
 public:
     explicit    Logger();
     virtual     ~Logger() {}
@@ -59,21 +65,22 @@ public:
 
     void                            log(Logger::eLogLevel level, const std::string& message);
 
-    const ImGuiTextBuffer&          getLog() const;
+    const sConsoleLog&              getConsoleLog() const;
 
     void                            setLogLevel(Logger::eLogLevel logLevel);
     Logger::eLogLevel               getLogLevel() const;
 
 private:
     std::string                     getDateToString();
+    void                            addConsoleLog(const sLogInfo& logInfo);
 
 private:
     std::ofstream   _stream;
 
     static std::shared_ptr<Logger>  _instance;
 
-    ImGuiTextBuffer             _log;
     std::vector<sLogInfo>       _logs;
+    sConsoleLog                 _log;
 
     Logger::eLogLevel           _logLevel;
 };

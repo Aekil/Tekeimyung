@@ -24,8 +24,8 @@ public:
 
     Entity*                                         createEntity(bool store = true);
 
-    void                                            destroyEntity(Entity* entity);
-    void                                            destroyEntityRegister(Entity* entity);
+    void                                            destroyEntity(const Entity::sHandle& entityHandle);
+    void                                            destroyEntityRegister(const Entity::sHandle& entityHandle);
     void                                            destroyEntities();
     void                                            destroyAllEntities();
 
@@ -57,16 +57,16 @@ private:
 
 private:
     // TODO: Replace Entity pointer with ID ?
-    std::vector<Entity*>                            _entities;
+    std::vector<Entity*>                                    _entities;
 
     // Store entities by tag
-    std::unordered_map<std::string, std::vector<Entity*> >        _entitiesTagGroups;
+    std::unordered_map<std::string, std::vector<Entity*> >  _entitiesTagGroups;
 
     // Store entities by component
-    std::unordered_map<uint32_t, std::vector<Entity*> >        _entitiesComponentGroups;
+    std::unordered_map<uint32_t, std::vector<Entity*> >     _entitiesComponentGroups;
 
-    std::vector<Entity*>                            _entitiesToDestroy;
-    World&                                          _world;
+    std::vector<Entity::sHandle>                            _entitiesToDestroy;
+    World&                                                  _world;
 
-    std::unique_ptr<EntityPool>                     _entityPool;
+    std::unique_ptr<EntityPool>                             _entityPool;
 };

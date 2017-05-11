@@ -64,6 +64,7 @@ bool    MapLoader::validateMap(const std::string& mapFile, sLoadInfo& loadInfo)
 {
     auto file = ResourceManager::getInstance()->getOrLoadResource<File>(mapFile);
     std::ifstream mapContent(file->getPath());
+    bool castlePosFound = false;
 
     if (!mapContent.good())
     {
@@ -86,6 +87,19 @@ bool    MapLoader::validateMap(const std::string& mapFile, sLoadInfo& loadInfo)
             if (!token.size())
             {
                 continue;
+            }
+            std::istringstream tokenStream(token);
+            int tokenInt;
+            tokenStream >> tokenInt;
+            if (tokenInt == -1)
+            {
+                if (castlePosFound)
+                {
+                    mapContent.close();
+                    LOG_ERROR("MapLoader::validateMap: Multiple castle pos not supported");
+                    return (false);
+                }
+                castlePosFound = true;
             }
             ++colsNb;
         }
@@ -114,6 +128,12 @@ bool    MapLoader::validateMap(const std::string& mapFile, sLoadInfo& loadInfo)
     {
         LOG_ERROR("MapLoader::validateMap: Map is empty");
         mapContent.close();
+        return (false);
+    }
+    else if (!castlePosFound)
+    {
+        mapContent.close();
+        LOG_ERROR("MapLoader::validateMap: No castle position found. Add -1 in the map to define a castle position");
         return (false);
     }
 

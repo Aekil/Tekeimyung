@@ -28,8 +28,14 @@ Entity* EntityManager::createEntity(bool store)
     return (entity);
 }
 
-void    EntityManager::destroyEntity(Entity* entity)
+void    EntityManager::destroyEntity(const Entity::sHandle& entityHandle)
 {
+    Entity* entity = getEntity(entityHandle);
+    if (!entity)
+    {
+        return;
+    }
+
     _world.notifyEntityDeleted(entity);
     std::for_each(entity->_components.begin(), entity->_components.end(), [this, &entity](sComponent* component)
     {
@@ -50,12 +56,9 @@ void    EntityManager::destroyEntity(Entity* entity)
     _entityPool->free(entity);
 }
 
-void    EntityManager::destroyEntityRegister(Entity* entity)
+void    EntityManager::destroyEntityRegister(const Entity::sHandle& entityHandle)
 {
-    if (entity)
-    {
-        _entitiesToDestroy.push_back(entity);
-    }
+    _entitiesToDestroy.push_back(entityHandle);
 }
 
 void    EntityManager::destroyEntities()
@@ -86,7 +89,7 @@ void    EntityManager::destroyAllEntities()
     for (std::size_t entitiesNb = _entities.size(); entitiesNb > 0; --entitiesNb)
     {
         Entity* entity = _entities[0];
-        destroyEntity(entity);
+        destroyEntity(entity->handle);
     }
     _entitiesToDestroy.clear();
 }

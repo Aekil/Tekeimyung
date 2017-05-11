@@ -5,6 +5,7 @@
 #pragma once
 
 #include <cstdint>
+#include <glm/vec2.hpp>
 #include <unordered_map>
 #include <vector>
 
@@ -27,6 +28,7 @@ public:
     std::unordered_map<int, std::vector<Entity*>>& getMapParts();
     DoubleArray<char>&      getSpawnersPaths();
     DoubleArray<Entity*>&   getEntities();
+    const glm::ivec2&       getCastlePos() const;
 
 private:
     void                    init();
@@ -36,4 +38,5 @@ private:
     DoubleArray<Entity*> _entities;
 
     std::unordered_map<int, std::vector<Entity*>> _mapParts;
+    glm::ivec2 _castlePos;
 };

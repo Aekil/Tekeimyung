@@ -111,10 +111,15 @@ void    GameState::renderPreviousStates(const std::vector<uint32_t>& filterIds)
         #endif
 
         System* stateRenderSystem = stateWorld.getSystem<RenderingSystem>();
+        System* stateUISystem = stateWorld.getSystem<UISystem>();
 
         if (stateRenderSystem)
         {
             stateRenderSystem->update(*stateWorld.getEntityManager(), 0);
+        }
+        if (stateUISystem)
+        {
+            stateUISystem->update(*stateWorld.getEntityManager(), 0);
         }
     }
 }
