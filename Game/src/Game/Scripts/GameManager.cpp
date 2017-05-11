@@ -23,7 +23,7 @@ void GameManager::update(float dt)
             transform->getPos().x > map.getWidth() * 25 ||
             transform->getPos().z > map.getHeight() * 25)
         {
-            em->destroyEntityRegister(projectile);
+            Destroy(projectile);
         }
     }
 }

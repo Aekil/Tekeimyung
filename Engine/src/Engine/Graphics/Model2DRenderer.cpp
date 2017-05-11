@@ -217,7 +217,7 @@ bool    Model2DRenderer::renderModelOnPlane(const std::string& modelEntityName,
     bool res = renderModelOnPlane(modelEntity, planeEntityTagName, width, height);
 
     // Destroy the entity, we don't need it anymore
-    em->destroyEntityRegister(modelEntity);
+    em->destroyEntityRegister(modelEntity->handle);
 
     return (res);
 }

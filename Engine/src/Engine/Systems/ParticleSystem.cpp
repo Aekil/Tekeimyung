@@ -97,7 +97,7 @@ void    ParticleSystem::updateEmitter(EntityManager &em, Entity* entity, float e
             }
             else {
                 removeEmitter(entity->handle);
-                em.destroyEntityRegister(entity);
+                em.destroyEntityRegister(entity->handle);
             }
         }
     }

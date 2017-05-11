@@ -87,7 +87,7 @@ void                    OptionsMenuState::createOrGetButtons()
 
         if (em != nullptr)
         {
-            em->destroyEntity(this->_buttonCurrentWindowMode);
+            em->destroyEntity(this->_buttonCurrentWindowMode->handle);
 
             buttonArchetype = (isFullscreen ? "BUTTON_TOGGLE_WINDOWED" : "BUTTON_TOGGLE_FULLSCREEN");
             this->_buttonCurrentWindowMode = EntityFactory::createOrGetEntity(buttonArchetype);

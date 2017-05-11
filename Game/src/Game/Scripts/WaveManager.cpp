@@ -269,7 +269,7 @@ void        WaveManager::handleGameOver()
 
         if (!scriptComponent)
         {
-            em->destroyEntityRegister(enemy);
+            Destroy(enemy);
             continue;
         }
 
@@ -277,7 +277,7 @@ void        WaveManager::handleGameOver()
 
         if (!enemyScript)
         {
-            em->destroyEntityRegister(enemy);
+            Destroy(enemy);
             continue;
         }
 

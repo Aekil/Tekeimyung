@@ -86,7 +86,7 @@ void    LevelEntitiesDebugWindow::displayEntityDebug(EntityManager* em, Entity* 
         if (ImGui::Button("Delete"))
         {
             ImGui::EndGroup();
-            em->destroyEntity(entity);
+            em->destroyEntity(entity->handle);
             ImGui::PopStyleColor(3);
             return;
         }
