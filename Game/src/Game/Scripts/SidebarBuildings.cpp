@@ -59,29 +59,9 @@ void SidebarBuildings::init()
 
         uiComponentCadre->offset = glm::vec2(i * 5, 5);
 
-        auto itemText = this->Instantiate("HUD_SIDEBAR_TEXT");
+        this->initTextBelow(i, uiComponent);
+        this->initTextTopLeft(i, uiComponent);
 
-        auto itemTextScript = itemText->getComponent<sScriptComponent>();
-        auto itemTextTextComponent = itemText->getComponent<sTextComponent>();
-
-        if (itemTextTextComponent == nullptr)
-            EXCEPT(NullptrException, "Entity with archetype %s doesn't have component %s", "SIDEBAR_TEXT", "sTextComponent");
-
-        if (itemTextScript == nullptr)
-            EXCEPT(NullptrException, "Entity with archetype %s doesn't have component %s", "SIDEBAR_TEXT", "sScriptComponent");
-
-        char                waveText[64];
-
-        sprintf_s(waveText, "%s coins", this->_sidebarItems[i].price.c_str());
-
-        itemTextTextComponent->text.setContent(waveText);
-
-        auto itemTextSidebarText = itemTextScript->getScript<SidebarText>("SidebarText");
-
-        if (itemTextSidebarText == nullptr)
-            EXCEPT(NullptrException, "Entity with archetype %s doesn't have script %s", "SIDEBAR_TEXT", "SidebarText");
-
-        itemTextSidebarText->setParentPos(uiComponent->offset);
     }
 
     //this->_sidebarItems[2].key = '3';
@@ -99,6 +79,61 @@ void SidebarBuildings::init()
     // Init selection
     this->_itemSelection.selected = false;
     this->_itemSelection.idSelected = -1;
+}
+
+void SidebarBuildings::initTextBelow(int index, sUiComponent* uiComponent)
+{
+    auto itemText = this->Instantiate("HUD_SIDEBAR_TEXT");
+
+    auto itemTextScript = itemText->getComponent<sScriptComponent>();
+    auto itemTextTextComponent = itemText->getComponent<sTextComponent>();
+
+    if (itemTextTextComponent == nullptr)
+        EXCEPT(NullptrException, "Entity with archetype %s doesn't have component %s", "SIDEBAR_TEXT", "sTextComponent");
+
+    if (itemTextScript == nullptr)
+        EXCEPT(NullptrException, "Entity with archetype %s doesn't have component %s", "SIDEBAR_TEXT", "sScriptComponent");
+
+    char                waveText[64];
+
+    sprintf_s(waveText, "%s coins", this->_sidebarItems[index].price.c_str());
+
+    itemTextTextComponent->text.setContent(waveText);
+
+    auto itemTextSidebarText = itemTextScript->getScript<SidebarText>("SidebarText");
+
+    if (itemTextSidebarText == nullptr)
+        EXCEPT(NullptrException, "Entity with archetype %s doesn't have script %s", "SIDEBAR_TEXT", "SidebarText");
+
+    itemTextSidebarText->setParentPos(uiComponent->offset, ePosition::BELOW);
+}
+
+void SidebarBuildings::initTextTopLeft(int index, sUiComponent* uiComponent)
+{
+    auto itemText = this->Instantiate("HUD_SIDEBAR_TEXT");
+
+    auto itemTextScript = itemText->getComponent<sScriptComponent>();
+    auto itemTextTextComponent = itemText->getComponent<sTextComponent>();
+
+    if (itemTextTextComponent == nullptr)
+        EXCEPT(NullptrException, "Entity with archetype %s doesn't have component %s", "SIDEBAR_TEXT", "sTextComponent");
+
+    if (itemTextScript == nullptr)
+        EXCEPT(NullptrException, "Entity with archetype %s doesn't have component %s", "SIDEBAR_TEXT", "sScriptComponent");
+
+    char                waveText[64];
+
+    sprintf_s(waveText, "%c", this->_sidebarItems[index].key);
+
+    itemTextTextComponent->text.setContent(waveText);
+    itemTextTextComponent->text.setFontSize(25);
+
+    auto itemTextSidebarText = itemTextScript->getScript<SidebarText>("SidebarText");
+
+    if (itemTextSidebarText == nullptr)
+        EXCEPT(NullptrException, "Entity with archetype %s doesn't have script %s", "SIDEBAR_TEXT", "SidebarText");
+
+    itemTextSidebarText->setParentPos(uiComponent->offset, ePosition::TOP_LEFT);
 }
 
 void SidebarBuildings::start()

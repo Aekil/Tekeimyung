@@ -39,6 +39,9 @@ public:
 private:
     void init();
 
+    void initTextBelow(int index, sUiComponent* uiComponent);
+    void initTextTopLeft(int index, sUiComponent* uiComponent);
+
 private:
     std::vector<t_itemCase> _sidebarItems;
     t_itemSelection     _itemSelection;

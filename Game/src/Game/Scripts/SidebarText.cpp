@@ -15,7 +15,7 @@ void SidebarText::update(float dt)
 
 }
 
-void SidebarText::setParentPos(glm::vec2 parentPos)
+void SidebarText::setParentPos(glm::vec2 parentPos, ePosition position)
 {
     this->_parentPos = parentPos;
 
@@ -23,5 +23,9 @@ void SidebarText::setParentPos(glm::vec2 parentPos)
 
     if (uiComponent == nullptr)
         EXCEPT(NullptrException, "%s don't have component : %s", "SidebarText", "sUiComponent");
-    uiComponent->offset = glm::vec2(this->_parentPos.x - 1, this->_parentPos.y - 4);
+
+    if (position == ePosition::BELOW)
+        uiComponent->offset = glm::vec2(this->_parentPos.x - 1, this->_parentPos.y - 4);
+    else if (position == ePosition::TOP_LEFT)
+        uiComponent->offset = glm::vec2(this->_parentPos.x - 1, this->_parentPos.y + 5);
 }

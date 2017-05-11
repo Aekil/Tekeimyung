@@ -116,10 +116,10 @@ void        NewBuild::setTileHovered(const Entity* tileHovered)
         {
             auto&       position = this->_tileHovered->getComponent<sTransformComponent>()->getPos();
 
-            if (this->_tileHovered->getTag() == "TileBaseTurret")
-                this->_currentChoice = "TOWER_FIRE";
+            if (this->_tileHovered->getTag() == "TileBaseTurret" && this->_currentChoice != "TOWER_FIRE")
+                return;
             else if (this->_tileHovered->getTag() == "TileFloor" && this->_currentChoice == "TOWER_FIRE")
-                this->_currentChoice = "TILE_BASE_TURRET";
+                return;
 
             this->_preview = this->Instantiate(this->_currentChoice, glm::vec3(position.x, position.y + 12.5f, position.z));
 
@@ -206,15 +206,19 @@ void        NewBuild::bindEntitiesToInputs()
 {
     this->_bindedEntities.insert(std::make_pair(Keyboard::eKey::KEY_1, "TILE_BASE_TURRET"));
     this->_bindedEntities.insert(std::make_pair(Keyboard::eKey::KEY_2, "TILE_WALL"));
-    this->_bindedEntities.insert(std::make_pair(Keyboard::eKey::KEY_3, "TRAP_NEEDLE"));
-    this->_bindedEntities.insert(std::make_pair(Keyboard::eKey::KEY_4, "TRAP_CUTTER"));
-    this->_bindedEntities.insert(std::make_pair(Keyboard::eKey::KEY_5, "TRAP_FIRE"));
+    this->_bindedEntities.insert(std::make_pair(Keyboard::eKey::KEY_3, "TOWER_FIRE"));
+    //this->_bindedEntities.insert(std::make_pair(Keyboard::eKey::KEY_4, "TRAP_CUTTER"));
+    //this->_bindedEntities.insert(std::make_pair(Keyboard::eKey::KEY_5, "TRAP_FIRE"));
 }
 
 void        NewBuild::checkUserInputs()
 {
     if (this->_enabled == true && this->_tileHovered != nullptr && this->mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_1] == Mouse::eButtonState::CLICK_RELEASED)
+    {
+        if (this->_currentChoice == "TOWER_FIRE" && this->_tileHovered->getTag() != "TileBaseTurret")
+            return;
         this->placePreviewedEntity();
+    }
     else if (this->_enabled == true && this->mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_2] == Mouse::eButtonState::CLICK_RELEASED)
         this->disableAll();
 
@@ -429,8 +433,9 @@ void            NewBuild::updatePreview()
 
     this->Destroy(this->_preview);
 
-    if (this->_tileHovered->getTag() == "TileBaseTurret")
-        this->_currentChoice = "TOWER_FIRE";
+    if ((this->_tileHovered->getTag() == "TileBaseTurret" && this->_currentChoice != "TOWER_FIRE") 
+        || this->_tileHovered->getTag() != "TileBaseTurret" && this->_currentChoice == "TOWER_FIRE")
+        return;
 
     this->_preview = this->Instantiate(this->_currentChoice, glm::vec3(position.x, position.y + 12.5f, position.z));
 
