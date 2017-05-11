@@ -44,7 +44,7 @@ TutoManager::TutoManager()
         },
         {
             eTutoState::BUILD_BASE_TOWER,
-            "Press 2 and build your first tower base !\n Tower bases are used to build towers on it"
+            "Press 1 and build your first tower base !\n Tower bases are used to build towers on it"
         },
         {
             eTutoState::BUILD_TOWER,
@@ -60,7 +60,7 @@ TutoManager::TutoManager()
         },
         {
             eTutoState::BUILD_WALL,
-            "Try to build a wall by pressing 1\n\
+            "Try to build a wall by pressing 2\n\
 Walls are very cheap and can help you to make the enemies follow a specific path"
         },
         {

@@ -39,7 +39,7 @@
       },
       "sUiComponent" : {
          "horizontal_alignment" : "MIDDLE",
-         "layer" : 0,
+         "layer" : -1,
          "offset" : {
             "x" : 35,
             "y" : -30
