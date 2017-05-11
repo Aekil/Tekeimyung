@@ -9,7 +9,7 @@
 #include <Engine/Components.hh>
 #include <Engine/Graphics/Material.hpp>
 #include <Game/Attibutes/Attribute.hpp>
-#include <Game/Scripts/Player.hpp>
+#include <Game/Character/Player.hpp>
 
 class   IWeapon
 {
