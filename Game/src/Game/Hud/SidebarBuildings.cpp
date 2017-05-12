@@ -4,6 +4,8 @@
 
 #include <Engine/EntityFactory.hpp>
 #include <Engine/Graphics/Model2DRenderer.hpp>
+#include <Engine/Utils/Exception.hpp>
+
 #include <Game/Hud/SidebarBuildings.hpp>
 #include <Game/Hud/SidebarItem.hpp>
 #include <Game/Hud/SidebarText.hpp>

@@ -2,7 +2,9 @@
 ** @Author : Simon AMBROISE
 */
 
+#include <Engine/Core/Components/Components.hh>
 #include <Engine/EntityFactory.hpp>
+
 #include <Game/Hud/ProgressBar.hpp>
 
 ProgressBar::~ProgressBar()

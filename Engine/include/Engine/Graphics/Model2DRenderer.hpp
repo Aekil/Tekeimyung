@@ -10,6 +10,7 @@
 #include <glm/mat4x4.hpp>
 
 #include <ECS/Entity.hpp>
+#include <Engine/Core/Components/RenderComponent.hh>
 #include <Engine/Graphics/Camera.hpp>
 #include <Engine/Graphics/Framebuffer.hpp>
 #include <Engine/Graphics/Light.hpp>
@@ -19,8 +20,6 @@
 #include <Engine/Graphics/ShaderProgram.hpp>
 #include <Engine/Graphics/UniformBuffer.hpp>
 #include <Engine/Graphics/Texture.hpp>
-
-struct sRenderComponent;
 
 class Model2DRenderer
 {

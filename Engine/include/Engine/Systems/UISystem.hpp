@@ -6,8 +6,8 @@
 
 #include <ECS/System.hpp>
 
+#include <Engine/Core/Components/TextComponent.hh>
 #include <Engine/Debug/MonitoringDebugWindow.hpp>
-#include <Engine/Components.hh>
 
 START_SYSTEM(UISystem)
 public:

@@ -11,7 +11,7 @@
 #include <Engine/Systems/UISystem.hpp>
 #include <Engine/Systems/ButtonSystem.hpp>
 #include <Engine/EntityFactory.hpp>
-#include <Engine/Components.hh>
+#include <Engine/Core/Components/Components.hh>
 
 #include <Game/GameStates/BuildingListState.hpp>
 

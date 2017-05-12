@@ -10,7 +10,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include <Engine/Components.hh>
 #include <Engine/Graphics/UI/Font.hpp>
 #include <Engine/Graphics/Material.hpp>
 #include <Engine/Utils/Exception.hpp>

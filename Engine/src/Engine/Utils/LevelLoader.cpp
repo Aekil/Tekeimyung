@@ -3,16 +3,19 @@
 */
 
 
-#include <Engine/ComponentFactory.hpp>
-#include <dirent.h> // This include has to be called after "ComponentFactory.hpp"
+#include <Engine/Core/Components/IComponentFactory.hpp>
 
 #include <Engine/BasicState.hpp>
+#include <Engine/Core/Components/NameComponent.hh>
+#include <Engine/Debug/Logger.hpp>
 #include <Engine/EntityFactory.hpp>
 #include <Engine/Utils/Exception.hpp>
-#include <Engine/Utils/JsonWriter.hpp>
 #include <Engine/Utils/JsonReader.hpp>
+#include <Engine/Utils/JsonWriter.hpp>
+
 #include <Engine/Utils/LevelLoader.hpp>
-#include <Engine/Debug/Logger.hpp>
+
+#include <dirent.h> // include dirent at the end or it could conflict with other includes
 
 std::unique_ptr<LevelLoader>    LevelLoader::_instance = nullptr;
 
@@ -78,6 +81,7 @@ void    LevelLoader::save(const std::string& levelName, const std::vector<Entity
         {
             JsonValue componentJson;
             std::string componentName = IComponentFactory::getComponentNameWithHash(component->id);
+
             IComponentFactory::getFactory(componentName)->saveToJson("", component, &componentJson);
 
             // Save entity component
@@ -130,6 +134,14 @@ void    LevelLoader::load(const std::string& levelName, EntityManager* em)
         {
             JsonValue componentJson(*it);
             std::string componentName = it.key().asString();
+
+            if (!IComponentFactory::componentTypeExists(componentName))
+            {
+                // TODO: Use LOG_ERROR (Why is it not working ?)
+                LOG_WARN("LevelLoader::load: Component type \"%s\" does not exist when loading entity \"%s\"", componentName.c_str(), entityTypeName.c_str());
+                continue;
+            }
+
             addComponentToEntity(entity, entityTypeName, componentJson, componentName);
         }
 

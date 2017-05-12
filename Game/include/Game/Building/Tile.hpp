@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include    <Engine/Core/Components/RenderComponent.hh>
 #include    <Engine/Core/ScriptFactory.hpp>
 #include    <Engine/Graphics/Material.hpp>
 

@@ -5,13 +5,12 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/string_cast.hpp>
 
-#include <Engine/Components.hh>
+#include <Engine/Core/Components/ScriptComponent.hh>
+#include <Engine/Core/ScriptFactory.hpp>
 #include <Engine/EntityFactory.hpp>
 #include <Engine/Debug/Debug.hpp>
 
 #include <Engine/Systems/ScriptSystem.hpp>
-
-#include <Engine/Core/ScriptFactory.hpp>
 
 ScriptSystem::ScriptSystem()
 {

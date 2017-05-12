@@ -3,7 +3,6 @@
 */
 
 #include <Engine/Debug/Logger.hpp>
-#include <dirent.h>
 #include <fstream>
 #include <algorithm>
 #include <vector>
@@ -19,6 +18,8 @@
 #include <Engine/Sound/SoundManager.hpp>
 
 #include <Engine/Utils/ResourceManager.hpp>
+
+#include <dirent.h> // include dirent at the end or it could conflict with other includes
 
 ResourceManager*   ResourceManager::_ResourceManager = nullptr;
 

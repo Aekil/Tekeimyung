@@ -2,7 +2,8 @@
 * @Author   Simon Ambroise
 */
 
-#include <Engine/Components.hh>
+#include <Engine/Core/Components/RenderComponent.hh>
+#include <Engine/Core/Components/TransformComponent.hh>
 #include <Engine/EntityFactory.hpp>
 #include <Engine/Physics/Collisions.hpp>
 #include <Engine/Physics/Physics.hpp>

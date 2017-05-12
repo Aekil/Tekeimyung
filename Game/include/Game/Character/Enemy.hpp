@@ -6,6 +6,7 @@
 
 #include <glm/vec3.hpp>
 
+#include <Engine/Core/Components/Components.hh>
 #include <Engine/Core/ScriptFactory.hpp>
 #include <Engine/Utils/EventSound.hpp>
 

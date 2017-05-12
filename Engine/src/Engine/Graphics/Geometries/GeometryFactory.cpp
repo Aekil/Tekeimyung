@@ -107,7 +107,7 @@ Geometry*   GeometryFactory::getGeometry(Geometry::eType type)
     }
     else
     {
-        EXCEPT(InvalidParametersException, "Unknown model type for sRenderComponent");
+        EXCEPT(InvalidParametersException, "GeometryFactory::getGeometry: Unknown model type");
     }
 
     ASSERT(geometry != nullptr, "The geometry should be registered");

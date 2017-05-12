@@ -6,7 +6,7 @@
 
 #include <Engine/Core/BaseScript.hpp>
 #include <Engine/Core/ScriptFactory.hpp>
-#include <Engine/Components.hh>
+#include <Engine/Core/Components/Components.hh>
 
 #define N_BUILDABLE_ITEMS   3
 

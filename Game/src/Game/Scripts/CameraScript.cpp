@@ -6,7 +6,7 @@
 #include <imgui_impl_glfw_gl3.h>
 
 #include <Engine/EntityFactory.hpp>
-#include <Engine/Components.hh>
+#include <Engine/Core/Components/Components.hh>
 #include <Engine/Window/GameWindow.hpp>
 #include <Engine/Debug/Logger.hpp>
 #include <Game/Scripts/CameraScript.hpp>

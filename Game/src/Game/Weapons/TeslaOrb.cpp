@@ -2,7 +2,9 @@
 * @Author   Mathieu Chassara
 */
 
+#include    <Engine/Core/Components/Components.hh>
 #include    <Engine/Physics/Physics.hpp>
+
 #include    <Game/Weapons/TeslaOrb.hpp>
 
 void        TeslaOrb::start()

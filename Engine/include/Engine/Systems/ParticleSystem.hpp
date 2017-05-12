@@ -15,7 +15,6 @@
 #include <Engine/Graphics/Geometries/Geometry.hpp>
 #include <Engine/Graphics/UniformBuffer.hpp>
 
-#include <Engine/Components.hh>
 
 #define MAX_PARTICLES   2000
 

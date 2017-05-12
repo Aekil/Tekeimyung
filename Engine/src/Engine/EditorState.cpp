@@ -2,15 +2,19 @@
 * @Author   Guillaume Labey
 */
 
-#include <Engine/EntityFactory.hpp>
-#include <Engine/EditorState.hpp>
-#include <Engine/Graphics/Renderer.hpp>
+#include <ImGuizmo.h>
+
+#include <Engine/Core/Components/CameraComponent.hh>
 #include <Engine/Debug/LevelEntitiesDebugWindow.hpp>
+#include <Engine/EntityFactory.hpp>
+#include <Engine/Graphics/Renderer.hpp>
 #include <Engine/Physics/Physics.hpp>
 #include <Engine/Sound/SoundManager.hpp>
 #include <Engine/Systems/RenderingSystem.hpp>
 #include <Engine/Systems/UISystem.hpp>
 #include <Engine/Window/GameWindow.hpp>
+
+#include <Engine/EditorState.hpp>
 
 
 EditorState::~EditorState() {}

@@ -3,16 +3,15 @@
 */
 
 #include <algorithm>
-
 #include <glm/gtx/string_cast.hpp>
 
-#include <Engine/Window/GameWindow.hpp>
+#include <Engine/Core/Components/ButtonComponent.hh>
+#include <Engine/Core/Components/TransformComponent.hh>
 #include <Engine/Debug/Logger.hpp>
-#include <Engine/Utils/LevelLoader.hpp>
-#include <Engine/Physics/Collisions.hpp>
-
-#include <Engine/Components.hh>
 #include <Engine/EntityFactory.hpp>
+#include <Engine/Physics/Collisions.hpp>
+#include <Engine/Utils/LevelLoader.hpp>
+#include <Engine/Window/GameWindow.hpp>
 
 #include <Engine/Systems/ButtonSystem.hpp>
 

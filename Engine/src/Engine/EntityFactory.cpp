@@ -5,20 +5,22 @@
 #include <algorithm>
 #include <iostream>
 
-#include <Engine/ComponentFactory.hpp>
-#include <dirent.h> // This include has to be called after "ComponentFactory.hpp"
-
+#include <Engine/Core/Components/IComponentFactory.hpp>
+#include <Engine/Core/Components/NameComponent.hh>
+#include <Engine/Core/Components/RenderComponent.hh>
+#include <Engine/Core/Components/TransformComponent.hh>
 #include <Engine/Debug/Debug.hpp>
-#include <Engine/Utils/File.hpp>
 #include <Engine/Debug/Logger.hpp>
-#include <Engine/Utils/Helper.hpp>
 #include <Engine/Utils/Exception.hpp>
-#include <Engine/Utils/ResourceManager.hpp>
-
+#include <Engine/Utils/File.hpp>
+#include <Engine/Utils/Helper.hpp>
 #include <Engine/Utils/JsonReader.hpp>
 #include <Engine/Utils/JsonWriter.hpp>
+#include <Engine/Utils/ResourceManager.hpp>
 
 #include <Engine/EntityFactory.hpp>
+
+#include <dirent.h> // include dirent at the end or it could conflict with other includes
 
 std::unordered_map<std::string, EntityFactory::sEntityInfo >  EntityFactory::_entities;
 std::unordered_map<std::string, std::string>  EntityFactory::_entitiesFiles;
@@ -76,9 +78,13 @@ void EntityFactory::loadDirectory(const std::string& archetypesDir)
             {
                 std::string componentName = it.key().asString();
 
-                // The macro COMPONENTS_TYPES did not create the type
+                // Component does not exists
                 if (!IComponentFactory::componentTypeExists(it.key().asString()))
-                    EXCEPT(InvalidParametersException, "Failed to read entity archetype \"%s\": Component type \"%s\" does not exist", typeName.c_str(), componentName.c_str());
+                {
+                    // TODO: Use LOG_ERROR (Why is it not working ?)
+                    LOG_WARN("EntityFactory::loadDirectory: Component type \"%s\" does not exist when loading entity \"%s\"", componentName.c_str(), typeName.c_str());
+                    continue;
+                }
 
                 LOG_INFO("Add %s component %s", typeName.c_str(), componentName.c_str());
                 IComponentFactory::initComponent(typeName, componentName, JsonValue(*it));

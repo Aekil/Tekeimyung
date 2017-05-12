@@ -4,18 +4,20 @@
 
 #pragma once
 
-#include <unordered_map>
 #include <memory>
+#include <unordered_map>
 
 #include <ECS/Entity.hpp>
 #include <ECS/System.hpp>
 
+#include <Engine/Core/Components/CameraComponent.hh>
+#include <Engine/Core/Components/LightComponent.hh>
+#include <Engine/Core/Components/RenderComponent.hh>
+#include <Engine/Core/Components/TransformComponent.hh>
 #include <Engine/Graphics/BufferPool.hpp>
-#include <Engine/Graphics/ShaderProgram.hpp>
 #include <Engine/Graphics/ModelInstance.hpp>
 #include <Engine/Graphics/RenderQueue.hpp>
-
-#include <Engine/Components.hh>
+#include <Engine/Graphics/ShaderProgram.hpp>
 #include <Engine/Systems/ParticleSystem.hpp>
 
 #define INSTANCING_MAX 400

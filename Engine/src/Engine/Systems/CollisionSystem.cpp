@@ -2,16 +2,18 @@
 * @Author   Simon Ambroise
 */
 
-#include <cmath>
 #include <algorithm>
+#include <cmath>
 
-#include <Engine/Window/GameWindow.hpp>
-#include <Engine/Physics/Collisions.hpp>
-#include <Engine/Graphics/Geometries/Geometry.hpp>
+#include <Engine/Core/Components/BoxColliderComponent.hh>
+#include <Engine/Core/Components/DynamicComponent.hh>
+#include <Engine/Core/Components/SphereColliderComponent.hh>
+#include <Engine/Core/Components/RigidBodyComponent.hh>
 #include <Engine/Debug/Logger.hpp>
-
-#include <Engine/Components.hh>
 #include <Engine/EntityFactory.hpp>
+#include <Engine/Graphics/Geometries/Geometry.hpp>
+#include <Engine/Physics/Collisions.hpp>
+#include <Engine/Window/GameWindow.hpp>
 
 #include <Engine/Systems/CollisionSystem.hpp>
 

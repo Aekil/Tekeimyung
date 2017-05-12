@@ -3,17 +3,13 @@
 */
 
 #include <Engine/EntityFactory.hpp>
+#include <Engine/Utils/Exception.hpp>
+
 #include <Game/Hud/SidebarText.hpp>
 
-void SidebarText::start()
-{
-    
-}
+void SidebarText::start() {}
 
-void SidebarText::update(float dt)
-{
-
-}
+void SidebarText::update(float dt) {}
 
 void SidebarText::setParentPos(glm::vec2 parentPos, ePosition position)
 {

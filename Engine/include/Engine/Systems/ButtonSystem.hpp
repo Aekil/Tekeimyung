@@ -6,8 +6,8 @@
 
 #include <ECS/System.hpp>
 
+#include <Engine/Core/Components/RenderComponent.hh>
 #include <Engine/Core/GameStateManager.hpp>
-#include <Engine/Components.hh>
 
 START_SYSTEM(ButtonSystem)
 public:

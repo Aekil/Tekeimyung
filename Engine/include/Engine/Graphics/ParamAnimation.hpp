@@ -2,10 +2,13 @@
 * @Author   Guillaume Labey
 */
 
+#pragma once
+
 #include <algorithm>
-#include <vector>
 #include <memory>
+#include <string>
 #include <unordered_map>
+#include <vector>
 
 #include <Engine/Utils/Timer.hpp>
 #include <Engine/Utils/Helper.hpp>

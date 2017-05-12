@@ -4,7 +4,11 @@
 
 #include <imgui.h>
 
+#include <Engine/Core/Components/IComponentFactory.hpp>
+#include <Engine/Core/Components/NameComponent.hh>
 #include <Engine/EntityFactory.hpp>
+#include <Engine/Window/GameWindow.hpp>
+
 #include <Engine/Debug/LevelEntitiesDebugWindow.hpp>
 
 Entity::sHandle    LevelEntitiesDebugWindow::_selectedEntityHandler = 0;

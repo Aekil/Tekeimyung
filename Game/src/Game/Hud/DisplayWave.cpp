@@ -2,6 +2,7 @@
 ** @Author : Julien CHARDON
 */
 
+#include <Engine/Core/Components/Components.hh>
 #include <Engine/EntityFactory.hpp>
 
 #include <Game/Manager/GameManager.hpp>

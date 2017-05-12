@@ -5,6 +5,7 @@
 #pragma once
 
 #include <ECS/System.hpp>
+#include <Engine/Core/Components/RigidBodyComponent.hh>
 
 START_SYSTEM(RigidBodySystem)
 public:

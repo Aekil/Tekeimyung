@@ -2,10 +2,14 @@
 ** @Author : Simon AMBROISE
 */
 
+#include <glm/gtc/matrix_transform.hpp>
+
+#include <Engine/Core/Components/Components.hh>
 #include <Engine/EntityFactory.hpp>
 #include <Engine/Graphics/Camera.hpp>
 #include <Engine/Graphics/Renderer.hpp>
 #include <Engine/Window/GameWindow.hpp>
+
 #include <Game/Scripts/Health.hpp>
 
 bool Health::takeDamage(double damage)

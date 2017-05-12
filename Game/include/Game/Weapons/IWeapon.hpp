@@ -6,7 +6,7 @@
 
 #include <map>
 
-#include <Engine/Components.hh>
+#include <Engine/Core/Components/Components.hh>
 #include <Engine/Graphics/Material.hpp>
 #include <Game/Attibutes/Attribute.hpp>
 #include <Game/Character/Player.hpp>

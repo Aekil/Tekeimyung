@@ -4,15 +4,14 @@
 
 #pragma once
 
+#include <Engine/Core/Components/RenderComponent.hh>
+#include <Engine/Core/Components/TransformComponent.hh>
+#include <Engine/Core/Components/UiComponent.hh>
 #include <Engine/Core/GameState.hpp>
 #include <Engine/Graphics/Camera.hpp>
 
 #include <ECS/System.hpp>
 #include <ECS/World.hpp>
-
-struct sTransformComponent;
-struct sRenderComponent;
-struct sUiComponent;
 
 START_GAMESTATE(EditorState)
  public:

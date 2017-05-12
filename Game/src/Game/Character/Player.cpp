@@ -4,7 +4,7 @@
 
 #include <cmath>
 
-#include <Engine/Components.hh>
+#include <Engine/Core/Components/Components.hh>
 #include <Engine/EntityFactory.hpp>
 #include <Engine/Graphics/Camera.hpp>
 #include <Engine/Graphics/Renderer.hpp>

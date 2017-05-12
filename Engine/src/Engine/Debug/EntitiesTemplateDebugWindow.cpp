@@ -4,9 +4,12 @@
 
 #include <imgui.h>
 
-#include <Engine/Debug/EntitiesTemplateDebugWindow.hpp>
+#include <Engine/Core/Components/IComponentFactory.hpp>
+#include <Engine/Core/Components/NameComponent.hh>
 #include <Engine/EntityFactory.hpp>
 #include <Engine/Utils/Helper.hpp>
+
+#include <Engine/Debug/EntitiesTemplateDebugWindow.hpp>
 
 EntitiesTemplateDebugWindow::EntitiesTemplateDebugWindow() : DebugWindow("Archetypes") {}
 

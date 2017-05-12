@@ -4,14 +4,12 @@
 
 #pragma once
 
-#include <string>
 #include <glm/vec3.hpp>
+#include <string>
 
 #include <ECS/Entity.hpp>
-
 #include <Engine/Debug/Logger.hpp>
 #include <Engine/Utils/JsonValue.hpp>
-
 #include <Engine/Window/GameWindow.hpp>
 
 #define KB_P(x)         this->keyboard.isPressed(x)

@@ -1,4 +1,6 @@
+#include <Engine/Core/Components/Components.hh>
 #include <Engine/EntityFactory.hpp>
+#include <Engine/Utils/Exception.hpp>
 
 #include <Game/Map/MapLoader.hpp>
 #include <Game/Manager/GameManager.hpp>

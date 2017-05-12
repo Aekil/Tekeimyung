@@ -6,6 +6,8 @@
 #include <imgui.h>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <Engine/Core/Components/ParticleEmitterComponent.hh>
+#include <Engine/Core/Components/RenderComponent.hh>
 #include <Engine/Debug/Logger.hpp>
 #include <Engine/Utils/Exception.hpp>
 #include <Engine/Utils/JsonWriter.hpp>

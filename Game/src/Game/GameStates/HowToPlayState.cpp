@@ -12,7 +12,7 @@
 #include <Engine/Systems/ButtonSystem.hpp>
 #include <Engine/Utils/LevelLoader.hpp>
 #include <Engine/EntityFactory.hpp>
-#include <Engine/Components.hh>
+#include <Engine/Core/Components/Components.hh>
 
 #include <Game/GameStates/HowToPlayState.hpp>
 #include <Game/Manager/TutoManager.hpp>

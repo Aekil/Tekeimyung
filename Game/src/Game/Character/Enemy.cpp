@@ -2,11 +2,10 @@
 ** @Author : Simon AMBROISE
 */
 
-#include <Engine/Components.hh>
-#include <Engine/ComponentFactory.hpp>
 #include <Engine/EntityFactory.hpp>
-#include <Engine/Utils/Maths.hpp>
 #include <Engine/Physics/Collisions.hpp>
+#include <Engine/Utils/Exception.hpp>
+#include <Engine/Utils/Maths.hpp>
 
 #include <Game/Character/Enemy.hpp>
 #include <Game/Character/Player.hpp>

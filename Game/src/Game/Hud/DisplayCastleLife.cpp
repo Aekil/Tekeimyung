@@ -2,6 +2,7 @@
 ** @Author : Julien CHARDON
 */
 
+#include <Engine/Core/Components/Components.hh>
 #include <Engine/EntityFactory.hpp>
 
 #include <Game/Manager/GameManager.hpp>
@@ -25,10 +26,10 @@ void DisplayCastleLife::update(float dt)
     if (this->_castle != nullptr && this->_castleLifeHudDisplay != nullptr)
     {
         sScriptComponent*   scriptComp = this->_castle->getComponent<sScriptComponent>();
-        
+
         if (scriptComp == nullptr)
             return;
-        
+
         Castle*             castle = scriptComp->getScript<Castle>(CASTLE_TAG);
 
         if (castle == nullptr)

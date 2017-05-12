@@ -2,13 +2,16 @@
 ** @Author: Simon AMBROISE
 */
 
-#include <Engine/Systems/MouseSystem.hpp>
-
-#include <Engine/Components.hh>
+#include <Engine/Core/Components/RenderComponent.hh>
+#include <Engine/Core/Components/ScriptComponent.hh>
+#include <Engine/Core/Components/TransformComponent.hh>
+#include <Engine/Core/Components/UiComponent.hh>
 #include <Engine/Window/GameWindow.hpp>
 #include <Engine/Physics/Collisions.hpp>
 #include <Engine/Physics/Physics.hpp>
 #include <Engine/Graphics/Renderer.hpp>
+
+#include <Engine/Systems/MouseSystem.hpp>
 
 MouseSystem::MouseSystem() {}
 

@@ -3,11 +3,13 @@
 */
 
 #include <glm/gtc/type_ptr.hpp> // glm::value_ptr
+#include <glm/gtc/matrix_transform.hpp> // glm::translate
 
-#include <Engine/Components.hh>
 #include <Engine/EntityFactory.hpp>
-#include <Engine/Graphics/Model2DRenderer.hpp>
 #include <Engine/Graphics/Renderer.hpp>
+#include <Engine/Window/GameWindow.hpp>
+
+#include <Engine/Graphics/Model2DRenderer.hpp>
 
 std::shared_ptr<Model2DRenderer>   Model2DRenderer::_instance = nullptr;
 

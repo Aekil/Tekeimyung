@@ -2,12 +2,15 @@
 * @Author   Simon Ambroise
 */
 
-#include <limits>
-#include <cmath>
 #include <algorithm>
+#include <cmath>
+#include <limits>
 
+#include <Engine/Core/Components/BoxColliderComponent.hh>
+#include <Engine/Core/Components/SphereColliderComponent.hh>
+#include <Engine/Core/Components/TransformComponent.hh>
+#include <Engine/Graphics/Geometries/Geometry.hpp>
 #include <Engine/Physics/Collisions.hpp>
-#include <Engine/Components.hh>
 
 Collisions::Collisions()
 {}

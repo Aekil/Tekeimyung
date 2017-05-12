@@ -10,7 +10,7 @@
 
 #include <Engine/Core/BaseScript.hpp>
 #include <Engine/Core/ScriptFactory.hpp>
-#include <Engine/Components.hh>
+#include <Engine/Core/Components/Components.hh>
 
 class GoldManager;
 class WaveManager;

@@ -2,22 +2,27 @@
 * @Author   Guillaume Labey
 */
 
+#include <imgui.h>
+#include <imgui_impl_glfw_gl3.h>
 #include <iostream>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <vector>
-#include <imgui.h>
-#include <imgui_impl_glfw_gl3.h>
 
-#include <Engine/Utils/Exception.hpp>
+#include <Engine/Core/Components/BoxColliderComponent.hh>
+#include <Engine/Core/Components/ParticleEmitterComponent.hh>
+#include <Engine/Core/Components/RigidBodyComponent.hh>
+#include <Engine/Core/Components/SphereColliderComponent.hh>
+#include <Engine/Core/Components/TextComponent.hh>
+#include <Engine/Core/Components/UiComponent.hh>
+#include <Engine/Debug/LevelEntitiesDebugWindow.hpp>
 #include <Engine/Debug/Logger.hpp>
-#include <Engine/Window/GameWindow.hpp>
-#include <Engine/Graphics/UI/Font.hpp>
 #include <Engine/Graphics/Geometries/Trapeze.hpp>
 #include <Engine/Graphics/Renderer.hpp>
-
-#include <Engine/Debug/LevelEntitiesDebugWindow.hpp>
+#include <Engine/Graphics/UI/Font.hpp>
+#include <Engine/Utils/Exception.hpp>
+#include <Engine/Window/GameWindow.hpp>
 
 #include <Engine/Systems/RenderingSystem.hpp>
 

@@ -1,3 +1,5 @@
+#include <Engine/Core/Components/ScriptComponent.hh>
+#include <Engine/Core/Components/RenderComponent.hh>
 #include <Engine/EntityFactory.hpp>
 
 #include <Game/Map/Map.hpp>

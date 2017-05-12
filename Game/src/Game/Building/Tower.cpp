@@ -2,7 +2,7 @@
 ** @Author : Guillaume Labey
 */
 
-#include <Engine/Components.hh>
+#include <Engine/Core/Components/Components.hh>
 #include <Engine/EntityFactory.hpp>
 #include <Engine/Physics/Collisions.hpp>
 #include <Engine/Debug/Debug.hpp>

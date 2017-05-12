@@ -2,7 +2,8 @@
 * @Author   Simon Ambroise
 */
 
-#include <Engine/Components.hh>
+#include <Engine/Core/Components/ScriptComponent.hh>
+#include <Engine/Core/Components/TransformComponent.hh>
 
 #include <Engine/Systems/RigidBodySystem.hpp>
 

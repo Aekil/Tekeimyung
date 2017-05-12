@@ -6,12 +6,12 @@
 
 #include <glm/vec3.hpp>
 
-#include <Engine/Utils/EventSound.hpp>
+#include <Engine/Core/Components/Components.hh>
 #include <Engine/Core/BaseScript.hpp>
 #include <Engine/Core/ScriptFactory.hpp>
-
-#include <Game/Scripts/Health.hpp>
+#include <Engine/Utils/EventSound.hpp>
 #include <Game/Attibutes/Attribute.hpp>
+#include <Game/Scripts/Health.hpp>
 
 class IWeapon;
 class GameManager;

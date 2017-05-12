@@ -2,17 +2,19 @@
 * @Author   Guillaume Labey
 */
 
+#include <algorithm>
+#include <cmath>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include <cmath>
-#include <algorithm>
 
-#include <Engine/Window/GameWindow.hpp>
-#include <Engine/Utils/Helper.hpp>
+#include <Engine/Core/Components/ParticleEmitterComponent.hh>
+#include <Engine/Core/Components/RenderComponent.hh>
+#include <Engine/Core/Components/TransformComponent.hh>
 #include <Engine/Debug/Logger.hpp>
 #include <Engine/Graphics/Geometries/Plane.hpp>
-
 #include <Engine/Systems/ParticleSystem.hpp>
+#include <Engine/Utils/Helper.hpp>
+#include <Engine/Window/GameWindow.hpp>
 
 // We can't initialize the buffer pool because opengl is not initialized
 std::unique_ptr<BufferPool> ParticleSystem::_bufferPool = nullptr;

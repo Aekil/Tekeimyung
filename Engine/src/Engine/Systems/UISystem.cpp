@@ -3,14 +3,14 @@
 */
 
 #include <algorithm>
-
 #include <glm/gtx/string_cast.hpp>
 
-#include <Engine/Window/GameWindow.hpp>
+#include <Engine/Core/Components/RenderComponent.hh>
+#include <Engine/Core/Components/TransformComponent.hh>
+#include <Engine/Core/Components/UiComponent.hh>
 #include <Engine/Debug/Logger.hpp>
-
-#include <Engine/Components.hh>
 #include <Engine/EntityFactory.hpp>
+#include <Engine/Window/GameWindow.hpp>
 
 #include <Engine/Systems/UISystem.hpp>
 

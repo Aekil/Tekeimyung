@@ -2,7 +2,7 @@
 ** @Author : Simon AMBROISE
 */
 
-#include <Engine/Components.hh>
+#include <Engine/Core/Components/Components.hh>
 
 #include <Game/Trap/TrapNeedle.hpp>
 

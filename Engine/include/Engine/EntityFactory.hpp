@@ -4,15 +4,14 @@
 
 #pragma once
 
-#include <unordered_map>
-#include <string>
-#include <vector>
+#include <glm/vec3.hpp>
 #include <list>
+#include <string>
+#include <unordered_map>
+#include <vector>
 
 #include <ECS/Entity.hpp>
 #include <ECS/EntityManager.hpp>
-
-#include <Engine/ComponentFactory.hpp>
 
 #define ARCHETYPES_LOCATION "resources/archetypes"
 

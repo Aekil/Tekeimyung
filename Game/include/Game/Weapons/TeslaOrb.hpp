@@ -2,10 +2,11 @@
 * @Author   Mathieu Chassara
 */
 
-#include    <Engine/ComponentFactory.hpp>
 #include    <Engine/Core/ScriptFactory.hpp>
 
 #include    <Game/Attibutes/Attribute.hpp>
+
+struct sRigidBodyComponent;
 
 class       TeslaOrb final : public BaseScript
 {
