@@ -5,7 +5,7 @@
 #include <imgui.h>
 
 #include <Engine/Debug/LogDebugWindow.hpp>
-#include <Engine/Utils/Helper.hpp>
+#include <Engine/Utils/EnumManager.hpp>
 
 LogDebugWindow::LogDebugWindow(std::shared_ptr<Logger> logger) :
     DebugWindow("Logs"), _logger(logger), _lastLogSize(0)
