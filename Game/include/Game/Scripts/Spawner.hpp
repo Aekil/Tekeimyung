@@ -61,7 +61,10 @@ public:
 private:
     void        setEnemyPath(Entity* enemy, const std::vector<glm::vec3>& path);
     void        getPath(const glm::ivec2& from, const glm::ivec2& to, std::vector<glm::vec3>& savedPath);
+    void        findBlockedPath(glm::ivec2 from, const glm::ivec2& to, std::vector<glm::ivec2>& path, glm::ivec2 closestTileFound);
     void        updateEnemiesPaths();
+
+    void        displayPath(const std::vector<glm::ivec2>& path) const;
 
     bool        isActive() const;
     void        setActive(bool active);
@@ -85,6 +88,10 @@ private:
 
     Path                    _path;
     std::vector<glm::vec3>  _closestPath;
+
+    // Used to display closest tiles found
+    // for path finding debug
+    std::vector<glm::ivec2>  _closestTilesFound;
 
     //  ImGui selection index
     uint32_t                _selectedConfig = 0;

@@ -13,6 +13,18 @@ void GameManager::start()
     {
         EXCEPT(InternalErrorException, "Failed to load map %s", _mapName);
     }
+
+    emptyMap = map;
+    for (int x = 0; x < emptyMap.getWidth(); ++x)
+    {
+        for (int z = 0; z < emptyMap.getHeight(); ++z)
+        {
+            if (emptyMap[x][z] % LAYER_NUMBER == 5)
+            {
+                emptyMap[x][z] = 1;
+            }
+        }
+    }
 }
 
 void GameManager::update(float dt)

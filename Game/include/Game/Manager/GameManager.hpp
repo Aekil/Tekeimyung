@@ -36,6 +36,8 @@ public:
 public:
     Map map;
 
+    Map emptyMap; // Save of the first load of the map
+
 private:
     std::string _mapName;
 };

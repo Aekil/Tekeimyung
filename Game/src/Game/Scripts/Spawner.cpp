@@ -4,9 +4,12 @@
 
 #include <Engine/Core/Components/Components.hh>
 #include <Engine/EntityFactory.hpp>
+#include <Engine/Debug/Debug.hpp>
+#include <Engine/Utils/Exception.hpp>
 
 #include <Game/Character/Enemy.hpp>
 #include <Game/Manager/GameManager.hpp>
+#include <Game/Map/Map.hpp>
 #include <Game/Scripts/Path.hpp>
 #include <Game/Scripts/Spawner.hpp>
 #include <Game/Manager/WaveManager.hpp>
@@ -303,20 +306,118 @@ void    Spawner::setEnemyPath(Entity* enemy, const std::vector<glm::vec3>& path)
 
 void    Spawner::getPath(const glm::ivec2& from, const glm::ivec2& to, std::vector<glm::vec3>& savedPath)
 {
-    std::vector<glm::ivec2> path = _path.goToTarget(from,
-                                                    to,
-                                                    &_gameManager->map);
+    std::vector<glm::ivec2> path;
+    glm::ivec2 closestTileFound;
+    if (!_path.goToTarget(from,
+                    to,
+                    &_gameManager->map,
+                    path,
+                    closestTileFound))
+    {
+        LOG_ERROR("FAIL");
+        findBlockedPath(from, to, path, closestTileFound);
+    }
 
     savedPath.clear();
     auto& mapEntities = _gameManager->map.getEntities();
     auto& spawnersPaths = _gameManager->map.getSpawnersPaths();
-    for (glm::ivec2& pos: path)
+    for (const glm::ivec2& pos: path)
     {
         Entity* tile = mapEntities[pos.x][pos.y];
+        if (!tile)
+        {
+            LOG_ERROR("Can't find tile at pos %d %d", pos.x, pos.y);
+            continue;
+        }
         sTransformComponent* tileTransform = tile->getComponent<sTransformComponent>();
         savedPath.push_back(tileTransform->getPos());
 
         spawnersPaths[pos.x][pos.y] = 1;
+    }
+
+#if defined(ENGINE_DEBUG)
+    displayPath(path);
+#endif
+}
+
+void    Spawner::findBlockedPath(glm::ivec2 from, const glm::ivec2& to, std::vector<glm::ivec2>& path, glm::ivec2 closestTileFound)
+{
+    bool isPathBlocked = true;
+    std::vector<glm::ivec2> tmpPath;
+
+    if (!(_path.isWalkable(_gameManager->map, closestTileFound.x, closestTileFound.y) ||
+        closestTileFound == from))
+    {
+        ASSERT(true, "SHOULD BE WALKABLE");
+    }
+
+#if defined(ENGINE_DEBUG)
+    _closestTilesFound.clear();
+#endif
+    while (isPathBlocked)
+    {
+#if defined(ENGINE_DEBUG)
+        _closestTilesFound.push_back(closestTileFound);
+#endif
+
+        // Find the path to the closest tile found
+        tmpPath.clear();
+        {
+            // Send dirty position because we don't need to find the closest tile
+            glm::ivec2 dirty;
+            _path.goToTarget(from,
+                                closestTileFound, // Target is the closest tile
+                                &_gameManager->map,
+                                tmpPath,
+                                dirty);
+        }
+
+        // Add the path to the closest tile into the final return path
+        for (const glm::ivec2& pos: tmpPath)
+        {
+            path.push_back(pos);
+        }
+
+        // Find the closest path from the closest tile found to the target,
+        // without taking into account walls and towers
+        tmpPath.clear();
+        from = closestTileFound;
+        if (!_path.goToTarget(from,
+                    to,
+                    &_gameManager->emptyMap,
+                    tmpPath,
+                    closestTileFound))
+        {
+            EXCEPT(InternalErrorException, "Can't find path on empty map");
+        }
+
+        // Find the first non-walkable tile on the found path
+        // and save its position
+        for (const glm::ivec2& pos: tmpPath)
+        {
+            path.push_back(pos);
+            if (!_path.isWalkable(_gameManager->map, pos.x, pos.y))
+            {
+                from = glm::ivec2(pos);
+                break;
+            }
+        }
+
+        // Try to find a new path on the game map
+        // from the non-walkable tile position
+        tmpPath.clear();
+        isPathBlocked = from != to &&
+                    !_path.goToTarget(from,
+                                        to,
+                                        &_gameManager->map,
+                                        tmpPath,
+                                        closestTileFound);
+    }
+
+    // Add the last part of the path
+    for (const glm::ivec2& pos: tmpPath)
+    {
+        path.push_back(pos);
     }
 }
 
@@ -341,6 +442,34 @@ void    Spawner::updateEnemiesPaths()
             getPath(entityPos, target, enemyPath);
             setEnemyPath(entity, enemyPath);
         }
+    }
+}
+
+void    Spawner::displayPath(const std::vector<glm::ivec2>& path) const
+{
+    auto& mapEntities = _gameManager->map.getEntities();
+    for (const glm::ivec2& pos: path)
+    {
+        Entity* tile = mapEntities[pos.x][pos.y];
+        if (!tile)
+        {
+            LOG_ERROR("Can't find tile at pos %d %d", pos.x, pos.y);
+            continue;
+        }
+        sRenderComponent* tileRender = tile->getComponent<sRenderComponent>();
+        tileRender->color = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
+    }
+
+    for (const glm::ivec2& pos: _closestTilesFound)
+    {
+        Entity* tile = mapEntities[pos.x][pos.y];
+        if (!tile)
+        {
+            LOG_ERROR("Can't find tile at pos %d %d", pos.x, pos.y);
+            continue;
+        }
+        sRenderComponent* tileRender = tile->getComponent<sRenderComponent>();
+        tileRender->color = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
     }
 }
 

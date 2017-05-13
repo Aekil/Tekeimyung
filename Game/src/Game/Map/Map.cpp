@@ -4,6 +4,15 @@
 
 #include <Game/Map/Map.hpp>
 
+Map::Map(const Map& rhs): DoubleArray<int>(rhs) {}
+
+Map&    Map::operator=(const Map& rhs)
+{
+    DoubleArray<int>::operator=(rhs);
+
+    return (*this);
+}
+
 std::unordered_map<int, std::vector<Entity*>>&  Map::getMapParts()
 {
     return (_mapParts);
@@ -45,6 +54,11 @@ void    Map::init()
                     _entities[x][z] = EntityFactory::createEntity("TILE_FLOOR", glm::vec3(x * 25, 0, z * 25));
                 else if ((*this)[x][z] % LAYER_NUMBER == 2)
                     _entities[x][z] = EntityFactory::createEntity("SPAWNER", glm::vec3(x * 25, 0, z * 25));
+                else if ((*this)[x][z] % LAYER_NUMBER == 5)
+                {
+                    EntityFactory::createEntity("TILE_WALL", glm::vec3(x * 25, 12.5, z * 25));
+                    _entities[x][z] = EntityFactory::createEntity("TILE_FLOOR", glm::vec3(x * 25, 0, z * 25));
+                }
             }
             else
             {
@@ -73,4 +87,9 @@ void    Map::init()
             }
         }
     }
+}
+
+void    Map::setCastlePos(const glm::ivec2& castlePos)
+{
+    _castlePos = castlePos;
 }
