@@ -2,14 +2,12 @@
 * @Author   Guillaume Labey
 */
 
-#include <iostream>
-#include <Engine/Window/GameWindow.hpp>
-
+#include <Engine/Core/Components/ButtonComponent.hh>
+#include <Engine/EntityFactory.hpp>
+#include <Engine/Systems/ButtonSystem.hpp>
 #include <Engine/Systems/RenderingSystem.hpp>
 #include <Engine/Systems/UISystem.hpp>
-#include <Engine/Systems/ButtonSystem.hpp>
-#include <Engine/EntityFactory.hpp>
-#include <Engine/Core/Components/Components.hh>
+#include <Engine/Window/GameWindow.hpp>
 #include <Game/GameStates/PauseState.hpp>
 
 #include <Game/GameStates/ConfirmExitState.hpp>
