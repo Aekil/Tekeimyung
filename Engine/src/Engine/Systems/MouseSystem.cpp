@@ -106,6 +106,7 @@ Entity* MouseSystem::getHoveredUI(EntityManager &em)
 
         // Check the mouse is in the button (2D AABB collision)
         if (render->enabled && !render->ignoreRaycast &&
+            render->display &&
             ui->layer < nearestLayer &&
             Collisions::pointVSAABB2D(cursorPos, pos, size))
         {
