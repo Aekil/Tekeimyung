@@ -38,12 +38,10 @@ bool    ComponentFactory<sSphereColliderComponent>::updateEditor(const std::stri
         sRenderComponent* render = entity->getComponent<sRenderComponent>();
         if (render)
         {
-            float modelMaxSize = render->getModel()->getSize().x;
-            if (render->getModel()->getSize().y > modelMaxSize)
-                modelMaxSize = render->getModel()->getSize().y;
-            if (render->getModel()->getSize().z > modelMaxSize)
-                modelMaxSize = render->getModel()->getSize().z;
-            component->radius = (modelMaxSize / 2.0f + 1.0f) / SIZE_UNIT;
+            float modelMaxSize = std::max({ render->getModel()->getSize().x,
+                                            render->getModel()->getSize().y,
+                                            render->getModel()->getSize().z });
+            component->radius = (modelMaxSize / 2.0f + 1.0f) / (SIZE_UNIT / 2.0f);
             component->pos = glm::vec3(render->getModel()->getMin().x + (render->getModel()->getSize().x / 2.0f),
                                         render->getModel()->getMin().y + (render->getModel()->getSize().y / 2.0f),
                                         render->getModel()->getMin().z + (render->getModel()->getSize().z / 2.0f));
