@@ -31,6 +31,7 @@ public:
     const glm::vec3&            getSize() const;
     const glm::vec3&            getMin() const;
     const glm::vec3&            getMax() const;
+    const glm::vec3&            getPivot() const;
 
     static Resource::eType      getResourceType() { return Resource::eType::MODEL; }
 
@@ -66,6 +67,7 @@ protected:
     glm::vec3                           _size;
     glm::vec3                           _min;
     glm::vec3                           _max;
+    glm::vec3                           _pivot;
 
     GLuint                              _primitiveType;
 };
