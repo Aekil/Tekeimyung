@@ -9,6 +9,7 @@
 #include <Engine/Core/Components/DynamicComponent.hh>
 #include <Engine/Core/Components/SphereColliderComponent.hh>
 #include <Engine/Core/Components/RigidBodyComponent.hh>
+#include <Engine/Core/Components/TransformComponent.hh>
 #include <Engine/Debug/Logger.hpp>
 #include <Engine/EntityFactory.hpp>
 #include <Engine/Graphics/Geometries/Geometry.hpp>
@@ -46,7 +47,18 @@ void    CollisionSystem::update(EntityManager &em, float elapsedTime)
                         if (std::find(rigidBodyB->ignoredTags.begin(), rigidBodyB->ignoredTags.end(), entity->getTag()) != rigidBodyB->ignoredTags.end())
                             continue;
 
+                        sTransformComponent* firstTransform = entity->getComponent<sTransformComponent>();
+                        sTransformComponent* secondTransform = (*it)->getComponent<sTransformComponent>();
+
+                        // Pre-calculate new position for collision detection
+                        firstTransform->translate(rigidBody->velocity * elapsedTime);
+                        secondTransform->translate(rigidBodyB->velocity * elapsedTime);
+
                         auto colliding = Collisions::isColliding(entity, (*it));
+
+                        // Rollback translate
+                        firstTransform->translate(-rigidBody->velocity * elapsedTime);
+                        secondTransform->translate(-rigidBodyB->velocity * elapsedTime);
 
                         if (rigidBody->collisionsEnabled && colliding)
                         {
