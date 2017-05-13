@@ -1,7 +1,7 @@
 {
    "components" : {
       "sBoxColliderComponent" : {
-         "isTrigger" : false,
+         "isTrigger" : true,
          "pos" : {
             "x" : 0,
             "y" : 0,
@@ -9,7 +9,7 @@
          },
          "size" : {
             "x" : 1.1000000238418579,
-            "y" : 1.1000000238418579,
+            "y" : 0.60000002384185791,
             "z" : 1.1000000238418579
          }
       },
@@ -125,15 +125,6 @@
             }
          ]
       },
-      "sSphereColliderComponent" : {
-         "isTrigger" : false,
-         "pos" : {
-            "x" : 0,
-            "y" : 0,
-            "z" : 0
-         },
-         "radius" : 1
-      },
       "sTransformComponent" : {
          "pos" : {
             "x" : 74.449356079101563,
@@ -146,13 +137,10 @@
             "z" : 1.2304550409317017
          },
          "scale" : {
-            "x" : 0.99998348951339722,
-            "y" : 0.99998348951339722,
+            "x" : 0.99998146295547485,
+            "y" : 0.99998146295547485,
             "z" : 1
          }
-      },
-      "sTypeComponent" : {
-         "type" : "CHARACTER"
       }
    },
    "name" : "ENEMY_TANK",
