@@ -2,12 +2,11 @@
 * @Author   Mathieu Chassara
 */
 
-#include    <Engine/Components.hh>
+#include    <Engine/Core/Components/RenderComponent.hh>
 #include    <Engine/EntityFactory.hpp>
-
+#include    <Engine/Systems/ButtonSystem.hpp>
 #include    <Engine/Systems/RenderingSystem.hpp>
 #include    <Engine/Systems/UISystem.hpp>
-#include    <Engine/Systems/ButtonSystem.hpp>
 
 #include    <Game/GameStates/HomeScreenState.hpp>
 
