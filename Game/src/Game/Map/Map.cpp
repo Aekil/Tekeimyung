@@ -45,8 +45,6 @@ void    Map::init()
                     _entities[x][z] = EntityFactory::createEntity("TILE_FLOOR", glm::vec3(x * 25, 0, z * 25));
                 else if ((*this)[x][z] % LAYER_NUMBER == 2)
                     _entities[x][z] = EntityFactory::createEntity("SPAWNER", glm::vec3(x * 25, 0, z * 25));
-                else if ((*this)[x][z] % LAYER_NUMBER == 3)
-                    _entities[x][z] = EntityFactory::createEntity("BUILDABLE_TILE_FLOOR", glm::vec3(x * 25, 0, z * 25));
             }
             else
             {
