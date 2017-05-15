@@ -14,7 +14,8 @@ Physics::~Physics() {}
 
 bool        Physics::raycast(const Ray& ray,
                             Entity** hitEntity,
-                            const std::vector<Entity*>& entitiesFilter,
+                            const std::vector<Entity*>& entitiesExcludeFilter,
+                            const std::vector<Entity*>& entitiesIncludeFilter,
                             float range)
 {
     float                   nearestHitDist = 0.0f;
@@ -24,8 +25,10 @@ bool        Physics::raycast(const Ray& ray,
 
     for (Entity* entity : entities)
     {
-        //  If the entity doesn't belong to the entitiesFilter passed as a parameter !
-        if (std::find(entitiesFilter.begin(), entitiesFilter.end(), entity) == entitiesFilter.end())
+        //  If the entity doesn't belong to the entitiesExcludeFilter passed as a parameter !
+        if (std::find(entitiesExcludeFilter.begin(), entitiesExcludeFilter.end(), entity) == entitiesExcludeFilter.end() &&
+            (entitiesIncludeFilter.size() == 0 ||
+                std::find(entitiesIncludeFilter.begin(), entitiesIncludeFilter.end(), entity) != entitiesIncludeFilter.end()))
         {
             sRenderComponent* render = entity->getComponent<sRenderComponent>();
             sTransformComponent* transform = entity->getComponent<sTransformComponent>();
@@ -71,14 +74,17 @@ bool        Physics::raycast(const Ray& ray,
 
 bool    Physics::raycastAll(const Ray& ray,
                             std::vector<Entity*>& hitEntities,
-                            const std::vector<Entity*>& entitiesFilter,
+                            const std::vector<Entity*>& entitiesExcludeFilter,
+                            const std::vector<Entity*>& entitiesIncludeFilter,
                             float range)
 {
     EntityManager* em = EntityFactory::getBindedEntityManager();
     for (Entity* entity : em->getEntities())
     {
-        //  If the entity doesn't belong to the entitiesFilter passed as a parameter !
-        if (std::find(entitiesFilter.begin(), entitiesFilter.end(), entity) == entitiesFilter.end())
+        //  If the entity doesn't belong to the entitiesExcludeFilter passed as a parameter !
+        if (std::find(entitiesExcludeFilter.begin(), entitiesExcludeFilter.end(), entity) == entitiesExcludeFilter.end() &&
+            (entitiesIncludeFilter.size() == 0 ||
+                std::find(entitiesIncludeFilter.begin(), entitiesIncludeFilter.end(), entity) != entitiesIncludeFilter.end()))
         {
             sRenderComponent* render = entity->getComponent<sRenderComponent>();
             sTransformComponent* transform = entity->getComponent<sTransformComponent>();

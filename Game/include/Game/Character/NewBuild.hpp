@@ -5,7 +5,6 @@
 #pragma once
 
 #include    <Engine/Core/ScriptFactory.hpp>
-
 #include    <Game/Building/Tile.hpp>
 #include    <Game/Character/Player.hpp>
 #include    <Game/Manager/GameManager.hpp>
@@ -29,7 +28,7 @@ public:
     virtual void    start() override final;
     virtual void    update(float dt) override final;
 
-public:
+private:
     bool    isEnabled() const;
     void    setEnabled(bool enabled);
     void    disableAll();

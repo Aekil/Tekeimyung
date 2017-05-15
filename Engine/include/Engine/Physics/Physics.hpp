@@ -17,11 +17,13 @@ public:
 
     static bool raycast(const Ray& ray,
                         Entity** hitEntity,
-                        const std::vector<Entity*>& entitiesFilter = {},
+                        const std::vector<Entity*>& entitiesExcludeFilter = {},
+                        const std::vector<Entity*>& entitiesIncludeFilter = {},
                         float range = -1.0f);
     static bool raycastAll(const Ray& ray,
                             std::vector<Entity*>& hitEntities,
-                            const std::vector<Entity*>& entitiesFilter = {},
+                            const std::vector<Entity*>& entitiesExcludeFilter = {},
+                            const std::vector<Entity*>& entitiesIncludeFilter = {},
                             float range = -1.0f);
 
     static bool raycastPlane(const Ray& ray, const glm::vec3& planeNormal, const glm::vec3& planePos, float& hitDistance);

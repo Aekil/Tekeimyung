@@ -65,7 +65,7 @@ void LaserWeapon::fireMultipleEnemy(Player* player, sTransformComponent* playerT
     Ray raycastHit = Ray(playerPos, glm::vec3{ playerDirection.x, 0.0f, playerDirection.z });
 
     std::vector<Entity*> hitedEntities;
-    if (Physics::raycastAll(raycastHit, hitedEntities, { player->getEntity(), this->_laser }, this->_attributes["MaxRange"]->getFinalValue()))
+    if (Physics::raycastAll(raycastHit, hitedEntities, { player->getEntity(), this->_laser }, {}, this->_attributes["MaxRange"]->getFinalValue()))
     {
         if (hitedEntities.size() == 0)
         {
@@ -118,7 +118,7 @@ void LaserWeapon::fireOneEnemy(Player* player, sTransformComponent* playerTransf
     Ray raycastHit = Ray(playerPos, glm::vec3{ playerDirection.x, 0.0f, playerDirection.z });
 
     Entity* hitedEntity;
-    if (Physics::raycast(raycastHit, &hitedEntity, { player->getEntity(), this->_laser }, this->_attributes["MaxRange"]->getFinalValue()))
+    if (Physics::raycast(raycastHit, &hitedEntity, { player->getEntity(), this->_laser }, {}, this->_attributes["MaxRange"]->getFinalValue()))
     {
         if (hitedEntity != nullptr && hitedEntity->getTag() == "Enemy")
         {

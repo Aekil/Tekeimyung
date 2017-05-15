@@ -3,8 +3,9 @@
 */
 
 #include    <Engine/EntityFactory.hpp>
+#include    <Engine/Graphics/Renderer.hpp>
 #include    <Engine/Physics/Collisions.hpp>
-
+#include    <Engine/Physics/Physics.hpp>
 #include    <Game/Building/Tile.hpp>
 #include    <Game/Character/NewBuild.hpp>
 #include    <Game/Character/Player.hpp>
@@ -22,6 +23,23 @@ void        NewBuild::start()
 
 void        NewBuild::update(float deltaTime)
 {
+    std::string tileTag = this->_currentChoice == "TOWER_FIRE" ? "TileBaseTurret" : "TileFloor";
+    auto gameWindow = GameWindow::getInstance();
+    Camera* camera = Renderer::getInstance()->getCurrentCamera();
+    Mouse& mouse = gameWindow->getMouse();
+    Cursor& cursor = mouse.getCursor();
+
+    if (!camera)
+        return;
+
+    Entity* selectedEntity;
+    auto em = EntityFactory::getBindedEntityManager();
+
+    Ray ray = camera->screenPosToRay((float)cursor.getX(), (float)cursor.getY());
+    Physics::raycast(ray, &selectedEntity, {}, em->getEntitiesByTag(tileTag));
+
+    setTileHovered(selectedEntity);
+
     this->checkUserInputs();
 }
 
@@ -90,12 +108,17 @@ void        NewBuild::setTileHovered(const Entity* tileHovered)
         return;
     }
 
-    if (tileHovered != nullptr && this->_tileHovered != tileHovered)
+    if (this->_tileHovered != tileHovered)
     {
         this->Destroy(this->_preview);
         this->_preview = nullptr;
 
         this->_tileHovered = tileHovered;
+
+        if (!tileHovered)
+        {
+            return;
+        }
 
         sScriptComponent*   scriptComponent = this->_tileHovered->getComponent<sScriptComponent>();
 
@@ -340,12 +363,6 @@ void        NewBuild::placePreviewedEntity()
     if (!this->_goldManager->removeGolds(this->_buildingPrices[this->_currentChoice]))
         return;
 
-    if (entity->getTag() != "TileBaseTurret")
-    {
-        auto previewRenderer = entity->getComponent<sRenderComponent>();
-        previewRenderer->ignoreRaycast = true;
-    }
-
     auto&   position = this->_tileHovered->getComponent<sTransformComponent>()->getPos();
     auto    entity = this->Instantiate(this->_currentChoice, glm::vec3(position.x, position.y + 12.5f, position.z));
     this->_alreadyBuiltTile.push_back(this->_tileHovered->handle);
@@ -459,7 +476,6 @@ void            NewBuild::updatePreview()
         auto    previewRenderer = this->_preview->getComponent<sRenderComponent>();
         auto    previewScripts = this->_preview->getComponent<sScriptComponent>();
 
-        previewRenderer->ignoreRaycast = true;
         previewScripts->enabled = false;
     }
 }

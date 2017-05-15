@@ -74,7 +74,7 @@ void    TeslaWeapon::fireLightning(Player* player, sTransformComponent* playerTr
     playerPos = playerTransform->getPos() + (playerRender->getModel()->getSize().y / 2.0f * playerTransform->getScale().y);
     raycastHit = Ray(playerPos, glm::vec3{ playerDirection.x, 0.0f, playerDirection.z });
 
-    if (Physics::raycast(raycastHit, &hitEntity, std::vector<Entity*> { player->getEntity() }) == true &&
+    if (Physics::raycast(raycastHit, &hitEntity, std::vector<Entity*> { player->getEntity() }, {}) == true &&
         hitEntity->getTag() == "Enemy")
     {
         this->spreadLightning(hitEntity, this->_attributes["HitAmount"]->getFinalValue());
@@ -154,7 +154,7 @@ void    TeslaWeapon::triggerLightningEffect(Entity* entity)
             if (render != nullptr)
             {
                 render->_animator.play("lightning_effect", false);
-                
+
                 auto& meshInstances = render->getModelInstance()->getMeshsInstances();
 
                 for (auto& meshInstance : meshInstances)

@@ -17,9 +17,6 @@ public:
     void    start() override final;
     void    update(float dt) override final;
 
-    void    onHoverEnter() override final;
-    void    onHoverExit() override final;
-
     bool    isBuildable();
     void    setBuildable(bool);
 

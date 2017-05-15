@@ -17,25 +17,7 @@ void Tile::start()
     _buildMaterial = ResourceManager::getInstance()->getResource<Material>("build.mat");
 }
 
-void Tile::update(float dt)
-{
-}
-
-void Tile::onHoverEnter()
-{
-    auto    em = EntityFactory::getBindedEntityManager();
-    auto    buildScript = em->getEntityByTag("Player")->getComponent<sScriptComponent>()->getScript<NewBuild>("NewBuild");
-
-    buildScript->setTileHovered(this->getEntity());
-}
-
-void Tile::onHoverExit()
-{
-    auto    em = EntityFactory::getBindedEntityManager();
-    auto    buildScript = em->getEntityByTag("Player")->getComponent<sScriptComponent>()->getScript<NewBuild>("NewBuild");
-
-    buildScript->setTileHovered(nullptr);
-}
+void Tile::update(float dt) {}
 
 void Tile::setBuildable(bool buildable)
 {
