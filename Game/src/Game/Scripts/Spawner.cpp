@@ -314,7 +314,6 @@ void    Spawner::getPath(const glm::ivec2& from, const glm::ivec2& to, std::vect
                     path,
                     closestTileFound))
     {
-        LOG_ERROR("FAIL");
         findBlockedPath(from, to, path, closestTileFound);
     }
 

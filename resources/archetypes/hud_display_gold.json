@@ -16,14 +16,14 @@
          "dynamic" : false,
          "hide_dynamic" : false,
          "ignore_raycast" : false,
-         "materials" : [ "MAT_Default" ],
+         "materials" : [ "geometry_default.mat" ],
          "model" : "resources/models/default.DAE",
-         "type" : "MESH"
+         "type" : "PLANE"
       },
       "sScriptComponent" : {
          "scripts" : [
             {
-               "name" : "HudDisplayGold"
+               "name" : "DisplayGold"
             }
          ]
       },
@@ -47,7 +47,7 @@
       "sTransformComponent" : {
          "pos" : {
             "x" : 1824,
-            "y" : 133.510009765625,
+            "y" : 132.21000671386719,
             "z" : 0
          },
          "rotation" : {
@@ -57,12 +57,9 @@
          },
          "scale" : {
             "x" : 4.1706833839416504,
-            "y" : 5.8612666130065918,
+            "y" : 5.8041949272155762,
             "z" : 1
          }
-      },
-      "sTypeComponent" : {
-         "type" : "TILE_WALKABLE"
       },
       "sUiComponent" : {
          "horizontal_alignment" : "RIGHT",

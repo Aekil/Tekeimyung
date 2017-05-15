@@ -25,7 +25,7 @@ private:
     const Entity*   _gameManager;
     const Entity*   _goldHudDisplay;
 
-    int             _tmpGolds = 0;
+    int             _tmpGolds = -1;
 };
 
 REGISTER_SCRIPT(DisplayGold);

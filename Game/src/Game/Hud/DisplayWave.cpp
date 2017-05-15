@@ -16,8 +16,7 @@ void DisplayWave::start()
     if (this->_em != nullptr)
     {
         this->_gameManager = this->_em->getEntityByTag(GAME_MANAGER_TAG);
-        if (this->_gameManager != nullptr)
-            this->_waveHudDisplay = this->_em->getEntityByTag(HUD_DISPLAY_WAVE_TAG);
+        this->_waveHudDisplay = this->_em->getEntityByTag(HUD_DISPLAY_WAVE_TAG);
     }
 }
 

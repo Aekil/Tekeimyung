@@ -7,7 +7,7 @@
 #include <Engine/Core/BaseScript.hpp>
 #include <Engine/Core/ScriptFactory.hpp>
 
-#define HUD_DISPLAY_WAVE_TAG    "DisplayWave"
+#define HUD_DISPLAY_WAVE_TAG    "HudDisplayWave"
 
 #define MAX_SIZE_TEXT_WAVES     256
 
@@ -25,8 +25,8 @@ private:
     const Entity*   _gameManager;
     const Entity*   _waveHudDisplay;
 
-    int             _tmpNbWaves = 0;
-    int             _tmpcurrentWave = 0;
+    int             _tmpNbWaves = -1;
+    int             _tmpcurrentWave = -1;
 };
 
 REGISTER_SCRIPT(DisplayWave);
