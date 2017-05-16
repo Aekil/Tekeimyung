@@ -8,7 +8,7 @@
 #include    <Engine/Systems/RenderingSystem.hpp>
 #include    <Engine/Systems/UISystem.hpp>
 #include    <Engine/Systems/ButtonSystem.hpp>
-#include    <Engine/Components.hh>
+#include    <Engine/Core/Components/Components.hh>
 
 #include    <Game/GameStates/OptionsMenuState.hpp>
 #include    <Game/GameStates/PlayState.hpp>

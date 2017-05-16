@@ -1,6 +1,6 @@
 #include <algorithm>
 
-#include <Game/Scripts/GameManager.hpp>
+#include <Game/Manager/GameManager.hpp>
 #include <Game/Scripts/Path.hpp>
 
 Node::Node(glm::ivec2 pos_, bool isWalkable_)

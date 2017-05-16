@@ -2,7 +2,7 @@
 * @Author   Mathieu Chassara
 */
 
-#include    <Engine/Components.hh>
+#include    <Engine/Core/Components/Components.hh>
 #include    <Engine/EntityFactory.hpp>
 
 #include    <Engine/Systems/RenderingSystem.hpp>
