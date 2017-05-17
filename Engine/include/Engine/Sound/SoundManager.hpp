@@ -33,6 +33,7 @@ typedef struct sSound
     std::string         name;
     bool                free;
     bool                paused;
+    float               volume;
     eSoundType          type;
     FMOD::Sound*        sound;
     FMOD::Channel*      channel;

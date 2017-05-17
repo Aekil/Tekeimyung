@@ -17,8 +17,8 @@
       {
          "name" : "BUILD",
          "sound" : {
-            "name" : "building.mp3",
-            "path" : "resources/sounds/sfx/building.mp3"
+            "name" : "build.wav",
+            "path" : "resources/sounds/sfx/build.wav"
          }
       },
       {
@@ -31,15 +31,29 @@
       {
          "name" : "TOWER_SHOOT",
          "sound" : {
-            "name" : "laser_shoot2.wav",
-            "path" : "resources/sounds/sfx/laser_shoot2.wav"
+            "name" : "turret_projectile.wav",
+            "path" : "resources/sounds/sfx/turret_projectile.wav"
          }
       },
       {
-         "name" : "PLAYER_SHOOT",
+         "name" : "PLAYER_SHOOT_GUN",
          "sound" : {
-            "name" : "laser_shoot2.wav",
-            "path" : "resources/sounds/sfx/laser_shoot2.wav"
+            "name" : "player_projectile1.wav",
+            "path" : "resources/sounds/sfx/player_projectile1.wav"
+         }
+      },
+      {
+         "name" : "PLAYER_SHOOT_ELEC",
+         "sound" : {
+            "name" : "paralyze.wav",
+            "path" : "resources/sounds/sfx/paralyze.wav"
+         }
+      },
+      {
+         "name" : "PLAYER_SHOOT_LAZR",
+         "sound" : {
+            "name" : "lasertest3.wav",
+            "path" : "resources/sounds/sfx/lasertest3.wav"
          }
       },
       {

@@ -17,6 +17,7 @@ LaserWeapon::LaserWeapon()
     this->_attributes["Damage"] = new Attribute(1.25f);
     this->_attributes["MaxRange"] = new Attribute(150.0f);
 
+    _shootSound = EventSound::getEventByEventType(eEventSound::PLAYER_SHOOT_LAZR);
     _material = ResourceManager::getInstance()->getResource<Material>("weapon_laser.mat");
 }
 
@@ -39,6 +40,13 @@ void    LaserWeapon::fire(Player* player, sTransformComponent* playerTransform, 
         this->fireOneEnemy(player, playerTransform, playerRender, playerDirection);
     else
         this->fireMultipleEnemy(player, playerTransform, playerRender, playerDirection);
+
+#if (ENABLE_SOUND)
+    if (_shootSound->soundID != -1)
+    {
+        SoundManager::getInstance()->playSound(_shootSound->soundID);
+    }
+#endif
 }
 
 Entity* LaserWeapon::farestEnemy(sTransformComponent* playerTransform, std::vector<Entity*> entities)

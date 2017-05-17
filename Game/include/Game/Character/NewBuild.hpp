@@ -5,6 +5,7 @@
 #pragma once
 
 #include    <Engine/Core/ScriptFactory.hpp>
+#include    <Engine/Utils/EventSound.hpp>
 
 #include    <Game/Building/Tile.hpp>
 #include    <Game/Character/Player.hpp>
@@ -46,6 +47,8 @@ private:
     Entity*         _preview = nullptr;
     std::string     _currentChoice;
     float           _radius = 0.0f;
+
+    tEventSound*    _buildSound = nullptr;
 
     std::vector<Entity::sHandle> _alreadyBuiltTile;
 

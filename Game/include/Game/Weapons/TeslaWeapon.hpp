@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <Engine/Utils/EventSound.hpp>
+
 #include <Game/Weapons/IWeapon.hpp>
 
 #define TESLA_WEAPON_NAME "Tesla"
@@ -34,4 +36,7 @@ private:
     void    triggerLightningEffect(Entity* entity);
 
     void    fireOrb(Player* player, sTransformComponent* playerTransform, sRenderComponent* playerRender, glm::vec3 playerDirection);
+
+private:
+    tEventSound* _shootSound = nullptr;
 };

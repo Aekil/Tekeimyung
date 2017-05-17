@@ -21,6 +21,7 @@ _system(nullptr)
     {
         _sounds[i].free = true;
         _sounds[i].id = i;
+        _sounds[i].volume = 1.0f;
         _sounds[i].sound = nullptr;
         _sounds[i].channel = nullptr;
         _sounds[i].type = eSoundType::DEFAULT_SOUND;

@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <Engine/Utils/EventSound.hpp>
+
 #include <Game/Weapons/IWeapon.hpp>
 
 
@@ -42,4 +44,6 @@ private:
     bool _timeExplosion = false;
     float _timeExplosionPercent = 0.17f;
     Entity* _laser = nullptr;
+
+    tEventSound* _shootSound = nullptr;
 };

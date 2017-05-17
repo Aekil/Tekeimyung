@@ -18,6 +18,8 @@ void        NewBuild::start()
     this->retrievePlayerScript();
     this->initPrices();
     this->_radius = 7.7f;
+
+    _buildSound = EventSound::getEventByEventType(eEventSound::BUILD);
 }
 
 void        NewBuild::update(float deltaTime)
@@ -357,6 +359,13 @@ void        NewBuild::placePreviewedEntity()
     tilePos.y = static_cast<int>(tileTransform->getPos().z / 25.0f);
     this->_gameManager->map[tilePos.x][tilePos.y] = 0;
     this->updateSpawnersPaths(tilePos);
+
+#if (ENABLE_SOUND)
+    if (_buildSound->soundID != -1)
+    {
+        SoundManager::getInstance()->playSound(_buildSound->soundID);
+    }
+#endif
 
 #define SEND_TUTO_BUILD(KEY, ITEM, TUTO_COND)                                           \
     if (this->_currentChoice == ITEM)                                                   \

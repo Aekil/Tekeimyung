@@ -42,6 +42,7 @@ void    PlayState::setupSystems()
 bool    PlayState::init()
 {
     _backgroundGameMusic = EventSound::getEventByEventType(eEventSound::BACKGROUND);
+    SoundManager::getInstance()->setVolumeAllChannels(0.5f);
 
     // Load tutorial level
     if (!TutoManager::_tutorialDone)

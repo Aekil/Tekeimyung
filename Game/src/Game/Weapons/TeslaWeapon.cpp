@@ -23,6 +23,7 @@ TeslaWeapon::TeslaWeapon()
     this->_attributes["HitAmount"] = new Attribute(2);
     this->_attributes["StunChance"] = new Attribute(0.0f);
 
+    _shootSound = EventSound::getEventByEventType(eEventSound::PLAYER_SHOOT_ELEC);
     _material = ResourceManager::getInstance()->getResource<Material>("weapon_tesla.mat");
 }
 
@@ -39,6 +40,13 @@ void    TeslaWeapon::fire(Player* player, sTransformComponent* playerTransform, 
             this->fireOrb(player, playerTransform, playerRender, playerDirection);
             break;
     }
+
+#if (ENABLE_SOUND)
+    if (_shootSound->soundID != -1)
+    {
+        SoundManager::getInstance()->playSound(_shootSound->soundID);
+    }
+#endif
 }
 
 void    TeslaWeapon::reload()

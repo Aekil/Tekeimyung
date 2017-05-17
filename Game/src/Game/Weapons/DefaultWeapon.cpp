@@ -20,7 +20,7 @@ DefaultWeapon::DefaultWeapon()
     this->_attributes["CriticalChance"] = new Attribute(5.0 / 100.0);
     this->_attributes["CriticalStrike"] = new Attribute(150.0 / 100.0);
 
-    _shootSound = EventSound::getEventByEventType(eEventSound::PLAYER_SHOOT);
+    _shootSound = EventSound::getEventByEventType(eEventSound::PLAYER_SHOOT_GUN);
     _material = ResourceManager::getInstance()->getResource<Material>("weapon_default.mat");
 }
 
