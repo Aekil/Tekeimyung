@@ -85,13 +85,8 @@ std::unique_ptr<Texture>    Model2DRenderer::generateTextureFromModel(sRenderCom
     {
         glm::vec3 cameraDir = glm::normalize(_2DRenderCamera.getDirection());
 
-        // Calculate the translation the model need to have his pivot point centered
-        glm::vec3 modelPivot = glm::vec3(0.0f, -(model->getModel()->getSize().y / 2.0f + model->getModel()->getMin().y), 0.0f);
-        modelPivot += glm::vec3(-(model->getModel()->getSize().x / 2.0f + model->getModel()->getMin().x), 0.0f, 0.0f);
-        modelPivot += glm::vec3(0.0f, 0.0f, -(model->getModel()->getSize().z / 2.0f + model->getModel()->getMin().z));
-
         // We place the object at a distance of 200 in front of the camera and center it
-        glm::mat4 transform = glm::translate(glm::mat4(1.0f), cameraDir * -200.0f + modelPivot);
+        glm::mat4 transform = glm::translate(glm::mat4(1.0f), cameraDir * -200.0f + model->getModel()->getPivot());
 
         // Update uniform buffer
         _2DRenderBuffer.update((void*)glm::value_ptr(transform), sizeof(glm::mat4));

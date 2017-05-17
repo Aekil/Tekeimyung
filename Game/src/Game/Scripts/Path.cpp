@@ -33,10 +33,7 @@ Node*    Path::getNodeFromPos(int x, int y)
         return nullptr;
 
     glm::ivec2 pos(x, y);
-    bool isWalkable = (*_map)[x][y] == -1 ||
-                        ((*_map)[x][y] % LAYER_NUMBER) == 1 ||
-                        ((*_map)[x][y] % LAYER_NUMBER) == 3;
-    return (new Node(pos, isWalkable));
+    return (new Node(pos, isWalkable(*_map, x, y)));
 }
 
 void    Path::freeNodes()
@@ -90,6 +87,11 @@ std::vector<Node*>   Path::getAdjacentNodes(Node* fromNode)
     return (adjacentNodes);
 }
 
+bool sortNodes(const Node* lhs, const Node* rhs)
+{
+    return ((lhs->h + lhs->g) < (rhs->h + rhs->g));
+}
+
 std::vector<Node*>   Path::getAdjacentWalkableNodes(Node* fromNode)
 {
     std::vector<Node*> walkableNodes;
@@ -120,15 +122,20 @@ std::vector<Node*>   Path::getAdjacentWalkableNodes(Node* fromNode)
     return (walkableNodes);
 }
 
-bool sortNodes(const Node* lhs, const Node* rhs)
-{
-    return ((lhs->h + lhs->g) < (rhs->h + rhs->g));
-}
-
 bool    Path::findTarget()
 {
     if (_openNodes.size() == 0)
         return (false);
+    else
+    {
+        Node* closestNode = _nodes[_closestTileFound->x][_closestTileFound->y];
+        Node* currentNode = _openNodes[0];
+        if (closestNode->pos == _from ||
+            currentNode->h < closestNode->h)
+        {
+            *_closestTileFound = currentNode->pos;
+        }
+    }
 
     Node* currentNode = _openNodes[0];
     _openNodes.erase(_openNodes.begin());
@@ -155,22 +162,22 @@ bool    Path::findTarget()
     return (false);
 }
 
-std::vector<glm::ivec2>  Path::goToTarget(glm::ivec2 pos, glm::ivec2 target, Map* map)
+bool Path::goToTarget(glm::ivec2 pos, glm::ivec2 target, Map* map, std::vector<glm::ivec2>& path, glm::ivec2& closestTileFound)
 {
-    std::vector<glm::ivec2> path;
-
     _map = map;
 
     if (isOutOfRange(pos.x, pos.y) ||
         isOutOfRange(target.x, target.y))
     {
-        return (path);
+        return (false);
     }
 
     _openNodes.clear();
 
     _from = pos;
     _target = target;
+    _closestTileFound = &closestTileFound;
+    *_closestTileFound = _from;
 
     generateNodes();
     _openNodes.push_back(_nodes[_from.x][_from.y]);
@@ -184,7 +191,12 @@ std::vector<glm::ivec2>  Path::goToTarget(glm::ivec2 pos, glm::ivec2 target, Map
     }
 
     std::reverse(path.begin(), path.end());
-    return (path);
+    return (path.size() != 0);
+}
+
+bool    Path::isWalkable(Map& map, int x, int y)
+{
+    return (map[x][y] == -1 || map[x][y] % LAYER_NUMBER == 1);
 }
 
 bool    Path::isOutOfRange(int x, int y) const

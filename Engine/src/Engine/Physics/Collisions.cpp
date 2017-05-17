@@ -7,6 +7,7 @@
 #include <limits>
 
 #include <Engine/Core/Components/BoxColliderComponent.hh>
+#include <Engine/Core/Components/RenderComponent.hh>
 #include <Engine/Core/Components/SphereColliderComponent.hh>
 #include <Engine/Core/Components/TransformComponent.hh>
 #include <Engine/Graphics/Geometries/Geometry.hpp>
@@ -73,6 +74,34 @@ double SquaredDistPointAABB(const glm::vec3& p, const glm::vec3& min, const glm:
     return sq;
 }
 
+bool    Collisions::AABBVSAABB(const glm::vec3& boxPos1, const glm::vec3& boxSize1, const glm::vec3& boxPos2, const glm::vec3& boxSize2)
+{
+    glm::vec3 boxMin1 = glm::vec3(
+            boxPos1.x - (boxSize1.x / 2.0f),
+            boxPos1.y - (boxSize1.y / 2.0f),
+            boxPos1.z - (boxSize1.z / 2.0f)
+        );
+    glm::vec3 boxMax1 = glm::vec3(
+            boxPos1.x + (boxSize1.x / 2.0f),
+            boxPos1.y + (boxSize1.y / 2.0f),
+            boxPos1.z + (boxSize1.z / 2.0f)
+        );
+    glm::vec3 boxMin2 = glm::vec3(
+            boxPos2.x - (boxSize2.x / 2.0f),
+            boxPos2.y - (boxSize2.y / 2.0f),
+            boxPos2.z - (boxSize2.z / 2.0f)
+        );
+    glm::vec3 boxMax2 = glm::vec3(
+            boxPos2.x + (boxSize2.x / 2.0f),
+            boxPos2.y + (boxSize2.y / 2.0f),
+            boxPos2.z + (boxSize2.z / 2.0f)
+        );
+
+    return (boxMin1.x <= boxMax2.x && boxMax1.x >= boxMin2.x) &&
+        (boxMin1.y <= boxMax2.y && boxMax1.y >= boxMin2.y) &&
+        (boxMin1.z <= boxMax2.z && boxMax1.z >= boxMin2.z);
+}
+
 bool    Collisions::sphereVSAABB(const glm::vec3& spherePosition, float sphereRadius, const glm::vec3& boxPosition, const glm::vec3& boxSize)
 {
     glm::vec3 min;
@@ -83,6 +112,8 @@ bool    Collisions::sphereVSAABB(const glm::vec3& spherePosition, float sphereRa
 
     return squaredDistance < (sphereRadius * sphereRadius);
 }
+
+
 
 float Collisions::rayVSAABB(const Ray& ray, const glm::vec3& boxMin, const glm::vec3& boxMax)
 {
@@ -209,13 +240,14 @@ bool    Collisions::isCollidingSphereAndEntity(glm::vec3 spherePos, float sphere
 bool    Collisions::isColliding(Entity *firstEntity, Entity *secondEntity)
 {
     sTransformComponent* firstTransform = firstEntity->getComponent<sTransformComponent>();
+    sSphereColliderComponent* firstSphereCollider = firstEntity->getComponent<sSphereColliderComponent>();
+    sBoxColliderComponent* firstBoxCollider = firstEntity->getComponent<sBoxColliderComponent>();
     sTransformComponent* secondTransform = secondEntity->getComponent<sTransformComponent>();
+    sSphereColliderComponent* secondSphereCollider = secondEntity->getComponent<sSphereColliderComponent>();
+    sBoxColliderComponent* secondBoxCollider = secondEntity->getComponent<sBoxColliderComponent>();
 
-    if (firstEntity->getComponent<sSphereColliderComponent>() != nullptr && secondEntity->getComponent<sSphereColliderComponent>() != nullptr)
+    if (firstSphereCollider != nullptr && secondSphereCollider != nullptr)
     {
-        sSphereColliderComponent* firstSphereCollider = firstEntity->getComponent<sSphereColliderComponent>();
-        sSphereColliderComponent* secondSphereCollider = secondEntity->getComponent<sSphereColliderComponent>();
-
         return (Collisions::sphereVSsphere(
             firstSphereCollider->pos + firstTransform->getPos(),
             firstSphereCollider->radius * std::max({ firstTransform->getScale().x, firstTransform->getScale().y, firstTransform->getScale().z }) * (SIZE_UNIT / 2.0f),
@@ -224,11 +256,27 @@ bool    Collisions::isColliding(Entity *firstEntity, Entity *secondEntity)
         ));
     }
 
-    if (firstEntity->getComponent<sBoxColliderComponent>() != nullptr && secondEntity->getComponent<sSphereColliderComponent>() != nullptr)
+    if (firstBoxCollider != nullptr && secondBoxCollider != nullptr)
     {
-        sBoxColliderComponent* firstBoxCollider = firstEntity->getComponent<sBoxColliderComponent>();
-        sSphereColliderComponent* secondSphereCollider = secondEntity->getComponent<sSphereColliderComponent>();
+        sRenderComponent* firstRender = firstEntity->getComponent<sRenderComponent>();
+        sRenderComponent* secondRender = secondEntity->getComponent<sRenderComponent>();
+        const glm::vec3& firstModelPivot = firstRender->getModel()->getPivot();
+        const glm::vec3& secondModelPivot = secondRender->getModel()->getPivot();
 
+        return (Collisions::AABBVSAABB(
+                firstBoxCollider->pos + firstTransform->getPos(),
+                glm::vec3(SIZE_UNIT * firstBoxCollider->size.x * firstTransform->getScale().x,
+                    SIZE_UNIT * firstBoxCollider->size.y * firstTransform->getScale().y,
+                    SIZE_UNIT * firstBoxCollider->size.z * firstTransform->getScale().z),
+                secondBoxCollider->pos + secondTransform->getPos(),
+                glm::vec3(SIZE_UNIT * secondBoxCollider->size.x * secondTransform->getScale().x,
+                    SIZE_UNIT * secondBoxCollider->size.y * secondTransform->getScale().y,
+                    SIZE_UNIT * secondBoxCollider->size.z * secondTransform->getScale().z)
+            ));
+    }
+
+    if (firstBoxCollider != nullptr && secondSphereCollider != nullptr)
+    {
         return (Collisions::sphereVSAABB(
             secondSphereCollider->pos + secondTransform->getPos(),
             secondSphereCollider->radius * std::max({ secondTransform->getScale().x, secondTransform->getScale().y, secondTransform->getScale().z }) * (SIZE_UNIT / 2.0f),
@@ -239,18 +287,15 @@ bool    Collisions::isColliding(Entity *firstEntity, Entity *secondEntity)
         ));
     }
 
-    if (secondEntity->getComponent<sBoxColliderComponent>() != nullptr && firstEntity->getComponent<sSphereColliderComponent>() != nullptr)
+    if (secondBoxCollider != nullptr && firstSphereCollider != nullptr)
     {
-        sBoxColliderComponent* boxCollider = secondEntity->getComponent<sBoxColliderComponent>();
-        sSphereColliderComponent* sphereCollider = firstEntity->getComponent<sSphereColliderComponent>();
-
         return (Collisions::sphereVSAABB(
-            sphereCollider->pos + firstTransform->getPos(),
-            sphereCollider->radius * std::max({ firstTransform->getScale().x, firstTransform->getScale().y, firstTransform->getScale().z }) * (SIZE_UNIT / 2.0f),
-            boxCollider->pos + secondTransform->getPos(),
-            glm::vec3(SIZE_UNIT * boxCollider->size.x * secondTransform->getScale().x,
-                SIZE_UNIT * boxCollider->size.y * secondTransform->getScale().y,
-                SIZE_UNIT * boxCollider->size.z * secondTransform->getScale().z)
+            firstSphereCollider->pos + firstTransform->getPos(),
+            firstSphereCollider->radius * std::max({ firstTransform->getScale().x, firstTransform->getScale().y, firstTransform->getScale().z }) * (SIZE_UNIT / 2.0f),
+            secondBoxCollider->pos + secondTransform->getPos(),
+            glm::vec3(SIZE_UNIT * secondBoxCollider->size.x * secondTransform->getScale().x,
+                SIZE_UNIT * secondBoxCollider->size.y * secondTransform->getScale().y,
+                SIZE_UNIT * secondBoxCollider->size.z * secondTransform->getScale().z)
         ));
     }
 

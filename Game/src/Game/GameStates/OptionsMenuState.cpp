@@ -2,16 +2,14 @@
 * @Author   Mathieu Chassara
 */
 
-#include    <iostream>
-#include    <Engine/Window/GameWindow.hpp>
-
+#include    <Engine/Core/Components/ButtonComponent.hh>
+#include    <Engine/Systems/ButtonSystem.hpp>
 #include    <Engine/Systems/RenderingSystem.hpp>
 #include    <Engine/Systems/UISystem.hpp>
-#include    <Engine/Systems/ButtonSystem.hpp>
-#include    <Engine/Core/Components/Components.hh>
+#include    <Engine/Window/GameWindow.hpp>
+#include    <Game/GameStates/PlayState.hpp>
 
 #include    <Game/GameStates/OptionsMenuState.hpp>
-#include    <Game/GameStates/PlayState.hpp>
 
 OptionsMenuState::~OptionsMenuState() {}
 

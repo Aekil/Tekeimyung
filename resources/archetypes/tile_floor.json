@@ -29,7 +29,7 @@
          "dynamic" : false,
          "hide_dynamic" : false,
          "ignore_raycast" : false,
-         "materials" : [ "bloom_cyan.mat" ],
+         "materials" : [ "bloom_cyan_dark.mat" ],
          "model" : "resources/models/blocks/block.DAE",
          "texture" : "",
          "type" : "MESH"
@@ -50,7 +50,7 @@
          },
          "rotation" : {
             "x" : 0,
-            "y" : 0,
+            "y" : -0,
             "z" : 0
          },
          "scale" : {
@@ -58,11 +58,8 @@
             "y" : 1,
             "z" : 1
          }
-      },
-      "sTypeComponent" : {
-         "type" : "TILE_WALKABLE"
       }
    },
    "name" : "TILE_FLOOR",
-   "tag" : ""
+   "tag" : "TileFloor"
 }

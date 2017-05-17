@@ -23,7 +23,7 @@
       "sScriptComponent" : {
          "scripts" : [
             {
-               "name" : "HudDisplayCastleLife"
+               "name" : "DisplayCastleLife"
             }
          ]
       },
@@ -47,7 +47,7 @@
       "sTransformComponent" : {
          "pos" : {
             "x" : 1824,
-            "y" : 205.40000915527344,
+            "y" : 203.40000915527344,
             "z" : 0
          },
          "rotation" : {
@@ -57,12 +57,9 @@
          },
          "scale" : {
             "x" : 4.1706829071044922,
-            "y" : 2.9306333065032959,
+            "y" : 2.9020974636077881,
             "z" : 1
          }
-      },
-      "sTypeComponent" : {
-         "type" : "TILE_WALKABLE"
       },
       "sUiComponent" : {
          "horizontal_alignment" : "RIGHT",

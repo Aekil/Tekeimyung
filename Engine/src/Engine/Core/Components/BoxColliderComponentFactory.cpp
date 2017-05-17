@@ -51,6 +51,11 @@ bool    ComponentFactory<sBoxColliderComponent>::updateEditor(const std::string&
         component->display = !component->display;
     }
 
+    if (ImGui::Button(component->isTrigger ? "Trigger" : "No trigger"))
+    {
+        component->isTrigger = !component->isTrigger;
+    }
+
     ImGui::InputFloat3("position", glm::value_ptr(component->pos), 3);
     ImGui::InputFloat3("size", glm::value_ptr(component->size), 3);
 

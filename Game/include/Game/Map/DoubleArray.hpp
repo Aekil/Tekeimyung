@@ -22,7 +22,10 @@ friend sLayer;
 
 public:
     DoubleArray() = default;
+    DoubleArray(const DoubleArray<T>& rhs);
     virtual ~DoubleArray();
+
+    DoubleArray& operator=(const DoubleArray<T>& rhs);
 
     uint32_t        getWidth() const;
     uint32_t        getHeight() const;
@@ -33,6 +36,7 @@ public:
     void    allocate(uint32_t width, uint32_t height);
     void    free();
     void    clear();
+    void    fill(T value);
 
 private:
     T*  _content = nullptr;

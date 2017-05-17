@@ -128,6 +128,11 @@ const glm::vec3&    Model::getSize() const
     return (_size);
 }
 
+const glm::vec3&    Model::getPivot() const
+{
+    return (_pivot);
+}
+
 const glm::vec3&    Model::getMin() const
 {
     return (_min);
@@ -248,4 +253,9 @@ void    Model::calculateSize()
     _size.z = max.z - min.z;
     _min = min;
     _max = max;
+
+    // Calculate the translation the model need to have his pivot point centered
+    _pivot = glm::vec3(0.0f, -(_size.y / 2.0f + _min.y), 0.0f);
+    _pivot += glm::vec3(-(_size.x / 2.0f + _min.x), 0.0f, 0.0f);
+    _pivot += glm::vec3(0.0f, 0.0f, -(_size.z / 2.0f + _min.z));
 }

@@ -23,12 +23,17 @@ friend MapLoader;
 
 public:
     Map() = default;
+    Map(const Map& rhs);
     ~Map() = default;
+
+    Map&                    operator=(const Map& rhs);
 
     std::unordered_map<int, std::vector<Entity*>>& getMapParts();
     DoubleArray<char>&      getSpawnersPaths();
     DoubleArray<Entity*>&   getEntities();
     const glm::ivec2&       getCastlePos() const;
+
+    void                    setCastlePos(const glm::ivec2& castlePos);
 
 private:
     void                    init();

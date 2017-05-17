@@ -42,6 +42,9 @@ public:
     void loadFromJson(const JsonValue& json) override final;
 
 private:
+    void destroyWall(Entity* entity, const glm::vec3& pos);
+
+private:
     Entity* _healthBarEmpty;
     sTransformComponent* _healthBarEmptyTransform;
     Entity* _healthBar;

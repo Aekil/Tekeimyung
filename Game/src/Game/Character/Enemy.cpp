@@ -49,7 +49,9 @@ void Enemy::update(float dt)
         this->_rigidBody->velocity = direction;
 
         if (glm::length(direction * dt) > glm::length(targetPos - entityPos))
+        {
             _pathProgress++;
+        }
     }
     else
         _transform->translate(glm::vec3(0.0f, 0.0f, -this->_speed * dt));
@@ -94,6 +96,22 @@ void    Enemy::onCollisionEnter(Entity* entity)
 
         direction *= -15;
         _transform->translate(direction);
+    }
+    else if (entity->getTag() != "Enemy" &&
+        _path.size() > 0 &&
+        _pathProgress < _path.size())
+    {
+        int8_t i = _pathProgress > 0 ? _pathProgress - 1 : 0;
+        sTransformComponent* transform = entity->getComponent<sTransformComponent>();
+        for (i; i < _path.size(); ++i)
+        {
+            if (transform->getPos().x == _path[i].x &&
+                transform->getPos().z == _path[i].z)
+            {
+                destroyWall(entity, _path[i]);
+                break;
+            }
+        }
     }
 }
 
@@ -184,6 +202,25 @@ void Enemy::setPath(const std::vector<glm::vec3>& path)
 void Enemy::stun()
 {
     this->_rigidBody->velocity = glm::vec3{ 0,0,0 };
+}
+
+void Enemy::destroyWall(Entity* entity, const glm::vec3& pos)
+{
+    EntityManager* em = EntityFactory::getBindedEntityManager();
+    Entity* gameManager = em->getEntityByTag("GameManager");
+    if (!gameManager)
+    {
+        LOG_WARN("Could not find entity with tag \"%s\"", "GameManager");
+        return;
+    }
+
+    GameManager* gameManagerScript = this->getEntityScript<GameManager>(gameManager, "GameManager");
+    if (!gameManagerScript)
+    {
+        LOG_WARN("Could not find script GameManager on entity GameManager");
+    }
+    Destroy(entity);
+    gameManagerScript->map[pos.x][pos.y] = 0;
 }
 
 bool Enemy::updateEditor()

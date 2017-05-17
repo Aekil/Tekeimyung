@@ -16,14 +16,14 @@
          "dynamic" : false,
          "hide_dynamic" : false,
          "ignore_raycast" : false,
-         "materials" : [ "MAT_Default" ],
+         "materials" : [ "geometry_default.mat" ],
          "model" : "resources/models/default.DAE",
-         "type" : "MESH"
+         "type" : "PLANE"
       },
       "sScriptComponent" : {
          "scripts" : [
             {
-               "name" : "HudDisplayWave"
+               "name" : "DisplayWave"
             }
          ]
       },
@@ -47,7 +47,7 @@
       "sTransformComponent" : {
          "pos" : {
             "x" : 1824,
-            "y" : 61.620002746582031,
+            "y" : 61.019996643066406,
             "z" : 0
          },
          "rotation" : {
@@ -56,13 +56,10 @@
             "z" : 0
          },
          "scale" : {
-            "x" : 4.1706829071044922,
-            "y" : 2.9306333065032959,
+            "x" : 19.200000762939453,
+            "y" : 10.170000076293945,
             "z" : 1
          }
-      },
-      "sTypeComponent" : {
-         "type" : "TILE_WALKABLE"
       },
       "sUiComponent" : {
          "horizontal_alignment" : "RIGHT",
@@ -73,7 +70,7 @@
          },
          "percentage_size" : true,
          "size" : {
-            "x" : 0.10000000149011612,
+            "x" : 0.10000000894069672,
             "y" : 0.10000000149011612
          },
          "vertical_alignment" : "BOTTOM"

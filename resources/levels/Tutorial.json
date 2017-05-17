@@ -32,9 +32,6 @@
                   "y" : 1,
                   "z" : 1
                }
-            },
-            "sTypeComponent" : {
-               "type" : "TILE_WALKABLE"
             }
          },
          "name" : "GAME_MANAGER",
@@ -111,9 +108,6 @@
                   "y" : 0.47145816683769226,
                   "z" : 0.47145813703536987
                }
-            },
-            "sTypeComponent" : {
-               "type" : "CHARACTER"
             }
          },
          "name" : "PLAYER",
@@ -189,9 +183,6 @@
                   "y" : 1,
                   "z" : 1
                }
-            },
-            "sTypeComponent" : {
-               "type" : "TILE_NOT_WALKABLE"
             }
          },
          "name" : "CASTLE",
@@ -339,7 +330,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 537.5999755859375,
-                  "y" : 944.8399658203125,
+                  "y" : 935.6400146484375,
                   "z" : 0
                },
                "rotation" : {
@@ -349,12 +340,9 @@
                },
                "scale" : {
                   "x" : 96.799873352050781,
-                  "y" : 7.9496994018554688,
+                  "y" : 7.8722925186157227,
                   "z" : 1
                }
-            },
-            "sTypeComponent" : {
-               "type" : "TILE_WALKABLE"
             },
             "sUiComponent" : {
                "horizontal_alignment" : "MIDDLE",
@@ -373,174 +361,6 @@
          },
          "name" : "TUTO_MANAGER",
          "tag" : "TutoManager"
-      },
-      {
-         "components" : {
-            "sNameComponent" : {
-               "name" : "HUD_DISPLAY_CASTLELIFE"
-            },
-            "sRenderComponent" : {
-               "animated" : false,
-               "animations" : [],
-               "color" : {
-                  "a" : 0,
-                  "b" : 0,
-                  "g" : 0,
-                  "r" : 0
-               },
-               "display" : true,
-               "dynamic" : false,
-               "hide_dynamic" : false,
-               "ignore_raycast" : false,
-               "materials" : [ "MAT_Default" ],
-               "model" : "resources/models/default.DAE",
-               "type" : "MESH"
-            },
-            "sScriptComponent" : {
-               "scripts" : [
-                  {
-                     "name" : "HudDisplayCastleLife"
-                  }
-               ]
-            },
-            "sTextComponent" : {
-               "color" : {
-                  "a" : 1,
-                  "b" : 0.16470588743686676,
-                  "g" : 0.16470588743686676,
-                  "r" : 1
-               },
-               "content" : "x/x",
-               "font_name" : "moonhouse.ttf",
-               "font_size" : 26,
-               "horizontal_alignment" : "LEFT",
-               "offset" : {
-                  "x" : 0,
-                  "y" : 0
-               },
-               "vertical_alignment" : "MIDDLE"
-            },
-            "sTransformComponent" : {
-               "pos" : {
-                  "x" : 1824,
-                  "y" : 205.40000915527344,
-                  "z" : 0
-               },
-               "rotation" : {
-                  "x" : 0,
-                  "y" : 0,
-                  "z" : 0
-               },
-               "scale" : {
-                  "x" : 4.1706829071044922,
-                  "y" : 2.9306333065032959,
-                  "z" : 1
-               }
-            },
-            "sTypeComponent" : {
-               "type" : "TILE_WALKABLE"
-            },
-            "sUiComponent" : {
-               "horizontal_alignment" : "RIGHT",
-               "layer" : 0,
-               "offset" : {
-                  "x" : 0,
-                  "y" : 15
-               },
-               "percentage_size" : true,
-               "size" : {
-                  "x" : 0.10000000149011612,
-                  "y" : 0.10000000149011612
-               },
-               "vertical_alignment" : "BOTTOM"
-            }
-         },
-         "name" : "HUD_DISPLAY_CASTLELIFE",
-         "tag" : "HudDisplayCastleLife"
-      },
-      {
-         "components" : {
-            "sNameComponent" : {
-               "name" : "HUD_DISPLAY_GOLD"
-            },
-            "sRenderComponent" : {
-               "animated" : false,
-               "animations" : [],
-               "color" : {
-                  "a" : 0,
-                  "b" : 0,
-                  "g" : 0,
-                  "r" : 0
-               },
-               "display" : true,
-               "dynamic" : false,
-               "hide_dynamic" : false,
-               "ignore_raycast" : false,
-               "materials" : [ "MAT_Default" ],
-               "model" : "resources/models/default.DAE",
-               "type" : "MESH"
-            },
-            "sScriptComponent" : {
-               "scripts" : [
-                  {
-                     "name" : "HudDisplayGold"
-                  }
-               ]
-            },
-            "sTextComponent" : {
-               "color" : {
-                  "a" : 1,
-                  "b" : 0,
-                  "g" : 0.78431373834609985,
-                  "r" : 0.78431373834609985
-               },
-               "content" : "X",
-               "font_name" : "moonhouse.ttf",
-               "font_size" : 22,
-               "horizontal_alignment" : "LEFT",
-               "offset" : {
-                  "x" : 0,
-                  "y" : 0
-               },
-               "vertical_alignment" : "MIDDLE"
-            },
-            "sTransformComponent" : {
-               "pos" : {
-                  "x" : 1824,
-                  "y" : 133.510009765625,
-                  "z" : 0
-               },
-               "rotation" : {
-                  "x" : 0,
-                  "y" : 0,
-                  "z" : 0
-               },
-               "scale" : {
-                  "x" : 4.1706833839416504,
-                  "y" : 5.8612666130065918,
-                  "z" : 1
-               }
-            },
-            "sTypeComponent" : {
-               "type" : "TILE_WALKABLE"
-            },
-            "sUiComponent" : {
-               "horizontal_alignment" : "RIGHT",
-               "layer" : 0,
-               "offset" : {
-                  "x" : 0,
-                  "y" : 3
-               },
-               "percentage_size" : true,
-               "size" : {
-                  "x" : 0.10000000894069672,
-                  "y" : 0.20000000298023224
-               },
-               "vertical_alignment" : "BOTTOM"
-            }
-         },
-         "name" : "HUD_DISPLAY_GOLD",
-         "tag" : "HudDisplayGold"
       },
       {
          "components" : {
@@ -567,7 +387,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 1632,
-                  "y" : 133.510009765625,
+                  "y" : 132.20999145507813,
                   "z" : 0
                },
                "rotation" : {
@@ -577,7 +397,7 @@
                },
                "scale" : {
                   "x" : 6.399993896484375,
-                  "y" : 6.0859193801879883,
+                  "y" : 6.0266604423522949,
                   "z" : 1
                }
             },
@@ -624,7 +444,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 1632,
-                  "y" : 205.39999389648438,
+                  "y" : 203.39999389648438,
                   "z" : 0
                },
                "rotation" : {
@@ -634,7 +454,7 @@
                },
                "scale" : {
                   "x" : 6.3999357223510742,
-                  "y" : 6.0858993530273438,
+                  "y" : 6.0266404151916504,
                   "z" : 1
                }
             },
@@ -698,7 +518,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 940.79998779296875,
-                  "y" : 272.15499877929688,
+                  "y" : 269.5050048828125,
                   "z" : 0
                },
                "rotation" : {
@@ -708,12 +528,9 @@
                },
                "scale" : {
                   "x" : 124.79998779296875,
-                  "y" : 15.405000686645508,
+                  "y" : 15.255000114440918,
                   "z" : 1
                }
-            },
-            "sTypeComponent" : {
-               "type" : "TILE_WALKABLE"
             },
             "sUiComponent" : {
                "horizontal_alignment" : "MIDDLE",
@@ -765,7 +582,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 960,
-                  "y" : 513.5,
+                  "y" : 508.5,
                   "z" : 0
                },
                "rotation" : {
@@ -775,12 +592,9 @@
                },
                "scale" : {
                   "x" : 192,
-                  "y" : 102.69999694824219,
+                  "y" : 101.69999694824219,
                   "z" : 1
                }
-            },
-            "sTypeComponent" : {
-               "type" : "TILE_WALKABLE"
             },
             "sUiComponent" : {
                "horizontal_alignment" : "MIDDLE",
@@ -799,6 +613,168 @@
          },
          "name" : "SIDEBAR_MANAGER",
          "tag" : "SidebarManager"
+      },
+      {
+         "components" : {
+            "sNameComponent" : {
+               "name" : "HUD_DISPLAY_GOLD"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 0,
+                  "b" : 0,
+                  "g" : 0,
+                  "r" : 0
+               },
+               "display" : true,
+               "dynamic" : false,
+               "hide_dynamic" : false,
+               "ignore_raycast" : false,
+               "materials" : [ "geometry_default.mat" ],
+               "model" : "resources/models/default.DAE",
+               "type" : "PLANE"
+            },
+            "sScriptComponent" : {
+               "scripts" : [
+                  {
+                     "name" : "DisplayGold"
+                  }
+               ]
+            },
+            "sTextComponent" : {
+               "color" : {
+                  "a" : 1,
+                  "b" : 0,
+                  "g" : 0.78431373834609985,
+                  "r" : 0.78431373834609985
+               },
+               "content" : "X",
+               "font_name" : "moonhouse.ttf",
+               "font_size" : 22,
+               "horizontal_alignment" : "LEFT",
+               "offset" : {
+                  "x" : 0,
+                  "y" : 0
+               },
+               "vertical_alignment" : "MIDDLE"
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 1824,
+                  "y" : 132.20999145507813,
+                  "z" : 0
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 19.200000762939453,
+                  "y" : 20.340000152587891,
+                  "z" : 1
+               }
+            },
+            "sUiComponent" : {
+               "horizontal_alignment" : "RIGHT",
+               "layer" : 0,
+               "offset" : {
+                  "x" : 0,
+                  "y" : 3
+               },
+               "percentage_size" : true,
+               "size" : {
+                  "x" : 0.10000000894069672,
+                  "y" : 0.20000000298023224
+               },
+               "vertical_alignment" : "BOTTOM"
+            }
+         },
+         "name" : "HUD_DISPLAY_GOLD",
+         "tag" : "HudDisplayGold"
+      },
+      {
+         "components" : {
+            "sNameComponent" : {
+               "name" : "HUD_DISPLAY_CASTLELIFE"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 0,
+                  "b" : 0,
+                  "g" : 0,
+                  "r" : 0
+               },
+               "display" : true,
+               "dynamic" : false,
+               "hide_dynamic" : false,
+               "ignore_raycast" : false,
+               "materials" : [ "MAT_Default" ],
+               "model" : "resources/models/default.DAE",
+               "type" : "MESH"
+            },
+            "sScriptComponent" : {
+               "scripts" : [
+                  {
+                     "name" : "DisplayCastleLife"
+                  }
+               ]
+            },
+            "sTextComponent" : {
+               "color" : {
+                  "a" : 1,
+                  "b" : 0.16470588743686676,
+                  "g" : 0.16470588743686676,
+                  "r" : 1
+               },
+               "content" : "x/x",
+               "font_name" : "moonhouse.ttf",
+               "font_size" : 26,
+               "horizontal_alignment" : "LEFT",
+               "offset" : {
+                  "x" : 0,
+                  "y" : 0
+               },
+               "vertical_alignment" : "MIDDLE"
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 1824,
+                  "y" : 203.40000915527344,
+                  "z" : 0
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 4.1706829071044922,
+                  "y" : 2.9020974636077881,
+                  "z" : 1
+               }
+            },
+            "sUiComponent" : {
+               "horizontal_alignment" : "RIGHT",
+               "layer" : 0,
+               "offset" : {
+                  "x" : 0,
+                  "y" : 15
+               },
+               "percentage_size" : true,
+               "size" : {
+                  "x" : 0.10000000149011612,
+                  "y" : 0.10000000149011612
+               },
+               "vertical_alignment" : "BOTTOM"
+            }
+         },
+         "name" : "HUD_DISPLAY_CASTLELIFE",
+         "tag" : "HudDisplayCastleLife"
       }
    ],
    "name" : "Tutorial"

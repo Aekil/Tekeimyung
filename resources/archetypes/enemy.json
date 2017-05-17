@@ -1,7 +1,7 @@
 {
    "components" : {
       "sBoxColliderComponent" : {
-         "isTrigger" : false,
+         "isTrigger" : true,
          "pos" : {
             "x" : 0,
             "y" : 0,
@@ -183,15 +183,6 @@
             }
          ]
       },
-      "sSphereColliderComponent" : {
-         "isTrigger" : false,
-         "pos" : {
-            "x" : 0,
-            "y" : 0,
-            "z" : 0
-         },
-         "radius" : 1
-      },
       "sTransformComponent" : {
          "pos" : {
             "x" : 213.03327941894531,
@@ -200,17 +191,14 @@
          },
          "rotation" : {
             "x" : 0,
-            "y" : 3.0517569030052982e-05,
-            "z" : 0.078400544822216034
+            "y" : 3.0517572668031789e-05,
+            "z" : 0.078399874269962311
          },
          "scale" : {
-            "x" : 0.99999994039535522,
-            "y" : 0.99999994039535522,
+            "x" : 0.99999397993087769,
+            "y" : 0.99999397993087769,
             "z" : 1
          }
-      },
-      "sTypeComponent" : {
-         "type" : "CHARACTER"
       }
    },
    "name" : "ENEMY",

@@ -22,6 +22,7 @@ public:
     static bool         pointVSAABB(const glm::vec3& point, const glm::vec3& boxPosition, const glm::vec3& boxSize);
     static bool         pointVSAABB2D(const glm::vec2& point, const glm::vec2& boxPosition, const glm::vec2& boxSize);
 
+    static bool         AABBVSAABB(const glm::vec3& boxPos1, const glm::vec3& boxSize1, const glm::vec3& boxPos2, const glm::vec3& boxSize2);
     static bool         sphereVSAABB(const glm::vec3& spherePosition, float sphereRadius, const glm::vec3& boxPosition, const glm::vec3& boxSize);
 
     static float        rayVSAABB(const Ray& ray, const glm::vec3& boxMin, const glm::vec3& boxMax);

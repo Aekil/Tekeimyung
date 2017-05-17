@@ -74,9 +74,6 @@
                   "y" : 1,
                   "z" : 1
                }
-            },
-            "sTypeComponent" : {
-               "type" : "TILE_WALKABLE"
             }
          },
          "name" : "GAME_MANAGER",
@@ -157,9 +154,6 @@
                   "y" : 0.47145816683769226,
                   "z" : 0.47145813703536987
                }
-            },
-            "sTypeComponent" : {
-               "type" : "CHARACTER"
             }
          },
          "name" : "PLAYER",
@@ -235,9 +229,6 @@
                   "y" : 1,
                   "z" : 1
                }
-            },
-            "sTypeComponent" : {
-               "type" : "TILE_NOT_WALKABLE"
             }
          },
          "name" : "CASTLE",
@@ -361,7 +352,7 @@
             "sScriptComponent" : {
                "scripts" : [
                   {
-                     "name" : "HudDisplayCastleLife"
+                     "name" : "DisplayCastleLife"
                   }
                ]
             },
@@ -385,7 +376,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 1824,
-                  "y" : 205.40000915527344,
+                  "y" : 203.40000915527344,
                   "z" : 0
                },
                "rotation" : {
@@ -395,12 +386,9 @@
                },
                "scale" : {
                   "x" : 4.1706829071044922,
-                  "y" : 2.9306333065032959,
+                  "y" : 2.9020974636077881,
                   "z" : 1
                }
-            },
-            "sTypeComponent" : {
-               "type" : "TILE_WALKABLE"
             },
             "sUiComponent" : {
                "horizontal_alignment" : "RIGHT",
@@ -438,14 +426,14 @@
                "dynamic" : false,
                "hide_dynamic" : false,
                "ignore_raycast" : false,
-               "materials" : [ "MAT_Default" ],
+               "materials" : [ "geometry_default.mat" ],
                "model" : "resources/models/default.DAE",
-               "type" : "MESH"
+               "type" : "PLANE"
             },
             "sScriptComponent" : {
                "scripts" : [
                   {
-                     "name" : "HudDisplayGold"
+                     "name" : "DisplayGold"
                   }
                ]
             },
@@ -469,7 +457,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 1824,
-                  "y" : 133.510009765625,
+                  "y" : 132.21000671386719,
                   "z" : 0
                },
                "rotation" : {
@@ -479,12 +467,9 @@
                },
                "scale" : {
                   "x" : 4.1706833839416504,
-                  "y" : 5.8612666130065918,
+                  "y" : 5.8041949272155762,
                   "z" : 1
                }
-            },
-            "sTypeComponent" : {
-               "type" : "TILE_WALKABLE"
             },
             "sUiComponent" : {
                "horizontal_alignment" : "RIGHT",
@@ -522,14 +507,14 @@
                "dynamic" : false,
                "hide_dynamic" : false,
                "ignore_raycast" : false,
-               "materials" : [ "MAT_Default" ],
+               "materials" : [ "geometry_default.mat" ],
                "model" : "resources/models/default.DAE",
-               "type" : "MESH"
+               "type" : "PLANE"
             },
             "sScriptComponent" : {
                "scripts" : [
                   {
-                     "name" : "HudDisplayWave"
+                     "name" : "DisplayWave"
                   }
                ]
             },
@@ -553,7 +538,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 1824,
-                  "y" : 61.620002746582031,
+                  "y" : 61.019996643066406,
                   "z" : 0
                },
                "rotation" : {
@@ -562,13 +547,10 @@
                   "z" : 0
                },
                "scale" : {
-                  "x" : 4.1706829071044922,
-                  "y" : 2.9306333065032959,
+                  "x" : 19.200000762939453,
+                  "y" : 10.170000076293945,
                   "z" : 1
                }
-            },
-            "sTypeComponent" : {
-               "type" : "TILE_WALKABLE"
             },
             "sUiComponent" : {
                "horizontal_alignment" : "RIGHT",
@@ -579,7 +561,7 @@
                },
                "percentage_size" : true,
                "size" : {
-                  "x" : 0.10000000149011612,
+                  "x" : 0.10000000894069672,
                   "y" : 0.10000000149011612
                },
                "vertical_alignment" : "BOTTOM"
@@ -637,7 +619,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 537.5999755859375,
-                  "y" : 944.8399658203125,
+                  "y" : 935.6400146484375,
                   "z" : 0
                },
                "rotation" : {
@@ -647,12 +629,9 @@
                },
                "scale" : {
                   "x" : 96.799873352050781,
-                  "y" : 5.8957400321960449,
+                  "y" : 5.8383326530456543,
                   "z" : 1
                }
-            },
-            "sTypeComponent" : {
-               "type" : "TILE_WALKABLE"
             },
             "sUiComponent" : {
                "horizontal_alignment" : "MIDDLE",
@@ -704,7 +683,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 960,
-                  "y" : 513.5,
+                  "y" : 508.5,
                   "z" : 0
                },
                "rotation" : {
@@ -714,12 +693,9 @@
                },
                "scale" : {
                   "x" : 192,
-                  "y" : 102.69999694824219,
+                  "y" : 101.69999694824219,
                   "z" : 1
                }
-            },
-            "sTypeComponent" : {
-               "type" : "TILE_WALKABLE"
             },
             "sUiComponent" : {
                "horizontal_alignment" : "MIDDLE",
@@ -764,7 +740,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 1628.800048828125,
-                  "y" : 133.12959289550781,
+                  "y" : 131.83329772949219,
                   "z" : 0
                },
                "rotation" : {
@@ -774,7 +750,7 @@
                },
                "scale" : {
                   "x" : 6.399993896484375,
-                  "y" : 6.0859193801879883,
+                  "y" : 6.0266604423522949,
                   "z" : 1
                }
             },
@@ -821,7 +797,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 1628.80029296875,
-                  "y" : 205.01950073242188,
+                  "y" : 203.023193359375,
                   "z" : 0
                },
                "rotation" : {
@@ -831,7 +807,7 @@
                },
                "scale" : {
                   "x" : 6.3999357223510742,
-                  "y" : 6.0858993530273438,
+                  "y" : 6.0266404151916504,
                   "z" : 1
                }
             },
@@ -878,7 +854,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 1628.80029296875,
-                  "y" : 61.239601135253906,
+                  "y" : 60.643302917480469,
                   "z" : 0
                },
                "rotation" : {
@@ -888,7 +864,7 @@
                },
                "scale" : {
                   "x" : 6.3999357223510742,
-                  "y" : 6.0859198570251465,
+                  "y" : 6.0266609191894531,
                   "z" : 1
                }
             },
@@ -952,7 +928,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 940.79998779296875,
-                  "y" : 272.15499877929688,
+                  "y" : 269.5050048828125,
                   "z" : 0
                },
                "rotation" : {
@@ -962,12 +938,9 @@
                },
                "scale" : {
                   "x" : 124.79998779296875,
-                  "y" : 15.405000686645508,
+                  "y" : 15.255000114440918,
                   "z" : 1
                }
-            },
-            "sTypeComponent" : {
-               "type" : "TILE_WALKABLE"
             },
             "sUiComponent" : {
                "horizontal_alignment" : "MIDDLE",

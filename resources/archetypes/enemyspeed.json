@@ -1,18 +1,5 @@
 {
    "components" : {
-      "sBoxColliderComponent" : {
-         "isTrigger" : false,
-         "pos" : {
-            "x" : 0,
-            "y" : 0,
-            "z" : 0
-         },
-         "size" : {
-            "x" : 1.1000000238418579,
-            "y" : 1.1000000238418579,
-            "z" : 1.1000000238418579
-         }
-      },
       "sDynamicComponent" : null,
       "sNameComponent" : {
          "name" : "ENEMY_SPEED"
@@ -137,13 +124,13 @@
          ]
       },
       "sSphereColliderComponent" : {
-         "isTrigger" : false,
+         "isTrigger" : true,
          "pos" : {
             "x" : 0,
             "y" : 0,
-            "z" : 0
+            "z" : -4.76837158203125e-07
          },
-         "radius" : 1
+         "radius" : 1.2000000476837158
       },
       "sTransformComponent" : {
          "pos" : {
@@ -161,9 +148,6 @@
             "y" : 1,
             "z" : 1
          }
-      },
-      "sTypeComponent" : {
-         "type" : "CHARACTER"
       }
    },
    "name" : "ENEMY_SPEED",

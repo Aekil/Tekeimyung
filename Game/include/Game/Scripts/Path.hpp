@@ -43,7 +43,8 @@ public:
     Path();
     ~Path();
 
-    std::vector<glm::ivec2>         goToTarget(glm::ivec2 pos, glm::ivec2 target, Map* map);
+    bool goToTarget(glm::ivec2 pos, glm::ivec2 target, Map* map, std::vector<glm::ivec2>& path, glm::ivec2& closestTileFound);
+    bool isWalkable(Map& map, int x, int y);
 
 private:
     Node*                           getNodeFromPos(int x, int y);
@@ -61,6 +62,7 @@ private:
 
     glm::ivec2                      _from;
     glm::ivec2                      _target;
+    glm::ivec2*                     _closestTileFound = nullptr;
 
     Map*                            _map = nullptr;
 

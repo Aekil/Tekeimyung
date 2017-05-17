@@ -25,8 +25,8 @@ private:
     const Entity*   _castle;
     const Entity*   _castleLifeHudDisplay;
 
-    int             _tmpCastleLife = 0;
-    int             _tmpMaxCastleLife = 0;
+    int             _tmpCastleLife = -1;
+    int             _tmpMaxCastleLife = -1;
 };
 
 REGISTER_SCRIPT(DisplayCastleLife);
