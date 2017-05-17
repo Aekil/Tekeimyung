@@ -2,7 +2,9 @@
 * @Author   Mathieu Chassara
 */
 
-#include    <Engine/Core/GameState.hpp>
+#include <Engine/Core/GameState.hpp>
+
+#include <Engine/Utils/EventSound.hpp>
 
 START_GAMESTATE(HomeScreenState, "HomeScreen")
  public:
@@ -11,8 +13,11 @@ START_GAMESTATE(HomeScreenState, "HomeScreen")
      void            onEnter() override final;
      void            setupSystems() override final;
      bool            init() override final;
+     //bool            update(float elapsedTime);
 
 private:
     Entity*         _buttonHowToPlay = nullptr;
+
+    //tEventSound*    _backgroundMenuMusic = nullptr;
 
 END_GAMESTATE(HomeScreenState)

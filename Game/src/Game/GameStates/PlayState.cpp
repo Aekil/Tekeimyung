@@ -41,7 +41,7 @@ void    PlayState::setupSystems()
 
 bool    PlayState::init()
 {
-    _backgroundMusic = EventSound::getEventByEventType(eEventSound::BACKGROUND);
+    _backgroundGameMusic = EventSound::getEventByEventType(eEventSound::BACKGROUND);
 
     // Load tutorial level
     if (!TutoManager::_tutorialDone)
@@ -59,11 +59,11 @@ bool    PlayState::update(float elapsedTime)
     auto &&keyboard = GameWindow::getInstance()->getKeyboard();
     auto &&mouse = GameWindow::getInstance()->getMouse();
 
-    if (keyboard.getStateMap()[Keyboard::eKey::B] == Keyboard::eKeyState::KEY_PRESSED)
+    /*if (keyboard.getStateMap()[Keyboard::eKey::B] == Keyboard::eKeyState::KEY_PRESSED)
     {
         _gameStateManager->addState<BuildingListState>();
         TutoManagerMessage::getInstance()->sendMessage(eTutoState::CHECK_BUILDLIST);
-    }
+    }*/
     if (!TutoManagerMessage::getInstance()->tutorialDone())
     {
         if (keyboard.getStateMap()[Keyboard::eKey::K] == Keyboard::eKeyState::KEY_RELEASED ||
@@ -81,11 +81,11 @@ bool    PlayState::update(float elapsedTime)
         _gameStateManager->addState<PauseState>();
     }
 
-    // Play background music
+    // Play background game music
     #if (ENABLE_SOUND)
-        if (_backgroundMusic->soundID != -1 && !SoundManager::getInstance()->isSoundPlaying(_backgroundMusic->soundID))
+        if (_backgroundGameMusic->soundID != -1 && !SoundManager::getInstance()->isSoundPlaying(_backgroundGameMusic->soundID))
         {
-            SoundManager::getInstance()->playSound(_backgroundMusic->soundID);
+            SoundManager::getInstance()->playSound(_backgroundGameMusic->soundID);
         }
     #endif
 

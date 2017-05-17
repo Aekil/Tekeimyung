@@ -1,10 +1,17 @@
 {
    "events" : [
       {
+         "name" : "BACKGROUND_MENU",
+         "sound" : {
+            "name" : "Delta.mp3",
+            "path" : "resources/sounds/musics/Delta.mp3"
+         }
+      },
+      {
          "name" : "BACKGROUND",
          "sound" : {
-            "name" : "background_epic_music.mp3",
-            "path" : "resources/sounds/musics/background_epic_music.mp3"
+            "name" : "bensound-scifi.mp3",
+            "path" : "resources/sounds/musics/bensound-scifi.mp3"
          }
       },
       {

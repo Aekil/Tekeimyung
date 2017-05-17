@@ -30,7 +30,21 @@ void    HomeScreenState::setupSystems()
 
 bool    HomeScreenState::init()
 {
+    //_backgroundMenuMusic = EventSound::getEventByEventType(eEventSound::BACKGROUND_MENU);
+
     //  Retrieving the "How to Play" button in order to play its animation.
     this->_buttonHowToPlay = EntityFactory::createOrGetEntity("BUTTON_HOW_TO_PLAY");
     return (true);
 }
+
+/*bool    HomeScreenState::update(float elapsedTime)
+{
+    // Play background home menu music
+#if (ENABLE_SOUND)
+    if (_backgroundMenuMusic->soundID != -1 && !SoundManager::getInstance()->isSoundPlaying(_backgroundMenuMusic->soundID))
+    {
+        SoundManager::getInstance()->playSound(_backgroundMenuMusic->soundID);
+    }
+#endif
+    return (true); // ok ?
+}*/

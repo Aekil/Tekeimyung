@@ -29,5 +29,5 @@ START_GAMESTATE(PlayState, "Game")
 private:
     std::pair <Keyboard::eKey, IInputEvent *>    _pair;
 
-    tEventSound*                        _backgroundMusic = nullptr;
+    tEventSound*                        _backgroundGameMusic = nullptr;
 END_GAMESTATE(PlayState)

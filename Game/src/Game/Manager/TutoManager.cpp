@@ -79,10 +79,10 @@ Walls are very cheap and can help you to make the enemies follow a specific path
             eTutoState::ENEMY_DEAD,
             "Try to kill this enemy"
         },
-        {
+        /*{
             eTutoState::CHECK_BUILDLIST,
             "Check the Build list with B to know what you can build and for how much golds"
-        },
+        },*/
         {
             eTutoState::CHECK_HOWTOPLAY,
             "Check the 'How to Play' from the pause menu (press Escape) for more informations"
