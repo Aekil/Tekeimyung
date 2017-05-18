@@ -50,9 +50,10 @@ private:
 
     tEventSound*    _buildSound = nullptr;
 
-    std::vector<Entity::sHandle> _alreadyBuiltTile;
-
     std::map<std::string, int> _buildingPrices;
+
+public:
+    std::vector<Entity::sHandle> _alreadyBuiltTile;
 
 private:
     void            retrievePlayerScript();

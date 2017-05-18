@@ -9,6 +9,7 @@
 
 #include <Game/Character/Enemy.hpp>
 #include <Game/Character/Player.hpp>
+#include <Game/Character/NewBuild.hpp>
 #include <Game/Manager/GameManager.hpp>
 #include <Game/Manager/GoldManager.hpp>
 #include <Game/Manager/TutoManagerMessage.hpp>
@@ -213,11 +214,24 @@ void Enemy::destroyWall(Entity* entity, const glm::vec3& pos)
         LOG_WARN("Could not find entity with tag \"%s\"", "GameManager");
         return;
     }
+    Entity* player = em->getEntityByTag("Player");
+    if (!player)
+    {
+        LOG_WARN("Could not find entity with tag \"%s\"", "Player");
+        return;
+    }
 
     GameManager* gameManagerScript = this->getEntityScript<GameManager>(gameManager, "GameManager");
     if (!gameManagerScript)
     {
         LOG_WARN("Could not find script GameManager on entity GameManager");
+        return;
+    }
+
+    NewBuild* newBuildScript = this->getEntityScript<NewBuild>(player, "NewBuild");
+    if (!newBuildScript)
+    {
+        LOG_WARN("Could not find script NewBuild on entity NewBuild");
         return;
     }
 
@@ -231,8 +245,16 @@ void Enemy::destroyWall(Entity* entity, const glm::vec3& pos)
     gameManagerScript->map[tilePos.x][tilePos.y] = 1;
 
     auto& towersLayer = gameManagerScript->map.getTowersLayer();
+    auto& mapEntities = gameManagerScript->map.getEntities();
     if (towersLayer[tilePos.x][tilePos.y] != nullptr)
     {
+        auto alreadyBuiltTile = std::find(newBuildScript->_alreadyBuiltTile.begin(),
+                                            newBuildScript->_alreadyBuiltTile.end(),
+                                            mapEntities[tilePos.x][tilePos.y]->handle);
+        if (alreadyBuiltTile != newBuildScript->_alreadyBuiltTile.end())
+        {
+            newBuildScript->_alreadyBuiltTile.erase(alreadyBuiltTile);
+        }
         Destroy(towersLayer[tilePos.x][tilePos.y]);
         towersLayer[tilePos.x][tilePos.y] = nullptr;
     }
