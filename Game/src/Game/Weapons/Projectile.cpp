@@ -55,6 +55,11 @@ void Projectile::onCollisionEnter(Entity* entity)
         enemy->takeDamage(_damage);
         destroyProjectile();
     }
+    else if (entity->getTag() == "TileWall" ||
+            entity->getTag() == "TileBaseTurret")
+    {
+        destroyProjectile();
+    }
 }
 
 void Projectile::followTarget(Entity* target)
