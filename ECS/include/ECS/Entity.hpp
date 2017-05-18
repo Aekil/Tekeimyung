@@ -31,6 +31,8 @@ public:
         sHandle(uint32_t handle);
         sHandle(const sHandle& handle);
 
+        sHandle& operator=(const sHandle& handle);
+
         union
         {
             struct

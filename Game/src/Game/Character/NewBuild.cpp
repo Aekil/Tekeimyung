@@ -348,17 +348,24 @@ void        NewBuild::placePreviewedEntity()
         previewRenderer->ignoreRaycast = true;
     }
 
-    auto&   position = this->_tileHovered->getComponent<sTransformComponent>()->getPos();
-    auto    entity = this->Instantiate(this->_currentChoice, glm::vec3(position.x, position.y + 12.5f, position.z));
+    auto& position = this->_tileHovered->getComponent<sTransformComponent>()->getPos();
+    Entity* entity = this->Instantiate(this->_currentChoice, glm::vec3(position.x, position.y + 12.5f, position.z));
     this->_alreadyBuiltTile.push_back(this->_tileHovered->handle);
 
-    glm::ivec2              tilePos;
-    sTransformComponent*    tileTransform = this->_tileHovered->getComponent<sTransformComponent>();
+    glm::ivec2 tilePos;
+    sTransformComponent* tileTransform = this->_tileHovered->getComponent<sTransformComponent>();
 
     tilePos.x = static_cast<int>(std::ceil(tileTransform->getPos().x) / 25.0f);
     tilePos.y = static_cast<int>(tileTransform->getPos().z / 25.0f);
+
     this->_gameManager->map[tilePos.x][tilePos.y] = 0;
     this->updateSpawnersPaths(tilePos);
+
+    // Place the tower in the map tower layer
+    if (this->_currentChoice == "TOWER_FIRE")
+    {
+        this->_gameManager->map.getTowersLayer()[tilePos.x][tilePos.y] = entity;
+    }
 
 #if (ENABLE_SOUND)
     if (_buildSound->soundID != -1)

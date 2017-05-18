@@ -31,6 +31,7 @@ public:
     std::unordered_map<int, std::vector<Entity*>>& getMapParts();
     DoubleArray<char>&      getSpawnersPaths();
     DoubleArray<Entity*>&   getEntities();
+    DoubleArray<Entity*>&   getTowersLayer();
     const glm::ivec2&       getCastlePos() const;
 
     void                    setCastlePos(const glm::ivec2& castlePos);
@@ -41,6 +42,7 @@ private:
 private:
     DoubleArray<char>   _spawnersPaths;
     DoubleArray<Entity*> _entities;
+    DoubleArray<Entity*> _towerslayer;
 
     std::unordered_map<int, std::vector<Entity*>> _mapParts;
     glm::ivec2 _castlePos;

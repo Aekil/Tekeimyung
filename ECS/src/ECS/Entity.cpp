@@ -14,6 +14,12 @@ Entity::sHandle::sHandle(uint32_t handle): value(handle) {}
 
 Entity::sHandle::sHandle(const sHandle& handle): value(handle.value) {}
 
+Entity::sHandle& Entity::sHandle::operator=(const sHandle& handle)
+{
+    value = handle.value;
+    return (*this);
+}
+
 Entity::sHandle::operator   uint32_t()
 {
     return (value);

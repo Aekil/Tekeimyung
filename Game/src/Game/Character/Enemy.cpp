@@ -218,9 +218,24 @@ void Enemy::destroyWall(Entity* entity, const glm::vec3& pos)
     if (!gameManagerScript)
     {
         LOG_WARN("Could not find script GameManager on entity GameManager");
+        return;
     }
+
     Destroy(entity);
-    gameManagerScript->map[pos.x][pos.y] = 0;
+
+
+    glm::ivec2 tilePos;
+    tilePos.x = static_cast<int>(std::ceil(pos.x) / 25.0f);
+    tilePos.y = static_cast<int>(pos.z / 25.0f);
+
+    gameManagerScript->map[tilePos.x][tilePos.y] = 1;
+
+    auto& towersLayer = gameManagerScript->map.getTowersLayer();
+    if (towersLayer[tilePos.x][tilePos.y] != nullptr)
+    {
+        Destroy(towersLayer[tilePos.x][tilePos.y]);
+        towersLayer[tilePos.x][tilePos.y] = nullptr;
+    }
 }
 
 bool Enemy::updateEditor()

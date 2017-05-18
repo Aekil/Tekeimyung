@@ -28,6 +28,11 @@ DoubleArray<Entity*>&  Map::getEntities()
     return (_entities);
 }
 
+DoubleArray<Entity*>&  Map::getTowersLayer()
+{
+    return (_towerslayer);
+}
+
 const glm::ivec2&   Map::getCastlePos() const
 {
     return (_castlePos);
@@ -36,6 +41,7 @@ const glm::ivec2&   Map::getCastlePos() const
 void    Map::init()
 {
     _entities.allocate(_width, _height);
+    _towerslayer.allocate(_width, _height);
     _spawnersPaths.allocate(_width, _height);
     for (int x = 0; x < _width; ++x)
     {

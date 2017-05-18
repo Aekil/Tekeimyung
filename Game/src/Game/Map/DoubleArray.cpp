@@ -12,6 +12,7 @@ DoubleArray<T>::sLayer::sLayer(DoubleArray<T>* array, int x): _array(array), _x(
 template <typename T>
 T&    DoubleArray<T>::sLayer::operator[](int y)
 {
+    ASSERT(_x < _array->_width && y < _array->_height, "Out of range");
     return _array->_content[_x * _array->_height + y];
 }
 
