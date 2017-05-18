@@ -17,7 +17,7 @@ void Tower::start()
     _lastShotTime = _fireRate;
     _towerTransform = entity->getComponent<sTransformComponent>();
     _towerRender = entity->getComponent<sRenderComponent>();
-    _range = 6.0f;
+    _range = 12.0f;
     _damage = 125;
     _towershootSound = EventSound::getEventByEventType(eEventSound::TOWER_SHOOT);
 }
@@ -52,13 +52,33 @@ void Tower::update(float dt)
 bool Tower::isInRange(Entity* entity)
 {
     sBoxColliderComponent* box = entity->getComponent<sBoxColliderComponent>();
+    sSphereColliderComponent* sphere = entity->getComponent<sSphereColliderComponent>();
+    sTransformComponent* transform = entity->getComponent<sTransformComponent>();
     auto& pos = entity->getComponent<sTransformComponent>()->getPos();
     auto& towerPos = this->entity->getComponent<sTransformComponent>()->getPos();
 
-    if (!box)
-        return (false);
+    if (box)
+    {
+        return (Collisions::sphereVSAABB(
+            towerPos,
+            _range * (SIZE_UNIT / 2.0f),
+            box->pos + pos,
+            glm::vec3(SIZE_UNIT * box->size.x * transform->getScale().x,
+                SIZE_UNIT * box->size.y * transform->getScale().y,
+                SIZE_UNIT * box->size.z * transform->getScale().z)
+            ));
+    }
+    else if (sphere)
+    {
+        return (Collisions::sphereVSsphere(
+            towerPos,
+            _range * (SIZE_UNIT / 2.0f),
+            sphere->pos + pos,
+            sphere->radius * std::max({ transform->getScale().x, transform->getScale().y, transform->getScale().z }) * (SIZE_UNIT / 2.0f)
+        ));
+    }
 
-    return (Collisions::sphereVSAABB(towerPos, _range * SIZE_UNIT, box->pos + pos, glm::vec3(box->size.x * SIZE_UNIT, box->size.y * SIZE_UNIT, box->size.z * SIZE_UNIT)));
+    return (false);
 }
 
 void Tower::shootTarget(Entity* target)
