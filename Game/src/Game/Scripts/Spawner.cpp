@@ -370,11 +370,17 @@ void    Spawner::findBlockedPath(glm::ivec2 from, const glm::ivec2& to, std::vec
                                 tmpPath,
                                 dirty);
         }
-
-        // Add the path to the closest tile into the final return path
-        for (const glm::ivec2& pos: tmpPath)
+        if (std::find(path.begin(), path.end(), closestTileFound) != path.end())
         {
-            path.push_back(pos);
+            closestTileFound = from;
+        }
+        else
+        {
+            // Add the path to the closest tile into the final return path
+            for (const glm::ivec2& pos: tmpPath)
+            {
+                path.push_back(pos);
+            }
         }
 
         // Find the closest path from the closest tile found to the target,
