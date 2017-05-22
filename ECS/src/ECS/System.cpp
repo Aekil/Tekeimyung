@@ -1,6 +1,12 @@
+/**
+* @Author   Guillaume Labey
+*/
+
+#include <algorithm>
+
 #include <ECS/System.hpp>
 
-System::System() {}
+System::System(uint32_t id): _id(id) {}
 
 System::~System() {}
 
@@ -11,22 +17,99 @@ bool    System::init()
 
 void    System::forEachEntity(EntityManager& em, std::function<void(Entity* entity)> callback)
 {
-    for (auto &&entity : em.getEntities())
+    for (uint32_t idx = 0; idx < this->_entities.size(); idx++)
     {
-        bool hasComponents = true;
+        Entity* entity = em.getEntity(this->_entities[idx]);
+        if (!entity)
+            continue;
 
-        for (auto componentType : _components)
-        {
-            size_t hashCode = componentType.hash_code();
-            if (!entity.second->hasComponent(hashCode))
-            {
-                hasComponents = false;
-                break;
-            }
-        }
+        if (this->hasDependencyDisabled(entity))
+            continue;
 
-        if (hasComponents)
-            callback(entity.second);
+        callback(entity);
     }
-    em.destroyEntities();
+}
+
+uint32_t    System::getId() const
+{
+    return (_id);
+}
+
+uint32_t    System::getEntitiesNb() const
+{
+    return ((uint32_t)_entities.size());
+}
+
+bool    System::hasDependencyDisabled(Entity* entity) const
+{
+    for (auto componentHash : _components)
+    {
+        if (!entity->getComponent(componentHash)->enabled)
+            return (true);
+    }
+
+    return (false);
+}
+
+bool    System::hasDependency(sComponent* component) const
+{
+    for (auto componentHash : _components)
+    {
+        if (componentHash == component->id)
+            return (true);
+    }
+    return (false);
+}
+
+bool    System::entityMatchDependencies(Entity* entity) const
+{
+    for (auto component: _components)
+    {
+        if (!entity->hasComponent(component))
+            return (false);
+    }
+    return (true);
+}
+
+bool    System::onEntityNewComponent(Entity* entity, sComponent* component)
+{
+    // The system is dependant of the component
+    if (hasDependency(component) &&
+        // The entity has got all components to be in the system
+        entityMatchDependencies(entity) &&
+        // The entity is not already in the system list
+        std::find(_entities.cbegin(), _entities.cend(), entity->handle) == _entities.cend())
+    {
+        _entities.push_back(entity->handle);
+        return (true);
+    }
+    return (false);
+}
+
+bool    System::onEntityRemovedComponent(Entity* entity, sComponent* component)
+{
+    // The system is dependant of the component
+    if (hasDependency(component))
+    {
+        auto foundEntity = std::find(_entities.cbegin(), _entities.cend(), entity->handle);
+        // The entity is in the system list
+        if (foundEntity != _entities.cend())
+        {
+            _entities.erase(foundEntity);
+            return (true);
+        }
+    }
+    return (false);
+}
+
+bool    System::onEntityDeleted(Entity* entity)
+{
+    auto foundEntity = std::find(_entities.cbegin(), _entities.cend(), entity->handle);
+    // The entity is in the system list
+    if (foundEntity != _entities.cend())
+    {
+        _entities.erase(foundEntity);
+        return (true);
+    }
+    return (false);
 }

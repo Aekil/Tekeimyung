@@ -1,17 +1,68 @@
 {
-    "name": "BLOCK_GREEN",
-    "components": {
-            "sPositionComponent": {
-                "x": 0,
-                "y": 0,
-                "z": 0
-            },
-            "sRenderComponent": {
-                "texture": "resources/sprites/blocks/block_green.png",
-                "type": "TILE"
-            },
-            "sTypeComponent": {
-                "type": "TILE_WALKABLE"
+   "components" : {
+      "sBoxColliderComponent" : {
+         "isTrigger" : false,
+         "pos" : {
+            "x" : 4.76837158203125e-06,
+            "y" : 6.25,
+            "z" : 7.62939453125e-06
+         },
+         "size" : {
+            "x" : 2.6000027656555176,
+            "y" : 1.3500049114227295,
+            "z" : 2.6000032424926758
+         }
+      },
+      "sNameComponent" : {
+         "name" : "BLOCK_GREEN"
+      },
+      "sRenderComponent" : {
+         "animated" : false,
+         "animations" : [],
+         "color" : {
+            "a" : 1,
+            "b" : 1,
+            "g" : 1,
+            "r" : 1
+         },
+         "display" : true,
+         "dynamic" : false,
+         "hide_dynamic" : false,
+         "ignore_raycast" : false,
+         "materials" : [ "geometry_default.mat" ],
+         "model" : "resources/models/blocks/block.DAE",
+         "texture" : "",
+         "type" : "MESH"
+      },
+      "sScriptComponent" : {
+         "class" : [ "Tile" ],
+         "scripts" : [
+            {
+               "name" : "Tile"
             }
-        }
+         ]
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 50,
+            "y" : 12.5,
+            "z" : 175
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "scale" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         }
+      },
+      "sTypeComponent" : {
+         "type" : "TILE_WALKABLE"
+      }
+   },
+   "name" : "BLOCK_GREEN",
+   "tag" : "BlockGreen"
 }

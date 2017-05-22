@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #include <GL/glew.h>
 
 #include <Engine/Graphics/Buffer.hpp>
@@ -63,14 +67,23 @@ void    Buffer::updateData(Vertex* vertices, int verticesNb, GLuint* indices, in
         sizeof(Vertex), // size between vertices
         (GLvoid*)(sizeof(GL_FLOAT) * 3));
 
-    // Vertex texture coords
+    // Vertex normal
     glVertexAttribPointer(
         2, // layout(location=2)
-        2, // 2 components in vec2
+        3, // 3 components in vec3
         GL_FLOAT, // component type
         GL_FALSE, // normalized values (between 0 and 1), GL_FALSE
         sizeof(Vertex), // size between vertices
         (GLvoid*)(sizeof(GL_FLOAT) * 6));
+
+    // Vertex normal
+    glVertexAttribPointer(
+        3, // layout(location=3)
+        2, // 2 components in vec2
+        GL_FLOAT, // component type
+        GL_FALSE, // normalized values (between 0 and 1), GL_FALSE
+        sizeof(Vertex), // size between vertices
+        (GLvoid*)(sizeof(GL_FLOAT) * 9));
 
     // Enable vertex attributes with layout(location=0)
     glEnableVertexAttribArray(0);
@@ -80,6 +93,9 @@ void    Buffer::updateData(Vertex* vertices, int verticesNb, GLuint* indices, in
 
     // Enable vertex attributes with layout(location=2)
     glEnableVertexAttribArray(2);
+
+    // Enable vertex attributes with layout(location=3)
+    glEnableVertexAttribArray(3);
 
     // Unbind Vertex Array
     glBindVertexArray(0);

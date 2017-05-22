@@ -1,0 +1,63 @@
+{
+   "components" : {
+      "sButtonComponent" : {
+         "action" : "NONE",
+         "action_level" : "",
+         "remove_states" : 0
+      },
+      "sNameComponent" : {
+         "name" : "BUTTON_TOGGLE_WINDOWED"
+      },
+      "sRenderComponent" : {
+         "animated" : false,
+         "animations" : [],
+         "color" : {
+            "a" : 1,
+            "b" : 1,
+            "g" : 1,
+            "r" : 1
+         },
+         "display" : true,
+         "dynamic" : false,
+         "hide_dynamic" : false,
+         "ignore_raycast" : false,
+         "materials" : [ "button_toogle_windowed.mat" ],
+         "model" : "resources/models/default.DAE",
+         "texture" : "resources/sprites/buttons/button_toggle_fullscreen.png",
+         "type" : "PLANE"
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 960,
+            "y" : 539.010009765625,
+            "z" : 0
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "scale" : {
+            "x" : 30,
+            "y" : 7.1999526023864746,
+            "z" : 6
+         }
+      },
+      "sUiComponent" : {
+         "horizontal_alignment" : "MIDDLE",
+         "layer" : 0,
+         "offset" : {
+            "x" : 0,
+            "y" : 3
+         },
+         "percentage_size" : true,
+         "size" : {
+            "x" : 0.15625,
+            "y" : 0.070795997977256775
+         },
+         "vertical_alignment" : "MIDDLE"
+      }
+   },
+   "name" : "BUTTON_TOGGLE_WINDOWED",
+   "tag" : ""
+}

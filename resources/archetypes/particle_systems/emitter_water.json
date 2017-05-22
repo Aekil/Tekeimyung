@@ -1,60 +1,105 @@
 {
-    "name": "EMITTER_WATER",
-    "components": {
-            "sPositionComponent": {
-                "x": 0,
-                "y": 0,
-                "z": 0
+   "components" : {
+      "sNameComponent" : {
+         "name" : "EMITTER_WATER"
+      },
+      "sParticleEmitterComponent" : {
+         "angle" : 25.161001205444336,
+         "angle_variance" : 0,
+         "color" : {
+            "finish" : {
+               "a" : 0,
+               "b" : 0,
+               "g" : 0.47058823704719543,
+               "r" : 0.78431373834609985
             },
-            "sRenderComponent": {
-                "texture": "resources/sprites/particles/particle_circle.png",
-                "type": "OBJECT"
-            },
-            "sTypeComponent": {
-                "type": "OBJECT"
-            },
-            "sParticleEmitterComponent": {
-                "emitter_life": 1.0,
-                "rate": 0,
-                "spawn_nb": 9,
-                "life": 80,
-                "life_variance": 30,
-                "angle": 301,
-                "angle_variance": 67,
-                "speed": 101,
-                "speed_variance": 22,
-                "color": {
-                    "start": {
-                        "r": 0.0,
-                        "g": 0.3,
-                        "b": 1.0,
-                        "a": 0.6
-                    },
-                    "finish": {
-                        "r": 0.0,
-                        "g": 0.64,
-                        "b": 1.0,
-                        "a": 0
-                    },
-                    "start_variance": {
-                        "r": 0,
-                        "g": 0,
-                        "b": 0,
-                        "a": 0
-                    },
-                    "finish_variance": {
-                        "r": 0,
-                        "g": 0,
-                        "b": 0,
-                        "a": 0
-                    }
-                },
-                "size": {
-                    "start": 1.0,
-                    "start_variance": 0.0,
-                    "finish": 0.5,
-                    "finish_variance": 0.0
-                }
+            "start" : {
+               "a" : 0.60000002384185791,
+               "b" : 0,
+               "g" : 0.30196079611778259,
+               "r" : 0.70980393886566162
             }
-        }
+         },
+         "display_only_particles" : true,
+         "emitter_life" : 0,
+         "life" : 80,
+         "life_variance" : 30,
+         "materials" : [ "MAT_Default" ],
+         "max_particles" : 50,
+         "model" : "resources/models/default.DAE",
+         "rate" : 0,
+         "size" : {
+            "finish" : 0.18800000846385956,
+            "finish_variance" : 0,
+            "start" : 0.26900002360343933,
+            "start_variance" : 0
+         },
+         "spawn_nb" : 1,
+         "speed" : 22.581001281738281,
+         "speed_variance" : 17.204000473022461,
+         "texture" : "resources/sprites/particles/particle_circle.png",
+         "type" : "MESH"
+      },
+      "sRenderComponent" : {
+         "animated" : false,
+         "animations" : [
+            {
+               "layer" : "DEFAULT",
+               "name" : "rotation animation",
+               "params" : [
+                  {
+                     "frames" : [
+                        {
+                           "easing" : "NONE",
+                           "time" : 1,
+                           "value" : {
+                              "x" : 0,
+                              "y" : 360,
+                              "z" : 0
+                           }
+                        }
+                     ],
+                     "name" : "rotation"
+                  }
+               ]
+            }
+         ],
+         "color" : {
+            "a" : 0,
+            "b" : 0,
+            "g" : 0,
+            "r" : 1
+         },
+         "display" : true,
+         "dynamic" : false,
+         "hide_dynamic" : false,
+         "ignore_raycast" : false,
+         "materials" : [ "geometry_default.mat" ],
+         "model" : "resources/models/default.DAE",
+         "texture" : "",
+         "type" : "BOX"
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 300,
+            "y" : 12.5,
+            "z" : 125
+         },
+         "rotation" : {
+            "x" : 90,
+            "y" : 6.103515625e-05,
+            "z" : 6.103515625e-05
+         },
+         "scale" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         }
+      },
+      "sTypeComponent" : {
+         "type" : "OBJECT"
+      }
+   },
+   "name" : "EMITTER_WATER",
+   "tag" : ""
 }

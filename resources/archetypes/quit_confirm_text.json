@@ -1,0 +1,58 @@
+{
+   "components" : {
+      "sNameComponent" : {
+         "name" : "QUIT_CONFIRM_TEXT"
+      },
+      "sRenderComponent" : {
+         "animated" : false,
+         "animations" : [],
+         "color" : {
+            "a" : 1,
+            "b" : 1,
+            "g" : 1,
+            "r" : 1
+         },
+         "display" : true,
+         "dynamic" : false,
+         "hide_dynamic" : false,
+         "ignore_raycast" : false,
+         "materials" : [ "quit_confirm_text.mat" ],
+         "model" : "resources/models/default.DAE",
+         "texture" : "resources/sprites/buttons/quit_confirmation_message.png",
+         "type" : "PLANE"
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 960,
+            "y" : 610.20001220703125,
+            "z" : 0
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "scale" : {
+            "x" : 60,
+            "y" : 7.1999526023864746,
+            "z" : 1
+         }
+      },
+      "sUiComponent" : {
+         "horizontal_alignment" : "MIDDLE",
+         "layer" : 0,
+         "offset" : {
+            "x" : 0,
+            "y" : 10
+         },
+         "percentage_size" : true,
+         "size" : {
+            "x" : 0.3125,
+            "y" : 0.070795997977256775
+         },
+         "vertical_alignment" : "MIDDLE"
+      }
+   },
+   "name" : "QUIT_CONFIRM_TEXT",
+   "tag" : ""
+}

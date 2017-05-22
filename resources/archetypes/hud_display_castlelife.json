@@ -1,0 +1,81 @@
+{
+   "components" : {
+      "sNameComponent" : {
+         "name" : "HUD_DISPLAY_CASTLELIFE"
+      },
+      "sRenderComponent" : {
+         "animated" : false,
+         "animations" : [],
+         "color" : {
+            "a" : 0,
+            "b" : 0,
+            "g" : 0,
+            "r" : 0
+         },
+         "display" : true,
+         "dynamic" : false,
+         "hide_dynamic" : false,
+         "ignore_raycast" : false,
+         "materials" : [ "MAT_Default" ],
+         "model" : "resources/models/default.DAE",
+         "type" : "MESH"
+      },
+      "sScriptComponent" : {
+         "scripts" : [
+            {
+               "name" : "DisplayCastleLife"
+            }
+         ]
+      },
+      "sTextComponent" : {
+         "color" : {
+            "a" : 1,
+            "b" : 0.16470588743686676,
+            "g" : 0.16470588743686676,
+            "r" : 1
+         },
+         "content" : "x/x",
+         "font_name" : "moonhouse.ttf",
+         "font_size" : 26,
+         "horizontal_alignment" : "LEFT",
+         "offset" : {
+            "x" : 0,
+            "y" : 0
+         },
+         "vertical_alignment" : "MIDDLE"
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 1824,
+            "y" : 203.40000915527344,
+            "z" : 0
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "scale" : {
+            "x" : 4.1706829071044922,
+            "y" : 2.9020974636077881,
+            "z" : 1
+         }
+      },
+      "sUiComponent" : {
+         "horizontal_alignment" : "RIGHT",
+         "layer" : 0,
+         "offset" : {
+            "x" : 0,
+            "y" : 15
+         },
+         "percentage_size" : true,
+         "size" : {
+            "x" : 0.10000000149011612,
+            "y" : 0.10000000149011612
+         },
+         "vertical_alignment" : "BOTTOM"
+      }
+   },
+   "name" : "HUD_DISPLAY_CASTLELIFE",
+   "tag" : "HudDisplayCastleLife"
+}

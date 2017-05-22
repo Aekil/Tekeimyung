@@ -1,0 +1,89 @@
+{
+   "components" : {
+      "sNameComponent" : {
+         "name" : "SPHERE_LASER_EXPLOSION"
+      },
+      "sRenderComponent" : {
+         "animated" : false,
+         "animations" : [
+            {
+               "layer" : "DEFAULT",
+               "name" : "growing_up",
+               "params" : [
+                  {
+                     "frames" : [
+                        {
+                           "easing" : "NONE",
+                           "time" : 0.5,
+                           "value" : {
+                              "x" : 7.6999998092651367,
+                              "y" : 7.6999998092651367,
+                              "z" : 7.6999998092651367
+                           }
+                        }
+                     ],
+                     "name" : "scale"
+                  },
+                  {
+                     "frames" : [
+                        {
+                           "easing" : "NONE",
+                           "time" : 0.5,
+                           "value" : {
+                              "x" : 0,
+                              "y" : 360,
+                              "z" : 0
+                           }
+                        }
+                     ],
+                     "name" : "rotation"
+                  }
+               ]
+            }
+         ],
+         "color" : {
+            "a" : 1,
+            "b" : 1,
+            "g" : 1,
+            "r" : 1
+         },
+         "display" : true,
+         "dynamic" : false,
+         "hide_dynamic" : false,
+         "ignore_raycast" : false,
+         "materials" : [ "sphere_laser_explosion.mat" ],
+         "model" : "resources/models/default.DAE",
+         "type" : "SPHERE"
+      },
+      "sScriptComponent" : {
+         "scripts" : [
+            {
+               "lifetime" : 0.5,
+               "name" : "LifeTime"
+            }
+         ]
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 198.74853515625,
+            "y" : 100,
+            "z" : 369.568359375
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "scale" : {
+            "x" : 0.99999856948852539,
+            "y" : 1.0000004768371582,
+            "z" : 1.000002384185791
+         }
+      },
+      "sTypeComponent" : {
+         "type" : "TILE_WALKABLE"
+      }
+   },
+   "name" : "SPHERE_LASER_EXPLOSION",
+   "tag" : ""
+}

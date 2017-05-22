@@ -1,0 +1,115 @@
+{
+   "components" : {
+      "sDynamicComponent" : null,
+      "sNameComponent" : {
+         "name" : "PLAYER_BULLET"
+      },
+      "sParticleEmitterComponent" : {
+         "angle" : 30.968002319335938,
+         "angle_variance" : 0,
+         "color" : {
+            "finish" : {
+               "a" : 0,
+               "b" : 0,
+               "g" : 1,
+               "r" : 1
+            },
+            "start" : {
+               "a" : 1,
+               "b" : 1,
+               "g" : 0,
+               "r" : 1
+            }
+         },
+         "display_only_particles" : true,
+         "emitter_life" : 0,
+         "life" : 22,
+         "life_variance" : 0,
+         "materials" : [ "particle_circle.mat" ],
+         "max_particles" : 22,
+         "model" : "resources/models/default.DAE",
+         "rate" : 0,
+         "size" : {
+            "finish" : 0,
+            "finish_variance" : 0,
+            "start" : 2.2039999961853027,
+            "start_variance" : 0
+         },
+         "speed" : 34.409000396728516,
+         "speed_variance" : 0,
+         "texture" : "resources/sprites/particles/particle_circle.png",
+         "type" : "PLANE"
+      },
+      "sRenderComponent" : {
+         "animated" : false,
+         "animations" : [],
+         "color" : {
+            "a" : 1,
+            "b" : 1,
+            "g" : 1,
+            "r" : 1
+         },
+         "display" : true,
+         "dynamic" : false,
+         "hide_dynamic" : false,
+         "ignore_raycast" : false,
+         "materials" : [ "particle_circle.mat" ],
+         "model" : "resources/models/default.DAE",
+         "texture" : "resources/sprites/particles/particle_circle.png",
+         "type" : "PLANE"
+      },
+      "sRigidBodyComponent" : {
+         "collisions_enabled" : true,
+         "gravity" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "ignored_tags" : [],
+         "velocity" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         }
+      },
+      "sScriptComponent" : {
+         "class" : [ "Projectile" ],
+         "scripts" : [
+            {
+               "name" : "Projectile"
+            }
+         ]
+      },
+      "sSphereColliderComponent" : {
+         "isTrigger" : true,
+         "pos" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "radius" : 0.60000002384185791
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 61.366287231445313,
+            "y" : 12.999992370605469,
+            "z" : 106.1392822265625
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "scale" : {
+            "x" : 0.37000000476837158,
+            "y" : 0.37000000476837158,
+            "z" : 0.37000000476837158
+         }
+      },
+      "sTypeComponent" : {
+         "type" : "OBJECT"
+      }
+   },
+   "name" : "PLAYER_BULLET",
+   "tag" : "Projectile"
+}

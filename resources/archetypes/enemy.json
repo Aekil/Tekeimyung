@@ -1,49 +1,206 @@
 {
-    "name": "ENEMY",
-    "components": {
-            "sPositionComponent": {
-                "x": 9,
-                "y": 8,
-                "z": 1
+   "components" : {
+      "sBoxColliderComponent" : {
+         "isTrigger" : true,
+         "pos" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "size" : {
+            "x" : 1.1000000238418579,
+            "y" : 1.1000000238418579,
+            "z" : 1.1000000238418579
+         }
+      },
+      "sDynamicComponent" : null,
+      "sNameComponent" : {
+         "name" : "ENEMY"
+      },
+      "sRenderComponent" : {
+         "animated" : false,
+         "animations" : [
+            {
+               "layer" : "MOVE_LAYER",
+               "name" : "rotation_enemy",
+               "params" : [
+                  {
+                     "frames" : [
+                        {
+                           "easing" : "NONE",
+                           "time" : 1.5,
+                           "value" : {
+                              "x" : 0,
+                              "y" : 0,
+                              "z" : 360
+                           }
+                        }
+                     ],
+                     "name" : "rotation"
+                  }
+               ]
             },
-            "sDirectionComponent": {
-                "x": 0,
-                "y": 0
+            {
+               "layer" : "HIT_LAYER",
+               "name" : "hit",
+               "params" : [
+                  {
+                     "frames" : [
+                        {
+                           "easing" : "NONE",
+                           "time" : 0.25,
+                           "value" : {
+                              "w" : 1,
+                              "x" : 1,
+                              "y" : 0,
+                              "z" : 0
+                           }
+                        },
+                        {
+                           "easing" : "NONE",
+                           "time" : 0.5,
+                           "value" : {
+                              "w" : 1,
+                              "x" : 1,
+                              "y" : 0,
+                              "z" : 1
+                           }
+                        },
+                        {
+                           "easing" : "NONE",
+                           "time" : 0.75,
+                           "value" : {
+                              "w" : 1,
+                              "x" : 1,
+                              "y" : 0,
+                              "z" : 0
+                           }
+                        },
+                        {
+                           "easing" : "NONE",
+                           "time" : 1,
+                           "value" : {
+                              "w" : 1,
+                              "x" : 1,
+                              "y" : 1,
+                              "z" : 1
+                           }
+                        }
+                     ],
+                     "name" : "color"
+                  }
+               ]
             },
-            "sRenderComponent": {
-                "texture": "resources/sprites/characters/soldierSpriteSheet.png",
-                "color": {
-                    "r": 1,
-                    "g": 0,
-                    "b": 0
-                },
-                "type": "OBJECT",
-                "animated": true,
-                "animation": {
-                    "orientations": ["NW", "N", "NE", "E", "W", "SW", "S", "SE"],
-                    "frames": {
-                        "x": 9,
-                        "y": 8
-                    }
-                },
-                "spriteSize": {
-                    "width": 55.0,
-                    "height": 64.9
-                }
-            },
-            "sTypeComponent": {
-                "type": "CHARACTER"
-            },
-            "sRectHitboxComponent": {
-                "min": {
-                    "x": 614,
-                    "y": 188.8
-                },
-                "max": {
-                    "x": 669,
-                    "y": 123.9
-                }
-            },
-            "sAIComponent": {}
-        }
+            {
+               "layer" : "DEFAULT",
+               "name" : "lightning_effect",
+               "params" : [
+                  {
+                     "frames" : [
+                        {
+                           "easing" : "EASE_IN",
+                           "time" : 0.41999998688697815,
+                           "value" : {
+                              "x" : 0,
+                              "y" : 0,
+                              "z" : -360
+                           }
+                        }
+                     ],
+                     "name" : "rotation"
+                  },
+                  {
+                     "frames" : [
+                        {
+                           "easing" : "EASE_IN",
+                           "time" : 0.20999999344348907,
+                           "value" : {
+                              "w" : 1,
+                              "x" : 0,
+                              "y" : 0,
+                              "z" : 1
+                           }
+                        },
+                        {
+                           "easing" : "NONE",
+                           "time" : 0.41999998688697815,
+                           "value" : {
+                              "w" : 1,
+                              "x" : 1,
+                              "y" : 1,
+                              "z" : 1
+                           }
+                        }
+                     ],
+                     "name" : "color"
+                  }
+               ]
+            }
+         ],
+         "color" : {
+            "a" : 1,
+            "b" : 1,
+            "g" : 1,
+            "r" : 1
+         },
+         "display" : true,
+         "dynamic" : true,
+         "geometry" : null,
+         "hide_dynamic" : false,
+         "ignore_raycast" : false,
+         "materials" : [ "enemy.mat" ],
+         "model" : "resources/models/characters/enemy.DAE",
+         "texture" : "",
+         "type" : "BOX"
+      },
+      "sRigidBodyComponent" : {
+         "collisions_enabled" : true,
+         "gravity" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "ignored_tags" : [
+            {
+               "tag" : "Player"
+            }
+         ],
+         "velocity" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         }
+      },
+      "sScriptComponent" : {
+         "class" : [ "Enemy" ],
+         "scripts" : [
+            {
+               "experience_earned" : 20,
+               "gold_earned" : 20,
+               "health" : 200,
+               "name" : "Enemy",
+               "speed" : 25
+            }
+         ]
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 213.03327941894531,
+            "y" : 19,
+            "z" : 100
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : 3.0517572668031789e-05,
+            "z" : 0.078399874269962311
+         },
+         "scale" : {
+            "x" : 0.99999397993087769,
+            "y" : 0.99999397993087769,
+            "z" : 1
+         }
+      }
+   },
+   "name" : "ENEMY",
+   "tag" : "Enemy"
 }

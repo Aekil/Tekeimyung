@@ -1,18 +1,15 @@
+/**
+* @Author   Simon Ambroise
+*/
+
 #pragma once
 
 #include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
 
-typedef struct sRectHitbox
-{
-    glm::vec2   min;
-    glm::vec2   max;
-}               tRectHitbox;
+#include <ECS/Entity.hpp>
 
-typedef struct sCircleHitbox
-{
-    glm::vec2   center;
-    float       radius;
-}               tCircleHitbox;
+#include <Engine/Graphics/Ray.hpp>
 
 class Collisions
 {
@@ -20,12 +17,20 @@ public:
     Collisions();
     ~Collisions();
 
-    static bool         rectHitboxCheck(tRectHitbox *hb1, tRectHitbox *hb2);
-    static bool         rectHitboxCheck(glm::vec2 *min1, glm::vec2 *max1, glm::vec2 *min2, glm::vec2 *max2);
+    static bool         sphereVSsphere(const glm::vec3& pos1, float radius1, const glm::vec3& pos2, float radius2);
 
-    static bool         circleHitboxCheck(tCircleHitbox *hb1, tCircleHitbox *hb2);
-    static bool         circleHitboxCheck(glm::vec2 *center1, float radius1, glm::vec2 *center2, float radius2);
+    static bool         pointVSAABB(const glm::vec3& point, const glm::vec3& boxPosition, const glm::vec3& boxSize);
+    static bool         pointVSAABB2D(const glm::vec2& point, const glm::vec2& boxPosition, const glm::vec2& boxSize);
 
+    static bool         AABBVSAABB(const glm::vec3& boxPos1, const glm::vec3& boxSize1, const glm::vec3& boxPos2, const glm::vec3& boxSize2);
+    static bool         sphereVSAABB(const glm::vec3& spherePosition, float sphereRadius, const glm::vec3& boxPosition, const glm::vec3& boxSize);
+
+    static float        rayVSAABB(const Ray& ray, const glm::vec3& boxMin, const glm::vec3& boxMax);
+
+    static bool         isColliding(Entity*, Entity*);
+    static bool         isCollidingSphereAndEntity(glm::vec3, float, Entity*);
 private:
 
 };
+
+double      SquaredDistPointAABB(const glm::vec3& p, const glm::vec3& min, const glm::vec3& max);

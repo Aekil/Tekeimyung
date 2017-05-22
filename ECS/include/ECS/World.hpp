@@ -1,6 +1,11 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #pragma once
 
 #include <vector>
+#include <memory>
 
 #include <ECS/EntityManager.hpp>
 #include <ECS/System.hpp>
@@ -11,32 +16,38 @@ public:
     World();
     ~World();
 
-    EntityManager&          getEntityManager();
-    std::vector<System*>&   getSystems();
+    EntityManager*                          getEntityManager();
+    std::vector<std::unique_ptr<System> >&  getSystems();
 
     template<typename T, typename... Args>
     void                    addSystem(Args... args)
     {
-        _systems.push_back(new T(args...));
+        std::unique_ptr<System> system_ = std::make_unique<T>(args...);
+        _systems.push_back(std::move(system_));
     }
 
     template<typename T>
     T*                      getSystem()
     {
-        const std::type_info& typeInfo = typeid(T);
+        uint32_t id = T::identifier;
 
-        for (auto system_: _systems)
+        for (auto& system_: _systems)
         {
-            if (system_->getTypeInfo().hash_code() == typeInfo.hash_code())
+            if (system_->getId() == id)
             {
-                return (static_cast<T*>(system_));
+                return (static_cast<T*>(system_.get()));
             }
         }
 
         return (nullptr);
     }
 
+    void                        notifyEntityNewComponent(Entity* entity, sComponent* component);
+    void                        notifyEntityRemovedComponent(Entity* entity, sComponent* component);
+    void                        notifyEntityCreated(Entity* entity);
+    void                        notifyEntityDeleted(Entity* entity);
+
 private:
-    EntityManager           _entityManager;
-    std::vector<System*>    _systems;
+    std::unique_ptr<EntityManager>          _entityManager;
+    std::vector<std::unique_ptr<System> >    _systems;
 };

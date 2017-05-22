@@ -1,0 +1,79 @@
+{
+   "components" : {
+      "sBoxColliderComponent" : {
+         "isTrigger" : false,
+         "pos" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "size" : {
+            "x" : 0.10000000149011612,
+            "y" : 0.10000000149011612,
+            "z" : 0.10000000149011612
+         }
+      },
+      "sNameComponent" : {
+         "name" : "TRAP_CUTTER"
+      },
+      "sRenderComponent" : {
+         "animated" : true,
+         "animations" : [],
+         "color" : {
+            "a" : 1,
+            "b" : 1,
+            "g" : 1,
+            "r" : 1
+         },
+         "display" : true,
+         "dynamic" : false,
+         "hide_dynamic" : false,
+         "ignore_raycast" : false,
+         "materials" : [ "Material #26", "Material #26" ],
+         "model" : "resources/models/traps/trap_cutter.DAE",
+         "texture" : "",
+         "type" : "MESH"
+      },
+      "sRigidBodyComponent" : {
+         "collisions_enabled" : true,
+         "gravity" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "ignored_tags" : [],
+         "velocity" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         }
+      },
+      "sScriptComponent" : {
+         "class" : [ "TrapCutter" ],
+         "scripts" : [
+            {
+               "name" : "TrapCutter"
+            }
+         ]
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 213,
+            "y" : 10.20948600769043,
+            "z" : 74.804588317871094
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "scale" : {
+            "x" : 25,
+            "y" : 25,
+            "z" : 25
+         }
+      }
+   },
+   "name" : "TRAP_CUTTER",
+   "tag" : ""
+}

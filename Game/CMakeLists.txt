@@ -1,3 +1,6 @@
+#	@Author   Guillaume Labey
+#	@Author   Mathieu Chassara
+
 cmake_minimum_required(VERSION 3.0)
 set(EXECUTABLE_NAME "game")
 project(${EXECUTABLE_NAME})
@@ -31,8 +34,8 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 # Add external includes
 include_directories(${CMAKE_SOURCE_DIR}/external/glm)
 include_directories(${CMAKE_SOURCE_DIR}/external/imgui/)
+include_directories(${CMAKE_SOURCE_DIR}/external/imGuizmo/)
 include_directories(${CMAKE_SOURCE_DIR}/external/jsoncpp)
-#include_directories(${CMAKE_SOURCE_DIR}/external/fmod/inc)
 
 # Include dirent only for windows
 # Linux have his own header
@@ -46,7 +49,7 @@ ENDIF()
 add_definitions(-DGLEW_STATIC)
 
 # Create executable
-add_executable(${EXECUTABLE_NAME} ${source_files} ${jsoncpp_source_files} ${include_files})
+add_executable(${EXECUTABLE_NAME} ${source_files} ${include_files})
 
 
 # Link libraries with executable

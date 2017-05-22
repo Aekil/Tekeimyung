@@ -1,0 +1,81 @@
+{
+   "components" : {
+      "sNameComponent" : {
+         "name" : "HUD_DISPLAY_GOLD"
+      },
+      "sRenderComponent" : {
+         "animated" : false,
+         "animations" : [],
+         "color" : {
+            "a" : 0,
+            "b" : 0,
+            "g" : 0,
+            "r" : 0
+         },
+         "display" : true,
+         "dynamic" : false,
+         "hide_dynamic" : false,
+         "ignore_raycast" : false,
+         "materials" : [ "geometry_default.mat" ],
+         "model" : "resources/models/default.DAE",
+         "type" : "PLANE"
+      },
+      "sScriptComponent" : {
+         "scripts" : [
+            {
+               "name" : "DisplayGold"
+            }
+         ]
+      },
+      "sTextComponent" : {
+         "color" : {
+            "a" : 1,
+            "b" : 0,
+            "g" : 0.78431373834609985,
+            "r" : 0.78431373834609985
+         },
+         "content" : "X",
+         "font_name" : "moonhouse.ttf",
+         "font_size" : 22,
+         "horizontal_alignment" : "LEFT",
+         "offset" : {
+            "x" : 0,
+            "y" : 0
+         },
+         "vertical_alignment" : "MIDDLE"
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 1824,
+            "y" : 132.21000671386719,
+            "z" : 0
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "scale" : {
+            "x" : 4.1706833839416504,
+            "y" : 5.8041949272155762,
+            "z" : 1
+         }
+      },
+      "sUiComponent" : {
+         "horizontal_alignment" : "RIGHT",
+         "layer" : 0,
+         "offset" : {
+            "x" : 0,
+            "y" : 3
+         },
+         "percentage_size" : true,
+         "size" : {
+            "x" : 0.10000000894069672,
+            "y" : 0.20000000298023224
+         },
+         "vertical_alignment" : "BOTTOM"
+      }
+   },
+   "name" : "HUD_DISPLAY_GOLD",
+   "tag" : "HudDisplayGold"
+}

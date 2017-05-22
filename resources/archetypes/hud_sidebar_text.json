@@ -1,0 +1,84 @@
+{
+   "components" : {
+      "sNameComponent" : {
+         "name" : "HUD_SIDEBAR_TEXT"
+      },
+      "sRenderComponent" : {
+         "animated" : false,
+         "animations" : [],
+         "color" : {
+            "a" : 1,
+            "b" : 1,
+            "g" : 1,
+            "r" : 1
+         },
+         "display" : true,
+         "dynamic" : false,
+         "hide_dynamic" : false,
+         "ignore_raycast" : false,
+         "materials" : [ "MAT_Default" ],
+         "model" : "resources/models/default.DAE",
+         "type" : "MESH"
+      },
+      "sScriptComponent" : {
+         "scripts" : [
+            {
+               "name" : "SidebarText"
+            }
+         ]
+      },
+      "sTextComponent" : {
+         "color" : {
+            "a" : 1,
+            "b" : 1,
+            "g" : 1,
+            "r" : 1
+         },
+         "content" : "1",
+         "font_name" : "arial.ttf",
+         "font_size" : 20,
+         "horizontal_alignment" : "LEFT",
+         "offset" : {
+            "x" : 0,
+            "y" : 0
+         },
+         "vertical_alignment" : "TOP"
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 960,
+            "y" : 17.521810531616211,
+            "z" : 0
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "scale" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         }
+      },
+      "sTypeComponent" : {
+         "type" : "TILE_WALKABLE"
+      },
+      "sUiComponent" : {
+         "horizontal_alignment" : "MIDDLE",
+         "layer" : 0,
+         "offset" : {
+            "x" : 0,
+            "y" : 0
+         },
+         "percentage_size" : false,
+         "size" : {
+            "x" : 0.10000000149011612,
+            "y" : 0.10000000149011612
+         },
+         "vertical_alignment" : "BOTTOM"
+      }
+   },
+   "name" : "HUD_SIDEBAR_TEXT",
+   "tag" : ""
+}

@@ -1,23 +1,69 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #include <Engine/Core/GameStateManager.hpp>
+#include <Engine/Debug/Logger.hpp>
 
 GameStateManager::GameStateManager() {}
 
 GameStateManager::~GameStateManager() {}
 
-void    GameStateManager::removeCurrentState()
+bool    GameStateManager::removeCurrentState()
 {
-    if (!_states.empty())
+    if (!hasStates())
     {
-        _states.pop_back();
+        return (false);
     }
+
+    _states.pop_back();
+    if (hasStates())
+    {
+        _states.back()->bindEntityManager();
+        _states.back()->onEnter();
+    }
+
+    return (true);
 }
 
 std::shared_ptr<GameState> GameStateManager::getCurrentState() const
 {
-    return (_states.back());
+    if (hasStates())
+        return (_states.back());
+    return (nullptr);
 }
 
 bool    GameStateManager::hasStates() const
 {
     return (_states.size() != 0);
+}
+
+void    GameStateManager::clearStates()
+{
+    _states.clear();
+}
+
+void    GameStateManager::removeLastStates(uint32_t nb)
+{
+    if (!nb)
+    {
+        return;
+    }
+    else if (nb > _states.size())
+    {
+        LOG_WARN("Can't remove %d states because the stack contains only %d states", (int)nb, (int)_states.size());
+        return;
+    }
+
+    for (nb; nb != 0; --nb)
+    {
+        _states.back()->bindEntityManager();
+        _states.pop_back();
+    }
+
+    if (hasStates())
+    {
+        _states.back()->bindEntityManager();
+        _states.back()->onEnter();
+    }
 }

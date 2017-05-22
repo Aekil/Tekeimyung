@@ -1,3 +1,7 @@
+/**
+* @Author   Mathieu Chassara
+*/
+
 #include <GLFW/glfw3.h>
 
 #include <Engine/Window/Mouse.hpp>

@@ -1,0 +1,155 @@
+{
+   "components" : {
+      "sDynamicComponent" : null,
+      "sNameComponent" : {
+         "name" : "ENEMY_SPEED"
+      },
+      "sRenderComponent" : {
+         "animated" : false,
+         "animations" : [
+            {
+               "layer" : "MOVE_LAYER",
+               "name" : "rotation_enemy",
+               "params" : [
+                  {
+                     "frames" : [
+                        {
+                           "easing" : "NONE",
+                           "time" : 1.5,
+                           "value" : {
+                              "x" : 0,
+                              "y" : 0,
+                              "z" : 360
+                           }
+                        }
+                     ],
+                     "name" : "rotation"
+                  }
+               ]
+            },
+            {
+               "layer" : "HIT_LAYER",
+               "name" : "hit",
+               "params" : [
+                  {
+                     "frames" : [
+                        {
+                           "easing" : "NONE",
+                           "time" : 0.25,
+                           "value" : {
+                              "w" : 1,
+                              "x" : 0.23529411852359772,
+                              "y" : 0,
+                              "z" : 0
+                           }
+                        },
+                        {
+                           "easing" : "NONE",
+                           "time" : 0.5,
+                           "value" : {
+                              "w" : 0,
+                              "x" : 0,
+                              "y" : 0,
+                              "z" : 0
+                           }
+                        },
+                        {
+                           "easing" : "NONE",
+                           "time" : 0.75,
+                           "value" : {
+                              "w" : 1,
+                              "x" : 0.23529411852359772,
+                              "y" : 0,
+                              "z" : 0
+                           }
+                        },
+                        {
+                           "easing" : "NONE",
+                           "time" : 1,
+                           "value" : {
+                              "w" : 1,
+                              "x" : 1,
+                              "y" : 1,
+                              "z" : 1
+                           }
+                        }
+                     ],
+                     "name" : "color"
+                  }
+               ]
+            }
+         ],
+         "color" : {
+            "a" : 1,
+            "b" : 1,
+            "g" : 0,
+            "r" : 1
+         },
+         "display" : true,
+         "dynamic" : true,
+         "hide_dynamic" : false,
+         "ignore_raycast" : false,
+         "materials" : [ "enemy_sphere.mat" ],
+         "model" : "resources/models/characters/enemy.DAE",
+         "type" : "SPHERE"
+      },
+      "sRigidBodyComponent" : {
+         "collisions_enabled" : true,
+         "gravity" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "ignored_tags" : [
+            {
+               "tag" : "Player"
+            }
+         ],
+         "velocity" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         }
+      },
+      "sScriptComponent" : {
+         "class" : [ "Enemy" ],
+         "scripts" : [
+            {
+               "experience_earned" : 12,
+               "gold_earned" : 20,
+               "health" : 120,
+               "name" : "Enemy",
+               "speed" : 50
+            }
+         ]
+      },
+      "sSphereColliderComponent" : {
+         "isTrigger" : true,
+         "pos" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : -4.76837158203125e-07
+         },
+         "radius" : 1.2000000476837158
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 110.80278015136719,
+            "y" : -86.73114013671875,
+            "z" : 317.92620849609375
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : 3.0517567211063579e-05,
+            "z" : 0
+         },
+         "scale" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         }
+      }
+   },
+   "name" : "ENEMY_SPEED",
+   "tag" : "Enemy"
+}

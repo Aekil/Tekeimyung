@@ -1,15 +1,20 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #pragma once
 
 #include <functional>
-#include <typeindex>
+#include <cstdint>
 
 #include <ECS/EntityManager.hpp>
 #include <ECS/Component.hh>
+#include <ECS/crc32.hh>
 
 class System
 {
 public:
-    System();
+    System(uint32_t id);
     virtual ~System();
 
     virtual void                        update(EntityManager& em, float elapsedTime) = 0;
@@ -19,15 +24,48 @@ public:
     template<typename ComponentType>
     void                                addDependency()
     {
-        _components.push_back(std::type_index(typeid(ComponentType)));
+        _components.push_back(ComponentType::identifier);
     }
 
-    virtual const std::type_info& getTypeInfo()
-    {
-        return (typeid(*this));
-    }
+    uint32_t                            getId() const;
+    uint32_t                            getEntitiesNb() const;
+
+    bool                                hasDependency(sComponent* component) const;
+    bool                                hasDependencyDisabled(Entity* entity) const;
+    bool                                entityMatchDependencies(Entity* entity) const;
+
+    virtual bool                        onEntityNewComponent(Entity* entity, sComponent* component);
+    virtual bool                        onEntityRemovedComponent(Entity* entity, sComponent* component);
+    virtual bool                        onEntityCreated(Entity* entity) { return true; }
+    virtual bool                        onEntityDeleted(Entity* entity);
+
+    virtual const char*                 getName() const = 0;
 
 protected:
-    // Store components type_index (copyable wrapper of type_info)
-    std::vector<std::type_index>         _components;
+    // Store components hashs
+    std::vector<uint32_t>           _components;
+
+    std::vector<Entity::sHandle>           _entities;
+
+    uint32_t                        _id;
 };
+
+
+template<typename SystemType>
+class BaseSystem: public System
+{
+    public:\
+    BaseSystem(): System(SystemType::identifier) {}
+};
+
+#define START_SYSTEM(name)                                          \
+    class name : public BaseSystem<name> {                          \
+        public:                                                     \
+        static constexpr unsigned int identifier = #name##_crc32;   \
+        const char* getName() const override final                  \
+        {                                                           \
+            return (#name);                                         \
+        }
+
+#define END_SYSTEM(name) \
+    };

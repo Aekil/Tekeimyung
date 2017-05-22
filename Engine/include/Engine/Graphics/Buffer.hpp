@@ -1,14 +1,20 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #pragma once
 
+#include <cstdint>
 #include <GL/glew.h>
 #include <glm/vec3.hpp>
 #include <glm/vec2.hpp>
 
 typedef struct
 {
-    glm::vec3       position;
+    glm::vec3       pos;
     glm::vec3       color;
-    glm::vec2       texCoords;
+    glm::vec3       normal;
+    glm::vec2       uv;
 }                   Vertex;
 
 class Buffer

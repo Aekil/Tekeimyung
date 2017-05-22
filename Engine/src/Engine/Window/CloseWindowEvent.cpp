@@ -1,3 +1,7 @@
+/**
+* @Author   Mathieu Chassara
+*/
+
 #include <Engine/Window/CloseWindowEvent.hpp>
 #include <Engine/Window/GameWindow.hpp>
 

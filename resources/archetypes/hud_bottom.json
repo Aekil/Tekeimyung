@@ -1,0 +1,57 @@
+{
+   "components" : {
+      "sNameComponent" : {
+         "name" : "HUD_BOTTOM"
+      },
+      "sRenderComponent" : {
+         "animated" : false,
+         "animations" : [],
+         "color" : {
+            "a" : 0.58823531866073608,
+            "b" : 1,
+            "g" : 1,
+            "r" : 0
+         },
+         "display" : true,
+         "dynamic" : false,
+         "hide_dynamic" : false,
+         "ignore_raycast" : false,
+         "materials" : [ "hud_bottom.mat" ],
+         "model" : "resources/models/default.DAE",
+         "type" : "PLANE"
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 960,
+            "y" : 508.5,
+            "z" : 0
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "scale" : {
+            "x" : 192,
+            "y" : 101.69999694824219,
+            "z" : 1
+         }
+      },
+      "sUiComponent" : {
+         "horizontal_alignment" : "MIDDLE",
+         "layer" : 0,
+         "offset" : {
+            "x" : 0,
+            "y" : 0
+         },
+         "percentage_size" : true,
+         "size" : {
+            "x" : 1,
+            "y" : 1
+         },
+         "vertical_alignment" : "MIDDLE"
+      }
+   },
+   "name" : "HUD_BOTTOM",
+   "tag" : ""
+}

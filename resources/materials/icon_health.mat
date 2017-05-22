@@ -1,0 +1,32 @@
+{
+   "ambient" : {
+      "a" : 1,
+      "b" : 1,
+      "g" : 1,
+      "r" : 1
+   },
+   "bloom_color" : {
+      "a" : 0.27450981736183167,
+      "b" : 0,
+      "g" : 0,
+      "r" : 1
+   },
+   "diffuse" : {
+      "a" : 0,
+      "b" : 0,
+      "g" : 0,
+      "r" : 0
+   },
+   "dst_blend" : "GL_ONE_MINUS_SRC_ALPHA",
+   "face_camera" : false,
+   "has_bloom" : true,
+   "src_blend" : "GL_SRC_ALPHA",
+   "textures" : {
+      "ambient" : "resources/sprites/textures/icon_health.png",
+      "bloom" : "",
+      "bloom_alpha" : "resources/sprites/textures/icon_health.png",
+      "diffuse" : "resources/sprites/textures/icon_health.png"
+   },
+   "transparent" : true,
+   "wireframe" : false
+}

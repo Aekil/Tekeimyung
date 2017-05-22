@@ -1,3 +1,7 @@
+/**
+* @Author   Mathieu Chassara
+*/
+
 #pragma once
 
 class           Cursor
@@ -13,6 +17,7 @@ public:
     void        setWindowEntering(bool entering);
     void        setXPosition(double xPos);
     void        setYPosition(double yPos);
+
 private:
     bool        _entered;
     double      _xPos, _yPos;

@@ -1,158 +1,94 @@
-#include <imgui.h>
-#include <imgui_impl_glfw_gl3.h>
-#include <glm/glm.hpp>
+/**
+* @Author   Guillaume Labey
+*/
 
-#include <Engine/Utils/Exception.hpp>
-#include <Engine/Utils/OverlayDebugWindow.hpp>
-#include <Engine/Utils/LogDebugWindow.hpp>
 #include <Engine/Window/Keyboard.hpp>
 #include <Engine/Window/HandleFullscreenEvent.hpp>
 #include <Engine/Window/GameWindow.hpp>
 #include <Engine/Sound/SoundManager.hpp>
 
-#include <Game/Systems/RenderingSystem.hpp>
-#include <Game/Systems/MovementSystem.hpp>
-#include <Game/Systems/GravitySystem.hpp>
-#include <Game/Systems/CollisionSystem.hpp>
-#include <Game/Systems/AISystem.hpp>
-#include <Game/Systems/ParticleSystem.hpp>
-#include <Game/Systems/InputSystem.hpp>
-#include <Game/Systems/TowerAISystem.hpp>
-#include <Game/Systems/ProjectileSystem.hpp>
-#include <Game/Systems/WaveSystem.hpp>
-#include <Game/Components.hh>
-#include <Game/EntityDebugWindow.hpp>
-#include <Game/EntityFactory.hpp>
+#include <Engine/Systems/RenderingSystem.hpp>
+#include <Engine/Systems/RigidBodySystem.hpp>
+#include <Engine/Systems/CollisionSystem.hpp>
+#include <Engine/Systems/ParticleSystem.hpp>
+#include <Engine/Systems/ScriptSystem.hpp>
+#include <Engine/Systems/UISystem.hpp>
+#include <Engine/Systems/MouseSystem.hpp>
+#include <Engine/Utils/LevelLoader.hpp>
+#include <Game/GameStates/HowToPlayState.hpp>
+#include <Game/GameStates/BuildingListState.hpp>
+#include <Game/GameStates/PauseState.hpp>
+#include <Game/Manager/TutoManagerMessage.hpp>
+#include <Game/Manager/TutoManager.hpp>
 
 #include <Game/GameStates/PlayState.hpp>
 
 
-PlayState::PlayState(): _windowImgui(true) {}
-
 PlayState::~PlayState() {}
 
-void    PlayState::createTile(const glm::vec3& pos, eArchetype type)
+void    PlayState::onEnter() {}
+
+void    PlayState::setupSystems()
 {
-    Entity* tile;
-
-    tile = EntityFactory::createEntity(type);
-    sPositionComponent* tilePos = tile->getComponent<sPositionComponent>();
-    tilePos->value.y = pos.y;
-    tilePos->value.x = pos.x;
-    tilePos->z = pos.z;
-    (*_map)[(uint16_t)pos.z][(uint32_t)pos.y][(uint32_t)pos.x] = tile->id;
-}
-
-void    PlayState::createWave(const glm::vec3& pos, eArchetype type)
-{
-    createTile(pos, type);
-}
-
-Entity* PlayState::createParticlesEmittor(const glm::vec3& pos, eArchetype type)
-{
-    Entity* ps;
-    sPositionComponent* psPos;
-
-    ps = EntityFactory::createEntity(type);
-    psPos = ps->getComponent<sPositionComponent>();
-    psPos->value.x = pos.x;
-    psPos->value.y = pos.y;
-    psPos->z = pos.z;
-    return (ps);
-}
-
-
-void    PlayState::goTo(Entity* emitter, Entity* character)
-{
-    sPositionComponent* emitterPos;
-    sPositionComponent* characterPos;
-
-    emitterPos = emitter->getComponent<sPositionComponent>();
-    characterPos = character->getComponent<sPositionComponent>();
-
-    if (!emitterPos || !characterPos)
-        EXCEPT(InternalErrorException, "sPositionComponent missing");
-
-    emitter->addComponent<sDirectionComponent>(glm::normalize(characterPos->value - emitterPos->value) * 4.0f);
+    _world.addSystem<ScriptSystem>();
+    _world.addSystem<MouseSystem>();
+    _world.addSystem<CollisionSystem>();
+    _world.addSystem<RigidBodySystem>();
+    _world.addSystem<ParticleSystem>();
+    _world.addSystem<UISystem>();
+    _world.addSystem<RenderingSystem>(_world.getSystem<ParticleSystem>()->getEmitters());
 }
 
 bool    PlayState::init()
 {
-    EntityManager &em = _world.getEntityManager();
+    _backgroundGameMusic = EventSound::getEventByEventType(eEventSound::BACKGROUND);
+    SoundManager::getInstance()->setVolumeAllChannels(0.5f);
 
-    EntityFactory::bindEntityManager(&em);
-
-    _map = new Map(em, 20, 15, 4);
-
-    // Create particles emitter
-    createParticlesEmittor(glm::vec3(8.5f, 5.5f, 1.0f), eArchetype::EMITTER_WATER);
-
-    // Create character
-    WaveSystem::createEntity(_map, glm::vec3(9, 5, 1), eArchetype::PLAYER);
-
-    // Initialize base map
-    for (int y = 0; y < 15; y++) {
-        for (int x = 0; x < 20; x++) {
-            createTile(glm::vec3(x, y, 0), eArchetype::BLOCK_GREEN);
-        }
+    // Load tutorial level
+    if (!TutoManager::_tutorialDone)
+    {
+        auto em = _world.getEntityManager();
+        em->destroyAllEntities();
+        LevelLoader::getInstance()->load("Tutorial", em);
     }
-
-    for (int y = 0; y < 4; y++) {
-        for (int x = 0; x < 20; x++) {
-            createTile(glm::vec3(x, y, 1), eArchetype::BLOCK_BROWN);
-        }
-    }
-
-    for (int y = 8; y < 15; y++) {
-        for (int x = 0; x < 20; x++) {
-            createTile(glm::vec3(x, y, 1), eArchetype::BLOCK_BROWN);
-        }
-    }
-
-    // Create wave
-    for (int i = 0; i < 2; i++) {
-        for (int j = 0; j < 1; j++) {
-            // create wave
-            createWave(glm::vec3(j, 5.0f + i, 0), eArchetype::WAVE_SPAWNER);
-        }
-    }
-
-    // Create towers
-    createTile(glm::vec3(7, 4, 1), eArchetype::TOWER_FIRE);
-    createTile(glm::vec3(7, 7, 1), eArchetype::TOWER_FIRE);
-
-    _world.addSystem<WaveSystem>(_map);
-    _world.addSystem<InputSystem>();
-    _world.addSystem<TowerAISystem>(_map);
-    _world.addSystem<AISystem>();
-    _world.addSystem<ProjectileSystem>();
-
-    //_world.addSystem<CollisionSystem>(_map);
-
-    _world.addSystem<MovementSystem>(_map);
-    _world.addSystem<ParticleSystem>();
-    _world.addSystem<CollisionSystem>(_map);
-
-    ParticleSystem* particleSystem = _world.getSystem<ParticleSystem>();
-    ASSERT(particleSystem != nullptr, "Particle system should not be null");
-
-    _world.addSystem<RenderingSystem>(_map, particleSystem->getEmitters());
-
-    addDebugWindow<OverlayDebugWindow>();
-    addDebugWindow<EntityDebugWindow>(_map, glm::vec2(0, 80), glm::vec2(450, 350));
-    addDebugWindow<LogDebugWindow>(Logger::getInstance(), glm::vec2(0, 430), glm::vec2(300, 200));
-
-     //Play sound
-    static int idSoundBkgdMusic = SoundManager::getInstance()->registerSound("ressources/sounds/Kalimba.mp3", BACKGROUND_SOUND);
-    SoundManager::getInstance()->playSound(idSoundBkgdMusic);
-
-    _pair = std::make_pair(Keyboard::eKey::F, new HandleFullscreenEvent());
     return (true);
 }
 
 bool    PlayState::update(float elapsedTime)
 {
-    if (GameWindow::getInstance()->getKeyboard().getStateMap()[_pair.first] == Keyboard::eKeyState::KEY_PRESSED)
-        _pair.second->execute();
+    auto& gameWindow = GameWindow::getInstance();
+    auto &&keyboard = GameWindow::getInstance()->getKeyboard();
+    auto &&mouse = GameWindow::getInstance()->getMouse();
+
+    /*if (keyboard.getStateMap()[Keyboard::eKey::B] == Keyboard::eKeyState::KEY_PRESSED)
+    {
+        _gameStateManager->addState<BuildingListState>();
+        TutoManagerMessage::getInstance()->sendMessage(eTutoState::CHECK_BUILDLIST);
+    }*/
+    if (!TutoManagerMessage::getInstance()->tutorialDone())
+    {
+        if (keyboard.getStateMap()[Keyboard::eKey::K] == Keyboard::eKeyState::KEY_RELEASED ||
+            (keyboard.getStateMap()[Keyboard::eKey::T] == Keyboard::eKeyState::KEY_RELEASED &&
+            TutoManagerMessage::getInstance()->stateOnGoing(eTutoState::TUTO_DONE)))
+        {
+            TutoManager::_tutorialDone = true;
+            _gameStateManager->replaceState<PlayState>();
+            return (true);
+        }
+    }
+    if (keyboard.getStateMap()[Keyboard::eKey::ESCAPE] == Keyboard::eKeyState::KEY_PRESSED ||
+        gameWindow->hasLostFocus())
+    {
+        _gameStateManager->addState<PauseState>();
+    }
+
+    // Play background game music
+    #if (ENABLE_SOUND)
+        if (_backgroundGameMusic->soundID != -1 && !SoundManager::getInstance()->isSoundPlaying(_backgroundGameMusic->soundID))
+        {
+            SoundManager::getInstance()->playSound(_backgroundGameMusic->soundID);
+        }
+    #endif
+
     return (GameState::update(elapsedTime));
 }

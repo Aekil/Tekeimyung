@@ -1,77 +1,134 @@
-#include <Engine/Utils/Exception.hpp>
+/**
+* @Author   Guillaume Labey
+*/
 
 #include <Engine/Graphics/Animation.hpp>
 
-Animation::Animation(): _framesNb(0), _currentFrame(0), _spriteSheet(nullptr) {}
+Animation::Animation(const std::string& name, const std::string& layer): _name(name), _layer(layer), _loop(true), _isPlaying(false) {}
+
+Animation::Animation(const Animation& rhs)
+{
+    _name = rhs.getName();
+    _layer = rhs.getLayer();
+    _loop = rhs.isLoop();
+    _isPlaying = rhs.isPlaying();
+
+    for (const auto& paramAnimation: rhs.getParamsAnimations())
+    {
+        _paramsAnimations.push_back(paramAnimation->clone());
+    }
+}
 
 Animation::~Animation() {}
 
-void    Animation::setSpriteSheet(Texture* spriteSheet)
+void    Animation::addParamAnimation(IParamAnimationPtr paramAnimation)
 {
-    _spriteSheet = spriteSheet;
+    isPlaying(true);
+    paramAnimation->reset();
+    _paramsAnimations.push_back(paramAnimation);
 }
 
-void    Animation::addFrame(const glm::vec2& offset)
+void    Animation::removeParamAnimation(IParamAnimationPtr paramAnimation)
 {
-    unsigned int spriteSheetSize;
+    reset();
+    update(0);
 
-    if (!_spriteSheet)
-    {
-        EXCEPT(InternalErrorException, "Attempt to add a frame without sprite sheet");
-    }
-
-    spriteSheetSize = _spriteSheet->getWidth() *  _spriteSheet->getHeight();
-
-    if (offset.x > spriteSheetSize ||
-        offset.y > spriteSheetSize)
-    {
-        EXCEPT(InternalErrorException, "Attempt to add a frame outside the sprite sheet range");
-    }
-
-    // Normalize texture coordinates
-    glm::vec2 normalizedOffset;
-    normalizedOffset.x = offset.x / _spriteSheet->getWidth();
-    normalizedOffset.y = offset.y / _spriteSheet->getHeight();
-
-    // Add textures coordinates to frame list
-    _frames.push_back(normalizedOffset);
-    ++_framesNb;
+    _paramsAnimations.erase(std::find(_paramsAnimations.begin(), _paramsAnimations.end(), paramAnimation));
+    if (_paramsAnimations.size() == 0)
+        _isPlaying = false;
 }
 
-void    Animation::addFrames(const glm::vec2& baseOffset, const glm::vec2& spriteSize, uint32_t cols, uint32_t rows)
+void    Animation::removeParamAnimation(const std::string& name)
 {
-    glm::vec2 textCoords;
-
-    for (uint32_t y = 0; y < rows; y++)
-    {
-        textCoords = {0, baseOffset.y + spriteSize.y * y};
-        for (uint32_t x = 0; x < cols; x++)
-        {
-            addFrame(textCoords);
-            textCoords.x += baseOffset.x + spriteSize.x;
-        }
-    }
+    IParamAnimationPtr paramAnimation = getParamAnimation(name);
+    removeParamAnimation(paramAnimation);
 }
 
-void    Animation::play(GLint textureShiftUniform)
+IParamAnimationPtr  Animation::getParamAnimation(const std::string& name)
 {
-    if (!_framesNb)
-        EXCEPT(InternalErrorException, "Attempt to play an animation with no frame");
-
-    // Bind sprite sheet
-    _spriteSheet->bind();
-
-    // Define texture coordinates shift
-    glUniform2f(textureShiftUniform, _frames[_currentFrame].x, _frames[_currentFrame].y);
-
-    _currentFrame += 1;
-    if (_currentFrame >= _framesNb)
+    for (const IParamAnimationPtr paramAnimation: _paramsAnimations)
     {
-        _currentFrame = 0;
+        if (paramAnimation->getName() == name)
+            return (paramAnimation);
     }
+
+    return (nullptr);
+}
+
+bool    Animation::update(float elapsedTime)
+{
+    _isPlaying = false;
+    for (auto paramAnimation: _paramsAnimations)
+    {
+        // ParamAnimation::update return true if the param animation is not finished
+        if (paramAnimation->update(elapsedTime))
+            _isPlaying = true;
+    }
+
+    if (!_isPlaying && _loop)
+    {
+        reset();
+        return (true);
+    }
+
+    return (!_isPlaying);
 }
 
 void    Animation::reset()
 {
-    _currentFrame = 0;
+    _isPlaying = true;
+    for (auto paramAnimation: _paramsAnimations)
+    {
+        paramAnimation->reset();
+    }
+}
+
+const std::string&  Animation::getName() const
+{
+    return (_name);
+}
+
+void    Animation::setName(const std::string& name)
+{
+    _name = name;
+}
+
+const std::string&  Animation::getLayer() const
+{
+    return (_layer);
+}
+
+void    Animation::setLayer(const std::string& layer)
+{
+    _layer = layer;
+}
+
+bool    Animation::isLoop() const
+{
+    return (_loop);
+}
+
+void    Animation::isLoop(bool isLoop)
+{
+    _loop = isLoop;
+}
+
+bool    Animation::isPlaying() const
+{
+    return (_isPlaying);
+}
+
+void    Animation::isPlaying(bool isPlaying)
+{
+    _isPlaying = isPlaying;
+}
+
+std::vector<IParamAnimationPtr >& Animation::getParamsAnimations()
+{
+    return (_paramsAnimations);
+}
+
+const std::vector<IParamAnimationPtr >& Animation::getParamsAnimations() const
+{
+    return (_paramsAnimations);
 }

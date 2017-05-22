@@ -1,0 +1,58 @@
+{
+   "components" : {
+      "sNameComponent" : {
+         "name" : "QUIT_CONFIRM_POPUP"
+      },
+      "sRenderComponent" : {
+         "animated" : false,
+         "animations" : [],
+         "color" : {
+            "a" : 1,
+            "b" : 1,
+            "g" : 1,
+            "r" : 1
+         },
+         "display" : true,
+         "dynamic" : false,
+         "hide_dynamic" : false,
+         "ignore_raycast" : false,
+         "materials" : [ "geometry_default.mat" ],
+         "model" : "resources/models/default.DAE",
+         "texture" : "",
+         "type" : "PLANE"
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 960,
+            "y" : 508.5,
+            "z" : -1
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "scale" : {
+            "x" : 48,
+            "y" : 20.340000152587891,
+            "z" : 1
+         }
+      },
+      "sUiComponent" : {
+         "horizontal_alignment" : "MIDDLE",
+         "layer" : 1,
+         "offset" : {
+            "x" : 0,
+            "y" : 0
+         },
+         "percentage_size" : true,
+         "size" : {
+            "x" : 0.25,
+            "y" : 0.20000000298023224
+         },
+         "vertical_alignment" : "MIDDLE"
+      }
+   },
+   "name" : "QUIT_CONFIRM_POPUP",
+   "tag" : ""
+}

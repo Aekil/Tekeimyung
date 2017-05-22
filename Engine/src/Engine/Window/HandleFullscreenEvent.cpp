@@ -1,4 +1,8 @@
-#include <Engine/Utils/Logger.hpp>
+/**
+* @Author   Mathieu Chassara
+*/
+
+#include <Engine/Debug/Logger.hpp>
 #include <Engine/Window/HandleFullscreenEvent.hpp>
 #include <Engine/Window/GameWindow.hpp>
 

@@ -1,0 +1,82 @@
+{
+   "components" : {
+      "sNameComponent" : {
+         "name" : "GAME_MANAGER"
+      },
+      "sScriptComponent" : {
+         "scripts" : [
+            {
+               "map_name" : "",
+               "name" : "GameManager"
+            },
+            {
+               "map_parts" : [
+                  {
+                     "map_part" : 0
+                  },
+                  {
+                     "map_part" : 0
+                  },
+                  {
+                     "map_part" : 0
+                  },
+                  {
+                     "map_part" : 0
+                  },
+                  {
+                     "map_part" : 0
+                  },
+                  {
+                     "map_part" : 0
+                  },
+                  {
+                     "map_part" : 0
+                  },
+                  {
+                     "map_part" : 0
+                  },
+                  {
+                     "map_part" : 0
+                  },
+                  {
+                     "map_part" : 0
+                  },
+                  {
+                     "map_part" : 0
+                  },
+                  {
+                     "map_part" : 0
+                  }
+               ],
+               "name" : "WaveManager",
+               "waves_max" : 12
+            },
+            {
+               "name" : "GoldManager"
+            }
+         ]
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 100,
+            "y" : 100,
+            "z" : 100
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "scale" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         }
+      },
+      "sTypeComponent" : {
+         "type" : "TILE_WALKABLE"
+      }
+   },
+   "name" : "GAME_MANAGER",
+   "tag" : "GameManager"
+}

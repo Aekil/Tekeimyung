@@ -1,0 +1,57 @@
+{
+   "components" : {
+      "sNameComponent" : {
+         "name" : "ICON_COIN"
+      },
+      "sRenderComponent" : {
+         "animated" : false,
+         "animations" : [],
+         "color" : {
+            "a" : 1,
+            "b" : 0,
+            "g" : 1,
+            "r" : 1
+         },
+         "display" : true,
+         "dynamic" : false,
+         "hide_dynamic" : false,
+         "ignore_raycast" : false,
+         "materials" : [ "icon_coin.mat" ],
+         "model" : "resources/models/default.DAE",
+         "type" : "PLANE"
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 1632,
+            "y" : 133.510009765625,
+            "z" : 0
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "scale" : {
+            "x" : 6.399993896484375,
+            "y" : 6.0859193801879883,
+            "z" : 1
+         }
+      },
+      "sUiComponent" : {
+         "horizontal_alignment" : "MIDDLE",
+         "layer" : -1,
+         "offset" : {
+            "x" : 35,
+            "y" : -37
+         },
+         "percentage_size" : true,
+         "size" : {
+            "x" : 0.033333301544189453,
+            "y" : 0.059259198606014252
+         },
+         "vertical_alignment" : "MIDDLE"
+      }
+   },
+   "name" : "ICON_COIN",
+   "tag" : ""
+}

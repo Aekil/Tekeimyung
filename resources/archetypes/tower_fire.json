@@ -1,23 +1,56 @@
 {
-    "name": "TOWER_FIRE",
-    "components": {
-            "sPositionComponent": {
-                "x": 0,
-                "y": 0,
-                "z": 0
-            },
-            "sRenderComponent": {
-                "texture": "resources/sprites/towers/tower_fire.png",
-                "type": "TILE",
-                "animated": false
-            },
-			"sTowerAIComponent": {
-				"radius": 4.2,
-				"fire_rate": 1,
-				"projectile_speed": 4.2
-			},
-            "sTypeComponent": {
-                "type": "TILE_NOT_WALKABLE"
+   "components" : {
+      "sDynamicComponent" : null,
+      "sNameComponent" : {
+         "name" : "TOWER_FIRE"
+      },
+      "sRenderComponent" : {
+         "animated" : false,
+         "animations" : [],
+         "color" : {
+            "a" : 1,
+            "b" : 1,
+            "g" : 1,
+            "r" : 1
+         },
+         "display" : true,
+         "dynamic" : false,
+         "hide_dynamic" : false,
+         "ignore_raycast" : true,
+         "materials" : [ "MAT_LightBrown", "MAT_Brown", "Mat_LightRed" ],
+         "model" : "resources/models/buildings/tower_fire.DAE",
+         "texture" : "",
+         "type" : "MESH"
+      },
+      "sScriptComponent" : {
+         "class" : [ "Tower" ],
+         "scripts" : [
+            {
+               "name" : "Tower"
             }
-        }
+         ]
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 250,
+            "y" : 25,
+            "z" : 175
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "scale" : {
+            "x" : 0.5,
+            "y" : 0.5,
+            "z" : 0.5
+         }
+      },
+      "sTypeComponent" : {
+         "type" : "TILE_NOT_WALKABLE"
+      }
+   },
+   "name" : "TOWER_FIRE",
+   "tag" : "Tower"
 }

@@ -1,41 +1,56 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #pragma once
 
-#include <string>
-#include <cstdint>
-#include <vector>
-#include <glm/vec2.hpp>
+#include <Engine/Graphics/ParamAnimation.hpp>
 
-#include <Engine/Graphics/Texture.hpp>
-
-enum class eOrientation
-{
-    N,
-    NE,
-    E,
-    SE,
-    S,
-    SW,
-    W,
-    NW
-};
+using IParamAnimationPtr = std::shared_ptr<IParamAnimation>;
 
 class Animation
 {
 public:
-    Animation();
+    Animation(const std::string& name = "animation", const std::string& layer = "DEFAULT");
+    Animation(const Animation& rhs);
     ~Animation();
-    void                                    setSpriteSheet(Texture* spriteSheet);
-    void                                    addFrame(const glm::vec2& offset);
-    void                                    addFrames(const glm::vec2& baseOffset, const glm::vec2& spriteSize, uint32_t cols, uint32_t rows);
-    void                                    play(GLint textureShiftUniform);
-    void                                    reset();
+
+    void                    addParamAnimation(IParamAnimationPtr paramAnimation);
+
+    void                    removeParamAnimation(IParamAnimationPtr paramAnimation);
+    void                    removeParamAnimation(const std::string& name);
+
+    IParamAnimationPtr      getParamAnimation(const std::string& name);
+
+    bool                    update(float elapsedTime);
+    void                    reset();
+
+    const std::string&      getName() const;
+    void                    setName(const std::string& name);
+
+    const std::string&      getLayer() const;
+    void                    setLayer(const std::string& layer);
+
+    bool                    isLoop() const;
+    void                    isLoop(bool isLoop);
+
+    bool                    isPlaying() const;
+
+    std::vector<IParamAnimationPtr >&  getParamsAnimations();
+    const std::vector<IParamAnimationPtr >&  getParamsAnimations() const;
 
 private:
-    // Texture uv coordinates offset
-    std::vector<glm::vec2>                  _frames;
+    void                    isPlaying(bool isPlaying);
 
-    uint32_t                                _framesNb;
-    uint32_t                                _currentFrame;
+private:
+    // An animation has got multiple params animations
+    // Ex: position, rotation and scale animation
+    std::vector<IParamAnimationPtr >  _paramsAnimations;
 
-    Texture*                                _spriteSheet;
+    // Animation name
+    std::string                     _name;
+    std::string                     _layer;
+    bool                            _loop;
+
+    bool                            _isPlaying;
 };

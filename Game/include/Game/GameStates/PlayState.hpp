@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #pragma once
 
 #include <array>
@@ -10,29 +14,20 @@
 #include <Engine/Window/IInputEvent.hpp>
 #include <Engine/Core/GameState.hpp>
 
-#include <Game/EntityFactory.hpp>
-#include <Game/Map.hpp>
+#include <Engine/EntityFactory.hpp>
+#include <Engine/Utils/EventSound.hpp>
 
-class PlayState: public GameState
-{
+START_GAMESTATE(PlayState, "Game")
  public:
-    PlayState();
-    virtual ~PlayState();
+    ~PlayState();
 
-    virtual bool                        init();
-    virtual bool                        update(float elapsedTime);
-
-private:
-    void                                createTile(const glm::vec3& pos, eArchetype type);
-    void                                createWave(const glm::vec3& pos, eArchetype type);
-    Entity*                             createParticlesEmittor(const glm::vec3& pos, eArchetype type);
-    void                                goTo(Entity* emitter, Entity* character);
+    void                                onEnter();
+    void                                setupSystems() override final;
+    bool                                init();
+    bool                                update(float elapsedTime);
 
 private:
-    Map*                                _map;
-    bool                                _windowImgui;
     std::pair <Keyboard::eKey, IInputEvent *>    _pair;
 
-    // Entity enemies for demo
-    //std::vector<Entity*>                _enemies;
-};
+    tEventSound*                        _backgroundGameMusic = nullptr;
+END_GAMESTATE(PlayState)
