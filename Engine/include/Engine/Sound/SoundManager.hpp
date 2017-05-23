@@ -68,7 +68,7 @@ public:
     bool                                    errorCheck();
 
     void                                    freeSound(int id);
-    int                                     registerSound(const std::string& name, eSoundType type/* = eSoundType::NONE*/, float volume = DEFAULT_SOUND_VOL);
+    int                                     registerSound(const std::string& name, eSoundType type/* = eSoundType::NONE*/);
 
     void                                    playSound(int id);
     /*void                                    resumeSound(int id);

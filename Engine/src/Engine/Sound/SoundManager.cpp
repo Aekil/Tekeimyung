@@ -101,7 +101,7 @@ void    SoundManager::freeSound(int id)
     }
 }
 
-int     SoundManager::registerSound(const std::string& name, eSoundType type, float volume)
+int     SoundManager::registerSound(const std::string& name, eSoundType type)
 {
     for (int i = 0; i < NB_MAX_SOUNDS; i++)
     {
@@ -120,7 +120,6 @@ int     SoundManager::registerSound(const std::string& name, eSoundType type, fl
             _sounds[i].free = false;
             _sounds[i].type = type;
             _sounds[i].name = name;
-            _sounds[i].volume = volume;
             _sounds[i].id = i;
 
             if (type == eSoundType::BACKGROUND_SOUND /*|| type == eSoundType::NONE*/)
@@ -157,6 +156,9 @@ void    SoundManager::playSound(int id)
     }
 
     _result = _system->playSound(_sounds[id].sound, 0, false, &_sounds[id].channel);
+    errorCheck();
+
+    _result = _sounds[id].channel->setVolume(_sounds[id].volume);
     errorCheck();
 
     if (_sounds[id].channel == nullptr)
@@ -340,7 +342,8 @@ void    SoundManager::setSoundVolume(int id, float volume)
             if (!_sounds[i].free)
             {
                 _sounds[i].volume = volume;
-                _sounds[i].channel->setVolume(_sounds[i].volume); // ?
+                /*_result = _sounds[i].channel->setVolume(_sounds[i].volume); // ?
+                errorCheck();*/
             }
             else
             {
