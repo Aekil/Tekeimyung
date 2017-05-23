@@ -21,7 +21,7 @@ _system(nullptr)
     {
         _sounds[i].free = true;
         _sounds[i].id = i;
-        _sounds[i].volume = 1.0f;
+        _sounds[i].volume = DEFAULT_SOUND_VOL;
         _sounds[i].sound = nullptr;
         _sounds[i].channel = nullptr;
         _sounds[i].type = eSoundType::DEFAULT_SOUND;
@@ -101,7 +101,7 @@ void    SoundManager::freeSound(int id)
     }
 }
 
-int     SoundManager::registerSound(const std::string& name, eSoundType type)
+int     SoundManager::registerSound(const std::string& name, eSoundType type, float volume)
 {
     for (int i = 0; i < NB_MAX_SOUNDS; i++)
     {
@@ -120,6 +120,7 @@ int     SoundManager::registerSound(const std::string& name, eSoundType type)
             _sounds[i].free = false;
             _sounds[i].type = type;
             _sounds[i].name = name;
+            _sounds[i].volume = volume;
             _sounds[i].id = i;
 
             if (type == eSoundType::BACKGROUND_SOUND /*|| type == eSoundType::NONE*/)
@@ -323,11 +324,32 @@ void    SoundManager::resumeAllChannels()
         errorCheck();
     }
 }
-
+// limits of volume ? (0.0f -> 1.0f ?)
 void    SoundManager::setVolumeAllChannels(float volume)
 {
     _result = _channelGroup->setVolume(volume);
     errorCheck();
+}
+
+void    SoundManager::setSoundVolume(int id, float volume)
+{
+    for (int i = 0; i < NB_MAX_SOUNDS; i++)
+    {
+        if (i == id)
+        {
+            if (!_sounds[i].free)
+            {
+                _sounds[i].volume = volume;
+                _sounds[i].channel->setVolume(_sounds[i].volume); // ?
+            }
+            else
+            {
+                LOG_WARN("Sound with id n°%d is not registered", id);
+            }
+            return;
+        }
+    }
+    LOG_WARN("Sound id n°%d doesn't exist", id);
 }
 
 /*void    SoundManager::addChannel(FMOD::Channel* channel)

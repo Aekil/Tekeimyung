@@ -21,6 +21,8 @@
 #define NB_MAX_CHANNELS     64
 #define NB_MAX_SOUNDS       64
 
+#define DEFAULT_SOUND_VOL   1.0f
+
 enum class eSoundType: char {
     /*NONE = 0,*/
     BACKGROUND_SOUND = 1,
@@ -66,7 +68,7 @@ public:
     bool                                    errorCheck();
 
     void                                    freeSound(int id);
-    int                                     registerSound(const std::string& name, eSoundType type/* = eSoundType::NONE*/);
+    int                                     registerSound(const std::string& name, eSoundType type/* = eSoundType::NONE*/, float volume = DEFAULT_SOUND_VOL);
 
     void                                    playSound(int id);
     /*void                                    resumeSound(int id);
@@ -85,6 +87,8 @@ public:
     void                                    pauseAllChannels();
     void                                    resumeAllChannels();
     void                                    setVolumeAllChannels(float volume);
+
+    void                                    setSoundVolume(int id, float volume);
 
     //tSoundInfos                             getSoundInfos(uint32_t soundID);
 
