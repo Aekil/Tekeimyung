@@ -23,7 +23,11 @@
 
 PauseState::~PauseState() {}
 
-void    PauseState::onEnter() {}
+void    PauseState::onEnter()
+{
+    SoundManager::getInstance()->setVolumeAllChannels(0.25f);
+    SoundManager::getInstance()->setSoundVolume(_backgroundGameMusic->soundID, 0.15f);
+}
 
 void    PauseState::setupSystems()
 {
@@ -35,7 +39,7 @@ void    PauseState::setupSystems()
 
 bool    PauseState::init()
 {
-    SoundManager::getInstance()->setVolumeAllChannels(0.3f);
+    _backgroundGameMusic = EventSound::getEventByEventType(eEventSound::BACKGROUND);
     return (true);
 }
 
@@ -51,7 +55,7 @@ bool    PauseState::update(float elapsedTime)
     // Unpause the game
     if (keyboard.getStateMap()[Keyboard::eKey::ESCAPE] == Keyboard::eKeyState::KEY_PRESSED)
     {
-        SoundManager::getInstance()->setVolumeAllChannels(0.5f);
+        //SoundManager::getInstance()->setVolumeAllChannels(DEFAULT_SOUND_VOL);
         return (false);
     }
 

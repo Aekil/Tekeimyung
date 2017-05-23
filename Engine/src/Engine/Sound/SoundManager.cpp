@@ -332,7 +332,7 @@ void    SoundManager::setVolumeAllChannels(float volume)
     _result = _channelGroup->setVolume(volume);
     errorCheck();
 }
-
+// Differentiate (general) volume from all channels to personalized volume for one channel
 void    SoundManager::setSoundVolume(int id, float volume)
 {
     for (int i = 0; i < NB_MAX_SOUNDS; i++)

@@ -4,10 +4,12 @@
 
 #pragma once
 
-#include <Engine/Core/GameState.hpp>
-
 #include <ECS/System.hpp>
 #include <ECS/World.hpp>
+
+#include <Engine/Core/GameState.hpp>
+#include <Engine/Utils/EventSound.hpp>
+
 
 START_GAMESTATE(PauseState, "Pause")
  public:
@@ -17,4 +19,7 @@ START_GAMESTATE(PauseState, "Pause")
     void                                setupSystems() override final;
     bool                                init() override final;
     bool                                update(float elapsedTime) override final;
+
+ private:
+    tEventSound*                        _backgroundGameMusic = nullptr;
 END_GAMESTATE(PauseState)
