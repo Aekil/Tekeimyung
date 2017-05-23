@@ -17,6 +17,8 @@ void    HomeScreenState::onEnter()
     sRenderComponent*   renderComponent = this->_buttonHowToPlay->getComponent<sRenderComponent>();
 
     renderComponent->_animator.play("fading", true);
+
+    SoundManager::getInstance()->setVolumeAllChannels(0);
 }
 
 void    HomeScreenState::setupSystems()
