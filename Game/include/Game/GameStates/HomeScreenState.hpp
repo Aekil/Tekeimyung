@@ -18,6 +18,7 @@ START_GAMESTATE(HomeScreenState, "HomeScreen")
 private:
     Entity*         _buttonHowToPlay = nullptr;
 
-    //tEventSound*    _backgroundMenuMusic = nullptr;
+    tEventSound*    _backgroundMenuMusic = nullptr;
+    tEventSound*    _backgroundGameMusic = nullptr;
 
 END_GAMESTATE(HomeScreenState)

@@ -30,4 +30,5 @@ private:
     std::pair <Keyboard::eKey, IInputEvent *>    _pair;
 
     tEventSound*                        _backgroundGameMusic = nullptr;
+    tEventSound*                        _backgroundMenuMusic = nullptr;
 END_GAMESTATE(PlayState)

@@ -71,9 +71,11 @@ public:
     int                                     registerSound(const std::string& name, eSoundType type/* = eSoundType::NONE*/);
 
     void                                    playSound(int id);
-    /*void                                    resumeSound(int id);
+    void                                    resumeSound(int id);
     void                                    pauseSound(int id);
-    void                                    stopSound(int id);*/
+    void                                    stopSound(int id);
+
+    void                                    restartSound(int id);
 
     bool                                    isSoundPlaying(int id);
     //bool                                    isSoundPaused(int id);

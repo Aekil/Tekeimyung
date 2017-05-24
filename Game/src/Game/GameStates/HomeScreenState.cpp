@@ -18,7 +18,19 @@ void    HomeScreenState::onEnter()
 
     renderComponent->_animator.play("fading", true);
 
-    SoundManager::getInstance()->setVolumeAllChannels(0);
+    SoundManager::getInstance()->setVolumeAllChannels(DEFAULT_SOUND_VOL);
+    SoundManager::getInstance()->setSoundVolume(_backgroundMenuMusic->soundID, 1.0f);
+
+    SoundManager::getInstance()->pauseSound(_backgroundGameMusic->soundID);
+    SoundManager::getInstance()->stopSound(_backgroundGameMusic->soundID);
+    SoundManager::getInstance()->resumeSound(_backgroundMenuMusic->soundID);
+
+#if (ENABLE_SOUND)
+    if (_backgroundMenuMusic->soundID != -1 && !SoundManager::getInstance()->isSoundPlaying(_backgroundMenuMusic->soundID))
+    {
+        SoundManager::getInstance()->playSound(_backgroundMenuMusic->soundID);
+    }
+#endif
 }
 
 void    HomeScreenState::setupSystems()
@@ -31,10 +43,12 @@ void    HomeScreenState::setupSystems()
 
 bool    HomeScreenState::init()
 {
-    //_backgroundMenuMusic = EventSound::getEventByEventType(eEventSound::BACKGROUND_MENU);
+    _backgroundMenuMusic = EventSound::getEventByEventType(eEventSound::BACKGROUND_MENU);
+    _backgroundGameMusic = EventSound::getEventByEventType(eEventSound::BACKGROUND);
 
     //  Retrieving the "How to Play" button in order to play its animation.
     this->_buttonHowToPlay = EntityFactory::createOrGetEntity("BUTTON_HOW_TO_PLAY");
+
     return (true);
 }
 

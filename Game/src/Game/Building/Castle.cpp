@@ -11,6 +11,7 @@ void Castle::start()
     this->_transform = getComponent<sTransformComponent>();
     Health::init(_render);
     _hitCastle = EventSound::getEventByEventType(eEventSound::ENEMY_HIT_CASTLE);
+    SoundManager::getInstance()->setSoundVolume(_hitCastle->soundID, 0.8f);
 }
 
 void Castle::update(float dt)

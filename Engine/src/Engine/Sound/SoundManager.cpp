@@ -170,11 +170,14 @@ void    SoundManager::playSound(int id)
     //addChannel(_sounds[id].channel);
 }
 
-/*void    SoundManager::resumeSound(int id)
+void    SoundManager::resumeSound(int id)
 {
     if (id < 0 || id >= NB_MAX_SOUNDS || // Out of range
         _sounds[id].channel == nullptr) // Not currently playing
+    {
+        LOG_WARN("Sound id %d out of range in resumeSound(id)", id);
         return;
+    }
 
     _result = _sounds[id].channel->setPaused(false);
     errorCheck();
@@ -184,7 +187,10 @@ void    SoundManager::pauseSound(int id)
 {
     if (id < 0 || id >= NB_MAX_SOUNDS || // Out of range
         _sounds[id].channel == nullptr) // Not currently playing
+    {
+        LOG_WARN("Sound id %d out of range in pauseSound(id)", id);
         return;
+    }
 
     _result = _sounds[id].channel->setPaused(true);
     errorCheck();
@@ -196,14 +202,26 @@ void    SoundManager::stopSound(int id)
         _sounds[id].channel == nullptr) // Not currently playing
         return;
 
-    removeChannel(_sounds[id].channel);
-    errorCheck();
+    /*removeChannel(_sounds[id].channel);
+    errorCheck();*/
 
     _result = _sounds[id].channel->stop();
     errorCheck();
 
-    _sounds[id].channel = nullptr;
-}*/
+    _sounds[id].channel = nullptr; // useful ?
+}
+
+void    SoundManager::restartSound(int id)
+{
+    if (id < 0 || id >= NB_MAX_SOUNDS) // out of range
+    {
+        LOG_WARN("Sound id %d out of range in restartSound(id)", id);
+        return;
+    }
+
+    _result = _sounds[id].channel->setPosition(0, 0);
+    errorCheck();
+}
 
 bool    SoundManager::isSoundPlaying(int id)
 {
