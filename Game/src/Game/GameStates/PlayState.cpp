@@ -29,7 +29,6 @@ PlayState::~PlayState() {}
 void    PlayState::onEnter()
 {
     SoundManager::getInstance()->setVolumeAllChannels(DEFAULT_SOUND_VOL);
-    SoundManager::getInstance()->setSoundVolume(_backgroundGameMusic->soundID, 0.5f);
 
     SoundManager::getInstance()->pauseSound(_backgroundMenuMusic->soundID);
     SoundManager::getInstance()->stopSound(_backgroundMenuMusic->soundID);
@@ -50,6 +49,7 @@ void    PlayState::setupSystems()
 bool    PlayState::init()
 {
     _backgroundGameMusic = EventSound::getEventByEventType(eEventSound::BACKGROUND);
+    SoundManager::getInstance()->setSoundVolume(_backgroundGameMusic->soundID, 0.2f);
     _backgroundMenuMusic = EventSound::getEventByEventType(eEventSound::BACKGROUND_MENU);
 
     // Load tutorial level

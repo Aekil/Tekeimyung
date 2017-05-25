@@ -17,9 +17,8 @@ void    HomeScreenState::onEnter()
     sRenderComponent*   renderComponent = this->_buttonHowToPlay->getComponent<sRenderComponent>();
 
     renderComponent->_animator.play("fading", true);
-
+    
     SoundManager::getInstance()->setVolumeAllChannels(DEFAULT_SOUND_VOL);
-    SoundManager::getInstance()->setSoundVolume(_backgroundMenuMusic->soundID, 1.0f);
 
     SoundManager::getInstance()->pauseSound(_backgroundGameMusic->soundID);
     SoundManager::getInstance()->stopSound(_backgroundGameMusic->soundID);
@@ -44,6 +43,7 @@ void    HomeScreenState::setupSystems()
 bool    HomeScreenState::init()
 {
     _backgroundMenuMusic = EventSound::getEventByEventType(eEventSound::BACKGROUND_MENU);
+    SoundManager::getInstance()->setSoundVolume(_backgroundMenuMusic->soundID, 1.0f);
     _backgroundGameMusic = EventSound::getEventByEventType(eEventSound::BACKGROUND);
 
     //  Retrieving the "How to Play" button in order to play its animation.

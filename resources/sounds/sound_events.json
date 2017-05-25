@@ -3,8 +3,8 @@
       {
          "name" : "BACKGROUND_MENU",
          "sound" : {
-            "name" : "Delta.mp3",
-            "path" : "resources/sounds/musics/Delta.mp3"
+            "name" : "Beta.mp3",
+            "path" : "resources/sounds/musics/Beta.mp3"
          }
       },
       {
