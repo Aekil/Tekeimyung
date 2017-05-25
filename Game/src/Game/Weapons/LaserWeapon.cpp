@@ -16,6 +16,7 @@ LaserWeapon::LaserWeapon()
     this->_attributes["Ammo"] = new Attribute(100.0f);
     this->_attributes["Damage"] = new Attribute(1.25f);
     this->_attributes["MaxRange"] = new Attribute(150.0f);
+    this->_attributes["ReloadingTime"] = new Attribute(1.5f);
 
     _shootSound = EventSound::getEventByEventType(eEventSound::PLAYER_SHOOT_LAZR);
     _material = ResourceManager::getInstance()->getResource<Material>("weapon_laser.mat");
@@ -26,7 +27,7 @@ void    LaserWeapon::fire(Player* player, sTransformComponent* playerTransform, 
     this->_attributes["Ammo"]->addBonus(Bonus(-1));
 
     if (this->_attributes["Ammo"]->getFinalValue() == 0)
-        this->reload();
+        this->_reloading = true;
 
     if (this->_laser == nullptr)
         this->_laser = EntityFactory::createEntity("LASER_CYLINDER");
@@ -184,7 +185,7 @@ void LaserWeapon::upgradeByLevel()
 
 void    LaserWeapon::reload()
 {
-
+    this->_attributes["Ammo"]->clearAllBonuses();
 }
 
 void    LaserWeapon::clean()

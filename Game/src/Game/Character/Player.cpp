@@ -28,6 +28,9 @@ void Player::death()
 
 void Player::start()
 {
+    this->_reloadingProgress.init("AMMO_BAR_EMPTY", "AMMO_BAR");
+    this->_reloadingProgress.display(false);
+
     this->_weapons.push_back(new DefaultWeapon());
     this->_weapons.push_back(new TeslaWeapon());
     this->_weapons.push_back(new LaserWeapon());
@@ -177,6 +180,38 @@ void Player::handleShoot(float dt)
 {
     this->_elapsedTime += dt;
 
+    if (keyboard.getStateMap()[Keyboard::eKey::R] == Keyboard::eKeyState::KEY_RELEASED)
+        this->_weapons[this->_actualWeapon]->setReloading(true);
+
+    if (this->_weapons[this->_actualWeapon]->isReloading())
+    {
+        this->_weapons[this->_actualWeapon]->clean();
+        this->_reloadElapsedTime += dt;
+
+        if (!this->_reloadingProgress.isDisplayed())
+        {
+            this->_reloadingProgress.display(true);
+            this->_reloadingProgress.maxProgress = this->_weapons[this->_actualWeapon]->_attributes["ReloadingTime"]->getBaseValue();
+            this->_reloadingProgress.currentProgress = this->_weapons[this->_actualWeapon]->getAttribute("ReloadingTime") - this->_reloadElapsedTime;
+        }
+
+        if (this->_reloadElapsedTime > this->_weapons[this->_actualWeapon]->getAttribute("ReloadingTime"))
+        {
+            this->_reloadElapsedTime = 0.0f;
+            this->_weapons[this->_actualWeapon]->setReloading(false);
+            this->_weapons[this->_actualWeapon]->reload();
+            this->_reloadingProgress.display(false);
+        }
+        else
+        {
+            this->_reloadingProgress.currentProgress -= dt;
+            this->_reloadingProgress.update();
+            return;
+        }
+    }
+    else if (!this->_weapons[this->_actualWeapon]->isReloading() && this->_reloadingProgress.isDisplayed())
+        this->_reloadingProgress.display(false);
+
     if (this->_canShoot && this->_elapsedTime > this->_weapons[this->_actualWeapon]->getAttribute("FireRate"))
     {
         if (mouse.isPressed(Mouse::eButton::MOUSE_BUTTON_1))
@@ -290,4 +325,9 @@ bool Player::updateEditor()
     }
 
     return (changed);
+}
+
+IWeapon*&    Player::getActualWeapon()
+{
+    return this->_weapons[this->_actualWeapon];
 }

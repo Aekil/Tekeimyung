@@ -15,17 +15,17 @@ void DisplayCastleLife::start()
     this->_em = EntityFactory::getBindedEntityManager();
     if (this->_em != nullptr)
     {
-        this->_castle = this->_em->getEntityByTag(CASTLE_TAG);
-        if (this->_castle != nullptr)
+        this->_player = this->_em->getEntityByTag(CASTLE_TAG);
+        if (this->_player != nullptr)
             this->_castleLifeHudDisplay = this->_em->getEntityByTag(HUD_DISPLAY_CASTLELIFE_TAG);
     }
 }
 
 void DisplayCastleLife::update(float dt)
 {
-    if (this->_castle != nullptr && this->_castleLifeHudDisplay != nullptr)
+    if (this->_player != nullptr && this->_castleLifeHudDisplay != nullptr)
     {
-        sScriptComponent*   scriptComp = this->_castle->getComponent<sScriptComponent>();
+        sScriptComponent*   scriptComp = this->_player->getComponent<sScriptComponent>();
 
         if (scriptComp == nullptr)
             return;

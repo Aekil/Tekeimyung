@@ -14,6 +14,7 @@
 class   IWeapon
 {
     friend class Player;
+    friend class DisplayAmmo;
 
 public:
     virtual void fire(Player* player, sTransformComponent* playerTransform, sRenderComponent* playerRender, glm::vec3 playerDirection) = 0;
@@ -38,12 +39,23 @@ public:
 
     Material* getMaterial()
     {
-        return (_material);
+        return (this->_material);
+    }
+
+    bool isReloading()
+    {
+        return this->_reloading;
+    }
+
+    void setReloading(bool reloading)
+    {
+        this->_reloading = reloading;
     }
 
 protected:
     std::map<std::string, Attribute*> _attributes;
     Material* _material = nullptr;
+    bool _reloading = false;
 
     int _level = 0;
 };

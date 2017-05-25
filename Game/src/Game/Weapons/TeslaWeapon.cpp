@@ -22,6 +22,7 @@ TeslaWeapon::TeslaWeapon()
     this->_attributes["MaxRange"] = new Attribute(35.0f);
     this->_attributes["HitAmount"] = new Attribute(2);
     this->_attributes["StunChance"] = new Attribute(0.0f);
+    this->_attributes["ReloadingTime"] = new Attribute(0.9f);
 
     _shootSound = EventSound::getEventByEventType(eEventSound::PLAYER_SHOOT_ELEC);
     _material = ResourceManager::getInstance()->getResource<Material>("weapon_tesla.mat");
@@ -29,6 +30,11 @@ TeslaWeapon::TeslaWeapon()
 
 void    TeslaWeapon::fire(Player* player, sTransformComponent* playerTransform, sRenderComponent* playerRender, glm::vec3 playerDirection)
 {
+    this->_attributes["Ammo"]->addBonus(Bonus(-1));
+
+    if (this->_attributes["Ammo"]->getFinalValue() == 0)
+        this->_reloading = true;
+
     switch (this->_level)
     {
         case 0:
@@ -51,7 +57,7 @@ void    TeslaWeapon::fire(Player* player, sTransformComponent* playerTransform, 
 
 void    TeslaWeapon::reload()
 {
-
+    this->_attributes["Ammo"]->clearAllBonuses();
 }
 
 void    TeslaWeapon::upgradeByLevel()

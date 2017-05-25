@@ -22,7 +22,7 @@ public:
 
 private:
     EntityManager*  _em;
-    const Entity*   _castle;
+    const Entity*   _player;
     const Entity*   _castleLifeHudDisplay;
 
     int             _tmpCastleLife = -1;
