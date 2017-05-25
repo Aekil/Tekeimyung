@@ -94,6 +94,9 @@ public:
 
     //tSoundInfos                             getSoundInfos(uint32_t soundID);
 
+    void                                    changeGeneralVolume(float volume);
+    float                                   getGeneralVolume() const;
+
 private:
     /*void                                    addChannel(FMOD::Channel* channel);
     void                                    removeChannel(FMOD::Channel* channel);*/
@@ -106,4 +109,6 @@ private:
     FMOD::ChannelGroup*                     _channelGroup;
 
     tSound                                  _sounds[NB_MAX_SOUNDS];
+
+    float                                   _generalVolume;
 };

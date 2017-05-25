@@ -15,7 +15,8 @@ std::shared_ptr<SoundManager>   SoundManager::_soundManager = nullptr;
 
 SoundManager::SoundManager() :
 _result(FMOD_OK),
-_system(nullptr)
+_system(nullptr),
+_generalVolume(DEFAULT_SOUND_VOL)
 {
     for (int i = 0; i < NB_MAX_SOUNDS; ++i)
     {
@@ -371,6 +372,16 @@ void    SoundManager::setSoundVolume(int id, float volume)
         }
     }
     LOG_WARN("Sound id n°%d doesn't exist", id);
+}
+
+void    SoundManager::changeGeneralVolume(float volume)
+{
+    _generalVolume += volume; // do some limit checks ?
+}
+
+float   SoundManager::getGeneralVolume() const
+{
+    return (_generalVolume);
 }
 
 /*void    SoundManager::addChannel(FMOD::Channel* channel)
