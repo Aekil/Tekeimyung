@@ -36,9 +36,6 @@
             "y" : 0.99999916553497314,
             "z" : 0.20000000298023224
          }
-      },
-      "sTypeComponent" : {
-         "type" : "TILE_WALKABLE"
       }
    },
    "name" : "LASER_CYLINDER",

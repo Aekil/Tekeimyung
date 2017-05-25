@@ -75,9 +75,6 @@
             "y" : 0.47145816683769226,
             "z" : 0.47145813703536987
          }
-      },
-      "sTypeComponent" : {
-         "type" : "CHARACTER"
       }
    },
    "name" : "PLAYER",

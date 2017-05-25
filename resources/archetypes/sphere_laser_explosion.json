@@ -79,9 +79,6 @@
             "y" : 1.0000004768371582,
             "z" : 1.000002384185791
          }
-      },
-      "sTypeComponent" : {
-         "type" : "TILE_WALKABLE"
       }
    },
    "name" : "SPHERE_LASER_EXPLOSION",

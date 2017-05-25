@@ -66,9 +66,6 @@
             "y" : 1,
             "z" : 1
          }
-      },
-      "sTypeComponent" : {
-         "type" : "TILE_WALKABLE"
       }
    },
    "name" : "TILE_WALL",

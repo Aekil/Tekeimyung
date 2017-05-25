@@ -44,9 +44,6 @@
             "z" : 1
          }
       },
-      "sTypeComponent" : {
-         "type" : "TILE_WALKABLE"
-      },
       "sUiComponent" : {
          "horizontal_alignment" : "MIDDLE",
          "layer" : -1,

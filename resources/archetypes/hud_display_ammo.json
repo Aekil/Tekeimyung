@@ -1,46 +1,53 @@
 {
    "components" : {
       "sNameComponent" : {
-         "name" : "SIDEBAR_ITEM_INFO"
+         "name" : "HUD_DISPLAY_AMMO"
       },
       "sRenderComponent" : {
          "animated" : false,
          "animations" : [],
          "color" : {
-            "a" : 1,
-            "b" : 1,
-            "g" : 1,
-            "r" : 1
+            "a" : 0,
+            "b" : 0,
+            "g" : 0,
+            "r" : 0
          },
-         "display" : false,
+         "display" : true,
          "dynamic" : false,
          "hide_dynamic" : false,
          "ignore_raycast" : false,
-         "materials" : [ "sidebar_item_info.mat" ],
+         "materials" : [ "MAT_Default" ],
          "model" : "resources/models/default.DAE",
-         "type" : "PLANE"
+         "type" : "MESH"
+      },
+      "sScriptComponent" : {
+         "scripts" : [
+            {
+               "name" : "DisplayAmmo"
+            }
+         ]
       },
       "sTextComponent" : {
          "color" : {
             "a" : 1,
             "b" : 1,
-            "g" : 1,
-            "r" : 1
+            "g" : 0,
+            "r" : 0
          },
-         "content" : "Item description",
-         "font_name" : "arial.ttf",
+         "content" : "x/x",
+         "font_name" : "moonhouse.ttf",
          "font_size" : 26,
          "horizontal_alignment" : "LEFT",
          "offset" : {
-            "x" : 27,
-            "y" : -18
+            "x" : 0,
+            "y" : 0
          },
-         "vertical_alignment" : "TOP"
+         "vertical_alignment" : "MIDDLE"
       },
       "sTransformComponent" : {
          "pos" : {
-            "x" : 940.79998779296875,
-            "y" : 272.15499877929688,
+            "x" : 211.19999694824219,
+            "y" : 184.86000061035156,
             "z" : 0
          },
          "rotation" : {
@@ -49,26 +56,26 @@
             "z" : 0
          },
          "scale" : {
-            "x" : 124.79998779296875,
-            "y" : 15.405000686645508,
+            "x" : 4.1706829071044922,
+            "y" : 2.9306333065032959,
             "z" : 1
          }
       },
       "sUiComponent" : {
-         "horizontal_alignment" : "MIDDLE",
+         "horizontal_alignment" : "LEFT",
          "layer" : 0,
          "offset" : {
-            "x" : -1,
-            "y" : 19
+            "x" : 6,
+            "y" : 13
          },
          "percentage_size" : true,
          "size" : {
-            "x" : 0.64999991655349731,
-            "y" : 0.15000000596046448
+            "x" : 0.10000000149011612,
+            "y" : 0.10000000149011612
          },
          "vertical_alignment" : "BOTTOM"
       }
    },
-   "name" : "SIDEBAR_ITEM_INFO",
-   "tag" : "SidebarItemInfo"
+   "name" : "HUD_DISPLAY_AMMO",
+   "tag" : "HudDisplayCastleLife"
 }

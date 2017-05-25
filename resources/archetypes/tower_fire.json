@@ -46,9 +46,6 @@
             "y" : 0.5,
             "z" : 0.5
          }
-      },
-      "sTypeComponent" : {
-         "type" : "TILE_NOT_WALKABLE"
       }
    },
    "name" : "TOWER_FIRE",

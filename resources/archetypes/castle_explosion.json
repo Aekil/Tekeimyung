@@ -72,9 +72,6 @@
             "y" : 0.91669178009033203,
             "z" : 0.91669297218322754
          }
-      },
-      "sTypeComponent" : {
-         "type" : "CHARACTER"
       }
    },
    "name" : "CASTLE_EXPLOSION",
