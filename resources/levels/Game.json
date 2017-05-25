@@ -1014,7 +1014,7 @@
                },
                "rotation" : {
                   "x" : 0,
-                  "y" : 0,
+                  "y" : -0,
                   "z" : 0
                },
                "scale" : {
@@ -1039,7 +1039,7 @@
             }
          },
          "name" : "HUD_DISPLAY_AMMO",
-         "tag" : "HudDisplayCastleLife"
+         "tag" : ""
       }
    ],
    "name" : "Game"
