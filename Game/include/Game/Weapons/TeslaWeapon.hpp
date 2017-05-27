@@ -10,17 +10,20 @@
 
 #define TESLA_WEAPON_NAME "Tesla"
 
+class TeslaOrb;
+
 class TeslaWeapon final : public IWeapon
 {
 public:
     TeslaWeapon();
-    ~TeslaWeapon() = default;
+    ~TeslaWeapon();
 
 public:
     void    fire(Player* player, sTransformComponent* playerTransform, sRenderComponent* playerRender, glm::vec3 playerDirection) override final;
     void    reload() override final;
     void    upgradeByLevel() override final;
     void    clean() override final;
+    void    setFiredOrb(TeslaOrb* firedOrb);
 
     virtual std::string getName()
     {
@@ -39,4 +42,6 @@ private:
 
 private:
     tEventSound* _shootSound = nullptr;
+
+    TeslaOrb* _firedOrb = nullptr;
 };

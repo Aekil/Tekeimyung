@@ -5,9 +5,20 @@
 #include    <Engine/Core/Components/Components.hh>
 #include    <Engine/Physics/Physics.hpp>
 
+#include    <Game/Weapons/TeslaWeapon.hpp>
+
 #include    <Game/Weapons/TeslaOrb.hpp>
 
-void        TeslaOrb::start()
+TeslaOrb::~TeslaOrb()
+{
+    // Prevent circular dependency crash
+    if (_owner != nullptr)
+    {
+        _owner->setFiredOrb(nullptr);
+    }
+}
+
+void    TeslaOrb::start()
 {
     sRenderComponent*   render = this->getComponent<sRenderComponent>();
 
@@ -19,7 +30,7 @@ void        TeslaOrb::start()
         render->_animator.play("spinning");
 }
 
-void        TeslaOrb::update(float deltaTime)
+void    TeslaOrb::update(float deltaTime)
 {
     if (this->hasReachedItsRange() == true)
     {
@@ -28,7 +39,7 @@ void        TeslaOrb::update(float deltaTime)
     }
 }
 
-void        TeslaOrb::onCollisionEnter(Entity* entity)
+void    TeslaOrb::onCollisionEnter(Entity* entity)
 {
     if (entity->getTag() == "TileBaseTurret")
     {
@@ -40,7 +51,7 @@ void        TeslaOrb::onCollisionEnter(Entity* entity)
 /**
     Called once when the orb is created, it just sets the orb position once.
 */
-void        TeslaOrb::setPosition(const glm::vec3& position)
+void    TeslaOrb::setPosition(const glm::vec3& position)
 {
     sTransformComponent*    transformComponent = this->getComponent<sTransformComponent>();
 
@@ -54,12 +65,17 @@ void        TeslaOrb::setPosition(const glm::vec3& position)
 /**
     Called once when the orb is created, it just sets the orb direction once.
 */
-void        TeslaOrb::setDirection(const glm::vec3& direction)
+void    TeslaOrb::setDirection(const glm::vec3& direction)
 {
     this->_rigidBody->velocity = direction * (float) this->_speed->getFinalValue();
 }
 
-bool        TeslaOrb::hasReachedItsRange()
+void    TeslaOrb::setOwner(TeslaWeapon* owner)
+{
+    _owner = owner;
+}
+
+bool    TeslaOrb::hasReachedItsRange()
 {
     sTransformComponent*    transform = this->getComponent<sTransformComponent>();
 
@@ -78,12 +94,12 @@ bool        TeslaOrb::hasReachedItsRange()
     return (true);
 }
 
-void        TeslaOrb::triggerNanoboost()
+void    TeslaOrb::triggerNanoboost()
 {
 
 }
 
-void        TeslaOrb::triggerExplosion()
+void    TeslaOrb::triggerExplosion()
 {
 
 }

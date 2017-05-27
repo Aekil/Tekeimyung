@@ -7,12 +7,13 @@
 #include    <Game/Attibutes/Attribute.hpp>
 
 struct sRigidBodyComponent;
+class TeslaWeapon;
 
 class       TeslaOrb final : public BaseScript
 {
 public:
     TeslaOrb() = default;
-    ~TeslaOrb() override final = default;
+    ~TeslaOrb() override final;
 
     void    start() override final;
     void    update(float deltaTime) override final;
@@ -21,6 +22,7 @@ public:
     //  Orb functions
     void    setPosition(const glm::vec3& direction);
     void    setDirection(const glm::vec3& direction);
+    void    setOwner(TeslaWeapon* owner);
 
     bool    hasReachedItsRange();
     void    triggerNanoboost();
@@ -32,6 +34,7 @@ private:
     Attribute*              _range;
 
     glm::vec3               _startPosition;
+    TeslaWeapon*            _owner = nullptr;
 };
 
 REGISTER_SCRIPT(TeslaOrb);

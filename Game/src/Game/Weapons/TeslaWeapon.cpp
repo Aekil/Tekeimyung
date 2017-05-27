@@ -27,6 +27,15 @@ TeslaWeapon::TeslaWeapon()
     _material = ResourceManager::getInstance()->getResource<Material>("weapon_tesla.mat");
 }
 
+TeslaWeapon::~TeslaWeapon()
+{
+    // Prevent circular dependency crash
+    if (_firedOrb != nullptr)
+    {
+        _firedOrb->setOwner(nullptr);
+    }
+}
+
 void    TeslaWeapon::fire(Player* player, sTransformComponent* playerTransform, sRenderComponent* playerRender, glm::vec3 playerDirection)
 {
     switch (this->_level)
@@ -179,8 +188,14 @@ void    TeslaWeapon::triggerLightningEffect(Entity* entity)
     }
 }
 
-void            TeslaWeapon::fireOrb(Player* player, sTransformComponent* playerTransform, sRenderComponent* playerRender, glm::vec3 playerDirection)
+void    TeslaWeapon::fireOrb(Player* player, sTransformComponent* playerTransform, sRenderComponent* playerRender, glm::vec3 playerDirection)
 {
+    // We can't fire multiple orbs
+    if (_firedOrb != nullptr)
+    {
+        return;
+    }
+
     Entity*     teslaOrb = EntityFactory::createEntity("TESLA_ORB");
 
     if (teslaOrb == nullptr)
@@ -191,14 +206,20 @@ void            TeslaWeapon::fireOrb(Player* player, sTransformComponent* player
     if (scriptComponent == nullptr)
         throw std::runtime_error("Could not retrieve " + std::string("sScriptComponent") + " from Entity with archetype \"" + std::string("TESLA_ORB") + "\"");
 
-    TeslaOrb*   orbScript = scriptComponent->getScript<TeslaOrb>("TeslaOrb");
+    _firedOrb = scriptComponent->getScript<TeslaOrb>("TeslaOrb");
 
-    if (scriptComponent == nullptr)
+    if (_firedOrb == nullptr)
         throw std::runtime_error("Could not retrieve script " + std::string("TeslaOrb") + " from Entity with archetype \"" + std::string("TESLA_ORB") + "\"");
 
     //  Let's set the orb's direction according to the player's.
-    orbScript->setPosition(playerTransform->getPos());
-    orbScript->setDirection({ playerDirection.x, 0.0f, playerDirection.z });
+    _firedOrb->setPosition(playerTransform->getPos());
+    _firedOrb->setDirection({ playerDirection.x, 0.0f, playerDirection.z });
+    _firedOrb->setOwner(this);
+}
+
+void    TeslaWeapon::setFiredOrb(TeslaOrb* firedOrb)
+{
+    _firedOrb = firedOrb;
 }
 
 void    TeslaWeapon::clean()
