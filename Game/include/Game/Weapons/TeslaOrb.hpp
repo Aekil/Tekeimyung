@@ -35,6 +35,7 @@ private:
     sRigidBodyComponent*    _rigidBody = nullptr;
     Attribute*              _speed = nullptr;
     Attribute*              _range = nullptr;
+    Attribute*              _explosionRange = nullptr;
 
     glm::vec3               _startPosition;
     TeslaWeapon*            _owner = nullptr;

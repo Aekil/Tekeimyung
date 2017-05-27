@@ -23,6 +23,9 @@ TeslaOrb::~TeslaOrb()
 
     if (_range != nullptr)
         delete _range;
+
+    if (_explosionRange != nullptr)
+        delete _explosionRange;
 }
 
 void    TeslaOrb::start()
@@ -32,6 +35,7 @@ void    TeslaOrb::start()
     this->_rigidBody = this->getComponent<sRigidBodyComponent>();
     this->_speed = new Attribute(100.0f);
     this->_range = new Attribute(150.0f);
+    this->_explosionRange = new Attribute(10.0f);
 
     if (render != nullptr)
         render->_animator.play("spinning");
@@ -116,8 +120,8 @@ void    TeslaOrb::triggerExplosion()
         auto box = enemy->getComponent<sBoxColliderComponent>();
         auto sphere = enemy->getComponent<sSphereColliderComponent>();
         auto enemyTransform = enemy->getComponent<sTransformComponent>();
+        float radius = this->_explosionRange->getFinalValue();
         bool inRange = false;
-        float radius = 6.0f;
 
         if (box != nullptr)
         {
