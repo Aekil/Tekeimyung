@@ -1,3 +1,5 @@
+#pragma once
+
 /**
 * @Author   Mathieu Chassara
 */

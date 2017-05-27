@@ -7,13 +7,16 @@
 #include <Engine/Utils/EventSound.hpp>
 
 #include <Game/Weapons/IWeapon.hpp>
+#include <Game/Weapons/TeslaOrb.hpp>
 
 #define TESLA_WEAPON_NAME "Tesla"
 
-class TeslaOrb;
-
 class TeslaWeapon final : public IWeapon
 {
+    // Allow TeslaOrb to access TeslaWeapon class in triggerExplosion
+    // because it needs to access triggerLightningEffect
+    friend void TeslaOrb::triggerExplosion();
+
 public:
     TeslaWeapon();
     ~TeslaWeapon();
