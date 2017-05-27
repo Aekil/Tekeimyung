@@ -16,9 +16,13 @@ TeslaOrb::~TeslaOrb()
 {
     // Prevent circular dependency crash
     if (_owner != nullptr)
-    {
         _owner->setFiredOrb(nullptr);
-    }
+
+    if (_speed != nullptr)
+        delete _speed;
+
+    if (_range != nullptr)
+        delete _range;
 }
 
 void    TeslaOrb::start()
@@ -31,6 +35,8 @@ void    TeslaOrb::start()
 
     if (render != nullptr)
         render->_animator.play("spinning");
+
+    _transform = this->getComponent<sTransformComponent>();
 }
 
 void    TeslaOrb::update(float deltaTime)
@@ -62,13 +68,8 @@ void    TeslaOrb::onCollisionEnter(Entity* entity)
 */
 void    TeslaOrb::setPosition(const glm::vec3& position)
 {
-    sTransformComponent*    transformComponent = this->getComponent<sTransformComponent>();
-
-    if (transformComponent != nullptr)
-    {
-        transformComponent->setPos(position);
-        this->_startPosition = position;
-    }
+    _transform->setPos(position);
+    this->_startPosition = position;
 }
 
 /**
@@ -86,21 +87,12 @@ void    TeslaOrb::setOwner(TeslaWeapon* owner)
 
 bool    TeslaOrb::hasReachedItsRange()
 {
-    sTransformComponent*    transform = this->getComponent<sTransformComponent>();
+    glm::vec3   currentPosition;
+    float       distance;
 
-    if (transform != nullptr)
-    {
-        glm::vec3   currentPosition;
-        float       distance;
-
-        currentPosition = transform->getPos();
-        distance = Physics::distance(this->_startPosition, currentPosition);
-        return (distance >= this->_range->getFinalValue());
-    }
-    else
-        LOG_WARN("Could not retrieve %s from Entity with archetype \"%s\"", "sTransformComponent", "TESLA_ORB");
-
-    return (true);
+    currentPosition = _transform->getPos();
+    distance = Physics::distance(this->_startPosition, currentPosition);
+    return (distance >= this->_range->getFinalValue());
 }
 
 void    TeslaOrb::triggerNanoboost()
@@ -116,7 +108,6 @@ void    TeslaOrb::triggerExplosion()
         return;
     }
 
-    sTransformComponent* transform = this->getComponent<sTransformComponent>();
     auto em = EntityFactory::getBindedEntityManager();
 
     const auto& enemies = em->getEntitiesByTag("Enemy");
@@ -131,7 +122,7 @@ void    TeslaOrb::triggerExplosion()
         if (box != nullptr)
         {
             if (Collisions::sphereVSAABB(
-                transform->getPos(),
+                _transform->getPos(),
                 radius * (SIZE_UNIT / 2.0f),
                 box->pos + enemyTransform->getPos(),
                 glm::vec3(box->size.x * SIZE_UNIT, box->size.y * SIZE_UNIT, box->size.z * SIZE_UNIT)))
@@ -142,7 +133,7 @@ void    TeslaOrb::triggerExplosion()
         else if (sphere != nullptr)
         {
             if (Collisions::sphereVSsphere(
-                transform->getPos(),
+                _transform->getPos(),
                 radius * (SIZE_UNIT / 2.0f),
                 sphere->pos + enemyTransform->getPos(),
                 sphere->radius * std::max({ enemyTransform->getScale().x, enemyTransform->getScale().y, enemyTransform->getScale().z }) * (SIZE_UNIT / 2.0f)))

@@ -9,6 +9,7 @@
 #include    <Game/Attibutes/Attribute.hpp>
 
 struct sRigidBodyComponent;
+struct sTransformComponent;
 class TeslaWeapon;
 
 class       TeslaOrb final : public BaseScript
@@ -31,12 +32,14 @@ public:
     void    triggerExplosion();
 
 private:
-    sRigidBodyComponent*    _rigidBody;
-    Attribute*              _speed;
-    Attribute*              _range;
+    sRigidBodyComponent*    _rigidBody = nullptr;
+    Attribute*              _speed = nullptr;
+    Attribute*              _range = nullptr;
 
     glm::vec3               _startPosition;
     TeslaWeapon*            _owner = nullptr;
+
+    sTransformComponent* _transform = nullptr;
 };
 
 REGISTER_SCRIPT(TeslaOrb);
