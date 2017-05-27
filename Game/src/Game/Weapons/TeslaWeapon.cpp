@@ -159,10 +159,11 @@ void    TeslaWeapon::triggerLightningEffect(Entity* entity)
         {
             sRenderComponent*   render = entity->getComponent<sRenderComponent>();
 
+            // Lightning animation
             if (render != nullptr)
             {
                 render->_animator.play("lightning_effect", false);
-                
+
                 auto& meshInstances = render->getModelInstance()->getMeshsInstances();
 
                 for (auto& meshInstance : meshInstances)
@@ -171,6 +172,9 @@ void    TeslaWeapon::triggerLightningEffect(Entity* entity)
                     mat->setBloom(glm::vec4{ 0.0f, 0.0f, std::numeric_limits<float>::max() * 10.0f, mat->getBloom().w });
                 }
             }
+
+            // Stun the enemy
+            enemyScript->stun(3.0f);
         }
     }
 }

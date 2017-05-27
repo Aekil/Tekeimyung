@@ -40,25 +40,6 @@ void Enemy::start()
 
 void Enemy::update(float dt)
 {
-    if (_path.size() > 0 &&
-        _pathProgress < _path.size())
-    {
-        glm::vec3 targetPos = { _path[_pathProgress].x, this->_transform->getPos().y, _path[_pathProgress].z };
-        const glm::vec3& entityPos = this->_transform->getPos();
-        glm::vec3 direction = glm::normalize(targetPos - entityPos);
-
-        direction *= this->_speed;
-
-        this->_rigidBody->velocity = direction;
-
-        if (glm::length(direction * dt) > glm::length(targetPos - entityPos))
-        {
-            _pathProgress++;
-        }
-    }
-    else
-        _transform->translate(glm::vec3(0.0f, 0.0f, -this->_speed * dt));
-
     if (this->_percentExplosion != nullptr)
     {
         int i = 0;
@@ -74,6 +55,14 @@ void Enemy::update(float dt)
     }
 
     Health::update(_transform);
+
+    // Enemy is stunned
+    if (updateStun(dt))
+    {
+        return;
+    }
+
+    followPath(dt);
 }
 
 void    Enemy::setPercentExplosion(Attribute* percentExplosion)
@@ -202,9 +191,65 @@ void Enemy::setPath(const std::vector<glm::vec3>& path)
     _pathProgress = 0;
 }
 
-void Enemy::stun()
+void Enemy::stun(float dt)
 {
     this->_rigidBody->velocity = glm::vec3{ 0,0,0 };
+    _stun = dt;
+}
+
+void Enemy::resetBloom()
+{
+    int i = 0;
+    auto& meshInstances = this->_render->getModelInstance()->getMeshsInstances();
+    for (auto& meshInstance : meshInstances)
+    {
+        auto material = meshInstance->getMaterial();
+
+        material->setBloom(this->_baseBlooms[i]);
+        i++;
+    }
+}
+
+bool Enemy::updateStun(float dt)
+{
+    // The enemy is not stunned
+    if (_stun <= 0.0f)
+    {
+        return (false);
+    }
+
+    _stun -= dt;
+
+    if (_stun <= 0.0f)
+    {
+        this->_render->_animator.play("rotation_enemy", true);
+        resetBloom();
+        return (false);
+    }
+
+    return (true);
+}
+
+void Enemy::followPath(float dt)
+{
+    if (_path.size() > 0 &&
+        _pathProgress < _path.size())
+    {
+        glm::vec3 targetPos = { _path[_pathProgress].x, this->_transform->getPos().y, _path[_pathProgress].z };
+        const glm::vec3& entityPos = this->_transform->getPos();
+        glm::vec3 direction = glm::normalize(targetPos - entityPos);
+
+        direction *= this->_speed;
+
+        this->_rigidBody->velocity = direction;
+
+        if (glm::length(direction * dt) > glm::length(targetPos - entityPos))
+        {
+            _pathProgress++;
+        }
+    }
+    else
+        _transform->translate(glm::vec3(0.0f, 0.0f, -this->_speed * dt));
 }
 
 void Enemy::destroyWall(Entity* entity, const glm::vec3& pos)

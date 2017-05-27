@@ -31,7 +31,7 @@ public:
     void remove();
     bool takeDamage(double damage) override final;
 
-    void stun();
+    void stun(float dt);
 
     Attribute* getPercentExplosion();
     void setPercentExplosion(Attribute*);
@@ -42,6 +42,9 @@ public:
     void loadFromJson(const JsonValue& json) override final;
 
 private:
+    void resetBloom();
+    bool updateStun(float dt);
+    void followPath(float dt);
     void destroyWall(Entity* entity, const glm::vec3& pos);
 
 private:
@@ -63,6 +66,7 @@ private:
     tEventSound* _earningCoins = nullptr;
 
     Attribute* _percentExplosion = nullptr;
+    float _stun{0.0f};
 
     float   _speed = 0.0f;
     int     _goldEarned = 0;
