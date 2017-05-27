@@ -81,6 +81,29 @@ void    TeslaWeapon::upgradeByLevel()
     }
 }
 
+void    TeslaWeapon::update(float dt, Mouse& mouse)
+{
+    if (_lastOrbDestruction > 0.0f)
+        _lastOrbDestruction -= dt;
+
+    if (_firedOrb != nullptr &&
+        mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_1] == Mouse::eButtonState::CLICK_PRESSED)
+    {
+        _firedOrb->triggerExplosion();
+        _lastOrbDestruction = 0.5f;
+        return;
+    }
+
+    return;
+}
+
+void    TeslaWeapon::clean() {}
+
+void    TeslaWeapon::setFiredOrb(TeslaOrb* firedOrb)
+{
+    _firedOrb = firedOrb;
+}
+
 void    TeslaWeapon::fireLightning(Player* player, sTransformComponent* playerTransform, sRenderComponent* playerRender, glm::vec3 playerDirection)
 {
     glm::vec3               playerPos;
@@ -191,7 +214,10 @@ void    TeslaWeapon::triggerLightningEffect(Entity* entity)
 void    TeslaWeapon::fireOrb(Player* player, sTransformComponent* playerTransform, sRenderComponent* playerRender, glm::vec3 playerDirection)
 {
     // We can't fire multiple orbs
-    if (_firedOrb != nullptr)
+    // We can't fire an orb just after orb explosion otherwise
+    // it could shoot right after the explosion
+    if (_firedOrb != nullptr ||
+        _lastOrbDestruction > 0.0f)
     {
         return;
     }
@@ -215,13 +241,4 @@ void    TeslaWeapon::fireOrb(Player* player, sTransformComponent* playerTransfor
     _firedOrb->setPosition(playerTransform->getPos());
     _firedOrb->setDirection({ playerDirection.x, 0.0f, playerDirection.z });
     _firedOrb->setOwner(this);
-}
-
-void    TeslaWeapon::setFiredOrb(TeslaOrb* firedOrb)
-{
-    _firedOrb = firedOrb;
-}
-
-void    TeslaWeapon::clean()
-{
 }

@@ -73,6 +73,7 @@ void Player::start()
 void Player::update(float dt)
 {
     this->updateDirection();
+
     if (TutoManagerMessage::getInstance()->stateOnGoingOrDone(eTutoState::MOVE))
         this->movement(dt);
     if (TutoManagerMessage::getInstance()->stateOnGoingOrDone(eTutoState::SHOOT))
@@ -175,7 +176,9 @@ void Player::movement(float elapsedTime)
 
 void Player::handleShoot(float dt)
 {
+
     this->_elapsedTime += dt;
+    this->_weapons[this->_actualWeapon]->update(dt, mouse);
 
     if (this->_canShoot && this->_elapsedTime > this->_weapons[this->_actualWeapon]->getAttribute("FireRate"))
     {

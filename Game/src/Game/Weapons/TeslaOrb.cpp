@@ -48,7 +48,6 @@ void    TeslaOrb::update(float deltaTime)
     if (this->hasReachedItsRange() == true)
     {
         this->triggerExplosion();
-        this->Destroy();
     }
 }
 
@@ -58,12 +57,10 @@ void    TeslaOrb::onCollisionEnter(Entity* entity)
     {
         LOG_DEBUG("Captain Amari says: ALLEZ NANOBOOST MON GARS SUR.");
         this->triggerNanoboost();
-        this->Destroy();
     }
     else if (entity->getTag() == "Enemy")
     {
         this->triggerExplosion();
-        this->Destroy();
     }
 }
 
@@ -101,7 +98,7 @@ bool    TeslaOrb::hasReachedItsRange()
 
 void    TeslaOrb::triggerNanoboost()
 {
-
+    this->Destroy();
 }
 
 void    TeslaOrb::triggerExplosion()
@@ -109,6 +106,7 @@ void    TeslaOrb::triggerExplosion()
     if (!_owner)
     {
         LOG_ERROR("TeslaOrb don't have owner");
+        this->Destroy();
         return;
     }
 
@@ -159,4 +157,6 @@ void    TeslaOrb::triggerExplosion()
             enemyScript->takeDamage(_owner->_attributes["Damage"]->getFinalValue());
         }
     }
+
+    this->Destroy();
 }

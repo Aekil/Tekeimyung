@@ -25,6 +25,7 @@ public:
     void    fire(Player* player, sTransformComponent* playerTransform, sRenderComponent* playerRender, glm::vec3 playerDirection) override final;
     void    reload() override final;
     void    upgradeByLevel() override final;
+    void    update(float dt, Mouse& mouse) override final;
     void    clean() override final;
     void    setFiredOrb(TeslaOrb* firedOrb);
 
@@ -47,4 +48,6 @@ private:
     tEventSound* _shootSound = nullptr;
 
     TeslaOrb* _firedOrb = nullptr;
+
+    float _lastOrbDestruction = 0.0f;
 };

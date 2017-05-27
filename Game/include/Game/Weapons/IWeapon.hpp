@@ -32,6 +32,8 @@ public:
         this->upgradeByLevel();
     }
 
+    virtual void update(float dt, Mouse& mouse) {}
+
     virtual std::string getName() = 0;
 
     virtual void clean() = 0;
