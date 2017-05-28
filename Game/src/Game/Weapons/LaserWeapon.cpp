@@ -50,6 +50,25 @@ void    LaserWeapon::fire(Player* player, sTransformComponent* playerTransform, 
 #endif
 }
 
+void    LaserWeapon::sortHitedEntities(sTransformComponent* playerTransform, std::vector<Entity *>& entities)
+{
+    float distance = std::numeric_limits<float>::min();
+
+    for (auto& entity : entities)
+    {
+        if (entity->getTag() != "Enemy")
+            distance = glm::distance(entity->getComponent<sTransformComponent>()->getPos(), playerTransform->getPos());
+    }
+
+
+    for (int i = entities.size() - 1; i >= 0; i--) 
+    {
+        auto distanceBetween = glm::distance(entities.at(i)->getComponent<sTransformComponent>()->getPos(), playerTransform->getPos());
+        if (distanceBetween > distance) 
+            entities.erase(entities.begin() + i);
+    }
+}
+
 Entity* LaserWeapon::farestEnemy(sTransformComponent* playerTransform, std::vector<Entity*> entities)
 {
     float distance = std::numeric_limits<float>::min();
@@ -83,6 +102,7 @@ void LaserWeapon::fireMultipleEnemy(Player* player, sTransformComponent* playerT
             return;
         }
 
+        this->sortHitedEntities(playerTransform, hitedEntities);
         auto farestEntity = this->farestEnemy(playerTransform, hitedEntities);
 
         if (this->_laser == nullptr)
@@ -129,7 +149,7 @@ void LaserWeapon::fireOneEnemy(Player* player, sTransformComponent* playerTransf
     Entity* hitedEntity;
     if (Physics::raycast(raycastHit, &hitedEntity, std::vector<Entity*>{ player->getEntity(), this->_laser }, this->_attributes["MaxRange"]->getFinalValue()))
     {
-        if (hitedEntity != nullptr && hitedEntity->getTag() == "Enemy")
+        if (hitedEntity != nullptr)
         {
             if (this->_laser == nullptr)
                 this->_laser = EntityFactory::createEntity("LASER_CYLINDER");
@@ -138,28 +158,31 @@ void LaserWeapon::fireOneEnemy(Player* player, sTransformComponent* playerTransf
             this->_laser->getComponent<sTransformComponent>()->setScale(glm::vec3{ 0.2f, glm::distance(hitedEntity->getComponent<sTransformComponent>()->getPos(), playerTransform->getPos()) / SIZE_UNIT, 0.2f });
             this->_laser->getComponent<sTransformComponent>()->setRotation(glm::vec3(90.0f, playerTransform->getRotation().y, 0.0f));
 
-            auto entityScriptComponent = hitedEntity->getComponent<sScriptComponent>();
-            if (entityScriptComponent == nullptr)
-                return;
-
-            auto enemyScript = entityScriptComponent->getScript<Enemy>("Enemy");
-
-            if (this->_timeDamage)
+            if (hitedEntity->getTag() == "Enemy")
             {
-                if (std::find(this->_oldEntitiesHited.begin(), this->_oldEntitiesHited.end(), hitedEntity) != this->_oldEntitiesHited.end())
-                    this->_attributes["Damage"]->addModifier(Modifier(this->_timeDamageDealt));
-                else
-                    this->_attributes["Damage"]->clearAll();
+                auto entityScriptComponent = hitedEntity->getComponent<sScriptComponent>();
+                if (entityScriptComponent == nullptr)
+                    return;
+
+                auto enemyScript = entityScriptComponent->getScript<Enemy>("Enemy");
+
+                if (this->_timeDamage)
+                {
+                    if (std::find(this->_oldEntitiesHited.begin(), this->_oldEntitiesHited.end(), hitedEntity) != this->_oldEntitiesHited.end())
+                        this->_attributes["Damage"]->addModifier(Modifier(this->_timeDamageDealt));
+                    else
+                        this->_attributes["Damage"]->clearAll();
+                }
+
+                enemyScript->takeDamage(this->_attributes["Damage"]->getFinalValue());
+
+                this->_oldEntitiesHited.push_back(hitedEntity);
             }
-
-            enemyScript->takeDamage(this->_attributes["Damage"]->getFinalValue());
-
-            this->_oldEntitiesHited.push_back(hitedEntity);
-        }
-        else
-        {
-            this->clean();
-            this->_oldEntitiesHited.clear();
+            else
+            {
+                this->clean();
+                this->_oldEntitiesHited.clear();
+            }
         }
     }
 }
@@ -191,9 +214,7 @@ void    LaserWeapon::reload()
 void    LaserWeapon::clean()
 {
     if (!this->_laser)
-    {
         return;
-    }
 
     auto em = EntityFactory::getBindedEntityManager();
 

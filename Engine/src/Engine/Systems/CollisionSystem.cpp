@@ -60,38 +60,39 @@ void    CollisionSystem::update(EntityManager &em, float elapsedTime)
                         firstTransform->translate(-rigidBody->velocity * elapsedTime);
                         secondTransform->translate(-rigidBodyB->velocity * elapsedTime);
 
-                        if (rigidBody->collisionsEnabled && colliding)
+                        if (rigidBody->collisionsEnabled && rigidBodyB->collisionsEnabled)
                         {
-                            if (((*it)->getComponent<sSphereColliderComponent>() != nullptr && !(*it)->getComponent<sSphereColliderComponent>()->isTrigger
-                                || (*it)->getComponent<sBoxColliderComponent>() != nullptr && !(*it)->getComponent<sBoxColliderComponent>()->isTrigger)
-                                && ((entity->getComponent<sSphereColliderComponent>() != nullptr && !entity->getComponent<sSphereColliderComponent>()->isTrigger)
-                                    || entity->getComponent<sBoxColliderComponent>() != nullptr && !entity->getComponent<sBoxColliderComponent>()->isTrigger))
+                            if (colliding)
                             {
-                                rigidBody->velocity = glm::vec3(0.0f);
+                                if (((*it)->getComponent<sSphereColliderComponent>() != nullptr && !(*it)->getComponent<sSphereColliderComponent>()->isTrigger
+                                    || (*it)->getComponent<sBoxColliderComponent>() != nullptr && !(*it)->getComponent<sBoxColliderComponent>()->isTrigger)
+                                    && ((entity->getComponent<sSphereColliderComponent>() != nullptr && !entity->getComponent<sSphereColliderComponent>()->isTrigger)
+                                        || entity->getComponent<sBoxColliderComponent>() != nullptr && !entity->getComponent<sBoxColliderComponent>()->isTrigger))
+                                {
+                                    rigidBody->velocity = glm::vec3(0.0f);
+                                }
+
+                                if (rigidBody->collisions.find((*it)->handle) == rigidBody->collisions.end() || rigidBody->collisions[(*it)->handle] == eCollisionState::NO_COLLISION)
+                                {
+                                    rigidBody->collisions[(*it)->handle] = eCollisionState::ENTERING_COLLISION;
+                                }
                             }
 
-                            if (rigidBody->collisions.find((*it)->handle) == rigidBody->collisions.end() || rigidBody->collisions[(*it)->handle] == eCollisionState::NO_COLLISION)
-                            {
-                                rigidBody->collisions[(*it)->handle] = eCollisionState::ENTERING_COLLISION;
-                            }
-                        }
-                        else if (rigidBody->collisionsEnabled)
-                        {
                             if (rigidBody->collisions[(*it)->handle] == eCollisionState::IS_COLLIDING)
                                 rigidBody->collisions[(*it)->handle] = eCollisionState::EXIT_COLLISION;
-                        }
 
-                        if (rigidBodyB->collisionsEnabled && colliding && (*it)->getComponent<sDynamicComponent>() == nullptr)
-                        {
-                            if (rigidBodyB->collisions.find(entity->handle) == rigidBodyB->collisions.end() || rigidBodyB->collisions[entity->handle] == eCollisionState::NO_COLLISION)
+                            if (colliding && (*it)->getComponent<sDynamicComponent>() == nullptr)
                             {
-                                rigidBodyB->collisions[entity->handle] = eCollisionState::ENTERING_COLLISION;
+                                if (rigidBodyB->collisions.find(entity->handle) == rigidBodyB->collisions.end() || rigidBodyB->collisions[entity->handle] == eCollisionState::NO_COLLISION)
+                                {
+                                    rigidBodyB->collisions[entity->handle] = eCollisionState::ENTERING_COLLISION;
+                                }
                             }
-                        }
-                        else if (rigidBodyB->collisionsEnabled && (*it)->getComponent<sDynamicComponent>() == nullptr)
-                        {
-                            if (rigidBodyB->collisions[entity->handle] == eCollisionState::IS_COLLIDING)
-                                rigidBodyB->collisions[entity->handle] = eCollisionState::EXIT_COLLISION;
+                            else if ((*it)->getComponent<sDynamicComponent>() == nullptr)
+                            {
+                                if (rigidBodyB->collisions[entity->handle] == eCollisionState::IS_COLLIDING)
+                                    rigidBodyB->collisions[entity->handle] = eCollisionState::EXIT_COLLISION;
+                            }
                         }
                     }
                 }
