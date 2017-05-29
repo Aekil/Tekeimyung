@@ -52,6 +52,8 @@ bool    PlayState::init()
     SoundManager::getInstance()->setSoundVolume(_backgroundGameMusic->soundID, 0.2f);
     _backgroundMenuMusic = EventSound::getEventByEventType(eEventSound::BACKGROUND_MENU);
 
+    _mute = false;
+
     // Load tutorial level
     if (!TutoManager::_tutorialDone)
     {
@@ -88,6 +90,18 @@ bool    PlayState::update(float elapsedTime)
         gameWindow->hasLostFocus())
     {
         _gameStateManager->addState<PauseState>();
+    }
+    else if (keyboard.getStateMap()[Keyboard::eKey::M] == Keyboard::eKeyState::KEY_PRESSED)
+    {
+        _mute = !_mute;
+        if (_mute)
+        {
+            SoundManager::getInstance()->setVolumeAllChannels(0);
+        }
+        else
+        {
+            SoundManager::getInstance()->setVolumeAllChannels(DEFAULT_SOUND_VOL);
+        }
     }
 
     // Play background game music
