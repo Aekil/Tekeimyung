@@ -54,3 +54,8 @@ void    ProgressBar::display(bool display)
     this->filledRender->display = display;
     this->emptyRender->display = display;
 }
+
+bool    ProgressBar::isDisplayed()
+{
+    return (this->filledRender->display && this->emptyRender->display);
+}

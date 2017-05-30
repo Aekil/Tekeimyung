@@ -38,9 +38,6 @@
             "z" : 1
          }
       },
-      "sTypeComponent" : {
-         "type" : "TILE_WALKABLE"
-      },
       "sUiComponent" : {
          "horizontal_alignment" : "NONE",
          "layer" : 1,

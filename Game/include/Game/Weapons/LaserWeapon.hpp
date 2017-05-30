@@ -34,6 +34,7 @@ private:
     void fireOneEnemy(Player* player, sTransformComponent* playerTransform, sRenderComponent* playerRender, glm::vec3 playerDirection);
     void fireMultipleEnemy(Player* player, sTransformComponent* playerTransform, sRenderComponent* playerRender, glm::vec3 playerDirection);
     Entity* farestEnemy(sTransformComponent* playerTransform, std::vector<Entity*> entities);
+    void sortHitedEntities(sTransformComponent* playerTransform, std::vector<Entity*>& entities);
 
 private:
     bool _timeDamage = false;

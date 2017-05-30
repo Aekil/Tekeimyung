@@ -330,7 +330,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 537.5999755859375,
-                  "y" : 935.6400146484375,
+                  "y" : 944.8399658203125,
                   "z" : 0
                },
                "rotation" : {
@@ -340,7 +340,7 @@
                },
                "scale" : {
                   "x" : 96.799873352050781,
-                  "y" : 7.8722925186157227,
+                  "y" : 7.9496994018554688,
                   "z" : 1
                }
             },
@@ -387,7 +387,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 1632,
-                  "y" : 132.20999145507813,
+                  "y" : 133.510009765625,
                   "z" : 0
                },
                "rotation" : {
@@ -397,7 +397,7 @@
                },
                "scale" : {
                   "x" : 6.399993896484375,
-                  "y" : 6.0266604423522949,
+                  "y" : 6.0859193801879883,
                   "z" : 1
                }
             },
@@ -444,7 +444,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 1632,
-                  "y" : 203.39999389648438,
+                  "y" : 205.39999389648438,
                   "z" : 0
                },
                "rotation" : {
@@ -454,7 +454,7 @@
                },
                "scale" : {
                   "x" : 6.3999357223510742,
-                  "y" : 6.0266404151916504,
+                  "y" : 6.0858993530273438,
                   "z" : 1
                }
             },
@@ -518,7 +518,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 940.79998779296875,
-                  "y" : 269.5050048828125,
+                  "y" : 272.15499877929688,
                   "z" : 0
                },
                "rotation" : {
@@ -528,7 +528,7 @@
                },
                "scale" : {
                   "x" : 124.79998779296875,
-                  "y" : 15.255000114440918,
+                  "y" : 15.405000686645508,
                   "z" : 1
                }
             },
@@ -582,7 +582,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 960,
-                  "y" : 508.5,
+                  "y" : 513.5,
                   "z" : 0
                },
                "rotation" : {
@@ -592,7 +592,7 @@
                },
                "scale" : {
                   "x" : 192,
-                  "y" : 101.69999694824219,
+                  "y" : 102.69999694824219,
                   "z" : 1
                }
             },
@@ -663,7 +663,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 1824,
-                  "y" : 132.20999145507813,
+                  "y" : 133.510009765625,
                   "z" : 0
                },
                "rotation" : {
@@ -673,7 +673,7 @@
                },
                "scale" : {
                   "x" : 19.200000762939453,
-                  "y" : 20.340000152587891,
+                  "y" : 20.540000915527344,
                   "z" : 1
                }
             },
@@ -744,7 +744,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 1824,
-                  "y" : 203.40000915527344,
+                  "y" : 205.40000915527344,
                   "z" : 0
                },
                "rotation" : {
@@ -754,7 +754,7 @@
                },
                "scale" : {
                   "x" : 4.1706829071044922,
-                  "y" : 2.9020974636077881,
+                  "y" : 2.9306333065032959,
                   "z" : 1
                }
             },
@@ -775,6 +775,87 @@
          },
          "name" : "HUD_DISPLAY_CASTLELIFE",
          "tag" : "HudDisplayCastleLife"
+      },
+      {
+         "components" : {
+            "sNameComponent" : {
+               "name" : "HUD_DISPLAY_AMMO"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 0,
+                  "b" : 0,
+                  "g" : 0,
+                  "r" : 0
+               },
+               "display" : true,
+               "dynamic" : false,
+               "hide_dynamic" : false,
+               "ignore_raycast" : false,
+               "materials" : [ "MAT_Default" ],
+               "model" : "resources/models/default.DAE",
+               "type" : "MESH"
+            },
+            "sScriptComponent" : {
+               "scripts" : [
+                  {
+                     "name" : "DisplayAmmo"
+                  }
+               ]
+            },
+            "sTextComponent" : {
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 0,
+                  "r" : 0
+               },
+               "content" : "x/x",
+               "font_name" : "moonhouse.ttf",
+               "font_size" : 26,
+               "horizontal_alignment" : "LEFT",
+               "offset" : {
+                  "x" : 0,
+                  "y" : 0
+               },
+               "vertical_alignment" : "MIDDLE"
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 211.19999694824219,
+                  "y" : 184.86000061035156,
+                  "z" : 0
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : -0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 4.1706829071044922,
+                  "y" : 2.9306333065032959,
+                  "z" : 1
+               }
+            },
+            "sUiComponent" : {
+               "horizontal_alignment" : "LEFT",
+               "layer" : 0,
+               "offset" : {
+                  "x" : 6,
+                  "y" : 13
+               },
+               "percentage_size" : true,
+               "size" : {
+                  "x" : 0.10000000149011612,
+                  "y" : 0.10000000149011612
+               },
+               "vertical_alignment" : "BOTTOM"
+            }
+         },
+         "name" : "HUD_DISPLAY_AMMO",
+         "tag" : ""
       }
    ],
    "name" : "Tutorial"

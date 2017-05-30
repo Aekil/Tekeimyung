@@ -21,6 +21,7 @@ void CameraScript::start()
     auto &mouse = GameWindow::getInstance()->getMouse();
     auto &&scroll = mouse.getScroll();
     _lastScrollOffset = scroll.yOffset;
+    this->_initialPosition = this->getComponent< sTransformComponent >()->getPos();
 }
 
 void CameraScript::update(float dt)
@@ -40,6 +41,14 @@ void CameraScript::update(float dt)
     }
 #endif
 
+    if (keyboard.getStateMap()[Keyboard::eKey::SPACE] == Keyboard::eKeyState::KEY_RELEASED)
+    {
+        sTransformComponent*    entityTransform = this->getComponent<sTransformComponent>();
+
+        if (entityTransform != nullptr)
+            entityTransform->setPos(this->_initialPosition);
+    }
+
     // update zoom
     {
         auto &&scroll = mouse.getScroll();
@@ -48,7 +57,7 @@ void CameraScript::update(float dt)
 
         if (offset && keyboard.isPressed(Keyboard::eKey::LEFT_CONTROL))
         {
-            camera.setProjSize(camera.getProjSize() + (float) offset * dt * _scrollSpeed);
+            camera.setProjSize(camera.getProjSize() + (float)offset * dt * _scrollSpeed);
 
             // Limit max projection size to 700
             camera.setProjSize(std::min(camera.getProjSize(), 700.0f));
@@ -86,21 +95,21 @@ void CameraScript::update(float dt)
         {
             if (cursor.getX() > gameWindow->getBufferWidth() - edgeDist)
             {
-                camera.translate({moveSpeed * dt, 0.0f, 0.0f}, Camera::eTransform::LOCAL);
+                camera.translate({ moveSpeed * dt, 0.0f, 0.0f }, Camera::eTransform::LOCAL);
             }
             if (cursor.getX() < edgeDist)
             {
-                camera.translate({-moveSpeed * dt, 0.0f, 0.0f}, Camera::eTransform::LOCAL);
+                camera.translate({ -moveSpeed * dt, 0.0f, 0.0f }, Camera::eTransform::LOCAL);
             }
             if (cursor.getY() > gameWindow->getBufferHeight() - edgeDist)
             {
                 // Double moveSpeed for Y because it seems to be slower then X due to isometric view
-                camera.translate({0.0f, -moveSpeed * dt, 0.0f}, Camera::eTransform::LOCAL);
+                camera.translate({ 0.0f, -moveSpeed * dt, 0.0f }, Camera::eTransform::LOCAL);
             }
             if (cursor.getY() < edgeDist)
             {
                 // Double moveSpeed for Y because it seems to be slower then X due to isometric view
-                camera.translate({0.0f, moveSpeed * dt, 0.0f}, Camera::eTransform::LOCAL);
+                camera.translate({ 0.0f, moveSpeed * dt, 0.0f }, Camera::eTransform::LOCAL);
             }
         }
 

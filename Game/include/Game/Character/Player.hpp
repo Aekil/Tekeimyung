@@ -10,6 +10,8 @@
 #include <Engine/Core/BaseScript.hpp>
 #include <Engine/Core/ScriptFactory.hpp>
 #include <Engine/Utils/EventSound.hpp>
+
+#include <Game/Hud/ProgressBar.hpp>
 #include <Game/Attibutes/Attribute.hpp>
 #include <Game/Scripts/Health.hpp>
 
@@ -28,7 +30,6 @@ private:
     void movement(float elapsedTime);
     void handleShoot(float dt);
 
-    float buildableRadius;
     void levelUp();
     void changeWeapon();
 
@@ -50,7 +51,10 @@ public:
     void setCanShoot(bool);
 
     bool updateEditor() override final;
+
+    IWeapon*& getActualWeapon();
 private:
+    float buildableRadius;
     glm::vec3 _direction;
     sTransformComponent* _transform;
     sRenderComponent* _render;
@@ -59,6 +63,7 @@ private:
 
     int _experience = 0;
     float _elapsedTime = 0.0f;
+    float _reloadElapsedTime = 0.0f;
     int _nextLevelUp = 100;
     int _level = 1;
     int _actualWeapon = 0;
@@ -72,6 +77,8 @@ private:
     std::map<int, std::pair<std::string, double>> _levelUpReward;
 
     bool _canShoot = true;
+
+    ProgressBar _reloadingProgress;
 
     //  ImGui selection index
     uint32_t                _selectedWeapon = 0;

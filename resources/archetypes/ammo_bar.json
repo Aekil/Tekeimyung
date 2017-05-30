@@ -1,7 +1,7 @@
 {
    "components" : {
       "sNameComponent" : {
-         "name" : "HEALTH"
+         "name" : "AMMO_BAR"
       },
       "sRenderComponent" : {
          "animated" : false,
@@ -16,43 +16,42 @@
          "dynamic" : false,
          "hide_dynamic" : false,
          "ignore_raycast" : false,
-         "materials" : [ "health_bar.mat" ],
+         "materials" : [ "ammo_bar.mat" ],
          "model" : "resources/models/default.DAE",
-         "texture" : "",
          "type" : "PLANE"
       },
       "sTransformComponent" : {
          "pos" : {
-            "x" : 710,
-            "y" : 458.5,
+            "x" : 148.39999389648438,
+            "y" : 138.239990234375,
             "z" : 0
          },
          "rotation" : {
             "x" : 0,
-            "y" : 0,
+            "y" : -0,
             "z" : 0
          },
          "scale" : {
-            "x" : 3.5,
-            "y" : 0.40000000596046448,
+            "x" : 22,
+            "y" : 3,
             "z" : 1
          }
       },
       "sUiComponent" : {
-         "horizontal_alignment" : "NONE",
-         "layer" : 0,
+         "horizontal_alignment" : "LEFT",
+         "layer" : -2,
          "offset" : {
-            "x" : 0,
-            "y" : 0
+            "x" : 2,
+            "y" : 12
          },
          "percentage_size" : false,
          "size" : {
             "x" : 0.10000000149011612,
             "y" : 0.10000000149011612
          },
-         "vertical_alignment" : "NONE"
+         "vertical_alignment" : "BOTTOM"
       }
    },
-   "name" : "HEALTH",
+   "name" : "AMMO_BAR",
    "tag" : ""
 }

@@ -1,7 +1,7 @@
 {
    "components" : {
       "sNameComponent" : {
-         "name" : "SIDEBAR_ITEM_INFO"
+         "name" : "AMMO_BAR_EMPTY"
       },
       "sRenderComponent" : {
          "animated" : false,
@@ -12,11 +12,11 @@
             "g" : 1,
             "r" : 1
          },
-         "display" : false,
+         "display" : true,
          "dynamic" : false,
          "hide_dynamic" : false,
          "ignore_raycast" : false,
-         "materials" : [ "sidebar_item_info.mat" ],
+         "materials" : [ "ammo_bar_empty.mat" ],
          "model" : "resources/models/default.DAE",
          "type" : "PLANE"
       },
@@ -27,48 +27,48 @@
             "g" : 1,
             "r" : 1
          },
-         "content" : "Item description",
-         "font_name" : "arial.ttf",
-         "font_size" : 26,
-         "horizontal_alignment" : "LEFT",
+         "content" : "RELOADING",
+         "font_name" : "moonhouse.ttf",
+         "font_size" : 28,
+         "horizontal_alignment" : "MIDDLE",
          "offset" : {
-            "x" : 27,
-            "y" : -18
+            "x" : 0,
+            "y" : 4
          },
-         "vertical_alignment" : "TOP"
+         "vertical_alignment" : "MIDDLE"
       },
       "sTransformComponent" : {
          "pos" : {
-            "x" : 940.79998779296875,
-            "y" : 272.15499877929688,
+            "x" : 148.39999389648438,
+            "y" : 138.239990234375,
             "z" : 0
          },
          "rotation" : {
             "x" : 0,
-            "y" : 0,
+            "y" : -0,
             "z" : 0
          },
          "scale" : {
-            "x" : 124.79998779296875,
-            "y" : 15.405000686645508,
+            "x" : 22,
+            "y" : 3,
             "z" : 1
          }
       },
       "sUiComponent" : {
-         "horizontal_alignment" : "MIDDLE",
-         "layer" : 0,
+         "horizontal_alignment" : "LEFT",
+         "layer" : -1,
          "offset" : {
-            "x" : -1,
-            "y" : 19
+            "x" : 2,
+            "y" : 12
          },
-         "percentage_size" : true,
+         "percentage_size" : false,
          "size" : {
-            "x" : 0.64999991655349731,
-            "y" : 0.15000000596046448
+            "x" : 0.10000000149011612,
+            "y" : 0.10000000149011612
          },
          "vertical_alignment" : "BOTTOM"
       }
    },
-   "name" : "SIDEBAR_ITEM_INFO",
-   "tag" : "SidebarItemInfo"
+   "name" : "AMMO_BAR_EMPTY",
+   "tag" : ""
 }

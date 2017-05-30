@@ -105,9 +105,6 @@
             "y" : 0.37000000476837158,
             "z" : 0.37000000476837158
          }
-      },
-      "sTypeComponent" : {
-         "type" : "OBJECT"
       }
    },
    "name" : "PLAYER_BULLET",

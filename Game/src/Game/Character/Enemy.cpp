@@ -248,15 +248,17 @@ void Enemy::destroyWall(Entity* entity, const glm::vec3& pos)
 
     auto& towersLayer = gameManagerScript->map.getTowersLayer();
     auto& mapEntities = gameManagerScript->map.getEntities();
+
+    auto alreadyBuiltTile = std::find(newBuildScript->_alreadyBuiltTile.begin(),
+        newBuildScript->_alreadyBuiltTile.end(),
+        mapEntities[tilePos.x][tilePos.y]->handle);
+    if (alreadyBuiltTile != newBuildScript->_alreadyBuiltTile.end())
+    {
+        newBuildScript->_alreadyBuiltTile.erase(alreadyBuiltTile);
+    }
+
     if (towersLayer[tilePos.x][tilePos.y] != nullptr)
     {
-        auto alreadyBuiltTile = std::find(newBuildScript->_alreadyBuiltTile.begin(),
-                                            newBuildScript->_alreadyBuiltTile.end(),
-                                            mapEntities[tilePos.x][tilePos.y]->handle);
-        if (alreadyBuiltTile != newBuildScript->_alreadyBuiltTile.end())
-        {
-            newBuildScript->_alreadyBuiltTile.erase(alreadyBuiltTile);
-        }
         Destroy(towersLayer[tilePos.x][tilePos.y]);
         towersLayer[tilePos.x][tilePos.y] = nullptr;
     }

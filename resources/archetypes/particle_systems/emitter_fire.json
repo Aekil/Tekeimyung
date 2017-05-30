@@ -56,9 +56,6 @@
             "y" : 1,
             "z" : 1
          }
-      },
-      "sTypeComponent" : {
-         "type" : "OBJECT"
       }
    },
    "name" : "EMITTER_FIRE",

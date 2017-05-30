@@ -17,6 +17,7 @@ public:
     void init(const std::string& entityProgressBarEmpty, const std::string& entityProgressBar);
     void update();
     void display(bool display);
+    bool isDisplayed();
 
 public:
     float maxProgress;
