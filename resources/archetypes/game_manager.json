@@ -6,46 +6,46 @@
       "sScriptComponent" : {
          "scripts" : [
             {
-               "map_name" : "",
+               "map_name" : "level_01",
                "name" : "GameManager"
             },
             {
                "map_parts" : [
                   {
-                     "map_part" : 0
+                     "map_part" : -1
                   },
                   {
-                     "map_part" : 0
+                     "map_part" : -1
                   },
                   {
-                     "map_part" : 0
+                     "map_part" : -1
                   },
                   {
-                     "map_part" : 0
+                     "map_part" : -1
                   },
                   {
-                     "map_part" : 0
+                     "map_part" : -1
                   },
                   {
-                     "map_part" : 0
+                     "map_part" : -1
                   },
                   {
-                     "map_part" : 0
+                     "map_part" : -1
                   },
                   {
-                     "map_part" : 0
+                     "map_part" : -1
                   },
                   {
-                     "map_part" : 0
+                     "map_part" : -1
                   },
                   {
-                     "map_part" : 0
+                     "map_part" : -1
                   },
                   {
-                     "map_part" : 0
+                     "map_part" : -1
                   },
                   {
-                     "map_part" : 0
+                     "map_part" : -1
                   }
                ],
                "name" : "WaveManager",
@@ -72,9 +72,6 @@
             "y" : 1,
             "z" : 1
          }
-      },
-      "sTypeComponent" : {
-         "type" : "TILE_WALKABLE"
       }
    },
    "name" : "GAME_MANAGER",

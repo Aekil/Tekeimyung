@@ -215,7 +215,7 @@
             },
             "sTransformComponent" : {
                "pos" : {
-                  "x" : 200,
+                  "x" : 150,
                   "y" : 12.5,
                   "z" : -25
                },
@@ -457,7 +457,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 1824,
-                  "y" : 132.21000671386719,
+                  "y" : 132.20999145507813,
                   "z" : 0
                },
                "rotation" : {
@@ -466,8 +466,8 @@
                   "z" : 0
                },
                "scale" : {
-                  "x" : 4.1706833839416504,
-                  "y" : 5.8041949272155762,
+                  "x" : 19.200000762939453,
+                  "y" : 20.340000152587891,
                   "z" : 1
                }
             },
@@ -836,7 +836,49 @@
             },
             "sRenderComponent" : {
                "animated" : false,
-               "animations" : [],
+               "animations" : [
+                  {
+                     "layer" : "DEFAULT",
+                     "name" : "blinking",
+                     "params" : [
+                        {
+                           "frames" : [
+                              {
+                                 "easing" : "NONE",
+                                 "time" : 0,
+                                 "value" : {
+                                    "w" : 1,
+                                    "x" : 0,
+                                    "y" : 1,
+                                    "z" : 1
+                                 }
+                              },
+                              {
+                                 "easing" : "NONE",
+                                 "time" : 0.75,
+                                 "value" : {
+                                    "w" : 1,
+                                    "x" : 0,
+                                    "y" : 0,
+                                    "z" : 1
+                                 }
+                              },
+                              {
+                                 "easing" : "NONE",
+                                 "time" : 1,
+                                 "value" : {
+                                    "w" : 1,
+                                    "x" : 0,
+                                    "y" : 1,
+                                    "z" : 1
+                                 }
+                              }
+                           ],
+                           "name" : "color"
+                        }
+                     ]
+                  }
+               ],
                "color" : {
                   "a" : 1,
                   "b" : 1,

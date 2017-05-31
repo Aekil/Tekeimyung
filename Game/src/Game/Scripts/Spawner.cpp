@@ -335,7 +335,7 @@ void    Spawner::getPath(const glm::ivec2& from, const glm::ivec2& to, std::vect
     }
 
 #if defined(ENGINE_DEBUG)
-    displayPath(path);
+    //displayPath(path);
 #endif
 }
 
