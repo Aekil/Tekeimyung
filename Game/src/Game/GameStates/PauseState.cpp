@@ -26,7 +26,6 @@ PauseState::~PauseState() {}
 void    PauseState::onEnter()
 {
     SoundManager::getInstance()->setVolumeAllChannels(0.25f);
-    SoundManager::getInstance()->setSoundVolume(_backgroundGameMusic->soundID, 0.15f);
 }
 
 void    PauseState::setupSystems()

@@ -22,9 +22,9 @@ void Enemy::start()
     this->_transform = getComponent<sTransformComponent>();
     Health::init(_render);
     _dyingSound = EventSound::getEventByEventType(eEventSound::ENEMY_DYING);
-    SoundManager::getInstance()->setSoundVolume(_dyingSound->soundID, 0.5f);
+    SoundManager::getInstance()->setSoundVolume(_dyingSound->soundID, 0.4f);
     _earningCoins = EventSound::getEventByEventType(eEventSound::EARN_COINS_FROM_ENEMY);
-    SoundManager::getInstance()->setSoundVolume(_earningCoins->soundID, 0.5f);
+    SoundManager::getInstance()->setSoundVolume(_earningCoins->soundID, 0.4f);
 
     auto& meshInstances = this->_render->getModelInstance()->getMeshsInstances();
     for (auto& meshInstance : meshInstances)
