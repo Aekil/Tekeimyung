@@ -4,7 +4,8 @@
          "components" : {
             "sButtonComponent" : {
                "action" : "ADD_LEVEL",
-               "action_level" : "Game"
+               "action_level" : "Game",
+               "remove_states" : 0
             },
             "sNameComponent" : {
                "name" : "BUTTON_PLAY_GAME"
@@ -18,6 +19,9 @@
                   "g" : 1,
                   "r" : 1
                },
+               "display" : true,
+               "dynamic" : false,
+               "hide_dynamic" : false,
                "ignore_raycast" : false,
                "materials" : [ "button_play_game.mat" ],
                "model" : "resources/models/default.DAE",
@@ -26,7 +30,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 960,
-                  "y" : 630.53997802734375,
+                  "y" : 712.79998779296875,
                   "z" : 0
                },
                "rotation" : {
@@ -36,7 +40,7 @@
                },
                "scale" : {
                   "x" : 30,
-                  "y" : 7.1999526023864746,
+                  "y" : 7.645967960357666,
                   "z" : 1.0000195503234863
                }
             },
@@ -45,7 +49,7 @@
                "layer" : 0,
                "offset" : {
                   "x" : 0,
-                  "y" : 12
+                  "y" : 16
                },
                "percentage_size" : true,
                "size" : {
@@ -62,7 +66,8 @@
          "components" : {
             "sButtonComponent" : {
                "action" : "ADD_LEVEL",
-               "action_level" : "HowToPlay"
+               "action_level" : "HowToPlay",
+               "remove_states" : 0
             },
             "sNameComponent" : {
                "name" : "BUTTON_HOW_TO_PLAY"
@@ -108,6 +113,9 @@
                   "g" : 1,
                   "r" : 1
                },
+               "display" : true,
+               "dynamic" : false,
+               "hide_dynamic" : false,
                "ignore_raycast" : false,
                "materials" : [ "button_how_to_play.mat" ],
                "model" : "resources/models/default.DAE",
@@ -116,7 +124,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 960,
-                  "y" : 549.17999267578125,
+                  "y" : 626.4000244140625,
                   "z" : 0
                },
                "rotation" : {
@@ -126,7 +134,7 @@
                },
                "scale" : {
                   "x" : 30,
-                  "y" : 7.1999526023864746,
+                  "y" : 7.645967960357666,
                   "z" : 6
                }
             },
@@ -135,7 +143,7 @@
                "layer" : 0,
                "offset" : {
                   "x" : 0,
-                  "y" : 4
+                  "y" : 8
                },
                "percentage_size" : true,
                "size" : {
@@ -152,7 +160,8 @@
          "components" : {
             "sButtonComponent" : {
                "action" : "ADD_LEVEL",
-               "action_level" : "Options"
+               "action_level" : "Options",
+               "remove_states" : 0
             },
             "sNameComponent" : {
                "name" : "BUTTON_OPTIONS"
@@ -166,6 +175,9 @@
                   "g" : 1,
                   "r" : 1
                },
+               "display" : true,
+               "dynamic" : false,
+               "hide_dynamic" : false,
                "ignore_raycast" : false,
                "materials" : [ "button_options.mat" ],
                "model" : "resources/models/default.DAE",
@@ -174,7 +186,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 960,
-                  "y" : 467.82000732421875,
+                  "y" : 540,
                   "z" : 0
                },
                "rotation" : {
@@ -184,7 +196,7 @@
                },
                "scale" : {
                   "x" : 30,
-                  "y" : 7.1999526023864746,
+                  "y" : 7.645967960357666,
                   "z" : 6
                }
             },
@@ -193,7 +205,7 @@
                "layer" : 0,
                "offset" : {
                   "x" : 0,
-                  "y" : -4
+                  "y" : 0
                },
                "percentage_size" : true,
                "size" : {
@@ -210,7 +222,8 @@
          "components" : {
             "sButtonComponent" : {
                "action" : "ADD_LEVEL",
-               "action_level" : "ConfirmExit"
+               "action_level" : "ConfirmExit",
+               "remove_states" : 0
             },
             "sNameComponent" : {
                "name" : "BUTTON_QUIT"
@@ -224,6 +237,9 @@
                   "g" : 1,
                   "r" : 1
                },
+               "display" : true,
+               "dynamic" : false,
+               "hide_dynamic" : false,
                "ignore_raycast" : false,
                "materials" : [ "button_quit.mat" ],
                "model" : "resources/models/default.DAE",
@@ -232,7 +248,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 960,
-                  "y" : 386.45999145507813,
+                  "y" : 367.20001220703125,
                   "z" : 0
                },
                "rotation" : {
@@ -242,7 +258,7 @@
                },
                "scale" : {
                   "x" : 30,
-                  "y" : 7.1999526023864746,
+                  "y" : 7.645967960357666,
                   "z" : 6
                }
             },
@@ -251,7 +267,7 @@
                "layer" : 0,
                "offset" : {
                   "x" : 0,
-                  "y" : -12
+                  "y" : -16
                },
                "percentage_size" : true,
                "size" : {
@@ -262,6 +278,68 @@
             }
          },
          "name" : "BUTTON_QUIT",
+         "tag" : ""
+      },
+      {
+         "components" : {
+            "sButtonComponent" : {
+               "action" : "ADD_LEVEL",
+               "action_level" : "CreditsScreen",
+               "remove_states" : 0
+            },
+            "sNameComponent" : {
+               "name" : "BUTTON_CREDITS"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 1
+               },
+               "display" : true,
+               "dynamic" : false,
+               "hide_dynamic" : false,
+               "ignore_raycast" : false,
+               "materials" : [ "button_credits.mat" ],
+               "model" : "resources/models/default.DAE",
+               "type" : "PLANE"
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 960,
+                  "y" : 453.60000610351563,
+                  "z" : 0
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 30,
+                  "y" : 7.645967960357666,
+                  "z" : 1
+               }
+            },
+            "sUiComponent" : {
+               "horizontal_alignment" : "MIDDLE",
+               "layer" : 0,
+               "offset" : {
+                  "x" : 0,
+                  "y" : -8
+               },
+               "percentage_size" : true,
+               "size" : {
+                  "x" : 0.15625,
+                  "y" : 0.070795997977256775
+               },
+               "vertical_alignment" : "MIDDLE"
+            }
+         },
+         "name" : "BUTTON_CREDITS",
          "tag" : ""
       }
    ],

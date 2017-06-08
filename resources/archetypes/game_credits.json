@@ -1,0 +1,57 @@
+{
+   "components" : {
+      "sNameComponent" : {
+         "name" : "GAME_CREDITS"
+      },
+      "sRenderComponent" : {
+         "animated" : false,
+         "animations" : [],
+         "color" : {
+            "a" : 1,
+            "b" : 1,
+            "g" : 1,
+            "r" : 1
+         },
+         "display" : true,
+         "dynamic" : false,
+         "hide_dynamic" : false,
+         "ignore_raycast" : false,
+         "materials" : [ "game_credits.mat" ],
+         "model" : "resources/models/default.DAE",
+         "type" : "PLANE"
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 960,
+            "y" : 540,
+            "z" : 0
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "scale" : {
+            "x" : 192,
+            "y" : 108,
+            "z" : 1
+         }
+      },
+      "sUiComponent" : {
+         "horizontal_alignment" : "MIDDLE",
+         "layer" : 0,
+         "offset" : {
+            "x" : 0,
+            "y" : 0
+         },
+         "percentage_size" : true,
+         "size" : {
+            "x" : 1,
+            "y" : 1
+         },
+         "vertical_alignment" : "MIDDLE"
+      }
+   },
+   "name" : "GAME_CREDITS",
+   "tag" : ""
+}
