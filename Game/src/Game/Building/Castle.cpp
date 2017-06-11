@@ -58,9 +58,9 @@ void Castle::onCollisionEnter(Entity* entity)
 
 void Castle::death()
 {
-    //Entity* explosion = Instantiate("CASTLE_EXPLOSION");
-    //sTransformComponent* explosionTransform = explosion->getComponent<sTransformComponent>();
-    //explosionTransform->setPos(this->_transform->getPos());
+    Entity* explosion = Instantiate("CASTLE_EXPLOSION");
+    sTransformComponent* explosionTransform = explosion->getComponent<sTransformComponent>();
+    explosionTransform->setPos(this->_transform->getPos());
 
     this->Destroy();
 }

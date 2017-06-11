@@ -225,7 +225,8 @@ bool        WaveManager::isGameOver()
 {
     auto    em = EntityFactory::getBindedEntityManager();
 
-    return (em->getEntityByTag("Castle") == nullptr);
+    return (em->getEntityByTag("Castle") == nullptr &&
+        em->getEntityByTag("CastleExplosion") == nullptr);
 }
 
 void        WaveManager::end()

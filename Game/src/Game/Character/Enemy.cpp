@@ -40,6 +40,14 @@ void Enemy::start()
 
 void Enemy::update(float dt)
 {
+    EntityManager* em = EntityFactory::getBindedEntityManager();
+    // Game lost, can't move
+    if (em->getEntityByTag("CastleExplosion"))
+    {
+        this->_rigidBody->velocity = {};
+        return;
+    }
+
     if (_path.size() > 0 &&
         _pathProgress < _path.size())
     {
@@ -88,6 +96,13 @@ Attribute*  Enemy::getPercentExplosion()
 
 void    Enemy::onCollisionEnter(Entity* entity)
 {
+    EntityManager* em = EntityFactory::getBindedEntityManager();
+    // Game lost, no collision
+    if (em->getEntityByTag("CastleExplosion"))
+    {
+        return;
+    }
+
     if (entity->getTag() == "ProjectileKnockBack")
     {
         EntityManager* em = EntityFactory::getBindedEntityManager();
