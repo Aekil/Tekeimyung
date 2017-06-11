@@ -28,6 +28,7 @@ void Castle::onCollisionEnter(Entity* entity)
     if (entity->getTag() == ENEMY_TAG)
     {
         this->takeDamage(DEFAULT_CASTLE_DMG_FROM_ENEMY);
+        this->_render->_animator.play("takeDamage", false);
 
         sScriptComponent* script = entity->getComponent<sScriptComponent>();
 
