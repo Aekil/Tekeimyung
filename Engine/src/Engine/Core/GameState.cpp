@@ -2,6 +2,7 @@
 * @Author   Guillaume Labey
 */
 
+#include <Engine/Core/GameStateManager.hpp>
 #include <Engine/Systems/RenderingSystem.hpp>
 #include <Engine/Utils/LevelLoader.hpp>
 #include <Engine/Debug/Debug.hpp>

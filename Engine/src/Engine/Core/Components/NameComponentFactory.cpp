@@ -4,6 +4,8 @@
 
 #include <Engine/Core/Components/NameComponentFactory.hpp>
 
+constexpr unsigned int sNameComponent::identifier;
+
 sComponent* ComponentFactory<sNameComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
 {
     sNameComponent*   component;

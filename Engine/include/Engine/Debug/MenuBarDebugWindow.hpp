@@ -15,7 +15,7 @@ friend Engine;
 
 public:
     MenuBarDebugWindow(Engine* engine, EntityManager* em);
-    MenuBarDebugWindow(Engine* engine, EntityManager* em, const ImVec2& pos, const ImVec2& size);
+    MenuBarDebugWindow(Engine* engine, EntityManager* em, const glm::vec2& pos, const glm::vec2& size);
     virtual ~MenuBarDebugWindow();
 
     void                build(std::shared_ptr<GameState> gameState, float elapsedTime) override final;

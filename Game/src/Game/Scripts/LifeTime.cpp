@@ -4,6 +4,8 @@
 
 #include <Game/Scripts/LifeTime.hpp>
 
+REGISTER_SCRIPT(LifeTime);
+
 void LifeTime::start() {}
 
 void LifeTime::update(float dt)

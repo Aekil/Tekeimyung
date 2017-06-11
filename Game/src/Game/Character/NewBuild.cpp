@@ -12,6 +12,8 @@
 #include    <Game/Manager/TutoManagerMessage.hpp>
 #include    <Game/Scripts/Spawner.hpp>
 
+REGISTER_SCRIPT(NewBuild);
+
 void        NewBuild::start()
 {
     this->retrieveManagers();
@@ -485,6 +487,6 @@ void            NewBuild::setSelectedItem(bool selected)
     auto em = EntityFactory::getBindedEntityManager();
     auto item = em->getEntityByTag(this->_currentChoice + "_SIDEBAR_ITEM");
 
-    SidebarItem* sidebarItemScript = this->getEntityScript<SidebarItem>(item, "SidebarItem");
+    SidebarItem* sidebarItemScript = sScriptComponent::getEntityScript<SidebarItem>(item, "SidebarItem");
     sidebarItemScript->switchColor(selected);
 }

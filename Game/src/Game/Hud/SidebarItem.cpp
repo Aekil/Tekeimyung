@@ -6,6 +6,8 @@
 #include <Engine/Debug/Logger.hpp>
 #include <Game/Hud/SidebarItem.hpp>
 
+REGISTER_SCRIPT(SidebarItem);
+
 void SidebarItem::start()
 {
     auto    em = EntityFactory::getBindedEntityManager();

@@ -34,5 +34,3 @@ private:
     sTransformComponent* _towerTransform;
     sRenderComponent* _towerRender;
 };
-
-REGISTER_SCRIPT(Tower);

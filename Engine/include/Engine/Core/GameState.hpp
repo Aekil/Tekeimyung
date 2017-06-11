@@ -10,10 +10,8 @@
 #include <ECS/World.hpp>
 #include <ECS/EntityManager.hpp>
 
-#include <Engine/Core/GameStateManager.hpp>
-
-class GameStateManager;
 class GameWindow;
+class GameStateManager;
 
 class GameState
 {
@@ -78,7 +76,7 @@ static std::string  getString(Args... args)
 #define START_GAMESTATE(name, ...)                                                                      \
     class name : public BaseGameState<name> {                                                           \
         public:                                                                                         \
-            name(GameStateManager* gameStateManager): BaseGameState(gameStateManager, __VA_ARGS__) {}   \
+            name(GameStateManager* gameStateManager): BaseGameState(gameStateManager, ## __VA_ARGS__) {}   \
             static constexpr unsigned int identifier = #name##_crc32;                                   \
             static std::string getLevelFile()                                                           \
             {                                                                                           \

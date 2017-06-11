@@ -151,11 +151,11 @@ void    EntityManager::removeEntityFromTagGroup(Entity* entity, const std::strin
     if (name.size() == 0)
         return;
 
-    auto& tagGroup = _entitiesTagGroups.find(name);
+    const auto& tagGroup = _entitiesTagGroups.find(name);
     if (tagGroup == _entitiesTagGroups.end())
         return;
 
-    auto& entityFind = std::find(tagGroup->second.cbegin(), tagGroup->second.cend(), entity);
+    const auto& entityFind = std::find(tagGroup->second.cbegin(), tagGroup->second.cend(), entity);
     if (entityFind != tagGroup->second.cend())
     {
         tagGroup->second.erase(entityFind);
@@ -169,11 +169,11 @@ void    EntityManager::addEntityToComponentGroup(Entity* entity, uint32_t compon
 
 void    EntityManager::removeEntityFromComponentGroup(Entity* entity, uint32_t componentHash)
 {
-    auto& componentGroup = _entitiesComponentGroups.find(componentHash);
+    const auto& componentGroup = _entitiesComponentGroups.find(componentHash);
     if (componentGroup == _entitiesComponentGroups.end())
         return;
 
-    auto& entityFind = std::find(componentGroup->second.cbegin(), componentGroup->second.cend(), entity);
+    const auto& entityFind = std::find(componentGroup->second.cbegin(), componentGroup->second.cend(), entity);
     if (entityFind != componentGroup->second.cend())
     {
         componentGroup->second.erase(entityFind);

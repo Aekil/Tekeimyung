@@ -108,7 +108,7 @@ void    EditorState::initCamera()
 
 void    EditorState::updateCamera(float elapsedTime)
 {
-    auto &gameWindow = GameWindow::getInstance();
+    const auto &gameWindow = GameWindow::getInstance();
     auto &keyboard = gameWindow->getKeyboard();
     auto &mouse = gameWindow->getMouse();
 
@@ -166,7 +166,7 @@ void    EditorState::updateCamera(float elapsedTime)
 
 void    EditorState::handleObjectSelection()
 {
-    auto &gameWindow = GameWindow::getInstance();
+    const auto &gameWindow = GameWindow::getInstance();
     auto &keyboard = gameWindow->getKeyboard();
     auto &mouse = gameWindow->getMouse();
 

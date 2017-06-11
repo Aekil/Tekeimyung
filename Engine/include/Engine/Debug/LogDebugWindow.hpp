@@ -13,7 +13,7 @@ class LogDebugWindow: public DebugWindow
 {
 public:
     LogDebugWindow(std::shared_ptr<Logger> logger);
-    LogDebugWindow(std::shared_ptr<Logger> logger, const ImVec2& pos, const ImVec2& size);
+    LogDebugWindow(std::shared_ptr<Logger> logger, const glm::vec2& pos, const glm::vec2& size);
     virtual ~LogDebugWindow();
 
     void        retrieveLogColors();

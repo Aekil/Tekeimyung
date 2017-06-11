@@ -8,6 +8,8 @@
 
 #include <Engine/Core/Components/BoxColliderComponentFactory.hpp>
 
+constexpr unsigned int sBoxColliderComponent::identifier;
+
 sComponent* ComponentFactory<sBoxColliderComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
 {
     sBoxColliderComponent* component = new sBoxColliderComponent();

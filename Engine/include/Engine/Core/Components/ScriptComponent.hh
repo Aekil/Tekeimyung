@@ -86,6 +86,18 @@ T*             getScript(const char* name)
     return nullptr;
 }
 
+template<typename T>
+static T*              getEntityScript(Entity* entity, const char* scriptName)
+{
+    sScriptComponent* scriptComp = entity->getComponent<sScriptComponent>();
+    if (!scriptComp)
+    {
+        return (nullptr);
+    }
+
+    return scriptComp->getScript<T>(scriptName);
+}
+
 std::vector<std::unique_ptr<BaseScript> > scripts;
 
 BaseScript* selectedScript{nullptr}; // Only used for editor

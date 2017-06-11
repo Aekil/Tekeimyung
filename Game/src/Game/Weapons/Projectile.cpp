@@ -9,6 +9,8 @@
 #include <Game/Character/Enemy.hpp>
 #include <Game/Weapons/Projectile.hpp>
 
+REGISTER_SCRIPT(Projectile);
+
 void Projectile::start()
 {
     _targetHandle = 0;

@@ -4,6 +4,8 @@
 
 #include <Engine/Core/Components/UiComponentFactory.hpp>
 
+constexpr unsigned int sUiComponent::identifier;
+
 sComponent* ComponentFactory<sUiComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
 {
     sUiComponent*  component;

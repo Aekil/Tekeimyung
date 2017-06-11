@@ -14,6 +14,8 @@
 #include <Game/Scripts/Spawner.hpp>
 #include <Game/Manager/WaveManager.hpp>
 
+REGISTER_SCRIPT(Spawner);
+
 void Spawner::start()
 {
     auto    em = EntityFactory::getBindedEntityManager();
@@ -53,7 +55,7 @@ void Spawner::start()
 void    Spawner::update(float deltaTime)
 {
 
-        auto&   it = this->_currentConfigs.begin();
+        auto   it = this->_currentConfigs.begin();
 
         for (it; it != this->_currentConfigs.end(); ++it)
         {
@@ -270,7 +272,7 @@ void    Spawner::updateClosestPath()
 
 bool        Spawner::isReadyForNextWave()
 {
-    auto&   it = this->_currentConfigs.begin();
+    auto   it = this->_currentConfigs.begin();
 
     for (it; it != this->_currentConfigs.end(); ++it)
     {
@@ -519,7 +521,7 @@ void    Spawner::spawnEntitiesFromConfig(sConfig* waveConfig, float dt)
 void    Spawner::sConfig::updateSpawnedEntities()
 {
     auto    em = EntityFactory::getBindedEntityManager();
-    auto&   it = spawnedEntities.begin();
+    auto   it = spawnedEntities.begin();
 
     for (it; it != spawnedEntities.end();)
     {

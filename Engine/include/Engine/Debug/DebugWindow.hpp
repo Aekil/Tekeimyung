@@ -14,7 +14,7 @@
 class DebugWindow
 {
 public:
-    DebugWindow(const std::string& tile = "", const ImVec2& pos = {0, 0}, const ImVec2& size = {192, 108});
+    DebugWindow(const std::string& tile = "", const glm::vec2& pos = {0, 0}, const glm::vec2& size = {192, 108});
     virtual     ~DebugWindow();
 
     static void         applyGlobalStyle();
@@ -35,8 +35,8 @@ protected:
 
 protected:
     std::string         _title;
-    ImVec2              _pos;
-    ImVec2              _size;
+    glm::vec2           _pos;
+    glm::vec2           _size;
     bool                _displayed;
 };
 

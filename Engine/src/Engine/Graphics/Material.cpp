@@ -10,6 +10,8 @@
 
 #include <Engine/Graphics/Material.hpp>
 
+DECLARE_ENUM_MANAGER(Material::eOption)
+
 Material::Material(bool isModelMaterial): _isModelMaterial(isModelMaterial)
 {
     _diffuse = {1.0f, 1.0f, 1.0f, 1.0f};

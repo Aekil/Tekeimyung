@@ -30,5 +30,3 @@ public:
 private:
     glm::vec2 _parentPos;
 };
-
-REGISTER_SCRIPT(SidebarText);

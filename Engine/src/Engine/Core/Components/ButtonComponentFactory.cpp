@@ -6,6 +6,9 @@
 
 #include <Engine/Core/Components/ButtonComponentFactory.hpp>
 
+constexpr unsigned int sButtonComponent::identifier;
+DECLARE_ENUM_MANAGER(sButtonComponent::eAction)
+
 sComponent* ComponentFactory<sButtonComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
 {
     sButtonComponent*  component;

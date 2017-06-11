@@ -39,11 +39,12 @@ include_directories(${ECS_INCLUDE_DIRS})
 # Use static lib of glew
 add_definitions(-DGLEW_STATIC)
 
+
 # Find GLFW library
 find_package(GLFW 3.0.0 REQUIRED)
 
 # Find GLEW library
-find_package(GLEW 3.0.0 REQUIRED)
+find_package(GLEW REQUIRED)
 
 # Find Opengl library
 find_package(OpenGL REQUIRED)
@@ -53,33 +54,40 @@ find_package(OpenGL REQUIRED)
 #Set Assimp directory and library on Windows
 IF (WIN32)
   set(ASSIMP_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/external/Assimp/include)
-  include_directories(${ASSIMP_INCLUDE_DIR})
   IF (CMAKE_SIZEOF_VOID_P EQUAL 8)
-    find_library(assimp assimp PATHS ${CMAKE_SOURCE_DIR}/external/Assimp/lib/x64)
+    find_library(ASSIMP_LIBRARY assimp PATHS ${CMAKE_SOURCE_DIR}/external/Assimp/lib/x64)
   ELSE()
-    find_library(assimp assimp PATHS ${CMAKE_SOURCE_DIR}/external/Assimp/lib/x86)
+    find_library(ASSIMP_LIBRARY assimp PATHS ${CMAKE_SOURCE_DIR}/external/Assimp/lib/x86)
   ENDIF()
+  set(ASSIMP_FOUND true)
+ELSE()
+  find_package(Assimp REQUIRED)
+ENDIF()
+
+IF (NOT ASSIMP_FOUND)
+  message(FATAL_ERROR "Can't find assimp library")
 ENDIF()
 
 IF (WIN32)
 #Set Freetype directory and library on Windows
-  set(FREETYPE_INCLUDE_DIR_freetype2 ${CMAKE_SOURCE_DIR}/external/freetype/include/freetype2)
+  set(FREETYPE_INCLUDE_DIR_ft2build ${CMAKE_SOURCE_DIR}/external/freetype/include/freetype2)
   set(FREETYPE_LIBRARIES ${CMAKE_SOURCE_DIR}/external/freetype/lib/freetype.lib)
-  #find_library(Freetype REQUIRED)
-  ELSE()
-    find_library(Freetype REQUIRED)
+  set(FREETYPE_FOUND true)
+ELSE()
+    find_package(Freetype REQUIRED)
 ENDIF()
 
-
+IF (NOT FREETYPE_FOUND)
+  message(FATAL_ERROR "Can't find freetype library")
+ENDIF()
 
 IF (WIN32)
 #Set FMOD directory and library on Windows
   set(FMOD_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/external/fmod/inc)
     find_library(FMOD_LIBRARY fmodL64_vc PATHS ${CMAKE_SOURCE_DIR}/external/fmod/lib)
-  ELSE()
+ELSE()
     find_package(FMOD REQUIRED)
 ENDIF()
-
 
 
 # Add project and libraries includes
@@ -91,7 +99,8 @@ include_directories(${CMAKE_SOURCE_DIR}/external/stb_image/)
 include_directories(${CMAKE_SOURCE_DIR}/external/imgui/)
 include_directories(${CMAKE_SOURCE_DIR}/external/imGuizmo/)
 include_directories(${CMAKE_SOURCE_DIR}/external/jsoncpp)
-include_directories(${FREETYPE_INCLUDE_DIR_freetype2})
+include_directories(${FREETYPE_INCLUDE_DIR_ft2build})
+include_directories(${ASSIMP_INCLUDE_DIR})
 
 # Include dirent only for windows
 # Linux have his own header
@@ -108,7 +117,7 @@ IF (WIN32)
 ENDIF()
 
 # Link libraries with executable
-target_link_libraries(${EXECUTABLE_NAME} ECS ${GLFW_LIBRARY} ${GLEW_LIBRARY} ${OPENGL_gl_LIBRARY} ${FMOD_LIBRARY} ${assimp} ${FREETYPE_LIBRARIES})
+target_link_libraries(${EXECUTABLE_NAME} ECS ${GLFW_LIBRARY} ${GLEW_LIBRARY} ${OPENGL_gl_LIBRARY} ${FMOD_LIBRARY} ${ASSIMP_LIBRARY} ${FREETYPE_LIBRARIES})
 
 
 # Store include dir into variable and share it with other projects through cache

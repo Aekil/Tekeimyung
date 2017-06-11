@@ -21,6 +21,8 @@
 #include <Game/Weapons/TeslaWeapon.hpp>
 #include <Game/Weapons/LaserWeapon.hpp>
 
+REGISTER_SCRIPT(Player);
+
 void Player::death()
 {
     this->Destroy();

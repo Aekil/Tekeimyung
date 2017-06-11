@@ -16,6 +16,7 @@
 #include <Engine/Graphics/Camera.hpp>
 
 Camera*     Camera::_instance = nullptr;
+DECLARE_ENUM_MANAGER(Camera::eProj)
 
 Camera::Camera(): _needUpdateView(true), _needUpdateProj(true), _fov(45.0f),
                     _near(0.1f), _far(1300.0f),

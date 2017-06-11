@@ -42,7 +42,7 @@ public:
 
     static Resource::eType      getResourceType() { return Resource::eType::GEOMETRY; }
 
-    bool                        loadFromFile(const std::string &fileName) override final { return (nullptr); }
+    bool                        loadFromFile(const std::string &fileName) override final { return (false); }
 
 private:
     eType               _type;

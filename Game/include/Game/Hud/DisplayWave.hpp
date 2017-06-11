@@ -28,5 +28,3 @@ private:
     int             _tmpNbWaves = -1;
     int             _tmpcurrentWave = -1;
 };
-
-REGISTER_SCRIPT(DisplayWave);

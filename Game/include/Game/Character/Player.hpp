@@ -83,5 +83,3 @@ private:
     //  ImGui selection index
     uint32_t                _selectedWeapon = 0;
 };
-
-REGISTER_SCRIPT(Player);

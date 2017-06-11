@@ -19,7 +19,7 @@ public:
         // if found, execute the creator function pointer
         if (iter == static_creators().end())
             return (nullptr);
-        auto& script = (*iter->second)();
+        auto script = (*iter->second)();
         script->setName(id);
 
         return (std::move(script));

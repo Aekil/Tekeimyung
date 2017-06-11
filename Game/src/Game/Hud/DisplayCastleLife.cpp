@@ -10,6 +10,8 @@
 
 #include <Game/Hud/DisplayCastleLife.hpp>
 
+REGISTER_SCRIPT(DisplayCastleLife);
+
 void DisplayCastleLife::start()
 {
     this->_em = EntityFactory::getBindedEntityManager();
@@ -43,7 +45,12 @@ void DisplayCastleLife::update(float dt)
             sTextComponent*     textComp = _castleLifeHudDisplay->getComponent<sTextComponent>();
             char                castleLifeText[MAX_SIZE_TEXT_CASTLELIFE];
 
+#if defined(_WIN32)
             sprintf_s(castleLifeText, "%d/%d", castleLife, maxCastleLife);
+#else
+            sprintf(castleLifeText, "%d/%d", castleLife, maxCastleLife);
+#endif
+
             textComp->text.setContent(castleLifeText);
             this->_tmpCastleLife = castleLife;
             this->_tmpMaxCastleLife = maxCastleLife;

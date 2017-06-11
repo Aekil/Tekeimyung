@@ -6,6 +6,8 @@
 
 #include <Engine/Core/Components/LightComponentFactory.hpp>
 
+constexpr unsigned int sLightComponent::identifier;
+
 sComponent* ComponentFactory<sLightComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
 {
     sLightComponent*  component;

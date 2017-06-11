@@ -4,6 +4,7 @@
 
 #include <sstream>
 
+#include <Engine/Core/Components/Components.hh>
 #include <Engine/Core/Components/ComponentsFactories.hh>
 #include <Engine/Utils/Exception.hpp>
 

@@ -13,7 +13,7 @@ LogDebugWindow::LogDebugWindow(std::shared_ptr<Logger> logger) :
     this->retrieveLogColors();
 }
 
-LogDebugWindow::LogDebugWindow(std::shared_ptr<Logger> logger, const ImVec2& pos, const ImVec2& size) :
+LogDebugWindow::LogDebugWindow(std::shared_ptr<Logger> logger, const glm::vec2& pos, const glm::vec2& size) :
     DebugWindow("Logs", pos, size), _logger(logger), _lastLogSize(0)
 {
     this->retrieveLogColors();
@@ -58,7 +58,9 @@ void    LogDebugWindow::build(std::shared_ptr<GameState> gameState, float elapse
             LOG_ERROR("No color for log filter %d", index);
             continue;
         }
-        logColorActive = (this->_logColors != nullptr ? this->_logColors[index] : ImGui::GetStyle().Colors[ImGuiCol_ButtonActive]);
+
+        const auto& styleColor = ImGui::GetStyle().Colors[ImGuiCol_ButtonActive];
+        logColorActive = (this->_logColors != nullptr ? this->_logColors[index] : ImColor::HSV(styleColor.x, styleColor.y, styleColor.z));
         logColorHover = logColorActive;
         //ImGui::PushStyleColor(ImGuiCol_Button, ImColor::HSV(0.0f, 0.1f, 0.5f, 1.0f));
         ImGui::PushStyleColor(ImGuiCol_Button, logColorActive);

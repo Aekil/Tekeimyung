@@ -6,7 +6,7 @@
 #include <memory>
 
 #include <Engine/Graphics/UI/Font.hpp>
-# include <Engine/Debug/Logger.hpp>
+#include <Engine/Debug/Logger.hpp>
 
 Font::Font() {}
 
@@ -50,6 +50,12 @@ bool    Font::loadFromFile(const std::string &fileName)
     {
         error = FT_Load_Char(_face, i, FT_LOAD_RENDER);
         CHECK_FT_ERROR(error, "Failed to load char %c for font %s", i, fileName.c_str());
+
+        if (!_face->glyph->bitmap.width || !_face->glyph->bitmap.rows)
+        {
+            LOG_WARN("Font::loadFromFile: Can't load char %d: texture width or height is 0", i);
+            continue;
+        }
         _chars[i].texture.load(_face->glyph->bitmap.width,
                             _face->glyph->bitmap.rows,
                             GL_RED,

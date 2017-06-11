@@ -10,6 +10,8 @@
 
 #include <Game/Hud/DisplayGold.hpp>
 
+REGISTER_SCRIPT(DisplayGold);
+
 void DisplayGold::start()
 {
     this->_em = EntityFactory::getBindedEntityManager();
@@ -34,7 +36,12 @@ void DisplayGold::update(float dt)
             sTextComponent*     textComp = _goldHudDisplay->getComponent<sTextComponent>();
             char                goldsText[MAX_SIZE_TEXT_GOLDS];
 
+#if defined(_WIN32)
             sprintf_s(goldsText, "%d", golds);
+#else
+            sprintf(goldsText, "%d", golds);
+#endif
+
             textComp->text.setContent(goldsText);
             this->_tmpGolds = golds;
         }

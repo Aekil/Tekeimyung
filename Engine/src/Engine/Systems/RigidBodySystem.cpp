@@ -30,7 +30,7 @@ void RigidBodySystem::handleCollisions(EntityManager &em, Entity* entity, sRigid
 {
     sScriptComponent* scriptComponent = entity->getComponent<sScriptComponent>();
 
-    for (auto& it = rigidBody->collisions.begin(); it != rigidBody->collisions.end(); ++it)
+    for (auto it = rigidBody->collisions.begin(); it != rigidBody->collisions.end(); ++it)
     {
         // The entity has been deleted, remove collision
         if (!em.getEntity(it->first))

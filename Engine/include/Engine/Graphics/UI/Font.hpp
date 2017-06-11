@@ -25,7 +25,7 @@ private:
     {
         Texture texture;
         glm::ivec2 bearing;
-        int advance;
+        int advance = 0;
     };
 
 public:

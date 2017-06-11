@@ -24,5 +24,3 @@ private:
 
     int             _previousAmmo = -1;
 };
-
-REGISTER_SCRIPT(DisplayAmmo);

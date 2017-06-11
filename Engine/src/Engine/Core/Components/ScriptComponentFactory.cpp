@@ -4,6 +4,8 @@
 
 #include <Engine/Core/Components/ScriptComponentFactory.hpp>
 
+constexpr unsigned int sScriptComponent::identifier;
+
 sComponent* ComponentFactory<sScriptComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
 {
     sScriptComponent*  component = new sScriptComponent();

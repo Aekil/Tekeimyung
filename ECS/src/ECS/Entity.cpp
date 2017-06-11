@@ -61,6 +61,16 @@ void    Entity::addComponent(sComponent* component)
     _em->notifyEntityNewComponent(this, component);
 }
 
+
+template<typename componentType, typename... Args>
+void Entity::addComponent(Args... args)
+{
+    sComponent* component = new componentType(args...);
+    _components.push_back(component);
+    _em->notifyEntityNewComponent(this, component);
+}
+
+
 sComponent* Entity::getComponent(size_t componentHashCode) const
 {
     for (const auto& component: _components)

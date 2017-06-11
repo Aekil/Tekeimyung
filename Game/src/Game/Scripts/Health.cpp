@@ -56,7 +56,7 @@ void Health::init(sRenderComponent* render)
 void Health::update(sTransformComponent* transform)
 {
     Camera* camera = Renderer::getInstance()->getCurrentCamera();
-    auto& gameWindow = GameWindow::getInstance();
+    const auto& gameWindow = GameWindow::getInstance();
 
     if (!camera)
         return;

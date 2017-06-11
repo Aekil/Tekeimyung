@@ -66,7 +66,7 @@ bool    PlayState::init()
 
 bool    PlayState::update(float elapsedTime)
 {
-    auto& gameWindow = GameWindow::getInstance();
+    const auto& gameWindow = GameWindow::getInstance();
     auto &&keyboard = GameWindow::getInstance()->getKeyboard();
     auto &&mouse = GameWindow::getInstance()->getMouse();
 

@@ -23,7 +23,7 @@ MaterialDebugWindow::MaterialDebugWindow() : DebugWindow("Materials")
     this->_size.y = GameWindow::getInstance()->getBufferHeight() - 300;
 }
 
-MaterialDebugWindow::MaterialDebugWindow(const ImVec2& pos, const ImVec2& size) :
+MaterialDebugWindow::MaterialDebugWindow(const glm::vec2& pos, const glm::vec2& size) :
     DebugWindow("Materials", pos, size) {}
 
 MaterialDebugWindow::~MaterialDebugWindow() {}

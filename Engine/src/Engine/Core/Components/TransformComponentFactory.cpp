@@ -14,6 +14,8 @@
 
 bool ComponentFactory<sTransformComponent>::enableGuizmos = true;
 
+constexpr unsigned int sTransformComponent::identifier;
+
 sComponent* ComponentFactory<sTransformComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
 {
     sTransformComponent*   component;

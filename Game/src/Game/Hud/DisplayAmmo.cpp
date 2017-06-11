@@ -15,6 +15,8 @@
 
 #include <Game/Hud/DisplayAmmo.hpp>
 
+REGISTER_SCRIPT(DisplayAmmo);
+
 void DisplayAmmo::start()
 {
     this->_em = EntityFactory::getBindedEntityManager();
@@ -52,7 +54,12 @@ void DisplayAmmo::update(float dt)
     {
         char                ammoText[MAX_SIZE_TEXT_AMMO];
 
+#if defined(_WIN32)
         sprintf_s(ammoText, "%d/%d", (int)actualAmmo, (int)maxAmmo);
+#else
+        sprintf(ammoText, "%d/%d", (int)actualAmmo, (int)maxAmmo);
+#endif
+
         textComp->text.setContent(ammoText);
         this->_previousAmmo = actualAmmo;
     }

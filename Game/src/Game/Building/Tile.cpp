@@ -10,6 +10,8 @@
 #include <Game/Building/Tile.hpp>
 #include <Game/Character/NewBuild.hpp>
 
+REGISTER_SCRIPT(Tile);
+
 void Tile::start()
 {
     _render = this->getComponent<sRenderComponent>();

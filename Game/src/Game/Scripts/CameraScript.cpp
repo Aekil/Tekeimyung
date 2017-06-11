@@ -11,6 +11,8 @@
 #include <Engine/Debug/Logger.hpp>
 #include <Game/Scripts/CameraScript.hpp>
 
+REGISTER_SCRIPT(CameraScript);
+
 void CameraScript::start()
 {
     auto    em = EntityFactory::getBindedEntityManager();
@@ -26,7 +28,7 @@ void CameraScript::start()
 
 void CameraScript::update(float dt)
 {
-    auto &gameWindow = GameWindow::getInstance();
+    const auto &gameWindow = GameWindow::getInstance();
     auto &mouse = gameWindow->getMouse();
     auto &keyboard = gameWindow->getKeyboard();
     auto& camera = _cameraComp->camera;

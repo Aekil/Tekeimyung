@@ -6,6 +6,8 @@
 
 #include <Engine/Graphics/Geometries/Geometry.hpp>
 
+DECLARE_ENUM_MANAGER(Geometry::eType)
+
 Geometry::Geometry() {}
 
 Geometry::Geometry(Geometry::eType type): _type(type) {}

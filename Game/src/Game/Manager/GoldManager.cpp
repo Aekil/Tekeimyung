@@ -6,6 +6,8 @@
 
 #include <Game/Manager/GoldManager.hpp>
 
+REGISTER_SCRIPT(GoldManager);
+
 void GoldManager::start()
 {
     this->_golds = STARTING_AMOUNT_OF_GOLD;

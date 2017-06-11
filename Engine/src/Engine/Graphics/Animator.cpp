@@ -84,7 +84,7 @@ bool    Animator::play(const std::string& name, bool loop, bool stopSameLayer)
         sAnimationLayer* playedLayer = getPlayedLayer(animation->getLayer());
         if (playedLayer)
         {
-            for (auto& layerAnimation: playedLayer->animations)
+            for (const auto& layerAnimation: playedLayer->animations)
             {
                 layerAnimation->reset();
                 layerAnimation->update(0);
@@ -141,7 +141,7 @@ bool    Animator::isPlaying(AnimationPtr animation) const
 {
     for (const auto& playedLayer: _playedLayers)
     {
-        auto& layerAnimations = playedLayer.second.animations;
+        const auto& layerAnimations = playedLayer.second.animations;
         if (playedLayer.first == animation->getLayer() &&
             std::find(layerAnimations.cbegin(), layerAnimations.cend(), animation) != layerAnimations.cend())
         {
@@ -172,7 +172,7 @@ void    Animator::reset()
 
 void    Animator::update(float elapsedTime)
 {
-    auto& playedLayer = _playedLayers.begin();
+    auto playedLayer = _playedLayers.begin();
     for (playedLayer; playedLayer != _playedLayers.end();)
     {
         auto& layer = playedLayer->second;
@@ -222,7 +222,7 @@ AnimationPtr    Animator::getAnimation(const std::string& name) const
 
 Animator::sAnimationLayer*  Animator::getPlayedLayer(const std::string& layer)
 {
-    auto& animationLayer = _playedLayers.find(layer);
+    const auto& animationLayer = _playedLayers.find(layer);
     if (animationLayer == _playedLayers.end())
         return (nullptr);
 
@@ -239,7 +239,7 @@ void    Animator::removePlayedAnimation(AnimationPtr animation)
     sAnimationLayer* playedLayer = getPlayedLayer(animation->getLayer());
     ASSERT(playedLayer != nullptr, "A played animation should be on a layer");
 
-    auto& layerAnimation = std::find(playedLayer->animations.cbegin(), playedLayer->animations.cend(), animation);
+    const auto& layerAnimation = std::find(playedLayer->animations.cbegin(), playedLayer->animations.cend(), animation);
     ASSERT(layerAnimation != playedLayer->animations.end(), "The animation should be on the layer list");
 
     animation->reset();

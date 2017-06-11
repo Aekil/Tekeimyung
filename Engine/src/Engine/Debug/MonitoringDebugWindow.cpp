@@ -10,7 +10,7 @@ std::shared_ptr<MonitoringDebugWindow>   MonitoringDebugWindow::_monitoringDebug
 
 MonitoringDebugWindow::MonitoringDebugWindow() : DebugWindow("Monitoring"), _checkSec(0) {}
 
-MonitoringDebugWindow::MonitoringDebugWindow(const ImVec2& pos, const ImVec2& size) :
+MonitoringDebugWindow::MonitoringDebugWindow(const glm::vec2& pos, const glm::vec2& size) :
     DebugWindow("Monitoring", pos, size), _checkSec(0) {}
 
 MonitoringDebugWindow::~MonitoringDebugWindow() {}

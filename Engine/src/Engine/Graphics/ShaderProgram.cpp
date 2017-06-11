@@ -45,7 +45,7 @@ void    ShaderProgram::attachShader(GLenum shaderType, const std::string& fileNa
         }
     }
 
-    shaderString.insert(0, "#version 420 core\n");
+    shaderString.insert(0, "#version 410 core\n");
 
     // Create shader and compiles it
     const char *cShaderString = shaderString.c_str();

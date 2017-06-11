@@ -13,7 +13,7 @@
 MenuBarDebugWindow::MenuBarDebugWindow(Engine* engine, EntityManager* em) :
     DebugWindow("Editor Menu"), _engine(engine), _em(em) {}
 
-MenuBarDebugWindow::MenuBarDebugWindow(Engine* engine, EntityManager* em, const ImVec2& pos, const ImVec2& size) :
+MenuBarDebugWindow::MenuBarDebugWindow(Engine* engine, EntityManager* em, const glm::vec2& pos, const glm::vec2& size) :
     DebugWindow("Editor Menu", pos, size), _engine(engine), _em(em) {}
 
 MenuBarDebugWindow::~MenuBarDebugWindow() {}
@@ -48,7 +48,7 @@ void    MenuBarDebugWindow::displayLevelsMenu()
     bool loadLevel = false;
     bool saveLevel = false;
     bool saveLevelAs = false;
-    auto& currentState = _engine->getGameStateManager().getCurrentState();
+    const auto& currentState = _engine->getGameStateManager().getCurrentState();
 
     // Enable menu if we are in play mode, we can't load or save the level
     if (ImGui::BeginMenu("Levels", currentState->getId() == EditorState::identifier))
@@ -103,7 +103,7 @@ void    MenuBarDebugWindow::displayLevelsMenu()
 void    MenuBarDebugWindow::displayPlayStopMenu()
 {
     auto& gameStateManager = _engine->getGameStateManager();
-    auto& currentState = gameStateManager.getCurrentState();
+    const auto& currentState = gameStateManager.getCurrentState();
 
     // EditorState should be the first state
     if (gameStateManager.getStates()[0]->getId() != EditorState::identifier)

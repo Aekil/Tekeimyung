@@ -69,5 +69,3 @@ private:
     void            updatePreview();
     void            setSelectedItem(bool);
 };
-
-REGISTER_SCRIPT(NewBuild);

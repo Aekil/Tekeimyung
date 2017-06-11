@@ -10,7 +10,7 @@
 OverlayDebugWindow::OverlayDebugWindow() :
     DebugWindow("Overlay") {}
 
-OverlayDebugWindow::OverlayDebugWindow(const ImVec2& pos, const ImVec2& size) :
+OverlayDebugWindow::OverlayDebugWindow(const glm::vec2& pos, const glm::vec2& size) :
     DebugWindow("Overlay", pos, size) {}
 
 OverlayDebugWindow::~OverlayDebugWindow() {}

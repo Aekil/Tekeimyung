@@ -62,12 +62,7 @@ public:
     void                            addComponent(sComponent* component);
 
     template<typename componentType, typename... Args>
-    void                            addComponent(Args... args)
-    {
-        sComponent* component = new componentType(args...);
-        _components.push_back(component);
-        _em->notifyEntityNewComponent(this, component);
-    }
+    void                            addComponent(Args... args);
 
     template<typename componentType>
     componentType*                  getComponent() const

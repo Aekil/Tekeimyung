@@ -8,6 +8,8 @@
 
 #include <Engine/Core/Components/RigidBodyComponentFactory.hpp>
 
+constexpr unsigned int sRigidBodyComponent::identifier;
+
 sComponent* ComponentFactory<sRigidBodyComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
 {
     sRigidBodyComponent* component = new sRigidBodyComponent();

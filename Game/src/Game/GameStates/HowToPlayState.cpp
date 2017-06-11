@@ -120,7 +120,12 @@ void        HowToPlayState::updatePagingText()
             sTextComponent* textComp = entityPageText->getComponent<sTextComponent>();
             char            pagingText[MAX_SIZE_TEXT_PAGES];
 
+#if defined(_WIN32)
             sprintf_s(pagingText, "PAGE : %d / %d", this->_currentPageIndex + 1, this->_pages.size());
+#else
+            sprintf(pagingText, "PAGE : %d / %d", this->_currentPageIndex + 1, this->_pages.size());
+#endif
+
             textComp->text.setContent(pagingText);
         }
 

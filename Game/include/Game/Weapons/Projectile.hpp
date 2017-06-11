@@ -39,5 +39,3 @@ private:
     sRigidBodyComponent* _projectileRigidBody;
     sParticleEmitterComponent* _projectileEmitter;
 };
-
-REGISTER_SCRIPT(Projectile);

@@ -81,5 +81,3 @@ private:
     GoldManager*        _goldManager = nullptr;
     bool                _tutorialIsFinished = false;
 };
-
-REGISTER_SCRIPT(WaveManager);

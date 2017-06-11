@@ -79,6 +79,11 @@ struct EnumManager<ENUM_NAME>                                                   
     }                                                                                       \
 };
 
+// If REGISTER_ENUM_MANAGER is used, DECLARE_ENUM_MANAGER used be defined in a .cpp file
+#define DECLARE_ENUM_MANAGER(ENUM_NAME)                                             \
+constexpr const char* EnumManager<ENUM_NAME>::enumStrings[];                        \
+constexpr uint32_t EnumManager<ENUM_NAME>::enumLength;
+
 #define REGISTER_ENUM(ENUM_NAME, ENUM_TYPE, ENUM_LIST)                                      \
 enum class ENUM_NAME: ENUM_TYPE                                                             \
 {                                                                                           \

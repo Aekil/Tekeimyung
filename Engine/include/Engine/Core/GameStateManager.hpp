@@ -12,8 +12,6 @@
 #include <Engine/Debug/Debug.hpp>
 #include <Engine/Debug/Logger.hpp>
 
-class GameState;
-
 class GameStateManager
 {
 public:

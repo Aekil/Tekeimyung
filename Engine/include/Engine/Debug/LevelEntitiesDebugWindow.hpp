@@ -16,7 +16,7 @@ friend EditorState;
 
 public:
     LevelEntitiesDebugWindow();
-    LevelEntitiesDebugWindow(const ImVec2& pos, const ImVec2& size);
+    LevelEntitiesDebugWindow(const glm::vec2& pos, const glm::vec2& size);
     virtual ~LevelEntitiesDebugWindow();
 
     void                build(std::shared_ptr<GameState> gameState, float elapsedTime) override final;

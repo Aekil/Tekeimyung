@@ -28,5 +28,3 @@ private:
     int             _tmpCastleLife = -1;
     int             _tmpMaxCastleLife = -1;
 };
-
-REGISTER_SCRIPT(DisplayCastleLife);

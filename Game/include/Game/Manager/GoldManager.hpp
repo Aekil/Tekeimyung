@@ -40,5 +40,3 @@ private:
     int     _golds;
     bool    _increaseOnTime = true;
 };
-
-REGISTER_SCRIPT(GoldManager);

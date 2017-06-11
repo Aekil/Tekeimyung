@@ -19,6 +19,7 @@ class BaseScript
 public:
     BaseScript();
     virtual ~BaseScript() {};
+
     virtual void start() = 0;
     virtual void update(float dt) = 0;
 
@@ -31,18 +32,6 @@ public:
     virtual bool updateEditor() { return (false); }
     virtual JsonValue saveToJson() { return (JsonValue()); };
     virtual void loadFromJson(const JsonValue& json) {}
-
-    template<typename T>
-    T* getEntityScript(Entity* entity, const char* scriptName)
-    {
-        sScriptComponent* scriptComp = entity->getComponent<sScriptComponent>();
-        if (!scriptComp)
-        {
-            return (nullptr);
-        }
-
-        return scriptComp->getScript<T>(scriptName);
-    }
 
     void setEntity(Entity* entity);
     Entity* getEntity();

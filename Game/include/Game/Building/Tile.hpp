@@ -30,5 +30,3 @@ private:
     Material           _renderMaterial;
     Material*           _buildMaterial;
 };
-
-REGISTER_SCRIPT(Tile);

@@ -2,7 +2,6 @@
 * @Author   Guillaume Labey
 */
 
-
 #include <Engine/Core/Components/IComponentFactory.hpp>
 
 #include <Engine/BasicState.hpp>
@@ -51,7 +50,7 @@ std::vector<const char*>& LevelLoader::getLevels()
 void    LevelLoader::addLevel(const std::string& levelName)
 {
     char *str = new char [levelName.size() + 1];
-    strcpy_s(str, levelName.size() + 1, levelName.c_str());
+    strncpy(str, levelName.c_str(), levelName.size() + 1);
     _levels.push_back(str);
 }
 

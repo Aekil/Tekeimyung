@@ -12,5 +12,3 @@ public:
     void start() override final;
     void update(float dt) override final;
 };
-
-REGISTER_SCRIPT(Test);

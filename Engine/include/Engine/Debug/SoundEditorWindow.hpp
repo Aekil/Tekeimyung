@@ -5,7 +5,6 @@
 #pragma once
 
 #include <memory>
-#include <imgui.h>
 
 #include <Engine/Debug/Debug.hpp>
 #include <Engine/Debug/DebugWindow.hpp>
@@ -18,7 +17,7 @@ class SoundEditorWindow : public DebugWindow
 {
 public:
     SoundEditorWindow();
-    SoundEditorWindow(const ImVec2& pos, const ImVec2& size);
+    SoundEditorWindow(const glm::vec2& pos, const glm::vec2& size);
     virtual ~SoundEditorWindow();
 
     void                        build(std::shared_ptr<GameState> gameState, float elapsedTime) override final;

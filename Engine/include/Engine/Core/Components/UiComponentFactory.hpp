@@ -11,7 +11,7 @@ template <>
 class ComponentFactory<sUiComponent> final: public BaseComponentFactory<sUiComponent>
 {
 public:
-    char* getTypeName() override final { return "sUiComponent"; }
+    const char* getTypeName() override final { return "sUiComponent"; }
     sComponent* loadFromJson(const std::string& entityType, const JsonValue& json) override final;
     JsonValue&  saveToJson(const std::string& entityType, const sComponent* savedComponent = nullptr, JsonValue* toJson = nullptr) override final;
 

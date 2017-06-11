@@ -25,5 +25,3 @@ public:
     JsonValue saveToJson() override final;
     void loadFromJson(const JsonValue& json) override final;
 };
-
-REGISTER_SCRIPT(LifeTime);
