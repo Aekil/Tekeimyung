@@ -14,8 +14,12 @@ struct  sScroll
     double  yOffset;
 };
 
+class GameWindow;
+
 class Mouse
 {
+    friend GameWindow;
+
 public:
     enum class      eButton : int
     {
@@ -53,10 +57,12 @@ public:
     Cursor&         getCursor();
     sScroll&        getScroll();
 
+    bool            isPressed(Mouse::eButton button);
+
+private:
     void            resetMouseState();
     void            updateMouseState();
 
-    bool            isPressed(Mouse::eButton button);
 private:
     MouseNativeMap  _nativeMap;
     MouseStateMap   _stateMap;

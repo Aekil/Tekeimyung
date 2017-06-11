@@ -43,6 +43,12 @@ sScroll&    Mouse::getScroll()
     return (_scroll);
 }
 
+bool    Mouse::isPressed(Mouse::eButton button)
+{
+    return (_stateMap[button] == Mouse::eButtonState::CLICK_PRESSED ||
+            _stateMap[button] == Mouse::eButtonState::CLICK_MAINTAINED);
+}
+
 void    Mouse::resetMouseState()
 {
     Mouse::MouseNativeMap::const_iterator   it;
@@ -71,10 +77,4 @@ void    Mouse::updateMouseState()
                 break;
         }
     }
-}
-
-bool    Mouse::isPressed(Mouse::eButton button)
-{
-    return (_stateMap[button] == Mouse::eButtonState::CLICK_PRESSED ||
-            _stateMap[button] == Mouse::eButtonState::CLICK_MAINTAINED);
 }

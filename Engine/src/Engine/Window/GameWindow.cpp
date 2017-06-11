@@ -321,6 +321,9 @@ void    GameWindow::display()
 
 void    GameWindow::pollEvents()
 {
+    _keyboard.updateKeyboardState();
+    _keyboard.resetTypedText();
+    _mouse.updateMouseState();
     glfwPollEvents();
 }
 
@@ -598,6 +601,8 @@ void    GameWindow::charCallback(GLFWwindow* window, unsigned int c)
     // Don't capture char events if ImGui is capturing them
     if (sendImGuiCharCallback(gameWindow, window, c))
         return;
+
+    gameWindow->getKeyboard().addTypedChar(c);
 }
 
 bool    GameWindow::sendImGuiCharCallback(GameWindow* gameWindow, GLFWwindow* window, unsigned int c)
