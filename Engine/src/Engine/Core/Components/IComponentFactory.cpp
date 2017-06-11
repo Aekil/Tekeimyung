@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #include <sstream>
 
 #include <Engine/Core/Components/ComponentsFactories.hh>

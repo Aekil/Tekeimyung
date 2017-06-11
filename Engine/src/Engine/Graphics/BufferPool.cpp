@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #include <Engine/Graphics/BufferPool.hpp>
 #include <Engine/Debug/Debug.hpp>
 

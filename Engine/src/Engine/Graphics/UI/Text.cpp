@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #include <Engine/Graphics/UI/Font.hpp>
 #include <Engine/Graphics/UI/Text.hpp>
 

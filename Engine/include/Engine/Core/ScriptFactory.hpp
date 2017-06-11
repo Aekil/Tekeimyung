@@ -1,3 +1,7 @@
+/**
+* @Author   Simon AMBROISE
+*/
+
 #pragma once
 
 #include <map>

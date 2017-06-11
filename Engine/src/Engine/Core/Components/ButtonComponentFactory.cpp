@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #include <Engine/Utils/LevelLoader.hpp>
 
 #include <Engine/Core/Components/ButtonComponentFactory.hpp>

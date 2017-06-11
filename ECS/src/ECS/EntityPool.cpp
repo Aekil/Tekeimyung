@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #include <ECS/Entity.hpp>
 #include <ECS/EntityPool.hpp>
 

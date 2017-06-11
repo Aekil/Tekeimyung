@@ -1,5 +1,5 @@
-/*
-** @Author : Guillaume Labey
+/**
+* @Author   Guillaume Labey
 */
 
 #pragma once

@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #include <glm/glm.hpp>
 
 #include <Engine/Graphics/Ray.hpp>

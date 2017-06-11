@@ -1,3 +1,7 @@
+/*
+** @Author : Simon AMBROISE
+*/
+
 #include <algorithm>
 
 #include <Engine/Debug/Logger.hpp>

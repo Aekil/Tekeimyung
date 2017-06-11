@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <Engine/Graphics/Transform.hpp>

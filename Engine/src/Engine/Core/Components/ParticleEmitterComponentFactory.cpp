@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #include <glm/gtc/type_ptr.hpp>
 
 #include <Engine/Core/Components/RenderComponentFactory.hpp>

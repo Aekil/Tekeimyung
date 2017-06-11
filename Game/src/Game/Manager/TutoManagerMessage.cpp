@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #include <Game/Manager/TutoManagerMessage.hpp>
 #include <Engine/EntityFactory.hpp>
 

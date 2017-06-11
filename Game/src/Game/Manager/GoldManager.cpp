@@ -1,5 +1,5 @@
-/*
-** @Author : Julien CHARDON
+/**
+* @Author   Julien CHARDON
 */
 
 #include <Engine/Debug/Logger.hpp>

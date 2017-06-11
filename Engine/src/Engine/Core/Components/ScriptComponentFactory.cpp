@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #include <Engine/Core/Components/ScriptComponentFactory.hpp>
 
 sComponent* ComponentFactory<sScriptComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)

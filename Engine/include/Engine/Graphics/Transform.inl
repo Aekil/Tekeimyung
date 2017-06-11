@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 inline const glm::mat4& Transform::getTransform()
 {
     if (_needUpdateTransform)

@@ -1,3 +1,7 @@
+/*
+** @Author : Simon AMBROISE
+*/
+
 #include <Engine/Debug/Logger.hpp>
 
 #include <Game/Attibutes/Bonus.hpp>

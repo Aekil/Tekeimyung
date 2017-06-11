@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #include <Engine/Core/Components/DynamicComponentFactory.hpp>
 
 sComponent* ComponentFactory<sDynamicComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)

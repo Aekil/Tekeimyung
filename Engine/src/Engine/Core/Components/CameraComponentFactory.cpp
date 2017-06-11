@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #include <Engine/Core/Components/CameraComponentFactory.hpp>
 
 sComponent* ComponentFactory<sCameraComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)

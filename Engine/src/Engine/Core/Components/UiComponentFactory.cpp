@@ -1,3 +1,7 @@
+/**
+* @Author   Guillaume Labey
+*/
+
 #include <Engine/Core/Components/UiComponentFactory.hpp>
 
 sComponent* ComponentFactory<sUiComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
