@@ -17,6 +17,7 @@
 #include <Engine/Utils/LevelLoader.hpp>
 #include <Game/GameStates/HowToPlayState.hpp>
 #include <Game/GameStates/BuildingListState.hpp>
+#include <Game/GameStates/ConsoleState.hpp>
 #include <Game/GameStates/PauseState.hpp>
 #include <Game/Manager/TutoManagerMessage.hpp>
 #include <Game/Manager/TutoManager.hpp>
@@ -90,6 +91,11 @@ bool    PlayState::update(float elapsedTime)
         gameWindow->hasLostFocus())
     {
         _gameStateManager->addState<PauseState>();
+    }
+    else if (TutoManager::_tutorialDone && // Can't use cheat codes in tutorial
+        keyboard.getStateMap()[Keyboard::eKey::ENTER] == Keyboard::eKeyState::KEY_PRESSED)
+    {
+        _gameStateManager->addState<ConsoleState>();
     }
     else if (keyboard.getStateMap()[Keyboard::eKey::M] == Keyboard::eKeyState::KEY_PRESSED)
     {

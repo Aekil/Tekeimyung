@@ -1,0 +1,179 @@
+{
+   "entities" : [
+      {
+         "components" : {
+            "sCameraComponent" : {
+               "far" : 1300,
+               "fov" : 45,
+               "near" : 200,
+               "projection" : "ORTHOGRAPHIC_3D",
+               "projection_size" : 520,
+               "viewport" : {
+                  "extent" : {
+                     "height" : 1,
+                     "width" : 1
+                  },
+                  "offset" : {
+                     "x" : 0,
+                     "y" : 0
+                  }
+               }
+            },
+            "sNameComponent" : {
+               "name" : "CAMERA"
+            },
+            "sScriptComponent" : {
+               "scripts" : [
+                  {
+                     "name" : "CameraScript"
+                  }
+               ]
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 675.994384765625,
+                  "y" : 468.94912719726563,
+                  "z" : 552.669921875
+               },
+               "rotation" : {
+                  "x" : -34.999996185302734,
+                  "y" : 46.999992370605469,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 0.99999803304672241,
+                  "y" : 0.99999946355819702,
+                  "z" : 0.99999958276748657
+               }
+            }
+         },
+         "name" : "CAMERA",
+         "tag" : ""
+      },
+      {
+         "components" : {
+            "sLightComponent" : {
+               "ambient" : {
+                  "x" : 0.30000001192092896,
+                  "y" : 0.30000001192092896,
+                  "z" : 0.30000001192092896
+               },
+               "diffuse" : {
+                  "x" : 1,
+                  "y" : 1,
+                  "z" : 1
+               },
+               "direction" : {
+                  "x" : -0.4377860426902771,
+                  "y" : -0.71845251321792603,
+                  "z" : -0.54052692651748657
+               }
+            },
+            "sNameComponent" : {
+               "name" : "LIGHT"
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 358.12460327148438,
+                  "y" : 203.8074951171875,
+                  "z" : 280.68218994140625
+               },
+               "rotation" : {
+                  "x" : 39.243698120117188,
+                  "y" : -31.303653717041016,
+                  "z" : -54.352916717529297
+               },
+               "scale" : {
+                  "x" : 1.9999793767929077,
+                  "y" : 5.2489604949951172,
+                  "z" : 1.999961256980896
+               }
+            }
+         },
+         "name" : "LIGHT",
+         "tag" : ""
+      },
+      {
+         "components" : {
+            "sNameComponent" : {
+               "name" : "CONSOLE"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 1
+               },
+               "display" : true,
+               "dynamic" : false,
+               "hide_dynamic" : false,
+               "ignore_raycast" : false,
+               "materials" : [ "console.mat" ],
+               "model" : "resources/models/default.DAE",
+               "type" : "PLANE"
+            },
+            "sScriptComponent" : {
+               "scripts" : [
+                  {
+                     "name" : "CheatCodesScript"
+                  }
+               ]
+            },
+            "sTextComponent" : {
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 1
+               },
+               "content" : "",
+               "font_name" : "arial.ttf",
+               "font_size" : 50,
+               "horizontal_alignment" : "LEFT",
+               "offset" : {
+                  "x" : 35,
+                  "y" : 0
+               },
+               "vertical_alignment" : "MIDDLE"
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 960,
+                  "y" : 508.5,
+                  "z" : 0
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 57.599998474121094,
+                  "y" : 10.170000076293945,
+                  "z" : 1
+               }
+            },
+            "sUiComponent" : {
+               "horizontal_alignment" : "MIDDLE",
+               "layer" : 0,
+               "offset" : {
+                  "x" : 0,
+                  "y" : 0
+               },
+               "percentage_size" : true,
+               "size" : {
+                  "x" : 0.30000001192092896,
+                  "y" : 0.10000000149011612
+               },
+               "vertical_alignment" : "MIDDLE"
+            }
+         },
+         "name" : "CONSOLE",
+         "tag" : "Console"
+      }
+   ],
+   "name" : "Console"
+}
