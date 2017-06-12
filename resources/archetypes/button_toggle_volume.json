@@ -1,0 +1,62 @@
+{
+   "components" : {
+      "sButtonComponent" : {
+         "action" : "NONE",
+         "action_level" : "",
+         "remove_states" : 0
+      },
+      "sNameComponent" : {
+         "name" : "BUTTON_TOGGLE_VOLUME"
+      },
+      "sRenderComponent" : {
+         "animated" : false,
+         "animations" : [],
+         "color" : {
+            "a" : 1,
+            "b" : 1,
+            "g" : 1,
+            "r" : 1
+         },
+         "display" : true,
+         "dynamic" : false,
+         "hide_dynamic" : false,
+         "ignore_raycast" : false,
+         "materials" : [ "button_toggle_volume.mat" ],
+         "model" : "resources/models/default.DAE",
+         "type" : "PLANE"
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 854.4000244140625,
+            "y" : 540,
+            "z" : 0
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : -0,
+            "z" : 0
+         },
+         "scale" : {
+            "x" : 7.5999360084533691,
+            "y" : 7.5999603271484375,
+            "z" : 1
+         }
+      },
+      "sUiComponent" : {
+         "horizontal_alignment" : "MIDDLE",
+         "layer" : 0,
+         "offset" : {
+            "x" : -5.5,
+            "y" : 0
+         },
+         "percentage_size" : true,
+         "size" : {
+            "x" : 0.039583001285791397,
+            "y" : 0.070370003581047058
+         },
+         "vertical_alignment" : "MIDDLE"
+      }
+   },
+   "name" : "BUTTON_TOGGLE_VOLUME",
+   "tag" : ""
+}

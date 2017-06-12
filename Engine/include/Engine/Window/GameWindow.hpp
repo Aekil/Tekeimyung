@@ -15,7 +15,7 @@
 #include <Engine/Window/Mouse.hpp>
 #include <Engine/Utils/Timer.hpp>
 
-#define WINDOW_DEFAULT_TITLE    "Team Tekeimyung - The Squirre"
+#define WINDOW_DEFAULT_TITLE    "The NTD Project"
 
 class GameWindow
 {

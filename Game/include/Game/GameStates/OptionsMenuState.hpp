@@ -23,9 +23,17 @@ START_GAMESTATE(OptionsMenuState, "Options")
     bool            handleButtons();
 
 private:
-    Entity*         _buttonToggleWindowed = nullptr;
-    Entity*         _buttonToggleFullscreen = nullptr;
+    //Entity*         _buttonToggleWindowed = nullptr;
+    //Entity*         _buttonToggleFullscreen = nullptr;
+    
+    //Entity*         _buttonToggleVolume = nullptr;
+    //Entity*         _buttonMuteVolume = nullptr;
+
     Entity*         _buttonCurrentWindowMode = nullptr;
+    Entity*         _buttonCurrentVolumeMode = nullptr;
+
+    bool            _soundMuted = false;
 
     void            createOrGetButtons();
+    bool            toggleVolume();
 END_GAMESTATE(OptionsMenuState)

@@ -1,0 +1,57 @@
+{
+   "components" : {
+      "sNameComponent" : {
+         "name" : "TEXT_VOLUME"
+      },
+      "sRenderComponent" : {
+         "animated" : false,
+         "animations" : [],
+         "color" : {
+            "a" : 1,
+            "b" : 1,
+            "g" : 1,
+            "r" : 1
+         },
+         "display" : true,
+         "dynamic" : false,
+         "hide_dynamic" : false,
+         "ignore_raycast" : false,
+         "materials" : [ "text_enabled.mat" ],
+         "model" : "resources/models/default.DAE",
+         "type" : "PLANE"
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 998.4000244140625,
+            "y" : 540,
+            "z" : 0
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "scale" : {
+            "x" : 15.600000381469727,
+            "y" : 7.1999282836914063,
+            "z" : 1
+         }
+      },
+      "sUiComponent" : {
+         "horizontal_alignment" : "MIDDLE",
+         "layer" : 0,
+         "offset" : {
+            "x" : 2,
+            "y" : 0
+         },
+         "percentage_size" : true,
+         "size" : {
+            "x" : 0.081249997019767761,
+            "y" : 0.066665999591350555
+         },
+         "vertical_alignment" : "MIDDLE"
+      }
+   },
+   "name" : "TEXT_VOLUME",
+   "tag" : ""
+}
