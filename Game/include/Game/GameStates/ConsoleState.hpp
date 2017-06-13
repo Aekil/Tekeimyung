@@ -23,18 +23,16 @@ START_GAMESTATE(ConsoleState, "Console")
     bool                                update(float elapsedTime) override final;
 
 private:
-    void                                handleCheatCodeKillAll();
-    void                                handleCheatCodeGiveMeGold();
-    void                                handleCheatCodeBuildForMe();
-    void                                handleCheatCodeAegis();
-    void                                handleCheatCode(const std::string& cheatCode);
+    static void                         handleCheatCodeKillAll(std::shared_ptr<GameState> playState);
+    static void                         handleCheatCodeGiveMeGold(std::shared_ptr<GameState> playState);
+    static void                         handleCheatCodeBuildForMe(std::shared_ptr<GameState> playState);
+    static void                         handleCheatCodeAegis(std::shared_ptr<GameState> playState);
+    static void                         handleCheatCode(std::shared_ptr<GameState> playState, const std::string& cheatCode);
 
  private:
     tEventSound*                        _backgroundGameMusic = nullptr;
 
     Entity*                             _console = nullptr;
-    std::shared_ptr<GameState>          _playState = nullptr;
-    EntityManager*                      _playStateEntityManager = nullptr;
 
-    Entity::sHandle                     _lastBuiltBaseTurretHandle = 0;
+    static Entity::sHandle              _lastBuiltBaseTurretHandle;
 END_GAMESTATE(ConsoleState)

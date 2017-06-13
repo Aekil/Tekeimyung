@@ -18,6 +18,7 @@
 
 #include <Game/GameStates/ConsoleState.hpp>
 
+Entity::sHandle ConsoleState::_lastBuiltBaseTurretHandle = 0;
 
 ConsoleState::~ConsoleState() {}
 
@@ -82,7 +83,16 @@ bool    ConsoleState::update(float elapsedTime)
             return (false);
         }
 
-        handleCheatCode(cheatCodeScripts->getText().getContent());
+        // Handle cheat code
+        {
+            uint32_t stateNb = static_cast<uint32_t>(_gameStateManager->getStates().size());
+            auto playState = _gameStateManager->getStates()[stateNb - 2];
+            EntityManager* playStateEntityManager = playState->getWorld().getEntityManager();
+
+            EntityFactory::bindEntityManager(playStateEntityManager);
+            handleCheatCode(playState, cheatCodeScripts->getText().getContent());
+            EntityFactory::bindEntityManager(_world.getEntityManager());
+        }
 
         return (false);
     }
@@ -90,9 +100,10 @@ bool    ConsoleState::update(float elapsedTime)
     return (success);
 }
 
-void    ConsoleState::handleCheatCodeKillAll()
+void    ConsoleState::handleCheatCodeKillAll(std::shared_ptr<GameState> playState)
 {
-    const auto& enemies = _playStateEntityManager->getEntitiesByTag("Enemy");
+    EntityManager* playStateEntityManager = playState->getWorld().getEntityManager();
+    const auto& enemies = playStateEntityManager->getEntitiesByTag("Enemy");
 
     for (auto& enemy : enemies)
     {
@@ -108,9 +119,10 @@ void    ConsoleState::handleCheatCodeKillAll()
     }
 }
 
-void    ConsoleState::handleCheatCodeGiveMeGold()
+void    ConsoleState::handleCheatCodeGiveMeGold(std::shared_ptr<GameState> playState)
 {
-    Entity* gameManager = _playStateEntityManager->getEntityByTag(GAME_MANAGER_TAG);
+    EntityManager* playStateEntityManager = playState->getWorld().getEntityManager();
+    Entity* gameManager = playStateEntityManager->getEntityByTag(GAME_MANAGER_TAG);
 
     if (!gameManager)
     {
@@ -129,14 +141,15 @@ void    ConsoleState::handleCheatCodeGiveMeGold()
     goldManager->addGolds(1000);
 }
 
-void    ConsoleState::handleCheatCodeBuildForMe()
+void    ConsoleState::handleCheatCodeBuildForMe(std::shared_ptr<GameState> playState)
 {
+    EntityManager* playStateEntityManager = playState->getWorld().getEntityManager();
     NewBuild* newBuild = nullptr;
     GameManager* gameManager = nullptr;
 
     // Get NewBuild script
     {
-        Entity* player = _playStateEntityManager->getEntityByTag("Player");
+        Entity* player = playStateEntityManager->getEntityByTag("Player");
 
         if (!player)
         {
@@ -155,7 +168,7 @@ void    ConsoleState::handleCheatCodeBuildForMe()
 
     // Get GameManager script
     {
-        Entity* gameManagerEntity = _playStateEntityManager->getEntityByTag(GAME_MANAGER_TAG);
+        Entity* gameManagerEntity = playStateEntityManager->getEntityByTag(GAME_MANAGER_TAG);
 
         if (!gameManagerEntity)
         {
@@ -190,7 +203,7 @@ void    ConsoleState::handleCheatCodeBuildForMe()
             }
         }
 
-        Entity* lastBuiltBaseTurret = _playStateEntityManager->getEntity(_lastBuiltBaseTurretHandle);
+        Entity* lastBuiltBaseTurret = playStateEntityManager->getEntity(_lastBuiltBaseTurretHandle);
 
         // A base turret has been built previously
         // But the tower could not be built (Out of money)
@@ -229,37 +242,29 @@ void    ConsoleState::handleCheatCodeBuildForMe()
     }
 }
 
-void    ConsoleState::handleCheatCodeAegis()
+void    ConsoleState::handleCheatCodeAegis(std::shared_ptr<GameState> playState)
 {
     // time speed is a member of GameState class
     // It speeds up the delta time send to GameState::_systems update
-    _playState->setTimeSpeed(20.0f);
+    playState->setTimeSpeed(20.0f);
 }
 
-void    ConsoleState::handleCheatCode(const std::string& cheatCode)
+void    ConsoleState::handleCheatCode(std::shared_ptr<GameState> playState, const std::string& cheatCode)
 {
-    uint32_t stateNb = static_cast<uint32_t>(_gameStateManager->getStates().size());
-    _playState = _gameStateManager->getStates()[stateNb - 2];
-    _playStateEntityManager = _playState->getWorld().getEntityManager();
-
-    EntityFactory::bindEntityManager(_playStateEntityManager);
-
     if (cheatCode == "killall")
     {
-        handleCheatCodeKillAll();
+        handleCheatCodeKillAll(playState);
     }
     else if (cheatCode == "give me gold")
     {
-        handleCheatCodeGiveMeGold();
+        handleCheatCodeGiveMeGold(playState);
     }
     else if (cheatCode == "build for me")
     {
-        handleCheatCodeBuildForMe();
+        handleCheatCodeBuildForMe(playState);
     }
     else if (cheatCode == "aegis")
     {
-        handleCheatCodeAegis();
+        handleCheatCodeAegis(playState);
     }
-
-    EntityFactory::bindEntityManager(_world.getEntityManager());
 }
