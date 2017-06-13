@@ -344,7 +344,7 @@ void    Spawner::findBlockedPath(glm::ivec2 from, const glm::ivec2& to, std::vec
     bool isPathBlocked = true;
     std::vector<glm::ivec2> tmpPath;
 
-    if (!(_path.isWalkable(_gameManager->map, closestTileFound.x, closestTileFound.y) ||
+    if (!(_gameManager->map.isWalkable(closestTileFound.x, closestTileFound.y) ||
         closestTileFound == from))
     {
         ASSERT(true, "SHOULD BE WALKABLE");
@@ -401,7 +401,7 @@ void    Spawner::findBlockedPath(glm::ivec2 from, const glm::ivec2& to, std::vec
         for (const glm::ivec2& pos: tmpPath)
         {
             path.push_back(pos);
-            if (!_path.isWalkable(_gameManager->map, pos.x, pos.y))
+            if (!_gameManager->map.isWalkable(pos.x, pos.y))
             {
                 from = glm::ivec2(pos);
                 break;

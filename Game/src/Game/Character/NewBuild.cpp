@@ -122,7 +122,12 @@ void        NewBuild::setTileHovered(const Entity* tileHovered)
     }
 }
 
-void        NewBuild::retrieveManagers()
+void    NewBuild::setCurrentChoice(const std::string& currentChoice)
+{
+    _currentChoice = currentChoice;
+}
+
+void    NewBuild::retrieveManagers()
 {
     auto    em = EntityFactory::getBindedEntityManager();
     Entity* gameManager = em->getEntityByTag("GameManager");
@@ -321,7 +326,7 @@ void        NewBuild::triggerBuildableZone(const std::string &archetype)
     }
 }
 
-void        NewBuild::placePreviewedEntity()
+Entity*        NewBuild::placePreviewedEntity()
 {
     // For the tutorial, we don't want the player
     // to build the same item 2 times
@@ -330,17 +335,17 @@ void        NewBuild::placePreviewedEntity()
         ITEM == this->_currentChoice &&                                                 \
         !TutoManagerMessage::getInstance()->stateOnGoing(eTutoState::TUTO_COND))        \
     {                                                                                   \
-        return;                                                                         \
+        return (nullptr);                                                               \
     }
 
     BUILD_ITEMS(LOCK_BUILD_COND)
 #undef LOCK_BUILD_COND
 
         if (std::find(this->_alreadyBuiltTile.begin(), this->_alreadyBuiltTile.end(), this->_tileHovered->handle) != this->_alreadyBuiltTile.end())
-            return;
+            return (nullptr);
 
     if (!this->_goldManager->removeGolds(this->_buildingPrices[this->_currentChoice]))
-        return;
+        return (nullptr);
 
     if (entity->getTag() != "TileBaseTurret")
     {
@@ -382,6 +387,8 @@ void        NewBuild::placePreviewedEntity()
 
     BUILD_ITEMS(SEND_TUTO_BUILD)
 #undef SEND_TUTO_BUILD
+
+    return (entity);
 }
 
 void        NewBuild::updateSpawnersPaths(const glm::ivec2& tilePos)

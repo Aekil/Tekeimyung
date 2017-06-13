@@ -23,6 +23,7 @@ START_GAMESTATE(ConsoleState, "Console")
 private:
     void                                handleCheatCodeKillAll();
     void                                handleCheatCodeGiveMeGold();
+    void                                handleCheatCodeBuildForMe();
     void                                handleCheatCode(const std::string& cheatCode);
 
  private:
@@ -30,4 +31,6 @@ private:
 
     Entity*                             _console = nullptr;;
     EntityManager*                      _playStateEntityManager = nullptr;
+
+    Entity::sHandle                     _lastBuiltBaseTurretHandle = 0;
 END_GAMESTATE(ConsoleState)

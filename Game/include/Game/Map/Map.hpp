@@ -36,6 +36,9 @@ public:
 
     void                    setCastlePos(const glm::ivec2& castlePos);
 
+    bool                    isFull();
+    bool                    isWalkable(int x, int z);
+
 private:
     void                    init();
 

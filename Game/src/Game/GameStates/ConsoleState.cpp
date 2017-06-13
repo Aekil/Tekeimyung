@@ -7,8 +7,10 @@
 #include <Engine/Systems/RenderingSystem.hpp>
 #include <Engine/Systems/ScriptSystem.hpp>
 #include <Engine/Systems/UISystem.hpp>
+#include <Engine/Utils/Helper.hpp>
 #include <Engine/Window/GameWindow.hpp>
 #include <Game/Character/Enemy.hpp>
+#include <Game/Character/NewBuild.hpp>
 #include <Game/GameStates/PlayState.hpp>
 #include <Game/Manager/GameManager.hpp>
 #include <Game/Manager/GoldManager.hpp>
@@ -127,6 +129,105 @@ void    ConsoleState::handleCheatCodeGiveMeGold()
     goldManager->addGolds(1000);
 }
 
+void    ConsoleState::handleCheatCodeBuildForMe()
+{
+    NewBuild* newBuild = nullptr;
+    GameManager* gameManager = nullptr;
+
+    // Get NewBuild script
+    {
+        Entity* player = _playStateEntityManager->getEntityByTag("Player");
+
+        if (!player)
+        {
+            LOG_ERROR("ConsoleState::handleCheatCodeBuildForMe: Can't find entity with tag \"Player\"");
+            return;
+        }
+
+        newBuild = BaseScript::getEntityScript<NewBuild>(player, "NewBuild");
+
+        if (!newBuild)
+        {
+            LOG_ERROR("ConsoleState::handleCheatCodeBuildForMe: Can't find script \"NewBuild\" on player");
+            return;
+        }
+    }
+
+    // Get GameManager script
+    {
+        Entity* gameManagerEntity = _playStateEntityManager->getEntityByTag(GAME_MANAGER_TAG);
+
+        if (!gameManagerEntity)
+        {
+            LOG_ERROR("ConsoleState::handleCheatCodeBuildForMe: Can't find entity with tag \"%s\"", GAME_MANAGER_TAG);
+            return;
+        }
+
+        gameManager = BaseScript::getEntityScript<GameManager>(gameManagerEntity, GAME_MANAGER_TAG);
+
+        if (!gameManager)
+        {
+            LOG_ERROR("ConsoleState::handleCheatCodeBuildForMe: Can't find script \"%s\" on gameManager", GAME_MANAGER_TAG);
+            return;
+        }
+    }
+
+    bool canBuild = true;
+    while (canBuild && !gameManager->map.isFull())
+    {
+        Entity* tile = nullptr;
+        bool found = false;
+        glm::ivec2 pos;
+        while (!found)
+        {
+            pos.x = Helper::randInt(0, gameManager->map.getWidth() - 1);
+            pos.y = Helper::randInt(0, gameManager->map.getHeight() - 1);
+
+            if (gameManager->map.isWalkable(pos.x, pos.y))
+            {
+                found = true;
+                tile = gameManager->map.getEntities()[pos.x][pos.y];
+            }
+        }
+
+        Entity* lastBuiltBaseTurret = _playStateEntityManager->getEntity(_lastBuiltBaseTurretHandle);
+
+        // A base turret has been built previously
+        // But the tower could not be built (Out of money)
+        if (!lastBuiltBaseTurret)
+        {
+            // Build base turret
+            newBuild->setCurrentChoice("TILE_BASE_TURRET");
+            newBuild->setTileHovered(tile);
+            // Build and get the created entity
+            lastBuiltBaseTurret = newBuild->placePreviewedEntity();
+            newBuild->setCurrentChoice("");
+        }
+
+        // Build tower if base turret has been built
+        if (lastBuiltBaseTurret)
+        {
+            newBuild->setCurrentChoice("TOWER_FIRE");
+            newBuild->setTileHovered(lastBuiltBaseTurret);
+            canBuild = newBuild->placePreviewedEntity() != nullptr;
+            newBuild->setCurrentChoice("");
+        }
+        else
+        {
+            canBuild = false;
+        }
+
+        if (canBuild)
+        {
+            _lastBuiltBaseTurretHandle = 0;
+        }
+        else
+        {
+            _lastBuiltBaseTurretHandle = lastBuiltBaseTurret->handle;
+        }
+    }
+}
+
 void    ConsoleState::handleCheatCode(const std::string& cheatCode)
 {
     uint32_t stateNb = static_cast<uint32_t>(_gameStateManager->getStates().size());
@@ -141,6 +242,10 @@ void    ConsoleState::handleCheatCode(const std::string& cheatCode)
     else if (cheatCode == "give me gold")
     {
         handleCheatCodeGiveMeGold();
+    }
+    else if (cheatCode == "build for me")
+    {
+        handleCheatCodeBuildForMe();
     }
 
     EntityFactory::bindEntityManager(_world.getEntityManager());
