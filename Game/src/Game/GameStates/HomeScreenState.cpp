@@ -18,7 +18,10 @@ void    HomeScreenState::onEnter()
 
     renderComponent->_animator.play("fading", true);
     
-    SoundManager::getInstance()->setVolumeAllChannels(DEFAULT_SOUND_VOL);
+    if (!SoundManager::getInstance()->getMuteState())
+    {
+        SoundManager::getInstance()->setVolumeAllChannels(DEFAULT_SOUND_VOL);
+    }
 
     SoundManager::getInstance()->pauseSound(_backgroundGameMusic->soundID);
     SoundManager::getInstance()->stopSound(_backgroundGameMusic->soundID);

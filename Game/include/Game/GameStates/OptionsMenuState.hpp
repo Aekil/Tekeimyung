@@ -32,8 +32,6 @@ private:
     Entity*         _buttonCurrentWindowMode = nullptr;
     Entity*         _buttonCurrentVolumeMode = nullptr;
 
-    bool            _soundMuted = false;
-
     void            createOrGetButtons();
     bool            toggleVolume();
 END_GAMESTATE(OptionsMenuState)

@@ -32,5 +32,4 @@ private:
     tEventSound*                        _backgroundGameMusic = nullptr;
     tEventSound*                        _backgroundMenuMusic = nullptr;
 
-    bool                                _mute;
 END_GAMESTATE(PlayState)

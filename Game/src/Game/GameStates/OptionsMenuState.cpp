@@ -13,7 +13,13 @@
 
 OptionsMenuState::~OptionsMenuState() {}
 
-void    OptionsMenuState::onEnter() {}
+void    OptionsMenuState::onEnter()
+{
+    /*if (!SoundManager::getInstance()->getMuteState())
+    {
+        SoundManager::getInstance()->setVolumeAllChannels(0.25f);
+    }*/
+}
 
 void    OptionsMenuState::setupSystems()
 {
@@ -93,7 +99,7 @@ void                    OptionsMenuState::createOrGetButtons()
         }
     }
 
-    buttonArchetype = (this->_soundMuted == true ? "BUTTON_MUTE_VOLUME" : "BUTTON_TOGGLE_VOLUME");
+    buttonArchetype = (SoundManager::getInstance()->getMuteState() == true ? "BUTTON_MUTE_VOLUME" : "BUTTON_TOGGLE_VOLUME");
     if (this->_buttonCurrentVolumeMode == nullptr)
         this->_buttonCurrentVolumeMode = EntityFactory::createOrGetEntity(buttonArchetype);
     else
@@ -104,7 +110,7 @@ void                    OptionsMenuState::createOrGetButtons()
         {
             em->destroyEntity(this->_buttonCurrentVolumeMode->handle);
 
-            buttonArchetype = (this->_soundMuted == true ? "BUTTON_MUTE_VOLUME" : "BUTTON_TOGGLE_VOLUME");
+            buttonArchetype = (SoundManager::getInstance()->getMuteState() == true ? "BUTTON_MUTE_VOLUME" : "BUTTON_TOGGLE_VOLUME");
             this->_buttonCurrentVolumeMode = EntityFactory::createOrGetEntity(buttonArchetype);
         }
     }
@@ -114,6 +120,7 @@ bool                    OptionsMenuState::toggleVolume()
 {
     auto                &&keyboard = GameWindow::getInstance()->getKeyboard();
     auto                &&mouse = GameWindow::getInstance()->getMouse();
+    auto                soundManager = SoundManager::getInstance();
 
     sButtonComponent*   buttonComponent = this->_buttonCurrentVolumeMode->getComponent<sButtonComponent>();
 
@@ -121,15 +128,15 @@ bool                    OptionsMenuState::toggleVolume()
 
     bool    enterPressed = keyboard.getStateMap()[Keyboard::eKey::ENTER] == Keyboard::eKeyState::KEY_PRESSED;
     bool    mouseClicked = mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_1] == Mouse::eButtonState::CLICK_PRESSED;
-
+    
     //  "Toggle fullscreen / windowed mode" button
     if ((enterPressed && buttonComponent->selected) ||
         (mouseClicked && buttonComponent->hovered))
     {
-        float           volume = (this->_soundMuted == true ? 1.0f : 0.0f);
-
-        SoundManager::getInstance()->setVolumeAllChannels(volume);
-        this->_soundMuted = !this->_soundMuted;
+        bool muted = soundManager->getMuteState();
+        float volume = (muted == true ? DEFAULT_SOUND_VOL : 0.0f);
+        soundManager->setMuteState(!muted);
+        soundManager->setVolumeAllChannels(volume);
         this->createOrGetButtons();
     }
 

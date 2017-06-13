@@ -25,7 +25,10 @@ PauseState::~PauseState() {}
 
 void    PauseState::onEnter()
 {
-    SoundManager::getInstance()->setVolumeAllChannels(0.25f);
+    if (!SoundManager::getInstance()->getMuteState())
+    {
+        SoundManager::getInstance()->setVolumeAllChannels(0.25f);
+    }
 }
 
 void    PauseState::setupSystems()

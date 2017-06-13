@@ -16,7 +16,8 @@ std::shared_ptr<SoundManager>   SoundManager::_soundManager = nullptr;
 SoundManager::SoundManager() :
 _result(FMOD_OK),
 _system(nullptr),
-_generalVolume(DEFAULT_SOUND_VOL)
+_generalVolume(DEFAULT_SOUND_VOL),
+_muted(false)
 {
     for (int i = 0; i < NB_MAX_SOUNDS; ++i)
     {
@@ -382,6 +383,16 @@ void    SoundManager::changeGeneralVolume(float volume)
 float   SoundManager::getGeneralVolume() const
 {
     return (_generalVolume);
+}
+
+void    SoundManager::setMuteState(bool muted)
+{
+    _muted = muted;
+}
+
+bool    SoundManager::getMuteState() const
+{
+    return (_muted);
 }
 
 /*void    SoundManager::addChannel(FMOD::Channel* channel)

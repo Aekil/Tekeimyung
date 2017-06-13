@@ -97,6 +97,9 @@ public:
     void                                    changeGeneralVolume(float volume);
     float                                   getGeneralVolume() const;
 
+    void                                    setMuteState(bool muted);
+    bool                                    getMuteState() const;
+
 private:
     /*void                                    addChannel(FMOD::Channel* channel);
     void                                    removeChannel(FMOD::Channel* channel);*/
@@ -111,4 +114,5 @@ private:
     tSound                                  _sounds[NB_MAX_SOUNDS];
 
     float                                   _generalVolume;
+    bool                                    _muted;
 };
