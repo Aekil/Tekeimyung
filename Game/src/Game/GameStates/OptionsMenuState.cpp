@@ -126,7 +126,7 @@ bool                    OptionsMenuState::toggleVolume()
 
     sButtonComponent*   buttonComponent = this->_buttonCurrentVolumeMode->getComponent<sButtonComponent>();
 
-    ASSERT(buttonComponent != nullptr, " The \"Current window mode\" button should have a sButtonComponent.");
+    ASSERT(buttonComponent != nullptr, " The \"Current volume mode\" button should have a sButtonComponent.");
 
     bool    enterPressed = keyboard.getStateMap()[Keyboard::eKey::ENTER] == Keyboard::eKeyState::KEY_PRESSED;
     bool    mouseClicked = mouse.getStateMap()[Mouse::eButton::MOUSE_BUTTON_1] == Mouse::eButtonState::CLICK_PRESSED;

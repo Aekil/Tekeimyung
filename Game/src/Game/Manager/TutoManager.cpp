@@ -44,24 +44,24 @@ TutoManager::TutoManager()
         },
         {
             eTutoState::BUILD_BASE_TOWER,
-            "Press 1 and build your first tower base !\n Tower bases are used to build towers on it"
+            "Press 1 to build your first turret base !\n Turret bases are used to build turrets upon them"
         },
         {
             eTutoState::BUILD_TOWER,
-            "Press 3 and select a tower base to build a tower on it"
+            "Press 3 and hover the base to build a turret on it !"
         },
         {
             eTutoState::DEACTIVATE_BUILD,
-            "Deactivate the build zone with the mouse right click"
+            "Disable the build zone with the mouse right click"
         },
         {
             eTutoState::ENEMY_DEAD,
-            "Towers will automatically shoot on enemies"
+            "Turrets will automatically target enemies"
         },
         {
             eTutoState::BUILD_WALL,
             "Try to build a wall by pressing 2\n\
-Walls are very cheap and can help you to make the enemies follow a specific path"
+            Walls are very cheap and can help you to make the enemies follow a specific path"
         },
         {
             eTutoState::ENEMY_DEAD,

@@ -41,7 +41,7 @@ void CameraScript::update(float dt)
     }
 #endif
 
-    if (keyboard.getStateMap()[Keyboard::eKey::SPACE] == Keyboard::eKeyState::KEY_RELEASED)
+    if (keyboard.getStateMap()[Keyboard::eKey::Y] == Keyboard::eKeyState::KEY_RELEASED)
     {
         sTransformComponent*    entityTransform = this->getComponent<sTransformComponent>();
 

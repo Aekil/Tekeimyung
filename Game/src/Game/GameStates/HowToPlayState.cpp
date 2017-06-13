@@ -62,10 +62,8 @@ bool    HowToPlayState::update(float elapsedTime)
 
 void    HowToPlayState::retrievePages()
 {
-    //this->_pages.push_back("PageControls");
-    //this->_pages.push_back("PageBuildables");
-    //this->_pages.push_back("PageWeapons");
-    this->_pages.push_back("HowToPlay");
+    this->_pages.push_back("PageObjectives");
+    this->_pages.push_back("PageControls");
 }
 
 void    HowToPlayState::retrieveButtons()
