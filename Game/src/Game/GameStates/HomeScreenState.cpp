@@ -8,6 +8,7 @@
 #include    <Engine/Systems/RenderingSystem.hpp>
 #include    <Engine/Systems/UISystem.hpp>
 
+#include    <Game/GameStates/OptionsMenuState.hpp>
 #include    <Game/GameStates/HomeScreenState.hpp>
 
 HomeScreenState::~HomeScreenState() {}
@@ -17,8 +18,13 @@ void    HomeScreenState::onEnter()
     sRenderComponent*   renderComponent = this->_buttonHowToPlay->getComponent<sRenderComponent>();
 
     renderComponent->_animator.play("fading", true);
+
+    OptionsMenuState::setFromHome(true);
     
-    SoundManager::getInstance()->setVolumeAllChannels(DEFAULT_SOUND_VOL);
+    if (!SoundManager::getInstance()->getMuteState())
+    {
+        SoundManager::getInstance()->setVolumeAllChannels(DEFAULT_SOUND_VOL);
+    }
 
     SoundManager::getInstance()->pauseSound(_backgroundGameMusic->soundID);
     SoundManager::getInstance()->stopSound(_backgroundGameMusic->soundID);

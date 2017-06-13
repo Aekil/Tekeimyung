@@ -30,7 +30,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 960,
-                  "y" : 712.79998779296875,
+                  "y" : 799.20001220703125,
                   "z" : 0
                },
                "rotation" : {
@@ -49,7 +49,7 @@
                "layer" : 0,
                "offset" : {
                   "x" : 0,
-                  "y" : 16
+                  "y" : 24
                },
                "percentage_size" : true,
                "size" : {
@@ -402,6 +402,68 @@
             }
          },
          "name" : "BUTTON_CREDITS",
+         "tag" : ""
+      },
+      {
+         "components" : {
+            "sButtonComponent" : {
+               "action" : "ADD_LEVEL",
+               "action_level" : "ConfirmRestartGame",
+               "remove_states" : 0
+            },
+            "sNameComponent" : {
+               "name" : "BUTTON_RESTART_GAME"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 1
+               },
+               "display" : true,
+               "dynamic" : false,
+               "hide_dynamic" : false,
+               "ignore_raycast" : false,
+               "materials" : [ "button_restart_game.mat" ],
+               "model" : "resources/models/default.DAE",
+               "type" : "PLANE"
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 960,
+                  "y" : 712.79998779296875,
+                  "z" : 0
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 30,
+                  "y" : 7.645967960357666,
+                  "z" : 1
+               }
+            },
+            "sUiComponent" : {
+               "horizontal_alignment" : "MIDDLE",
+               "layer" : 0,
+               "offset" : {
+                  "x" : 0,
+                  "y" : 16
+               },
+               "percentage_size" : true,
+               "size" : {
+                  "x" : 0.15625,
+                  "y" : 0.070795997977256775
+               },
+               "vertical_alignment" : "MIDDLE"
+            }
+         },
+         "name" : "BUTTON_RESTART_GAME",
          "tag" : ""
       }
    ],

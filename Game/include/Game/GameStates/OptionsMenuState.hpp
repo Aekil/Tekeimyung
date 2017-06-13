@@ -22,10 +22,21 @@ START_GAMESTATE(OptionsMenuState, "Options")
 
     bool            handleButtons();
 
+    static void     setFromHome(bool fromHome);
+    
+
 private:
-    Entity*         _buttonToggleWindowed = nullptr;
-    Entity*         _buttonToggleFullscreen = nullptr;
+    //Entity*         _buttonToggleWindowed = nullptr;
+    //Entity*         _buttonToggleFullscreen = nullptr;
+    
+    //Entity*         _buttonToggleVolume = nullptr;
+    //Entity*         _buttonMuteVolume = nullptr;
+
     Entity*         _buttonCurrentWindowMode = nullptr;
+    Entity*         _buttonCurrentVolumeMode = nullptr;
 
     void            createOrGetButtons();
+    bool            toggleVolume();
+
+    static bool     _fromHome;
 END_GAMESTATE(OptionsMenuState)

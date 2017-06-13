@@ -15,6 +15,7 @@
 #include <Engine/Systems/UISystem.hpp>
 #include <Engine/Systems/MouseSystem.hpp>
 #include <Engine/Utils/LevelLoader.hpp>
+#include <Game/GameStates/OptionsMenuState.hpp>
 #include <Game/GameStates/HowToPlayState.hpp>
 #include <Game/GameStates/BuildingListState.hpp>
 #include <Game/GameStates/ConsoleState.hpp>
@@ -30,8 +31,10 @@ PlayState::~PlayState() {}
 
 void    PlayState::onEnter()
 {
-    SoundManager::getInstance()->setVolumeAllChannels(DEFAULT_SOUND_VOL);
-
+    if (!SoundManager::getInstance()->getMuteState())
+    {
+        SoundManager::getInstance()->setVolumeAllChannels(DEFAULT_SOUND_VOL);
+    }
     SoundManager::getInstance()->pauseSound(_backgroundMenuMusic->soundID);
     SoundManager::getInstance()->stopSound(_backgroundMenuMusic->soundID);
     SoundManager::getInstance()->resumeSound(_backgroundGameMusic->soundID);
@@ -53,8 +56,6 @@ bool    PlayState::init()
     _backgroundGameMusic = EventSound::getEventByEventType(eEventSound::BACKGROUND);
     SoundManager::getInstance()->setSoundVolume(_backgroundGameMusic->soundID, 0.2f);
     _backgroundMenuMusic = EventSound::getEventByEventType(eEventSound::BACKGROUND_MENU);
-
-    _mute = false;
 
     // Load tutorial level
     if (!TutoManager::_tutorialDone)
@@ -98,6 +99,7 @@ bool    PlayState::update(float elapsedTime)
     auto& gameWindow = GameWindow::getInstance();
     auto &&keyboard = GameWindow::getInstance()->getKeyboard();
     auto &&mouse = GameWindow::getInstance()->getMouse();
+    auto soundManager = SoundManager::getInstance();
 
     /*if (keyboard.getStateMap()[Keyboard::eKey::B] == Keyboard::eKeyState::KEY_PRESSED)
     {
@@ -127,22 +129,16 @@ bool    PlayState::update(float elapsedTime)
     }
     else if (keyboard.getStateMap()[Keyboard::eKey::M] == Keyboard::eKeyState::KEY_PRESSED)
     {
-        _mute = !_mute;
-        if (_mute)
-        {
-            SoundManager::getInstance()->setVolumeAllChannels(0);
-        }
-        else
-        {
-            SoundManager::getInstance()->setVolumeAllChannels(DEFAULT_SOUND_VOL);
-        }
+        bool muted = soundManager->getMuteState();
+        soundManager->setMuteState(!muted);
+        soundManager->setVolumeAllChannels((muted == false ? 0.0f : DEFAULT_SOUND_VOL));
     }
 
     // Play background game music
     #if (ENABLE_SOUND)
-        if (_backgroundGameMusic->soundID != -1 && !SoundManager::getInstance()->isSoundPlaying(_backgroundGameMusic->soundID))
+        if (_backgroundGameMusic->soundID != -1 && !soundManager->isSoundPlaying(_backgroundGameMusic->soundID))
         {
-            SoundManager::getInstance()->playSound(_backgroundGameMusic->soundID);
+            soundManager->playSound(_backgroundGameMusic->soundID);
         }
     #endif
 
