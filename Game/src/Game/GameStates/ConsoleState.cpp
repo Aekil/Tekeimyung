@@ -251,7 +251,7 @@ void    ConsoleState::handleCheatCodeAegis(PlayState* playState)
 {
     // time speed is a member of GameState class
     // It speeds up the delta time send to GameState::_systems update
-    playState->setTimeSpeed(20.0f);
+    playState->setTimeSpeed(10.0f);
 }
 
 void    ConsoleState::handleCheatCode(PlayState* playState, const std::string& cheatCode)
