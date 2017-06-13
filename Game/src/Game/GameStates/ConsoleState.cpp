@@ -211,6 +211,11 @@ void    ConsoleState::handleCheatCodeBuildForMe()
             newBuild->setTileHovered(lastBuiltBaseTurret);
             canBuild = newBuild->placePreviewedEntity() != nullptr;
             newBuild->setCurrentChoice("");
+
+            if (!canBuild)
+            {
+                _lastBuiltBaseTurretHandle = lastBuiltBaseTurret->handle;
+            }
         }
         else
         {
@@ -220,10 +225,6 @@ void    ConsoleState::handleCheatCodeBuildForMe()
         if (canBuild)
         {
             _lastBuiltBaseTurretHandle = 0;
-        }
-        else
-        {
-            _lastBuiltBaseTurretHandle = lastBuiltBaseTurret->handle;
         }
     }
 }
