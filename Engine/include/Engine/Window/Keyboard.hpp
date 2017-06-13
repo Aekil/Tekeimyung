@@ -4,11 +4,16 @@
 
 #pragma once
 
-#include <unordered_map>
+#include <cstdint>
 #include <string>
+#include <unordered_map>
+
+class GameWindow;
 
 class Keyboard
 {
+    friend GameWindow;
+
 public:
 	enum class          eKey : char
 	{
@@ -143,10 +148,12 @@ public:
 		KEY_MAINTAINED,		// The key has been pressed in the previous frame and still is, in the current frame.
 		KEY_RELEASED		// The key has just been released !
 	}                   KeyState;
+
 private:
 	typedef std::unordered_map<int, Keyboard::eKey>                 KeyboardNativeMap;
     typedef std::unordered_map<Keyboard::eKey, Keyboard::eKeyState> KeyboardStateMap;
     typedef std::unordered_map<std::string, Keyboard::eKey>    KeyboardStringMap;
+
 public:
 	explicit            Keyboard();
 	                    ~Keyboard() {}
@@ -154,15 +161,23 @@ public:
 	KeyboardNativeMap&  getNativeMap();
     KeyboardStateMap&   getStateMap();
     KeyboardStringMap&  getStringMap();
+    const std::string&  getTypedText() const;
+
     std::string         keyToString(Keyboard::eKey key);
     Keyboard::eKeyState operator[](Keyboard::eKey key);
 
+    bool                isPressed(Keyboard::eKey key);
+
+private:
     void                resetKeyboardState();
     void                updateKeyboardState();
+    void                resetTypedText();
+    void                addTypedChar(uint32_t codePoint);
 
-    bool                isPressed(Keyboard::eKey key);
 private:
 	KeyboardNativeMap   _nativeMap;
     KeyboardStateMap    _stateMap;
     KeyboardStringMap   _stringMap;
+
+    std::string         _typedText;
 };

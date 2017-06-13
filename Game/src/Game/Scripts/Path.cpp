@@ -37,7 +37,7 @@ Node*    Path::getNodeFromPos(int x, int y)
         return nullptr;
 
     glm::ivec2 pos(x, y);
-    return (new Node(pos, isWalkable(*_map, x, y)));
+    return (new Node(pos, _map->isWalkable(x, y)));
 }
 
 void    Path::freeNodes()
@@ -196,11 +196,6 @@ bool Path::goToTarget(glm::ivec2 pos, glm::ivec2 target, Map* map, std::vector<g
 
     std::reverse(path.begin(), path.end());
     return (path.size() != 0);
-}
-
-bool    Path::isWalkable(Map& map, int x, int y)
-{
-    return (map[x][y] == -1 || map[x][y] % LAYER_NUMBER == 1);
 }
 
 bool    Path::isOutOfRange(int x, int y) const

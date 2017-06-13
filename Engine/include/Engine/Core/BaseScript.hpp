@@ -33,7 +33,7 @@ public:
     virtual void loadFromJson(const JsonValue& json) {}
 
     template<typename T>
-    T* getEntityScript(Entity* entity, const char* scriptName)
+    static T* getEntityScript(Entity* entity, const char* scriptName)
     {
         sScriptComponent* scriptComp = entity->getComponent<sScriptComponent>();
         if (!scriptComp)

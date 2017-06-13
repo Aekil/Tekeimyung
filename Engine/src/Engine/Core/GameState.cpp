@@ -40,7 +40,7 @@ bool    GameState::update(float elapsedTime)
         for (auto&& system: _world.getSystems())
         {
             Timer timer;
-            system->update(*_world.getEntityManager(), elapsedTime);
+            system->update(*_world.getEntityManager(), elapsedTime * _timeSpeed);
             MonitoringDebugWindow::getInstance()->updateSystem(system->getId(), timer.getElapsedTime(), system->getEntitiesNb(), system->getName());
         }
     }
@@ -61,6 +61,11 @@ uint32_t    GameState::getId() const
     return (_id);
 }
 
+float    GameState::getTimeSpeed() const
+{
+    return (_timeSpeed);
+}
+
 World&  GameState::getWorld()
 {
     return (_world);
@@ -69,6 +74,11 @@ World&  GameState::getWorld()
 void    GameState::setLevelFile(const std::string& levelFile)
 {
     _levelFile = levelFile;
+}
+
+void    GameState::setTimeSpeed(float timeSpeed)
+{
+    _timeSpeed = timeSpeed;
 }
 
 void    GameState::cloneEntityManager(EntityManager* em)

@@ -83,8 +83,6 @@ bool    Engine::run(int ac, char** av, std::shared_ptr<GameState> startGameState
         {
             float elapsedTime = timer.getElapsedTime();
             timer.reset();
-            _window->getKeyboard().updateKeyboardState();
-            _window->getMouse().updateMouseState();
             _window->pollEvents();
 
             _soundManager->update();

@@ -30,6 +30,8 @@ public:
     void                setFontSize(uint32_t fontSize);
     void                setColor(const glm::vec4& color);
 
+    void                addContent(const std::string& content);
+
     void                isDirty(bool dirty);
     bool                isDirty() const;
 

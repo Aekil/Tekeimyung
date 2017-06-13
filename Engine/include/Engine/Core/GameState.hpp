@@ -31,20 +31,23 @@ public:
     virtual bool            initSystems();
     virtual bool            update(float elapsedTime);
 
-    void                            bindEntityManager();
+    void                    bindEntityManager();
 
     uint32_t                getId() const;
+    float                   getTimeSpeed() const;
+    World&                  getWorld();
 
-    World&                          getWorld();
-    void                            setLevelFile(const std::string& levelFile);
-    void                            cloneEntityManager(EntityManager* em);
+    void                    setLevelFile(const std::string& levelFile);
+    void                    setTimeSpeed(float timeSpeed);
+
+    void                    cloneEntityManager(EntityManager* em);
 
 protected:
-    void                            renderPreviousStates(const std::vector<uint32_t>& filterIds = {});
+    void                    renderPreviousStates(const std::vector<uint32_t>& filterIds = {});
 
 private:
-    void                            loadLevel();
-    void                            onWindowResize();
+    void                    loadLevel();
+    void                    onWindowResize();
 
 protected:
     World                   _world;
@@ -53,6 +56,8 @@ protected:
     std::string             _levelFile;
 
     uint32_t                _id;
+
+    float                   _timeSpeed = 1.0f;
 };
 
 

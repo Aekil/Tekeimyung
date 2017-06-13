@@ -51,11 +51,7 @@ void        WaveManager::update(float dt)
         //}
         if (this->keyboard.getStateMap()[Keyboard::eKey::SPACE] == Keyboard::eKeyState::KEY_RELEASED)
         {
-            this->startWave(this->_currentWave + 1);
-            this->_state = eState::ONGOING_WAVE;
-            this->_goldManager->setIncreaseOnTime(true);
-            TutoManager::display(false);
-            LOG_DEBUG("WaveManager's state: %s", "ONGOING_WAVE");
+            handlePendingWave();
         }
         break;
     case eState::ONGOING_WAVE:
@@ -367,6 +363,14 @@ void    WaveManager::updateProgressBar(float deltaTime)
 
 void    WaveManager::setTutorialIsFinished(bool tutorialIsFinished)
 {
-
     this->_tutorialIsFinished = tutorialIsFinished;
+}
+
+void    WaveManager::handlePendingWave()
+{
+    this->startWave(this->_currentWave + 1);
+    this->_state = eState::ONGOING_WAVE;
+    this->_goldManager->setIncreaseOnTime(true);
+    TutoManager::display(false);
+    LOG_DEBUG("WaveManager's state: %s", "ONGOING_WAVE");
 }

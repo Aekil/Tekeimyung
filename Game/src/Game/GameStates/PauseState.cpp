@@ -2,8 +2,6 @@
 * @Author   Guillaume Labey
 */
 
-#include <iostream>
-
 #include <Engine/Window/GameWindow.hpp>
 #include <Engine/Sound/SoundManager.hpp>
 

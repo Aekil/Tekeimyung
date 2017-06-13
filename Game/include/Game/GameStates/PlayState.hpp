@@ -17,6 +17,8 @@
 #include <Engine/EntityFactory.hpp>
 #include <Engine/Utils/EventSound.hpp>
 
+class WaveManager;
+
 START_GAMESTATE(PlayState, "Game")
  public:
     ~PlayState();
@@ -26,6 +28,9 @@ START_GAMESTATE(PlayState, "Game")
     bool                                init();
     bool                                update(float elapsedTime);
 
+public:
+    bool                                _autoPlay = false;
+
 private:
     std::pair <Keyboard::eKey, IInputEvent *>    _pair;
 
@@ -33,4 +38,7 @@ private:
     tEventSound*                        _backgroundMenuMusic = nullptr;
 
     bool                                _mute;
+
+    WaveManager*                        _waveManager = nullptr;
+
 END_GAMESTATE(PlayState)

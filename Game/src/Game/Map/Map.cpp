@@ -42,6 +42,27 @@ const glm::ivec2&   Map::getCastlePos() const
     return (_castlePos);
 }
 
+bool    Map::isFull()
+{
+    for (int x = 0; x < _width; ++x)
+    {
+        for (int z = 0; z < _height; ++z)
+        {
+            if (isWalkable(x, z))
+            {
+                return (false);
+            }
+        }
+    }
+
+    return (true);
+}
+
+bool    Map::isWalkable(int x, int z)
+{
+    return ((*this)[x][z] == -1 || (*this)[x][z] % LAYER_NUMBER == 1);
+}
+
 void    Map::init()
 {
     _entities.allocate(_width, _height);

@@ -19,8 +19,12 @@
 
 typedef     std::unordered_map<Keyboard::eKey, std::string>   MapKeyboardEntity;
 
+class ConsoleState;
+
 class       NewBuild final : public BaseScript
 {
+    friend class ConsoleState;
+
 public:
     NewBuild() = default;
     ~NewBuild() = default;
@@ -36,6 +40,7 @@ public:
     void    disableAll();
 
     void    setTileHovered(const Entity* tileHovered);
+    void    setCurrentChoice(const std::string& currentChoice);
 
 private:
     GameManager*    _gameManager = nullptr;
@@ -62,7 +67,7 @@ private:
     void            checkUserInputs();
     void            triggerBuildableZone(const std::string &archetype);
 
-    void            placePreviewedEntity();
+    Entity*         placePreviewedEntity();
     void            updateSpawnersPaths(const glm::ivec2& tilePos);
 
     void            initPrices();

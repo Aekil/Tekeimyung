@@ -278,6 +278,11 @@ Keyboard::KeyboardStringMap& Keyboard::getStringMap()
     return (_stringMap);
 }
 
+const std::string&  Keyboard::getTypedText() const
+{
+    return (_typedText);
+}
+
 std::string Keyboard::keyToString(Keyboard::eKey key)
 {
     for (auto it = _stringMap.begin(); it != _stringMap.end(); it++)
@@ -291,6 +296,12 @@ std::string Keyboard::keyToString(Keyboard::eKey key)
 Keyboard::eKeyState Keyboard::operator[](Keyboard::eKey key)
 {
 	return (_stateMap[key]);
+}
+
+bool    Keyboard::isPressed(Keyboard::eKey key)
+{
+    return (_stateMap[key] == Keyboard::eKeyState::KEY_PRESSED ||
+            _stateMap[key] == Keyboard::eKeyState::KEY_MAINTAINED);
 }
 
 void    Keyboard::resetKeyboardState()
@@ -323,8 +334,12 @@ void    Keyboard::updateKeyboardState()
     }
 }
 
-bool    Keyboard::isPressed(Keyboard::eKey key)
+void    Keyboard::resetTypedText()
 {
-    return (_stateMap[key] == Keyboard::eKeyState::KEY_PRESSED ||
-            _stateMap[key] == Keyboard::eKeyState::KEY_MAINTAINED);
+    _typedText.clear();
+}
+
+void    Keyboard::addTypedChar(uint32_t codePoint)
+{
+    _typedText += codePoint;
 }

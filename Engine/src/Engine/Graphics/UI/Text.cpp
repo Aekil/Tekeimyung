@@ -106,6 +106,12 @@ void    Text::setColor(const glm::vec4& color)
     _color = color;
 }
 
+void    Text::addContent(const std::string& content)
+{
+    _content += content;
+    needUpdate();
+}
+
 void    Text::isDirty(bool dirty)
 {
     _dirty = dirty;

@@ -6,6 +6,7 @@
 
 #include <cstdint>
 #include <memory>
+#include <string>
 #include <fmod.hpp>
 #include <fmod_common.h>
 #include <fmod_errors.h>
