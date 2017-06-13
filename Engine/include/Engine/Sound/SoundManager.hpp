@@ -89,6 +89,7 @@ public:
     void                                    pauseAllChannels();
     void                                    resumeAllChannels();
     void                                    setVolumeAllChannels(float volume);
+    void                                    setVolumeAllSfxChannels(float volume);
 
     void                                    setSoundVolume(int id, float volume);
 
@@ -100,6 +101,7 @@ public:
     void                                    setMuteState(bool muted);
     bool                                    getMuteState() const;
 
+
 private:
     /*void                                    addChannel(FMOD::Channel* channel);
     void                                    removeChannel(FMOD::Channel* channel);*/
@@ -109,7 +111,8 @@ private:
 
     FMOD_RESULT                             _result;
     FMOD::System*                           _system;
-    FMOD::ChannelGroup*                     _channelGroup;
+    FMOD::ChannelGroup*                     _allChannelsGroup;
+    //FMOD::ChannelGroup*                     _sfxChannelsGroup;
 
     tSound                                  _sounds[NB_MAX_SOUNDS];
 

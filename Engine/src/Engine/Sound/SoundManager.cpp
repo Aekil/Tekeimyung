@@ -55,9 +55,12 @@ bool    SoundManager::initialize()
     if (errorCheck())
         return (false);
 
-    _result = _system->getMasterChannelGroup(&_channelGroup);
+    _result = _system->getMasterChannelGroup(&_allChannelsGroup);
     if (errorCheck())
         return (false);
+
+    //_result = _system->createChannelGroup("sfx", &_sfxChannelsGroup);
+    //_sfxChannelsGroup->
 
     return (true);
 }
@@ -323,12 +326,12 @@ void    SoundManager::pauseAllChannels()
 {
     bool chanGrpState;
 
-    _result = _channelGroup->getPaused(&chanGrpState);
+    _result = _allChannelsGroup->getPaused(&chanGrpState);
     errorCheck();
 
     if (!chanGrpState)
     {
-        _result = _channelGroup->setPaused(1);
+        _result = _allChannelsGroup->setPaused(1);
         errorCheck();
     }
 }
@@ -337,21 +340,33 @@ void    SoundManager::resumeAllChannels()
 {
     bool chanGrpState;
     
-    _result = _channelGroup->getPaused(&chanGrpState);
+    _result = _allChannelsGroup->getPaused(&chanGrpState);
     errorCheck();
 
     if (chanGrpState)
     {
-        _result = _channelGroup->setPaused(0);
+        _result = _allChannelsGroup->setPaused(0);
         errorCheck();
     }
 }
 // limits of volume ? (0.0f -> 1.0f ?)
 void    SoundManager::setVolumeAllChannels(float volume)
 {
-    _result = _channelGroup->setVolume(volume);
+    _result = _allChannelsGroup->setVolume(volume);
     errorCheck();
 }
+
+void    SoundManager::setVolumeAllSfxChannels(float volume)
+{
+    for (int i = 0; i < NB_MAX_SOUNDS; ++i)
+    {
+        if (!_sounds[i].free && _sounds[i].type == eSoundType::DEFAULT_SOUND)
+        {
+            _sounds[i].channel->setVolume(volume);
+        }
+    }
+}
+
 // Differentiate (general) volume from all channels to personalized volume for one channel
 void    SoundManager::setSoundVolume(int id, float volume)
 {
@@ -375,7 +390,7 @@ void    SoundManager::setSoundVolume(int id, float volume)
     LOG_WARN("Sound id n°%d doesn't exist", id);
 }
 
-void    SoundManager::changeGeneralVolume(float volume)
+void    SoundManager::changeGeneralVolume(float volume) // not used yet
 {
     _generalVolume += volume; // do some limit checks ?
 }
