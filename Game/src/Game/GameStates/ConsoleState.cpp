@@ -229,10 +229,18 @@ void    ConsoleState::handleCheatCodeBuildForMe()
     }
 }
 
+void    ConsoleState::handleCheatCodeAegis()
+{
+    // time speed is a member of GameState class
+    // It speeds up the delta time send to GameState::_systems update
+    _playState->setTimeSpeed(20.0f);
+}
+
 void    ConsoleState::handleCheatCode(const std::string& cheatCode)
 {
     uint32_t stateNb = static_cast<uint32_t>(_gameStateManager->getStates().size());
-    _playStateEntityManager = _gameStateManager->getStates()[stateNb - 2]->getWorld().getEntityManager();
+    _playState = _gameStateManager->getStates()[stateNb - 2];
+    _playStateEntityManager = _playState->getWorld().getEntityManager();
 
     EntityFactory::bindEntityManager(_playStateEntityManager);
 
@@ -247,6 +255,10 @@ void    ConsoleState::handleCheatCode(const std::string& cheatCode)
     else if (cheatCode == "build for me")
     {
         handleCheatCodeBuildForMe();
+    }
+    else if (cheatCode == "aegis")
+    {
+        handleCheatCodeAegis();
     }
 
     EntityFactory::bindEntityManager(_world.getEntityManager());

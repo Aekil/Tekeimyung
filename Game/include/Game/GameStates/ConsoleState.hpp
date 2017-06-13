@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <memory>
+
 #include <ECS/System.hpp>
 #include <ECS/World.hpp>
 
@@ -24,12 +26,14 @@ private:
     void                                handleCheatCodeKillAll();
     void                                handleCheatCodeGiveMeGold();
     void                                handleCheatCodeBuildForMe();
+    void                                handleCheatCodeAegis();
     void                                handleCheatCode(const std::string& cheatCode);
 
  private:
     tEventSound*                        _backgroundGameMusic = nullptr;
 
-    Entity*                             _console = nullptr;;
+    Entity*                             _console = nullptr;
+    std::shared_ptr<GameState>          _playState = nullptr;
     EntityManager*                      _playStateEntityManager = nullptr;
 
     Entity::sHandle                     _lastBuiltBaseTurretHandle = 0;
