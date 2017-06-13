@@ -90,7 +90,7 @@ bool    ConsoleState::update(float elapsedTime)
             EntityManager* playStateEntityManager = playState->getWorld().getEntityManager();
 
             EntityFactory::bindEntityManager(playStateEntityManager);
-            handleCheatCode(playState, cheatCodeScripts->getText().getContent());
+            handleCheatCode(static_cast<PlayState*>(playState.get()), cheatCodeScripts->getText().getContent());
             EntityFactory::bindEntityManager(_world.getEntityManager());
         }
 
@@ -100,7 +100,7 @@ bool    ConsoleState::update(float elapsedTime)
     return (success);
 }
 
-void    ConsoleState::handleCheatCodeKillAll(std::shared_ptr<GameState> playState)
+void    ConsoleState::handleCheatCodeKillAll(PlayState* playState)
 {
     EntityManager* playStateEntityManager = playState->getWorld().getEntityManager();
     const auto& enemies = playStateEntityManager->getEntitiesByTag("Enemy");
@@ -119,7 +119,7 @@ void    ConsoleState::handleCheatCodeKillAll(std::shared_ptr<GameState> playStat
     }
 }
 
-void    ConsoleState::handleCheatCodeGiveMeGold(std::shared_ptr<GameState> playState)
+void    ConsoleState::handleCheatCodeGiveMeGold(PlayState* playState)
 {
     EntityManager* playStateEntityManager = playState->getWorld().getEntityManager();
     Entity* gameManager = playStateEntityManager->getEntityByTag(GAME_MANAGER_TAG);
@@ -141,7 +141,7 @@ void    ConsoleState::handleCheatCodeGiveMeGold(std::shared_ptr<GameState> playS
     goldManager->addGolds(1000);
 }
 
-void    ConsoleState::handleCheatCodeBuildForMe(std::shared_ptr<GameState> playState)
+void    ConsoleState::handleCheatCodeBuildForMe(PlayState* playState)
 {
     EntityManager* playStateEntityManager = playState->getWorld().getEntityManager();
     NewBuild* newBuild = nullptr;
@@ -242,14 +242,19 @@ void    ConsoleState::handleCheatCodeBuildForMe(std::shared_ptr<GameState> playS
     }
 }
 
-void    ConsoleState::handleCheatCodeAegis(std::shared_ptr<GameState> playState)
+void    ConsoleState::handleCheatCodePlayForMe(PlayState* playState)
+{
+    playState->_autoPlay = true;
+}
+
+void    ConsoleState::handleCheatCodeAegis(PlayState* playState)
 {
     // time speed is a member of GameState class
     // It speeds up the delta time send to GameState::_systems update
     playState->setTimeSpeed(20.0f);
 }
 
-void    ConsoleState::handleCheatCode(std::shared_ptr<GameState> playState, const std::string& cheatCode)
+void    ConsoleState::handleCheatCode(PlayState* playState, const std::string& cheatCode)
 {
     if (cheatCode == "killall")
     {
@@ -262,6 +267,10 @@ void    ConsoleState::handleCheatCode(std::shared_ptr<GameState> playState, cons
     else if (cheatCode == "build for me")
     {
         handleCheatCodeBuildForMe(playState);
+    }
+    else if (cheatCode == "play for me")
+    {
+        handleCheatCodePlayForMe(playState);
     }
     else if (cheatCode == "aegis")
     {

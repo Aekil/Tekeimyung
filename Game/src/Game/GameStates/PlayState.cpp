@@ -21,6 +21,7 @@
 #include <Game/GameStates/PauseState.hpp>
 #include <Game/Manager/TutoManagerMessage.hpp>
 #include <Game/Manager/TutoManager.hpp>
+#include <Game/Manager/WaveManager.hpp>
 
 #include <Game/GameStates/PlayState.hpp>
 
@@ -62,6 +63,33 @@ bool    PlayState::init()
         em->destroyAllEntities();
         LevelLoader::getInstance()->load("Tutorial", em);
     }
+    // Get WaveManager
+    else
+    {
+        auto em = _world.getEntityManager();
+        Entity* gameManager = em->getEntityByTag("GameManager");
+        if (!gameManager)
+        {
+            LOG_WARN("Can't find entity with GameManager tag");
+            return (true);
+        }
+
+        auto scriptComponent = gameManager->getComponent<sScriptComponent>();
+
+        if (!scriptComponent)
+        {
+            LOG_WARN("Can't find scriptComponent on GameManager entity");
+            return (true);
+        }
+
+        _waveManager = scriptComponent->getScript<WaveManager>("WaveManager");
+        if (!_waveManager)
+        {
+            LOG_WARN("GameManager does not have WaveManager script");
+            return (true);
+        }
+    }
+
     return (true);
 }
 
@@ -117,6 +145,15 @@ bool    PlayState::update(float elapsedTime)
             SoundManager::getInstance()->playSound(_backgroundGameMusic->soundID);
         }
     #endif
+
+    if (_autoPlay)
+    {
+        ConsoleState::handleCheatCodeBuildForMe(this);
+        if (_waveManager && _waveManager->getManagerState() ==  WaveManager::eState::PENDING_WAVE)
+        {
+            _waveManager->handlePendingWave();
+        }
+    }
 
     return (GameState::update(elapsedTime));
 }

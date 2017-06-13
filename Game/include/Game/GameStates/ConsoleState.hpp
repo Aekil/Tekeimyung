@@ -12,6 +12,7 @@
 #include <Engine/Core/GameState.hpp>
 #include <Engine/Utils/EventSound.hpp>
 
+class PlayState;
 
 START_GAMESTATE(ConsoleState, "Console")
  public:
@@ -22,12 +23,12 @@ START_GAMESTATE(ConsoleState, "Console")
     bool                                init() override final;
     bool                                update(float elapsedTime) override final;
 
-private:
-    static void                         handleCheatCodeKillAll(std::shared_ptr<GameState> playState);
-    static void                         handleCheatCodeGiveMeGold(std::shared_ptr<GameState> playState);
-    static void                         handleCheatCodeBuildForMe(std::shared_ptr<GameState> playState);
-    static void                         handleCheatCodeAegis(std::shared_ptr<GameState> playState);
-    static void                         handleCheatCode(std::shared_ptr<GameState> playState, const std::string& cheatCode);
+    static void                         handleCheatCodeKillAll(PlayState* playState);
+    static void                         handleCheatCodeGiveMeGold(PlayState* playState);
+    static void                         handleCheatCodeBuildForMe(PlayState* playState);
+    static void                         handleCheatCodePlayForMe(PlayState* playState);
+    static void                         handleCheatCodeAegis(PlayState* playState);
+    static void                         handleCheatCode(PlayState* playState, const std::string& cheatCode);
 
  private:
     tEventSound*                        _backgroundGameMusic = nullptr;

@@ -41,6 +41,8 @@ public:
 
     void    setTutorialIsFinished(bool);
 
+    void    handlePendingWave();
+
     //  Json serialization & ImGui edition.
 public:
     bool        updateEditor() override final;

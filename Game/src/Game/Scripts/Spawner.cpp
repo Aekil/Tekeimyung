@@ -12,7 +12,6 @@
 #include <Game/Map/Map.hpp>
 #include <Game/Scripts/Path.hpp>
 #include <Game/Scripts/Spawner.hpp>
-#include <Game/Manager/WaveManager.hpp>
 
 void Spawner::start()
 {
