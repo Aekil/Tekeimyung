@@ -25,6 +25,8 @@ PauseState::~PauseState() {}
 
 void    PauseState::onEnter()
 {
+    OptionsMenuState::setFromHome(false);
+
     if (!SoundManager::getInstance()->getMuteState())
     {
         SoundManager::getInstance()->setVolumeAllChannels(0.25f);

@@ -15,6 +15,7 @@
 #include <Engine/Systems/UISystem.hpp>
 #include <Engine/Systems/MouseSystem.hpp>
 #include <Engine/Utils/LevelLoader.hpp>
+#include <Game/GameStates/OptionsMenuState.hpp>
 #include <Game/GameStates/HowToPlayState.hpp>
 #include <Game/GameStates/BuildingListState.hpp>
 #include <Game/GameStates/PauseState.hpp>

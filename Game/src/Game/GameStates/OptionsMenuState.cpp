@@ -11,14 +11,16 @@
 
 #include    <Game/GameStates/OptionsMenuState.hpp>
 
+bool OptionsMenuState::_fromHome;
+
 OptionsMenuState::~OptionsMenuState() {}
 
 void    OptionsMenuState::onEnter()
 {
-    /*if (!SoundManager::getInstance()->getMuteState())
+    if (!_fromHome && !SoundManager::getInstance()->getMuteState())
     {
         SoundManager::getInstance()->setVolumeAllChannels(0.25f);
-    }*/
+    }
 }
 
 void    OptionsMenuState::setupSystems()
@@ -134,11 +136,16 @@ bool                    OptionsMenuState::toggleVolume()
         (mouseClicked && buttonComponent->hovered))
     {
         bool muted = soundManager->getMuteState();
-        float volume = (muted == true ? DEFAULT_SOUND_VOL : 0.0f);
+        float volume = (muted == true ? (_fromHome == true ? DEFAULT_SOUND_VOL : 0.25f) : 0.0f);
         soundManager->setMuteState(!muted);
         soundManager->setVolumeAllChannels(volume);
         this->createOrGetButtons();
     }
 
     return (true);
+}
+
+void    OptionsMenuState::setFromHome(bool fromHome)
+{
+    _fromHome = fromHome;
 }
