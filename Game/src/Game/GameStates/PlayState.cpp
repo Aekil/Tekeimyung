@@ -97,14 +97,7 @@ bool    PlayState::update(float elapsedTime)
     {
         bool muted = soundManager->getMuteState();
         soundManager->setMuteState(!muted);
-        if (muted)
-        {
-            soundManager->setVolumeAllChannels(0);
-        }
-        else
-        {
-            soundManager->setVolumeAllChannels(DEFAULT_SOUND_VOL);
-        }
+        soundManager->setVolumeAllChannels((muted == false ? 0.0f : DEFAULT_SOUND_VOL));
     }
 
     // Play background game music
