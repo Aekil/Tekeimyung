@@ -6,29 +6,29 @@
          "remove_states" : 0
       },
       "sNameComponent" : {
-         "name" : "BUTTON_TOGGLE_VOLUME"
+         "name" : "BUTTON_SFX_DISABLED"
       },
       "sRenderComponent" : {
          "animated" : false,
          "animations" : [],
          "color" : {
             "a" : 1,
-            "b" : 1,
-            "g" : 1,
+            "b" : 0,
+            "g" : 0,
             "r" : 1
          },
          "display" : true,
          "dynamic" : false,
          "hide_dynamic" : false,
          "ignore_raycast" : false,
-         "materials" : [ "button_toggle_volume.mat" ],
+         "materials" : [ "button_sfx_disabled.mat" ],
          "model" : "resources/models/default.DAE",
          "type" : "PLANE"
       },
       "sTransformComponent" : {
          "pos" : {
             "x" : 960,
-            "y" : 549.17999267578125,
+            "y" : 467.82000732421875,
             "z" : 0
          },
          "rotation" : {
@@ -47,7 +47,7 @@
          "layer" : 0,
          "offset" : {
             "x" : 0,
-            "y" : 4
+            "y" : -4
          },
          "percentage_size" : true,
          "size" : {
@@ -57,6 +57,6 @@
          "vertical_alignment" : "MIDDLE"
       }
    },
-   "name" : "BUTTON_TOGGLE_VOLUME",
+   "name" : "BUTTON_SFX_DISABLED",
    "tag" : ""
 }
