@@ -69,6 +69,20 @@
             "name" : "hit_castle.wav",
             "path" : "resources/sounds/sfx/hit_castle.wav"
          }
+      },
+      {
+         "name" : "DEFEAT_SCREEN",
+         "sound" : {
+            "name" : "defeat.wav",
+            "path" : "resources/sounds/sfx/defeat.wav"
+         }
+      },
+      {
+         "name" : "VICTORY_SCREEN",
+         "sound" : {
+            "name" : "victory.wav",
+            "path" : "resources/sounds/sfx/victory.wav"
+         }
       }
    ]
 }

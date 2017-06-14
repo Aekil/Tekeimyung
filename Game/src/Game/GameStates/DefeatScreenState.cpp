@@ -17,6 +17,13 @@ void    DefeatScreenState::onEnter()
     sRenderComponent*   renderComponent = this->_buttonTryAgainRed->getComponent<sRenderComponent>();
 
     renderComponent->_animator.play("fading", true);
+
+#if (ENABLE_SOUND)
+    if (_defeatSound->soundID != -1)
+    {
+        SoundManager::getInstance()->playSound(_defeatSound->soundID);
+    }
+#endif
 }
 
 void    DefeatScreenState::setupSystems()
@@ -29,6 +36,9 @@ void    DefeatScreenState::setupSystems()
 
 bool    DefeatScreenState::init()
 {
+    _defeatSound = EventSound::getEventByEventType(eEventSound::DEFEAT_SCREEN);
+    SoundManager::getInstance()->setSoundVolume(_defeatSound->soundID, 0.9f);
+
     //  Retrieving the "How to Play" button in order to play its animation.
     this->_buttonTryAgainRed = EntityFactory::createOrGetEntity("BUTTON_TRY_AGAIN_RED");
     return (true);

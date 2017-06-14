@@ -17,6 +17,13 @@ void    VictoryScreenState::onEnter()
     sRenderComponent*   renderComponent = this->_buttonTryAgainGreen->getComponent<sRenderComponent>();
 
     renderComponent->_animator.play("fading", true);
+
+#if (ENABLE_SOUND)
+    if (_victorySound->soundID != -1)
+    {
+        SoundManager::getInstance()->playSound(_victorySound->soundID);
+    }
+#endif
 }
 
 void    VictoryScreenState::setupSystems()
@@ -29,6 +36,9 @@ void    VictoryScreenState::setupSystems()
 
 bool    VictoryScreenState::init()
 {
+    _victorySound = EventSound::getEventByEventType(eEventSound::VICTORY_SCREEN);
+    //SoundManager::getInstance()->setSoundVolume(_victorySound->soundID, 1.0f);
+
     //  Retrieving the "How to Play" button in order to play its animation.
     this->_buttonTryAgainGreen = EntityFactory::createOrGetEntity("BUTTON_TRY_AGAIN_GREEN");
     return (true);
