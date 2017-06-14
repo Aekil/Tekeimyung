@@ -15,6 +15,7 @@
 #include <Engine/Systems/UISystem.hpp>
 #include <Engine/Systems/MouseSystem.hpp>
 #include <Engine/Utils/LevelLoader.hpp>
+#include <Game/Building/Castle.hpp>
 #include <Game/GameStates/DefeatScreenState.hpp>
 #include <Game/GameStates/OptionsMenuState.hpp>
 #include <Game/GameStates/HowToPlayState.hpp>
@@ -160,7 +161,28 @@ bool    PlayState::update(float elapsedTime)
     }
     else if (_autoLose)
     {
-        _gameStateManager->addState<DefeatScreenState>();
+        //_gameStateManager->addState<DefeatScreenState>();
+        
+        EntityManager*  em = this->getWorld().getEntityManager();
+        Entity*         castle = em->getEntityByTag("Castle");
+
+        if (!castle)
+        {
+            LOG_ERROR("PlayState::update: Can't find entity with tag \"%s\"", "Castle");
+            return (false);
+        }
+
+        Castle*     castleScript = BaseScript::getEntityScript<Castle>(castle, "Castle");
+
+        if (!castleScript)
+        {
+            LOG_ERROR("PlayState::update: Can't find script \"%s\" on Castle", "Castle");
+            return (false);
+        }
+
+        ConsoleState::handleCheatCodeKillAll(this);
+        castleScript->death();
+        _autoLose = false;
     }
 
     return (GameState::update(elapsedTime));

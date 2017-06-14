@@ -138,7 +138,7 @@ void    ConsoleState::handleCheatCodeGiveMeGold(PlayState* playState)
         return;
     }
 
-    goldManager->addGolds(1000);
+    goldManager->addGolds(777);
 }
 
 void    ConsoleState::handleCheatCodeBuildForMe(PlayState* playState)
@@ -293,11 +293,11 @@ void    ConsoleState::handleCheatCode(PlayState* playState, const std::string& c
     {
         handleCheatCodeAegis(playState);
     }
-    else if (cheatCode == "win")
+    else if (cheatCode == "victory")
     {
         handleCheatCodeWin(playState);
     }
-    else if (cheatCode == "lose")
+    else if (cheatCode == "defeat")
     {
         handleCheatCodeLose(playState);
     }

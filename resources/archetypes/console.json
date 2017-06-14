@@ -35,12 +35,12 @@
             "r" : 1
          },
          "content" : "",
-         "font_name" : "arial.ttf",
-         "font_size" : 50,
-         "horizontal_alignment" : "LEFT",
+         "font_name" : "moonhouse.ttf",
+         "font_size" : 35,
+         "horizontal_alignment" : "MIDDLE",
          "offset" : {
-            "x" : 35,
-            "y" : 0
+            "x" : 0,
+            "y" : 8
          },
          "vertical_alignment" : "MIDDLE"
       },
@@ -56,8 +56,8 @@
             "z" : 0
          },
          "scale" : {
-            "x" : 57.599998474121094,
-            "y" : 10.170000076293945,
+            "x" : 60,
+            "y" : 6.7799324989318848,
             "z" : 1
          }
       },
@@ -70,8 +70,8 @@
          },
          "percentage_size" : true,
          "size" : {
-            "x" : 0.30000001192092896,
-            "y" : 0.10000000149011612
+            "x" : 0.3125,
+            "y" : 0.066665999591350555
          },
          "vertical_alignment" : "MIDDLE"
       }
