@@ -29,6 +29,8 @@ PlayState::~PlayState() {}
 
 void    PlayState::onEnter()
 {
+    SoundManager::getInstance()->setMuteSfx(true);
+
     if (!SoundManager::getInstance()->getMuteState())
     {
         SoundManager::getInstance()->setVolumeAllChannels(DEFAULT_SOUND_VOL);

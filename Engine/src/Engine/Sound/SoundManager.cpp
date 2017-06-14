@@ -356,7 +356,7 @@ void    SoundManager::setVolumeAllChannels(float volume)
     errorCheck();
 }
 
-void    SoundManager::setVolumeAllSfxChannels(float volume)
+/*void    SoundManager::setVolumeAllSfxChannels(float volume)
 {
     for (int i = 0; i < NB_MAX_SOUNDS; ++i)
     {
@@ -365,7 +365,7 @@ void    SoundManager::setVolumeAllSfxChannels(float volume)
             _sounds[i].channel->setVolume(volume);
         }
     }
-}
+}*/
 
 // Differentiate (general) volume from all channels to personalized volume for one channel
 void    SoundManager::setSoundVolume(int id, float volume)
@@ -408,6 +408,29 @@ void    SoundManager::setMuteState(bool muted)
 bool    SoundManager::getMuteState() const
 {
     return (_muted);
+}
+
+void    SoundManager::setMuteBckgd(bool toMute)
+{
+    for (int i = 0; i < NB_MAX_SOUNDS; ++i)
+    {
+        if (!_sounds[i].free && _sounds[i].type == eSoundType::BACKGROUND_SOUND)
+        {
+            _sounds[i].channel->setVolume((toMute == true) ? 0 : _sounds[i].volume);
+            //_sounds[i].channel->stop();
+        }
+    }
+}
+
+void    SoundManager::setMuteSfx(bool toMute)
+{
+    for (int i = 0; i < NB_MAX_SOUNDS; ++i)
+    {
+        if (!_sounds[i].free && _sounds[i].type == eSoundType::DEFAULT_SOUND)
+        {
+            _sounds[i].channel->setVolume((toMute == true) ? 0 : _sounds[i].volume);
+        }
+    }
 }
 
 /*void    SoundManager::addChannel(FMOD::Channel* channel)

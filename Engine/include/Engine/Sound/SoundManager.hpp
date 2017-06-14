@@ -89,7 +89,7 @@ public:
     void                                    pauseAllChannels();
     void                                    resumeAllChannels();
     void                                    setVolumeAllChannels(float volume);
-    void                                    setVolumeAllSfxChannels(float volume);
+    //void                                    setVolumeAllSfxChannels(float volume); // ! Danger ! : don't use this one 
 
     void                                    setSoundVolume(int id, float volume);
 
@@ -101,6 +101,8 @@ public:
     void                                    setMuteState(bool muted);
     bool                                    getMuteState() const;
 
+    void                                    setMuteBckgd(bool toMute);
+    void                                    setMuteSfx(bool toMute);
 
 private:
     /*void                                    addChannel(FMOD::Channel* channel);
