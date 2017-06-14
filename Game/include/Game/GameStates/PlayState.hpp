@@ -30,6 +30,8 @@ START_GAMESTATE(PlayState, "Game")
 
 public:
     bool                                _autoPlay = false;
+    bool                                _autoWin = false;
+    bool                                _autoLose = false;
 
 private:
     std::pair <Keyboard::eKey, IInputEvent *>    _pair;

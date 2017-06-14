@@ -28,6 +28,8 @@ START_GAMESTATE(ConsoleState, "Console")
     static void                         handleCheatCodeBuildForMe(PlayState* playState);
     static void                         handleCheatCodePlayForMe(PlayState* playState);
     static void                         handleCheatCodeAegis(PlayState* playState);
+    static void                         handleCheatCodeWin(PlayState* playState);
+    static void                         handleCheatCodeLose(PlayState* playState);
     static void                         handleCheatCode(PlayState* playState, const std::string& cheatCode);
 
  private:

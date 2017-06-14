@@ -261,6 +261,16 @@ void    ConsoleState::handleCheatCodeAegis(PlayState* playState)
     }
 }
 
+void    ConsoleState::handleCheatCodeWin(PlayState* playState)
+{
+    playState->_autoWin = true;
+}
+
+void    ConsoleState::handleCheatCodeLose(PlayState* playState)
+{
+    playState->_autoLose = true;
+}
+
 void    ConsoleState::handleCheatCode(PlayState* playState, const std::string& cheatCode)
 {
     if (cheatCode == "killall")
@@ -282,5 +292,13 @@ void    ConsoleState::handleCheatCode(PlayState* playState, const std::string& c
     else if (cheatCode == "aegis")
     {
         handleCheatCodeAegis(playState);
+    }
+    else if (cheatCode == "win")
+    {
+        handleCheatCodeWin(playState);
+    }
+    else if (cheatCode == "lose")
+    {
+        handleCheatCodeLose(playState);
     }
 }

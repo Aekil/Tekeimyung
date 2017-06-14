@@ -15,11 +15,13 @@
 #include <Engine/Systems/UISystem.hpp>
 #include <Engine/Systems/MouseSystem.hpp>
 #include <Engine/Utils/LevelLoader.hpp>
+#include <Game/GameStates/DefeatScreenState.hpp>
 #include <Game/GameStates/OptionsMenuState.hpp>
 #include <Game/GameStates/HowToPlayState.hpp>
 #include <Game/GameStates/BuildingListState.hpp>
 #include <Game/GameStates/ConsoleState.hpp>
 #include <Game/GameStates/PauseState.hpp>
+#include <Game/GameStates/VictoryScreenState.hpp>
 #include <Game/Manager/TutoManagerMessage.hpp>
 #include <Game/Manager/TutoManager.hpp>
 #include <Game/Manager/WaveManager.hpp>
@@ -151,6 +153,14 @@ bool    PlayState::update(float elapsedTime)
         {
             _waveManager->handlePendingWave();
         }
+    }
+    else if (_autoWin)
+    {
+        _gameStateManager->addState<VictoryScreenState>();
+    }
+    else if (_autoLose)
+    {
+        _gameStateManager->addState<DefeatScreenState>();
     }
 
     return (GameState::update(elapsedTime));
