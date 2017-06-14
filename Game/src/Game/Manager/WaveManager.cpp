@@ -30,6 +30,13 @@ void        WaveManager::start()
 
 void        WaveManager::update(float dt)
 {
+    if (this->isGameOver() == true)
+    {
+        this->_boardState = eBoardState::DEFEAT;
+        end();
+        return;
+    }
+
     switch (this->_state)
     {
     case eState::STARTING:
@@ -41,14 +48,6 @@ void        WaveManager::update(float dt)
         }
         break;
     case eState::PENDING_WAVE:
-        //this->updateProgressBar(dt);
-        //if (this->_progressBar.currentProgress <= 0.0f)
-        //{
-        //    this->_progressBar.display(false);
-        //    this->startWave(this->_currentWave + 1);
-        //    this->_state = eState::ONGOING_WAVE;
-        //    LOG_DEBUG("WaveManager's state: %s", "ONGOING_WAVE");
-        //}
         if (this->keyboard.getStateMap()[Keyboard::eKey::SPACE] == Keyboard::eKeyState::KEY_RELEASED)
         {
             handlePendingWave();
