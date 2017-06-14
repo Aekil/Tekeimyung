@@ -4,6 +4,8 @@
 
 #include    <Engine/Core/GameState.hpp>
 
+#include <Engine/Utils/EventSound.hpp>
+
 START_GAMESTATE(DefeatScreenState, "DefeatScreen")
  public:
      ~DefeatScreenState();
@@ -14,5 +16,7 @@ START_GAMESTATE(DefeatScreenState, "DefeatScreen")
 
 private:
     Entity*         _buttonTryAgainRed = nullptr;
+
+    tEventSound*    _defeatSound = nullptr;
 
     END_GAMESTATE(DefeatScreenState)

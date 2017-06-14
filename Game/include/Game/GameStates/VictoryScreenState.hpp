@@ -4,6 +4,8 @@
 
 #include    <Engine/Core/GameState.hpp>
 
+#include <Engine/Utils/EventSound.hpp>
+
 START_GAMESTATE(VictoryScreenState, "VictoryScreen")
  public:
      ~VictoryScreenState();
@@ -14,5 +16,7 @@ START_GAMESTATE(VictoryScreenState, "VictoryScreen")
 
 private:
     Entity*         _buttonTryAgainGreen = nullptr;
+
+    tEventSound*    _victorySound = nullptr;
 
     END_GAMESTATE(VictoryScreenState)
