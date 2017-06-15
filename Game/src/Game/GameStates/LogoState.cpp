@@ -62,5 +62,5 @@ bool    LogoState::update(float elapsedTime)
         this->_gameStateManager->addState<HomeScreenState>();
     }
 
-    return (true);
+    return (GameState::update(elapsedTime));
 }
