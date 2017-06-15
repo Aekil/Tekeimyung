@@ -1,0 +1,99 @@
+{
+   "components" : {
+      "sNameComponent" : {
+         "name" : "DIGIPEN_LOGO"
+      },
+      "sRenderComponent" : {
+         "animated" : false,
+         "animations" : [
+            {
+               "layer" : "DEFAULT",
+               "name" : "fading_logo",
+               "params" : [
+                  {
+                     "frames" : [
+                        {
+                           "easing" : "NONE",
+                           "time" : 0,
+                           "value" : {
+                              "w" : 0,
+                              "x" : 1,
+                              "y" : 1,
+                              "z" : 1
+                           }
+                        },
+                        {
+                           "easing" : "NONE",
+                           "time" : 2,
+                           "value" : {
+                              "w" : 1,
+                              "x" : 1,
+                              "y" : 1,
+                              "z" : 1
+                           }
+                        },
+                        {
+                           "easing" : "NONE",
+                           "time" : 4,
+                           "value" : {
+                              "w" : 0,
+                              "x" : 1,
+                              "y" : 1,
+                              "z" : 1
+                           }
+                        }
+                     ],
+                     "name" : "color"
+                  }
+               ]
+            }
+         ],
+         "color" : {
+            "a" : 0,
+            "b" : 1,
+            "g" : 1,
+            "r" : 1
+         },
+         "display" : true,
+         "dynamic" : false,
+         "hide_dynamic" : false,
+         "ignore_raycast" : false,
+         "materials" : [ "digipen_logo.mat" ],
+         "model" : "resources/models/default.DAE",
+         "type" : "PLANE"
+      },
+      "sTransformComponent" : {
+         "pos" : {
+            "x" : 960,
+            "y" : 513.5,
+            "z" : 0
+         },
+         "rotation" : {
+            "x" : 0,
+            "y" : 0,
+            "z" : 0
+         },
+         "scale" : {
+            "x" : 86.400001525878906,
+            "y" : 25.674993515014648,
+            "z" : 1
+         }
+      },
+      "sUiComponent" : {
+         "horizontal_alignment" : "MIDDLE",
+         "layer" : 0,
+         "offset" : {
+            "x" : 0,
+            "y" : 0
+         },
+         "percentage_size" : true,
+         "size" : {
+            "x" : 0.44999998807907104,
+            "y" : 0.24999995529651642
+         },
+         "vertical_alignment" : "MIDDLE"
+      }
+   },
+   "name" : "DIGIPEN_LOGO",
+   "tag" : ""
+}

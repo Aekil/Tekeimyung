@@ -26,6 +26,7 @@
 #include <Game/GameStates/HomeScreenState.hpp>
 #include <Game/GameStates/VictoryScreenState.hpp>
 #include <Game/GameStates/DefeatScreenState.hpp>
+#include <Game/GameStates/LogoState.hpp>
 
 void    windowCloseHandler(void* data)
 {
@@ -70,6 +71,7 @@ int     main(int ac, char** av)
         REGISTER_GAMESTATE(HomeScreenState);
         REGISTER_GAMESTATE(VictoryScreenState);
         REGISTER_GAMESTATE(DefeatScreenState);
+        REGISTER_GAMESTATE(LogoState);
 
         EventSound::loadEvents();
         GameWindow::getInstance()->registerCloseHandler(windowCloseHandler, &engine);
@@ -80,9 +82,9 @@ int     main(int ac, char** av)
         //  if (!engine.run(ac, av, playState))
         //      return (1);
 
-        std::shared_ptr<HomeScreenState>    homeScreenState = std::make_shared<HomeScreenState>(&gameStateManager);
+        std::shared_ptr<LogoState>    digipenLogoState = std::make_shared<LogoState>(&gameStateManager);
 
-        if (!engine.run(ac, av, homeScreenState))
+        if (!engine.run(ac, av, digipenLogoState))
             return (1);
     }
     catch (const std::exception& e)

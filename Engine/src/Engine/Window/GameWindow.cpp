@@ -17,7 +17,7 @@
 std::shared_ptr<GameWindow> GameWindow::_instance;
 
 GameWindow::GameWindow(GameStateManager* gameStateManager, const char *title) :
-    _bufferWidth(0), _bufferHeight(0), _fullscreen(true),
+    _bufferWidth(0), _bufferHeight(0), _fullscreen(false),
     _title(title), _monitor(nullptr), _window(nullptr), _running(false), _gameStateManager(gameStateManager),
     _lostFocus(false), _closeHandler(nullptr) {}
 
