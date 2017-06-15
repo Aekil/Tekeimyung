@@ -155,14 +155,14 @@ bool    PlayState::update(float elapsedTime)
             _waveManager->handlePendingWave();
         }
     }
-    else if (_autoWin)
+    else if (_waveManager && _autoWin)
     {
-        _gameStateManager->addState<VictoryScreenState>();
+        ConsoleState::handleCheatCodeKillAll(this);
+        _waveManager->victory();
+        _autoWin = false;
     }
     else if (_autoLose)
     {
-        //_gameStateManager->addState<DefeatScreenState>();
-        
         EntityManager*  em = this->getWorld().getEntityManager();
         Entity*         castle = em->getEntityByTag("Castle");
 

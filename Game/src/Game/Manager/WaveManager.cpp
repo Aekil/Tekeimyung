@@ -6,6 +6,7 @@
 
 #include <Engine/EntityFactory.hpp>
 #include <Engine/Utils/LevelLoader.hpp>
+#include <Engine/Utils/ResourceManager.hpp>
 
 #include <Game/GameStates/VictoryScreenState.hpp>
 #include <Game/GameStates/DefeatScreenState.hpp>
@@ -33,7 +34,12 @@ void        WaveManager::update(float dt)
     if (this->isGameOver() == true)
     {
         this->_boardState = eBoardState::DEFEAT;
-        end();
+        end(dt);
+        return;
+    }
+    else if (this->_boardState == eBoardState::VICTORY)
+    {
+        handleVictory(dt);
         return;
     }
 
@@ -70,7 +76,7 @@ void        WaveManager::update(float dt)
     case eState::ENDING:
         LOG_DEBUG("WaveManager's state: %s", "ENDING");
         this->_state = eState::ENDED;
-        this->end();
+        this->end(dt);
         break;
     case eState::ENDED:
         LOG_DEBUG("WaveManager's state: %s", "ENDED");
@@ -211,7 +217,7 @@ bool            WaveManager::checkEndWave()
     }
 
     if (this->_currentWave == this->_waves)
-        this->_boardState = eBoardState::VICTORY;
+        victory();
 
     return (true);
 }
@@ -224,16 +230,13 @@ bool        WaveManager::isGameOver()
         em->getEntityByTag("CastleExplosion") == nullptr);
 }
 
-void        WaveManager::end()
+void        WaveManager::end(float deltaTime)
 {
     auto    gameStateManager = GameWindow::getInstance()->getGameStateManager();
 
     switch (this->_boardState)
     {
     case eBoardState::IDLE:
-    case eBoardState::VICTORY:
-        gameStateManager->addState<VictoryScreenState>();
-        break;
     case eBoardState::DEFEAT:
         this->handleGameOver();
         gameStateManager->addState<DefeatScreenState>();
@@ -278,6 +281,17 @@ void        WaveManager::handleGameOver()
         }
 
         enemyScript->death();
+    }
+}
+
+void    WaveManager::handleVictory(float deltaTime)
+{
+    _victoryElapsedTime += deltaTime;
+
+    if (_victoryElapsedTime >= 3.0f)
+    {
+        auto gameStateManager = GameWindow::getInstance()->getGameStateManager();
+        gameStateManager->addState<VictoryScreenState>();
     }
 }
 
@@ -363,6 +377,40 @@ void    WaveManager::updateProgressBar(float deltaTime)
 void    WaveManager::setTutorialIsFinished(bool tutorialIsFinished)
 {
     this->_tutorialIsFinished = tutorialIsFinished;
+}
+
+void    WaveManager::victory()
+{
+    if (this->_boardState == eBoardState::VICTORY)
+    {
+        return;
+    }
+
+    this->_boardState = eBoardState::VICTORY;
+
+    auto em = EntityFactory::getBindedEntityManager();
+    auto& spawners = em->getEntitiesByTag("Spawner");
+
+    for (Entity* spawner: spawners)
+    {
+        sRenderComponent* spawnerRender = spawner->getComponent<sRenderComponent>();
+        // Spawn firework on spawner
+        {
+            Entity* firework = Instantiate("FIREWORK");
+            sTransformComponent* fireworkTransform = firework->getComponent<sTransformComponent>();
+            sTransformComponent* spawnerTransform = spawner->getComponent<sTransformComponent>();
+
+            glm::vec3 pos = spawnerTransform->getPos();
+            pos.y += spawnerRender->getModel()->getMax().y;
+            fireworkTransform->setPos(pos);
+        }
+
+        // Change spawner material
+        {
+            Material* bloomMaterial = ResourceManager::getInstance()->getResource<Material>("bloom_green.mat");
+            spawnerRender->getModelInstance()->setMaterial(bloomMaterial);
+        }
+    }
 }
 
 void    WaveManager::handlePendingWave()

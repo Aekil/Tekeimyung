@@ -41,6 +41,8 @@ public:
 
     void    setTutorialIsFinished(bool);
 
+    void    victory();
+
     void    handlePendingWave();
 
     //  Json serialization & ImGui edition.
@@ -60,10 +62,11 @@ private:
     void    startWave(uint32_t wave);
     bool    checkEndWave();
     bool    isGameOver();
-    void    end();
+    void    end(float deltaTime);
 
     void    handleEndWave();
     void    handleGameOver();
+    void    handleVictory(float deltaTime);
 
     bool    checkBoardState(float deltaTime);
     void    spawnMapPart();
@@ -82,6 +85,8 @@ private:
 
     GoldManager*        _goldManager = nullptr;
     bool                _tutorialIsFinished = false;
+
+    float               _victoryElapsedTime = 0.0f;
 };
 
 REGISTER_SCRIPT(WaveManager);
