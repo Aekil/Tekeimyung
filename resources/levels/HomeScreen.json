@@ -30,7 +30,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 960,
-                  "y" : 712.79998779296875,
+                  "y" : 671.219970703125,
                   "z" : 0
                },
                "rotation" : {
@@ -40,7 +40,7 @@
                },
                "scale" : {
                   "x" : 30,
-                  "y" : 7.645967960357666,
+                  "y" : 7.1999526023864746,
                   "z" : 1.0000195503234863
                }
             },
@@ -124,7 +124,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 960,
-                  "y" : 626.4000244140625,
+                  "y" : 589.8599853515625,
                   "z" : 0
                },
                "rotation" : {
@@ -134,7 +134,7 @@
                },
                "scale" : {
                   "x" : 30,
-                  "y" : 7.645967960357666,
+                  "y" : 7.1999526023864746,
                   "z" : 6
                }
             },
@@ -186,7 +186,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 960,
-                  "y" : 540,
+                  "y" : 508.5,
                   "z" : 0
                },
                "rotation" : {
@@ -196,7 +196,7 @@
                },
                "scale" : {
                   "x" : 30,
-                  "y" : 7.645967960357666,
+                  "y" : 7.1999526023864746,
                   "z" : 6
                }
             },
@@ -216,68 +216,6 @@
             }
          },
          "name" : "BUTTON_OPTIONS",
-         "tag" : ""
-      },
-      {
-         "components" : {
-            "sButtonComponent" : {
-               "action" : "ADD_LEVEL",
-               "action_level" : "ConfirmExit",
-               "remove_states" : 0
-            },
-            "sNameComponent" : {
-               "name" : "BUTTON_QUIT"
-            },
-            "sRenderComponent" : {
-               "animated" : false,
-               "animations" : [],
-               "color" : {
-                  "a" : 1,
-                  "b" : 1,
-                  "g" : 1,
-                  "r" : 1
-               },
-               "display" : true,
-               "dynamic" : false,
-               "hide_dynamic" : false,
-               "ignore_raycast" : false,
-               "materials" : [ "button_quit.mat" ],
-               "model" : "resources/models/default.DAE",
-               "type" : "PLANE"
-            },
-            "sTransformComponent" : {
-               "pos" : {
-                  "x" : 960,
-                  "y" : 367.20001220703125,
-                  "z" : 0
-               },
-               "rotation" : {
-                  "x" : 0,
-                  "y" : 0,
-                  "z" : 0
-               },
-               "scale" : {
-                  "x" : 30,
-                  "y" : 7.645967960357666,
-                  "z" : 6
-               }
-            },
-            "sUiComponent" : {
-               "horizontal_alignment" : "MIDDLE",
-               "layer" : 0,
-               "offset" : {
-                  "x" : 0,
-                  "y" : -16
-               },
-               "percentage_size" : true,
-               "size" : {
-                  "x" : 0.15625,
-                  "y" : 0.070795997977256775
-               },
-               "vertical_alignment" : "MIDDLE"
-            }
-         },
-         "name" : "BUTTON_QUIT",
          "tag" : ""
       },
       {
@@ -310,7 +248,7 @@
             "sTransformComponent" : {
                "pos" : {
                   "x" : 960,
-                  "y" : 453.60000610351563,
+                  "y" : 427.1400146484375,
                   "z" : 0
                },
                "rotation" : {
@@ -320,7 +258,7 @@
                },
                "scale" : {
                   "x" : 30,
-                  "y" : 7.645967960357666,
+                  "y" : 7.1999526023864746,
                   "z" : 1
                }
             },
@@ -340,6 +278,68 @@
             }
          },
          "name" : "BUTTON_CREDITS",
+         "tag" : ""
+      },
+      {
+         "components" : {
+            "sButtonComponent" : {
+               "action" : "ADD_LEVEL",
+               "action_level" : "ConfirmExit",
+               "remove_states" : 0
+            },
+            "sNameComponent" : {
+               "name" : "BUTTON_QUIT"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 1,
+                  "b" : 1,
+                  "g" : 1,
+                  "r" : 1
+               },
+               "display" : true,
+               "dynamic" : false,
+               "hide_dynamic" : false,
+               "ignore_raycast" : false,
+               "materials" : [ "button_quit.mat" ],
+               "model" : "resources/models/default.DAE",
+               "type" : "PLANE"
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 960,
+                  "y" : 345.77999877929688,
+                  "z" : 0
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 30,
+                  "y" : 7.1999526023864746,
+                  "z" : 6
+               }
+            },
+            "sUiComponent" : {
+               "horizontal_alignment" : "MIDDLE",
+               "layer" : 0,
+               "offset" : {
+                  "x" : 0,
+                  "y" : -16
+               },
+               "percentage_size" : true,
+               "size" : {
+                  "x" : 0.15625,
+                  "y" : 0.070795997977256775
+               },
+               "vertical_alignment" : "MIDDLE"
+            }
+         },
+         "name" : "BUTTON_QUIT",
          "tag" : ""
       }
    ],
