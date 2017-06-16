@@ -3,6 +3,63 @@
       {
          "components" : {
             "sNameComponent" : {
+               "name" : "BACKGROUND"
+            },
+            "sRenderComponent" : {
+               "animated" : false,
+               "animations" : [],
+               "color" : {
+                  "a" : 1,
+                  "b" : 0.019607843831181526,
+                  "g" : 0.019607843831181526,
+                  "r" : 0.019607843831181526
+               },
+               "display" : true,
+               "dynamic" : false,
+               "hide_dynamic" : false,
+               "ignore_raycast" : true,
+               "materials" : [ "geometry_default.mat" ],
+               "model" : "resources/models/default.DAE",
+               "type" : "PLANE"
+            },
+            "sTransformComponent" : {
+               "pos" : {
+                  "x" : 960,
+                  "y" : 513.5,
+                  "z" : 0
+               },
+               "rotation" : {
+                  "x" : 0,
+                  "y" : 0,
+                  "z" : 0
+               },
+               "scale" : {
+                  "x" : 192,
+                  "y" : 102.69999694824219,
+                  "z" : 1
+               }
+            },
+            "sUiComponent" : {
+               "horizontal_alignment" : "MIDDLE",
+               "layer" : 1,
+               "offset" : {
+                  "x" : 0,
+                  "y" : 0
+               },
+               "percentage_size" : true,
+               "size" : {
+                  "x" : 1,
+                  "y" : 1
+               },
+               "vertical_alignment" : "MIDDLE"
+            }
+         },
+         "name" : "BACKGROUND",
+         "tag" : ""
+      },
+      {
+         "components" : {
+            "sNameComponent" : {
                "name" : "DIGIPEN_LOGO"
             },
             "sRenderComponent" : {
@@ -97,63 +154,6 @@
             }
          },
          "name" : "DIGIPEN_LOGO",
-         "tag" : ""
-      },
-      {
-         "components" : {
-            "sNameComponent" : {
-               "name" : "BACKGROUND"
-            },
-            "sRenderComponent" : {
-               "animated" : false,
-               "animations" : [],
-               "color" : {
-                  "a" : 1,
-                  "b" : 0.019607843831181526,
-                  "g" : 0.019607843831181526,
-                  "r" : 0.019607843831181526
-               },
-               "display" : true,
-               "dynamic" : false,
-               "hide_dynamic" : false,
-               "ignore_raycast" : true,
-               "materials" : [ "geometry_default.mat" ],
-               "model" : "resources/models/default.DAE",
-               "type" : "PLANE"
-            },
-            "sTransformComponent" : {
-               "pos" : {
-                  "x" : 960,
-                  "y" : 513.5,
-                  "z" : 0
-               },
-               "rotation" : {
-                  "x" : 0,
-                  "y" : 0,
-                  "z" : 0
-               },
-               "scale" : {
-                  "x" : 192,
-                  "y" : 102.69999694824219,
-                  "z" : 1
-               }
-            },
-            "sUiComponent" : {
-               "horizontal_alignment" : "MIDDLE",
-               "layer" : 1,
-               "offset" : {
-                  "x" : 0,
-                  "y" : 0
-               },
-               "percentage_size" : true,
-               "size" : {
-                  "x" : 1,
-                  "y" : 1
-               },
-               "vertical_alignment" : "MIDDLE"
-            }
-         },
-         "name" : "BACKGROUND",
          "tag" : ""
       }
    ],

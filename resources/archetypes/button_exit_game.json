@@ -28,7 +28,7 @@
       "sTransformComponent" : {
          "pos" : {
             "x" : 960,
-            "y" : 305.10000610351563,
+            "y" : 223.739990234375,
             "z" : 0
          },
          "rotation" : {
@@ -47,7 +47,7 @@
          "layer" : 0,
          "offset" : {
             "x" : 0,
-            "y" : -20
+            "y" : -28
          },
          "percentage_size" : true,
          "size" : {

@@ -1,8 +1,8 @@
 {
    "components" : {
       "sButtonComponent" : {
-         "action" : "REPLACE_CURRENT_LEVEL",
-         "action_level" : "HomeScreen",
+         "action" : "ADD_LEVEL",
+         "action_level" : "ConfirmBackToMenu",
          "remove_states" : 0
       },
       "sNameComponent" : {
@@ -10,7 +10,39 @@
       },
       "sRenderComponent" : {
          "animated" : false,
-         "animations" : [],
+         "animations" : [
+            {
+               "layer" : "DEFAULT",
+               "name" : "fading",
+               "params" : [
+                  {
+                     "frames" : [
+                        {
+                           "easing" : "NONE",
+                           "time" : 1,
+                           "value" : {
+                              "w" : 0.35294118523597717,
+                              "x" : 1,
+                              "y" : 1,
+                              "z" : 1
+                           }
+                        },
+                        {
+                           "easing" : "NONE",
+                           "time" : 2,
+                           "value" : {
+                              "w" : 1,
+                              "x" : 1,
+                              "y" : 1,
+                              "z" : 1
+                           }
+                        }
+                     ],
+                     "name" : "color"
+                  }
+               ]
+            }
+         ],
          "color" : {
             "a" : 1,
             "b" : 1,
@@ -28,7 +60,7 @@
       "sTransformComponent" : {
          "pos" : {
             "x" : 960,
-            "y" : 264.41998291015625,
+            "y" : 305.10000610351563,
             "z" : 0
          },
          "rotation" : {
@@ -47,7 +79,7 @@
          "layer" : 0,
          "offset" : {
             "x" : 0,
-            "y" : -24
+            "y" : -20
          },
          "percentage_size" : true,
          "size" : {
