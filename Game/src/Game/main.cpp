@@ -27,6 +27,7 @@
 #include <Game/GameStates/VictoryScreenState.hpp>
 #include <Game/GameStates/DefeatScreenState.hpp>
 #include <Game/GameStates/LogoState.hpp>
+#include <Game/GameStates/CreditsState.hpp>
 
 void    windowCloseHandler(void* data)
 {
@@ -72,6 +73,7 @@ int     main(int ac, char** av)
         REGISTER_GAMESTATE(VictoryScreenState);
         REGISTER_GAMESTATE(DefeatScreenState);
         REGISTER_GAMESTATE(LogoState);
+        REGISTER_GAMESTATE(CreditsState);
 
         EventSound::loadEvents();
         GameWindow::getInstance()->registerCloseHandler(windowCloseHandler, &engine);
