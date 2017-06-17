@@ -79,3 +79,9 @@ const Font::sChar*   Font::getChar(char c) const
         return (nullptr);
     return (&_chars[c]);
 }
+
+uint32_t     Font::getLetterSpacing() const
+{
+    // TODO: Store in Font
+    return (50);
+}

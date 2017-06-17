@@ -771,6 +771,10 @@ void    Renderer::renderTexts(std::vector<sRenderableText>& texts,
                 pos.y -= text.getFontSize();
                 continue;
             }
+            else if (c == ' ')
+            {
+                pos.x += fontScale * font->getLetterSpacing();
+            }
 
             auto char_ = font->getChar(c);
             if (!char_)
