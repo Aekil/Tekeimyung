@@ -16,6 +16,8 @@
 #include <Game/Manager/WaveManager.hpp>
 #include <Game/Character/Enemy.hpp>
 
+REGISTER_SCRIPT(WaveManager);
+
 void        WaveManager::start()
 {
     auto    em = EntityFactory::getBindedEntityManager();

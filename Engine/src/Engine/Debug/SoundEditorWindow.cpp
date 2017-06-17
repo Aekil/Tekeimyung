@@ -17,7 +17,7 @@ std::string SoundEditorWindow::_selectedSoundEventName;
 SoundEditorWindow::SoundEditorWindow() :
     DebugWindow(SOUNDEDITOR_WINDOW_TITLE) {}
 
-SoundEditorWindow::SoundEditorWindow(const ImVec2& pos, const ImVec2& size) :
+SoundEditorWindow::SoundEditorWindow(const glm::vec2& pos, const glm::vec2& size) :
     DebugWindow(SOUNDEDITOR_WINDOW_TITLE, pos, size)
 {
 }

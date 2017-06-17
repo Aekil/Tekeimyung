@@ -33,5 +33,3 @@ private:
 
     glm::vec3               _startPosition;
 };
-
-REGISTER_SCRIPT(TeslaOrb);

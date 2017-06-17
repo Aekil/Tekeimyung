@@ -7,7 +7,6 @@
 #include <memory>
 #include <vector>
 #include <map>
-#include <imgui.h>
 
 #include <Engine/Debug/Debug.hpp>
 #include <Engine/Utils/Helper.hpp>
@@ -34,7 +33,7 @@ class MonitoringDebugWindow : public DebugWindow
 {
 public:
     MonitoringDebugWindow();
-    MonitoringDebugWindow(const ImVec2& pos, const ImVec2& size);
+    MonitoringDebugWindow(const glm::vec2& pos, const glm::vec2& size);
     virtual ~MonitoringDebugWindow();
 
     static std::shared_ptr<MonitoringDebugWindow>   getInstance();

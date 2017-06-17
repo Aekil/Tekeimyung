@@ -12,7 +12,7 @@ class           EntitiesTemplateDebugWindow: public DebugWindow
 {
 public:
     EntitiesTemplateDebugWindow();
-    EntitiesTemplateDebugWindow(const ImVec2& pos, const ImVec2& size);
+    EntitiesTemplateDebugWindow(const glm::vec2& pos, const glm::vec2& size);
     virtual ~EntitiesTemplateDebugWindow();
 
     void        build(std::shared_ptr<GameState> gameState, float elapsedTime) override final;

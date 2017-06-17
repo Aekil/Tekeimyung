@@ -8,6 +8,8 @@
 
 #include <Engine/Core/Components/ParticleEmitterComponentFactory.hpp>
 
+constexpr unsigned int sParticleEmitterComponent::identifier;
+
 sComponent* ComponentFactory<sParticleEmitterComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
 {
     sParticleEmitterComponent* component = new sParticleEmitterComponent();

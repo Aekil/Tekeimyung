@@ -5,6 +5,8 @@
 #include <Game/Map/MapLoader.hpp>
 #include <Game/Manager/GameManager.hpp>
 
+REGISTER_SCRIPT(GameManager);
+
 GameManager::GameManager() {}
 
 void GameManager::start()

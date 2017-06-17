@@ -14,6 +14,8 @@
 #include <Game/Manager/GoldManager.hpp>
 #include <Game/Manager/TutoManagerMessage.hpp>
 
+REGISTER_SCRIPT(Enemy);
+
 void Enemy::start()
 {
     this->_render = getComponent<sRenderComponent>();
@@ -238,14 +240,14 @@ void Enemy::destroyWall(Entity* entity, const glm::vec3& pos)
         return;
     }
 
-    GameManager* gameManagerScript = this->getEntityScript<GameManager>(gameManager, "GameManager");
+    GameManager* gameManagerScript = sScriptComponent::getEntityScript<GameManager>(gameManager, "GameManager");
     if (!gameManagerScript)
     {
         LOG_WARN("Could not find script GameManager on entity GameManager");
         return;
     }
 
-    NewBuild* newBuildScript = this->getEntityScript<NewBuild>(player, "NewBuild");
+    NewBuild* newBuildScript = sScriptComponent::getEntityScript<NewBuild>(player, "NewBuild");
     if (!newBuildScript)
     {
         LOG_WARN("Could not find script NewBuild on entity NewBuild");

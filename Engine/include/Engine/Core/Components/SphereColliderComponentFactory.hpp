@@ -11,7 +11,7 @@ template <>
 class ComponentFactory<sSphereColliderComponent> final: public BaseComponentFactory<sSphereColliderComponent>
 {
 public:
-    char* getTypeName() override final { return "sSphereColliderComponent"; }
+    const char* getTypeName() override final { return "sSphereColliderComponent"; }
     sComponent* loadFromJson(const std::string& entityType, const JsonValue& json) override final;
     JsonValue& saveToJson(const std::string& entityType, const sComponent* savedComponent = nullptr, JsonValue* toJson = nullptr) override final;
 

@@ -78,5 +78,3 @@ private:
 
     std::vector<sTutoStep> _steps;
 };
-
-REGISTER_SCRIPT(TutoManager);

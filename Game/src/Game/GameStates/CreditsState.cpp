@@ -113,7 +113,11 @@ void        CreditsState::updatePagingText()
             sTextComponent* textComp = entityPageText->getComponent<sTextComponent>();
             char            pagingText[MAX_SIZE_TEXT_PAGES];
 
-            sprintf_s(pagingText, "PAGE : %d / %d", this->_currentPageIndex + 1, this->_pages.size());
+#if defined(_WIN32)
+            sprintf_s(pagingText, "PAGE : %d / %d", this->_currentPageIndex + 1, (int)this->_pages.size());
+#else
+            sprintf(pagingText, "PAGE : %d / %d", this->_currentPageIndex + 1, (int)this->_pages.size());
+#endif
             textComp->text.setContent(pagingText);
         }
 

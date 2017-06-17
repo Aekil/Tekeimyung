@@ -14,6 +14,8 @@
 
 bool    TutoManager::_tutorialDone = false;
 
+REGISTER_SCRIPT(TutoManager);
+
 TutoManager::~TutoManager()
 {
     TutoManagerMessage::_instance = nullptr;
@@ -118,7 +120,7 @@ void TutoManager::start()
         return;
     }
 
-    _goldManager = getEntityScript<GoldManager>(gameManager, "GoldManager");
+    _goldManager = sScriptComponent::getEntityScript<GoldManager>(gameManager, "GoldManager");
 
     if (_goldManager == nullptr)
     {
@@ -127,7 +129,7 @@ void TutoManager::start()
     }
     _goldManager->setIncreaseOnTime(false);
 
-    _waveManager = getEntityScript<WaveManager>(gameManager, "WaveManager");
+    _waveManager = sScriptComponent::getEntityScript<WaveManager>(gameManager, "WaveManager");
 
     if (_waveManager == nullptr)
     {
@@ -225,7 +227,7 @@ void    TutoManager::spawnEnemy(float speed)
         return;
     }
 
-    Spawner* spawnerScript = getEntityScript<Spawner>(spawner, "Spawner");
+    Spawner* spawnerScript = sScriptComponent::getEntityScript<Spawner>(spawner, "Spawner");
     if (!spawnerScript)
     {
         LOG_ERROR("TutoManager::spawnEnemy: Spawner don't have Spawner script");
@@ -237,7 +239,7 @@ void    TutoManager::spawnEnemy(float speed)
     // Change enemy speed
     if (speed != -1.0f)
     {
-        Enemy* enemyScript = getEntityScript<Enemy>(enemy, "Enemy");
+        Enemy* enemyScript = sScriptComponent::getEntityScript<Enemy>(enemy, "Enemy");
         if (!enemyScript)
         {
             LOG_ERROR("TutoManager::spawnEnemy: Enemy don't have Enemy script");

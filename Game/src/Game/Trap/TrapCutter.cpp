@@ -6,6 +6,8 @@
 
 #include <Game/Trap/TrapCutter.hpp>
 
+REGISTER_SCRIPT(TrapCutter);
+
 void TrapCutter::start()
 {
     this->damage = 60;

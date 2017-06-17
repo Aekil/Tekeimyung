@@ -34,5 +34,3 @@ private:
     std::string         _description;
     Entity*             _border = nullptr;
 };
-
-REGISTER_SCRIPT(SidebarItem);

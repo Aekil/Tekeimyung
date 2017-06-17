@@ -8,6 +8,8 @@
 
 #include <Engine/Core/Components/SphereColliderComponentFactory.hpp>
 
+constexpr unsigned int sSphereColliderComponent::identifier;
+
 sComponent* ComponentFactory<sSphereColliderComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
 {
     sSphereColliderComponent* component = new sSphereColliderComponent();

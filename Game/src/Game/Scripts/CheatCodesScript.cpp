@@ -8,6 +8,8 @@
 
 #include <Game/Scripts/CheatCodesScript.hpp>
 
+REGISTER_SCRIPT(CheatCodesScript);
+
 void CheatCodesScript::start()
 {
     _textComp = entity->getComponent<sTextComponent>();
@@ -15,7 +17,7 @@ void CheatCodesScript::start()
 
 void CheatCodesScript::update(float dt)
 {
-    auto &gameWindow = GameWindow::getInstance();
+    auto gameWindow = GameWindow::getInstance();
     auto &keyboard = gameWindow->getKeyboard();
     static float deleteMaintainedInterval = 0.1f;
 

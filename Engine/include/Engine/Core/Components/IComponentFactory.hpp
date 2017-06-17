@@ -127,7 +127,7 @@ public:
     }
 
 private:
-    virtual char* getTypeName() = 0;
+    virtual const char* getTypeName() = 0;
     sComponent*         clone(const std::string& entityType)
     {
         return _components.at(entityType)->clone();

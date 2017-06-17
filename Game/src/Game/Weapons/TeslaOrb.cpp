@@ -7,6 +7,8 @@
 
 #include    <Game/Weapons/TeslaOrb.hpp>
 
+REGISTER_SCRIPT(TeslaOrb);
+
 void        TeslaOrb::start()
 {
     sRenderComponent*   render = this->getComponent<sRenderComponent>();

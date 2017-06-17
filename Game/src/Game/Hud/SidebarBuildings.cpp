@@ -10,6 +10,8 @@
 #include <Game/Hud/SidebarItem.hpp>
 #include <Game/Hud/SidebarText.hpp>
 
+REGISTER_SCRIPT(SidebarBuildings);
+
 SidebarBuildings::SidebarBuildings()
 {}
 
@@ -43,7 +45,7 @@ void SidebarBuildings::init()
 
         item->setTag(this->_sidebarItems[i].archetype + "_SIDEBAR_ITEM");
 
-        auto itemTextSidebarItem = this->getEntityScript<SidebarItem>(item, "SidebarItem");
+        auto itemTextSidebarItem = sScriptComponent::getEntityScript<SidebarItem>(item, "SidebarItem");
 
         if (itemTextSidebarItem == nullptr)
             EXCEPT(NullptrException, "Entity with archetype %s doesn't have script %s", "SIDEBAR_ITEM", "SidebarItem");
@@ -84,7 +86,11 @@ void SidebarBuildings::initTextBelow(int index, sUiComponent* uiComponent)
 
     char text[64];
 
+#if defined(_WIN32)
     sprintf_s(text, "%s coins", this->_sidebarItems[index].price.c_str());
+#else
+    sprintf(text, "%s coins", this->_sidebarItems[index].price.c_str());
+#endif
 
     itemTextTextComponent->text.setContent(text);
 
@@ -111,7 +117,11 @@ void SidebarBuildings::initTextTopLeft(int index, sUiComponent* uiComponent)
 
     char text[64];
 
+#if defined(_WIN32)
     sprintf_s(text, "%c", this->_sidebarItems[index].key);
+#else
+    sprintf(text, "%c", this->_sidebarItems[index].key);
+#endif
 
     itemTextTextComponent->text.setContent(text);
     itemTextTextComponent->text.setFontSize(25);

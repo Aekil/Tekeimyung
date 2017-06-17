@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <cstdint>
 #include <vector>
 #include <glm/vec2.hpp>
 #include <ft2build.h>
@@ -25,7 +26,7 @@ private:
     {
         Texture texture;
         glm::ivec2 bearing;
-        int advance;
+        int advance = 0;
     };
 
 public:
@@ -36,7 +37,7 @@ public:
 
     const sChar*                getChar(char c) const;
     const std::string&          getName() const;
-
+    uint32_t                    getLetterSpacing() const;
     static Resource::eType      getResourceType() { return Resource::eType::FONT; }
 
 private:

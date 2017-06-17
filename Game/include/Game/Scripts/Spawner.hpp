@@ -96,5 +96,3 @@ private:
     //  ImGui selection index
     uint32_t                _selectedConfig = 0;
 };
-
-REGISTER_SCRIPT(Spawner);

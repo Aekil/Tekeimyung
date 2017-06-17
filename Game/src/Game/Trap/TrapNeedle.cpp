@@ -6,6 +6,8 @@
 
 #include <Game/Trap/TrapNeedle.hpp>
 
+REGISTER_SCRIPT(TrapNeedle);
+
 void TrapNeedle::start()
 {
     this->damage = 35;

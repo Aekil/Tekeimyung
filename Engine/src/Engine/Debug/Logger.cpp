@@ -5,6 +5,7 @@
 // Define this flag before time.h to use secure versions of localtime and asctime on Windows
 #define __STDC_WANT_LIB_EXT1__ 1
 #include <ctime>
+#include <cstring>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
@@ -12,6 +13,7 @@
 #include <Engine/Debug/Logger.hpp>
 
 std::shared_ptr<Logger> Logger::_instance;
+DECLARE_ENUM_MANAGER(Logger::eLogLevel)
 
 Logger::Logger()
 {

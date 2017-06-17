@@ -13,7 +13,7 @@
 
 EntitiesTemplateDebugWindow::EntitiesTemplateDebugWindow() : DebugWindow("Archetypes") {}
 
-EntitiesTemplateDebugWindow::EntitiesTemplateDebugWindow(const ImVec2& pos, const ImVec2& size) :
+EntitiesTemplateDebugWindow::EntitiesTemplateDebugWindow(const glm::vec2& pos, const glm::vec2& size) :
                                     DebugWindow("Archetypes", pos, size) {}
 
 EntitiesTemplateDebugWindow::~EntitiesTemplateDebugWindow() {}

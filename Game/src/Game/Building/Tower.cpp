@@ -10,6 +10,8 @@
 #include <Game/Weapons/Projectile.hpp>
 #include <Game/Building/Tower.hpp>
 
+REGISTER_SCRIPT(Tower);
+
 void Tower::start()
 {
     _targetHandle = 0;

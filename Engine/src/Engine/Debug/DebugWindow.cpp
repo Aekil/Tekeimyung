@@ -7,7 +7,7 @@
 #include <Engine/Debug/Debug.hpp>
 #include <Engine/Debug/DebugWindow.hpp>
 
-DebugWindow::DebugWindow(const std::string& tile, const ImVec2& pos, const ImVec2& size) :
+DebugWindow::DebugWindow(const std::string& tile, const glm::vec2& pos, const glm::vec2& size) :
                         _displayed(true), _title(tile), _pos(pos), _size(size) {}
 
 DebugWindow::~DebugWindow() {}

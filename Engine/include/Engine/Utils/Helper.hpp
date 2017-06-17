@@ -45,6 +45,17 @@ public:
         return buffer;
     }
 
+    static std::string  formatMessage(const char* message)
+    {
+        std::string buffer;
+        buffer.resize(512);
+        int size = snprintf(const_cast<char*>(buffer.c_str()), 512, "%s", message);
+
+        buffer.resize(size);
+        return buffer;
+    }
+
+
     template <typename T>
     static T            lerp(T from, T to, float time)
     {

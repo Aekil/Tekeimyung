@@ -107,6 +107,7 @@ if (${CMAKE_HOST_UNIX})
             /usr/lib
             /usr/local/lib64
             /usr/local/lib
+            /usr/lib/x86_64-linux-gnu
             /sw/lib
             /opt/local/lib
             NO_DEFAULT_PATH

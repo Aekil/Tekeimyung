@@ -10,7 +10,7 @@ std::shared_ptr<MonitoringDebugWindow>   MonitoringDebugWindow::_monitoringDebug
 
 MonitoringDebugWindow::MonitoringDebugWindow() : DebugWindow("Monitoring"), _checkSec(0) {}
 
-MonitoringDebugWindow::MonitoringDebugWindow(const ImVec2& pos, const ImVec2& size) :
+MonitoringDebugWindow::MonitoringDebugWindow(const glm::vec2& pos, const glm::vec2& size) :
     DebugWindow("Monitoring", pos, size), _checkSec(0) {}
 
 MonitoringDebugWindow::~MonitoringDebugWindow() {}
@@ -122,12 +122,12 @@ void    MonitoringDebugWindow::displaySystem(tMonitoring& system)
 #if (ENABLE_COLOR) // display with colors
     {
         ImColor color = getDisplayColor(system);
-        ImGui::TextColored(color, FMT_MSG("%-20s | %4d  : %+3c  %.2f ms   (%.3f)", system.name, (int)system.nbEntities, (system.oldAvg < system.avgTimeSec) ? '+' : '-',
+        ImGui::TextColored(color, "%s", FMT_MSG("%-20s | %4d  : %+3c  %.2f ms   (%.3f)", system.name, (int)system.nbEntities, (system.oldAvg < system.avgTimeSec) ? '+' : '-',
             SEC_TO_MS(system.avgTimeSec), SEC_TO_MS(system.avgTimeSec)).c_str());
     }
 #else // display all in white
     {
-        ImGui::Text(FMT_MSG("%-20s : %+3c  %.2f ms   (%.3f)", system.name, (system.oldAvg < system.avgTimeSec) ? '+' : '-',
+        ImGui::Text("%s", FMT_MSG("%-20s : %+3c  %.2f ms   (%.3f)", system.name, (system.oldAvg < system.avgTimeSec) ? '+' : '-',
             SEC_TO_MS(system.avgTimeSec), SEC_TO_MS(system.avgTimeSec)).c_str()); // not always uptodate compared to colored display
     }
 #endif

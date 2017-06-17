@@ -10,6 +10,8 @@
 
 #include <Engine/Core/Components/RenderComponentFactory.hpp>
 
+constexpr unsigned int sRenderComponent::identifier;
+
 sComponent* ComponentFactory<sRenderComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
 {
     sRenderComponent* component = new sRenderComponent();

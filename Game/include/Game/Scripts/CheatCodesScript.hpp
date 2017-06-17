@@ -22,5 +22,3 @@ private:
 
     float _lastDelete = 0.0f;
 };
-
-REGISTER_SCRIPT(CheatCodesScript);

@@ -10,6 +10,8 @@
 
 #include <Game/Hud/DisplayWave.hpp>
 
+REGISTER_SCRIPT(DisplayWave);
+
 void DisplayWave::start()
 {
     this->_em = EntityFactory::getBindedEntityManager();
@@ -34,7 +36,12 @@ void DisplayWave::update(float dt)
             sTextComponent*     textComp = _waveHudDisplay->getComponent<sTextComponent>();
             char                waveText[MAX_SIZE_TEXT_WAVES];
 
+#if defined(_WIN32)
             sprintf_s(waveText, "%d/%d", currentWave, nbWaves);
+#else
+            sprintf(waveText, "%d/%d", currentWave, nbWaves);
+#endif
+
             textComp->text.setContent(waveText);
             this->_tmpNbWaves = nbWaves;
             this->_tmpcurrentWave = currentWave;

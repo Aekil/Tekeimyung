@@ -6,6 +6,8 @@
 
 #include <Game/Trap/TrapFire.hpp>
 
+REGISTER_SCRIPT(TrapFire);
+
 void TrapFire::start()
 {
     this->damage = 50;

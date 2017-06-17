@@ -23,5 +23,3 @@ private:
     Entity*             _entityToFollow = nullptr;
     glm::vec3           _initialPosition;
 };
-
-REGISTER_SCRIPT(CameraScript);

@@ -76,7 +76,7 @@ bool    ConsoleState::update(float elapsedTime)
             return (false);
         }
 
-        CheatCodesScript* cheatCodeScripts = BaseScript::getEntityScript<CheatCodesScript>(_console, "CheatCodesScript");
+        CheatCodesScript* cheatCodeScripts = sScriptComponent::getEntityScript<CheatCodesScript>(_console, "CheatCodesScript");
         if (!cheatCodeScripts)
         {
             LOG_ERROR("ConsoleState::update: Can't enter cheat codes because the console entity doesn not have the script \"CheatCodesScript\"");
@@ -107,7 +107,7 @@ void    ConsoleState::handleCheatCodeKillAll(PlayState* playState)
 
     for (auto& enemy : enemies)
     {
-        Enemy*  enemyScript = BaseScript::getEntityScript<Enemy>(enemy, "Enemy");
+        Enemy*  enemyScript = sScriptComponent::getEntityScript<Enemy>(enemy, "Enemy");
 
         if (!enemyScript)
         {
@@ -130,7 +130,7 @@ void    ConsoleState::handleCheatCodeGiveMeGold(PlayState* playState)
         return;
     }
 
-    GoldManager* goldManager = BaseScript::getEntityScript<GoldManager>(gameManager, GOLD_MANAGER_TAG);
+    GoldManager* goldManager = sScriptComponent::getEntityScript<GoldManager>(gameManager, GOLD_MANAGER_TAG);
 
     if (!goldManager)
     {
@@ -157,7 +157,7 @@ void    ConsoleState::handleCheatCodeBuildForMe(PlayState* playState)
             return;
         }
 
-        newBuild = BaseScript::getEntityScript<NewBuild>(player, "NewBuild");
+        newBuild = sScriptComponent::getEntityScript<NewBuild>(player, "NewBuild");
 
         if (!newBuild)
         {
@@ -176,7 +176,7 @@ void    ConsoleState::handleCheatCodeBuildForMe(PlayState* playState)
             return;
         }
 
-        gameManager = BaseScript::getEntityScript<GameManager>(gameManagerEntity, GAME_MANAGER_TAG);
+        gameManager = sScriptComponent::getEntityScript<GameManager>(gameManagerEntity, GAME_MANAGER_TAG);
 
         if (!gameManager)
         {

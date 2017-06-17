@@ -4,6 +4,8 @@
 
 #include <Engine/Core/Components/CameraComponentFactory.hpp>
 
+constexpr unsigned int sCameraComponent::identifier;
+
 sComponent* ComponentFactory<sCameraComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
 {
     sCameraComponent*  component;

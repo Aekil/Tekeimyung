@@ -46,5 +46,3 @@ private:
 
     tEventSound* _hitCastle = nullptr;
 };
-
-REGISTER_SCRIPT(Castle);

@@ -4,6 +4,8 @@
 
 #include <Engine/Graphics/Animation.hpp>
 
+DECLARE_ENUM_MANAGER(IParamAnimation::eEasing)
+
 Animation::Animation(const std::string& name, const std::string& layer): _name(name), _layer(layer), _loop(true), _isPlaying(false) {}
 
 Animation::Animation(const Animation& rhs)

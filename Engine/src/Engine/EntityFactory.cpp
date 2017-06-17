@@ -70,7 +70,7 @@ void EntityFactory::loadDirectory(const std::string& archetypesDir)
 
             _entitiesFiles[typeName] = path;
              _entities[typeName].tag = tag;
-             _typesString.push_back(_strdup(typeName.c_str()));
+             _typesString.push_back(strdup(typeName.c_str()));
 
             // Create entity components
             auto &&components = parsed.get("components", {}).get();
@@ -466,7 +466,7 @@ void    EntityFactory::saveEntityTemplate(const std::string& typeName, Entity* e
             if (name->value == typeName && entity != entity)
             {
                 auto& components = entity->getComponents();
-                auto& it = components.begin();
+                auto it = components.begin();
                 for (it; it != components.end();)
                 {
                     sComponent* component = *it;

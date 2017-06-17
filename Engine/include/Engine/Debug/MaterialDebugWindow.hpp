@@ -15,7 +15,7 @@ class           MaterialDebugWindow : public DebugWindow, public IInspectorImple
 {
 public:
     MaterialDebugWindow();
-    MaterialDebugWindow(const ImVec2& pos, const ImVec2& size);
+    MaterialDebugWindow(const glm::vec2& pos, const glm::vec2& size);
     ~MaterialDebugWindow();
 
     void        build(std::shared_ptr<GameState> gameState, float elapsedTime) override final;

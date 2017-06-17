@@ -15,7 +15,7 @@ Entity::sHandle    LevelEntitiesDebugWindow::_selectedEntityHandler = 0;
 
 LevelEntitiesDebugWindow::LevelEntitiesDebugWindow() : DebugWindow("Scene Hierarchy") {}
 
-LevelEntitiesDebugWindow::LevelEntitiesDebugWindow(const ImVec2& pos, const ImVec2& size) :
+LevelEntitiesDebugWindow::LevelEntitiesDebugWindow(const glm::vec2& pos, const glm::vec2& size) :
     DebugWindow("Scene Hierarchy", pos, size) {}
 
 LevelEntitiesDebugWindow::~LevelEntitiesDebugWindow() {}

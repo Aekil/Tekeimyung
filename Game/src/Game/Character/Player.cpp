@@ -21,6 +21,8 @@
 #include <Game/Weapons/TeslaWeapon.hpp>
 #include <Game/Weapons/LaserWeapon.hpp>
 
+REGISTER_SCRIPT(Player);
+
 void Player::death()
 {
     this->Destroy();
@@ -308,7 +310,7 @@ bool Player::updateEditor()
     {
         auto& weapon = this->_weapons[_selectedWeapon];
 
-        ImGui::Text(FMT_MSG("Damage (with modifier) : (%.3f)", weapon->getAttribute("Damage")).c_str());
+        ImGui::Text("%s", FMT_MSG("Damage (with modifier) : (%.3f)", weapon->getAttribute("Damage")).c_str());
 
         for (auto &attribute : weapon->_attributes)
         {

@@ -114,7 +114,8 @@ void    RenderQueue::clear()
     std::memset(_uiTransparentMeshs.data(), 0, _uiTransparentMeshsNb * sizeof(sRenderableMesh));
     _uiTransparentMeshsNb = 0;
 
-    std::memset(_texts.data(), 0, _textsNb * sizeof(sRenderableText));
+    _texts.clear();
+    _texts.resize(MAX_RENDERABLE_MESHS);
     _textsNb = 0;
 
     std::memset(_lights.data(), 0, _lightsNb * sizeof(void*));

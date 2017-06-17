@@ -9,6 +9,8 @@
 #include <Game/Building/Castle.hpp>
 #include <Game/Character/Enemy.hpp>
 
+REGISTER_SCRIPT(Castle);
+
 void Castle::start()
 {
     this->_render = getComponent<sRenderComponent>();

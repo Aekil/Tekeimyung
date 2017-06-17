@@ -10,6 +10,10 @@
 
 #include <Engine/Core/Components/TextComponentFactory.hpp>
 
+constexpr unsigned int sTextComponent::identifier;
+DECLARE_ENUM_MANAGER(eHorizontalAlignment)
+DECLARE_ENUM_MANAGER(eVerticalAlignment)
+
 sComponent* ComponentFactory<sTextComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
 {
     sTextComponent*  component;

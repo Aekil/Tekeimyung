@@ -4,6 +4,8 @@
 
 #include <Engine/Core/Components/DynamicComponentFactory.hpp>
 
+constexpr unsigned int sDynamicComponent::identifier;
+
 sComponent* ComponentFactory<sDynamicComponent>::loadFromJson(const std::string& entityType, const JsonValue& json)
 {
     sDynamicComponent*  component;

@@ -27,5 +27,3 @@ private:
 
     int             _tmpGolds = -1;
 };
-
-REGISTER_SCRIPT(DisplayGold);

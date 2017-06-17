@@ -16,6 +16,11 @@
 
 std::shared_ptr<GameWindow> GameWindow::_instance;
 
+void error_callback(int error, const char* description)
+{
+    LOG_ERROR("GLFW ERROR: %s", description);
+}
+
 GameWindow::GameWindow(GameStateManager* gameStateManager, const char *title) :
     _bufferWidth(0), _bufferHeight(0), _fullscreen(true),
     _title(title), _monitor(nullptr), _window(nullptr), _running(false), _gameStateManager(gameStateManager),
@@ -37,6 +42,8 @@ bool    GameWindow::initialize()
         return (false);
     }
 
+    glfwSetErrorCallback(error_callback);
+
     // Retrieving the primary monitor.
     _monitor = glfwGetPrimaryMonitor();
     if (_monitor == nullptr)
@@ -57,7 +64,7 @@ bool    GameWindow::initialize()
     _screenHeight = vidmode->height;
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     // Creating a GLFW window.

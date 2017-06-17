@@ -41,5 +41,3 @@ public:
 private:
     std::string _mapName;
 };
-
-REGISTER_SCRIPT(GameManager);

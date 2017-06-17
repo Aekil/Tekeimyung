@@ -536,7 +536,7 @@ void    RenderingSystem::updateColliderMaterial(ModelInstance* modelInstance, En
         return;
     }
 
-    for (auto& it = rigidBody->collisions.begin(); it != rigidBody->collisions.end(); ++it)
+    for (auto it = rigidBody->collisions.begin(); it != rigidBody->collisions.end(); ++it)
     {
         if (rigidBody->collisions[it->first] != eCollisionState::NO_COLLISION)
         {

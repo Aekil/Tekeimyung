@@ -70,5 +70,3 @@ private:
 
     std::vector<glm::vec4> _baseBlooms;
 };
-
-REGISTER_SCRIPT(Enemy);

@@ -88,5 +88,3 @@ private:
 
     float               _victoryElapsedTime = 0.0f;
 };
-
-REGISTER_SCRIPT(WaveManager);

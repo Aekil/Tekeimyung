@@ -39,5 +39,3 @@ private:
 private:
     std::vector<t_itemCase> _sidebarItems;
 };
-
-REGISTER_SCRIPT(SidebarBuildings);

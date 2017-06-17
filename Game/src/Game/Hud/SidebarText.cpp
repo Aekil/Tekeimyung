@@ -7,6 +7,8 @@
 
 #include <Game/Hud/SidebarText.hpp>
 
+REGISTER_SCRIPT(SidebarText);
+
 void SidebarText::start() {}
 
 void SidebarText::update(float dt) {}
