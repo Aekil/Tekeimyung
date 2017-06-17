@@ -121,9 +121,9 @@ void        HowToPlayState::updatePagingText()
             char            pagingText[MAX_SIZE_TEXT_PAGES];
 
 #if defined(_WIN32)
-            sprintf_s(pagingText, "PAGE : %d / %d", this->_currentPageIndex + 1, this->_pages.size());
+            sprintf_s(pagingText, "PAGE : %d / %d", this->_currentPageIndex + 1, (int)this->_pages.size());
 #else
-            sprintf(pagingText, "PAGE : %d / %d", this->_currentPageIndex + 1, this->_pages.size());
+            sprintf(pagingText, "PAGE : %d / %d", this->_currentPageIndex + 1, (int)this->_pages.size());
 #endif
 
             textComp->text.setContent(pagingText);
