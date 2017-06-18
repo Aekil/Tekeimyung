@@ -80,9 +80,20 @@ struct EnumManager<ENUM_NAME>                                                   
 };
 
 // If REGISTER_ENUM_MANAGER is used, DECLARE_ENUM_MANAGER used be defined in a .cpp file
+// MSVC does not need the declaration in a .cpp file
+// and the declaration "constexpr const char* EnumManager<ENUM_NAME>::enumStrings[];" does not work for VC++ 2015
+
+#if defined(_MSC_VER)
+
+    #define DECLARE_ENUM_MANAGER(ENUM_NAME)
+
+#else
+
 #define DECLARE_ENUM_MANAGER(ENUM_NAME)                                             \
 constexpr const char* EnumManager<ENUM_NAME>::enumStrings[];                        \
 constexpr uint32_t EnumManager<ENUM_NAME>::enumLength;
+
+#endif
 
 #define REGISTER_ENUM(ENUM_NAME, ENUM_TYPE, ENUM_LIST)                                      \
 enum class ENUM_NAME: ENUM_TYPE                                                             \
