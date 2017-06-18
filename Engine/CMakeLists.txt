@@ -73,8 +73,6 @@ ENDIF()
 # Find Opengl library
 find_package(OpenGL REQUIRED)
 
-# Find FMOD library
-
 #Set Assimp directory and library on Windows
 IF (OS_WINDOWS)
   set(ASSIMP_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/external/Assimp/include)
@@ -103,14 +101,8 @@ IF (NOT FREETYPE_FOUND)
   message(FATAL_ERROR "Can't find freetype library")
 ENDIF()
 
-IF (OS_WINDOWS)
-#Set FMOD directory and library on Windows
-  set(FMOD_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/external/fmod/inc)
-    find_library(FMOD_LIBRARY fmodL64_vc PATHS ${CMAKE_SOURCE_DIR}/external/fmod/lib)
-ELSE()
-    find_package(FMOD REQUIRED)
-ENDIF()
-
+# Find FMOD library
+find_package(FMOD REQUIRED)
 
 # Add project and libraries includes
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include ${GLFW_INCLUDE_DIR} ${GLEW_INCLUDE_DIR} ${OPENGL_INCLUDE_DIR} ${FMOD_INCLUDE_DIR})

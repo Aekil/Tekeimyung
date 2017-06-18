@@ -20,7 +20,7 @@ find_path(FMOD_INCLUDE_DIR
     CMAKE_FIND_ROOT_PATH_BOTH
 )
 
-find_library(FMOD_LIBRARY_RELEASE
+find_library(FMOD_LIBRARY
     NAMES fmod
     PATHS ${FIND_PATHS}
     PATH_SUFFIXES lib
@@ -28,11 +28,11 @@ find_library(FMOD_LIBRARY_RELEASE
 )
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(FMOD DEFAULT_MSG FMOD_LIBRARY_RELEASE FMOD_INCLUDE_DIR)
+find_package_handle_standard_args(FMOD DEFAULT_MSG FMOD_LIBRARY FMOD_INCLUDE_DIR)
 
 if(FMOD_FOUND)
-    set(FMOD_LIBRARY debug ${FMOD_LIBRARY_RELEASE}
-                       optimized ${FMOD_LIBRARY_RELEASE}
+    set(FMOD_LIBRARY debug ${FMOD_LIBRARY}
+                       optimized ${FMOD_LIBRARY}
     )
 endif()
 
